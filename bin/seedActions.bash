@@ -25,7 +25,7 @@ fi
 
 
 . ${opBase}/lib/ocp-lib.sh
-
+.  $( dirname $0 )/bsipBases.sh
 
 
 opBasePathSet
