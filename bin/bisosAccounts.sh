@@ -17,13 +17,13 @@ __author__="
 
 ####+BEGIN: bx:bsip:bash:seed-spec :types "seedActions.bash"
 SEED="
-*  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip3/bin/seedActions.bash]] | 
+*  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
 "
 FILE="
-*  /This File/ :: /bisos/core/bsip3/bin/bisosAccounts.sh 
+*  /This File/ :: /bisos/core/bsip/bin/bisosAccounts.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
-    /bisos/core/bsip3/bin/seedActions.bash -l $0 "$@" 
+    /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
     exit $?
 fi
 ####+END:
@@ -86,12 +86,15 @@ function vis_examples {
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
     visLibExamplesOutput ${G_myName} 
-  cat  << _EOF_
-$( examplesSeperatorTopLabel "${G_myName}" )
-$( examplesSeperatorChapter "Chapter Title" )
-$( examplesSeperatorSection "Section Title" )
-${G_myName} ${extraInfo} -i doTheWork
-_EOF_
+
+    #   cat  << _EOF_
+# $( examplesSeperatorTopLabel "${G_myName}" )
+# $( examplesSeperatorChapter "Chapter Title" )
+# $( examplesSeperatorSection "Section Title" )
+# ${G_myName} ${extraInfo} -i doTheWork
+    # _EOF_
+    
+    vis_bsiosAccountsExamples
 }
 
 noArgsHook() {

@@ -72,9 +72,11 @@ ${G_myName} ${extraInfo} -i userAcctsExist bisos bystar lsipusr ; echo \$?
 ${G_myName} ${extraInfo} -i userAcctsDelete bisos bystar ; echo \$?
 ${G_myName} ${extraInfo} -i groupsDelete bystar ; echo \$?
 $( examplesSeperatorSection "Accounts Information" )
-${G_myName} ${extraInfo} -i userAcctsReport bisos bystar
+${G_myName} -i userAcctsReport bisos bystar lsipusr
 ${G_myName} ${extraInfo} -i userAcctsReport bystar
 ${G_myName} ${extraInfo} -i userAcctsReport bisos
+${G_myName} ${extraInfo} -i usgAcctNextLocalUidNu
+${G_myName} ${extraInfo} -i bxisoAcctNextLocalUidNu
 sudo tail /etc/sudoers
 _EOF_
 }
@@ -122,8 +124,35 @@ _EOF_
     lpReturn
 }
 
+function vis_bisosAcct_bisosUid { echo 2000; }
+function vis_bisosAcct_bisosName { echo bisos; }
 
-function vis_userAcctUpdate_bystar {
+function vis_bisosAcct_bisosGid { echo 2000; }
+function vis_bisosAcct_bisosGroupName { echo bisos; }
+
+function vis_bisosAcct_bystarUid { echo 2001; }
+function vis_bisosAcct_bystarName { echo bystar; }
+function vis_bisosAcct_bystarGid { echo bisos; }
+
+function vis_bisosAcct_bxisoDelimiterUid { echo 1000000; }
+function vis_bisosAcct_bxisoDelimiterName { echo bxisoDelimiter; }
+function vis_bisosAcct_bxisoDelimiterGid { echo bisos; }
+
+
+
+function vis_userAcctPasswdSet {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+This is not being used at this time. It should be moved into a bisos environment script.
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;    
+
+
+
+function vis_userAcctCreate_bystar {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 This is not being used at this time. It should be moved into a bisos environment script.
@@ -148,6 +177,165 @@ _EOF_
     userAcctPasswd=$( vis_getPasswdForAcct ${userAcctName} ${passwdPolicy} )
 
     lpDo useradd \
+	 --uid "${acctUid}" \
+	 --comment "ByStar User Acct" \
+	 --gid "${userAcctGroup}" \
+	 --shell /bin/bash \
+	 --create-home \
+	 ${userAcctName}
+
+    lpDo eval "echo ${userAcctName}:${userAcctPasswd} | sudo -S /usr/sbin/chpasswd"    
+
+    #
+    #  NOTYET, below is for Fedora/Centos/Redhat
+    #
+    #lpDo eval "echo ${userAcctPasswd} | sudo -S passwd ${userAcctPasswd} --stdin"
+    #
+    #lpDo sudo usermod -aG wheel ${userAcctPasswd}
+    #
+
+    lpDo sudo sh -c "echo ${userAcctName} ALL=\(ALL\) NOPASSWD: ALL >> /etc/sudoers"
+
+    lpDo vis_userAcctsReport ${userAcctName}
+
+    lpReturn
+}
+
+function vis_usgAcctCreate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+When acctUidIncrement is 0, use bystarUid for uid.
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local acctName=$1
+
+    if vis_userAcctExists "${acctName}" ; then
+	EH_problem "${acctName} Already Exists -- Addition Skipped"
+	lpReturn 101
+    fi
+
+    lpDo vis_usgAcctAdd "${acctName}"
+
+    lpDo vis_usgAcctPasswdSet "${acctName}"
+
+    lpDo vis_userAcctsReport ${userAcctName}
+}
+
+function vis_usgAcctPasswd {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+When acctUidIncrement is 0, use bystarUid for uid.
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local acctName=$1
+
+    if vis_userAcctExists "${acctName}" ; then
+	EH_problem "${acctName} Already Exists -- Addition Skipped"
+	lpReturn 101
+    fi
+
+    local userAcctPasswd=$( vis_getPasswdForAcct ${acctName} ${passwdPolicy} )
+
+    lpDo eval "echo ${acctName}:${userAcctPasswd} | sudo -S /usr/sbin/chpasswd"    
+
+    #
+    #  NOTYET, below is for Fedora/Centos/Redhat
+    #
+    #lpDo eval "echo ${userAcctPasswd} | sudo -S passwd ${userAcctPasswd} --stdin"
+    #
+    #lpDo sudo usermod -aG wheel ${userAcctPasswd}
+    #
+}
+
+
+function vis_usgAcctAdd {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+When acctUidIncrement is 0, use bystarUid for uid.
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local acctName="$1"
+
+    if vis_userAcctExists "${acctName}" ; then
+	EH_problem "${acctName} Already Exists -- Addition Skipped"
+	lpReturn 101
+    fi
+
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;    
+
+    local acctGid="$( vis_bisosAcct_bystarGid )"
+    local acctUid=""
+    local acctComment=""
+    local acctHome="/bxo/usg/${acctName}"
+
+    if [ "${acctName}" == "$( vis_bisosAcct_bystarName )" ] ; then
+	acctUid=$( vis_bisosAcct_bystarUid )
+	acctComment="BISOS Default Usage Acct"
+    else
+	acctUid=$( vis_usgAcctNextLocalUidNu )
+	acctComment="BISOS Named Usage Acct"	
+    fi
+
+    lpDo useradd \
+	 --uid "${acctUid}" \
+	 --gid "${acctGid}" \
+	 --groups "lsipusr" \
+	 --shell /bin/bash \
+	 --home-dir "${acctHome}" \
+	 --comment "${acctComment}" \
+	 ${acctName}
+
+    lpReturn
+}
+
+
+function vis_bxisoAcctCreate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+When acctUidIncrement is 0, use bystarUid for uid.
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local acctName=$1
+    local acctUidIncrement=$2
+}
+
+function vis_bxisoAcctAdd {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+When acctUidIncrement is 0, use bystarUid for uid.
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local acctName=$1
+    local acctUidIncrement=$2
+
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;    
+
+    local passwdPolicy=$1
+
+    local userAcctName="bystar"
+    local userAcctGroup="bisos"
+    #local userAcctSupplementryGroups=""        
+    local userAcctPasswd=""
+
+    if vis_userAcctsExist ${userAcctName} ; then
+	EH_problem "${userAcctName} Exists"
+	lpReturn 101
+    fi
+
+    userAcctPasswd=$( vis_getPasswdForAcct ${userAcctName} ${passwdPolicy} )
+
+    lpDo useradd \
+	 --uid "${acctUid}" \
 	 --comment "ByStar User Acct" \
 	 --gid "${userAcctGroup}" \
 	 --shell /bin/bash \
@@ -276,7 +464,6 @@ _EOF_
     EH_assert [[ $# -gt 0 ]]
 
     local inputsList="$@"
-    local each=""
     local thisFunc=${G_thisFunc}
 
     function processEach {
@@ -288,10 +475,26 @@ _EOF_
 	fi
 	lpDo sudo groupadd ${groupName}    	
     }
-    
-    for each in ${inputsList} ; do
-	lpDo processEach ${each}
-    done
+
+####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
+    if [ $# -gt 0 ] ; then
+	local each=""
+	for each in ${inputsList} ; do
+	    lpDo processEach ${each}
+	done
+    else
+	local eachLine=""
+	while read -r -t 1 eachLine ; do
+	    if [ ! -z "${eachLine}" ] ; then
+		local each=""
+		for each in ${eachLine} ; do
+		    lpDo processEach ${each}
+		done
+	    fi
+	done
+    fi
+
+####+END:
     
     lpReturn
 }
@@ -303,10 +506,7 @@ function vis_groupsDelete {
 echo someParam and args 
 _EOF_
     }
-    EH_assert [[ $# -gt 0 ]]
-
     local inputsList="$@"
-    local each=""
     local thisFunc=${G_thisFunc}
 
     function processEach {
@@ -318,10 +518,26 @@ _EOF_
 	fi
 	lpDo sudo groupdel ${groupName}    	
     }
-    
-    for each in ${inputsList} ; do
-	lpDo processEach ${each}
-    done
+
+####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
+    if [ $# -gt 0 ] ; then
+	local each=""
+	for each in ${inputsList} ; do
+	    lpDo processEach ${each}
+	done
+    else
+	local eachLine=""
+	while read -r -t 1 eachLine ; do
+	    if [ ! -z "${eachLine}" ] ; then
+		local each=""
+		for each in ${eachLine} ; do
+		    lpDo processEach ${each}
+		done
+	    fi
+	done
+    fi
+
+####+END:
     
     lpReturn
 }
@@ -331,13 +547,14 @@ _EOF_
 function vis_userAcctsReport {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-echo someParam and args 
+Report on a user account, inputs can come from args or from stdin.
+Design Pattern: processEach based on args or stdin.
+Examples:
+      ${G_myName} -i userAcctsReport bisos
+      echo bisos bystar | ${G_myName} -i userAcctsReport
 _EOF_
     }
-    EH_assert [[ $# -gt 0 ]]
-
     local inputsList="$@"
-    local each=""
     local thisFunc=${G_thisFunc}
 
     function processEach {
@@ -348,15 +565,34 @@ _EOF_
 	    lpReturn 101
 	fi
 
+	ANT_raw "--- ${userAcctName}: passwd, group, id, sudoers ---"
+	
 	lpDo getent passwd ${userAcctName}
 	lpDo getent group ${userAcctName}
 
 	lpDo sudo -u ${userAcctName} id
+	lpDo sudo grep ${userAcctName} /etc/sudoers
     }
-    
-    for each in ${inputsList} ; do
-	lpDo processEach ${each}
-    done
+
+####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
+    if [ $# -gt 0 ] ; then
+	local each=""
+	for each in ${inputsList} ; do
+	    lpDo processEach ${each}
+	done
+    else
+	local eachLine=""
+	while read -r -t 1 eachLine ; do
+	    if [ ! -z "${eachLine}" ] ; then
+		local each=""
+		for each in ${eachLine} ; do
+		    lpDo processEach ${each}
+		done
+	    fi
+	done
+    fi
+
+####+END:
     
     lpReturn
 }
@@ -385,28 +621,26 @@ _EOF_
     lpReturn ${retVal}
 }
 
+    
 
-function vis_userAcctsExist {
+function vis_userAcctExists {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 echo someParam and args 
 _EOF_
     }
-    EH_assert [[ $# -gt 0 ]]
+    EH_assert [[ $# -eq 1 ]]
 
-    local inputsList="$@"
+    local userAcctNameOrUid="$1"
     local retVal=0
     local exitCode=0
-    local each=""
-    
-    for each in ${inputsList} ; do
-	getent passwd ${each} > /dev/null 2>&1
-	exitCode=$?
-	if [ ${exitCode} -ne 0 ] ; then
-	    retVal=${exitCode}
-	    break
-	fi
-    done
+
+    getent passwd ${each} > /dev/null 2>&1
+    exitCode=$?
+    if [ ${exitCode} -ne 0 ] ; then
+	retVal=${exitCode}
+    fi
+
     lpReturn ${retVal}
 }
 
@@ -438,20 +672,94 @@ _EOF_
 }
 
 
+function vis_usgAcctNextLocalUidNu {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    #if vis_reRunAsRoot G_thisFunc $@ ; then lpReturn globalReRunRetVal; fi;	
+
+    local lastNuStr=$( sort -g -t : -k 3 /etc/passwd | \
+			   egrep '^.*:.*:1[0-9][0-9][0-9]:' |\
+			   tail -1 |\
+			   cut -d : -f 3 \
+	  )
+    local nextNu=0
+
+    if [ -z "${lastNuStr}" ] ; then
+	EH_problem ""
+	lpReturn 101
+    fi
+
+    nextNu=$( expr $lastNuStr +  1 )
+    
+    echo ${nextNu}
+
+    lpReturn
+}	
 
 function vis_usgAcctNextLocalUidNu {
-  EH_assert [[ $# -eq  0 ]]
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Next Usage Account -- usgAcctMin=1000 -- hence :1[0-9][0-9][0-9]:
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
 
-  passwdFileInfo=$( egrep '^..-16' /etc/passwd | sort | tail -1 | cut -d: -f1 )
+    #if vis_reRunAsRoot G_thisFunc $@ ; then lpReturn globalReRunRetVal; fi;	
 
-  if [ "${passwdFileInfo}_" == "_" ] ; then 
-    echo "16001"
-  else
-    lastNuStr=$( expr substr  ${passwdFileInfo}  4 10 )
+    local lastNuStr=$( sort -g -t : -k 3 /etc/passwd | \
+			   egrep '^.*:.*:1[0-9][0-9][0-9]:' |\
+			   tail -1 |\
+			   cut -d : -f 3 \
+	  )
+    local nextNu=0
+
+    if [ -z "${lastNuStr}" ] ; then
+	EH_problem ""
+	lpReturn 101
+    fi
+
     nextNu=$( expr $lastNuStr +  1 )
+    
     echo ${nextNu}
-  fi
-}
+
+    lpReturn
+}	
+
+
+function vis_bxisoAcctNextLocalUidNu {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+ByStar Information Or Service Object -- bxisoAcctMin=1000000 -- hence :1[0-9][0-9][0-9]:
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    #if vis_reRunAsRoot G_thisFunc $@ ; then lpReturn globalReRunRetVal; fi;	
+
+    local lastNuStr=$( sort -g -t : -k 3 /etc/passwd | \
+			   egrep '^.*:.*:1[0-9][0-9][0-9][0-9][0-9][0-9]:' |\
+			   tail -1 |\
+			   cut -d : -f 3 \
+	  )
+    local nextNu=0
+
+    if [ -z "${lastNuStr}" ] ; then
+	EH_problem ""
+	lpReturn 101
+    fi
+
+    nextNu=$( expr $lastNuStr +  1 )
+    
+    echo ${nextNu}
+
+    lpReturn
+}	
+
+
 
 
 function checkAcctExist {

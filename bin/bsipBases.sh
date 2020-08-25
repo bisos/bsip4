@@ -17,7 +17,6 @@ if [ "${bsipBase}" == "" ] ; then
 fi
 
 bsipBinBase=${bsipBase}/bin
-echo "ZZZ $bsipBinBase KKK"
 bsipLibBase=${bsipBase}/lib
 bsipManBase=${bsipBase}/man
 bsipSiteControlBase=${bsipBase}/siteControl

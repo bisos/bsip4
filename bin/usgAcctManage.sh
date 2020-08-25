@@ -17,13 +17,13 @@ __author__="
 
 ####+BEGIN: bx:bsip:bash:seed-spec :types "seedActions.bash"
 SEED="
-*  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip3/bin/seedActions.bash]] | 
+*  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
 "
 FILE="
-*  /This File/ :: /bisos/core/bsip3/bin/usgAcctManage.sh 
+*  /This File/ :: /bisos/core/bsip/bin/usgAcctManage.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
-    /bisos/core/bsip3/bin/seedActions.bash -l $0 "$@" 
+    /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
     exit $?
 fi
 ####+END:
@@ -62,6 +62,7 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
+. ${bsipBinBase}/bisosAccounts_lib.sh
 
 # PRE parameters
 
@@ -89,7 +90,12 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Chapter Title" )
 $( examplesSeperatorSection "Section Title" )
-${G_myName} ${extraInfo} -i createAcct
+${G_myName} ${extraInfo} -i createFullUpdate bystar
+${G_myName} ${extraInfo} -i list usgAccts
+${G_myName} ${extraInfo} -i report listOfAccounts
+${G_myName} ${extraInfo} -i baseUpdate_bash 
+${G_myName} ${extraInfo} -i baseUpdate_blee
+${G_myName} ${extraInfo} -i baseUpdate_bue
 _EOF_
 }
 
@@ -102,7 +108,7 @@ _CommentBegin_
 _CommentEnd_
 
 
-function vis_createAcct {
+function vis_acctFullUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 acctName bxo.ue
@@ -113,6 +119,44 @@ _EOF_
 
     lpReturn
 }
+
+function vis_baseUpdate_bash {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+acctName bxo.ue
+_EOF_
+    }
+    EH_assert [[ $# -eq gt 1 ]]
+    local usgAcctName=$1
+
+    lpReturn
+}
+
+
+function vis_baseUpdate_blee {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+acctName bxo.ue
+_EOF_
+    }
+    EH_assert [[ $# -eq gt 1 ]]
+    local usgAcctName=$1
+
+    lpReturn
+}
+
+function vis_baseUpdate_bue {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+acctName bxo.ue
+_EOF_
+    }
+    EH_assert [[ $# -eq gt 1 ]]
+    local usgAcctName=$1
+
+    lpReturn
+}
+
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*
