@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash # -*- mode: sh-mode; -*-
 
 IimBriefDescription="NOTYET: Short Description Of The Module"
 
@@ -13,20 +13,6 @@ ORIGIN="
 __author__="
 * Authors: Mohsen BANAN, http://mohsen.banan.1.byname.net/contact
 "
-
-
-####+BEGIN: bx:bsip:bash:seed-spec :types "seedActions.bash"
-SEED="
-*  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
-"
-FILE="
-*  /This File/ :: /bisos/core/bsip/bin/bisosAccounts.sh 
-"
-if [ "${loadFiles}" == "" ] ; then
-    /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
-    exit $?
-fi
-####+END:
 
 _CommentBegin_
 ####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/libre/ByStar/InitialTemplates/software/plusOrg/dblock/inserts/topControls.org"
@@ -49,77 +35,92 @@ function vis_moduleDescription {  cat  << _EOF_
 _EOF_
 }
 
-_CommentBegin_
-*  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *Seed Extensions*
-_CommentEnd_
 
-_CommentBegin_
-*  [[elisp:(org-cycle)][| ]]  Imports       :: Prefaces (Imports/Libraries) [[elisp:(org-cycle)][| ]]
-_CommentEnd_
+function vis_bisosAcct_bisosUid { echo 2000; }
+function vis_bisosAcct_bisosName { echo bisos; }
 
-. ${opBinBase}/opAcctLib.sh
-. ${opBinBase}/opDoAtAsLib.sh
-. ${opBinBase}/lpParams.libSh
-. ${opBinBase}/lpReRunAs.libSh
+function vis_bisosAcct_bisosGid { echo 2000; }
+function vis_bisosAcct_bisosGroupName { echo bisos; }
 
-. ${bsipBinBase}/unisosAccounts_lib.sh
-. ${bsipBinBase}/bisosGroupAccount_lib.sh
-. ${bsipBinBase}/bisosAccounts_lib.sh
-
-# PRE parameters
-
-baseDir=""
-
-function G_postParamHook {
-     return 0
-}
-
-
-_CommentBegin_
-*  [[elisp:(org-cycle)][| ]]  Examples      :: Examples [[elisp:(org-cycle)][| ]]
-_CommentEnd_
-
-
-function vis_examples {
+function vis_bisosGroupExamples {
     typeset extraInfo="-h -v -n showRun"
     #typeset extraInfo=""
     typeset runInfo="-p ri=lsipusr:passive"
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
-    visLibExamplesOutput ${G_myName} 
-
-    cat  << _EOF_
-$( examplesSeperatorTopLabel "${G_myName}" )
+  cat  << _EOF_
+$( examplesSeperatorChapter "BISOS Account And Group Management" )
+${G_myName} ${extraInfo} -i userAcctUpdate_bisos passwd_tmpSame
+${G_myName} ${extraInfo} -i bisosAcctVerify
 _EOF_
-    
-    vis_unisosAccountsExamples
-    vis_bisosGroupExamples
-    vis_usgAccountsExamples
-    vis_bxisoAccountsExamples
 }
 
-noArgsHook() {
-  vis_examples
-}
 
-_CommentBegin_
-*  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
-_CommentEnd_
-
-
-function vis_doTheWork {
+function vis_userAcctUpdate_bisos {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+echo someParam and args.
 _EOF_
     }
-    EH_assert [[ $# -eq 0 ]]
+    EH_assert [[ $# -eq 1 ]]
 
-    lpDo vis_failExample
-    EH_retOnFail
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;    
+
+    local passwdPolicy=$1
+
+    if [ -z "${bisosUserName}" ] ; then
+	EH_problem "Missing bisosUserName"
+	lpReturn 101
+    fi
+
+    if [ -z "${bisosGroupName}" ] ; then
+	EH_problem "Missing bisosGroupName"
+	lpReturn 101
+    fi
+
+    local userAcctName="${bisosUserName}"
+    local userAcctGroup="${bisosGroupName}"
+
+    if vis_userAcctsExist ${userAcctName} ; then
+	EH_problem "${userAcctName} User Acct Already Exists"
+
+	#
+	# The account does not exist, so the group should not exist as well
+	#
+
+	if vis_groupsExist ${userAcctGroup} ; then
+	    EH_problem "${userAcctGroup} Group Exists, It Should Not"
+	    lpDo vis_groupsDelete ${userAcctGroup}
+	fi
+	lpReturn 101
+    fi
+
+    if vis_groupsExist ${userAcctGroup} ; then
+	ANT_raw "${userAcctGroup} Group Exists, groupsAdd skipped"
+    else
+	vis_groupsAdd ${userAcctGroup}
+    fi
+
+    #
+    # No Home, No Login-Shell
+    #  	 	 --gid ${userAcctGroup}
+
+    lpDo useradd \
+	 --home /bisos \
+	 --no-create-home \
+	 --gid "${userAcctGroup}" \
+	 --shell /usr/sbin/nologin \
+	 --comment "ByStar Internet Services OS" \
+	 ${userAcctName}
+
+    lpDo sudo sh -c "echo ${userAcctName} ALL=\(ALL\) NOPASSWD: ALL >> /etc/sudoers"
+
+    lpDo vis_userAcctsReport ${userAcctName}
 
     lpReturn
 }
+
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*

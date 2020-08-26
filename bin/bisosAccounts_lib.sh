@@ -35,51 +35,96 @@ function vis_moduleDescription {  cat  << _EOF_
 _EOF_
 }
 
-function vis_doTheWork {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
+function vis_bisosAcct_bystarUid { echo 2001; }
+function vis_bisosAcct_bystarName { echo bystar; }
+function vis_bisosAcct_bystarGid { echo bisos; }
 
-    lpDo vis_failExample
-    EH_retOnFail
+function vis_bisosAcct_bxisoDelimiterUid { echo 1000000; }
+function vis_bisosAcct_bxisoDelimiterName { echo bxisoDelimiter; }
+function vis_bisosAcct_bxisoDelimiterGid { echo bisos; }
 
-    lpReturn
-}
-
-
-function vis_bsiosAccountsExamples {
+function vis_bisosGeneralAccountsExamples {
     typeset extraInfo="-h -v -n showRun"
     #typeset extraInfo=""
     typeset runInfo="-p ri=lsipusr:passive"
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
-    visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
-$( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "BISOS User Accounts Management" )
-$( examplesSeperatorSection "Full Operations" )
-${G_myName} ${extraInfo} -i fullUpdate passwd_tmpSame
-${G_myName} ${extraInfo} -i fullDelete
-$( examplesSeperatorSection "Accounts Update/Creation" )
-${G_myName} ${extraInfo} -i userAcctUpdate_bisos passwd_tmpSame
-${G_myName} ${extraInfo} -i userAcctUpdate_bystar passwd_tmpSame
 $( examplesSeperatorSection "Accounts Manipulation" )
 ${G_myName} ${extraInfo} -i groupsExist bisos bystar lsipusr ; echo \$?
 ${G_myName} ${extraInfo} -i userAcctsExist bisos bystar lsipusr ; echo \$?
 ${G_myName} ${extraInfo} -i userAcctsDelete bisos bystar ; echo \$?
 ${G_myName} ${extraInfo} -i groupsDelete bystar ; echo \$?
-$( examplesSeperatorSection "Accounts Information" )
+$( examplesSeperatorChapter "General Purpose Accounts Processing Facilities" )
 ${G_myName} -i userAcctsReport bisos bystar lsipusr
 ${G_myName} ${extraInfo} -i userAcctsReport bystar
-${G_myName} ${extraInfo} -i userAcctsReport bisos
-${G_myName} ${extraInfo} -i usgAcctNextLocalUidNu
-${G_myName} ${extraInfo} -i bxisoAcctNextLocalUidNu
 sudo tail /etc/sudoers
+pwck
+grpck
 _EOF_
 }
+
+function vis_bisosGroupExamples {
+    typeset extraInfo="-h -v -n showRun"
+    #typeset extraInfo=""
+    typeset runInfo="-p ri=lsipusr:passive"
+
+    typeset examplesInfo="${extraInfo} ${runInfo}"
+
+  cat  << _EOF_
+$( examplesSeperatorChapter "BISOS Account And Group Management" )
+${G_myName} ${extraInfo} -i userAcctUpdate_bisos passwd_tmpSame
+${G_myName} ${extraInfo} -i bisosAcctVerify
+_EOF_
+}
+
+function vis_usgAccountsExamples {
+    typeset extraInfo="-h -v -n showRun"
+    #typeset extraInfo=""
+    typeset runInfo="-p ri=lsipusr:passive"
+
+    typeset examplesInfo="${extraInfo} ${runInfo}"
+
+  cat  << _EOF_
+$( examplesSeperatorChapter "Usage (usg) Accounts" )
+${G_myName} ${extraInfo} -i usgAcctNextLocalUidNu
+${G_myName} ${extraInfo} -i usgAcctPasswd bystar
+${G_myName} ${extraInfo} -i usgAcctPasswd oneUsgAcct
+${G_myName} ${extraInfo} -i usgAcctAdd bystar
+${G_myName} ${extraInfo} -i usgAcctAdd oneUsgAcct
+${G_myName} ${extraInfo} -i usgAcctCreate bystar    # acctAdd, passwdSet, sudoers, report
+${G_myName} ${extraInfo} -i usgAcctCreate oneUsgAcct
+${G_myName} ${extraInfo} -i usgAcctDelete bystar
+${G_myName} ${extraInfo} -i usgAcctdelete oneUsgAcct
+${G_myName} ${extraInfo} -i usgAcctVerify bystar
+${G_myName} ${extraInfo} -i usgAcctVerify oneUsgAcct
+_EOF_
+}
+
+function vis_bxisoAccountsExamples {
+    typeset extraInfo="-h -v -n showRun"
+    #typeset extraInfo=""
+    typeset runInfo="-p ri=lsipusr:passive"
+
+    typeset examplesInfo="${extraInfo} ${runInfo}"
+
+  cat  << _EOF_
+$( examplesSeperatorChapter "BxISO (Info and Service Objects) Accounts" )
+${G_myName} ${extraInfo} -i bxisoAcctNextLocalUidNu
+${G_myName} ${extraInfo} -i bxisoAcctAdd bxisoAcct0
+${G_myName} ${extraInfo} -i bxisoAcctAdd oneBxisoAcct
+${G_myName} ${extraInfo} -i bxisoAcctCreate bxisoAcct0   # acctAdd, passwdSet, sudoers, report
+${G_myName} ${extraInfo} -i bxisoAcctCreate oneBxisoAcct
+${G_myName} ${extraInfo} -i bxisoAcctVerify bxisoAcct0
+${G_myName} ${extraInfo} -i bxisoAcctVerify oneBxisoAcct
+${G_myName} ${extraInfo} -i bxisoAcctDelete bxisoAcct0
+${G_myName} ${extraInfo} -i bxisoAcctDelete oneBxisoAcct
+_EOF_
+}
+
+
 
 function vis_fullUpdate {
     G_funcEntry
@@ -103,42 +148,6 @@ _EOF_
     lpReturn
 }
 
-function vis_fullDelete {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-echo someParam and args 
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    #
-    # Order is important
-    #
-
-    # lpDo vis_userAcctsDelete bystar
-    
-    lpDo vis_userAcctsDelete bisos
-
-
-
-    lpReturn
-}
-
-function vis_bisosAcct_bisosUid { echo 2000; }
-function vis_bisosAcct_bisosName { echo bisos; }
-
-function vis_bisosAcct_bisosGid { echo 2000; }
-function vis_bisosAcct_bisosGroupName { echo bisos; }
-
-function vis_bisosAcct_bystarUid { echo 2001; }
-function vis_bisosAcct_bystarName { echo bystar; }
-function vis_bisosAcct_bystarGid { echo bisos; }
-
-function vis_bisosAcct_bxisoDelimiterUid { echo 1000000; }
-function vis_bisosAcct_bxisoDelimiterName { echo bxisoDelimiter; }
-function vis_bisosAcct_bxisoDelimiterGid { echo bisos; }
-
-
 
 function vis_userAcctPasswdSet {
     G_funcEntry
@@ -148,8 +157,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 1 ]]
 
-    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;    
-
+}
 
 
 function vis_userAcctCreate_bystar {
@@ -201,6 +209,7 @@ _EOF_
     lpReturn
 }
 
+
 function vis_usgAcctCreate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -234,7 +243,7 @@ _EOF_
     local acctName=$1
 
     if vis_userAcctExists "${acctName}" ; then
-	EH_problem "${acctName} Already Exists -- Addition Skipped"
+	EH_problem "${acctName} Already Exists -- Processing Skipped"
 	lpReturn 101
     fi
 
@@ -255,7 +264,7 @@ _EOF_
 function vis_usgAcctAdd {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-When acctUidIncrement is 0, use bystarUid for uid.
+Add the USG account if it does not exist.
 _EOF_
     }
     EH_assert [[ $# -eq 1 ]]
@@ -273,6 +282,7 @@ _EOF_
     local acctUid=""
     local acctComment=""
     local acctHome="/bxo/usg/${acctName}"
+    local supplementaryGroups="lsipusr"  # NOTYET, locate existing code in 
 
     if [ "${acctName}" == "$( vis_bisosAcct_bystarName )" ] ; then
 	acctUid=$( vis_bisosAcct_bystarUid )
@@ -285,7 +295,7 @@ _EOF_
     lpDo useradd \
 	 --uid "${acctUid}" \
 	 --gid "${acctGid}" \
-	 --groups "lsipusr" \
+	 --groups "${supplementaryGroups}" \
 	 --shell /bin/bash \
 	 --home-dir "${acctHome}" \
 	 --comment "${acctComment}" \
@@ -429,13 +439,12 @@ _EOF_
 function vis_userAcctsDelete {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-echo someParam and args
+Delete specified user accounts.
+Design Pattern: processEach based on args or stdin.
 _EOF_
     }
-    EH_assert [[ $# -gt 0 ]]
 
     local inputsList="$@"
-    local each=""
     local thisFunc=${G_thisFunc}
 
     function processEach {
@@ -447,10 +456,27 @@ _EOF_
 	fi
 	lpDo sudo userdel ${userAcctName}    	
     }
+
+####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
+    if [ $# -gt 0 ] ; then
+	local each=""
+	for each in ${inputsList} ; do
+	    lpDo processEach ${each}
+	done
+    else
+	local eachLine=""
+	while read -r -t 1 eachLine ; do
+	    if [ ! -z "${eachLine}" ] ; then
+		local each=""
+		for each in ${eachLine} ; do
+		    lpDo processEach ${each}
+		done
+	    fi
+	done
+    fi
+
+####+END:
     
-    for each in ${inputsList} ; do
-	lpDo processEach ${each}
-    done
     
     lpReturn
 }
@@ -459,9 +485,9 @@ function vis_groupsAdd {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Add specified groups.
+Design Pattern: processEach based on args or stdin.
 _EOF_
     }
-    EH_assert [[ $# -gt 0 ]]
 
     local inputsList="$@"
     local thisFunc=${G_thisFunc}
@@ -503,9 +529,11 @@ _EOF_
 function vis_groupsDelete {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-echo someParam and args 
+Delete specified groups.
+Design Pattern: processEach based on args or stdin.
 _EOF_
     }
+
     local inputsList="$@"
     local thisFunc=${G_thisFunc}
 
@@ -560,7 +588,7 @@ _EOF_
     function processEach {
 	EH_assert [[ $# -eq 1 ]]
 	local userAcctName=$1
-	if ! vis_userAcctsExist ${userAcctName} ; then
+	if vis_userAcctExists. ${userAcctName} ; then
 	    EH_problem "${userAcctName} Does Not Exist -- ${thisFunc} Processing Skipped"
 	    lpReturn 101
 	fi
@@ -597,28 +625,22 @@ _EOF_
     lpReturn
 }
 
-function vis_groupsExist {
+function vis_groupExists {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-echo someParam and args 
+Return zero if specified group exists.
+Return non-zero -- exitCode of getent -- if specified group does not exist.
 _EOF_
     }
-    EH_assert [[ $# -gt 0 ]]
+    EH_assert [[ $# -eq 1 ]]
 
-    local inputsList="$@"
-    local retVal=0
+    local groupNameOrGid="$1"
     local exitCode=0
-    local each=""
-    
-    for each in ${inputsList} ; do
-	getent group ${each} > /dev/null 2>&1
-	exitCode=$?
-	if [ ${exitCode} -ne 0 ] ; then
-	    retVal=${exitCode}
-	    break
-	fi
-    done
-    lpReturn ${retVal}
+
+    getent group ${groupNameOrGid} > /dev/null 2>&1
+    exitCode=$?
+
+    lpReturn ${exitCode}
 }
 
     
@@ -626,28 +648,25 @@ _EOF_
 function vis_userAcctExists {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-echo someParam and args 
+Return zero if specified userAcct exists.
+Return non-zero -- exitCode of getent -- if specified userAcct does not exist.
 _EOF_
     }
     EH_assert [[ $# -eq 1 ]]
 
     local userAcctNameOrUid="$1"
-    local retVal=0
     local exitCode=0
 
-    getent passwd ${each} > /dev/null 2>&1
+    getent passwd ${userAcctNameOrUid} > /dev/null 2>&1
     exitCode=$?
-    if [ ${exitCode} -ne 0 ] ; then
-	retVal=${exitCode}
-    fi
 
-    lpReturn ${retVal}
+    lpReturn ${exitCode}
 }
 
-function vis_getPasswdForAcct {
+function vis_getInitialPasswdForAcct {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-echo someParam and args 
+Based on specified policy, get an initial passwd for account. 
 _EOF_
     }
     EH_assert [[ $# -eq 2 ]]
@@ -675,14 +694,13 @@ _EOF_
 function vis_usgAcctNextLocalUidNu {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+Usage Account (usg) -- usgAcctMin=2000 -- hence :2[0-9][0-9][0-9]:
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    #if vis_reRunAsRoot G_thisFunc $@ ; then lpReturn globalReRunRetVal; fi;	
-
     local lastNuStr=$( sort -g -t : -k 3 /etc/passwd | \
-			   egrep '^.*:.*:1[0-9][0-9][0-9]:' |\
+			   egrep '^.*:.*:2[0-9][0-9][0-9]:' |\
 			   tail -1 |\
 			   cut -d : -f 3 \
 	  )
@@ -699,46 +717,14 @@ _EOF_
 
     lpReturn
 }	
-
-function vis_usgAcctNextLocalUidNu {
-   G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-Next Usage Account -- usgAcctMin=1000 -- hence :1[0-9][0-9][0-9]:
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    #if vis_reRunAsRoot G_thisFunc $@ ; then lpReturn globalReRunRetVal; fi;	
-
-    local lastNuStr=$( sort -g -t : -k 3 /etc/passwd | \
-			   egrep '^.*:.*:1[0-9][0-9][0-9]:' |\
-			   tail -1 |\
-			   cut -d : -f 3 \
-	  )
-    local nextNu=0
-
-    if [ -z "${lastNuStr}" ] ; then
-	EH_problem ""
-	lpReturn 101
-    fi
-
-    nextNu=$( expr $lastNuStr +  1 )
-    
-    echo ${nextNu}
-
-    lpReturn
-}	
-
 
 function vis_bxisoAcctNextLocalUidNu {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-ByStar Information Or Service Object -- bxisoAcctMin=1000000 -- hence :1[0-9][0-9][0-9]:
+ByStar Information Or Service Object Account (bxiso) -- bxisoAcctMin=1000000 -- hence :1[0-9][0-9][0-9][0-9][0-9][0-9]:
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-
-    #if vis_reRunAsRoot G_thisFunc $@ ; then lpReturn globalReRunRetVal; fi;	
 
     local lastNuStr=$( sort -g -t : -k 3 /etc/passwd | \
 			   egrep '^.*:.*:1[0-9][0-9][0-9][0-9][0-9][0-9]:' |\
@@ -758,24 +744,6 @@ _EOF_
 
     lpReturn
 }	
-
-
-
-
-function checkAcctExist {
-
-  typeset thisName="$@"
-
-  typeset inEtcPasswd_userid=`cat /etc/passwd | grep -i ":${thisName}:" | cut -d: -f1`
-  
-  if [[ -n ${inEtcPasswd_userid} ]] ; then
-    print "${inEtcPasswd_userid}"
-    return 1
-  else
-    print "none"
-    return 0
-  fi
-}
 
 
 
