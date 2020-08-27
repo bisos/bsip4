@@ -6,6 +6,7 @@
 #set -v
 #set -x
 
+OSMTROOT="/opt/public/osmt"
 
 if [ "${OSMTROOT}X" != "X" ] ; then
     if [ -f ${OSMTROOT}/bin/opConfig.sh ] ; then

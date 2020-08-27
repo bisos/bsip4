@@ -92,7 +92,8 @@ function vis_examples {
     cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 _EOF_
-    
+
+    vis_bisosAccountsProvisionExamples    
     vis_unisosAccountsExamples
     vis_bisosGroupExamples
     vis_usgAccountsExamples

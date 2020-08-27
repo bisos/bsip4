@@ -44,6 +44,9 @@ function vis_unisosAccountsExamples {
 
   cat  << _EOF_
 $( examplesSeperatorChapter "Unisos User Accounts Management" )
+${G_myName} -i uidSortPasswdFile
+${G_myName} -i gidSortGroupFile
+${G_myName} ${extraInfo} -i userAcctsExist bisos bystar lsipusr ; echo \$?
 $( examplesSeperatorSection "Accounts Manipulation" )
 ${G_myName} ${extraInfo} -i groupsExist bisos bystar lsipusr ; echo \$?
 ${G_myName} ${extraInfo} -i userAcctsExist bisos bystar lsipusr ; echo \$?
@@ -57,6 +60,23 @@ pwck
 grpck
 _EOF_
 }
+
+function vis_uidSortPasswdFile {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    opDo eval sort -g -t : -k 3 /etc/passwd
+}
+
+function vis_gidSortGroupFile {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    opDo eval sort -g -t : -k 3 /etc/group
+}
+
 
 function vis_userAcctsDelete {
     G_funcEntry
@@ -72,8 +92,8 @@ _EOF_
     function processEach {
 	EH_assert [[ $# -eq 1 ]]
 	local userAcctName=$1
-	if ! vis_userAcctsExist ${userAcctName} ; then
-	    EH_problem "${userAcctName} Does Not Exist -- ${thisFunc} Processing Skipped"
+	if ! vis_userAcctExists ${userAcctName} ; then
+	    EH_problem "${userAcctName} Account Does Not Exist -- ${thisFunc} Processing Skipped"
 	    lpReturn 101
 	fi
 	lpDo sudo userdel ${userAcctName}    	
@@ -108,6 +128,7 @@ function vis_groupsAdd {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Add specified groups.
 Design Pattern: processEach based on args or stdin.
+Runs groupadd as root.
 _EOF_
     }
 
@@ -147,12 +168,36 @@ _EOF_
     lpReturn
 }
 
+function vis_groupAddAsGid {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Add specified group as specified gid.
+Runs groupadd as root and returns its exitCode.
+_EOF_
+    }
+    EH_assert [[ $# -eq 2 ]]
+
+    local thisGroupName="$1"
+    local thisGid="$2"
+    local exitCode=0
+    
+    if vis_groupExists ${thisGroupName} ; then
+	EH_problem "${groupName} Already Does Exist -- ${G_thisFunc} Processing Skipped"
+	lpReturn 101
+    fi
+    
+    lpDo sudo groupadd --gid ${thisGid} ${thisGroupName}
+    exitCode=$?
+    
+    lpReturn ${exitCode}
+}
 
 function vis_groupsDelete {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Delete specified groups.
 Design Pattern: processEach based on args or stdin.
+Runs groupdel as root.
 _EOF_
     }
 
@@ -162,7 +207,7 @@ _EOF_
     function processEach {
 	EH_assert [[ $# -eq 1 ]]
 	local groupName=$1
-	if ! vis_groupsExist ${groupName} ; then
+	if ! vis_groupExists ${groupName} ; then
 	    EH_problem "${groupName} Does Not Exist -- ${thisFunc} Processing Skipped"
 	    lpReturn 101
 	fi
@@ -210,7 +255,7 @@ _EOF_
     function processEach {
 	EH_assert [[ $# -eq 1 ]]
 	local userAcctName=$1
-	if vis_userAcctExists. ${userAcctName} ; then
+	if ! vis_userAcctExists ${userAcctName} ; then
 	    EH_problem "${userAcctName} Does Not Exist -- ${thisFunc} Processing Skipped"
 	    lpReturn 101
 	fi
@@ -222,6 +267,168 @@ _EOF_
 
 	lpDo sudo -u ${userAcctName} id
 	lpDo sudo grep ${userAcctName} /etc/sudoers
+    }
+
+####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
+    if [ $# -gt 0 ] ; then
+	local each=""
+	for each in ${inputsList} ; do
+	    lpDo processEach ${each}
+	done
+    else
+	local eachLine=""
+	while read -r -t 1 eachLine ; do
+	    if [ ! -z "${eachLine}" ] ; then
+		local each=""
+		for each in ${eachLine} ; do
+		    lpDo processEach ${each}
+		done
+	    fi
+	done
+    fi
+
+####+END:
+    
+    lpReturn
+}
+
+function vis_groupVerify {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Verifies that a group is as expected.
+_EOF_
+    }
+
+    EH_assert [[ $# -eq 2 ]]    
+
+    local groupName=$1
+    local groupGid=$2
+    local retVal=0
+
+    if ! vis_groupExists "${groupName}" ; then
+	ANT_raw "${groupName} entry does not exist in /etc/group"
+	lpReturn 101
+    fi
+
+    local getentStr=$( getent group ${groupName} )
+    local getentGid=$( getent group ${groupName} | cut -d : -f 3 )
+
+    if [ "${groupGid}" != "${getentGid}" ] ; then
+	ANT_raw "GID of ${groupName} entry in /etc/group is not ${groupGid}"
+	ANT_raw "${getentStr}"
+	retVal=101
+    fi
+    lpReturn ${retVal}
+}
+
+function forAcctNameGetUid {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+For acctName return the 3rd field as uid.
+_EOF_
+		       }
+    EH_assert [[ $# -eq 1 ]]
+
+    forAcctNameGetFieldNu $1 3
+}
+
+
+function forAcctNameGetFieldNu {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Verifies that an account is as expected.
+_EOF_
+		       }
+    EH_assert [[ $# -eq 2 ]]
+
+    local acctName=$1
+    local fieldNu=$2
+    
+    local getentStr=$( getent passwd ${acctName} )
+    if [ -z "${getentStr}" ] ; then
+	EH_problem "Missing passwd entry for ${acctName}"
+	lpReturn 101
+    fi
+    local getentField=$( print ${getentStr} | cut -d : -f ${fieldNu} )
+    if [ -z "${getentField}" ] ; then
+	EH_problem "Missing passwd field entry for ${acctName} fieldNu ${fieldNu}"
+	lpReturn 101
+    fi
+    echo "${getentField}"
+}
+    
+
+
+function vis_accountVerify {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Verifies that an account is as expected.
+_EOF_
+    }
+
+    EH_assert [[ $# -eq 4 ]]    
+
+    local acctName=$1
+    local acctUid=$2
+    local acctGid=$3
+    local acctHome=$4    
+    
+    local retVal=0
+
+    if ! vis_userAcctExists "${acctName}" ; then
+	ANT_raw "${acctName} account entry does not exist in /etc/passwd"
+	lpReturn 101
+    fi
+
+    local getentStr=$( getent passwd ${acctName} )
+    local getentAcctUid=$( print ${getentStr} | cut -d : -f 3 )
+    local getentAcctGid=$( print ${getentStr} | cut -d : -f 4 )
+    local getentAcctHome=$( print ${getentStr} | cut -d : -f 6 )    
+
+    if [ "${acctUid}" != "${getentAcctUid}" ] ; then
+	ANT_raw "UID of ${acctName} entry in /etc/passwd is not ${acctUid}"
+	retVal=101
+    fi
+    if [ "${acctGid}" != "${getentAcctGid}" ] ; then
+	ANT_raw "GID of ${acctName} entry in /etc/passwd is not ${acctGid}"
+	retVal=101
+    fi
+    if [ "${acctHome}" != "${getentAcctHome}" ] ; then
+	ANT_raw "HOME of ${acctName} entry in /etc/passwd is not ${acctHome}"
+	retVal=101
+    fi
+
+    if [ "$retVal" != "0" ] ; then
+	ANT_raw "${getentStr}"
+    fi
+    
+    lpReturn ${retVal}
+}
+
+
+function vis_groupsReport {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Report on groups, inputs can come from args or from stdin.
+Design Pattern: processEach based on args or stdin.
+Examples:
+      ${G_myName} -i groupsReport bisos
+      echo bisos bystar | ${G_myName} -i groupsReport
+_EOF_
+    }
+    local inputsList="$@"
+    local thisFunc=${G_thisFunc}
+
+    function processEach {
+	EH_assert [[ $# -eq 1 ]]
+	local groupName=$1
+
+	if ! vis_groupExists "${groupName}" ; then
+	    ANT_raw "${groupName} entry does not exist in /etc/group"
+	    lpReturn 101
+	fi
+
+	lpDo getent group ${groupName}
     }
 
 ####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
@@ -265,7 +472,27 @@ _EOF_
     lpReturn ${exitCode}
 }
 
-    
+function vis_sudoersAddLine {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Return zero if specified group exists.
+Return non-zero -- exitCode of getent -- if specified group does not exist.
+_EOF_
+    }
+    EH_assert [[ $# -eq 3 ]]
+
+    local acctName="$1"
+    local commands="$2"
+    local passwd="$3"
+
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
+
+    if egrep "^${acctName}" /etc/sudoers ; then
+       ANT_raw "${acctName} is already in sudoers, skipped"
+    else
+	lpDo sh -c "echo ${acctName} ALL=\(ALL\) NOPASSWD: ALL >> /etc/sudoers"
+    fi
+}
 
 function vis_userAcctExists {
     G_funcEntry

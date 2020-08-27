@@ -1,6 +1,6 @@
 #!/bin/bash # -*- mode: sh-mode; -*-
 
-IimBriefDescription="NOTYET: Short Description Of The Module"
+IimBriefDescription="Library: For BISOS Accounts -- BleePanel: XXX"
 
 ORIGIN="
 * Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee
@@ -35,15 +35,19 @@ function vis_moduleDescription {  cat  << _EOF_
 _EOF_
 }
 
-function vis_bisosAcct_bystarUid { echo 2001; }
 function vis_bisosAcct_bystarName { echo bystar; }
-function vis_bisosAcct_bystarGid { echo bisos; }
+function vis_bisosAcct_bystarUid { echo 2001; }
 
-function vis_bisosAcct_bxisoDelimiterUid { echo 1000000; }
+function vis_bisosAcct_usgGid { vis_bisosGroup_bisosGid; }
+function vis_bisosAcct_usgHomeBase { echo "/bxo/usg"; }
+
 function vis_bisosAcct_bxisoDelimiterName { echo bxisoDelimiter; }
-function vis_bisosAcct_bxisoDelimiterGid { echo bisos; }
+function vis_bisosAcct_bxisoDelimiterUid { echo 1000000; }
 
-function vis_bisosGeneralAccountsExamples {
+function vis_bisosAcct_bxisoGid { vis_bisosGroup_bisosGid; }
+function vis_bisosAcct_bxisoHomeBase { echo "/bxo/iso"; }
+
+function vis_bisosAccountsProvisionExamples {
     typeset extraInfo="-h -v -n showRun"
     #typeset extraInfo=""
     typeset runInfo="-p ri=lsipusr:passive"
@@ -51,34 +55,12 @@ function vis_bisosGeneralAccountsExamples {
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
   cat  << _EOF_
-$( examplesSeperatorChapter "BISOS User Accounts Management" )
-$( examplesSeperatorSection "Accounts Manipulation" )
-${G_myName} ${extraInfo} -i groupsExist bisos bystar lsipusr ; echo \$?
-${G_myName} ${extraInfo} -i userAcctsExist bisos bystar lsipusr ; echo \$?
-${G_myName} ${extraInfo} -i userAcctsDelete bisos bystar ; echo \$?
-${G_myName} ${extraInfo} -i groupsDelete bystar ; echo \$?
-$( examplesSeperatorChapter "General Purpose Accounts Processing Facilities" )
-${G_myName} -i userAcctsReport bisos bystar lsipusr
-${G_myName} ${extraInfo} -i userAcctsReport bystar
-sudo tail /etc/sudoers
-pwck
-grpck
+$( examplesSeperatorChapter "Provisioning Setups" )
+${G_myName}  -i provisionSetup   # Summary outputs
+${G_myName} ${extraInfo} -i provisionSetup    # Detailed outputs
 _EOF_
 }
 
-function vis_bisosGroupExamples {
-    typeset extraInfo="-h -v -n showRun"
-    #typeset extraInfo=""
-    typeset runInfo="-p ri=lsipusr:passive"
-
-    typeset examplesInfo="${extraInfo} ${runInfo}"
-
-  cat  << _EOF_
-$( examplesSeperatorChapter "BISOS Account And Group Management" )
-${G_myName} ${extraInfo} -i userAcctUpdate_bisos passwd_tmpSame
-${G_myName} ${extraInfo} -i bisosAcctVerify
-_EOF_
-}
 
 function vis_usgAccountsExamples {
     typeset extraInfo="-h -v -n showRun"
@@ -94,7 +76,7 @@ ${G_myName} ${extraInfo} -i usgAcctPasswd bystar
 ${G_myName} ${extraInfo} -i usgAcctPasswd oneUsgAcct
 ${G_myName} ${extraInfo} -i usgAcctAdd bystar
 ${G_myName} ${extraInfo} -i usgAcctAdd oneUsgAcct
-${G_myName} ${extraInfo} -i usgAcctCreate bystar    # acctAdd, passwdSet, sudoers, report
+${G_myName} ${extraInfo} -i usgAcctCreate bystar    # acctAdd,  sudoers, report, passwdSet
 ${G_myName} ${extraInfo} -i usgAcctCreate oneUsgAcct
 ${G_myName} ${extraInfo} -i usgAcctDelete bystar
 ${G_myName} ${extraInfo} -i usgAcctdelete oneUsgAcct
@@ -113,101 +95,90 @@ function vis_bxisoAccountsExamples {
   cat  << _EOF_
 $( examplesSeperatorChapter "BxISO (Info and Service Objects) Accounts" )
 ${G_myName} ${extraInfo} -i bxisoAcctNextLocalUidNu
-${G_myName} ${extraInfo} -i bxisoAcctAdd bxisoAcct0
-${G_myName} ${extraInfo} -i bxisoAcctAdd oneBxisoAcct
-${G_myName} ${extraInfo} -i bxisoAcctCreate bxisoAcct0   # acctAdd, passwdSet, sudoers, report
-${G_myName} ${extraInfo} -i bxisoAcctCreate oneBxisoAcct
-${G_myName} ${extraInfo} -i bxisoAcctVerify bxisoAcct0
-${G_myName} ${extraInfo} -i bxisoAcctVerify oneBxisoAcct
-${G_myName} ${extraInfo} -i bxisoAcctDelete bxisoAcct0
-${G_myName} ${extraInfo} -i bxisoAcctDelete oneBxisoAcct
+${G_myName} ${extraInfo} -i bxisoAcctAdd bxisoDelimiter
+${G_myName} ${extraInfo} -i bxisoAcctAdd oneBxsoAcct
+${G_myName} ${extraInfo} -i bxisoAcctCreate bxisoDelimiter  # acctAdd, sudoers, report
+${G_myName} ${extraInfo} -i bxisoAcctCreate oneBxsoAcct
+${G_myName} ${extraInfo} -i bxisoAcctDelete bxisoDelimiter
+${G_myName} ${extraInfo} -i bxisoAcctDelete oneBxsoAcct
+${G_myName} ${extraInfo} -i bxisoAcctVerify bxisoDelimiter
+${G_myName} ${extraInfo} -i bxisoAcctVerify oneBxsoAcct
 _EOF_
 }
 
-
-
-function vis_fullUpdate {
+function vis_provisionSetup {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-echo someParam and args 
+Update required groups and accounts at provisioning time.
+Repeatable: 
+	You can re-run this function multiple times.
+Assumptions:
+	1) bisos group has already been created.
+	2) bisos account has already been created.
+Actions:
+	1) Verify that bisos group is properly setup.
+	2) Verify that bisos account is properly setup.
+	3) Create the bystar account.
 _EOF_
     }
-    EH_assert [[ $# -eq 1 ]]
-    local passwdPolicy=$1
+    EH_assert [[ $# -eq 0 ]]
 
-    #
-    # Order is important
-    #
+    local bisosGroupName=$( vis_bisosGroup_bisosGroupName )
     
-    lpDo vis_userAcctUpdate_bisos ${passwdPolicy}
-    
-    # lpDo vis_userAcctUpdate_bystar ${passwdPolicy}
-
-    lpDo vis_userAcctsReport bisos  # bystar
-
-    lpReturn
-}
-
-
-function vis_userAcctPasswdSet {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-This is not being used at this time. It should be moved into a bisos environment script.
-_EOF_
-    }
-    EH_assert [[ $# -eq 1 ]]
-
-}
-
-
-function vis_userAcctCreate_bystar {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-This is not being used at this time. It should be moved into a bisos environment script.
-_EOF_
-    }
-    EH_assert [[ $# -eq 1 ]]
-
-    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;    
-
-    local passwdPolicy=$1
-
-    local userAcctName="bystar"
-    local userAcctGroup="bisos"
-    #local userAcctSupplementryGroups=""        
-    local userAcctPasswd=""
-
-    if vis_userAcctsExist ${userAcctName} ; then
-	EH_problem "${userAcctName} Exists"
+    if vis_bisosGroupVerify ; then
+	ANT_raw "${bisosGroupName} group is as expected."
+    else
+	EH_problem "${bisosGroupName} group is missing or misconfigured -- Re-run bisosGroupAdd"
 	lpReturn 101
     fi
 
-    userAcctPasswd=$( vis_getPasswdForAcct ${userAcctName} ${passwdPolicy} )
+    local bisosGroupAcctName="$( vis_bisosAcct_bisosName )"
 
-    lpDo useradd \
-	 --uid "${acctUid}" \
-	 --comment "ByStar User Acct" \
-	 --gid "${userAcctGroup}" \
-	 --shell /bin/bash \
-	 --create-home \
-	 ${userAcctName}
+    if vis_bisosGroupAcctVerify ; then
+	ANT_raw "${bisosGroupAcctName} account is as expected."
+    else
+	EH_problem "${bisosGroupAcctName} account is missing or misconfigured -- Re-run bisosGroupAdd"
+	lpReturn 101
+    fi
 
-    lpDo eval "echo ${userAcctName}:${userAcctPasswd} | sudo -S /usr/sbin/chpasswd"    
+    opDo vis_usgAcctCreate bystar
 
-    #
-    #  NOTYET, below is for Fedora/Centos/Redhat
-    #
-    #lpDo eval "echo ${userAcctPasswd} | sudo -S passwd ${userAcctPasswd} --stdin"
-    #
-    #lpDo sudo usermod -aG wheel ${userAcctPasswd}
-    #
-
-    lpDo sudo sh -c "echo ${userAcctName} ALL=\(ALL\) NOPASSWD: ALL >> /etc/sudoers"
-
-    lpDo vis_userAcctsReport ${userAcctName}
+    opDo vis_bxisoAcctCreate bxisoDelimiter
 
     lpReturn
 }
+
+
+function vis_usgAcctVerify {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Delete bisos group, if needed.
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+
+    local acctName="$1"
+    
+    local acctUid=0
+    local acctGid="$( vis_bisosAcct_usgGid )"
+    local acctHome="$( vis_bisosAcct_usgHomeBase )/${acctName}"    
+
+    if vis_userAcctExists "${acctName}" ; then
+	acctUid=$( forAcctNameGetUid ${acctName} )
+    else
+	ANT_raw "${acctName} account entry does not exist in /etc/passwd"
+	lpReturn 101
+    fi
+    
+    if ! vis_bisosGroupVerify ; then
+	EH_problem "${acctGid} Group is missing or misconfigured -- Re-run bisosGroupAdd"
+	lpReturn 101
+    fi
+    
+    lpDo vis_accountVerify ${acctName} ${acctUid} ${acctGid} ${acctHome}
+}
+
 
 
 function vis_usgAcctCreate {
@@ -220,19 +191,38 @@ _EOF_
 
     local acctName=$1
 
-    if vis_userAcctExists "${acctName}" ; then
-	EH_problem "${acctName} Already Exists -- Addition Skipped"
+    local acctGid="$( vis_bisosGroup_bisosGroupName )"
+    
+    if vis_groupExists ${acctGid} ; then    
+	if ! vis_bisosGroupVerify ; then
+	    EH_problem "${acctGid} group is misconfigured -- Re-run bisosGroupAdd"
+	    lpReturn 101
+	fi
+    else
+	EH_problem "${acctGid} group is missing Re-run bisosGroupAdd"
 	lpReturn 101
     fi
 
-    lpDo vis_usgAcctAdd "${acctName}"
+   if vis_userAcctExists "${acctName}" ; then
+       if vis_usgAcctVerify "${acctName}" ; then
+	   ANT_raw "${acctName} exists and is properly configured. It will be used"
+       else
+	   EH_problem "${acctName} account is misconfigured"
+	   lpReturn 101
+       fi
+   else
+       opDo vis_usgAcctAdd ${acctName}
+   fi
 
-    lpDo vis_usgAcctPasswdSet "${acctName}"
+   opDo vis_sudoersAddLine "${acctName}" ALL NOPASSWD
 
-    lpDo vis_userAcctsReport ${userAcctName}
+   # the sudo -u ${acctName} id -- results in creation of the homeDir
+   opDo vis_userAcctsReport ${acctName}   
+
+   lpDo vis_usgAcctPasswdSet "${acctName}"
 }
 
-function vis_usgAcctPasswd {
+function vis_usgAcctPasswdSet {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 When acctUidIncrement is 0, use bystarUid for uid.
@@ -242,12 +232,12 @@ _EOF_
 
     local acctName=$1
 
-    if vis_userAcctExists "${acctName}" ; then
-	EH_problem "${acctName} Already Exists -- Processing Skipped"
+    if ! vis_userAcctExists "${acctName}" ; then
+	EH_problem "Missing ${acctName} account -- Processing Skipped"
 	lpReturn 101
     fi
 
-    local userAcctPasswd=$( vis_getPasswdForAcct ${acctName} ${passwdPolicy} )
+    local userAcctPasswd=$( vis_getInitialPasswdForAcct ${acctName} "intra" )
 
     lpDo eval "echo ${acctName}:${userAcctPasswd} | sudo -S /usr/sbin/chpasswd"    
 
@@ -271,18 +261,18 @@ _EOF_
 
     local acctName="$1"
 
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;        
+    
     if vis_userAcctExists "${acctName}" ; then
 	EH_problem "${acctName} Already Exists -- Addition Skipped"
 	lpReturn 101
     fi
 
-    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;    
-
-    local acctGid="$( vis_bisosAcct_bystarGid )"
+    local acctGid="$( vis_bisosAcct_usgGid )"
     local acctUid=""
     local acctComment=""
-    local acctHome="/bxo/usg/${acctName}"
-    local supplementaryGroups="lsipusr"  # NOTYET, locate existing code in 
+    local acctHome="$( vis_bisosAcct_usgHomeBase )/${acctName}"
+    local supplementaryGroups="adm"  # NOTYET, locate existing code in 
 
     if [ "${acctName}" == "$( vis_bisosAcct_bystarName )" ] ; then
 	acctUid=$( vis_bisosAcct_bystarUid )
@@ -304,6 +294,55 @@ _EOF_
     lpReturn
 }
 
+function vis_usgAcctDelete {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Delete the usg account.
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local acctName="$1"
+
+    lpDo vis_userAcctsDelete ${acctName}
+
+    lpReturn
+}
+
+
+
+function vis_bxisoAcctVerify {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Verify a bxiso account.
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+
+    local acctName=$1
+    
+    local acctUid=0
+    local acctGid="$( vis_bisosAcct_usgGid )"
+    local acctHome="$( vis_bisosAcct_bxisoHomeBase )/${acctName}"
+
+    if vis_userAcctExists "${acctName}" ; then
+	acctUid=$( forAcctNameGetUid ${acctName} )
+    else
+	ANT_raw "${acctName} account entry does not exist in /etc/passwd"
+	lpReturn 101
+    fi
+    
+    if ! vis_bisosGroupVerify ; then
+	EH_problem "${acctGid} Group is missing or misconfigured -- Re-run bisosGroupAdd"
+	lpReturn 101
+    fi
+    
+    lpDo vis_accountVerify ${acctName} ${acctUid} ${acctGid} ${acctHome}
+}
+
+
+
 
 function vis_bxisoAcctCreate {
     G_funcEntry
@@ -314,7 +353,34 @@ _EOF_
     EH_assert [[ $# -eq 1 ]]
 
     local acctName=$1
-    local acctUidIncrement=$2
+    
+    local acctGid="$( vis_bisosGroup_bisosGroupName )"
+    
+    if vis_groupExists ${acctGid} ; then    
+	if ! vis_bisosGroupVerify ; then
+	    EH_problem "${acctGid} group is misconfigured -- Re-run bisosGroupAdd"
+	    lpReturn 101
+	fi
+    else
+	EH_problem "${acctGid} group is missing Re-run bisosGroupAdd"
+	lpReturn 101
+    fi
+
+   if vis_userAcctExists "${acctName}" ; then
+       if vis_bxisoAcctVerify "${acctName}" ; then
+	   ANT_raw "${acctName} exists and is properly configured. It will be used"
+       else
+	   EH_problem "${acctName} account is misconfigured"
+	   lpReturn 101
+       fi
+   else
+       opDo vis_bxisoAcctAdd ${acctName}
+   fi
+
+   opDo vis_sudoersAddLine "${acctName}" ALL NOPASSWD
+
+   # the sudo -u ${acctName} id -- results in creation of the homeDir
+   opDo vis_userAcctsReport ${acctName}   
 }
 
 function vis_bxisoAcctAdd {
@@ -326,341 +392,38 @@ _EOF_
     EH_assert [[ $# -eq 1 ]]
 
     local acctName=$1
-    local acctUidIncrement=$2
 
-    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;    
-
-    local passwdPolicy=$1
-
-    local userAcctName="bystar"
-    local userAcctGroup="bisos"
-    #local userAcctSupplementryGroups=""        
-    local userAcctPasswd=""
-
-    if vis_userAcctsExist ${userAcctName} ; then
-	EH_problem "${userAcctName} Exists"
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;        
+    
+    if vis_userAcctExists "${acctName}" ; then
+	EH_problem "${acctName} Already Exists -- Addition Skipped"
 	lpReturn 101
     fi
 
-    userAcctPasswd=$( vis_getPasswdForAcct ${userAcctName} ${passwdPolicy} )
+    local acctGid="$( vis_bisosAcct_bxisoGid )"
+    local acctUid=""
+    local acctComment=""
+    local acctHome="$( vis_bisosAcct_bxisoHomeBase )/${acctName}"    
+    local supplementaryGroups="adm"  # NOTYET, locate existing code in 
+
+    if [ "${acctName}" == "$( vis_bisosAcct_bxisoDelimiterName )" ] ; then
+	acctUid=$( vis_bisosAcct_bxisoDelimiterUid )
+	acctComment="BISOS Default BXISO Accts Delimiter"
+    else
+	acctUid=$( vis_bxisoAcctNextLocalUidNu )
+	acctComment="BISOS OID of BXISO Acct"	
+    fi
 
     lpDo useradd \
 	 --uid "${acctUid}" \
-	 --comment "ByStar User Acct" \
-	 --gid "${userAcctGroup}" \
-	 --shell /bin/bash \
-	 --create-home \
-	 ${userAcctName}
-
-    lpDo eval "echo ${userAcctName}:${userAcctPasswd} | sudo -S /usr/sbin/chpasswd"    
-
-    #
-    #  NOTYET, below is for Fedora/Centos/Redhat
-    #
-    #lpDo eval "echo ${userAcctPasswd} | sudo -S passwd ${userAcctPasswd} --stdin"
-    #
-    #lpDo sudo usermod -aG wheel ${userAcctPasswd}
-    #
-
-    lpDo sudo sh -c "echo ${userAcctName} ALL=\(ALL\) NOPASSWD: ALL >> /etc/sudoers"
-
-    lpDo vis_userAcctsReport ${userAcctName}
-
-    lpReturn
-}
-
-
-
-
-function vis_userAcctUpdate_bisos {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-echo someParam and args.
-_EOF_
-    }
-    EH_assert [[ $# -eq 1 ]]
-
-    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;    
-
-    local passwdPolicy=$1
-
-    if [ -z "${bisosUserName}" ] ; then
-	EH_problem "Missing bisosUserName"
-	lpReturn 101
-    fi
-
-    if [ -z "${bisosGroupName}" ] ; then
-	EH_problem "Missing bisosGroupName"
-	lpReturn 101
-    fi
-
-    local userAcctName="${bisosUserName}"
-    local userAcctGroup="${bisosGroupName}"
-
-    if vis_userAcctsExist ${userAcctName} ; then
-	EH_problem "${userAcctName} User Acct Already Exists"
-
-	#
-	# The account does not exist, so the group should not exist as well
-	#
-
-	if vis_groupsExist ${userAcctGroup} ; then
-	    EH_problem "${userAcctGroup} Group Exists, It Should Not"
-	    lpDo vis_groupsDelete ${userAcctGroup}
-	fi
-	lpReturn 101
-    fi
-
-    if vis_groupsExist ${userAcctGroup} ; then
-	ANT_raw "${userAcctGroup} Group Exists, groupsAdd skipped"
-    else
-	vis_groupsAdd ${userAcctGroup}
-    fi
-
-    #
-    # No Home, No Login-Shell
-    #  	 	 --gid ${userAcctGroup}
-
-    lpDo useradd \
-	 --home /bisos \
-	 --no-create-home \
-	 --gid "${userAcctGroup}" \
+	 --gid "${acctGid}" \
+	 --groups "${supplementaryGroups}" \
 	 --shell /usr/sbin/nologin \
-	 --comment "ByStar Internet Services OS" \
-	 ${userAcctName}
-
-    lpDo sudo sh -c "echo ${userAcctName} ALL=\(ALL\) NOPASSWD: ALL >> /etc/sudoers"
-
-    lpDo vis_userAcctsReport ${userAcctName}
-
-    lpReturn
-}
-
-function vis_userAcctsDelete {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-Delete specified user accounts.
-Design Pattern: processEach based on args or stdin.
-_EOF_
-    }
-
-    local inputsList="$@"
-    local thisFunc=${G_thisFunc}
-
-    function processEach {
-	EH_assert [[ $# -eq 1 ]]
-	local userAcctName=$1
-	if ! vis_userAcctsExist ${userAcctName} ; then
-	    EH_problem "${userAcctName} Does Not Exist -- ${thisFunc} Processing Skipped"
-	    lpReturn 101
-	fi
-	lpDo sudo userdel ${userAcctName}    	
-    }
-
-####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
-    if [ $# -gt 0 ] ; then
-	local each=""
-	for each in ${inputsList} ; do
-	    lpDo processEach ${each}
-	done
-    else
-	local eachLine=""
-	while read -r -t 1 eachLine ; do
-	    if [ ! -z "${eachLine}" ] ; then
-		local each=""
-		for each in ${eachLine} ; do
-		    lpDo processEach ${each}
-		done
-	    fi
-	done
-    fi
-
-####+END:
-    
+	 --home-dir "${acctHome}" \
+	 --comment "${acctComment}" \
+	 ${acctName}
     
     lpReturn
-}
-
-function vis_groupsAdd {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-Add specified groups.
-Design Pattern: processEach based on args or stdin.
-_EOF_
-    }
-
-    local inputsList="$@"
-    local thisFunc=${G_thisFunc}
-
-    function processEach {
-	EH_assert [[ $# -eq 1 ]]
-	local groupName=$1
-	if vis_groupsExist ${groupName} ; then
-	    EH_problem "${groupName} Already Does Exist -- ${thisFunc} Processing Skipped"
-	    lpReturn 101
-	fi
-	lpDo sudo groupadd ${groupName}    	
-    }
-
-####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
-    if [ $# -gt 0 ] ; then
-	local each=""
-	for each in ${inputsList} ; do
-	    lpDo processEach ${each}
-	done
-    else
-	local eachLine=""
-	while read -r -t 1 eachLine ; do
-	    if [ ! -z "${eachLine}" ] ; then
-		local each=""
-		for each in ${eachLine} ; do
-		    lpDo processEach ${each}
-		done
-	    fi
-	done
-    fi
-
-####+END:
-    
-    lpReturn
-}
-
-
-function vis_groupsDelete {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-Delete specified groups.
-Design Pattern: processEach based on args or stdin.
-_EOF_
-    }
-
-    local inputsList="$@"
-    local thisFunc=${G_thisFunc}
-
-    function processEach {
-	EH_assert [[ $# -eq 1 ]]
-	local groupName=$1
-	if ! vis_groupsExist ${groupName} ; then
-	    EH_problem "${groupName} Does Not Exist -- ${thisFunc} Processing Skipped"
-	    lpReturn 101
-	fi
-	lpDo sudo groupdel ${groupName}    	
-    }
-
-####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
-    if [ $# -gt 0 ] ; then
-	local each=""
-	for each in ${inputsList} ; do
-	    lpDo processEach ${each}
-	done
-    else
-	local eachLine=""
-	while read -r -t 1 eachLine ; do
-	    if [ ! -z "${eachLine}" ] ; then
-		local each=""
-		for each in ${eachLine} ; do
-		    lpDo processEach ${each}
-		done
-	    fi
-	done
-    fi
-
-####+END:
-    
-    lpReturn
-}
-
-
-
-function vis_userAcctsReport {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-Report on a user account, inputs can come from args or from stdin.
-Design Pattern: processEach based on args or stdin.
-Examples:
-      ${G_myName} -i userAcctsReport bisos
-      echo bisos bystar | ${G_myName} -i userAcctsReport
-_EOF_
-    }
-    local inputsList="$@"
-    local thisFunc=${G_thisFunc}
-
-    function processEach {
-	EH_assert [[ $# -eq 1 ]]
-	local userAcctName=$1
-	if vis_userAcctExists. ${userAcctName} ; then
-	    EH_problem "${userAcctName} Does Not Exist -- ${thisFunc} Processing Skipped"
-	    lpReturn 101
-	fi
-
-	ANT_raw "--- ${userAcctName}: passwd, group, id, sudoers ---"
-	
-	lpDo getent passwd ${userAcctName}
-	lpDo getent group ${userAcctName}
-
-	lpDo sudo -u ${userAcctName} id
-	lpDo sudo grep ${userAcctName} /etc/sudoers
-    }
-
-####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
-    if [ $# -gt 0 ] ; then
-	local each=""
-	for each in ${inputsList} ; do
-	    lpDo processEach ${each}
-	done
-    else
-	local eachLine=""
-	while read -r -t 1 eachLine ; do
-	    if [ ! -z "${eachLine}" ] ; then
-		local each=""
-		for each in ${eachLine} ; do
-		    lpDo processEach ${each}
-		done
-	    fi
-	done
-    fi
-
-####+END:
-    
-    lpReturn
-}
-
-function vis_groupExists {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-Return zero if specified group exists.
-Return non-zero -- exitCode of getent -- if specified group does not exist.
-_EOF_
-    }
-    EH_assert [[ $# -eq 1 ]]
-
-    local groupNameOrGid="$1"
-    local exitCode=0
-
-    getent group ${groupNameOrGid} > /dev/null 2>&1
-    exitCode=$?
-
-    lpReturn ${exitCode}
-}
-
-    
-
-function vis_userAcctExists {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-Return zero if specified userAcct exists.
-Return non-zero -- exitCode of getent -- if specified userAcct does not exist.
-_EOF_
-    }
-    EH_assert [[ $# -eq 1 ]]
-
-    local userAcctNameOrUid="$1"
-    local exitCode=0
-
-    getent passwd ${userAcctNameOrUid} > /dev/null 2>&1
-    exitCode=$?
-
-    lpReturn ${exitCode}
 }
 
 function vis_getInitialPasswdForAcct {
@@ -674,11 +437,14 @@ _EOF_
     local userAcctName=$1    
     local passwdPolicy=$2
 
-    local userAcctPasswd="bisos"
+    local userAcctPasswd=""
 
     case ${passwdPolicy} in
 	"passwd_tmpSame")
 	    userAcctPasswd=${userAcctName}
+	    ;;
+	"intra")
+	    userAcctPasswd="intra"
 	    ;;
 	*)
 	    EH_problem "Unknown: ${passwdPolicy}"
@@ -744,6 +510,58 @@ _EOF_
 
     lpReturn
 }	
+
+
+
+function vis_userAcctCreate_bystar {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+This is not being used at this time. It should be moved into a bisos environment script.
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;    
+
+    local passwdPolicy=$1
+
+    local userAcctName="bystar"
+    local userAcctGroup="bisos"
+    #local userAcctSupplementryGroups=""        
+    local userAcctPasswd=""
+
+    if vis_userAcctsExist ${userAcctName} ; then
+	EH_problem "${userAcctName} Exists"
+	lpReturn 101
+    fi
+
+    userAcctPasswd=$( vis_getPasswdForAcct ${userAcctName} ${passwdPolicy} )
+
+    lpDo useradd \
+	 --uid "${acctUid}" \
+	 --comment "ByStar User Acct" \
+	 --gid "${userAcctGroup}" \
+	 --shell /bin/bash \
+	 --create-home \
+	 ${userAcctName}
+
+    lpDo eval "echo ${userAcctName}:${userAcctPasswd} | sudo -S /usr/sbin/chpasswd"    
+
+    #
+    #  NOTYET, below is for Fedora/Centos/Redhat
+    #
+    #lpDo eval "echo ${userAcctPasswd} | sudo -S passwd ${userAcctPasswd} --stdin"
+    #
+    #lpDo sudo usermod -aG wheel ${userAcctPasswd}
+    #
+
+    lpDo sudo sh -c "echo ${userAcctName} ALL=\(ALL\) NOPASSWD: ALL >> /etc/sudoers"
+
+    lpDo vis_userAcctsReport ${userAcctName}
+
+    lpReturn
+}
+
 
 
 

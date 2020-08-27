@@ -36,11 +36,13 @@ _EOF_
 }
 
 
-function vis_bisosAcct_bisosUid { echo 2000; }
-function vis_bisosAcct_bisosName { echo bisos; }
+function vis_bisosGroup_bisosGid { echo 2222; }
+function vis_bisosGroup_bisosGroupName { echo bisos; }
 
-function vis_bisosAcct_bisosGid { echo 2000; }
-function vis_bisosAcct_bisosGroupName { echo bisos; }
+function vis_bisosAcct_bisosName { echo bisos; }
+function vis_bisosAcct_bisosUid { echo 2000; }
+function vis_bisosAcct_bisosGid { vis_bisosGroup_bisosGid; }
+function vis_bisosAcct_bisosHome { echo "/bisos/groupAcct"; }
 
 function vis_bisosGroupExamples {
     typeset extraInfo="-h -v -n showRun"
@@ -51,72 +53,181 @@ function vis_bisosGroupExamples {
 
   cat  << _EOF_
 $( examplesSeperatorChapter "BISOS Account And Group Management" )
-${G_myName} ${extraInfo} -i userAcctUpdate_bisos passwd_tmpSame
-${G_myName} ${extraInfo} -i bisosAcctVerify
+${G_myName} ${extraInfo} -i bisosGroupVerify
+${G_myName} ${extraInfo} -i bisosGroupAdd
+${G_myName} ${extraInfo} -i bisosGroupDelete
+${G_myName} ${extraInfo} -i bisosGroupAcctVerify
+${G_myName} ${extraInfo} -i bisosGroupAcctCreate
+${G_myName} ${extraInfo} -i bisosGroupAcctAdd
+${G_myName} ${extraInfo} -i bisosGroupAcctDelete
 _EOF_
 }
 
-
-function vis_userAcctUpdate_bisos {
+function vis_bisosGroupVerify {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-echo someParam and args.
+Verify that bisos entry exists in /etc/group and is as expected.
 _EOF_
     }
-    EH_assert [[ $# -eq 1 ]]
+    EH_assert [[ $# -eq 0 ]]
 
-    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;    
+    local bisosGroupName=$( vis_bisosGroup_bisosGroupName )
+    local bisosGid=$( vis_bisosGroup_bisosGid )        
+    local retVal=0
 
-    local passwdPolicy=$1
+    lpDo vis_groupVerify ${bisosGroupName} ${bisosGid}
+    retVal=$?
+    
+    lpReturn ${retVal}
+}
 
-    if [ -z "${bisosUserName}" ] ; then
-	EH_problem "Missing bisosUserName"
+function vis_bisosGroupAdd {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Adds bisos group, if needed.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local bisosGroupName=$( vis_bisosGroup_bisosGroupName )
+    local bisosGid=$( vis_bisosGroup_bisosGid )    
+    local retVal=0
+
+    lpDo vis_groupAddAsGid ${bisosGroupName} ${bisosGid}
+    retVal=$?
+
+    lpReturn ${retVal}
+}
+
+function vis_bisosGroupDelete {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Delete bisos group, if needed.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local bisosGroupName=$( vis_bisosGroup_bisosGroupName )
+    local retVal=0
+
+    lpDo vis_groupsDelete ${bisosGroupName}
+    retVal=$?
+
+    lpReturn ${retVal}
+}
+
+function vis_bisosGroupAcctVerify {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Verify that the bisos account is as expected.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local acctName="$( vis_bisosAcct_bisosName )"
+    local acctUid="$( vis_bisosAcct_bisosUid )"    
+    local acctGid="$( vis_bisosAcct_bisosGid )"
+    local acctHome="$( vis_bisosAcct_bisosHome )"    
+
+    if ! vis_userAcctExists "${acctName}" ; then
+	ANT_raw "${acctName} account entry does not exist in /etc/passwd"
+	lpReturn 101
+    fi
+    
+    if ! vis_bisosGroupVerify ; then
+	EH_problem "${acctGid} group is missing or misconfigured -- Re-run bisosGroupAdd"
 	lpReturn 101
     fi
 
-    if [ -z "${bisosGroupName}" ] ; then
-	EH_problem "Missing bisosGroupName"
+    lpDo vis_accountVerify ${acctName} ${acctUid} ${acctGid} ${acctHome}
+}
+
+function vis_bisosGroupAcctCreate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Add the USG account if it does not exist.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local acctName="$( vis_bisosAcct_bisosName )"
+    local acctGid="$( vis_bisosGroup_bisosGroupName )"
+    
+
+   if vis_groupExists ${acctGid} ; then    
+       if ! vis_bisosGroupVerify ; then
+	   EH_problem "${acctGid} group is missing or misconfigured -- Re-run bisosGroupAdd"
+	   lpReturn 101
+       fi
+   else
+       opDo vis_bisosGroupAdd
+   fi
+
+   if vis_userAcctExists "${acctName}" ; then
+       if vis_bisosGroupAcctVerify ; then
+	   ANT_raw "${acctName} exists and is properly configured. It will be used"
+       else
+	   EH_problem "${acctName} account is misconfigured"
+	   lpReturn 101
+       fi
+   else
+       opDo vis_bisosGroupAcctAdd
+   fi
+
+   opDo vis_sudoersAddLine "${acctName}" ALL NOPASSWD
+
+   # the sudo -u ${acctName} id -- results in creation of the homeDir
+   opDo vis_userAcctsReport ${acctName}   
+}
+
+
+
+function vis_bisosGroupAcctAdd {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Add the bisos account if it does not exist.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local acctName="$( vis_bisosAcct_bisosName )"
+    local acctUid="$( vis_bisosAcct_bisosUid )"    
+    local acctGid="$( vis_bisosGroup_bisosGroupName )"
+    local acctHome="$( vis_bisosAcct_bisosHome )"
+    local acctComment="BISOS Group Account"
+    local supplementaryGroups="adm"  # NOTYET, locate existing code in 
+    
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
+
+    if vis_userAcctExists "${acctName}" ; then
+	EH_problem "${acctName} Already Exists -- Addition Skipped"
 	lpReturn 101
     fi
-
-    local userAcctName="${bisosUserName}"
-    local userAcctGroup="${bisosGroupName}"
-
-    if vis_userAcctsExist ${userAcctName} ; then
-	EH_problem "${userAcctName} User Acct Already Exists"
-
-	#
-	# The account does not exist, so the group should not exist as well
-	#
-
-	if vis_groupsExist ${userAcctGroup} ; then
-	    EH_problem "${userAcctGroup} Group Exists, It Should Not"
-	    lpDo vis_groupsDelete ${userAcctGroup}
-	fi
-	lpReturn 101
-    fi
-
-    if vis_groupsExist ${userAcctGroup} ; then
-	ANT_raw "${userAcctGroup} Group Exists, groupsAdd skipped"
-    else
-	vis_groupsAdd ${userAcctGroup}
-    fi
-
-    #
-    # No Home, No Login-Shell
-    #  	 	 --gid ${userAcctGroup}
 
     lpDo useradd \
-	 --home /bisos \
-	 --no-create-home \
-	 --gid "${userAcctGroup}" \
+	 --uid "${acctUid}" \
+	 --gid "${acctGid}" \
+	 --groups "${supplementaryGroups}" \
 	 --shell /usr/sbin/nologin \
-	 --comment "ByStar Internet Services OS" \
-	 ${userAcctName}
+	 --no-create-home \
+	 --home-dir "${acctHome}" \
+	 --comment "${acctComment}" \
+	 ${acctName}
 
-    lpDo sudo sh -c "echo ${userAcctName} ALL=\(ALL\) NOPASSWD: ALL >> /etc/sudoers"
+    lpReturn
+}
 
-    lpDo vis_userAcctsReport ${userAcctName}
+function vis_bisosGroupAcctDelete {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Delete the bisos account.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local acctName="$( vis_bisosAcct_bisosName )"
+
+    lpDo vis_userAcctsDelete ${acctName}
 
     lpReturn
 }
