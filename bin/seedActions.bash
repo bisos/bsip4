@@ -6,7 +6,8 @@
 #set -v
 #set -x
 
-OSMTROOT="/opt/public/osmt"
+#OSMTROOT="/opt/public/osmt"
+OSMTROOT="/bisos/core/bsip"
 
 if [ "${OSMTROOT}X" != "X" ] ; then
     if [ -f ${OSMTROOT}/bin/opConfig.sh ] ; then

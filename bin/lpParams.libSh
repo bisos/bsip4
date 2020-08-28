@@ -1,0 +1,43 @@
+#!/bin/osmtKsh
+#!/bin/osmtKsh
+
+# typeset RcsId="$Id: lpParams.libSh,v 1.2 2020-01-05 20:54:40 lsipusr Exp $"
+
+vis_lpPlatformHelp () {
+  cat  << _EOF_
+
+TODO:
+	- This needs to become more generalized
+	  The expectations being that most functions 
+	  call this once and know that they have everything 
+	  they need.
+
+This is the layer below lpPlatform.
+
+_EOF_
+}
+
+
+function lpParamsBasicGet {
+  EH_assert [[ $# -eq 0 ]]
+
+  # Add idempotency
+
+    opDoExit opNetCfg_paramsGet ${opRunClusterName} ${opRunHostName}
+
+    case ${opRunHostFamily} in
+	"BUE"|"BMUE"|"BHUE")
+	    dynamicIpAddrSupported="TRUE"
+	    lpDnsEntryIpAddr="127.0.0.1"   #  one's own entry for apache2, plone3, ...
+	    ;;
+	"BISP"|"BACS"|"BSSP")  
+	    dynamicIpAddrSupported="FASLE"		
+	    lpDnsEntryIpAddr=${opNetCfg_ipAddr}
+	    ;;
+	*)  
+	    EH_problem "Unsupported opRunHostFamily=${opRunHostFamily}"
+	    ;;
+    esac
+
+
+}

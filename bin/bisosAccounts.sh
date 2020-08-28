@@ -62,7 +62,8 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
-. ${bsipBinBase}/bisosPlatform_lib.sh
+# ./platformBases_lib.sh
+. ${bsipBinBase}/platformBases_lib.sh
 
 . ${bsipBinBase}/unisosAccounts_lib.sh
 . ${bsipBinBase}/bisosGroupAccount_lib.sh

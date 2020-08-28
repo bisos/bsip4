@@ -467,10 +467,11 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     local lastNuStr=$( sort -g -t : -k 3 /etc/passwd | \
-			   egrep '^.*:.*:2[0-9][0-9][0-9]:' |\
-			   tail -1 |\
-			   cut -d : -f 3 \
+			   cut -d : -f 3 | \
+			   egrep '2[0-9][0-9][0-9]$' |\
+			   tail -1 
 	  )
+
     local nextNu=0
 
     if [ -z "${lastNuStr}" ] ; then
@@ -494,10 +495,11 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     local lastNuStr=$( sort -g -t : -k 3 /etc/passwd | \
-			   egrep '^.*:.*:1[0-9][0-9][0-9][0-9][0-9][0-9]:' |\
-			   tail -1 |\
-			   cut -d : -f 3 \
+			   cut -d : -f 3 | \
+			   egrep '1[0-9][0-9][0-9][0-9][0-9][0-9]$' |\
+			   tail -1 
 	  )
+
     local nextNu=0
 
     if [ -z "${lastNuStr}" ] ; then

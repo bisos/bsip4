@@ -1,0 +1,92 @@
+#!/bin/bash
+
+####+BEGIN: bx:dblock:bash:top-of-file :vc "cvs" :partof "bystar" :copyleft "halaal+brief"
+
+####+END:
+
+# {{{ Describe
+
+function vis_describeLocal {
+    cat  << _EOF_
+_EOF_
+}
+
+# }}}
+
+
+function lpSilentPushd {                                                                   
+    if (("$#" > 0)); then
+        pushd "$@" > /dev/null
+    else
+        cd $HOME
+    fi
+}
+
+function lpSilentPopd {                                                                   
+        popd "$@" > /dev/null
+}
+
+
+function lpPushd {                                                                   
+    if (("$#" > 0)); then
+        pushd "$@" > /dev/null
+	ANV_cooked "Pushded to $( pwd )"
+    else
+        cd $HOME
+    fi
+}
+
+function lpPopd {                                                                   
+        popd "$@" > /dev/null
+	ANV_cooked "Popded to $( pwd )"
+}
+
+
+function vis_inBaseDirDo {
+    inBaseDirDo "$@"
+}
+
+function inBaseDirDo {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Arg-1 =${baseDir} is a baseDirectory.
+Arg-2 and REST =${doCommand} are the command to do. 
+If baseDirectory exists, we go there and ${doCommand}.
+_EOF_
+    }
+    EH_assert [[ $# -ge 2 ]]
+
+    typeset baseDir=$1
+
+    shift
+
+    typeset doCommand=$@
+
+    if [ -d ${baseDir} ] ;  then
+	lpSilentPushd ${baseDir}
+	if [ -z "${G_recordMode}" ] ; then
+	    #printf  1>&2 "Missing ** -- In $( pwd ) Running: ${doCommand}\n"  
+	    ANV_cooked "In $( pwd ) Running: ${doCommand}"	    
+	else
+	    #printf  1>&2 "NOT Missing ** -- In $( pwd ) Running: ${doCommand}\n"  	    
+	    ANV_cooked "In $( pwd ) Running: ${doCommand}"	    
+	fi
+	${doCommand}
+	lpSilentPopd > /dev/null
+    else
+	EH_problem "Missing ${baseDir} -- Skiping:  ${doCommand}"
+	lpReturn 101
+    fi
+
+    lpReturn
+}
+
+####+BEGIN: bx:dblock:bash:end-of-file :type "basic"
+# {{{ DBLOCK-end-of-file
+#local variables:
+#major-mode: shellscript-mode
+#fill-column: 90
+# end:
+# }}} DBLOCK-end-of-file
+####+END:
+
