@@ -72,6 +72,19 @@
 ####+BEGIN: blee:panel:icm:bash:intro :outLevel 3 :sep nil :folding? t :label "BASH-ICM" :icmName "usgAcctManage.sh" :comment "" :afterComment ""
 *** [[elisp:(show-all)][(>]] [[elisp:(blee:menu-sel:outline:popupMenu)][+-]] [[elisp:(blee:menu-sel:navigation:popupMenu)][==]]  [[elisp:(org-cycle)][| /BASH-ICM/ |]] :: [[elisp:(lsip-local-run-command "usgAcctManage.sh -i examples")][usgAcctManage.sh]]  [[elisp:(lsip-local-run-command "usgAcctManage.sh -i visit")][visit]]  [[elisp:(lsip-local-run-command "usgAcctManage.sh -i describe")][describe]] *|*  == *|*   [[elisp:(org-shifttab)][<)]] E|
 ####+END:
+####+BEGIN: blee:bxPanel:foldingSection :outLevel 1 :sep t :title "Stay In Sync With BISOS Provisioning" :anchor "" :extraInfo ""
+* /[[elisp:(beginning-of-buffer)][|^]]  [[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]] [[elisp:(delete-other-windows)][|1]]/ 
+* [[elisp:(show-all)][(>]]  _[[elisp:(blee:menu-sel:outline:popupMenu)][±]]_  _[[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]]_       [[elisp:(org-cycle)][| *Stay In Sync With BISOS Provisioning:* |]]    [[elisp:(org-shifttab)][<)]] E|
+####+END
+####+BEGIN: blee:panel:unix:cmnd :outLevel 2 :sep nil :folding? nil :label "diff" :command "diff ./platformBases_lib.sh /opt/bisosProvisioner/gitRepos/provisioners/bin/platformBases_lib.sh" :comment "" :afterComment ""
+** [[elisp:(show-all)][(>]] [[elisp:(blee:menu-sel:outline:popupMenu)][+-]] [[elisp:(blee:menu-sel:navigation:popupMenu)][==]]  /diff/ :: [[elisp:(lsip-local-run-command "diff ./platformBases_lib.sh /opt/bisosProvisioner/gitRepos/provisioners/bin/platformBases_lib.sh")][diff ./platformBases_lib.sh /opt/bisosProvisioner/gitRepos/provisioners/bin/platformBases_lib.sh]] *|*  == *|*    [[elisp:(org-shifttab)][<)]] E|
+####+END:
+####+BEGIN: blee:panel:unix:cmnd :outLevel 2 :sep nil :folding? nil :label "diff" :command "diff ./unisosAccounts_lib.sh /opt/bisosProvisioner/gitRepos/provisioners/bin/unisosAccounts_lib.sh" :comment "" :afterComment ""
+** [[elisp:(show-all)][(>]] [[elisp:(blee:menu-sel:outline:popupMenu)][+-]] [[elisp:(blee:menu-sel:navigation:popupMenu)][==]]  /diff/ :: [[elisp:(lsip-local-run-command "diff ./unisosAccounts_lib.sh /opt/bisosProvisioner/gitRepos/provisioners/bin/unisosAccounts_lib.sh")][diff ./unisosAccounts_lib.sh /opt/bisosProvisioner/gitRepos/provisioners/bin/unisosAccounts_lib.sh]] *|*  == *|*    [[elisp:(org-shifttab)][<)]] E|
+####+END:
+####+BEGIN: blee:panel:unix:cmnd :outLevel 2 :sep nil :folding? nil :label "diff" :command "diff ./bisosGroupAccount_lib.sh /opt/bisosProvisioner/gitRepos/provisioners/bin/bisosGroupAccount_lib.sh" :comment "" :afterComment ""
+** [[elisp:(show-all)][(>]] [[elisp:(blee:menu-sel:outline:popupMenu)][+-]] [[elisp:(blee:menu-sel:navigation:popupMenu)][==]]  /diff/ :: [[elisp:(lsip-local-run-command "diff ./bisosGroupAccount_lib.sh /opt/bisosProvisioner/gitRepos/provisioners/bin/bisosGroupAccount_lib.sh")][diff ./bisosGroupAccount_lib.sh /opt/bisosProvisioner/gitRepos/provisioners/bin/bisosGroupAccount_lib.sh]] *|*  == *|*    [[elisp:(org-shifttab)][<)]] E|
+####+END:
 ####+BEGIN: blee:bxPanel:foldingSection :outLevel 1 :sep t :title "BISOS Provisioning" :anchor "" :extraInfo "bootstrap"
 * /[[elisp:(beginning-of-buffer)][|^]]  [[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]] [[elisp:(delete-other-windows)][|1]]/ 
 * [[elisp:(show-all)][(>]]  _[[elisp:(blee:menu-sel:outline:popupMenu)][±]]_  _[[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]]_       [[elisp:(org-cycle)][| *BISOS Provisioning:* |]]  bootstrap  [[elisp:(org-shifttab)][<)]] E|
@@ -96,6 +109,13 @@
 ####+BEGIN: blee:panel:icm:bash:intro :outLevel 3 :sep nil :folding? t :label "BASH-ICM" :icmName "bisosProvision.sh" :comment "" :afterComment ""
 *** [[elisp:(show-all)][(>]] [[elisp:(blee:menu-sel:outline:popupMenu)][+-]] [[elisp:(blee:menu-sel:navigation:popupMenu)][==]]  [[elisp:(org-cycle)][| /BASH-ICM/ |]] :: [[elisp:(lsip-local-run-command "bisosProvision.sh -i examples")][bisosProvision.sh]]  [[elisp:(lsip-local-run-command "bisosProvision.sh -i visit")][visit]]  [[elisp:(lsip-local-run-command "bisosProvision.sh -i describe")][describe]] *|*  == *|*   [[elisp:(org-shifttab)][<)]] E|
 ####+END:
+####+BEGIN: blee:bxPanel:foldingSection :outLevel 1 :sep t :title "BISOS Bases" :anchor "" :extraInfo ""
+* /[[elisp:(beginning-of-buffer)][|^]]  [[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]] [[elisp:(delete-other-windows)][|1]]/ 
+* [[elisp:(show-all)][(>]]  _[[elisp:(blee:menu-sel:outline:popupMenu)][±]]_  _[[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]]_       [[elisp:(org-cycle)][| *BISOS Bases:* |]]    [[elisp:(org-shifttab)][<)]] E|
+####+END
+** 
+** ./platformBases_lib.sh
+** B|
 ####+BEGIN: blee:bxPanel:separator :outLevel 1
 * /[[elisp:(beginning-of-buffer)][|^]] [[elisp:(blee:menu-sel:navigation:popupMenu)][==]] [[elisp:(delete-other-windows)][|1]]/
 ####+END
