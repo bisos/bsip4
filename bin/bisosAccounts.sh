@@ -96,7 +96,8 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 _EOF_
 
-    vis_bisosAccountsProvisionExamples    
+    vis_bisosAccountsProvisionExamples
+    vis_bisosGroupAcctProvisionExamples    
     vis_unisosAccountsExamples
     vis_bisosGroupExamples
     vis_usgAccountsExamples
