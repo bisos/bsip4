@@ -62,6 +62,8 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
+. ${bsipBinBase}/bisosPlatform_lib.sh
+
 . ${bsipBinBase}/unisosAccounts_lib.sh
 . ${bsipBinBase}/bisosGroupAccount_lib.sh
 . ${bsipBinBase}/bisosAccounts_lib.sh
@@ -108,19 +110,6 @@ _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
 _CommentEnd_
 
-
-function vis_doTheWork {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    lpDo vis_failExample
-    EH_retOnFail
-
-    lpReturn
-}
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*

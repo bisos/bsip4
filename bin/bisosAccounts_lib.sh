@@ -39,13 +39,14 @@ function vis_bisosAcct_bystarName { echo bystar; }
 function vis_bisosAcct_bystarUid { echo 2001; }
 
 function vis_bisosAcct_usgGid { vis_bisosGroup_bisosGid; }
-function vis_bisosAcct_usgHomeBase { echo "/bxo/usg"; }
+function vis_bisosAcct_usgHomeBase { echo "${bxp_rootDir_bxo}/usg"; }
 
 function vis_bisosAcct_bxisoDelimiterName { echo bxisoDelimiter; }
 function vis_bisosAcct_bxisoDelimiterUid { echo 1000000; }
 
 function vis_bisosAcct_bxisoGid { vis_bisosGroup_bisosGid; }
-function vis_bisosAcct_bxisoHomeBase { echo "/bxo/iso"; }
+function vis_bisosAcct_bxisoHomeBase { echo "${bxp_rootDir_bxo}/iso"; }
+
 
 function vis_bisosAccountsProvisionExamples {
     typeset extraInfo="-h -v -n showRun"
@@ -56,8 +57,8 @@ function vis_bisosAccountsProvisionExamples {
 
   cat  << _EOF_
 $( examplesSeperatorChapter "Provisioning Setups" )
-${G_myName}  -i provisionSetup   # Summary outputs
-${G_myName} ${extraInfo} -i provisionSetup    # Detailed outputs
+${G_myName}  -i bisosAcctsProvisionSetup   # Summary outputs
+${G_myName} ${extraInfo} -i bisosAcctsProvisionSetup    # Detailed outputs
 _EOF_
 }
 
@@ -106,7 +107,7 @@ ${G_myName} ${extraInfo} -i bxisoAcctVerify oneBxsoAcct
 _EOF_
 }
 
-function vis_provisionSetup {
+function vis_bisosAcctsProvisionSetup {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Update required groups and accounts at provisioning time.

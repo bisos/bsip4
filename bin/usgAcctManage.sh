@@ -62,6 +62,8 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
+. ${bsipBinBase}/unisosAccounts_lib.sh
+. ${bsipBinBase}/bisosGroupAccount_lib.sh
 . ${bsipBinBase}/bisosAccounts_lib.sh
 
 # PRE parameters
@@ -86,18 +88,49 @@ function vis_examples {
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
     visLibExamplesOutput ${G_myName} 
-  cat  << _EOF_
+    cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
+_EOF_
+
+    vis_usgAccountsExamples
+    thisIcmExamples
+}
+
+
+
+function thisIcmExamples {
+    typeset extraInfo="-h -v -n showRun"
+    #typeset extraInfo=""
+    typeset runInfo="-p ri=lsipusr:passive"
+
+    typeset examplesInfo="${extraInfo} ${runInfo}"
+
+  cat  << _EOF_
 $( examplesSeperatorChapter "Chapter Title" )
 $( examplesSeperatorSection "Section Title" )
 ${G_myName} ${extraInfo} -i createFullUpdate bystar
 ${G_myName} ${extraInfo} -i list usgAccts
 ${G_myName} ${extraInfo} -i report listOfAccounts
-${G_myName} ${extraInfo} -i baseUpdate_bash 
+${G_myName} ${extraInfo} -i baseUpdate_bash bystar
 ${G_myName} ${extraInfo} -i baseUpdate_blee
 ${G_myName} ${extraInfo} -i baseUpdate_bue
 _EOF_
 }
+
+function vis_thisProvisionExamples {
+    typeset extraInfo="-h -v -n showRun"
+    #typeset extraInfo=""
+    typeset runInfo="-p ri=lsipusr:passive"
+
+    typeset examplesInfo="${extraInfo} ${runInfo}"
+
+  cat  << _EOF_
+$( examplesSeperatorChapter "USG Provisioning Setups" )
+${G_myName}  -i usgProvisionSetup   # Summary outputs
+${G_myName} ${extraInfo} -i usgProvisionSetup    # Detailed outputs
+_EOF_
+}
+
 
 noArgsHook() {
   vis_examples
