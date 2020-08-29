@@ -74,6 +74,7 @@ _CommentEnd_
 # PRE parameters
 
 baseDir=""
+acctName=""
 
 function G_postParamHook {
      return 0
@@ -95,6 +96,8 @@ function vis_examples {
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
+$( examplesSeperatorChapter "Blee Provisioing Setup" )
+${G_myName} ${extraInfo} -p acctName=bystar -i provisionSetup
 $( examplesSeperatorChapter "Blee Prepare And Update Initialization Files" )
 ${G_myName} ${extraInfo} -i prepUpdateInit 27f
 ${G_myName} ${extraInfo} -i prepUpdateInit 24f
@@ -115,6 +118,26 @@ noArgsHook() {
 _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
 _CommentEnd_
+
+
+
+function vis_provisionSetup {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+In acctName's (mandtaory) HOME, with vis_prepUpdateInit create emacs init files.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    if [ -z "${acctName}" ] ; then
+	EH_problem "Missing acctName"
+	lpReturn 101
+    fi
+
+    # NOTYET, verify that acctName is valid (source needed lib)
+
+    lpDo sudo -u ${acctName} ${G_myFullName} -v -n showRun -i prepUpdateInit 26f
+}
 
 
 function vis_prepUpdateInit {
@@ -162,6 +185,9 @@ _EOF_
 
     local emacsVer="$1"
 
+    local runTimeAcctName=$( id -u -n )
+    local HOME=$( eval echo ~${runTimeAcctName} )
+
     local templatesBaseDir="/bisos/blee/env/init/"
     
     if [ ! -d "${templatesBaseDir}" ] ; then
@@ -169,19 +195,31 @@ _EOF_
 	return 1
     fi
 
-    local dotEmacs=$( FN_absolutePathGet "~/.emacs" )
-    local dotEmacsEl=$( FN_absolutePathGet "~/.emacs.el" )   
+    local dotEmacs=$( FN_absolutePathGet "${HOME}/.emacs" )
+    local dotEmacsEl=$( FN_absolutePathGet "${HOME}/.emacs.el" )   
 
     if [ -f "${dotEmacs}" ] ; then
 	opDo FN_fileSafeMove  "${dotEmacs}" "${dotEmacs}-$(DATE_nowTag)"
+    else
+	ANT_raw "No ${dotEmacs} -- elimination skipped"
     fi
 
     if [ -f "${dotEmacsEl}" ] ; then
 	opDo FN_fileSafeMove  "${dotEmacsEl}" "${dotEmacsEl}-$(DATE_nowTag)"
+    else
+	ANT_raw "No ${dotEmacsEl} -- elimination skipped"
     fi
 
-    local dotEmacs_dInit=$( FN_absolutePathGet "~/.emacs.d/init.el" )
-    local dotEmacs_dEarly=$( FN_absolutePathGet "~/.emacs.d/early-init.el" )    
+    local dotEmacs_dBase=$( FN_absolutePathGet "${HOME}/.emacs.d" )
+
+    if [ -d "${dotEmacs_dBase}" ] ; then
+	ANT_raw "${dotEmacs_dBase} directory exists -- creation skipped"
+    else
+	lpDo mkdir "${dotEmacs_dBase}"
+    fi
+
+    local dotEmacs_dInit=$( FN_absolutePathGet "${HOME}/.emacs.d/init.el" )
+    local dotEmacs_dEarly=$( FN_absolutePathGet "${HOME}/.emacs.d/early-init.el" )    
 
     if [ -f "${dotEmacs_dInit}" ] ; then
 	opDo FN_fileSafeMove  "${dotEmacs_dInit}" "${dotEmacs_dInit}-$(DATE_nowTag)"
@@ -196,6 +234,10 @@ _EOF_
     fi
     
     case ${emacsVer} in
+	"25f" | "26f")
+	    doNothing
+	    ;;
+	
 	"27f")
 	    if [ -f "${dotConfig_emacs_init}" ] ; then
 		opDo FN_fileSafeMove  "${dotConfig_emacs_init}" "${dotConfig_emacs_init}-$(DATE_nowTag)"
@@ -210,7 +252,7 @@ _EOF_
 	    
 	    ;;
 	*)
-	    EH-problem "Unsupported ${emacsVer}"
+	    EH_problem "Unsupported ${emacsVer}"
 	    ;;
     esac
 

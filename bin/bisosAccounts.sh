@@ -63,11 +63,11 @@ _CommentEnd_
 . ${opBinBase}/lpReRunAs.libSh
 
 # ./platformBases_lib.sh
-. ${bsipBinBase}/platformBases_lib.sh
+. ${opBinBase}/platformBases_lib.sh
 
-. ${bsipBinBase}/unisosAccounts_lib.sh
-. ${bsipBinBase}/bisosGroupAccount_lib.sh
-. ${bsipBinBase}/bisosAccounts_lib.sh
+. ${opBinBase}/unisosAccounts_lib.sh
+. ${opBinBase}/bisosGroupAccount_lib.sh
+. ${opBinBase}/bisosAccounts_lib.sh
 
 # PRE parameters
 

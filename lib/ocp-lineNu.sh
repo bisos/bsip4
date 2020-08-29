@@ -11,6 +11,7 @@
 
 # set-u fix
 # with set -u all $FUNCNAME should become ${FUNCNAME-main}
+# Also add ${BASH_SOURCE} for fileName and funcName
 #
 
 

@@ -153,6 +153,10 @@ _EOF_
 
 #### 
 
+# set-u fix  
+G_runMode=${G_runMode-}
+G_verbose=${G_verbose-}
+
 if [[ -z "${G_runMode}" ]] ; then
     export G_runMode="runOnly"
 fi

@@ -91,6 +91,11 @@ G_forceModeCmndOption=""
 G_forceMode=""
 G_checkMode=""
 
+
+# set-u fix  -- These need to perhaps be placed elsewhere
+opRunAcctName=""
+G_runMode=""
+
 visibleFunction=""   # Dec 2019 to address unbound param
 
 while getopts e:T:c:i:p:l:u?n:r:vfh c

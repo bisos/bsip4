@@ -57,6 +57,9 @@ function opRunUserGet {
   # NOTYET, based on UID range, determine acctType
   opRunAcctType=employee
 
+  # set-u fix  
+  opRunAcctName=${opRunAcctName-}
+
   if [[ "${opRunAcctName}_" == "_" ]] ; then 
     opRunAcctName=`${cmdId} -u -n`
     export opRunAcctName

@@ -292,6 +292,9 @@ _EOF_
 	 --comment "${acctComment}" \
 	 ${acctName}
 
+    lpDo mkdir "${acctHome}"
+    lpDo chown ${acctUid}:${acctGid} "${acctHome}"
+
     lpReturn
 }
 
