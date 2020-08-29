@@ -1478,6 +1478,7 @@ _CommentEnd_
 # DEFAULTS
 #
 
+# set-u fix
 G_myPanel=$(FN_prefix ${G_myName})-Panel.org
 
 G_iimGroupingType=${IimGroupingType[grouped]}

@@ -22,8 +22,8 @@ export adoptedSrcBase=/opt/public/src
 
 export adoptedPkgBase=/opt/public/pkgs
 
-
-PATH="${opBinBase}:${mmaBinDistBase}/bin:${mmaEzmlmBinDistBase}:${PATH}"
+# set-u fix
+#PATH="${opBinBase}:${mmaBinDistBase}/bin:${mmaEzmlmBinDistBase}:${PATH}"
 
 function opRunEnvOutputGeneric {
   opRunSiteName=genericSite

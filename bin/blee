@@ -29,10 +29,10 @@ if [ "${loadFiles}" == "" ] ; then
 fi
 ####+END:
 
-set -u            # unset vars are an error
-#set -e            # exit if pipeline fails  
-set -o pipefail   # return is that of rightmost
-IFS=$'\n\t'      #
+# set -u            # unset vars are an error
+# #set -e            # exit if pipeline fails  
+# set -o pipefail   # return is that of rightmost
+# IFS=$'\n\t'      #
 
 
 _CommentBegin_

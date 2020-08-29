@@ -6,6 +6,17 @@
 #set -v
 #set -x
 
+set -u            # unset vars are an error
+#set -e            # exit if pipeline fails  
+set -o pipefail   # return is that of rightmost
+
+#IFS=$'\n\t'      #
+
+# set-u fix
+G_myName=""
+FUNCNAME=""
+
+
 #OSMTROOT="/opt/public/osmt"
 OSMTROOT="/bisos/core/bsip"
 
@@ -27,7 +38,7 @@ fi
 
 
 . ${opBase}/lib/ocp-lib.sh
-.  $( dirname $0 )/bsipBases.sh
+#.  $( dirname $0 )/bsipBases.sh
 
 
 opBasePathSet
@@ -70,6 +81,15 @@ G_recordMode=""
 G_recordModeCmndOption=""
 
 G_paramCmndOption=""
+
+# set-u fix
+G_myName=""
+G_checkCmndOption=""
+G_verboseCmndOption=""
+G_humanCmndOption=""
+G_forceModeCmndOption=""
+G_forceMode=""
+G_checkMode=""
 
 visibleFunction=""   # Dec 2019 to address unbound param
 

@@ -9,8 +9,13 @@
 # 
 #
 
+# set-u fix
+# with set -u all $FUNCNAME should become ${FUNCNAME-main}
+#
+
+
 if [[ "${BASH_VERSION}X" != "X" ]] ; then
-    alias TM_trace='tm_fileName=$FUNCNAME; tm_lineNo=$LINENO; tm_trace'
+    alias TM_trace='tm_fileName=${FUNCNAME-main}; tm_lineNo=$LINENO; tm_trace'
     alias LOG_event='tm_fileName=$FUNCNAME; tm_lineNo=$LINENO; log_event'
     alias LOG_message='tm_fileName=$FUNCNAME; tm_lineNo=$LINENO; log_event'
     alias EH_oops='print -u2 -- "EH_,$FUNCNAME,$LINENO: OOPS"'

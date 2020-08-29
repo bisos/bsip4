@@ -234,9 +234,10 @@ function varNameValueStdout {
 #
 # /dirsPart/nonDirsPart
 # /dirsPart/prefix.extension
-# 
-FN_prefix() {
-  baseFileName=`basename "$1"`
+#
+function FN_prefix {
+    local thisFile=${1-missing}
+  baseFileName=`basename ${thisFile}`
   #print ${baseFileName%%\.*}  # 
   print ${baseFileName%\.*}  
 }

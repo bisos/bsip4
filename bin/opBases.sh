@@ -73,6 +73,8 @@ if [ "${mmaPkgBase}_" == "_" ] ; then
   fi
 fi
 
+# set-u fix
+mmaUePkgBase=""
 if [ "${mmaUePkgBase}_" == "_" ] ; then
   if test -d /opt/public/mmaUePkgs ; then
     mmaUePkgBase=/opt/public/mmaUePkgs
@@ -120,6 +122,9 @@ lpBaseDir_bystarTemplates="/libre/ByStar/InitialTemplates"      # /libre/vc/byst
 lpAcct_user="bystar"                          #  
 lpAcct_admin="lsipusr"                        #
 lpAcct_bystarGroup="employee"                 #
+
+# set-u fix
+Id=""
 
 
 ## NOTYET, JUNK, LEFTOVER
