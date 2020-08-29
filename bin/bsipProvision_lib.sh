@@ -40,14 +40,48 @@ _EOF_
     
     local extraInfo="$1"
     local bisosBinBase="$( bisosBinBaseGet )"
-
     
     cat  << _EOF_
-$( examplesSeperatorChapter "BISOS Provisioning:: From /bisos" )
+$( examplesSeperatorChapter "BISOS Provisioning:: From /bisos/core/bsip" )
+$( examplesSeperatorSection "BSIP Provision Targets" )
+${G_myName} ${extraInfo} -i bsipProvision_baseBisosPlatform
 $( examplesSeperatorSection "BISOS Accounts" )
-${bisosBinBase}/bisosProvision.sh
+${bisosBinBase}/${G_myName}
 ${G_myName} ${extraInfo} -i provisionBisosAccts
 _EOF_
+}
+
+
+function osmtTmpExamples {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+    
+    local extraInfo="$1"
+    local provisionersBinBase="$( provisionersBinBaseGet )"
+
+    cat  << _EOF_    
+$( examplesSeperatorChapter "Temporary OSMT Setup" )
+$( examplesSeperatorSection "Run OSMT Genesis" )
+${provisionersBinBase}/osmtBx2GenesisSelfcontained.sh
+${G_myName} ${extraInfo} -i osmtGenesis baseIoC
+${G_myName} ${extraInfo} -i osmtGenesis baseIoC atNeda
+$( examplesSeperatorChapter "BISOS Bases Administration (/bisos/core)" )
+$( examplesSeperatorSection "bisosBasesAdmin" )
+_EOF_
+}
+
+
+function vis_bsipProvision_baseBisosPlatform {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo vis_provisionBisosAccts
 }
 
 
@@ -73,3 +107,29 @@ _EOF_
     lpReturn
 }
 
+
+
+function vis_osmtGenesis {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -ge 0 ]]
+
+    local icmArgs="$@"
+
+    local provisionersBinBase="$( provisionersBinBaseGet )"
+	
+    # /opt/bisosProvisioner/gitRepos/provisioners/bin/osmtBx2GenesisSelfcontained.sh
+    local bisosProg="${provisionersBinBase}/osmtBx2GenesisSelfcontained.sh"
+
+    if [ ! -x "${bisosProg}" ] ; then
+	EH_problem "Missing ${bisosProg}"
+	lpReturn 1
+    else
+	osmtBx2GenesisSelfcontained.sh -h -v -n showRun -r basic -i baseIoC            # Blee + Ability To Import Io
+    	opDo sudo "${bisosProg}"  -h -v -n showRun -r basic -i $@
+    fi
+    
+    lpReturn
+}

@@ -41,11 +41,9 @@ _EOF_
 # Import Libraries
 
 #
-. ${opLibBase}/pidLib.sh
-. ${opLibBase}/portLib.sh
 
-. ${bsipBinBase}/bisosPlatform_lib.sh
-. ${bsipBinBase}/bisosProvision_lib.sh
+. ${opBinBase}//platformBases_lib.sh
+. ${opBinBase}/bsipProvision_lib.sh
 
 
 function G_postParamHook {
