@@ -1,0 +1,342 @@
+#!/bin/osmtKsh
+#!/bin/osmtKsh 
+
+typeset RcsId="$Id: distHook.libSh,v 1.3 2020-02-03 01:28:39 lsipusr Exp $"
+
+distFamilyIsSetAssert () {
+
+  if [ "${opRunDistFamily}_" == "_" ]  ; then
+    EH_problem "opRunDistFamily is not set -- STOP"
+    ANT_raw "Need to run -- opSysIdentities.sh -i osmtInfoExpand"
+    opDo distInfoAdmin.sh -v -n showRun  -i opRunDistFamilySet
+    return 1
+  fi
+
+  if [ "${opRunDistGeneration}_" == "_" ]  ; then
+    EH_problem "opRunDistFamily is not set -- STOP"
+    ANT_raw "Need to run -- opSysIdentities.sh -i osmtInfoExpand"
+    opDo distInfoAdmin.sh -v -n showRun  -i opRunDistFamilySet
+    return 1
+  fi
+
+  return 0
+}
+
+distFamilyGenerationHookRun () {
+#set -x
+
+  # Determine if any of the functions
+  #     ${HookFuncName}_${opRunDistFamily}_${opRunDistGeneration}
+  #     ${HookFuncName}_${opRunDistFamily}_DEFAULT
+  #     ${HookFuncName}_DEFAULT_DEFAULT
+  # in that order exists, If it exists, run the first in order
+  # and return that functions exist code.
+  #
+  # Otherwise NAG.
+  #
+
+  EH_assert [[ $# -eq 1 ]]
+
+  hookFuncName=$1
+
+  #opRunDistFamily=""
+
+  distFamilyIsSetAssert || return 1
+
+  fullFuncName="${hookFuncName}_${opRunDistFamily}_${opRunDistGeneration}"
+
+  funcListResult=`ListFuncs | egrep "^${fullFuncName}\$" || true`
+  #if [ "${funcListResult}X" != "X" ] ; then
+  if [ "${funcListResult}X" == "${fullFuncName}X" ] ; then
+    ${fullFuncName}
+    return $?
+  fi
+  
+  fullFuncName="${hookFuncName}_${opRunDistFamily}_DEFAULT"
+
+  funcListResult=`ListFuncs | egrep "^${fullFuncName}\$" || true`
+  if [ "${funcListResult}X" != "X" ] ; then
+    ${fullFuncName}
+    return $?
+  fi
+
+  fullFuncName="${hookFuncName}_DEFAULT_DEFAULT"
+
+  funcListResult=`ListFuncs | egrep "^${fullFuncName}\$" || true`
+  if [ "${funcListResult}X" != "X" ] ; then
+    ${fullFuncName}
+    return $?
+  fi
+
+  ANT_raw "No ${fullFuncName} -- skipped"
+  return 1
+}
+
+
+distFamilyGenerationNotFound () {
+  EH_assert [[ $# -eq 1 ]]
+
+  EH_problem "No Handler Found for ${opRunDistFamily}/${opRunDistGeneration}"
+  EH_problem "$1"
+}
+
+distFamilyGenerationBaseDir () {
+
+  EH_assert [[ $# -ge 0 ]]
+
+  if [[ $# -eq 0 ]] ; then
+     thisDistFamily=${opRunDistFamily}
+     thisDistGeneration=${opRunDistGeneration}
+  elif [[ $# -eq 2 ]] ; then
+     thisDistFamily=${1}
+     thisDistGeneration=${2}
+  else
+      EH_problem "Wrong Number Of Args -- STOPED"
+      return 1
+  fi
+
+  if [ "${thisDistFamily}_" == "_" ]  ; then
+    EH_problem "thisDistFamily is not set -- STOPED"
+    return 1
+  fi
+
+  cononDistFamily=`STR_toLower ${thisDistFamily}`
+  cononDistGeneration=`STR_toLower ${thisDistGeneration}`
+
+  # /opt/public/osmt/distBase/
+
+  fullBaseName="${opBase}/distBase/${cononDistFamily}/${cononDistGeneration}"
+
+  if [ ! -d ${fullBaseName} ] ; then
+    EH_problem "Missing Directory ${fullBaseName}"
+    return 1
+  fi
+
+  echo ${fullBaseName}
+}
+
+distFamilyGenerationBaseVarDir () {
+
+  EH_assert [[ $# -eq 0 ]]
+
+  #opRunDistFamily=""
+
+  if [ "${opRunDistFamily}_" == "_" ]  ; then
+    EH_problem "opRunDistFamily is not set -- STOPED"
+    return 1
+  fi
+
+  cononDistFamily=`STR_toLower ${opRunDistFamily}`
+  cononDistGeneration=`STR_toLower ${opRunDistGeneration}`
+
+  # /opt/public/osmt/distBase/
+
+  fullBaseName="${opVarBase}/distBase/${cononDistFamily}/${cononDistGeneration}"
+
+  if [ ! -d ${fullBaseName} ] ; then
+    EH_problem "Missing Directory ${fullBaseName}"
+    return 1
+  fi
+
+  echo ${fullBaseName}
+}
+
+cononDistFamily=`STR_toLower ${opRunDistFamily}`
+cononDistGeneration=`STR_toLower ${opRunDistGeneration}`
+# NOTYET
+cononDistArch="i386"
+
+
+lsipAdoptedFamilyGenerationArchList=( \
+    "lsipAdopted_DEBIAN_SARGE" \
+    "lsipAdopted_DEBIAN_ETCH" \
+    "lsipAdopted_DEBIAN_LENNY" \
+    "lsipAdopted_DEBIAN_SQUEEZE" \
+    "lsipAdopted_DEBIAN_7" \
+    "lsipAdopted_UBUNTU_FIESTY" \
+    "lsipAdopted_UBUNTU_GUTSY" \
+    "lsipAdopted_UBUNTU_HARDY" \
+    "lsipAdopted_UBUNTU_1004" \
+    "lsipAdopted_UBUNTU_1010" \
+    "lsipAdopted_UBUNTU_1104" \
+    "lsipAdopted_UBUNTU_1110" \
+    "lsipAdopted_UBUNTU_1204" \
+    "lsipAdopted_UBUNTU_1210" \
+    "lsipAdopted_UBUNTU_1310" \
+    "lsipAdopted_UBUNTU_1404" \
+    "lsipAdopted_UBUNTU_1604" \
+    "lsipAdopted_UBUNTU_1804" \
+    "lsipAdopted_UBUNTU_2004" \            
+)
+
+lsipAdopted_DEBIAN_SARGE () {
+   adoptedDistFamily="debian"
+   adoptedDistGeneration="sarge"
+   adoptedDistRev="3.1"
+   adoptedDistArchs=( "i386"  "sparc" )
+   adoptedDistNextGen="lsipAdopted_DEBIAN_ETCH"
+}
+
+lsipAdopted_DEBIAN_ETCH () {
+   adoptedDistFamily="debian"
+   adoptedDistGeneration="etch"
+   adoptedDistRev="4.0"
+   adoptedDistArchs=( "i386"  "sparc" )
+   adoptedDistNextGen="lsipAdopted_DEBIAN_LENNY"
+}
+
+lsipAdopted_DEBIAN_LENNY () {
+   adoptedDistFamily="debian"
+   adoptedDistGeneration="lenny"
+   adoptedDistRev="5.0"
+   adoptedDistArchs=( "i386"  "sparc" )
+   adoptedDistNextGen="lsipAdopted_DEBIAN_SQUEEZE"
+}
+
+lsipAdopted_DEBIAN_SQUEEZE () {
+   adoptedDistFamily="debian"
+   adoptedDistGeneration="squeeze"
+   adoptedDistRev="6.0"
+   adoptedDistArchs=( "i386"  "sparc" )
+   adoptedDistNextGen=""
+}
+
+lsipAdopted_DEBIAN_7 () {
+   adoptedDistFamily="debian"
+   adoptedDistGeneration="7"  # wheezy
+   adoptedDistRev="7.0"
+   adoptedDistArchs=( "i386"  "sparc" )
+   adoptedDistNextGen=""
+}
+
+
+lsipAdopted_UBUNTU_FIESTY () {
+   adoptedDistFamily="ubuntu"
+   adoptedDistGeneration="fiesty"
+   adoptedDistRev="7.04"
+   adoptedDistArchs=( "i386"  "sparc" )
+}
+
+lsipAdopted_UBUNTU_GUTSY () {
+   adoptedDistFamily="ubuntu"
+   adoptedDistGeneration="gutsy"
+   adoptedDistRev="7.10"
+   adoptedDistArchs=( "i386"  "sparc" )
+}
+
+
+lsipAdopted_UBUNTU_HARDY () {
+   adoptedDistFamily="ubuntu"
+   adoptedDistGeneration="hardy"
+   adoptedDistRev="8.04"
+   adoptedDistArchs=( "i386"  "sparc" )
+}
+
+
+lsipAdopted_UBUNTU_INTREPID () {
+   adoptedDistFamily="ubuntu"
+   adoptedDistGeneration="intrepid"
+   adoptedDistRev="8.10"
+   adoptedDistArchs=( "i386"  "sparc" )
+}
+
+
+lsipAdopted_UBUNTU_904 () {
+   adoptedDistFamily="ubuntu"
+   adoptedDistGeneration="904"  # jaunty
+   adoptedDistRev="9.04"
+   adoptedDistArchs=( "i386"  "sparc" )
+}
+
+
+lsipAdopted_UBUNTU_910 () {
+   adoptedDistFamily="ubuntu"
+   adoptedDistGeneration="910"  # karmic
+   adoptedDistRev="9.10"
+   adoptedDistArchs=( "i386"  "sparc" )
+}
+
+lsipAdopted_UBUNTU_1004 () {
+   adoptedDistFamily="ubuntu"
+   adoptedDistGeneration="1004"  # karmic
+   adoptedDistRev="10.04"
+   adoptedDistArchs=( "i386"  "sparc" )
+}
+
+
+lsipAdopted_UBUNTU_1010 () {
+   adoptedDistFamily="ubuntu"
+   adoptedDistGeneration="1010"  # 
+   adoptedDistRev="10.10"
+   adoptedDistArchs=( "i386"  "sparc" )
+}
+
+
+lsipAdopted_UBUNTU_1104 () {
+   adoptedDistFamily="ubuntu"
+   adoptedDistGeneration="1104"  # 
+   adoptedDistRev="11.04"
+   adoptedDistArchs=( "i386"  "sparc" )
+}
+
+
+lsipAdopted_UBUNTU_1110 () {
+   adoptedDistFamily="ubuntu"
+   adoptedDistGeneration="1110"  # 
+   adoptedDistRev="11.10"
+   adoptedDistArchs=( "i386"  "sparc" )
+}
+
+
+lsipAdopted_UBUNTU_1204 () {
+   adoptedDistFamily="ubuntu"
+   adoptedDistGeneration="1204"  # 
+   adoptedDistRev="12.04"
+   adoptedDistArchs=( "i386"  "sparc" )
+}
+
+lsipAdopted_UBUNTU_1210 () {
+   adoptedDistFamily="ubuntu"
+   adoptedDistGeneration="1210"  # 
+   adoptedDistRev="12.10"
+   adoptedDistArchs=( "i386"  "sparc" )
+}
+
+lsipAdopted_UBUNTU_1310 () {
+   adoptedDistFamily="ubuntu"
+   adoptedDistGeneration="1310"  # 
+   adoptedDistRev="13.10"
+   adoptedDistArchs=( "i386"  "sparc" )
+}
+
+lsipAdopted_UBUNTU_1404 () {
+   adoptedDistFamily="ubuntu"
+   adoptedDistGeneration="1404"  # 
+   adoptedDistRev="14.04"
+   adoptedDistArchs=( "i386"  "sparc" )
+}
+
+lsipAdopted_UBUNTU_1604 () {
+   adoptedDistFamily="ubuntu"
+   adoptedDistGeneration="1604"  # 
+   adoptedDistRev="16.04"
+   adoptedDistArchs=( "i386"  "sparc" )
+}
+
+
+lsipAdopted_UBUNTU_1804 () {
+   adoptedDistFamily="ubuntu"
+   adoptedDistGeneration="1804"  # 
+   adoptedDistRev="18.04"
+   adoptedDistArchs=( "i386"  "sparc" )
+}
+
+
+lsipAdopted_UBUNTU_2004 () {
+   adoptedDistFamily="ubuntu"
+   adoptedDistGeneration="2004"  # 
+   adoptedDistRev="20.04"
+   adoptedDistArchs=( "i386"  "sparc" )
+}
+
+
