@@ -46,8 +46,9 @@ $( examplesSeperatorChapter "BISOS Provisioning:: From /bisos/core/bsip" )
 $( examplesSeperatorSection "BSIP Provision Targets" )
 ${G_myName} ${extraInfo} -i bsipProvision_baseBisosPlatform
 $( examplesSeperatorSection "BISOS Accounts" )
-${bisosBinBase}/${G_myName}
 ${G_myName} ${extraInfo} -i provisionBisosAccts
+$( examplesSeperatorSection "USG Account Bases" )
+${G_myName} ${extraInfo} -i provisionUsgAcctBases
 _EOF_
 }
 
@@ -82,6 +83,8 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     lpDo vis_provisionBisosAccts
+    
+    lpDo vis_provisionUsgAcctBases
 }
 
 
@@ -102,6 +105,28 @@ _EOF_
 	lpReturn 1
     else	
     	opDo "${bisosProg}" -h -v -n showRun -i bisosAcctsProvisionSetup
+    fi
+    
+    lpReturn
+}
+
+function vis_provisionUsgAcctBases {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local bisosBinBase="$( bisosBinBaseGet )"
+	
+    # /bisos/core/bsip/bin/usgAcctManage.sh
+    local bisosProg="${bisosBinBase}/usgAcctManage.sh"
+
+    if [ ! -x "${bisosProg}" ] ; then
+	EH_problem "Missing ${bisosProg}"
+	lpReturn 1
+    else	
+    	opDo "${bisosProg}" -h -v -n showRun -i provisionSetup
     fi
     
     lpReturn

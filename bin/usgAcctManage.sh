@@ -127,8 +127,11 @@ function vis_thisProvisionExamples {
 
   cat  << _EOF_
 $( examplesSeperatorChapter "USG Provisioning Setups" )
-${G_myName} -p acctName=bystar -i provisionSetup   # Summary outputs
-${G_myName} ${extraInfo} -p acctName=bystar -i provisionSetup    # Detailed outputs
+${G_myName} -i provisionSetup   # Summary outputs
+${G_myName} ${extraInfo} -i provisionSetup    # Detailed outputs
+$( examplesSeperatorSection "USG Provisioning Account Setups" )
+${G_myName} -p acctName=bystar -i provisionSetupAcct   # Summary outputs
+${G_myName} ${extraInfo} -p acctName=bystar -i provisionSetupAcct    # Detailed outputs
 _EOF_
 }
 
@@ -142,6 +145,19 @@ _CommentBegin_
 _CommentEnd_
 
 function vis_provisionSetup {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+In acctName's (mandtaory) HOME, with vis_prepUpdateInit create emacs init files.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    acctName=bystar
+    lpDo vis_provisionSetupAcct
+}
+
+
+function vis_provisionSetupAcct {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 In acctName's (mandtaory) HOME, with vis_prepUpdateInit create emacs init files.
