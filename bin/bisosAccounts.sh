@@ -65,6 +65,8 @@ _CommentEnd_
 # ./platformBases_lib.sh
 . ${opBinBase}/platformBases_lib.sh
 
+. ${opBinBase}/distHook.libSh
+
 . ${opBinBase}/unisosAccounts_lib.sh
 . ${opBinBase}/bisosGroupAccount_lib.sh
 . ${opBinBase}/bisosAccounts_lib.sh

@@ -35,6 +35,10 @@ function vis_moduleDescription {  cat  << _EOF_
 _EOF_
 }
 
+
+supplementaryGroupsList=()
+
+
 function vis_bisosAcct_bystarName { echo bystar; }
 function vis_bisosAcct_bystarUid { echo 2001; }
 
@@ -215,6 +219,8 @@ _EOF_
        opDo vis_usgAcctAdd ${acctName}
    fi
 
+   lpDo vis_usgAcct_supplementaryGroupsAdd ${acctName}
+   
    opDo vis_sudoersAddLine "${acctName}" ALL NOPASSWD
 
    # the sudo -u ${acctName} id -- results in creation of the homeDir
@@ -273,7 +279,6 @@ _EOF_
     local acctUid=""
     local acctComment=""
     local acctHome="$( vis_bisosAcct_usgHomeBase )/${acctName}"
-    local supplementaryGroups="adm"  # NOTYET, locate existing code in 
 
     if [ "${acctName}" == "$( vis_bisosAcct_bystarName )" ] ; then
 	acctUid=$( vis_bisosAcct_bystarUid )
@@ -286,7 +291,6 @@ _EOF_
     lpDo useradd \
 	 --uid "${acctUid}" \
 	 --gid "${acctGid}" \
-	 --groups "${supplementaryGroups}" \
 	 --shell /bin/bash \
 	 --home-dir "${acctHome}" \
 	 --comment "${acctComment}" \
@@ -297,6 +301,25 @@ _EOF_
 
     lpReturn
 }
+
+function vis_usgAcct_supplementaryGroupsAdd {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Add needed supplementary groups to the specified USG account.
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local acctName="$1"
+    local eachGroup=""
+
+    lpDo distFamilyGenerationHookRun "addSupplementaryGroups"
+
+    for eachGroup in ${supplementaryGroupsList[@]} ; do
+	opDo sudo usermod -G ${eachGroup} --append ${acctName}    
+    done
+}
+    
 
 function vis_usgAcctDelete {
     G_funcEntry
@@ -518,54 +541,36 @@ _EOF_
 }	
 
 
+addSupplementaryGroups_UBUNTU_1404 () {
+  supplementaryGroupsList=("employee" "adm" dialout cdrom floppy dip video plugdev lpadmin scanner "admin" "audio" netdev )
+}
 
-function vis_userAcctCreate_bystar {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-This is not being used at this time. It should be moved into a bisos environment script.
-_EOF_
-    }
-    EH_assert [[ $# -eq 1 ]]
+addSupplementaryGroups_UBUNTU_1604 () {
+  supplementaryGroupsList=("employee" "adm" dialout cdrom floppy dip video plugdev lpadmin scanner "audio" netdev )
+}
 
-    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;    
+addSupplementaryGroups_UBUNTU_1804 () {
+  supplementaryGroupsList=("employee" "adm" dialout cdrom floppy dip video plugdev lpadmin scanner "audio" netdev  "vboxsf" )
+}
 
-    local passwdPolicy=$1
+addSupplementaryGroups_UBUNTU_2004 () {
+  supplementaryGroupsList=("employee" "adm" dialout cdrom floppy dip video plugdev lpadmin scanner "audio" netdev  "vboxsf" )
+}
 
-    local userAcctName="bystar"
-    local userAcctGroup="bisos"
-    #local userAcctSupplementryGroups=""        
-    local userAcctPasswd=""
+addSupplementaryGroups_DEBIAN_LENNY () {
+  supplementaryGroupsList=(dialout cdrom floppy audio video plugdev netdev)
+}
 
-    if vis_userAcctsExist ${userAcctName} ; then
-	EH_problem "${userAcctName} Exists"
-	lpReturn 101
-    fi
+addSupplementaryGroups_DEBIAN_SQUEEZE () {
+  supplementaryGroupsList=(dialout cdrom floppy audio video plugdev netdev)
+}
 
-    userAcctPasswd=$( vis_getPasswdForAcct ${userAcctName} ${passwdPolicy} )
+addSupplementaryGroups_DEBIAN_7 () {
+  supplementaryGroupsList=(dialout cdrom floppy audio video plugdev netdev)
+}
 
-    lpDo useradd \
-	 --uid "${acctUid}" \
-	 --comment "ByStar User Acct" \
-	 --gid "${userAcctGroup}" \
-	 --shell /bin/bash \
-	 --create-home \
-	 ${userAcctName}
-
-    lpDo eval "echo ${userAcctName}:${userAcctPasswd} | sudo -S /usr/sbin/chpasswd"    
-
-    #
-    #  NOTYET, below is for Fedora/Centos/Redhat
-    #
-    #lpDo eval "echo ${userAcctPasswd} | sudo -S passwd ${userAcctPasswd} --stdin"
-    #
-    #lpDo sudo usermod -aG wheel ${userAcctPasswd}
-    #
-
-    lpDo sudo sh -c "echo ${userAcctName} ALL=\(ALL\) NOPASSWD: ALL >> /etc/sudoers"
-
-    lpDo vis_userAcctsReport ${userAcctName}
-
-    lpReturn
+addSupplementaryGroups_DEFAULT_DEFAULT () {
+  supplementaryGroupsList=( "staff" )
 }
 
 

@@ -111,7 +111,7 @@ $( examplesSeperatorSection "Section Title" )
 ${G_myName} ${extraInfo} -i createFullUpdate bystar
 ${G_myName} ${extraInfo} -i list usgAccts
 ${G_myName} ${extraInfo} -i report listOfAccounts
-${G_myName} ${extraInfo} -i baseUpdate_bash bystar
+${G_myName} ${extraInfo} -i acctBase_bashrcUpdate bystar
 ${G_myName} ${extraInfo} -i baseUpdate_blee
 ${G_myName} ${extraInfo} -i baseUpdate_bue
 _EOF_
