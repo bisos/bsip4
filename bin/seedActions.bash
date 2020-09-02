@@ -1,6 +1,5 @@
 #!/bin/bash
 #
-# RCS Revision: $Id: seedActions.bash,v 1.9 2020-02-24 02:28:20 lsipusr Exp $
 #
 
 #set -v

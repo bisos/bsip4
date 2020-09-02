@@ -87,6 +87,7 @@ ${G_myName} ${extraInfo} -i usgAcctDelete bystar
 ${G_myName} ${extraInfo} -i usgAcctdelete oneUsgAcct
 ${G_myName} ${extraInfo} -i usgAcctVerify bystar
 ${G_myName} ${extraInfo} -i usgAcctVerify oneUsgAcct
+${G_myName} ${extraInfo} -i usgAcct_supplementaryGroupsAdd bystar
 _EOF_
 }
 
@@ -554,7 +555,7 @@ addSupplementaryGroups_UBUNTU_1804 () {
 }
 
 addSupplementaryGroups_UBUNTU_2004 () {
-  supplementaryGroupsList=("employee" "adm" dialout cdrom floppy dip video plugdev lpadmin scanner "audio" netdev  "vboxsf" )
+  supplementaryGroupsList=("employee" "adm" dialout cdrom floppy dip video plugdev lpadmin scanner "audio" netdev  "vboxsf" "vboxusers")
 }
 
 addSupplementaryGroups_DEBIAN_LENNY () {

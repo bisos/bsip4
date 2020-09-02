@@ -1,0 +1,45 @@
+#!/bin/osmtKsh
+#!/bin/osmtKsh
+
+vis_debPkgsLibShHelp () {
+  cat  << _EOF_
+  See Roadmap
+
+_EOF_
+  return 0
+}
+
+aptPreferencesFile="/etc/apt/preferences"
+
+
+function aptPinStdout {
+  EH_assert [[ $# -eq 3 ]]
+
+  pkgName=$1
+  pkgVersion=$2
+  pinPriority=$3
+
+  # NOTYET, context validate all 3 params
+
+  cat  << _EOF_
+
+Package: $1
+Pin: version $2
+Pin-Priority: $3
+_EOF_
+}
+
+function aptPinUpdate {
+  EH_assert [[ $# -eq 3 ]]
+
+  pkgName=$1
+  pkgVersion=$2
+  pinPriority=$3
+
+  FN_fileSafeCopy ${aptPreferencesFile} ${aptPreferencesFile}.${dateTag}
+
+  aptPinStdout $1 $2 $3	>> ${aptPreferencesFile}
+
+  opDo ls -l ${aptPreferencesFile}
+}
+
