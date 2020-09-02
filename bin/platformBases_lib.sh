@@ -107,14 +107,15 @@ venvBasePy3="${bxp_rootDir_provisioners}/venv/py3"
 pdb_bsipBase="${bxp_rootDir_bisos}/core/bsip"
 
 #
-# /bisos/venv/py2-bisos-3  /bisos/venv/py2/bisos3 /bisos/venv/dev/py2/bisos3
-# /bisos/venv/dev-py2-bisos-3
+# /bisos/venv/py2/bisos3 /bisos/venv/py2/dev/bisos3
+# /bisos/venv/py3/bisos3 /bisos/venv/py3/dev/bisos3
 #
-pdb_venv_py2Bisos3="${bxp_rootDir_bisos}/venv/py2-bisos-3"
-pdb_venv_py2Bisos3Dev="${bxp_rootDir_bisos}/venv/dev-py2-bisos-3"
-pdb_venv_py3Bisos3="${bxp_rootDir_bisos}/venv/py3-bisos-3"
-pdb_venv_py3Bisos3Dev="${bxp_rootDir_bisos}/venv/dev-py3-bisos-3"
+pdb_venv_py2Bisos3="${bxp_rootDir_bisos}/venv/py2/bisos3"
+pdb_venv_py2Bisos3Dev="${bxp_rootDir_bisos}/venv/py2/dev/bisos3"
+pdb_venv_py3Bisos3="${bxp_rootDir_bisos}/venv/py3/bisos3"
+pdb_venv_py3Bisos3Dev="${bxp_rootDir_bisos}/venv/py3/dev/bisos3"
 
 pdb_bsip_base="${bxp_rootDir_bisos}/core/bsip"
 pdb_bsip_bin="${pdb_bsip_base}/bin"
 pdb_bsip_lib="${pdb_bsip_base}/lib"
+
