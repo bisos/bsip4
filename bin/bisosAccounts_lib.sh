@@ -547,11 +547,11 @@ addSupplementaryGroups_UBUNTU_1404 () {
 }
 
 addSupplementaryGroups_UBUNTU_1604 () {
-  supplementaryGroupsList=("employee" "adm" dialout cdrom floppy dip video plugdev lpadmin scanner "audio" netdev )
+  supplementaryGroupsList=("employee" "adm" dialout cdrom floppy dip video plugdev lpadmin scanner "audio" netdev  "vboxusers")
 }
 
 addSupplementaryGroups_UBUNTU_1804 () {
-  supplementaryGroupsList=("employee" "adm" dialout cdrom floppy dip video plugdev lpadmin scanner "audio" netdev  "vboxsf" )
+  supplementaryGroupsList=("employee" "adm" dialout cdrom floppy dip video plugdev lpadmin scanner "audio" netdev  "vboxsf" "vboxusers")
 }
 
 addSupplementaryGroups_UBUNTU_2004 () {
