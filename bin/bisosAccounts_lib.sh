@@ -220,6 +220,8 @@ _EOF_
        opDo vis_usgAcctAdd ${acctName}
    fi
 
+   lpDo vis_acct_createHome ${acctName}
+
    lpDo vis_usgAcct_supplementaryGroupsAdd ${acctName}
    
    opDo vis_sudoersAddLine "${acctName}" ALL NOPASSWD
@@ -297,11 +299,37 @@ _EOF_
 	 --comment "${acctComment}" \
 	 ${acctName}
 
-    lpDo mkdir "${acctHome}"
-    lpDo chown ${acctUid}:${acctGid} "${acctHome}"
+    lpReturn
+}
+
+
+function vis_acct_createHome {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Create home dir for specified acct
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local acctName="$1"
+
+    local getentStr=$( getent passwd ${acctName} )
+    
+    if [ -z "${getentStr}" ] ; then
+	EH_problem "Missing acct -- ${acctName}"
+	lpReturn 101
+    fi
+    
+    local getentAcctUid=$( echo ${getentStr} | cut -d : -f 3 )
+    local getentAcctGid=$( echo ${getentStr} | cut -d : -f 4 )
+    local getentAcctHome=$( echo ${getentStr} | cut -d : -f 6 )    
+
+    lpDo sudo mkdir "${acctHome}"
+    lpDo sudo chown ${getentAcctUid}:${getentAcctGid} "${getentAcctHome}"
 
     lpReturn
 }
+
 
 function vis_usgAcct_supplementaryGroupsAdd {
     G_funcEntry
@@ -405,8 +433,8 @@ _EOF_
        opDo vis_bxisoAcctAdd ${acctName}
    fi
 
-   opDo vis_sudoersAddLine "${acctName}" ALL NOPASSWD
-
+   lpDo vis_acct_createHome ${acctName}
+   
    # the sudo -u ${acctName} id -- results in creation of the homeDir
    opDo vis_userAcctsReport ${acctName}   
 }
