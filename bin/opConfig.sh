@@ -56,7 +56,7 @@ if [[ -f /etc/osmtInfo ]] ; then
     opRunEnvStoreFile=/etc/osmtInfo
 else
   if [[ "${CURENVBASE}_" == "_" ]] ; then
-    opRunEnvOutputGeneric > /etc/osmtInfo
+    opRunEnvOutputGeneric | sudo tee /etc/osmtInfo
     opRunEnvStoreFile=/etc/osmtInfo
     echo "Using the generic ${opRunEnvStoreFile}"
   else

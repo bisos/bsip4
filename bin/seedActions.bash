@@ -15,6 +15,15 @@ set -o pipefail   # return is that of rightmost
 G_myName=""
 FUNCNAME=""
 
+CURENVBASE=""
+opRunOsType=""
+opRunSiteName=""
+opRunClusterName=""
+opRunHostName=""
+G_myInvokedName=""
+loadSegment=""
+opRunDistFamily=""
+opRunDistGeneration=""
 
 #OSMTROOT="/opt/public/osmt"
 OSMTROOT="/bisos/core/bsip"
@@ -89,7 +98,6 @@ G_humanCmndOption=""
 G_forceModeCmndOption=""
 G_forceMode=""
 G_checkMode=""
-
 
 # set-u fix  -- These need to perhaps be placed elsewhere
 opRunAcctName=""
