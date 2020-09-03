@@ -36,6 +36,8 @@ function opRunEnvOutputGeneric {
   opRunParamStandalone=strict
   opRunDomainName=genericDomain
 
+  vis_opRunDistFamilySet > /dev/null  
+  
   cat  << _EOF_  
 # THIS FILE MACHINE GENERATED with ${G_myName} and $0
 opRunSiteName=${opRunSiteName}
@@ -49,8 +51,96 @@ opRunOsRev=${opRunOsRev}
 opRunMachineArch=${opRunMachineArch}
 # Hostwide Parameters
 opRunParamStandalone=${opRunParamStandalone}
+opRunDistFamily=${opRunDistFamily}
+opRunDistGeneration=${opRunDistGeneration}
+opRunDistGenNu=${opRunDistGenNu}
 _EOF_
 }
+
+
+vis_opRunDistFamilySet () {
+
+  opRunDistFamily="UNKNOWN"
+  
+  if grep buntu /etc/issue ; then
+    opRunDistFamily="UBUNTU"
+  elif grep "Debian GNU/Linux" /etc/issue ; then
+    opRunDistFamily="DEBIAN"
+ elif grep "maemo" /etc/issue ; then
+    opRunDistFamily="MAEMO"
+ elif grep "Red Hat" /etc/issue ; then
+    opRunDistFamily="REDHAT"
+ elif grep "Solaris" /etc/issue ; then
+    opRunDistFamily="SOLARIS"
+  else
+    opRunDistFamily="UNSUPPORTED"
+  fi
+
+  opRunDistGeneration="UNKNOWN"
+  case ${opRunDistFamily} in
+    "UBUNTU")
+	      if grep "6.10" /etc/issue ; then
+		opRunDistGeneration="EDGY"
+		opRunDistGenNu="6.10"
+	      elif grep "14.04" /etc/issue ; then  # LTS
+		opRunDistGeneration="1404"
+		opRunDistGenNu="14.04"
+	      elif grep "Xenial" /etc/issue ; then  # LTS
+		opRunDistGeneration="1604"
+		opRunDistGenNu="16.04"
+	      elif grep "16.04" /etc/issue ; then  # LTS
+		opRunDistGeneration="1604"
+		opRunDistGenNu="16.04"
+	      elif grep "Beaver" /etc/issue ; then  # LTS
+		opRunDistGeneration="1804"
+		opRunDistGenNu="18.04"
+	      elif grep "18.04" /etc/issue ; then  # LTS
+		opRunDistGeneration="1804"
+		opRunDistGenNu="18.04"
+	      elif grep "Focal" /etc/issue ; then  # LTS
+		opRunDistGeneration="2004"
+		opRunDistGenNu="20.04"
+	      elif grep "20.04" /etc/issue ; then  # LTS
+		opRunDistGeneration="2004"
+		opRunDistGenNu="20.04"
+	      else
+		opRunDistGeneration="UNSUPPORTED"
+		opRunDistGenNu="UNSUPORTED"
+	      fi
+       ;;
+    "DEBIAN")
+	  # NOTYET -- use lsb_release -i ... instead
+	      if grep "3.1" /etc/issue ; then
+		opRunDistGeneration="SARGE"
+		opRunDistGenNu="3.1"
+	      elif grep "7.0" /etc/issue ; then
+		opRunDistGeneration="7"
+		opRunDistGenNu="7.0"
+	      else
+		opRunDistGeneration="UNSUPPORTED"
+		opRunDistGenNu="UNSUPORTED"
+	      fi
+       ;;
+    "REDHAT")
+	     opRunDistGeneration="UNSUPPORTED"
+       ;;
+    "UNKNOWN")
+	       opRunDistGeneration="UNSUPPORTED"
+       ;;
+    "UNSUPPORTED")
+		   opRunDistGeneration="UNSUPPORTED"
+       ;;
+    *)
+       opRunDistGeneration="UNSUPPORTED"
+	EH_oops ;
+       return
+       ;;
+  esac
+
+
+}
+
+
 
 if [[ -f /etc/osmtInfo ]] ; then
     opRunEnvStoreFile=/etc/osmtInfo
