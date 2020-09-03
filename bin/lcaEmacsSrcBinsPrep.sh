@@ -102,10 +102,11 @@ srcObtainForm="git"
 emacsVerLatest="emacs28"
 emacsVerCurrent="emacs27"
 
+srcPkgName="${emacsVerCurrent}"
 
 srcBuildScript=""
 srcBuildScriptTmpDir=/tmp/"${srcPkgName}"
-srcBuildBaseDir="/libre/var/srcPkgs/${srcPkgName}-tar"
+srcBuildBaseDir="/de/bisos/srcPkgs/${srcPkgName}-tar"
 
 distEmacsTarFile=${srcPkgName}.tar
 distEmacsTarUrl="http://ftp.gnu.org/pub/gnu/emacs/${distEmacsTarFile}.gz"
@@ -235,12 +236,12 @@ _EOF_
 	srcBuildScript=""
 	srcBuildScriptTmpDir=/tmp/"${srcPkgName}"
 	
-	srcObtainBaseDir="/libre/var/srcPkgs/${srcPkgName}"
+	srcObtainBaseDir="/de/bisos/srcPkgs/${srcPkgName}"
 	# -- depth 1 of git clone, copies only the latest revision 
 	#obtainCmndLine="git clone --depth 1 git://git.sv.gnu.org/emacs.git"
 	obtainCmndLine="obtainOrUpdateSrc_emacs28"
 
-	srcBuildBaseDir="/libre/var/srcPkgs/${srcPkgName}/emacs"	
+	srcBuildBaseDir="/de/bisos/srcPkgs/${srcPkgName}/emacs"	
     }
 
     function srcPkgSpecPrep_emacs27_git {
@@ -248,18 +249,18 @@ _EOF_
 	srcBuildScript=""
 	srcBuildScriptTmpDir=/tmp/"${srcPkgName}"
 
-	srcObtainBaseDir="/libre/var/srcPkgs/${srcPkgName}"
+	srcObtainBaseDir="/de/bisos/srcPkgs/${srcPkgName}"
 	# -- depth 1 of git clone, copies only the latest revision 
 	obtainCmndLine="git clone --single-branch -b emacs-27 git://git.sv.gnu.org/emacs.git"
 
-	srcBuildBaseDir="/libre/var/srcPkgs/${srcPkgName}/emacs"	
+	srcBuildBaseDir="/de/bisos/srcPkgs/${srcPkgName}/emacs"	
     }
 
     function srcPkgSpecPrep_emacs27_tar {
 	srcPkgName="emacs-27"
 	srcBuildScript=""
 	srcBuildScriptTmpDir=/tmp/"${srcPkgName}"
-	srcBuildBaseDir="/libre/var/srcPkgs/${srcPkgName}-tar"
+	srcBuildBaseDir="/de/bisos/srcPkgs/${srcPkgName}-tar"
 
         distEmacsTarFile=${srcPkgName}.tar
 	distEmacsTarUrl="http://ftp.gnu.org/pub/gnu/emacs/${distEmacsTarFile}.gz"
@@ -288,7 +289,7 @@ _EOF_
     elif [ "${srcPkgSelector}" == "emacs-26" ] ; then
 	# http://ftp.gnu.org/pub/gnu/emacs/
 	srcPkgName="emacs-26.3"
-	srcObtainBaseDir="/libre/var/srcPkgs/${srcPkgName}"
+	srcObtainBaseDir="/de/bisos/srcPkgs/${srcPkgName}"
 	
         distEmacsTarFile=${srcPkgName}.tar
 	distEmacsTarUrl="http://ftp.gnu.org/pub/gnu/emacs/${distEmacsTarFile}.gz"
@@ -297,7 +298,7 @@ _EOF_
 	prepCmndLine="tar -zxf ${distEmacsTarFile}.gz"
 
 	srcBuildScriptTmpDir=/tmp/"${srcPkgName}"
-	srcBuildBaseDir="/libre/var/srcPkgs/${srcPkgName}/${srcPkgName}"
+	srcBuildBaseDir="/de/bisos/srcPkgs/${srcPkgName}/${srcPkgName}"
     	srcBuildScript="vis_srcBuild_26"
 
     	srcInstallScript="vis_srcBinInstall_common"	
@@ -306,7 +307,7 @@ _EOF_
 	srcPkgName="emacs-25.1"
 	srcBuildScript=""
 	srcBuildScriptTmpDir=/tmp/"${srcPkgName}"
-	srcBuildBaseDir="/libre/var/srcPkgs/${srcPkgName}-tar"
+	srcBuildBaseDir="/de/bisos/srcPkgs/${srcPkgName}-tar"
 
         distEmacsTarFile=${srcPkgName}.tar
 	distEmacsTarUrl="http://ftp.gnu.org/pub/gnu/emacs/${distEmacsTarFile}.gz"
