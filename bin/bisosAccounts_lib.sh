@@ -324,7 +324,7 @@ _EOF_
     local getentAcctGid=$( echo ${getentStr} | cut -d : -f 4 )
     local getentAcctHome=$( echo ${getentStr} | cut -d : -f 6 )    
 
-    lpDo sudo mkdir "${acctHome}"
+    lpDo sudo mkdir "${getentAcctHome}"
     lpDo sudo chown ${getentAcctUid}:${getentAcctGid} "${getentAcctHome}"
 
     lpReturn
