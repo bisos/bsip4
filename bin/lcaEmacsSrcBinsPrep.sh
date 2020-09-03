@@ -111,6 +111,8 @@ srcBuildBaseDir="/de/bisos/srcPkgs/${srcPkgName}-tar"
 distEmacsTarFile=${srcPkgName}.tar
 distEmacsTarUrl="http://ftp.gnu.org/pub/gnu/emacs/${distEmacsTarFile}.gz"
 
+prepCmndLine=""
+
 #
 #
 # END PKG Base Variables
