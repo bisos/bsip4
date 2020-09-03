@@ -14,17 +14,16 @@ __author__="
 * Authors: Mohsen BANAN, http://mohsen.banan.1.byname.net/contact
 "
 
-    #/opt/public/osmt/bin/seedActions.bash -l $0 $( quoteEach "$@" )
 
-####+BEGIN: bx:dblock:lsip:bash:seed-spec :types "seedActions.bash"
+####+BEGIN: bx:bsip:bash:seed-spec :types "seedActions.bash"
 SEED="
-*  /[dblock]/ /Seed/ :: [[file:/opt/public/osmt/bin/seedActions.bash]] | 
+*  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
 "
 FILE="
-*  /This File/ :: /opt/public/osmt/bin/bleeclient 
+*  /This File/ :: /bisos/core/bsip/bin/debAptSourcesManage.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
-    /opt/public/osmt/bin/seedActions.bash -l $0 "$@" 
+    /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
     exit $?
 fi
 ####+END:
@@ -82,134 +81,52 @@ function vis_examples {
     typeset extraInfo="-h -v -n showRun"
     #typeset extraInfo=""
     typeset runInfo="-p ri=lsipusr:passive"
-    local oneFileName="/etc/passwd"
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
     visLibExamplesOutput ${G_myName} 
-    cat  << _EOF_
+  cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
+$( examplesSeperatorChapter "Chapter Title" )
+$( examplesSeperatorSection "Section Title" )
+${G_myName} ${extraInfo} -i enableDebSrc
 _EOF_
-
-    vis_examples_bleeLib
-    
-    cat  << _EOF_
-$( examplesSeperatorChapter "Blee Client" )
-$( examplesSeperatorSection "Run Raw Blee Client -- deliver args to emacsclient" )
-${G_myName} ${extraInfo} -i run -- --eval "(blee:bnsm:panel-goto \"/libre/ByStar/InitialTemplates/activeDocs/blee/bleeActivities\")"
-${G_myName} ${extraInfo} -i run -- --eval "(emacs-version)"
-${G_myName} ${extraInfo} -- --eval "(emacs-version)"
-${G_myName} ${extraInfo} -- --no-wait ${oneFileName}
-$( examplesSeperatorSection "Visit File" )
-${G_myName} ${extraInfo} -i here ${oneFileName}          # Default noArgsHook -- visit file here
-${G_myName} ${extraInfo} -i other ${oneFileName}         # visit file other window
-_EOF_
-  
 }
 
-function noArgsHook {
-    if [ "" == "$*" ] ; then
-	EH_problem  "Missing Args:: run -- ${G_myName} -i examples -- to see available common features."
-	lpReturn 1
-    fi
-
-    opDo vis_here "$@"
+noArgsHook() {
+  vis_examples
 }
-
 
 _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
 _CommentEnd_
 
 
-function vis_run {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-This is incomplete and untested. It should become a dispatcher for emacsclient(s).
-_EOF_
-    }
-    EH_assert [[ $# -gt 0 ]]
-
-    local thisEmacsClient=$( vis_thisEmacsClient )
-
-    opDo ${thisEmacsClient} "$@"
-
-    lpReturn
-}
-
-
-function vis_seeInOther {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 1 ]]
-
-    local thisEmacsClient=$( vis_thisEmacsClient )
-
-    if [ -f "$1" ] ; then
-	opDo ${thisEmacsClient} -n --eval "(see-file-other-window \"$1\")"
-    else
-	EH_problem "Missing File -- $1"
-    fi
-
-    lpReturn
-}
-
-
-function vis_other {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 1 ]]
-
-    local thisEmacsClient=$( vis_thisEmacsClient )
-
-    if [ -f "$1" ] ; then
-	opDo ${thisEmacsClient} -n --eval "(find-file-other-window \"$1\")"
-    else
-	EH_problem "Missing File -- $1"
-    fi
-
-    lpReturn
-}
-
-function vis_here {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 1 ]]
-
-    local thisEmacsClient=$( vis_thisEmacsClient )
-
-    if [ -f "$1" ] ; then
-	opDo ${thisEmacsClient} -n --eval "(find-file \"$1\")"
-    else
-	EH_problem "Missing File -- $1"
-    fi
-
-    lpReturn
-}
-
-
-function vis_serverName {
+function vis_enableDebSrc {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    local thisEmacsClient=$( vis_thisEmacsClient )
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
+    
+    local aptSourcesFile="/etc/apt/sources.list"
 
-    opDo ${thisEmacsClient} --eval "(describe-variable 'server-name)"
+    opDo FN_fileSafeCopy ${aptSourcesFile} ${aptSourcesFile}.${dateTag}    
 
+    egrep '^deb ' ${aptSourcesFile}  | egrep 'restricted|universe' | grep -i ubuntu.com | grep -v backports  |
+	while read thisLine ; do
+	    echo Running: $( echo add-apt-repository --enable-source \'${thisLine}\' )
+	    eval          $( echo add-apt-repository --enable-source \'${thisLine}\' )
+	done
+
+    opDo apt-get update
+
+    opDo ls -l ${aptSourcesFile}
+    
     lpReturn
 }
-
-
-
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*

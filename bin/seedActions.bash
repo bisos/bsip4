@@ -24,6 +24,7 @@ G_myInvokedName=""
 loadSegment=""
 opRunDistFamily=""
 opRunDistGeneration=""
+skipIt=""
 
 #OSMTROOT="/opt/public/osmt"
 OSMTROOT="/bisos/core/bsip"

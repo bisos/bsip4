@@ -425,23 +425,19 @@ _EOF_
 	#
 	opDo apt-get -y build-dep emacs
 	
-	# On a fresh ubuntu 20.04 system
+	# On a fresh ubuntu 20.04 system -- for emacs-gtk is emacs26 as distributed with 20.04
 	# The following NEW packages will be installed:
-	# 
 	# autopoint debhelper dh-autoreconf dh-strip-nondeterminism dwz imagemagick
-	# imagemagick-6.q16 libatk-bridge2.0-dev libatk1.0-dev libatspi2.0-dev libbz2-dev
-	# libdatrie-dev libdbus-1-dev libdebhelper-perl libdjvulibre-dev libegl-dev
-	# libegl1-mesa-dev libepoxy-dev libexif-dev libfile-stripnondeterminism-perl
-	# libfribidi-dev libgdk-pixbuf2.0-dev libgl1-mesa-dev libgles-dev libgles1
-	# libglvnd-dev libgpm-dev libgtk-3-dev libilmbase-dev liblcms2-dev liblockfile-bin
-	# liblockfile-dev liblockfile1 liblqr-1-0-dev libm17n-dev libmagick++-6-headers
-	# libmagick++-6.q16-8 libmagick++-6.q16-dev libmagickcore-6-arch-config
-	# libmagickcore-6-headers libmagickcore-6.q16-6-extra libmagickcore-6.q16-dev
-	# libmagickwand-6-headers libmagickwand-6.q16-dev libopenexr-dev libopengl-dev
-	# libopengl0 libotf-dev libpango1.0-dev librsvg2-dev libsub-override-perl
-	# libsystemd-dev libthai-dev libwayland-bin libwayland-dev libwmf-dev
-	# libxkbcommon-dev pango1.0-tools po-debconf quilt sharutils wayland-protocols
-	# xaw3dg xaw3dg-dev xutils-dev
+	# imagemagick-6.q16 libacl1-dev libasound2-dev libattr1-dev libbz2-dev
+	# libdebhelper-perl libdjvulibre-dev libexif-dev libfile-stripnondeterminism-perl
+	# libgpm-dev libilmbase-dev liblcms2-dev liblockfile-bin liblockfile-dev
+	# liblockfile1 liblqr-1-0-dev libm17n-dev libmagick++-6-headers libmagick++-6.q16-8
+	# libmagick++-6.q16-dev libmagickcore-6-arch-config libmagickcore-6-headers
+	# libmagickcore-6.q16-6-extra libmagickcore-6.q16-dev libmagickwand-6-headers
+	# libmagickwand-6.q16-dev libopenexr-dev libotf-dev librsvg2-dev
+	# libsub-override-perl libsystemd-dev libwmf-dev po-debconf quilt sharutils xaw3dg
+	# xaw3dg-dev xutils-dev
+	#
 	
 	# emacs-gtk is emacs26 as distributed with 20.04
 	#  apt-cache depends emacs-gtk | grep Depends: | grep -v emacs | cut -d ':' -f 2 | sed -e 's/^/opDo apt-get -y install /'
@@ -627,11 +623,21 @@ _EOF_
     if [ "${opRunDistGeneration}" == "2004" ] ; then
 	#
 
-	opDo apt-get -y install libgif-dev      # NOTYET double check on need for this
-	opDo apt-get -y install libgnutls28-dev # NOTYET double check on need for this
-	opDo apt-get -y install libwebkit2gtk-4.0-dev
-	opDo apt-get -y install libwebkit2gtk-4.0-37-gtk2  # NOTYET, is this needed	
-	opDo apt-get -y install libharfbuzz-dev     # shaping for farsi/arabic
+	opDo apt-get -y install  libjpeg-dev
+	opDo apt-get -y install  libtiff-dev
+	opDo apt-get -y install  libncurses5-dev
+	opDo apt-get -y install  libgif-dev      # NOTYET double check on need for this
+	opDo apt-get -y install  libpng12-dev
+	opDo apt-get -y install  librsvg2-dev
+	opDo apt-get -y install  libotf-dev
+	
+	opDo apt-get -y install  libgnutls28-dev # NOTYET double check on need for this
+
+	opDo apt-get -y install  libwebkit2gtk-4.0-dev
+	opDo apt-get -y install  libwebkit2gtk-4.0-37-gtk2  # NOTYET, is this needed
+
+	opDo apt-get -y install  libm17n-dev
+	opDo apt-get -y install  libharfbuzz-dev     # shaping for farsi/arabic
 
     elif [ "${opRunDistGeneration}" == "1804" ] ; then
 	#

@@ -50,12 +50,16 @@ function vis_examples_bleeLib {
 
   cat  << _EOF_
 $( examplesSeperatorChapter "Blee Lib Feature Examples" )
+$( examplesSeperatorSection "Locating The Server" )
 ${G_myName} ${extraInfo} -i thisEmacsClient                                            # Obatin qualified emacsclient for this Bash
 ${G_myName} ${extraInfo} -i emacsclientProgOfEmacsServerVersion ${emacsServerVersion}  # Obtain emacsclient based on EmacsVersion
 ${G_myName} ${extraInfo} -i emacsServerSocketBleeVersion ${emacsServerSocket}          # Obtain BleeVersion in Bash
 ${G_myName} ${extraInfo} -i emacsServerSocketEmacsVersion ${emacsServerSocket}         # Obtain EmacsVersion in Bash
 ${G_myName} ${extraInfo} -i emacsServerSocketFromEnv                                   # Obtain ServerSocket from environement
 ${G_myName} ${extraInfo} -i emacsServerPidFromEnv				       # Obatin ServerPid from environment
+$( examplesSeperatorSection "Raw emacsclient Invocations" )
+$( vis_thisEmacsClient ) --eval "(emacs-version)"
+$( vis_examples_bleeLib )
 _EOF_
 }
 
