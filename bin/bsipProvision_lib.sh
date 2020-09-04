@@ -92,7 +92,7 @@ _EOF_
 
     lpDo vis_provisionEssentials
 
-    lpDo provisionBasicBlee
+    lpDo vis_provisionBasicBlee
 }
 
 
@@ -148,7 +148,17 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo bisosSysEssentialsBinsPrep.sh -v -n showRun -i fullUpdate
+    local bisosBinBase="$( bisosBinBaseGet )"
+	
+    # /bisos/core/bsip/bin/bisosSysEssentialsBinsPrep.sh
+    local bisosProg="${bisosBinBase}/bisosSysEssentialsBinsPrep.sh"
+
+    if [ ! -x "${bisosProg}" ] ; then
+	EH_problem "Missing ${bisosProg}"
+	lpReturn 1
+    else	
+    	opDo "${bisosProg}" -h -v -n showRun -i fullUpdate
+    fi
     
     lpReturn
 }
@@ -160,7 +170,17 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo bleeBinsPrep.sh -v -n showRun -i fullUpdate
+    local bisosBinBase="$( bisosBinBaseGet )"
+	
+    # /bisos/core/bsip/bin/bleeBinsPrep.sh
+    local bisosProg="${bisosBinBase}/bleeBinsPrep.sh"
+
+    if [ ! -x "${bisosProg}" ] ; then
+	EH_problem "Missing ${bisosProg}"
+	lpReturn 1
+    else	
+    	opDo "${bisosProg}" -h -v -n showRun -i fullUpdate
+    fi
     
     lpReturn
 }
