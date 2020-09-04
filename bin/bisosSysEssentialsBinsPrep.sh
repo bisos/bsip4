@@ -19,12 +19,15 @@ __author__="
 "
 
 
-####+BEGIN: bx:dblock:lsip:bash:seed-spec :types "seedSubjectBinsPrepDist.sh"
+####+BEGIN: bx:bsip:bash:seed-spec :types "seedSubjectBinsPrepDist.sh"
 SEED="
-* /[dblock]/--Seed/: /opt/public/osmt/bin/seedSubjectBinsPrepDist.sh
+*  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedSubjectBinsPrepDist.sh]] | 
+"
+FILE="
+*  /This File/ :: /bisos/core/bsip/bin/bisosSysEssentialsBinsPrep.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
-    /opt/public/osmt/bin/seedSubjectBinsPrepDist.sh -l $0 "$@" 
+    /bisos/core/bsip/bin/seedSubjectBinsPrepDist.sh -l $0 "$@" 
     exit $?
 fi
 ####+END:
