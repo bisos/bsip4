@@ -49,6 +49,10 @@ $( examplesSeperatorSection "BISOS Accounts" )
 ${G_myName} ${extraInfo} -i provisionBisosAccts
 $( examplesSeperatorSection "USG Account Bases" )
 ${G_myName} ${extraInfo} -i provisionUsgAcctBases
+$( examplesSeperatorSection "Sys Essentials" )
+${G_myName} ${extraInfo} -i provisionEssentials
+$( examplesSeperatorSection "Basic Blee -- system emacs" )
+${G_myName} ${extraInfo} -i provisionBasicBlee
 _EOF_
 }
 
@@ -85,6 +89,10 @@ _EOF_
     lpDo vis_provisionBisosAccts
     
     lpDo vis_provisionUsgAcctBases
+
+    lpDo vis_provisionEssentials
+
+    lpDo provisionBasicBlee
 }
 
 
@@ -128,6 +136,31 @@ _EOF_
     else	
     	opDo "${bisosProg}" -h -v -n showRun -i provisionSetup
     fi
+    
+    lpReturn
+}
+
+
+function vis_provisionEssentials {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo bisosSysEssentialsBinsPrep.sh -v -n showRun -i fullUpdate
+    
+    lpReturn
+}
+
+function vis_provisionBasicBlee {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo bleeBinsPrep.sh -v -n showRun -i fullUpdate
     
     lpReturn
 }

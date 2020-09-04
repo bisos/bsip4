@@ -87,10 +87,10 @@ function vis_examples {
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
-$( examplesSeperatorChapter "Chapter Title" )
-$( examplesSeperatorSection "Section Title" )
-${G_myName} ${extraInfo} -i enableDebSrc
+$( examplesSeperatorChapter "Manage deb-src lines of sources.list" )
 ${G_myName} ${extraInfo} -i verifyDebSrc
+${G_myName} ${extraInfo} -i enableDebSrc
+${G_myName} ${extraInfo} -i disableDebSrc
 _EOF_
 }
 
@@ -112,7 +112,6 @@ _EOF_
 
     local aptSourcesFile="/etc/apt/sources.list"
     local retVal=0
-
 
     opDo eval "egrep '^deb-src ' ${aptSourcesFile}"
     retVal=$?
