@@ -90,6 +90,7 @@ $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Chapter Title" )
 $( examplesSeperatorSection "Section Title" )
 ${G_myName} ${extraInfo} -i enableDebSrc
+${G_myName} ${extraInfo} -i verifyDebSrc
 _EOF_
 }
 
@@ -100,6 +101,30 @@ noArgsHook() {
 _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
 _CommentEnd_
+
+
+function vis_verifyDebSrc {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local aptSourcesFile="/etc/apt/sources.list"
+    local retVal=0
+
+
+    opDo eval "egrep '^deb-src ' ${aptSourcesFile}"
+    retVal=$?
+
+    if [ ${retVal} == 0 ]  ; then
+	ANT_raw "deb-src lines detected in ${aptSourcesFile} -- returning ${retVal}"
+    else
+	ANT_raw "deb-src lines are missing in ${aptSourcesFile} -- returning ${retVal}"
+    fi
+    
+    lpReturn ${retVal}
+}
 
 
 function vis_enableDebSrc {
@@ -127,6 +152,35 @@ _EOF_
     
     lpReturn
 }
+
+
+function vis_disbaleDebSrc {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Has not been test yet. 
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
+    
+    local aptSourcesFile="/etc/apt/sources.list"
+
+    opDo FN_fileSafeCopy ${aptSourcesFile} ${aptSourcesFile}.${dateTag}    
+
+    egrep '^deb-src ' ${aptSourcesFile}  |
+	while read thisLine ; do
+	    echo Running: $( echo add-apt-repository --remove \'${thisLine}\' )
+	    eval          $( echo add-apt-repository --remove \'${thisLine}\' )
+	done
+
+    opDo apt-get update
+
+    opDo ls -l ${aptSourcesFile}
+    
+    lpReturn
+}
+
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*
