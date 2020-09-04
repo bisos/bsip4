@@ -53,6 +53,9 @@ $( examplesSeperatorSection "Sys Essentials" )
 ${G_myName} ${extraInfo} -i provisionEssentials
 $( examplesSeperatorSection "Basic Blee -- system emacs" )
 ${G_myName} ${extraInfo} -i provisionBasicBlee
+$( examplesSeperatorSection "PySys and PyVenv" )
+${G_myName} ${extraInfo} -i provisionPySysSetup
+${G_myName} ${extraInfo} -i provisionPyVenvSetup
 _EOF_
 }
 
@@ -93,6 +96,10 @@ _EOF_
     lpDo vis_provisionEssentials
 
     lpDo vis_provisionBasicBlee
+
+    lpDo vis_provisionPySysSetup
+
+    lpDo vis_provisionPyVenvSetup
 }
 
 
@@ -180,6 +187,50 @@ _EOF_
 	lpReturn 1
     else	
     	opDo "${bisosProg}" -h -v -n showRun -i fullUpdate
+    fi
+    
+    lpReturn
+}
+
+function vis_provisionPySysSetup {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local bisosBinBase="$( bisosBinBaseGet )"
+	
+    # /bisos/core/bsip/bin/bisosPySysSetup.sh
+    local bisosProg="${bisosBinBase}/bisosPySysSetup.sh"
+
+    if [ ! -x "${bisosProg}" ] ; then
+	EH_problem "Missing ${bisosProg}"
+	lpReturn 1
+    else	
+    	opDo "${bisosProg}" -h -v -n showRun  -i pySys_provisionSetup
+    fi
+    
+    lpReturn
+}
+
+function vis_provisionPyVenvSetup {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local bisosBinBase="$( bisosBinBaseGet )"
+	
+    # /bisos/core/bsip/bin/bisosPyVenvSetup.sh
+    local bisosProg="${bisosBinBase}/bisosPyVenvSetup.sh"
+
+    if [ ! -x "${bisosProg}" ] ; then
+	EH_problem "Missing ${bisosProg}"
+	lpReturn 1
+    else	
+    	opDo "${bisosProg}" -h -v -n showRun  -i pyVenv_provisionSetup
     fi
     
     lpReturn
