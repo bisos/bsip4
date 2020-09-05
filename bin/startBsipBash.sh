@@ -417,8 +417,8 @@ _EOF_
 
     typeset scriptName="$1"
     typeset icmGroupBaseDir="."
-    # ~lsipusr/BUE/inserts/moded/sh-mode/bx/start/binsPrepLcaSimple.sh
-    typeset icmTemplatesBaseDir=$( FN_absolutePathGet ~lsipusr/BUE/inserts/moded/sh-mode/bx/start )
+
+    typeset icmTemplatesBaseDir="/bisos/apps/defaults/software/begin/icmBash"
 
     typeset scriptFullName=${icmGroupBaseDir}/${scriptName}
     

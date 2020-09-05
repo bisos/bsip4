@@ -294,7 +294,9 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    opDo lcaEmacsSrcBinsPrep.sh -v -n showRun -i srcFullBuild emacs27
+    local bisosBinBase="$( bisosBinBaseGet )"
+    
+    opDo sudo -u bisos ${bisosBinBase}/lcaEmacsSrcBinsPrep.sh -v -n showRun -i srcFullBuild emacs27
 	
     lpReturn
 }

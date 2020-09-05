@@ -75,7 +75,8 @@ _EOF_
 
     itemOrderedList=(
 	"debconf_utils"     # needed for pre-seeding
-	"ruby"        # needed by facter	
+	"postfixCustom"     # because various packages install postfix
+	"ruby"              # needed by facter	
 	"facter"
 	"build_essential"
 	"dkms"
@@ -111,6 +112,15 @@ binsPrep_debconf_utils_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "debconf-utils
 
 ####+END:
 
+####+BEGIN: bx:dblock:lsip:binsprep:apt :module "ruby"
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || Apt-Pkg       :: ruby [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+item_ruby () { distFamilyGenerationHookRun binsPrep_ruby; }
+
+binsPrep_ruby_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "ruby"; }
+
+####+END:
 
 ####+BEGIN: bx:dblock:lsip:binsprep:apt :module "facter"
 _CommentBegin_
@@ -151,6 +161,42 @@ item_linux_headers_generic () { distFamilyGenerationHookRun binsPrep_linux_heade
 binsPrep_linux_headers_generic_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "linux-headers-generic"; }
 
 ####+END:
+
+
+
+
+_CommentBegin_
+*      ======[[elisp:(org-cycle)][Fold]]====== Custom-Pkg: postfixCustom
+_CommentEnd_
+
+
+item_postfixCustom () {
+  distFamilyGenerationHookRun binsPrep_postfixCustom
+}
+
+binsPrep_postfixCustom_DEFAULT_DEFAULT () {
+    mmaThisPkgName="postfixCustom"
+    mmaPkgDebianName="${mmaThisPkgName}"
+    mmaPkgDebianMethod="custom"  #  or "apt" no need for customInstallScript but with binsPrep_installPostHook
+    binsPrep_installPostHook="postfix_installPost"
+
+    function customInstallScript {
+	ANT_raw "Selecting postfix postfix/main_mailer_type string 'No configuration' with debconf-set-selections"
+	echo "postfix postfix/main_mailer_type string 'No configuration'" | sudo  debconf-set-selections
+	ANT_raw "Selecting postfix postfix/mailname string NONE with debconf-set-selections"	
+	echo "postfix postfix/mailname string NONE" | sudo  debconf-set-selections
+
+	opDo sudo apt-get -y install postfix
+    }
+}
+
+function postfix_installPost {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Just a place holder.
+_EOF_
+    }
+}
 
 
 _CommentBegin_

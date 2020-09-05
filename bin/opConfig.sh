@@ -44,6 +44,8 @@ opRunSiteName=${opRunSiteName}
 opRunClusterName=${opRunClusterName}
 opRunDomainName=${opRunDomainName}
 opRunHostName=${opRunHostName}
+opRunHostFamily=BUE
+opRunHostFamilyTag=00
 opRunHostMode=${opRunHostMode}
 # Read Only Parameters
 opRunOsType=${opRunOsType}
@@ -54,6 +56,12 @@ opRunParamStandalone=${opRunParamStandalone}
 opRunDistFamily=${opRunDistFamily}
 opRunDistGeneration=${opRunDistGeneration}
 opRunDistGenNu=${opRunDistGenNu}
+BoxName=box00
+bxpDistGeneration=bx3
+bxpSwProfile=bx2IoC
+bxpVirtGuestType=unknown
+bxpVirtHostFqdn=none
+bxpVirtHostIpAddr=none
 _EOF_
 }
 
