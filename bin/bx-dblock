@@ -89,6 +89,7 @@ function vis_examples {
     #typeset extraInfo=""
     typeset runInfo="-p ri=lsipusr:passive"
     local thisEmacsClient=$( vis_thisEmacsClient )
+    local thisOne="NOTYET"
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
@@ -288,7 +289,7 @@ function vis_dblockUpdateOneFileOrIgnore {
     function describeF {  cat  << _EOF_
 Operates on a single file. To be used by other scripts.
 _EOF_
-  }
+		       }
     EH_assert [[ $# -eq 1 ]]
 
     typeset thisOne="$1"

@@ -100,9 +100,9 @@ _EOF_
 
     lpDo vis_provisionBasicBlee
 
+    lpDo vis_provisionVirtSysSetup    
+    
     lpDo vis_provisionEmacsFromSrc
-
-    lpDo vis_provisionVirtSysSetup
 }
 
 

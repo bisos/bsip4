@@ -74,6 +74,7 @@ _EOF_
     #  [[elisp:(lsip-local-run-command "apt-cache search something | egrep '^something'")][apt-cache search something | egrep '^something']]
 
     itemOrderedList=(
+	"debconf_utils"     # needed for pre-seeding
 	"ruby"        # needed by facter	
 	"facter"
 	"build_essential"
@@ -99,6 +100,17 @@ function examplesHookPost {
 ${G_myName} -i moduleDescription
 _EOF_
 }
+
+####+BEGIN: bx:dblock:lsip:binsprep:apt :module "debconf-utils"
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || Apt-Pkg       :: debconf-utils [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+item_debconf_utils () { distFamilyGenerationHookRun binsPrep_debconf_utils; }
+
+binsPrep_debconf_utils_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "debconf-utils"; }
+
+####+END:
+
 
 ####+BEGIN: bx:dblock:lsip:binsprep:apt :module "facter"
 _CommentBegin_
