@@ -90,12 +90,10 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    local bisosBinBase="$( bisosBinBaseGet )"
     local virtualizationType=$( facter virtual )
 
     if [ "${virtualizationType}" == "physical" ] ; then
 	EH_problem "This function only applies to Guests -- virtualizationType=${virtualizationType}"
-	opDo "${bisosBinBase}/lcaVirtualboxBinsPrep.sh -v -n showRun -i fullUpdate"
     elif [ "${virtualizationType}" == "virtualbox" ] ; then
 	lpDo sudo rcvboxadd setup
     else

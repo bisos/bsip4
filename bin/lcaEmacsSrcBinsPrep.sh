@@ -182,11 +182,18 @@ ${G_myName} ${extraInfo} -i postInstall emacs28
 ${G_myName} ${extraInfo} -i postInstall emacs27
 ${G_myName} ${extraInfo} -i postInstall emacs26
 $( examplesSeperatorChapter "srcFullBuild:: srcEnvSetup + obtain + build + install -- Full Service" )
+$( examplesSeperatorChapter "srcFullBuild:: when rebuilding is desired specify -f (forceMode) " )
 ${G_myName} ${extraInfo} -i srcFullBuild # defaults to latest
 ${G_myName} ${extraInfo} -i srcFullBuild current
 ${G_myName} ${extraInfo} -i srcFullBuild emacs28
 ${G_myName} ${extraInfo} -i srcFullBuild emacs27
 ${G_myName} ${extraInfo} -i srcFullBuild emacs26
+$( examplesSeperatorChapter "Installation Verification:: Is Specified Emacs Installed?" )
+${G_myName} ${extraInfo} -i installedVerify # defaults to latest
+${G_myName} ${extraInfo} -i installedVerify current
+${G_myName} ${extraInfo} -i installedVerify emacs28
+${G_myName} ${extraInfo} -i installedVerify emacs27
+${G_myName} ${extraInfo} -i installedVerify emacs26
 _EOF_
 }
 
@@ -1133,6 +1140,64 @@ _EOF_
     opDo ls -l /usr/local/bin/emacs-${emacsVersion} /usr/local/bin/emacsclient-${emacsClientVersion} 
 }
 
+function vis_installedVerify {     
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Verify if specified emacs has been installed.
+_EOF_
+		       }
+
+    EH_assert [[ $# -lt 2 ]]
+
+    local srcPkgSelector=""
+    local retVal=0
+
+    if [ $# -eq 0 ] ; then
+	srcPkgSelector="latest"
+    else
+	srcPkgSelector="$1"
+    fi
+
+    opDo emacsVerCanonicalized
+    
+    opDo vis_srcPkgSpecPrep ${srcPkgSelector}     
+
+    opDo installedVerify
+    retVal=$?
+
+    lpReturn ${retVal}    
+}
+
+
+
+function installedVerify {     
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		       }
+
+    local emacsVersion=${srcPkgSelector##emacs}  # eg, 28 - emacs front stripped from emacs28 
+    
+    local emacsProg=$( echo /usr/local/bin/emacs-${emacsVersion}.* )
+
+    local retVal=0
+
+    if [ ! -f /usr/local/bin/emacs-${emacsVersion} ] ; then
+	retVal=101
+    fi
+
+    if [ ! -f /usr/local/bin/emacsclient-${emacsVersion} ] ; then
+	retVal=101
+    fi
+
+    if [ ${retVal} == 0 ] ; then
+	opDo ls -l /usr/local/bin/emacs-${emacsVersion} /usr/local/bin/emacsclient-${emacsVersion}
+    else
+	ANT_raw "/usr/local/bin/emacs-${emacsVersion} has not been installed"
+    fi
+
+    lpReturn  ${retVal}
+}
 
 
 _CommentBegin_
@@ -1161,7 +1226,18 @@ _EOF_
 	srcPkgSelector="$1"
     fi
 
-    opDo emacsVerCanonicalized    
+    opDo emacsVerCanonicalized
+
+    opDo vis_srcPkgSpecPrep ${srcPkgSelector}
+
+    if installedVerify ; then
+	if [ "${G_forceMode}" == "force" ] ; then
+	    ANT_raw "Re-Building:: Emacs ${srcPkgSelector} is installed but forceMode is specified"
+	else
+	    ANT_raw "Skipping Build:: Emacs ${srcPkgSelector} is installed and forceMode is not specified"
+	    lpReturn 0
+	fi
+    fi
     
     opDoAfterPause vis_srcEnvSetup ${srcPkgSelector}
 

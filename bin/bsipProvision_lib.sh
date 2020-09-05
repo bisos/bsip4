@@ -7,6 +7,7 @@
 _CommentBegin_
 _CommentEnd_
 
+
 function bisosBinBaseGet {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -29,7 +30,7 @@ _EOF_
     echo ${provisionersBinBase}
 }
 
-
+export export PATH="$( bisosBinBaseGet ):${PATH}"
 
 function vis_bisosProvisionExamples {
    G_funcEntry
@@ -283,5 +284,17 @@ _EOF_
     	opDo sudo "${bisosProg}"  -h -v -n showRun -r basic -i $@
     fi
     
+    lpReturn
+}
+
+function vis_provisionEmacsFromSrc {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    opDo lcaEmacsSrcBinsPrep.sh -v -n showRun -i srcFullBuild emacs27
+	
     lpReturn
 }
