@@ -73,7 +73,9 @@ _EOF_
 
     #  [[elisp:(lsip-local-run-command "apt-cache search something | egrep '^something'")][apt-cache search something | egrep '^something']]
 
-    itemOrderedList=( 
+    itemOrderedList=(
+	"ruby"        # needed by facter	
+	"facter"
 	"build_essential"
 	"dkms"
 	"linux_headers_generic" 	
@@ -97,6 +99,16 @@ function examplesHookPost {
 ${G_myName} -i moduleDescription
 _EOF_
 }
+
+####+BEGIN: bx:dblock:lsip:binsprep:apt :module "facter"
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || Apt-Pkg       :: facter [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+item_facter () { distFamilyGenerationHookRun binsPrep_facter; }
+
+binsPrep_facter_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "facter"; }
+
+####+END:
 
 ####+BEGIN: bx:dblock:lsip:binsprep:apt :module "build-essential"
 _CommentBegin_

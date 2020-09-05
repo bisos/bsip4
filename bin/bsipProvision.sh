@@ -63,8 +63,95 @@ $( examplesSeperatorTopLabel "${G_myName}" )
 _EOF_
     
     vis_bisosProvisionExamples "${extraInfo}"
+
+    vis_bsipProvsionNativeExamples
 }
+
+function vis_postSysBaseExamples {
+    typeset extraInfo="-h -v -n showRun"
+    #typeset extraInfo=""
+    typeset runInfo="-p ri=lsipusr:passive"
+
+    typeset examplesInfo="${extraInfo} ${runInfo}"
+
+    cat  << _EOF_
+$( examplesSeperatorChapter "Post SysBase Examples" )
+$( examplesSeperatorSection "Base BxoContainer" )
+${G_myName} ${extraInfo} -i bxoContainer_provisionSetup
+_EOF_
+    
+}
+
+function vis_bsipProvsionNativeExamples {
+    typeset extraInfo="-h -v -n showRun"
+    #typeset extraInfo=""
+    typeset runInfo="-p ri=lsipusr:passive"
+
+    typeset examplesInfo="${extraInfo} ${runInfo}"
+
+    cat  << _EOF_
+$( examplesSeperatorChapter "Native Examples" )
+$( examplesSeperatorSection "Native Base BxoContainer" )
+${G_myName} ${extraInfo} -i bxoContainer_provisionSetup
+_EOF_
+    
+}
+
+
+
+function osmtTmpExamples {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+    
+    local extraInfo="$1"
+    local provisionersBinBase="$( provisionersBinBaseGet )"
+
+    cat  << _EOF_    
+$( examplesSeperatorChapter "Temporary OSMT Setup" )
+$( examplesSeperatorSection "Run OSMT Genesis" )
+${provisionersBinBase}/osmtBx2GenesisSelfcontained.sh
+${G_myName} ${extraInfo} -i osmtGenesis baseIoC
+${G_myName} ${extraInfo} -i osmtGenesis baseIoC atNeda
+$( examplesSeperatorChapter "BISOS Bases Administration (/bisos/core)" )
+$( examplesSeperatorSection "bisosBasesAdmin" )
+_EOF_
+}
+
 
 noArgsHook() {
   vis_examples
 }
+
+function vis_bxoContainer_provisionSetup {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local bisosBinBase="$( bisosBinBaseGet )"
+
+    echo "Setup tex, fonts, tools and needed scripts and preps for bxo old and new"
+    
+    lpReturn
+}
+
+
+_CommentBegin_
+*  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*
+_CommentEnd_
+
+####+BEGIN: bx:dblock:bash:end-of-file :type "basic"
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  Common        ::  /[dblock] -- End-Of-File Controls/ [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+#+STARTUP: showall
+#local variables:
+#major-mode: sh-mode
+#fill-column: 90
+# end:
+####+END:
+

@@ -42,47 +42,45 @@ _EOF_
     local bisosBinBase="$( bisosBinBaseGet )"
     
     cat  << _EOF_
-$( examplesSeperatorChapter "BISOS Provisioning:: From /bisos/core/bsip" )
+$( examplesSeperatorChapter "BISOS Provisioning:: From /bisos/core/bsip/bin/bsipProvision_lib.sh" )
 $( examplesSeperatorSection "BSIP Provision Targets" )
-${G_myName} ${extraInfo} -i bsipProvision_baseBisosPlatform
+${G_myName} ${extraInfo} -i bsipProvision_sysBasePlatform    # Minimal Host or Guest plus Blee
 $( examplesSeperatorSection "BISOS Accounts" )
 ${G_myName} ${extraInfo} -i provisionBisosAccts
 $( examplesSeperatorSection "USG Account Bases" )
 ${G_myName} ${extraInfo} -i provisionUsgAcctBases
 $( examplesSeperatorSection "Sys Essentials" )
 ${G_myName} ${extraInfo} -i provisionEssentials
-$( examplesSeperatorSection "Basic Blee -- system emacs" )
-${G_myName} ${extraInfo} -i provisionBasicBlee
-$( examplesSeperatorSection "PySys and PyVenv" )
+$( examplesSeperatorSection "Emacs, Blee, PyEnv and VirtSys" )
 ${G_myName} ${extraInfo} -i provisionPySysSetup
 ${G_myName} ${extraInfo} -i provisionPyVenvSetup
+${G_myName} ${extraInfo} -i provisionBasicBlee
+${G_myName} ${extraInfo} -i provisionEmacsFromSrc
+${G_myName} ${extraInfo} -i provisionBasicBlee
 _EOF_
+
+    vis_fromBsipProvisionExamplesList
 }
 
 
-function osmtTmpExamples {
+function vis_fromBsipProvisionExamplesList {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
-    EH_assert [[ $# -eq 1 ]]
+    EH_assert [[ $# -eq 0 ]]
     
-    local extraInfo="$1"
-    local provisionersBinBase="$( provisionersBinBaseGet )"
+    local bisosBinBase="$( bisosBinBaseGet )"
+    local bisosProg="${bisosBinBase}/bsipProvision.sh"
 
-    cat  << _EOF_    
-$( examplesSeperatorChapter "Temporary OSMT Setup" )
-$( examplesSeperatorSection "Run OSMT Genesis" )
-${provisionersBinBase}/osmtBx2GenesisSelfcontained.sh
-${G_myName} ${extraInfo} -i osmtGenesis baseIoC
-${G_myName} ${extraInfo} -i osmtGenesis baseIoC atNeda
-$( examplesSeperatorChapter "BISOS Bases Administration (/bisos/core)" )
-$( examplesSeperatorSection "bisosBasesAdmin" )
-_EOF_
+    ${bisosProg} -i postSysBaseExamples
+    
 }
 
 
-function vis_bsipProvision_baseBisosPlatform {
+
+
+function vis_bsipProvision_sysBasePlatform {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -95,11 +93,15 @@ _EOF_
 
     lpDo vis_provisionEssentials
 
-    lpDo vis_provisionBasicBlee
-
     lpDo vis_provisionPySysSetup
 
     lpDo vis_provisionPyVenvSetup
+
+    lpDo vis_provisionBasicBlee
+
+    lpDo vis_provisionEmacsFromSrc
+
+    lpDo vis_provisionVirtSysSetup
 }
 
 
@@ -236,6 +238,27 @@ _EOF_
     lpReturn
 }
 
+function vis_provisionVirtSysSetup {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local bisosBinBase="$( bisosBinBaseGet )"
+	
+    # /bisos/core/bsip/bin/bisosVirtSysSetup.sh
+    local bisosProg="${bisosBinBase}/bisosVirtSysSetup.sh"
+
+    if [ ! -x "${bisosProg}" ] ; then
+	EH_problem "Missing ${bisosProg}"
+	lpReturn 1
+    else	
+    	opDo "${bisosProg}" -h -v -n showRun  -i virtSys_provisionSetup
+    fi
+    
+    lpReturn
+}
 
 
 function vis_osmtGenesis {
