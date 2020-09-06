@@ -643,8 +643,8 @@ _EOF_
 	opDo apt-get -y install  libjpeg-dev
 	opDo apt-get -y install  libtiff-dev
 	opDo apt-get -y install  libncurses5-dev
-	opDo apt-get -y install  libgif-dev      # NOTYET double check on need for this
-	opDo apt-get -y install  libpng12-dev
+	opDo apt-get -y install  libgif-dev
+	opDo apt-get -y install  libpng-dev
 	opDo apt-get -y install  librsvg2-dev
 	opDo apt-get -y install  libotf-dev
 	
@@ -1117,7 +1117,7 @@ _EOF_
 
     local emacsVersion=${srcPkgSelector##emacs}  # eg, 28 - emacs front stripped from emacs28 
     
-    local emacsProg=$( echo /usr/local/bin/emacs-${emacsVersion}.* )
+    local emacsProg=$( ls -t /usr/local/bin/emacs-${emacsVersion}.* | head -1 )
     local emacsClientFullVersion=$( /usr/local/bin/emacsclient --version | cut -d ' ' -f 2 )
     local emacsClientVersion=$( /usr/local/bin/emacsclient --version | cut -d ' ' -f 2 | cut -d '.' -f 1 )
 
