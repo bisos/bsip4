@@ -32,7 +32,7 @@ fi
 ####+END:
 
 _CommentBegin_
-####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/libre/ByStar/InitialTemplates/software/plusOrg/dblock/inserts/topControls.org"
+####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/bisos/apps/defaults/software/plusOrg/dblock/inserts/topControls.org"
 *      ================
 *  /Controls/ ::  [[elisp:(org-cycle)][| ]]  [[elisp:(show-all)][Show-All]]  [[elisp:(org-shifttab)][Overview]]  [[elisp:(progn (org-shifttab) (org-content))][Content]] | [[file:Panel.org][Panel]] | [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] | [[elisp:(bx:org:run-me)][Run]] | [[elisp:(bx:org:run-me-eml)][RunEml]] | [[elisp:(delete-other-windows)][(1)]] | [[elisp:(progn (save-buffer) (kill-buffer))][S&Q]]  [[elisp:(save-buffer)][Save]]  [[elisp:(kill-buffer)][Quit]] [[elisp:(org-cycle)][| ]]
 ** /Version Control/ ::  [[elisp:(call-interactively (quote cvs-update))][cvs-update]]  [[elisp:(vc-update)][vc-update]] | [[elisp:(bx:org:agenda:this-file-otherWin)][Agenda-List]]  [[elisp:(bx:org:todo:this-file-otherWin)][ToDo-List]] 
@@ -48,7 +48,7 @@ _CommentEnd_
 
 function vis_moduleDescription {  cat  << _EOF_
 *  [[elisp:(org-cycle)][| ]]  Xrefs         :: *[Related/Xrefs:]*  <<Xref->>  -- External Documents  [[elisp:(org-cycle)][| ]]
-**  [[elisp:(org-cycle)][| ]]  Panel        :: [[file:/libre/ByStar/InitialTemplates/activeDocs/bxServices/versionControl/fullUsagePanel-en.org::Xref-VersionControl][Panel Roadmap Documentation]] [[elisp:(org-cycle)][| ]]
+**  [[elisp:(org-cycle)][| ]]  Panel        :: [[file:/bisos/apps/defaults/activeDocs/bxServices/versionControl/fullUsagePanel-en.org::Xref-VersionControl][Panel Roadmap Documentation]] [[elisp:(org-cycle)][| ]]
 *  [[elisp:(org-cycle)][| ]]  Info          :: *[Module Description:]* [[elisp:(org-cycle)][| ]]
 **  [[elisp:(org-cycle)][| ]]  Overview     ::  Types Of ICM  [[elisp:(org-cycle)][| ]]
     The following ICM-Bash types are recognized:
@@ -143,8 +143,8 @@ _EOF_
     typeset scriptName="$1"
     typeset icmGroupBaseDir="/opt/public/osmt/bin"
     #typeset icmTemplatesBaseDir=$( FN_absolutePathGet ~lsipusr/BUE/inserts/moded/sh-mode/bx/start )
-    #  /libre/ByStar/InitialTemplates/software/begin/iimBash/lpSimple.generic
-    typeset icmTemplatesBaseDir="/libre/ByStar/InitialTemplates/software/begin/iimBash"
+    #  /bisos/apps/defaults/software/begin/iimBash/lpSimple.generic
+    typeset icmTemplatesBaseDir="/bisos/apps/defaults/software/begin/iimBash"
 
     typeset scriptFullName=${icmGroupBaseDir}/${scriptName}
     
@@ -174,8 +174,8 @@ _EOF_
     typeset scriptName="$1"
     typeset icmGroupBaseDir="$( getBsipBase )/bin"
     #typeset icmTemplatesBaseDir=$( FN_absolutePathGet ~lsipusr/BUE/inserts/moded/sh-mode/bx/start )
-    #  /libre/ByStar/InitialTemplates/software/begin/icmBash/lpSimple.generic
-    typeset icmTemplatesBaseDir="/libre/ByStar/InitialTemplates/software/begin/icmBash"
+    #  /bisos/apps/defaults/software/begin/icmBash/lpSimple.generic
+    typeset icmTemplatesBaseDir="/bisos/apps/defaults/software/begin/icmBash"
 
     typeset scriptFullName=${icmGroupBaseDir}/${scriptName}
     
@@ -206,8 +206,8 @@ _EOF_
     typeset scriptName="$1"
     typeset icmGroupBaseDir="/opt/public/osmt/lib"
     #typeset icmTemplatesBaseDir=$( FN_absolutePathGet ~lsipusr/BUE/inserts/moded/sh-mode/bx/start )
-    #  /libre/ByStar/InitialTemplates/software/begin/iimBash/libSh.generic
-    typeset icmTemplatesBaseDir="/libre/ByStar/InitialTemplates/software/begin/iimBash"
+    #  /bisos/apps/defaults/software/begin/iimBash/libSh.generic
+    typeset icmTemplatesBaseDir="/bisos/apps/defaults/software/begin/iimBash"
     
     typeset scriptFullName=${icmGroupBaseDir}/${scriptName}
     
@@ -236,8 +236,8 @@ _EOF_
     typeset scriptName="$1"
     typeset icmGroupBaseDir="$( getBsipBase )/bin"
     #typeset icmTemplatesBaseDir=$( FN_absolutePathGet ~lsipusr/BUE/inserts/moded/sh-mode/bx/start )
-    #  /libre/ByStar/InitialTemplates/software/begin/iimBash/libSh.generic
-    typeset icmTemplatesBaseDir="/libre/ByStar/InitialTemplates/software/begin/icmBash"
+    #  /bisos/apps/defaults/software/begin/iimBash/libSh.generic
+    typeset icmTemplatesBaseDir="/bisos/apps/defaults/software/begin/icmBash"
     
     typeset scriptFullName=${icmGroupBaseDir}/${scriptName}
     
@@ -272,7 +272,7 @@ _EOF_
     typeset scriptName="$1"
     typeset icmGroupBaseDir="."
     # ~lsipusr/BUE/inserts/moded/sh-mode/bx/start/binsPrepLcaSimple.sh
-    typeset icmTemplatesBaseDir=$( /libre/ByStar/InitialTemplates/software/begin/iimBash )    
+    typeset icmTemplatesBaseDir=$( /bisos/apps/defaults/software/begin/iimBash )    
 
     typeset scriptFullName=${icmGroupBaseDir}/${scriptName}
     
@@ -345,7 +345,7 @@ _EOF_
     # ~lsipusr/BUE/inserts/moded/sh-mode/bx/start/binsPrepLcaSimple.sh
     #typeset icmTemplatesBaseDir=$( FN_absolutePathGet ~lsipusr/BUE/inserts/moded/sh-mode/bx/start )
 
-    typeset icmTemplatesBaseDir="/libre/ByStar/InitialTemplates/software/begin/iimBash"
+    typeset icmTemplatesBaseDir="/bisos/apps/defaults/software/begin/iimBash"
 
     typeset scriptFullName=${icmGroupBaseDir}/${scriptName}
     
@@ -355,7 +355,7 @@ _EOF_
 	lpReturn 101
     fi
 
-    # /libre/ByStar/InitialTemplates/software/begin/iimBash/binsPrepLcaSimple.sh
+    # /bisos/apps/defaults/software/begin/iimBash/binsPrepLcaSimple.sh
     opDo cp ${icmTemplatesBaseDir}/binsPrepLcaSimple.sh ${scriptFullName}
     opDo chmod 775 ${scriptFullName}
     opDo bx-dblock -i dblockUpdateFiles ${scriptFullName}
@@ -456,7 +456,7 @@ _EOF_
     typeset icmGroupBaseDir="/opt/public/osmt/bin"
     # ~lsipusr/BUE/inserts/moded/sh-mode/bx/start/binsPrepLcaSimple.sh
     #typeset icmTemplatesBaseDir=$( FN_absolutePathGet ~lsipusr/BUE/inserts/moded/sh-mode/bx/start )
-    typeset icmTemplatesBaseDir=$(FN_absolutePathGet  /libre/ByStar/InitialTemplates/software/begin/iimBash)
+    typeset icmTemplatesBaseDir=$(FN_absolutePathGet  /bisos/apps/defaults/software/begin/iimBash)
 
     typeset scriptFullName=${icmGroupBaseDir}/${scriptName}
     
@@ -496,7 +496,7 @@ _EOF_
 
     typeset scriptName="$1"
     typeset icmGroupBaseDir="/opt/public/osmt/bin"
-    typeset icmTemplatesBaseDir=$(FN_absolutePathGet /libre/ByStar/InitialTemplates/software/begin/iimBash)
+    typeset icmTemplatesBaseDir=$(FN_absolutePathGet /bisos/apps/defaults/software/begin/iimBash)
 
     typeset scriptFullName=${icmGroupBaseDir}/${scriptName}
     

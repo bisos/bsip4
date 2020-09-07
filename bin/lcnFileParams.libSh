@@ -1,0 +1,241 @@
+#!/bin/osmtKsh
+#!/bin/osmtKsh
+
+vis_fileParamsHelp () {
+  cat  << _EOF_
+
+---
+
+  File Based Language Independent Parameter Specification
+
+    BASH Bindings
+
+---
+
+  ( This is not in the spirit of Hungarian notation )
+
+ FILE NAME CONVENTIONS
+ =====================
+
+ORIGIN
+------
+ =  (m)          -- (Mandatory) Parameter is unititialized and requires input
+ -  (s)          -- (Specified) Default initialized -- expected to be changed
+ %  (o)          -- Optional, blank is fine
+    (d)          -- Derived
+
+
+VARIABLE CONTENT
+----------------
+ _  (r)         -- Registered variable -- A change can violate schema
+
+
+VARIABLE TYPE
+-------------
+ #  (l)          -- A List
+ :  (c)          -- Complex Variable - Unspecified, semantic specific
+ @  (p)          -- Pointer
+ [1-9]           -- Ordered array
+ /directory      -- C struct
+
+
+READ/WRITE
+----------
+ .  (n)          -- Readonly
+
+
+---
+
+  - Code Generator
+     Given a directory, create a BASH Library that reads and writes 
+     the parameters
+
+  - Validator
+
+
+_EOF_
+  return 0
+}
+
+
+
+
+function fileParamsCodeGenOutput {
+  EH_assert [[ $# -ge 1 ]]
+
+  hereDir=$( pwd )
+
+  paramsFileBaseDir=$1
+
+  if [ "${2}_" == "_" ] ; then
+      paramTag=""
+  else
+      paramTag=$2
+  fi
+
+  if [[ -d ${paramsFileBaseDir} ]] ; then 
+   if  ! cd ${paramsFileBaseDir}  ; then
+      EH_problem "Failed:  ${paramsFileBaseDir}"
+	exit 101
+   fi
+  else
+      EH_problem "Missing ${paramsFileBaseDir} Directory"
+      return 100
+  fi
+
+  filesList=$( find . -maxdepth 1 -type f   -print | egrep -v '~$' | egrep -v '\.sh$' | egrep -v README | sed -e s:^./:: )
+
+  funcName=cpf_$( FN_nonDirsPart ${paramsFileBaseDir} | sed -e s:-:_: )
+
+
+  cat  << _EOF_
+function ${funcName} {
+
+   if  ! cd ${paramsFileBaseDir}  ; then
+      EH_problem "Failed:  ${paramsFileBaseDir}"
+	exit 101
+   fi
+
+_EOF_
+  
+  for oneFile in ${filesList}; do
+      # Catch and process the last character
+      leftPart=${oneFile%:*}
+      rightPart=${oneFile##*:}
+      if [ "${paramTag}_" == "_" ] ; then
+          cat  << _EOF_
+   cp_${leftPart}="\$( cat ${oneFile} )"
+_EOF_
+      else
+        cat  << _EOF_
+   cp_${paramTag}_${leftPart}="\$( cat ${oneFile} )"
+_EOF_
+      fi
+  done
+  cat  << _EOF_
+}
+_EOF_
+
+    if  ! cd ${hereDir}  ; then
+      EH_problem "Failed:  cd ${hereDir}"
+      exit 101
+    fi
+}
+
+function fileParamsCodeGenToFile {
+  EH_assert [[ $# -eq 1 ]]
+
+  paramsFileBaseDir=$1
+
+  funcName=cpf_$( FN_nonDirsPart ${paramsFileBaseDir} | sed -e s:-:_: )
+
+  fileParamsCodeGenOutput ${paramsFileBaseDir} > ${paramsFileBaseDir}/${funcName}.sh
+}
+
+function fileParamsLoadVarsFromBaseDir {
+  EH_assert [[ $# -eq 1 ]]
+  paramsFileBaseDir=$1
+
+  hereDir=$( pwd )
+
+  funcName=cpf_$( FN_nonDirsPart ${paramsFileBaseDir} | sed -e s:-:_: )
+
+
+  #if [ ! -f ${paramsFileBaseDir}/${funcName}.sh ] ; then
+     fileParamsCodeGenToFile ${paramsFileBaseDir}	
+  #fi	
+
+  . ${paramsFileBaseDir}/${funcName}.sh
+
+  ${funcName}
+
+    # NOTYET, Bug here if pwd includes spaces
+    if  ! cd -- "${hereDir}"  ; then
+      EH_problem "Failed:  cd ${hereDir}"
+      exit 101
+    fi
+}
+
+function fileParamsShow {
+  EH_assert [[ $# -eq 1 ]]
+
+  paramsFileBaseDir=$1
+
+  fileParamsCodeGenToFile ${paramsFileBaseDir}
+  fileParamsLoadVarsFromBaseDir	${paramsFileBaseDir}	
+  
+  if [[ -d ${paramsFileBaseDir} ]] ; then 
+      opDoExit cd ${paramsFileBaseDir}
+  else
+      EH_problem "Missing ${paramsFileBaseDir} Directory"
+      return 100
+  fi
+
+  filesList=$( find . -maxdepth 1 -type f   -print | egrep -v '~$' | egrep -v '\.sh$' | egrep -v README | sed -e s:^./:: )
+
+  if [ -z "${filesList}" ] ; then
+      ANT_raw "Empty fileParams -- directory=$1"
+      lpReturn
+  fi    
+
+  funcName=cpf_$( FN_nonDirsPart ${paramsFileBaseDir} | sed -e s:-:_: )
+
+  tmpFileName="/tmp/codeGen.fileParamsShow.$$"
+
+  cat  << _EOF_ > ${tmpFileName}
+function ${funcName} {
+
+_EOF_
+  
+  for oneFile in ${filesList}; do
+      # Catch and process the last character
+      leftPart=${oneFile%:*}
+      rightPart=${oneFile##*:}
+      cpVarName="cp_${leftPart}"
+      cat  << _EOF_  >> ${tmpFileName}
+   echo cp_${leftPart}="\$${cpVarName}"
+_EOF_
+  done
+  cat  << _EOF_ >> ${tmpFileName}
+}
+_EOF_
+
+   .  ${tmpFileName}
+
+   ${funcName}
+
+   opDo rm ${tmpFileName}
+}
+
+function fileParamsWrite {
+  EH_assert [[ $# -eq 2 ]]
+
+  paramsFileBaseDir=$1
+  destBaseDir=$2
+
+    EH_assert [[ -d ${paramsFileBaseDir} ]]
+    EH_assert [[ -d ${destBaseDir} ]]
+
+
+  fileParamsCodeGenToFile ${paramsFileBaseDir}
+  fileParamsLoadVarsFromBaseDir	${paramsFileBaseDir}	
+  
+  if [[ -d ${paramsFileBaseDir} ]] ; then 
+      opDoExit cd ${paramsFileBaseDir}
+  else
+      EH_problem "Missing ${paramsFileBaseDir} Directory"
+      return 100
+  fi
+
+  filesList=$( find . -maxdepth 1 -type f   -print | egrep -v '~$' | egrep -v '\.sh$' | egrep -v README | sed -e s:^./:: )
+
+
+  for oneFile in ${filesList}; do
+   # NOTYET, makes it be safe
+   opDo cp ${oneFile} ${destBaseDir}/${oneFile}
+  done
+
+  opDo ls -ld ${destBaseDir}
+
+}
+

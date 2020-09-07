@@ -174,11 +174,11 @@ if [[ "${BASH_VERSION}X" != "X" ]] ; then
     alias opDoAssertContinue='_opDoAssertContinue "${G_myName}" "$FUNCNAME" $LINENO'
 
     # Complain and die if fails
-    alias opDoExit='_opDo "${BASH_SOURCE[0]}" "${G_myName}" "$FUNCNAME" $LINENO "EXIT"'
+    alias opDoExit='_opDo "${G_myName}" "$FUNCNAME" $LINENO "EXIT"'
 
     # Complain and return to calling function if fails
-    #alias opDoRet="trap 'echo HAI; return \$?' ERR ;_opDo "${BASH_SOURCE[0]}" '${G_myName}' '$FUNCNAME' $LINENO 'DONT_EXIT'"
-    #alias opDoRet='_opDo "${BASH_SOURCE[0]}" "${G_myName}" "$FUNCNAME" $LINENO "DONT_EXIT"'
+    #alias opDoRet="trap 'echo HAI; return \$?' ERR ;_opDo '${G_myName}' '$FUNCNAME' $LINENO 'DONT_EXIT'"
+    #alias opDoRet='_opDo "${G_myName}" "$FUNCNAME" $LINENO "DONT_EXIT"'
     alias opDoRet='opDoComplain '
 
     #alias TM_funcEntered='print -u2 "TM_,Entered: ${G_myName}":$LINENO:"$FUNCNAME" args: 1="$1" 2="$2" From: -$(caller 0)-$(caller 1)'
@@ -186,18 +186,18 @@ if [[ "${BASH_VERSION}X" != "X" ]] ; then
     alias G_funcEntry='G_thisFunc=$FUNCNAME; G_thisFuncArgs=$@'
 
     # Complain if fails
-    #alias opDoComplain='trap "incomplain" ERR ; _opDo "${BASH_SOURCE[0]}" "${G_myName}" "$FUNCNAME" $LINENO "DONT_EXIT"'
-    alias opDoComplain='_opDo "${BASH_SOURCE[0]}" "${G_myName}" "$FUNCNAME" $LINENO "DONT_EXIT"'
-    #alias lpDoRet='trap "errHandlerRet" ERR;_opDo "${BASH_SOURCE[0]}" "${G_myName}" "$FUNCNAME" "$LINENO" "JUST_DO"'
-    #alias lpDoRet='trap "TRIGGERED_ERR" ERR ;_opDo "${BASH_SOURCE[0]}" "${G_myName}" "$FUNCNAME" "$LINENO" "DONT_EXIT"'
+    #alias opDoComplain='trap "incomplain" ERR ; _opDo "${G_myName}" "$FUNCNAME" $LINENO "DONT_EXIT"'
+    alias opDoComplain='_opDo "${G_myName}" "$FUNCNAME" $LINENO "DONT_EXIT"'
+    #alias lpDoRet='trap "errHandlerRet" ERR;_opDo "${G_myName}" "$FUNCNAME" "$LINENO" "JUST_DO"'
+    #alias lpDoRet='trap "TRIGGERED_ERR" ERR ;_opDo "${G_myName}" "$FUNCNAME" "$LINENO" "DONT_EXIT"'
 
     # Just do it
-    #alias opDo='trap "" ERR ;  _opDo "${BASH_SOURCE[0]}" "${G_myName}" "$FUNCNAME" $LINENO "JUST_DO"'
-    alias opDo='_opDo "${BASH_SOURCE[0]}" "${G_myName}" "$FUNCNAME" $LINENO "JUST_DO"'
+    #alias opDo='trap "" ERR ;  _opDo "${G_myName}" "$FUNCNAME" $LINENO "JUST_DO"'
+    alias opDo='_opDo "${G_myName}" "$FUNCNAME" $LINENO "JUST_DO"'
 
     alias lpReturn='lpLastRetFuncIsValid=1; lpLastRetFunc=$FUNCNAME; return'
 
-    alias lpDo='_opDo "${BASH_SOURCE[0]}" "${G_myName}" "$FUNCNAME" $LINENO "JUST_DO"'
+    alias lpDo='_opDo "${G_myName}" "$FUNCNAME" $LINENO "JUST_DO"'
 
     alias EH_retOnFail='errVal=$?; if [[ ${errVal} != 0 ]] ; then  print -u2 "EH_,retOnFail,${G_myName}::$FUNCNAME:$LINENO (ret=${errVal} func=${lpLastRetFunc})"; lpLastRetFunc=$FUNCNAME; return ${errVal}; fi'
 
@@ -209,7 +209,7 @@ if [[ "${BASH_VERSION}X" != "X" ]] ; then
     ###alias opDoRetFail='print -u2 "opDoRetFail,${G_myName}::$FUNCNAME:$LINENO"; return 101'
     alias opDoRetFail='print -u2 "opDoRetFail,${G_myName}::$FUNCNAME:$LINENO"; return 101'
 
-    #alias opDoAfterPause='print -u2 "$FUNCNAME"; _pauseForVerification ; if [[ ${skipIt} == "true" ]] ; then return; fi;_opDo "${BASH_SOURCE[0]}" "${G_myName}" "$FUNCNAME" $LINENO "JUST_DO"'
+    #alias opDoAfterPause='print -u2 "$FUNCNAME"; _pauseForVerification ; if [[ ${skipIt} == "true" ]] ; then return; fi;_opDo "${G_myName}" "$FUNCNAME" $LINENO "JUST_DO"'
     alias opDoAfterPause='_opDoAfterPause "${G_myName}" "$FUNCNAME" $LINENO "JUST_DO"'
 else
 
@@ -221,28 +221,28 @@ else
     alias opDoAssertContinue='_opDoAssertContinue "${G_myName}" "$0" $LINENO'
 
     # Complain and die if fails
-    alias opDoExit='_opDo "${BASH_SOURCE[0]}" "${G_myName}" "$0" $LINENO "EXIT"'
+    alias opDoExit='_opDo "${G_myName}" "$0" $LINENO "EXIT"'
 
     # Complain and return to calling function if fails
-    #alias opDoRet="trap 'echo HAI; return \$?' ERR ;_opDo "${BASH_SOURCE[0]}" '${G_myName}' '$0' $LINENO 'DONT_EXIT'"
-    #alias opDoRet='_opDo "${BASH_SOURCE[0]}" "${G_myName}" "$0" $LINENO "DONT_EXIT"'
+    #alias opDoRet="trap 'echo HAI; return \$?' ERR ;_opDo '${G_myName}' '$0' $LINENO 'DONT_EXIT'"
+    #alias opDoRet='_opDo "${G_myName}" "$0" $LINENO "DONT_EXIT"'
     alias opDoRet='opDoComplain '
 
     alias TM_funcEntered='print -u2 "TM_,Entered: ${G_myName}":$LINENO:"$0" args: 1="$1" 2="$2"'
 
     # Complain if fails
-    #alias opDoComplain='trap "incomplain" ERR ; _opDo "${BASH_SOURCE[0]}" "${G_myName}" "$0" $LINENO "DONT_EXIT"'
-    alias opDoComplain='_opDo "${BASH_SOURCE[0]}" "${G_myName}" "$0" $LINENO "DONT_EXIT"'
-    #alias lpDoRet='trap "errHandlerRet" ERR;_opDo "${BASH_SOURCE[0]}" "${G_myName}" "$0" "$LINENO" "JUST_DO"'
-    #alias lpDoRet='trap "TRIGGERED_ERR" ERR ;_opDo "${BASH_SOURCE[0]}" "${G_myName}" "$0" "$LINENO" "DONT_EXIT"'
+    #alias opDoComplain='trap "incomplain" ERR ; _opDo "${G_myName}" "$0" $LINENO "DONT_EXIT"'
+    alias opDoComplain='_opDo "${G_myName}" "$0" $LINENO "DONT_EXIT"'
+    #alias lpDoRet='trap "errHandlerRet" ERR;_opDo "${G_myName}" "$0" "$LINENO" "JUST_DO"'
+    #alias lpDoRet='trap "TRIGGERED_ERR" ERR ;_opDo "${G_myName}" "$0" "$LINENO" "DONT_EXIT"'
 
     # Just do it
-    #alias opDo='trap "" ERR ;  _opDo "${BASH_SOURCE[0]}" "${G_myName}" "$0" $LINENO "JUST_DO"'
-    alias opDo='_opDo "${BASH_SOURCE[0]}" "${G_myName}" "$0" $LINENO "JUST_DO"'
+    #alias opDo='trap "" ERR ;  _opDo "${G_myName}" "$0" $LINENO "JUST_DO"'
+    alias opDo='_opDo "${G_myName}" "$0" $LINENO "JUST_DO"'
 
     alias lpReturn='lpLastRetFuncIsValid=1; lpLastRetFunc=$0; return'
 
-    alias lpDo='_opDo "${BASH_SOURCE[0]}" "${G_myName}" "$0" $LINENO "JUST_DO"'
+    alias lpDo='_opDo "${G_myName}" "$0" $LINENO "JUST_DO"'
 
     alias EH_retOnFail='errVal=$?; if [[ ${errVal} != 0 ]] ; then  print -u2 "EH_,retOnFail,${G_myName}::$0:$LINENO (ret=${errVal} func=${lpLastRetFunc})"; lpLastRetFunc=$0; return ${errVal}; fi'
 
@@ -254,7 +254,7 @@ else
     ###alias opDoRetFail='print -u2 "opDoRetFail,${G_myName}::$0:$LINENO"; return 101'
     alias opDoRetFail='print -u2 "opDoRetFail,${G_myName}::$0:$LINENO"; return 101'
 
-    #alias opDoAfterPause='print -u2 "$0"; _pauseForVerification ; if [[ ${skipIt} == "true" ]] ; then return; fi;_opDo "${BASH_SOURCE[0]}" "${G_myName}" "$0" $LINENO "JUST_DO"'
+    #alias opDoAfterPause='print -u2 "$0"; _pauseForVerification ; if [[ ${skipIt} == "true" ]] ; then return; fi;_opDo "${G_myName}" "$0" $LINENO "JUST_DO"'
     alias opDoAfterPause='_opDoAfterPause "${G_myName}" "$0" $LINENO "JUST_DO"'
 fi
 
@@ -411,16 +411,10 @@ __opDo_prevFunctionName=""
 
 function _opDo {
     err=0
-    typeset bashSrc="$1"; shift || exit
-    typeset scriptName="$1"; shift || exit     
+    typeset scriptName="$1"; shift || exit 
     typeset functionName="$1"; shift || exit
     typeset lineNumber="$1"; shift || exit
     typeset mode="$1"; shift || exit
-
-    local bashSrcSansDirs=$(FN_nonDirsPart ${bashSrc})
-    local origScriptName=${scriptName}
-
-    #printf 1>&2 " XX ${bashSrc} XX "
 
     if [[ -z "${__opDo_prevScriptName}" ]] ; then
 	export __opDo_prevScriptName=""
@@ -443,13 +437,13 @@ function _opDo {
     if [ -z "${G_recordMode}" ] ; then
 	lineNumberTag="** [${lineNumber}]"
     else
-	lineNumberTag="** [[file:${bashSrc}::${lineNumber}][${lineNumber}]]"	
+	lineNumberTag="** [[file:${G_myFullName}::${lineNumber}][${lineNumber}]]"	
     fi
 
     if [ -z "${G_recordMode}" ] ; then
-	scriptFuncName="* ${bashSrc}::[${lineNumber}] -- ${origScriptName}${functionName}"	
+	scriptFuncName="* ${scriptName}${functionName}"	
     else
-	scriptFuncName="* [[file:${bashSrc}::${lineNumber}][${origScriptName}:${bashSrcSansDirs}:${functionName}]]"		
+	scriptFuncName="* [[file:${G_myFullName}::function ${functionName}][${scriptName}${functionName}]]"		
     fi
 
     typeset msg

@@ -1,0 +1,609 @@
+#!/bin/bash
+
+IimBriefDescription="Library: bxt (ByStar Object Tree)"
+
+ORIGIN="
+* Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee
+"
+
+####+BEGIN: bx:dblock:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
+typeset RcsId="$Id: lcnObjectTree.libSh,v 1.10 2020-08-23 18:21:24 lsipusr Exp $"
+# *CopyLeft*
+# Copyright (c) 2011 Neda Communications, Inc. -- http://www.neda.com
+# See PLPC-120001 for restrictions.
+# This is a Halaal Poly-Existential intended to remain perpetually Halaal.
+####+END:
+
+__author__="
+* Authors: Mohsen BANAN, http://mohsen.banan.1.byname.net/contact
+"
+
+_CommentBegin_
+####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/libre/ByStar/InitialTemplates/software/plusOrg/dblock/inserts/topControls.org"
+*  /Controls/ ::  [[elisp:(org-cycle)][| ]]  [[elisp:(show-all)][Show-All]]  [[elisp:(org-shifttab)][Overview]]  [[elisp:(progn (org-shifttab) (org-content))][Content]] | [[file:Panel.org][Panel]] | [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] | [[elisp:(bx:org:run-me)][Run]] | [[elisp:(bx:org:run-me-eml)][RunEml]] | [[elisp:(delete-other-windows)][(1)]] | [[elisp:(progn (save-buffer) (kill-buffer))][S&Q]]  [[elisp:(save-buffer)][Save]]  [[elisp:(kill-buffer)][Quit]] [[elisp:(org-cycle)][| ]]
+** /Version Control/ ::  [[elisp:(call-interactively (quote cvs-update))][cvs-update]]  [[elisp:(vc-update)][vc-update]] | [[elisp:(bx:org:agenda:this-file-otherWin)][Agenda-List]]  [[elisp:(bx:org:todo:this-file-otherWin)][ToDo-List]] 
+
+####+END:
+_CommentEnd_
+
+_CommentBegin_
+*      ================
+*  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]] CONTENTS-LIST ################
+*  [[elisp:(org-cycle)][| ]]  Notes          :: *[Current-Info:]*  Status, Notes (Tasks/Todo Lists, etc.) [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+
+function vis_moduleDescription {  cat  << _EOF_
+*  [[elisp:(org-cycle)][| ]]  [Xrefs]        :: *[Related/Xrefs:]*  <<Xref->>  -- External Documents  [[elisp:(org-cycle)][| ]]
+**  [[elisp:(org-cycle)][| ]]  Primary Panel :: [[file:/libre/ByStar/InitialTemplates/activeDocs/bxRefModel/bxSrf/fullUsagePanel-en.org::bxt][BISOS Bxt Panel Xref]] [[elisp:(org-cycle)][| ]]
+*  [[elisp:(org-cycle)][| ]]  [Info]         :: *[Module Description:]* [[elisp:(org-cycle)][| ]]
+_EOF_
+}
+
+
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || IIF       ::  vis_describeLocal    [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+
+function vis_describeLocal {
+    cat  << _EOF_
+    Tree Traversal Facilities
+
+Inputs: 
+          leavesList, leavesOrdered, leavesExcludes
+          nodesList, nodesOrdered, nodesExcludes
+
+Outputs: 
+          leavesEffective
+          nodesEffective
+
+A 'dir' is either a leaf or a node or ignorable as in (treeItemEnum)
+_EOF_
+}
+
+
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || Enum      ::  treeItemEnum    [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+
+typeset    treeItemFileName="_tree_"
+typeset -A treeItemEnum=(
+    [node]=node                   # this dir is a node 
+    [leaf]=leaf                   # this dir is a leaf
+    [ignore]=ignore               # ignore this and everything below it
+    [auxLeaf]=auxLeaf             # ignore processing this leaf -- stop traversing
+    [auxNode]=auxNode             # ignore processing this node but continue traversing
+    [ignoreLeaf]=ignoreLeaf       # Deprecated -- ignore this leaf -- Same as auxLeaf
+    [ignoreNode]=ignoreNode       # Deprecated -- ignore this node but continue traversing -- Same as auxNode
+)
+
+typeset    treeItemProcessor="_treeProc_"
+
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || Enum      ::  commonObjectTypeEnum    [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+
+typeset    bxtObjectTypeFileName="_objectType_"
+
+#
+# Perhaps commonObjectTypeFileName should be obsoleted
+#
+typeset    commonObjectTypeFileName="_objectType_"
+typeset -A commonObjectTypeEnum=(
+    [auxNode]=fto.auxNode 
+    [auxLeaf]=fto.auxLeaf
+    [node]=fto.node 
+    [leaf]=fto.leaf 
+    [ignore]=fto.ignore
+    [data]=bxt.data
+    [custom]=bxt.custom    
+)
+
+
+
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || IIF       ::  vis_treeFacilitiesExamples    [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+
+function vis_treeFacilitiesExamples {
+
+  #typeset extraInfo=""
+  typeset extraInfo="-v -n showRun"
+
+ cat  << _EOF_
+-- TREE TRAVERSAL FACILITIES ---
+${G_myName} ${extraInfo} -i effectiveLeaves
+${G_myName} ${extraInfo} -i effectiveNodes
+${G_myName} ${extraInfo} -i leavesListThere . 2> /dev/null
+${G_myName} ${extraInfo} -i nodesListThere . 2> /dev/null
+${G_myName} ${extraInfo} -i leafTherePredicate . ; echo \$?
+${G_myName} ${extraInfo} -i nodeTherePredicate . ; echo \$?
+_EOF_
+}
+
+# }}}
+
+
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || IIF       ::  vis_treeRecurse    [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+
+# Should be vis_ftoWalkRunFunc
+function vis_treeRecurse {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+Given effectiveNodes, walk through each node,
+in each node based on effectiveLeaves, walk through each leaf.
+_EOF_
+    }
+ 
+    typeset thisNode=""
+    typeset currentDir=`pwd`
+
+    print "#### At Current Node: ${currentDir} ####"
+
+    #opDoComplain ${G_myName} -n showRun -i "$@"
+    ${G_myName} -n showRun -i "$@"
+
+    typeset effectiveLeaves=$( vis_effectiveLeaves )
+    print "#### At ${currentDir}: effectiveLeaves=${effectiveLeaves}  ####"
+
+    for thisLeaf in ${effectiveLeaves} ; do
+	#opDoComplain cd ${currentDir}/${thisLeaf} || continue
+	cd ${currentDir}/${thisLeaf} || continue
+	print "#### At Leaf: ${currentDir}/${thisLeaf} ####"
+	#opDoComplain ${G_myName} -n showRun -i "$@"
+	typeset treeProc
+	if [ -f "ftoProc.sh" ] ; then
+	    treeProc="ftoProc.sh"
+	elif [ -f "_treeProc_" ] ; then
+	    treeProc=$( cat _treeProc_ )
+	elif [ -f "lcntProc.sh" ] ; then
+	    treeProc="lcntProc.sh"
+	elif [ -f "${G_myName}" ] ; then
+	    treeProc="${G_myName}"
+	else
+	    "EH_problem No Processor Found -- Being Skipped"
+	    continue
+	fi
+	
+	opDoComplain ${treeProc} -n showRun -i "$@"
+    done
+
+    typeset effectiveNodes=$( vis_effectiveNodes )
+    print "#### At ${currentDir}: effectiveNodes=${effectiveNodes}  ####"
+
+    for thisNode in ${effectiveNodes} ; do
+	#opDoComplain cd ${currentDir}/${thisNode} || continue
+	cd ${currentDir}/${thisNode} || continue
+	print "#### Recursing To Node: ${currentDir}/${thisNode} ####"
+
+	#opDoComplain ${G_myName} -n showRun -i treeRecurse "$@"
+	typeset treeProc
+	if [ -f "_treeProc_" ] ; then
+	    treeProc=$( cat _treeProc_ )
+	elif [ -f "lcntProc.sh" ] ; then
+	    treeProc="lcntProc.sh"
+	elif [ -f "${G_myName}" ] ; then
+	    treeProc="${G_myName}"
+	else
+	    "EH_problem No Processor Found -- Being Skipped"
+	    continue
+	fi
+	
+	${treeProc} -n showRun -i treeRecurse "$@"
+    done
+}
+
+
+function vis_in_nodeBase_ {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+_EOF_
+		       }
+    local currentDir=$( pwd )
+    local relCurDir=$( FN_nonDirsPart ${currentDir} )
+
+    if [ ${relCurDir} == "_nodeBase_" ] ; then
+	lpReturn 0
+    else
+	lpReturn 1
+    fi
+}
+		       
+
+function vis_ftoWalkRunCmnd {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+Given effectiveNodes, walk through each node,
+in each node based on effectiveLeaves, walk through each leaf.
+RunCommand must be in the cwd.
+_EOF_
+    }
+ 
+    typeset thisNode=""
+    typeset currentDir=`pwd`
+
+    function perhapsRun {
+	local cmndName=$1
+	if which ${cmndName} ; then
+	    opDoComplain  "$@"
+	else
+	    ANT_raw "Missing ${cmndName} -- Execution Skipped"
+	fi
+    }
+
+    ANT_raw  "#### At Current Node: ${currentDir} ####"
+
+    perhapsRun "$@"
+
+    typeset effectiveLeaves=$( vis_effectiveLeaves )
+    ANT_raw  "#### At ${currentDir}: effectiveLeaves=${effectiveLeaves}  ####"
+
+    for thisLeaf in ${effectiveLeaves} ; do
+	#opDoComplain cd ${currentDir}/${thisLeaf} || continue
+	cd ${currentDir}/${thisLeaf} || continue
+	ANT_raw  "#### At Leaf: ${currentDir}/${thisLeaf} ####"
+	typeset treeProc
+	if [ ! -f "_treeProc_" ] ; then
+	    ANT_raw "Leaf=${thisLeaf} -- No Processor Found -- Being Skipped"
+	    continue
+	fi
+	
+	perhapsRun "$@"
+    done
+
+    typeset effectiveNodes=$( vis_effectiveNodes )
+    print "#### At ${currentDir}: effectiveNodes=${effectiveNodes}  ####"
+
+    for thisNode in ${effectiveNodes} ; do
+	#opDoComplain cd ${currentDir}/${thisNode} || continue
+	cd ${currentDir}/${thisNode} || continue
+	print "#### Recursing To Node: ${currentDir}/${thisNode} ####"
+
+	#opDoComplain ${G_myName} -n showRun -i treeRecurse "$@"
+	typeset treeProc
+	if [ -f "ftoProc.sh" ] ; then
+	    treeProc="ftoProc.sh"
+	elif [ -f "_treeProc_" ] ; then
+	    treeProc=$( cat _treeProc_ )
+	elif [ -f "${G_myName}" ] ; then
+	    treeProc="${G_myName}"
+	else
+	    ANT_raw "Node=${thisNode} -- No Processor Found -- Being Skipped"
+	    continue
+	fi
+	
+	opDo ${treeProc} -n showRun -i ftoWalkRunCmnd "$@"
+    done
+}
+
+
+
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || IIF       ::  vis_effectiveLeaves    [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+
+function vis_effectiveLeaves {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+
+_EOF_
+    }
+
+    EH_assert [[ $# -eq 0 ]]
+
+    if [ "${leavesOrdered}" != "" ] ; then
+	leavesEffective="${leavesOrdered}"
+    else 
+	echo "${leavesExcludes}" | sort > /tmp/$$.excludes
+	echo "${leavesList}" | sort > /tmp/$$.include
+	leavesEffective=$( comm -13 /tmp/$$.excludes /tmp/$$.include )
+	/bin/rm /tmp/$$.excludes /tmp/$$.include 
+    fi
+    echo ${leavesEffective}
+}
+
+
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || IIF       ::  vis_effectiveNodes    [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+
+function vis_effectiveNodes {
+  EH_assert [[ $# -eq 0 ]]
+
+  if [ "${nodesOrdered}" != "" ] ; then
+      nodesEffective="${nodesOrdered}"
+  else 
+      echo "${nodesExcludes}" | sort > /tmp/$$.excludes
+      echo "${nodesList}" | sort > /tmp/$$.include
+      nodesEffective=$( comm -13 /tmp/$$.excludes /tmp/$$.include )
+      /bin/rm /tmp/$$.excludes /tmp/$$.include
+  fi
+  echo ${nodesEffective}
+}
+
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || IIF       ::  vis_leafTherePredicate    [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+
+function vis_leafTherePredicate {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+_EOF_
+    }
+
+    EH_assert [[ $# -eq 1 ]]
+
+    typeset here=$1
+
+    opDoExit cd ${here}
+
+    if [[ ! -f _tree_ ]] ; then 
+	EH_problem "Missing _tree_"
+	lpReturn 101
+    fi
+
+    typeset nodeOrLeaf=$( cat _tree_ )
+
+    if [ "${nodeOrLeaf}" == "leaf" ] ; then
+	lpReturn 0
+    elif [ "${nodeOrLeaf}" == "node" ] ; then
+	lpReturn 1
+    else
+	lpReturn 101
+    fi
+}
+
+
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || IIF       ::  vis_nodeTherePredicate    [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+
+function vis_nodeTherePredicate {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+_EOF_
+    }
+
+    EH_assert [[ $# -eq 1 ]]
+
+    typeset here=$1
+
+    opDoExit cd ${here}
+
+    if [[ ! -f _tree_ ]] ; then 
+	EH_problem "Missing _tree_"
+	#lpReturn 101
+	lpReturn 0
+    fi
+    
+    typeset nodeOrLeaf=$( cat _tree_ )
+
+    if [ "${nodeOrLeaf}" == "node" ] ; then
+	lpReturn 0
+    elif [ "${nodeOrLeaf}" == "auxNode" ] ; then
+	lpReturn 0
+    elif [ "${nodeOrLeaf}" == "leaf" ] ; then
+	lpReturn 1
+    else
+	lpReturn 101
+    fi
+}
+
+
+
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || IIF       ::  vis_leavesListThere    [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+
+function vis_leavesListThere {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+${G_myName}:${G_thisFunc}:Description: 
+_EOF_
+    }
+
+    EH_assert [[ $# -eq 1 ]]
+
+    typeset here=$1
+    opDoExit cd ${here} 2> /dev/null
+    here=$( pwd )
+
+    find -L . -maxdepth 1 -type d -print  | sed -e s:^./:: | egrep -v '^\.$' | egrep -v '^CVS$' | egrep -v '^.git$' |
+    while read thisLine ; do
+
+	opDoExit cd ${here} 
+	if vis_leafTherePredicate ${thisLine} ; then
+	    echo "${thisLine}"
+	fi
+    done
+}
+
+
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || IIF       ::  vis_nodesListThere    [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+
+function vis_nodesListThere {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+${G_myName}:${G_thisFunc}:Description: 
+_EOF_
+    }
+
+    EH_assert [[ $# -eq 1 ]]
+
+    typeset here=$1
+    opDoExit cd ${here} 2> /dev/null
+    here=$( pwd )
+    
+    find -L . -maxdepth 1 -type d -print  | sed -e s:^./:: | egrep -v '^\.$' | egrep -v '^CVS$' | egrep -v '^.git$' |
+    while read thisLine ; do
+	opDoExit cd ${here} 2> /dev/null
+	if vis_nodeTherePredicate ${thisLine} ; then
+	    echo "${thisLine}"
+	fi
+    done
+}
+
+
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || IIF       ::  vis_leafThereTag    [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+
+function vis_leafThereTag {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+Create _tree_ and _treeProc_ files.
+_EOF_
+    }
+    EH_assert [[ $# -eq 2 ]]
+
+    typeset here=$1
+    typeset treeProc=$2
+        
+    vis_bxtThereTag ${here} leaf ${treeProc}
+    lpReturn
+}
+
+
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || IIF       ::  vis_nodeThereTag    [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+
+function vis_nodeThereTag {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+Create _tree_ and _treeProc_ files.
+_EOF_
+    }
+    EH_assert [[ $# -eq 2 ]]
+
+    typeset here=$1
+    typeset treeProc=$2
+
+    vis_bxtThereTag ${here} node ${treeProc}
+    lpReturn
+}
+
+
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || IIF       ::  vis_bxtThereTag    [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+
+function vis_bxtThereTag {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+Create _tree_ and _treeProc_ files based on args.
+_EOF_
+    }
+    EH_assert [[ $# -eq 3 ]]
+
+    typeset here=$1
+    typeset treeItemType=$2
+    typeset treeProc=$3
+
+    opDoExit pushd ${here}
+
+    if [[ -f ${treeItemFileName} ]] ; then 
+	ANT_raw "${treeItemFileName} Already Exists -- Nothing Done"
+    else
+	opDo eval echo "${treeItemEnum[${treeItemType}]}" \> ${treeItemFileName}
+    fi
+
+    if [[ -f ${treeItemProcessor} ]] ; then 
+	ANT_raw "${treeItemProcessor} Already Exists -- Nothing Done"
+    else
+	opDo eval echo "${treeProc}" \> ${treeItemProcessor}
+    fi
+    opDo popd
+    lpReturn
+}
+
+function vis_ftoThereTag {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+Create _tree_ and _treeProc_ files based on args.
+_EOF_
+    }
+    EH_assert [[ $# -eq 3 ]]
+
+    vis_bxtThereTag $@
+}
+
+
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || IIF       ::  vis_bxtThereObjectTypeTag    [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+
+function vis_bxtThereObjectTypeTag {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+Create _tree_ and _treeProc_ files based on args.
+_EOF_
+    }
+    EH_assert [[ $# -eq 2 ]]
+
+    typeset here=$1
+    typeset objectType=$2
+
+    opDoExit pushd ${here}
+
+    if [[ -f ${bxtObjectTypeFileName} ]] ; then 
+	ANT_raw "${bxtObjectTypeFileName} Already Exists -- Nothing Done"
+    else
+	opDo eval echo "${objectType}" \> ${bxtObjectTypeFileName}
+    fi
+
+    opDo popd
+    
+    lpReturn
+}
+
+
+
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || IIF       ::  vis_underBaseRunCommand    [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+
+function vis_underBaseRunCommand {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Given a baseDir as $1, find all underlying directories and 
+in each of those, run rest of the arguments.
+_EOF_
+    }
+    EH_assert [[ $# -ge 2 ]]
+
+    typeset baseDir=$1
+    shift
+    typeset commandToRun=$@
+
+    typeset underBaseDirList=$( find $( FN_absolutePathGet ${baseDir} ) -type d -print | egrep -v '^CVS$' | egrep -v '^.git$' )
+
+    print "%%%%% ${baseDir} %%%%%"
+
+    typeset thisOne=""
+    for thisOne in ${underBaseDirList} ; do
+	opDoComplain cd ${thisOne} || continue
+	print "%%%%%% ${thisOne} %%%%%"
+    
+	opDo ${commandToRun}
+    done
+}
+
+
+_CommentBegin_
+*  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*
+_CommentEnd_
+
+####+BEGIN: bx:dblock:bash:end-of-file :type "basic"
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  Common        ::  /[dblock] -- End-Of-File Controls/ [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+#+STARTUP: showall
+#local variables:
+#major-mode: sh-mode
+#fill-column: 90
+# end:
+####+END:
