@@ -7,7 +7,7 @@ ORIGIN="
 "
 
 ####+BEGIN: bx:dblock:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
-typeset RcsId="$Id: mmaSshAdmin.sh,v 1.1.1.1 2016-06-08 23:49:51 lsipusr Exp $"
+typeset RcsId="$Id: lcaSshAdmin.sh,v 1.1.1.1 2016-06-08 23:49:51 lsipusr Exp $"
 # *CopyLeft*
 # Copyright (c) 2011 Neda Communications, Inc. -- http://www.neda.com
 # See PLPC-120001 for restrictions.
@@ -56,16 +56,16 @@ Establishing trust between
     callerUser@callerHost and calledUser@calledHost
 
 on calledHost as calledUser
-  mmaSshAdmin.sh -e "run as root for now" -p localUser=mohsen -i userKeyUpdate
-  mmaSshAdmin.sh -p localUser=mohsen -i userKeyVerify
+  lcaSshAdmin.sh -e "run as root for now" -p localUser=mohsen -i userKeyUpdate
+  lcaSshAdmin.sh -p localUser=mohsen -i userKeyVerify
 
-  mmaSshAdmin.sh -p localUser=mohsen -p remoteUser=mohsen -p remoteHost=callerHost -i authorizedKeysUpdate
+  lcaSshAdmin.sh -p localUser=mohsen -p remoteUser=mohsen -p remoteHost=callerHost -i authorizedKeysUpdate
 
 on callerHost as callerHost
-  mmaSshAdmin.sh -e "run as root for now" -p localUser=mohsen -i userKeyUpdate
-  mmaSshAdmin.sh -p localUser=mohsen -i userKeyVerify
+  lcaSshAdmin.sh -e "run as root for now" -p localUser=mohsen -i userKeyUpdate
+  lcaSshAdmin.sh -p localUser=mohsen -i userKeyVerify
 
-mmaSshAdmin.sh -p localUser=mohsen -p remoteUser=mohsen -p remoteHost=calledHost -i authorizedKeysUpdate
+lcaSshAdmin.sh -p localUser=mohsen -p remoteUser=mohsen -p remoteHost=calledHost -i authorizedKeysUpdate
 
 _EOF_
 }
@@ -507,7 +507,7 @@ function vis_fullVerify {
 }
 
 function vis_fullUpdate {
-  opDoRet mmaSshBinsPrep.sh -i compInitInstall
+  opDoRet lcaSshBinsPrep.sh -i compInitInstall
   opDoRet vis_serverKeyUpdate
   opDoRet vis_xforwardingEnabled
   #opDoRet vis_start

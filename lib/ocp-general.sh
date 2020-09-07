@@ -376,7 +376,7 @@ function FN_dirCreatePathIfNotThere {
 
   if test -d $1 ;   then
      if [[ "${G_verbose}_" == "verbose_" ]] ; then
-	print -u2 "Directory $1 exists, $0 skipped"
+	printf 1>&2 "Directory $1 exists -- ${BASH_SOURCE[0]} $FUNCNAME skipped\n"
      fi
   else
      mkdir -p $1

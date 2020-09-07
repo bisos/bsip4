@@ -87,7 +87,9 @@ ${G_myName} ${extraInfo} -i usgAcctDelete bystar
 ${G_myName} ${extraInfo} -i usgAcctdelete oneUsgAcct
 ${G_myName} ${extraInfo} -i usgAcctVerify bystar
 ${G_myName} ${extraInfo} -i usgAcctVerify oneUsgAcct
-${G_myName} ${extraInfo} -i usgAcct_supplementaryGroupsAdd bystar
+${G_myName} ${extraInfo} -i usgAcct_supplementaryGroupsUpdate bystar
+${G_myName} ${extraInfo} -i usgAcct_sshKeysUpdate bystar
+${G_myName} ${extraInfo} -i usgAcct_gitConfigUpdate bystar
 _EOF_
 }
 
@@ -222,7 +224,11 @@ _EOF_
 
    lpDo vis_acct_createHome ${acctName}
 
-   lpDo vis_usgAcct_supplementaryGroupsAdd ${acctName}
+   lpDo vis_usgAcct_supplementaryGroupsUpdate ${acctName}
+
+   lpDo vis_usgAcct_sshKeysUpdate ${acctName}   
+
+   lpDo vis_usgAcct_gitConfigUpdate ${acctName}   
    
    opDo vis_sudoersAddLine "${acctName}" ALL NOPASSWD
 
@@ -285,7 +291,7 @@ _EOF_
 
     if [ "${acctName}" == "$( vis_bisosAcct_bystarName )" ] ; then
 	acctUid=$( vis_bisosAcct_bystarUid )
-	acctComment="BISOS Default Usage Acct"
+	acctComment="bystar: BISOS Default Usage Acct"
     else
 	acctUid=$( vis_usgAcctNextLocalUidNu )
 	acctComment="BISOS Named Usage Acct"	
@@ -331,7 +337,7 @@ _EOF_
 }
 
 
-function vis_usgAcct_supplementaryGroupsAdd {
+function vis_usgAcct_supplementaryGroupsUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Add needed supplementary groups to the specified USG account.
@@ -348,7 +354,49 @@ _EOF_
 	opDo sudo usermod -G ${eachGroup} --append ${acctName}    
     done
 }
+
+function vis_usgAcct_sshKeysUpdate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Add sshKeys if not there, with forceMode update existing ones.
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;        
     
+    local acctName="$1"
+
+    if lcaSshAdmin.sh -p localUser="${acctName}" -i userKeyVerify; then
+	if [ "${G_forceMode}" == "force" ] ; then
+	    ANT_raw "Ssh Keys Exist -- Overwriting Them"
+	    opDo lcaSshAdmin.sh -p localUser="${acctName}" -i userKeyUpdate
+	else
+	    ANT_raw "Ssh Keys Exist and No G_forceMode -- Updating Skipped"
+	fi
+    else
+	opDo lcaSshAdmin.sh -p localUser="${acctName}" -i userKeyUpdate
+    fi
+
+
+}
+
+function vis_usgAcct_gitConfigUpdate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Configure git pars -- just a starting point for now.
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;        
+
+    local acctName="$1"
+
+    lpDo sudo -u ${acctName} git config --global user.email "bystar@bisos.net"
+    lpDo sudo -u ${acctName} git config --global user.name "Default Bisos"
+}
+
 
 function vis_usgAcctDelete {
     G_funcEntry

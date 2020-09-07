@@ -183,8 +183,8 @@ binsPrep_postfixCustom_DEFAULT_DEFAULT () {
     function customInstallScript {
 	ANT_raw "Selecting postfix postfix/main_mailer_type string 'No configuration' with debconf-set-selections"
 	echo "postfix postfix/main_mailer_type string 'No configuration'" | sudo  debconf-set-selections
-	ANT_raw "Selecting postfix postfix/mailname string NONE with debconf-set-selections"	
-	echo "postfix postfix/mailname string NONE" | sudo  debconf-set-selections
+	ANT_raw "Selecting postfix postfix/mailname string bisos.net with debconf-set-selections"	
+	echo "postfix postfix/mailname string bisos.net" | sudo  debconf-set-selections
 
 	opDo sudo apt-get -y install postfix
     }
