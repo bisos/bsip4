@@ -1,5 +1,5 @@
-#!/bin/osmtKsh
-#!/bin/osmtKsh
+#!/bin/bash
+#!/bin/bash
 
 # typeset RcsId="$Id: lpParams.libSh,v 1.2 2020-01-05 20:54:40 lsipusr Exp $"
 

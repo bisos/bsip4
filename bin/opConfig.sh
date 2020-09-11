@@ -1,4 +1,4 @@
-#!/bin/osmtKsh
+#!/bin/bash
 
 if [ "${OSMTROOT}X" == "X" ] ; then
     typeset currDir=`dirname $0`

@@ -20,7 +20,7 @@ SEED="
 *  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
 "
 FILE="
-*  /This File/ :: /bisos/core/bsip/bin/usgAcctManage.sh 
+*  /This File/ :: /bisos/core/bsip/bin/convertOsmt2Bsip.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
     /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
@@ -62,14 +62,10 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
-. ${opBinBase}/unisosAccounts_lib.sh
-. ${opBinBase}/bisosGroupAccount_lib.sh
-. ${opBinBase}/bisosAccounts_lib.sh
 
 # PRE parameters
 
 baseDir=""
-acctName=""
 
 function G_postParamHook {
      return 0
@@ -89,52 +85,20 @@ function vis_examples {
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
     visLibExamplesOutput ${G_myName} 
-    cat  << _EOF_
+  cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
-_EOF_
-
-    vis_usgAccountsExamples
-    
-    vis_thisProvisionExamples
-    
-    vis_thisIcmExamples
-}
-
-
-function vis_thisIcmExamples {
-    typeset extraInfo="-h -v -n showRun"
-    #typeset extraInfo=""
-    typeset runInfo="-p ri=lsipusr:passive"
-
-    typeset examplesInfo="${extraInfo} ${runInfo}"
-
-  cat  << _EOF_
-$( examplesSeperatorChapter "List And Report On Existing USG Accounts" )
-${G_myName} ${extraInfo} -i list usgAccts
-${G_myName} ${extraInfo} -i report listOfAccounts
-$( examplesSeperatorChapter "Setup Bases For Specified Account" )
-${G_myName} ${extraInfo} -i acctBase_bashrcUpdate bystar
-blee ${extraInfo} -p acctName=bystar -i provisionSetup
+$( examplesSeperatorChapter "Chapter Title" )
+$( examplesSeperatorSection "Section Title" )
+find /bisos/git/auth/bxRepos -type f -print | egrep '/ftoProc\.sh$' | ${G_myName} ${extraInfo} -i commonAspects
+find /bisos/git/auth/bxRepos -type f -print | egrep '/ftoProc\.sh$' | bx-dblock -i dblockUpdateFiles
+find /bisos/git/auth/bxRepos -type f -print | egrep '/ftoProc\.sh\.[0-9]*$' 
+${G_myName} ${extraInfo} -i commonAspects ./convertOld2NewSed.sh
+$( examplesSeperatorSection "Report" )
+${G_myName} ${extraInfo} -i report ./convertOld2NewSed.sh
+${G_myName} -i report ./convertOld2NewSed.sh
+find . -type f -print |  egrep '\.2020[0-9]*$' 
 _EOF_
 }
-
-function vis_thisProvisionExamples {
-    typeset extraInfo="-h -v -n showRun"
-    #typeset extraInfo=""
-    typeset runInfo="-p ri=lsipusr:passive"
-
-    typeset examplesInfo="${extraInfo} ${runInfo}"
-
-  cat  << _EOF_
-$( examplesSeperatorChapter "USG Provisioning Setups" )
-${G_myName} -i provisionSetup   # Summary outputs
-${G_myName} ${extraInfo} -i provisionSetup    # Detailed outputs
-$( examplesSeperatorSection "USG Provisioning Account Setups" )
-${G_myName} -p acctName=bystar -i provisionSetupAcct   # Summary outputs
-${G_myName} ${extraInfo} -p acctName=bystar -i provisionSetupAcct    # Detailed outputs
-_EOF_
-}
-
 
 noArgsHook() {
   vis_examples
@@ -144,86 +108,111 @@ _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
 _CommentEnd_
 
-function vis_provisionSetup {
+
+
+function vis_report {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-In acctName's (mandtaory) HOME, with vis_prepUpdateInit create emacs init files.
+Function description.
+Design Pattern: processEach based on args or stdin.
+Examples:
+      ${G_myName} -i userAcctsReport bisos
+      echo bisos bystar | ${G_myName} -i userAcctsReport
 _EOF_
     }
-    EH_assert [[ $# -eq 0 ]]
+    local inputsList="$@"
+    local thisFunc=${G_thisFunc}
 
-    acctName=bystar
-    lpDo vis_provisionSetupAcct
-}
+    function processEach {
+	EH_assert [[ $# -eq 1 ]]
+	local each="$1"
 
+	echo "Processing ${thisFunc} ${each}"	
 
-function vis_provisionSetupAcct {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-In acctName's (mandtaory) HOME, with vis_prepUpdateInit create emacs init files.
-_EOF_
+	lpDo egrep "^\#\!/bin/osmtKsh" ${each}
+	lpDo egrep bx:dblock:lsip:bash:seed-spec ${each}
+	lpDo egrep bx:dblock:bash:top-of-file ${each}
+
+	lpReturn 0
     }
-    EH_assert [[ $# -eq 0 ]]
 
-    if [ -z "${acctName}" ] ; then
-	EH_problem "Missing acctName"
-	lpReturn 101
+####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
+    if [ $# -gt 0 ] ; then
+	local each=""
+	for each in ${inputsList} ; do
+	    lpDo processEach ${each}
+	done
+    else
+	local eachLine=""
+	while read -r -t 1 eachLine ; do
+	    if [ ! -z "${eachLine}" ] ; then
+		local each=""
+		for each in ${eachLine} ; do
+		    lpDo processEach ${each}
+		done
+	    fi
+	done
     fi
 
-    # NOTYET, verify that acctName is valid (source needed lib)    
-
-    lpDo vis_acctBase_bashrcUpdate ${acctName}
-
-    lpDo blee -v -n showRun -p acctName=${acctName} -i provisionSetup
-}
-
-
-function vis_acctBase_bashrcUpdate {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-acctName bxo.ue
-_EOF_
-    }
-    EH_assert [[ $# -eq 1 ]]
-    local usgAcctName=$1
-
-    local usgAcctHome=$( eval echo ~${usgAcctName} )
-    local profileDefaultFile="/bisos/apps/defaults/bashrc/usg/_profile"
-    local bashrcDefaultFile="/bisos/apps/defaults/bashrc/usg/_bashrc"
-
-    lpDo sudo -u ${usgAcctName} cp ${profileDefaultFile} ${usgAcctHome}/_profile
-    lpDo sudo -u ${usgAcctName} cp ${bashrcDefaultFile} ${usgAcctHome}/_bashrc
-
-    lpDo sudo -u ${usgAcctName} ln -s ${usgAcctHome}/_profile ${usgAcctHome}/.profile
-    lpDo sudo -u ${usgAcctName} ln -s ${usgAcctHome}/_bashrc ${usgAcctHome}/.bashrc            
-
+####+END:
+    
     lpReturn
 }
 
 
-function vis_baseUpdate_blee {
+
+function vis_commonAspects {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-acctName bxo.ue
+Function description.
+Design Pattern: processEach based on args or stdin.
+Examples:
+      ${G_myName} -i userAcctsReport bisos
+      echo bisos bystar | ${G_myName} -i userAcctsReport
 _EOF_
     }
-    EH_assert [[ $# -eq gt 1 ]]
-    local usgAcctName=$1
+    local inputsList="$@"
+    local thisFunc=${G_thisFunc}
 
+    function processEach {
+	EH_assert [[ $# -eq 1 ]]
+	local each="$1"
+	local eachDateTag="${dateTag}"
+
+	#echo "${thisFunc}" "${each}"	
+	lpDo FN_fileSafeCopy "${each}" "${each}.${eachDateTag}"
+
+	cat ${each}.${eachDateTag} | \
+	    sed -e "s@\#\!/bin/osmtKsh@#!/bin/bash@g" \
+		-e "s@bx:dblock:lsip:bash:seed-spec@bx:bsip:bash:seed-spec@g" \
+		-e "s@bx:dblock:bash:top-of-file@bx:bash:top-of-file@g"  > ${each}
+	
+	lpReturn 0
+    }
+
+####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
+    if [ $# -gt 0 ] ; then
+	local each=""
+	for each in ${inputsList} ; do
+	    lpDo processEach ${each}
+	done
+    else
+	local eachLine=""
+	while read -r -t 1 eachLine ; do
+	    if [ ! -z "${eachLine}" ] ; then
+		local each=""
+		for each in ${eachLine} ; do
+		    lpDo processEach ${each}
+		done
+	    fi
+	done
+    fi
+
+####+END:
+    
     lpReturn
 }
 
-function vis_baseUpdate_bue {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-acctName bxo.ue
-_EOF_
-    }
-    EH_assert [[ $# -eq gt 1 ]]
-    local usgAcctName=$1
-
-    lpReturn
-}
 
 
 _CommentBegin_

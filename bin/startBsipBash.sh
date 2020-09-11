@@ -6,7 +6,7 @@ ORIGIN="
 * Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee
 "
 
-####+BEGIN: bx:dblock:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
+####+BEGIN: bx:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
 typeset RcsId="$Id: startBsipBash.sh,v 1.2 2020-09-01 02:10:49 lsipusr Exp $"
 # *CopyLeft*
 # Copyright (c) 2011 Neda Communications, Inc. -- http://www.neda.com
@@ -78,7 +78,7 @@ _CommentEnd_
 baseDir=""
 
 function getOsmtBase { echo "/opt/public/osmt"; }
-function getBsipBase { echo "/bisos/core/bsip3"; }
+function getBsipBase { echo "/bisos/core/bsip"; }
 
 function G_postParamHook {
      return 0

@@ -12,7 +12,7 @@ ORIGIN="
 * Latest Version Available At: http://www.bysource.org/lsip/bx2Genesis.sh
 "
 
-####+BEGIN: bx:dblock:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
+####+BEGIN: bx:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
 typeset RcsId="$Id: bx2Genesis.sh,v 1.15 2020-04-06 04:16:35 lsipusr Exp $"
 # *CopyLeft*
 # Copyright (c) 2011 Neda Communications, Inc. -- http://www.neda.com

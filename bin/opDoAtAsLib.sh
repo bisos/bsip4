@@ -1,4 +1,4 @@
-#!/bin/osmtKsh
+#!/bin/bash
 
 # 
 # NOTYET

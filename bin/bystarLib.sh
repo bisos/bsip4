@@ -1,4 +1,4 @@
-#!/bin/osmtKsh
+#!/bin/bash
 
 typeset RcsId="$Id: bystarLib.sh,v 1.3 2016-07-29 02:02:53 lsipusr Exp $"
 
