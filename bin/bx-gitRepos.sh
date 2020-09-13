@@ -150,6 +150,55 @@ _EOF_
 }	
 
 
+function vis_cachedBxReposListFileName {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    if [ ! -d "/bisos/var/core/cached" ] ; then
+	lpDo mkdir -p /bisos/var/core/cached
+    fi
+    
+    echo "/bisos/var/core/cached/bxReposList"
+
+    lpReturn
+}	
+
+
+function vis_cachedBxReposListRefresh {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    ANT_cooked "Creating The Cache File:"
+    lpDo stdbuf -i0 -o0 -e0 bx-gitRepos.sh -h -v -n showRun -i bxReposList | tee "${bxReposListFileName}"
+
+    lpReturn
+}	
+
+
+function vis_cachedBxReposList {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local bxReposListFileName=$( vis_cachedBxReposListFileName )
+
+    if [ -f "${bxReposListFileName}" ] ; then
+	cat "${bxReposListFileName}"
+    else
+	ANT_cooked "Creating The Cache File:"
+	lpDo stdbuf -i0 -o0 -e0 bx-gitRepos.sh -h -v -n showRun -i bxReposList | tee "${bxReposListFileName}"
+    fi
+
+    lpReturn
+}	
 
 
 _CommentBegin_

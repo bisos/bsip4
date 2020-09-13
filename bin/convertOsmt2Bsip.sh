@@ -89,14 +89,16 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Chapter Title" )
 $( examplesSeperatorSection "Section Title" )
+find /bisos/git/auth/bxRepos -type f -print | egrep '/ftoProc\.sh$' | wc
+find /bisos/git/auth/bxRepos -type f -print | egrep '/ftoProc\.sh$' | ${G_myName} -i report
 find /bisos/git/auth/bxRepos -type f -print | egrep '/ftoProc\.sh$' | ${G_myName} ${extraInfo} -i commonAspects
 find /bisos/git/auth/bxRepos -type f -print | egrep '/ftoProc\.sh$' | bx-dblock -i dblockUpdateFiles
-find /bisos/git/auth/bxRepos -type f -print | egrep '/ftoProc\.sh\.[0-9]*$' 
-${G_myName} ${extraInfo} -i commonAspects ./convertOld2NewSed.sh
+find /bisos/git/auth/bxRepos -type f -print | egrep '/ftoProc\.sh\.2020[0-9]+$' | wc
+${G_myName} ${extraInfo} -i commonAspects *
 $( examplesSeperatorSection "Report" )
-${G_myName} ${extraInfo} -i report ./convertOld2NewSed.sh
-${G_myName} -i report ./convertOld2NewSed.sh
-find . -type f -print |  egrep '\.2020[0-9]*$' 
+${G_myName} ${extraInfo} -i report *
+${G_myName} -i report *
+find . -type f -print |  egrep '\.2020[0-9]+$' 
 _EOF_
 }
 
@@ -109,7 +111,6 @@ _CommentBegin_
 _CommentEnd_
 
 
-
 function vis_report {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -120,15 +121,15 @@ Examples:
       echo bisos bystar | ${G_myName} -i userAcctsReport
 _EOF_
     }
-    local inputsList="$@"
     local thisFunc=${G_thisFunc}
 
     function processEach {
 	EH_assert [[ $# -eq 1 ]]
 	local each="$1"
 
-	echo "Processing ${thisFunc} ${each}"	
+	echo "Processing ${thisFunc}:: ${each}"
 
+	lpDo egrep "^IimBriefDescription=" ${each}
 	lpDo egrep "^\#\!/bin/osmtKsh" ${each}
 	lpDo egrep bx:dblock:lsip:bash:seed-spec ${each}
 	lpDo egrep bx:dblock:bash:top-of-file ${each}
@@ -136,24 +137,24 @@ _EOF_
 	lpReturn 0
     }
 
-####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
-    if [ $# -gt 0 ] ; then
-	local each=""
-	for each in ${inputsList} ; do
-	    lpDo processEach ${each}
+####+BEGIN: bx:bsip:bash/processArgsAndStdin 
+     function processArgsAndStdin {
+	local effectiveArgs=( "$@" )
+	local stdinArgs
+	local each
+	if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
+	    readarray stdinArgs < /dev/stdin
+	    effectiveArgs=( "$@" "${stdinArgs[@]}" )
+	fi
+	if [ ${#effectiveArgs[@]} -eq 0 ] ; then
+	    ANT_raw "No Args And Stdin Is Empty"
+	    lpReturn
+	fi
+	for each in "${effectiveArgs[@]}"; do
+	    lpDo processEach "${each%$'\n'}"
 	done
-    else
-	local eachLine=""
-	while read -r -t 1 eachLine ; do
-	    if [ ! -z "${eachLine}" ] ; then
-		local each=""
-		for each in ${eachLine} ; do
-		    lpDo processEach ${each}
-		done
-	    fi
-	done
-    fi
-
+    }
+    lpDo processArgsAndStdin "$@"
 ####+END:
     
     lpReturn
@@ -171,7 +172,6 @@ Examples:
       echo bisos bystar | ${G_myName} -i userAcctsReport
 _EOF_
     }
-    local inputsList="$@"
     local thisFunc=${G_thisFunc}
 
     function processEach {
@@ -184,30 +184,31 @@ _EOF_
 
 	cat ${each}.${eachDateTag} | \
 	    sed -e "s@\#\!/bin/osmtKsh@#!/bin/bash@g" \
-		-e "s@bx:dblock:lsip:bash:seed-spec@bx:bsip:bash:seed-spec@g" \
+		-e "s@IimBriefDescription=@IcmBriefDescription=@g" \
+		-e "s@bx:dblock:lsip:bash:seed-spec@bx:bsip:bash:seed-spec@g" \		
 		-e "s@bx:dblock:bash:top-of-file@bx:bash:top-of-file@g"  > ${each}
 	
 	lpReturn 0
     }
 
-####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
-    if [ $# -gt 0 ] ; then
-	local each=""
-	for each in ${inputsList} ; do
-	    lpDo processEach ${each}
+####+BEGIN: bx:bsip:bash/processArgsAndStdin 
+     function processArgsAndStdin {
+	local effectiveArgs=( "$@" )
+	local stdinArgs
+	local each
+	if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
+	    readarray stdinArgs < /dev/stdin
+	    effectiveArgs=( "$@" "${stdinArgs[@]}" )
+	fi
+	if [ ${#effectiveArgs[@]} -eq 0 ] ; then
+	    ANT_raw "No Args And Stdin Is Empty"
+	    lpReturn
+	fi
+	for each in "${effectiveArgs[@]}"; do
+	    lpDo processEach "${each%$'\n'}"
 	done
-    else
-	local eachLine=""
-	while read -r -t 1 eachLine ; do
-	    if [ ! -z "${eachLine}" ] ; then
-		local each=""
-		for each in ${eachLine} ; do
-		    lpDo processEach ${each}
-		done
-	    fi
-	done
-    fi
-
+    }
+    lpDo processArgsAndStdin "$@"
 ####+END:
     
     lpReturn
