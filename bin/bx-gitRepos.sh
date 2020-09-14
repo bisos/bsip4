@@ -100,28 +100,32 @@ function vis_examples {
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Manage Git Repo Base Directories" )
-$( examplesSeperatorSection "List BxRepo Base Directories" )
+$( examplesSeperatorSection "Top Repos BaseDir" )
+${G_myName} -i bxReposBaseDir  # $( ${G_myName} -i bxReposBaseDir )
+${G_myName} -p clout=anon -i bxReposBaseDir # $( ${G_myName} -p clout=anon -i bxReposBaseDir )
+$( examplesSeperatorSection "List BxRepo Base Directories (FTO WalkDirs)" )
 cd /bisos/git/auth/bxRepos && ftoProc.sh -v -n showRun -i treeRecurse gitReposList 2> /dev/null | egrep '^GitRepo' | cut -d ':' -f 2 
 stdbuf -i0 -o0 -e0 ${G_myName} ${extraInfo} -i bxReposList   # default clout=auth
 stdbuf -i0 -o0 -e0 ${G_myName} ${extraInfo} -p clout=anon -i bxReposList   # default clout=auth
 $( examplesSeperatorSection "List Cached BxRepos Base Directories" )
-${G_myName} -i cachedBxReposListFileName  # default clout=auth
-${G_myName} -p clout=anon -i cachedBxReposListFileName
-ls -l $( ${G_myName} -i cachedBxReposListFileName )
-ls -l $( ${G_myName} -p clout=anon -i cachedBxReposListFileName )
+${G_myName} -i cachedBxReposListFileName  # $( ${G_myName} -i cachedBxReposListFileName )
+${G_myName} -p clout=anon -i cachedBxReposListFileName  # $( ${G_myName} -p clout=anon -i cachedBxReposListFileName )
 ${G_myName} ${extraInfo} -i cachedBxReposListRefresh
 ${G_myName} ${extraInfo} -p clout=anon -i cachedBxReposListRefresh
-${G_myName} ${extraInfo} -p basedDir="/bisos/git/auth/bxRepos/bisos-pip" -i cachedBxReposListRefresh
+${G_myName} ${extraInfo} -p basedDir="/bisos/git/auth/bxRepos/bisos-pip" -p clout=auth -i cachedBxReposListRefresh
 ${G_myName} ${extraInfo} -i cachedBxReposList
 ${G_myName} ${extraInfo} -p clout=anon -i cachedBxReposList
 $( examplesSeperatorSection "gitBaseIsCollection Git Repo Base Directories" )
 ${G_myName} -i gitBaseIsCollection ${oneRepoBaseDir}
 ${G_myName} -i cachedBxReposList | ${G_myName} -i gitBaseIsCollection
+${G_myName} -p clout=anon -i cachedBxReposList | ${G_myName} -i gitBaseIsCollection
 $( examplesSeperatorSection "List BxRepo Base grep GIT-DIGEST" )
 cd /bisos/git/auth/bxRepos && ftoProc.sh -v -n showRun -i treeRecurse gitStatusReport 2> /dev/null | grep GIT-DIGEST
 ${G_myName} ${extraInfo} -i gitStatusReport ${oneRepoBaseDir}
 ${G_myName} -i cachedBxReposList | ${G_myName} -i gitStatusReport
 ${G_myName} -i cachedBxReposList | ${G_myName} -i gitStatusReport | grep CHANGED
+${G_myName} -p clout=anon -i cachedBxReposList | ${G_myName} -i gitStatusReport
+${G_myName} -p clout=anon -i cachedBxReposList | ${G_myName} -i gitStatusReport | grep CHANGED
 $( examplesSeperatorSection "Remote Status" )
 ${G_myName} ${extraInfo} -i gitRemStatus ${oneRepoBaseDir}
 ${G_myName} -i cachedBxReposList | ${G_myName} -i gitRemStatus  # Does not work reliably
@@ -234,7 +238,7 @@ _CommentBegin_
 _CommentEnd_
 
 
-function vis_bxReposList {
+function vis_bxReposBaseDir {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -252,14 +256,8 @@ _EOF_
 	fi
     fi
 
-    lpDo pushd "${baseDir}" > /dev/null \
-	&& \
-	stdbuf -i0 -o0 -e0  ftoProc.sh -v -n showRun -i treeRecurse gitReposList 2> /dev/null | \
-	    egrep '^GitRepo' | \
-	    cut -d ':' -f 2 \
-	&& \
-	lpDo popd > /dev/null
-
+    echo "${baseDir}"
+    
     lpReturn
 }	
 
@@ -271,17 +269,10 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    if [ -z "${baseDir}" ] ; then
-	if [ "${clout}" == "auth" ] ; then
-	    baseDir="/bisos/git/auth/bxRepos"
-	elif [ "${clout}" == "anon" ] ; then
-	    baseDir="/bisos/git/anon/bxRepos"
-	else
-	    EH_problem "clout=${clout} is neither auth nor anon"
-	    EH_retOnFail
-	fi
-    fi
+    local baseDir=$( vis_bxReposBaseDir )
 
+    EH_assert [[ "${baseDir}X" != "X" ]]
+    
     lpDo pushd "${baseDir}" > /dev/null \
 	&& \
 	stdbuf -i0 -o0 -e0  ftoProc.sh -v -n showRun -i treeRecurse gitReposList 2> /dev/null | \
