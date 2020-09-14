@@ -208,7 +208,10 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    ANT_cooked "Creating The Cache File:"
+    local bxReposListFileName=$( vis_cachedBxReposListFileName )
+    EH_assert [[ "${bxReposListFileName}X" != "X" ]]
+    
+    ANT_cooked "Creating The Cache File at ${bxReposListFileName}:"
     lpDo stdbuf -i0 -o0 -e0 ${G_myName} -h -v -n showRun -p baseDir="${baseDir}" -p clout=${clout} -i bxReposList | tee "${bxReposListFileName}"
 
     lpReturn
@@ -222,6 +225,7 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     local bxReposListFileName=$( vis_cachedBxReposListFileName )
+    EH_assert [[ "${bxReposListFileName}X" != "X" ]]
 
     if [ -f "${bxReposListFileName}" ] ; then
 	lpDo cat "${bxReposListFileName}"
