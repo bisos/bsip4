@@ -70,9 +70,9 @@ _CommentEnd_
 
 # PRE parameters
 
-baseDir=""   # defaults to /bisos/git/auth/bxRepos or /bisos/git/anon/bxRepos based on clout
+baseDir=""   # defaults to /bisos/git/auth/bxRepos or /bisos/git/anon/bxRepos based on vcMode
              # -- or could be anything
-clout="auth"  # authenticated or anonymous "anon"
+vcMode="auth"  # authenticated or anonymous "anon"
 
 message="auto"     # git commit message
 
@@ -102,32 +102,32 @@ $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Manage Git Repo Base Directories" )
 $( examplesSeperatorSection "Top Repos BaseDir" )
 ${G_myName} -i bxReposBaseDir  # $( ${G_myName} -i bxReposBaseDir )
-${G_myName} -p clout=anon -i bxReposBaseDir # $( ${G_myName} -p clout=anon -i bxReposBaseDir )
-ls -l $( ${G_myName} -i bxReposBaseDir ) $( ${G_myName} -p clout=anon -i bxReposBaseDir )
+${G_myName} -p vcMode=anon -i bxReposBaseDir # $( ${G_myName} -p vcMode=anon -i bxReposBaseDir )
+ls -l $( ${G_myName} -i bxReposBaseDir ) $( ${G_myName} -p vcMode=anon -i bxReposBaseDir )
 $( examplesSeperatorSection "List BxRepo Base Directories (FTO WalkDirs)" )
 cd /bisos/git/auth/bxRepos && ftoProc.sh -v -n showRun -i treeRecurse gitReposList 2> /dev/null | egrep '^GitRepo' | cut -d ':' -f 2 
-stdbuf -i0 -o0 -e0 ${G_myName} ${extraInfo} -i bxReposList   # default clout=auth
-stdbuf -i0 -o0 -e0 ${G_myName} ${extraInfo} -p clout=anon -i bxReposList   # default clout=auth
+stdbuf -i0 -o0 -e0 ${G_myName} ${extraInfo} -i bxReposList   # default vcMode=auth
+stdbuf -i0 -o0 -e0 ${G_myName} ${extraInfo} -p vcMode=anon -i bxReposList   # default vcMode=auth
 $( examplesSeperatorSection "List Cached BxRepos Base Directories" )
 ${G_myName} -i cachedBxReposListFileName  # $( ${G_myName} -i cachedBxReposListFileName )
-${G_myName} -p clout=anon -i cachedBxReposListFileName  # $( ${G_myName} -p clout=anon -i cachedBxReposListFileName )
-ls -l $( ${G_myName} -i cachedBxReposListFileName ) $( ${G_myName} -p clout=anon -i cachedBxReposListFileName )
+${G_myName} -p vcMode=anon -i cachedBxReposListFileName  # $( ${G_myName} -p vcMode=anon -i cachedBxReposListFileName )
+ls -l $( ${G_myName} -i cachedBxReposListFileName ) $( ${G_myName} -p vcMode=anon -i cachedBxReposListFileName )
 ${G_myName} ${extraInfo} -i cachedBxReposListRefresh
-${G_myName} ${extraInfo} -p clout=anon -i cachedBxReposListRefresh
-${G_myName} ${extraInfo} -p basedDir="/bisos/git/auth/bxRepos/bisos-pip" -p clout=auth -i cachedBxReposListRefresh
+${G_myName} ${extraInfo} -p vcMode=anon -i cachedBxReposListRefresh
+${G_myName} ${extraInfo} -p basedDir="/bisos/git/auth/bxRepos/bisos-pip" -p vcMode=auth -i cachedBxReposListRefresh
 ${G_myName} ${extraInfo} -i cachedBxReposList
-${G_myName} ${extraInfo} -p clout=anon -i cachedBxReposList
+${G_myName} ${extraInfo} -p vcMode=anon -i cachedBxReposList
 $( examplesSeperatorSection "gitBaseIsCollection Git Repo Base Directories" )
 ${G_myName} -i gitBaseIsCollection ${oneRepoBaseDir}
 ${G_myName} -i cachedBxReposList | ${G_myName} -i gitBaseIsCollection
-${G_myName} -p clout=anon -i cachedBxReposList | ${G_myName} -i gitBaseIsCollection
+${G_myName} -p vcMode=anon -i cachedBxReposList | ${G_myName} -i gitBaseIsCollection
 $( examplesSeperatorSection "List BxRepo Base grep GIT-DIGEST" )
 cd /bisos/git/auth/bxRepos && ftoProc.sh -v -n showRun -i treeRecurse gitStatusReport 2> /dev/null | grep GIT-DIGEST
 ${G_myName} ${extraInfo} -i gitStatusReport ${oneRepoBaseDir}
 ${G_myName} -i cachedBxReposList | ${G_myName} -i gitStatusReport
 ${G_myName} -i cachedBxReposList | ${G_myName} -i gitStatusReport | grep CHANGED
-${G_myName} -p clout=anon -i cachedBxReposList | ${G_myName} -i gitStatusReport
-${G_myName} -p clout=anon -i cachedBxReposList | ${G_myName} -i gitStatusReport | grep CHANGED
+${G_myName} -p vcMode=anon -i cachedBxReposList | ${G_myName} -i gitStatusReport
+${G_myName} -p vcMode=anon -i cachedBxReposList | ${G_myName} -i gitStatusReport | grep CHANGED
 $( examplesSeperatorSection "Remote Status" )
 ${G_myName} ${extraInfo} -i gitRemStatus ${oneRepoBaseDir}
 ${G_myName} -i cachedBxReposList | ${G_myName} -i gitRemStatus  # Does not work reliably
@@ -190,12 +190,12 @@ _EOF_
 	lpDo mkdir -p /bisos/var/core/cached
     fi
 
-    if [ "${clout}" == "auth" ] ; then
+    if [ "${vcMode}" == "auth" ] ; then
 	echo "/bisos/var/core/cached/bxReposList.auth"
-    elif [ "${clout}" == "anon" ] ; then
+    elif [ "${vcMode}" == "anon" ] ; then
 	echo "/bisos/var/core/cached/bxReposList.anon"
     else
-	EH_problem "clout=${clout} is neither auth nor anon"
+	EH_problem "vcMode=${vcMode} is neither auth nor anon"
 	EH_retOnFail
     fi
 
@@ -214,7 +214,7 @@ _EOF_
     EH_assert [[ "${bxReposListFileName}X" != "X" ]]
     
     ANT_cooked "Creating The Cache File at ${bxReposListFileName}:"
-    lpDo stdbuf -i0 -o0 -e0 ${G_myName} -h -v -n showRun -p baseDir="${baseDir}" -p clout=${clout} -i bxReposList | tee "${bxReposListFileName}"
+    lpDo stdbuf -i0 -o0 -e0 ${G_myName} -h -v -n showRun -p baseDir="${baseDir}" -p vcMode=${vcMode} -i bxReposList | tee "${bxReposListFileName}"
 
     lpReturn
 }	
@@ -252,12 +252,12 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if [ -z "${baseDir}" ] ; then
-	if [ "${clout}" == "auth" ] ; then
+	if [ "${vcMode}" == "auth" ] ; then
 	    baseDir="/bisos/git/auth/bxRepos"
-	elif [ "${clout}" == "anon" ] ; then
+	elif [ "${vcMode}" == "anon" ] ; then
 	    baseDir="/bisos/git/anon/bxRepos"
 	else
-	    EH_problem "clout=${clout} is neither auth nor anon"
+	    EH_problem "vcMode=${vcMode} is neither auth nor anon"
 	    EH_retOnFail
 	fi
     fi
