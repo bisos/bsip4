@@ -62,6 +62,8 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
+. ${opBinBase}/distHook.libSh
+
 . ${opBinBase}/unisosAccounts_lib.sh
 . ${opBinBase}/bisosGroupAccount_lib.sh
 . ${opBinBase}/bisosAccounts_lib.sh

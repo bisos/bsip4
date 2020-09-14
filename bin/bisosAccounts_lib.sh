@@ -291,7 +291,7 @@ _EOF_
 
     if [ "${acctName}" == "$( vis_bisosAcct_bystarName )" ] ; then
 	acctUid=$( vis_bisosAcct_bystarUid )
-	acctComment="bystar: BISOS Default Usage Acct"
+	acctComment="bystar -- Default BISOS Acct"
     else
 	acctUid=$( vis_usgAcctNextLocalUidNu )
 	acctComment="BISOS Named Usage Acct"	
@@ -631,7 +631,7 @@ addSupplementaryGroups_UBUNTU_1804 () {
 }
 
 addSupplementaryGroups_UBUNTU_2004 () {
-  supplementaryGroupsList=("employee" "adm" dialout cdrom floppy dip video plugdev lpadmin scanner "audio" netdev  "vboxsf" "vboxusers")
+  supplementaryGroupsList=("employee" "subscrbr" "adm" dialout cdrom floppy dip video plugdev lpadmin scanner "audio" netdev  "vboxsf" "vboxusers")
 }
 
 addSupplementaryGroups_DEBIAN_LENNY () {

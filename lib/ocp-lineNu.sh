@@ -60,8 +60,10 @@ log_event() {
 }
 
 eh_problem() {
-  print -u2 -r -- "EH_,${G_myName},${tm_fileName},${tm_lineNo}: PROBLEM: $*"
+    print -u2 -r -- "EH_,${G_myName},${tm_fileName},${tm_lineNo}: PROBLEM: $*"
+    return 111
 }
+
 
 eh_fatal() {
   print -u2 -r -- "EH_,${tm_fileName},${tm_lineNo}: FATAL $*"
