@@ -103,6 +103,7 @@ $( examplesSeperatorChapter "Manage Git Repo Base Directories" )
 $( examplesSeperatorSection "Top Repos BaseDir" )
 ${G_myName} -i bxReposBaseDir  # $( ${G_myName} -i bxReposBaseDir )
 ${G_myName} -p clout=anon -i bxReposBaseDir # $( ${G_myName} -p clout=anon -i bxReposBaseDir )
+ls -l $( ${G_myName} -i bxReposBaseDir ) $( ${G_myName} -p clout=anon -i bxReposBaseDir )
 $( examplesSeperatorSection "List BxRepo Base Directories (FTO WalkDirs)" )
 cd /bisos/git/auth/bxRepos && ftoProc.sh -v -n showRun -i treeRecurse gitReposList 2> /dev/null | egrep '^GitRepo' | cut -d ':' -f 2 
 stdbuf -i0 -o0 -e0 ${G_myName} ${extraInfo} -i bxReposList   # default clout=auth
@@ -110,6 +111,7 @@ stdbuf -i0 -o0 -e0 ${G_myName} ${extraInfo} -p clout=anon -i bxReposList   # def
 $( examplesSeperatorSection "List Cached BxRepos Base Directories" )
 ${G_myName} -i cachedBxReposListFileName  # $( ${G_myName} -i cachedBxReposListFileName )
 ${G_myName} -p clout=anon -i cachedBxReposListFileName  # $( ${G_myName} -p clout=anon -i cachedBxReposListFileName )
+ls -l $( ${G_myName} -i cachedBxReposListFileName ) $( ${G_myName} -p clout=anon -i cachedBxReposListFileName )
 ${G_myName} ${extraInfo} -i cachedBxReposListRefresh
 ${G_myName} ${extraInfo} -p clout=anon -i cachedBxReposListRefresh
 ${G_myName} ${extraInfo} -p basedDir="/bisos/git/auth/bxRepos/bisos-pip" -p clout=auth -i cachedBxReposListRefresh
