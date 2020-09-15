@@ -193,7 +193,7 @@ _EOF_
 	    opDo touch "./destDesc"
 	fi
 	if [ ! -f "./bleePanelProc.sh" ] ; then
-	    opDo cp /libre/ByStar/InitialTemplates/update/bleePanel/start/bleePanelProc.sh ./bleePanelProc.sh
+	    opDo cp /bisos/apps/defaults/update/bleePanel/start/bleePanelProc.sh ./bleePanelProc.sh
 	fi
     }	
 	    
@@ -243,7 +243,7 @@ _EOF_
 	    # fi
 
 	    if [ ! -f "./bleePanelProc.sh" ] ; then
-		opDo cp /libre/ByStar/InitialTemplates/update/bleePanel/start/bleePanelProc.sh ./bleePanelProc.sh
+		opDo cp /bisos/apps/defaults/update/bleePanel/start/bleePanelProc.sh ./bleePanelProc.sh
 	    fi
 
 	    if [ ! -d "${nodeBaseDirName}" ] ; then

@@ -771,13 +771,13 @@ _EOF_
 	# else
 	    echo "REPO-ATOM:${here}"
 	    if [ ! -f .gitignore ] ; then
-		lpDo cp /libre/ByStar/InitialTemplates/begin/templates/moded/git/gitignore/emacs+py .gitignore
+		lpDo cp /bisos/apps/defaults/begin/templates/moded/git/gitignore/emacs+py .gitignore
 	    else
 		echo "${here}/.gitignore in place -- updating skipped"
 	    fi
 
 	    if [ ! -f .gitattributes ] ; then
-		lpDo cp /libre/ByStar/InitialTemplates/begin/templates/moded/git/gitattributes/py .gitattributes
+		lpDo cp /bisos/apps/defaults/begin/templates/moded/git/gitattributes/py .gitattributes
 	    else
 		echo "${here}/.gitattributes in place -- updating skipped"
 	    fi
@@ -852,9 +852,9 @@ _EOF_
 	EH_assert [[ $# -eq 1 ]]
 	local thisOne="$1"
 
-	# lpDo cp /libre/ByStar/InitialTemplates/begin/templates/moded/git/gitignore/emacs+py .gitignore
+	# lpDo cp /bisos/apps/defaults/begin/templates/moded/git/gitignore/emacs+py .gitignore
 
-	# lpDo cp /libre/ByStar/InitialTemplates/begin/templates/moded/git/gitattributes/py .gitattributes    
+	# lpDo cp /bisos/apps/defaults/begin/templates/moded/git/gitattributes/py .gitattributes    
 
 	inBaseDirDo \
 	    ${thisOne} \

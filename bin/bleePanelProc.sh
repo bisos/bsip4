@@ -38,9 +38,9 @@ _EOF_
 function templatesEvolution {
     cat  << _EOF_
 $( examplesSeperatorSection "ftoProc.sh -- Templates Evolution" )
-diff ./ftoProc.sh  /libre/ByStar/InitialTemplates/update/fto/start/commonProc/anyFtoItem/ftoProcNode.sh
-cp ./ftoProc.sh  /libre/ByStar/InitialTemplates/update/fto/start/commonProc/anyFtoItem/ftoProcNode.sh
-cp /libre/ByStar/InitialTemplates/update/fto/start/commonProc/anyFtoItem/ftoProcNode.sh ./ftoProc.sh  
+diff ./ftoProc.sh  /bisos/apps/defaults/update/fto/start/commonProc/anyFtoItem/ftoProcNode.sh
+cp ./ftoProc.sh  /bisos/apps/defaults/update/fto/start/commonProc/anyFtoItem/ftoProcNode.sh
+cp /bisos/apps/defaults/update/fto/start/commonProc/anyFtoItem/ftoProcNode.sh ./ftoProc.sh  
 $( examplesSeperatorSection "commonPanel.org -- Templates Evolution" )
 diff ./Panel.org  /libre/ByStar/InitialTemplates/start/fto/commonProc/anyFtoItem/mainPanel.org
 cp ./Panel.org /libre/ByStar/InitialTemplates/start/fto/commonProc/anyFtoItem/mainPanel.org

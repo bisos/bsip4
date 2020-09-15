@@ -33,11 +33,9 @@ fi
 ####+END:
 
 _CommentBegin_
-####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/libre/ByStar/InitialTemplates/software/plusOrg/dblock/inserts/topControls.org"
-*      ================
+####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/bisos/apps/defaults/software/plusOrg/dblock/inserts/topControls.org"
 *  /Controls/ ::  [[elisp:(org-cycle)][| ]]  [[elisp:(show-all)][Show-All]]  [[elisp:(org-shifttab)][Overview]]  [[elisp:(progn (org-shifttab) (org-content))][Content]] | [[file:Panel.org][Panel]] | [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] | [[elisp:(bx:org:run-me)][Run]] | [[elisp:(bx:org:run-me-eml)][RunEml]] | [[elisp:(delete-other-windows)][(1)]] | [[elisp:(progn (save-buffer) (kill-buffer))][S&Q]]  [[elisp:(save-buffer)][Save]]  [[elisp:(kill-buffer)][Quit]] [[elisp:(org-cycle)][| ]]
-** /Version Control/ ::  [[elisp:(call-interactively (quote cvs-update))][cvs-update]]  [[elisp:(vc-update)][vc-update]] | [[elisp:(bx:org:agenda:this-file-otherWin)][Agenda-List]]  [[elisp:(bx:org:todo:this-file-otherWin)][ToDo-List]] 
-
+** /Version Control/ ::  [[elisp:(call-interactively (quote cvs-update))][cvs-update]]  [[elisp:(vc-update)][vc-update]] | [[elisp:(bx:org:agenda:this-file-otherWin)][Agenda-List]]  [[elisp:(bx:org:todo:this-file-otherWin)][ToDo-List]]
 ####+END:
 _CommentEnd_
 
@@ -281,10 +279,10 @@ _EOF_
     else
 	case ${treeItem} in
 	    "node"|"auxNode")
-		opDo cp /libre/ByStar/InitialTemplates/update/fto/start/commonProc/anyFtoItem/ftoProcNode.sh ${ftpProcFile}
+		opDo cp /bisos/apps/defaults/update/fto/start/commonProc/anyFtoItem/ftoProcNode.sh ${ftpProcFile}
 		;;
 	    "leaf"|"auxLeaf")
-		opDo cp /libre/ByStar/InitialTemplates/update/fto/start/commonProc/anyFtoItem/ftoProcLeaf.sh ${ftpProcFile}
+		opDo cp /bisos/apps/defaults/update/fto/start/commonProc/anyFtoItem/ftoProcLeaf.sh ${ftpProcFile}
 		;;
 	    "ignore")
 		doNothing
@@ -309,10 +307,10 @@ _EOF_
     else
 	case ${treeItem} in
 	    "node"|"auxNode")
-		opDo cp /libre/ByStar/InitialTemplates/update/fto/start/commonProc/anyFtoItem/mainPanel.org ${mainPanelFile}		
+		opDo cp /bisos/apps/defaults/update/fto/start/commonProc/anyFtoItem/mainPanel.org ${mainPanelFile}		
 		;;
 	    "leaf"|"auxLeaf")
-		opDo cp /libre/ByStar/InitialTemplates/update/fto/start/commonProc/anyFtoItem/mainPanel.org ${mainPanelFile}				
+		opDo cp /bisos/apps/defaults/update/fto/start/commonProc/anyFtoItem/mainPanel.org ${mainPanelFile}				
 		;;
 	    "ignore")
 		doNothing
@@ -989,10 +987,9 @@ _EOF_
 
     lpDo rm -r -f fptb
 
-    lpDo cp /libre/ByStar/InitialTemplates/begin/templates/moded/git/gitignore/emacs+py .gitignore
+    lpDo cp /bisos/apps/defaults/begin/templates/moded/git/gitignore/emacs+py .gitignore
 
-    lpDo cp /libre/ByStar/InitialTemplates/begin/templates/moded/git/gitattributes/py .gitattributes    
-    
+    lpDo cp /bisos/apps/defaults/begin/templates/moded/git/gitattributes/py .gitattributes    
     
     lpReturn
 }

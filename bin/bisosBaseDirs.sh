@@ -107,6 +107,8 @@ ${G_myName} ${extraInfo} -i bxGitReposAuthReBuildBisos     # Runs with sudo -u b
 $( examplesSeperatorChapter "Git Bases Rebuild As Specified" )
 ${G_myName} ${extraInfo} -p vcMode=anon -i bxGitReposBasesReBuild /bisos/git/anon   # runs as current user
 ${G_myName} ${extraInfo} -p vcMode=auth -i bxGitReposBasesReBuild /bisos/git/auth   # runs as current user
+find /bisos/git/auth/bxRepos -type f -print | egrep '/ftoProc\.sh$' | bx-dblock -i dblockUpdateFiles
+find /bisos/git/anon/bxRepos -type f -print | egrep '/ftoProc\.sh$' | bx-dblock -i dblockUpdateFiles
 _EOF_
 }
 
