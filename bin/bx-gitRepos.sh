@@ -75,7 +75,7 @@ baseDir=""   # defaults to /bisos/git/auth/bxRepos or /bisos/git/anon/bxRepos ba
 vcMode="auth"  # authenticated or anonymous "anon"
 
 message="auto"     # git commit message
-
+addCommitPushClout="modifieds"  # or "all"
 
 function G_postParamHook {
      return 0
@@ -135,8 +135,10 @@ $( examplesSeperatorSection "Pull Remote" )
 ${G_myName} ${extraInfo} -i gitRemPull ${oneRepoBaseDir}
 ${G_myName} -i cachedBxReposList | ${G_myName} -i gitRemPull
 $( examplesSeperatorSection "Add, Commit and Push" )
-${G_myName} ${extraInfo} -i addCommitPush ${oneRepoBaseDir} 
-${G_myName} -i cachedBxReposList | ${G_myName} -i addCommitPush
+${G_myName} ${extraInfo} -i addCommitPush_modifieds ${oneRepoBaseDir} 
+${G_myName} ${extraInfo} -i addCommitPush_all ${oneRepoBaseDir} 
+${G_myName} -i cachedBxReposList | ${G_myName} -i addCommitPush_modifieds
+${G_myName} -i cachedBxReposList | ${G_myName} -i addCommitPush_all
 $( examplesSeperatorSection "Update Git Repo Base Directories" )
 ${G_myName} ${extraInfo} -i baseUpdateDotIgnore ${oneRepoBaseDir}
 ${G_myName} ${extraInfo} -i baseUpdateDotIgnore .
@@ -467,14 +469,17 @@ _EOF_
 }	
 
 
+
 function addCommitPush {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+Based on addCommitPushClout, runs either git add --update or git add -all.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
     local here=$(pwd)
+    local gitOutput=""
 
     if gitStatusReport ; then
 	echo "Nothing to add-commit-push"
@@ -482,10 +487,24 @@ _EOF_
     fi
 
     echo "Something to add-commit-push -- message=${message}"
-    
-    lpDo git add --update .
-    EH_retOnFail
 
+    if [ "${addCommitPushClout}" == "modifieds" ] ; then
+	lpDo git add --update .
+	EH_retOnFail
+    elif [ "${addCommitPushClout}" == "all" ] ; then
+	if gitBaseIsCollection ; then
+	    ANT_raw "In A Collection, only updating modifieds"		
+	    lpDo git add --update .
+	    EH_retOnFail
+	else
+	    lpDo git add --all .
+	    EH_retOnFail
+	fi
+    else
+	EH_problem "Unknown addCommitPushClout=${addCommitPushClout}"
+	EH_retOnFail
+    fi
+	
     # In -m below, space failed. Changed to _ for that reason
     lpDo git commit -m "${message}"
     EH_retOnFail
@@ -495,6 +514,31 @@ _EOF_
 
     lpReturn
 }	
+
+
+function vis_addCommitPush_modifieds {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+If there are any args, process those.
+If there are no args, process stdin.
+_EOF_
+		       }
+    
+    addCommitPushClout="modifieds"
+    lpDo vis_addCommitPush "$@"
+}
+
+function vis_addCommitPush_all {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+If there are any args, process those.
+If there are no args, process stdin.
+_EOF_
+		       }
+    
+    addCommitPushClout="all"
+    lpDo vis_addCommitPush "$@"
+}
 
 
 _CommentBegin_
@@ -647,6 +691,7 @@ _EOF_
 function gitStatusReport {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+Returns 0, if current -- 1 if changed. For Collections, only modifieds are relevant.
 NOTYET: Library Candidate
 _EOF_
     }
@@ -687,10 +732,18 @@ _EOF_
     fi
 
     if gitBaseIsCollection ; then
-	lpDo gitDigest ${retVal} "COLLECTION"
 	if [ $retVal != 0 ] ; then
-	   lpDo git status --untracked-files=no --porcelain
+	    gitStatusOutput=$( git status --untracked-files=no --porcelain )
+	    if [ -z "${gitStatusOutput}" ] ; then
+		# In a collection and no modified files.
+		retVal=0
+		lpDo gitDigest ${retVal} "COLLECTION"
+	    else
+		lpDo gitDigest ${retVal} "COLLECTION"		
+		lpDo echo "${gitStatusOutput}"
+	    fi
 	fi
+	
     else
 	lpDo gitDigest ${retVal} "REPO-ATOM"
 	if [ $retVal != 0 ] ; then
