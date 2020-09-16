@@ -25,6 +25,7 @@ loadSegment=""
 opRunDistFamily=""
 opRunDistGeneration=""
 skipIt=""
+tm_setFile=""
 
 #OSMTROOT="/opt/public/osmt"
 OSMTROOT="/bisos/core/bsip"

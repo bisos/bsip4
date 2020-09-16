@@ -179,7 +179,9 @@ _EOF_
 
 	#opDoComplain ${G_myName} -n showRun -i treeRecurse "$@"
 	typeset treeProc
-	if [ -f "_treeProc_" ] ; then
+	if [ -f "ftoProc.sh" ] ; then
+	    treeProc="ftoProc.sh"
+	elif [ -f "_treeProc_" ] ; then
 	    treeProc=$( cat _treeProc_ )
 	elif [ -f "lcntProc.sh" ] ; then
 	    treeProc="lcntProc.sh"

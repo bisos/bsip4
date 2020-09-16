@@ -103,7 +103,7 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "BISOS Git Bases Rebuild" )
 ${G_myName} ${extraInfo} -i bxGitReposAnonReBuildBisos     # Runs with sudo -u bisos
-${G_myName} ${extraInfo} -i bxGitReposAuthReBuildBisos     # Runs with sudo -u bisos
+${G_myName} ${extraInfo} -i bxGitReposAuthReBuildBisos     # Runs as current user
 $( examplesSeperatorChapter "Git Bases Rebuild As Specified" )
 ${G_myName} ${extraInfo} -p vcMode=anon -i bxGitReposBasesReBuild /bisos/git/anon   # runs as current user
 ${G_myName} ${extraInfo} -p vcMode=auth -i bxGitReposBasesReBuild /bisos/git/auth   # runs as current user
@@ -166,15 +166,17 @@ _EOF_
     local bxGitReposBase=""	    
     
     if [ "${vcMode}" == "auth" ] ; then
-	bxGitReposBase="${bxp_rootDir_bisos}/git/auth"	
+	bxGitReposBase="${bxp_rootDir_bisos}/git/auth"
+	${G_myFullName} -h -v -n showRun -p vcMode=${vcMode} -i bxGitReposBasesReBuild "${bxGitReposBase}"	
     elif [ "${vcMode}" == "anon" ] ; then
-	bxGitReposBase="${bxp_rootDir_bisos}/git/anon"	
+	bxGitReposBase="${bxp_rootDir_bisos}/git/anon"
+	lpDo sudo --set-home --user=${currentUser} ${G_myFullName} -h -v -n showRun -p vcMode=${vcMode} -i bxGitReposBasesReBuild "${bxGitReposBase}"	
     else
 	EH_problem "vcMode=${vcMode} is neither auth nor anon"
 	EH_retOnFail
     fi
 
-    lpDo sudo --set-home --user=${currentUser} ${G_myFullName} -h -v -n showRun -p vcMode=${vcMode} -i bxGitReposBasesReBuild "${bxGitReposBase}"
+
 }
 
 

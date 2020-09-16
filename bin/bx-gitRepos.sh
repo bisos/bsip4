@@ -125,7 +125,7 @@ $( examplesSeperatorSection "List BxRepo Base grep GIT-DIGEST" )
 cd /bisos/git/auth/bxRepos && ftoProc.sh -v -n showRun -i treeRecurse gitStatusReport 2> /dev/null | grep GIT-DIGEST
 ${G_myName} ${extraInfo} -i gitStatusReport ${oneRepoBaseDir}
 ${G_myName} -i cachedBxReposList | ${G_myName} -i gitStatusReport
-${G_myName} -i cachedBxReposList | ${G_myName} -i gitStatusReport | grep CHANGED
+${G_myName} -i cachedBxReposList | ${G_myName} -i gitStatusReport | grep CHANGED | grep ATOM
 ${G_myName} -p vcMode=anon -i cachedBxReposList | ${G_myName} -i gitStatusReport
 ${G_myName} -p vcMode=anon -i cachedBxReposList | ${G_myName} -i gitStatusReport | grep CHANGED
 $( examplesSeperatorSection "Remote Status" )
@@ -475,8 +475,15 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     local here=$(pwd)
+
+    if gitStatusReport ; then
+	echo "Nothing to add-commit-push"
+	lpReturn
+    fi
+
+    echo "Something to add-commit-push -- message=${message}"
     
-    lpDo git add -u .
+    lpDo git add --update .
     EH_retOnFail
 
     # In -m below, space failed. Changed to _ for that reason
@@ -485,6 +492,8 @@ _EOF_
 
     lpDo git push origin master
     EH_retOnFail
+
+    lpReturn
 }	
 
 
@@ -548,7 +557,7 @@ _CommentEnd_
 function gitBaseIsCollection {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-NOTYET: Library Candidate
+operates on cwd -- NOTYET: Library Candidate
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -561,14 +570,18 @@ _EOF_
 
     local retVal=0
 
-    if [ "${remoteGitName}" == "base" ] ; then
+    if [ "${remoteGitName}" == "base.git" ] ; then
 	retVal=0
-    elif [ "${remoteGitName}" == "bxReposBase" ] ; then
+    elif [ "${remoteGitName}" == "bxReposBase.git" ] ; then
+	retVal=0
+    elif [ "${remoteGitName}" == "mohsenBananBase.git" ] ; then
 	retVal=0
     else
 	retVal=1
     fi
 
+    TM_trace 9 "remoteGitPath=${remoteGitPath} -- remoteGitName=${remoteGitName} -- retVal=${retVal}"
+    
     lpReturn ${retVal}
 }	
 
@@ -642,47 +655,50 @@ _EOF_
     local remoteGitPath=""
     local remoteGitName=""
     local remoteHostName=""
-    local exitCode=0
-
-    function gitDigest {    
-	EH_assert [[ $# -eq 1 ]]
-
-	local exitCode=$1
-
-	if [ "${exitCode}" = "1" ] ; then
-	    # grep for Changes was empty
-	    echo  "GIT-DIGEST:current: ${here} ::${remoteHostName}:${remoteGitPath}"
-	else
-	    echo  "GIT-DIGEST:-CHANGED-: ${here} ::${remoteHostName}:${remoteGitPath}"	    
-	fi
-
-    }
-    
+    local retVal=0
+    local gitStatusOutput=""
 
     remoteHostName=$( git remote show origin | grep 'Fetch URL' | cut -d ':' -f 2-100 | xargs uriParseStdout.py | grep -i hostname | cut -d '=' -f 2 )    
     remoteGitPath=$( git remote show origin | grep 'Fetch URL' | cut -d ':' -f 2-100 | xargs uriParseStdout.py | grep -i path | cut -d '=' -f 2 )
     remoteGitName=$( basename "${remoteGitPath}" )
 
-    if [ "${remoteGitName}" == "base" ] ; then
-	#git status --untracked-files=no | grep -i Changes > /dev/null
-	git status  --porcelain | egrep -v '/$' > /dev/null	    
-	exitCode=$?
-	gitDigest "${exitCode}"
-    elif [ "${remoteGitName}" == "bxReposBase" ] ; then
-	git status  --porcelain | egrep -v '/$' > /dev/null	    
-	exitCode=$?
-	gitDigest "${exitCode}"
-    else
-	#git status | grep -i Changes > /dev/null
-	if [ -z "$(git status --porcelain)" ] ; then
-	    exitCode=1
+    function gitDigest {    
+	EH_assert [[ $# -eq 2 ]]
+
+	local retVal=$1
+	local collectionOrAtom=$2
+
+	if [ "${retVal}" == 0 ] ; then
+	    # grep for Changes was empty
+	    echo  "GIT-DIGEST:current:${collectionOrAtom}: ${here} ::${remoteHostName}:${remoteGitPath}"
 	else
-	    exitCode=0
+	    echo  "GIT-DIGEST:-CHANGED-:${collectionOrAtom}: ${here} ::${remoteHostName}:${remoteGitPath}"	    
 	fi
-	gitDigest "${exitCode}"
+
+    }
+
+    gitStatusOutput=$( git status  --porcelain )
+    # git status does not return a proper exit code
+
+    if [ -z "${gitStatusOutput}" ] ; then
+	retVal=0
+    else
+	retVal=1
     fi
 
-    lpReturn ${exitCode}
+    if gitBaseIsCollection ; then
+	lpDo gitDigest ${retVal} "COLLECTION"
+	if [ $retVal != 0 ] ; then
+	   lpDo git status --untracked-files=no --porcelain
+	fi
+    else
+	lpDo gitDigest ${retVal} "REPO-ATOM"
+	if [ $retVal != 0 ] ; then
+	   lpDo echo "${gitStatusOutput}"
+	fi
+    fi
+    
+    lpReturn ${retVal}
 }	
 
 
@@ -703,10 +719,7 @@ _EOF_
 	EH_assert [[ $# -eq 0 ]]
 	local here=$(pwd)
 	
-	if gitStatusReport ; then
-	    # NOTYET, distinguish between ATOM and COLLECTION
-	    lpDo git status --porcelain
-	fi
+	lpDo gitStatusReport
     }
 
     function processEach {
