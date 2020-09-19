@@ -7,7 +7,15 @@ ORIGIN="
 "
 
 ####+BEGIN: bx:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
-
+### Args: :control "enabled|disabled|hide|release|fVar"  :vc "cvs|git|nil" :partof "bystar|nil" :copyleft "halaal+minimal|halaal+brief|nil"
+typeset RcsId="$Id: dblock-iim-bash.el,v 1.4 2017-02-08 06:42:32 lsipusr Exp $"
+# *CopyLeft*
+__copying__="
+* Libre-Halaal Software"
+#  This is part of ByStar Libre Services. http://www.by-star.net
+# Copyright (c) 2011 Neda Communications, Inc. -- http://www.neda.com
+# See PLPC-120001 for restrictions.
+# This is a Halaal Poly-Existential intended to remain perpetually Halaal.
 ####+END:
 
 __author__="
@@ -102,13 +110,19 @@ function vis_examples {
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "BISOS Git Bases Rebuild" )
-${G_myName} ${extraInfo} -i bxGitReposAnonReBuildBisos     # Runs with sudo -u bisos
-${G_myName} ${extraInfo} -i bxGitReposAuthReBuildBisos     # Runs as current user
+${G_myName} ${extraInfo} -i bxGitReposAnonReCloneBisos     # Runs with sudo -u bisos
+${G_myName} ${extraInfo} -i bxGitReposAuthReCloneBisos     # Runs as current user
 $( examplesSeperatorChapter "Git Bases Rebuild As Specified" )
-${G_myName} ${extraInfo} -p vcMode=anon -i bxGitReposBasesReBuild /bisos/git/anon   # runs as current user
-${G_myName} ${extraInfo} -p vcMode=auth -i bxGitReposBasesReBuild /bisos/git/auth   # runs as current user
+${G_myName} ${extraInfo} -p vcMode=anon -i bxGitReposBasesReClone /bisos/git/anon   # runs as current user
+${G_myName} ${extraInfo} -p vcMode=auth -i bxGitReposBasesReClone /bisos/git/auth   # runs as current user
 find /bisos/git/auth/bxRepos -type f -print | egrep '/ftoProc\.sh$' | bx-dblock -i dblockUpdateFiles
 find /bisos/git/anon/bxRepos -type f -print | egrep '/ftoProc\.sh$' | bx-dblock -i dblockUpdateFiles
+$( examplesSeperatorChapter "Pointing Of bxRepos to Auth or Anon" )
+${G_myName} ${extraInfo} -i bxReposCurReport
+${G_myName} ${extraInfo} -i bxReposCurShow
+$( ls -l $( ${G_myName} ${extraInfo} -i bxReposCurShow ) )
+${G_myName} ${extraInfo} -i bxReposAuthSet
+${G_myName} ${extraInfo} -i bxReposAnonSet
 _EOF_
 }
 
@@ -117,7 +131,7 @@ noArgsHook() {
 }
 
 
-function vis_bxGitReposAnonReBuildBisos {
+function vis_bxGitReposAnonReCloneBisos {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Runs as bisos user.
@@ -125,10 +139,10 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo bxGitReposReBuildBisos "anon"
+    lpDo bxGitReposReCloneBisos "anon"
  }
 
-function vis_bxGitReposAuthReBuildBisos {
+function vis_bxGitReposAuthReCloneBisos {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Runs as bisos user.
@@ -136,11 +150,11 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo bxGitReposReBuildBisos "auth"
+    lpDo bxGitReposReCloneBisos "auth"
  }
 
 
-function bxGitReposReBuildBisos {
+function bxGitReposReCloneBisos {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Runs as bisos user.
@@ -167,21 +181,19 @@ _EOF_
     
     if [ "${vcMode}" == "auth" ] ; then
 	bxGitReposBase="${bxp_rootDir_bisos}/git/auth"
-	${G_myFullName} -h -v -n showRun -p vcMode=${vcMode} -i bxGitReposBasesReBuild "${bxGitReposBase}"	
+	${G_myFullName} -h -v -n showRun -p vcMode=${vcMode} -i bxGitReposBasesReClone "${bxGitReposBase}"	
     elif [ "${vcMode}" == "anon" ] ; then
 	bxGitReposBase="${bxp_rootDir_bisos}/git/anon"
-	lpDo sudo --set-home --user=${currentUser} ${G_myFullName} -h -v -n showRun -p vcMode=${vcMode} -i bxGitReposBasesReBuild "${bxGitReposBase}"	
+	lpDo sudo --set-home --user=${currentUser} ${G_myFullName} -h -v -n showRun -p vcMode=${vcMode} -i bxGitReposBasesReClone "${bxGitReposBase}"	
     else
 	EH_problem "vcMode=${vcMode} is neither auth nor anon"
 	EH_retOnFail
     fi
-
-
 }
 
 
 
-function vis_bxGitReposBasesReBuild {
+function vis_bxGitReposBasesReClone {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Arg1 is expected to be something like /bisos/git/anon to which bxRepos and ext will be appended.
@@ -221,11 +233,65 @@ _EOF_
     EH_assert [[ -d "${baseDir}/bxRepos" ]]
 	
     lpDo bx-gitReposBases -v 20 --baseDir="${baseDir}/bxRepos" --pbdName="bxReposRoot" --vcMode=${vcMode}  -i pbdUpdate all
-    
-    lpDo bx-gitReposBases -v 20 --baseDir="${baseDir}/ext" --pbdName="extRepos" --vcMode=${vcMode}  -i pbdUpdate all    
+
+    if [ -d "${baseDir}/ext" ] ; then
+	lpDo mv "${baseDir}/ext" "${baseDir}/ext.${thisDateTag}"
+    fi
+
+    lpDo bx-gitReposBases -v 20 --baseDir="${baseDir}/ext" --pbdName="extRepos" --vcMode=${vcMode}  -i pbdUpdate all
 }
 
 
+
+function vis_bxReposCurShow {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Runs as bisos user.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    echo "${bxp_rootDir_bisos}/git/bxRepos"
+}
+
+function vis_bxReposCurReport {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Runs as bisos user.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo vis_bxReposCurShow
+    opDo ls -l $( ${G_myName} -i bxReposCurShow )
+}
+
+
+function vis_bxReposAuthSet {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Runs as bisos user.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo FN_fileSymlinkUpdate "${bxp_rootDir_bisos}/git/auth/bxRepos" "${bxp_rootDir_bisos}/git/bxRepos"
+
+    lpDo ls -l "${bxp_rootDir_bisos}/git/bxRepos"
+}
+
+function vis_bxReposAnonSet {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Runs as bisos user.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo FN_fileSymlinkUpdate "${bxp_rootDir_bisos}/git/anon/bxRepos" "${bxp_rootDir_bisos}/git/bxRepos"
+
+    lpDo ls -l "${bxp_rootDir_bisos}/git/bxRepos"
+}
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*

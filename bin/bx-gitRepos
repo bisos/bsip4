@@ -74,8 +74,7 @@ baseDir=""   # defaults to /bisos/git/auth/bxRepos or /bisos/git/anon/bxRepos ba
              # -- or could be anything
 vcMode="auth"  # authenticated or anonymous "anon"
 
-message="auto"     # git commit message
-addCommitPushClout="modifieds"  # or "all"
+message="${G_myName}-auto"     # git commit message
 
 function G_postParamHook {
      return 0
@@ -105,50 +104,52 @@ ${G_myName} -i bxReposBaseDir  # $( ${G_myName} -i bxReposBaseDir )
 ${G_myName} -p vcMode=anon -i bxReposBaseDir # $( ${G_myName} -p vcMode=anon -i bxReposBaseDir )
 ls -l $( ${G_myName} -i bxReposBaseDir ) $( ${G_myName} -p vcMode=anon -i bxReposBaseDir )
 $( examplesSeperatorSection "List BxRepo Base Directories (FTO WalkDirs)" )
+cd /bisos/git/auth/bxRepos && ftoProc.sh -v -n showRun -i treeRecurse gitReposList  # With all debugging info
 cd /bisos/git/auth/bxRepos && ftoProc.sh -v -n showRun -i treeRecurse gitReposList 2> /dev/null | egrep '^GitRepo' | cut -d ':' -f 2 
 stdbuf -i0 -o0 -e0 ${G_myName} ${extraInfo} -i bxReposList   # default vcMode=auth
 stdbuf -i0 -o0 -e0 ${G_myName} ${extraInfo} -p vcMode=anon -i bxReposList   # default vcMode=auth
 $( examplesSeperatorSection "List Cached BxRepos Base Directories" )
-${G_myName} -i cachedBxReposListFileName  # $( ${G_myName} -i cachedBxReposListFileName )
-${G_myName} -p vcMode=anon -i cachedBxReposListFileName  # $( ${G_myName} -p vcMode=anon -i cachedBxReposListFileName )
-ls -l $( ${G_myName} -i cachedBxReposListFileName ) $( ${G_myName} -p vcMode=anon -i cachedBxReposListFileName )
-${G_myName} ${extraInfo} -i cachedBxReposListRefresh
-${G_myName} ${extraInfo} -p vcMode=anon -i cachedBxReposListRefresh
-${G_myName} ${extraInfo} -p basedDir="/bisos/git/auth/bxRepos/bisos-pip" -p vcMode=auth -i cachedBxReposListRefresh
-${G_myName} ${extraInfo} -i cachedBxReposList
-${G_myName} ${extraInfo} -p vcMode=anon -i cachedBxReposList
+${G_myName} -i cachedLsFileName  # $( ${G_myName} -i cachedLsFileName )
+${G_myName} -p vcMode=anon -i cachedLsFileName  # $( ${G_myName} -p vcMode=anon -i cachedLsFileName )
+ls -l $( ${G_myName} -i cachedLsFileName ) $( ${G_myName} -p vcMode=anon -i cachedLsFileName )
+${G_myName} ${extraInfo} -i cachedLsRefresh
+${G_myName} ${extraInfo} -p vcMode=anon -i cachedLsRefresh
+${G_myName} ${extraInfo} -p basedDir="/bisos/git/auth/bxRepos/bisos-pip" -p vcMode=auth -i cachedLsRefresh
+${G_myName} ${extraInfo} -i cachedLs
+${G_myName} ${extraInfo} -p vcMode=anon -i cachedLs
 $( examplesSeperatorSection "gitBaseIsCollection Git Repo Base Directories" )
 ${G_myName} -i gitBaseIsCollection ${oneRepoBaseDir}
-${G_myName} -i cachedBxReposList | ${G_myName} -i gitBaseIsCollection
-${G_myName} -p vcMode=anon -i cachedBxReposList | ${G_myName} -i gitBaseIsCollection
+${G_myName} -i cachedLs | ${G_myName} -i gitBaseIsCollection
+${G_myName} -p vcMode=anon -i cachedLs | ${G_myName} -i gitBaseIsCollection
 $( examplesSeperatorSection "List BxRepo Base grep GIT-DIGEST" )
 cd /bisos/git/auth/bxRepos && ftoProc.sh -v -n showRun -i treeRecurse gitStatusReport 2> /dev/null | grep GIT-DIGEST
-${G_myName} ${extraInfo} -i gitStatusReport ${oneRepoBaseDir}
-${G_myName} -i cachedBxReposList | ${G_myName} -i gitStatusReport
-${G_myName} -i cachedBxReposList | ${G_myName} -i gitStatusReport | grep CHANGED | grep ATOM
-${G_myName} -p vcMode=anon -i cachedBxReposList | ${G_myName} -i gitStatusReport
-${G_myName} -p vcMode=anon -i cachedBxReposList | ${G_myName} -i gitStatusReport | grep CHANGED
-$( examplesSeperatorSection "Remote Status" )
-${G_myName} ${extraInfo} -i gitRemStatus ${oneRepoBaseDir}
-${G_myName} -i cachedBxReposList | ${G_myName} -i gitRemStatus  # Does not work reliably
+echo ${oneRepoBaseDir} | ${G_myName} ${extraInfo} -i status loc
+${G_myName} -i cachedLs | ${G_myName} -i status loc
+${G_myName} -i cachedLs | ${G_myName} -i status rem
+${G_myName} -i cachedLs | ${G_myName} -i status loc rem
+${G_myName} -i cachedLs | ${G_myName} -i status | grep CHANGED | grep ATOM
+${G_myName} -p vcMode=anon -i cachedLs | ${G_myName} -i status loc
+${G_myName} -p vcMode=anon -i cachedLs | ${G_myName} -i status loc rem
+${G_myName} -p vcMode=anon -i cachedLs | ${G_myName} -i status rem
+${G_myName} -p vcMode=anon -i cachedLs | ${G_myName} -i status | grep CHANGED
 $( examplesSeperatorSection "Pull Remote" )
 ${G_myName} ${extraInfo} -i gitRemPull ${oneRepoBaseDir}
-${G_myName} -i cachedBxReposList | ${G_myName} -i gitRemPull
+${G_myName} -i cachedLs | ${G_myName} -i gitRemPull
 $( examplesSeperatorSection "Add, Commit and Push" )
-${G_myName} ${extraInfo} -i addCommitPush_modifieds ${oneRepoBaseDir} 
-${G_myName} ${extraInfo} -i addCommitPush_all ${oneRepoBaseDir} 
-${G_myName} -i cachedBxReposList | ${G_myName} -i addCommitPush_modifieds
-${G_myName} -i cachedBxReposList | ${G_myName} -i addCommitPush_all
+echo ${oneRepoBaseDir}  | ${G_myName} ${extraInfo} -i addCommitPush modifieds 
+echo  ${oneRepoBaseDir} | ${G_myName} ${extraInfo} -i addCommitPush all
+${G_myName} -i cachedLs | ${G_myName} -i addCommitPush modifieds
+${G_myName} -i cachedLs | ${G_myName} -i addCommitPush all
 $( examplesSeperatorSection "Update Git Repo Base Directories" )
 ${G_myName} ${extraInfo} -i baseUpdateDotIgnore ${oneRepoBaseDir}
 ${G_myName} ${extraInfo} -i baseUpdateDotIgnore .
-${G_myName} -i cachedBxReposList | ${G_myName} ${extraInfo} -i baseUpdateDotIgnore
+${G_myName} -i cachedLs | ${G_myName} ${extraInfo} -i baseUpdateDotIgnore
 startAnyFto.sh -h -v -n showRun -i startFtoUpdate auxNode
 $( examplesSeperatorSection "Verify Git Repo Base Directories" )
 ${G_myName} ${extraInfo} -i baseVerifyDotIgnore ${oneRepoBaseDir}
 ${G_myName} ${extraInfo} -i baseVerifyDotIgnore .
-${G_myName} -i cachedBxReposList | ${G_myName} -i baseVerifyDotIgnore
-${G_myName} -i cachedBxReposList | ${G_myName} -i baseVerifyDotIgnore | grep Missing
+${G_myName} -i cachedLs | ${G_myName} -i baseVerifyDotIgnore
+${G_myName} -i cachedLs | ${G_myName} -i baseVerifyDotIgnore | grep Missing
 _EOF_
 }
 
@@ -181,7 +182,7 @@ _EOF_
 }	
 
 
-function vis_cachedBxReposListFileName {
+function vis_cachedLsFileName {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -205,14 +206,14 @@ _EOF_
 }	
 
 
-function vis_cachedBxReposListRefresh {
+function vis_cachedLsRefresh {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    local bxReposListFileName=$( vis_cachedBxReposListFileName )
+    local bxReposListFileName=$( vis_cachedLsFileName )
     EH_assert [[ "${bxReposListFileName}X" != "X" ]]
     
     ANT_cooked "Creating The Cache File at ${bxReposListFileName}:"
@@ -221,20 +222,20 @@ _EOF_
     lpReturn
 }	
 
-function vis_cachedBxReposList {
+function vis_cachedLs {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    local bxReposListFileName=$( vis_cachedBxReposListFileName )
+    local bxReposListFileName=$( vis_cachedLsFileName )
     EH_assert [[ "${bxReposListFileName}X" != "X" ]]
 
     if [ -f "${bxReposListFileName}" ] ; then
 	lpDo cat "${bxReposListFileName}"
     else
-	lpDo vis_cachedBxReposListRefresh
+	lpDo vis_cachedLsRefresh
     fi
 
     lpReturn
@@ -299,7 +300,7 @@ _CommentBegin_
 _CommentEnd_
 
 
-function gitRemStatus {
+function gitRemStatusIncomplete {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 # To do this properly, eg in a script, you need to be able to refer to
@@ -340,60 +341,6 @@ _EOF_
     fi
 
 }	
-
-
-
-_CommentBegin_
-*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || IIF       ::  vis_gitRemStatus  [[elisp:(org-cycle)][| ]]
-_CommentEnd_
-
-function vis_gitRemStatus {
-    G_funcEntry
-    function describeF {  cat  << _EOF_
-If there are any args, process those.
-If there are no args, process stdin.
-_EOF_
-		       }
-
-    function hereDo {
-	EH_assert [[ $# -eq 0 ]]
-	local here=$(pwd)
-
-	lpDo gitRemStatus
-    }
-
-    function processEach {
-	EH_assert [[ $# -eq 1 ]]
-	local thisOne="$1"
-
-	inBaseDirDo \
-	    ${thisOne} \
-	    hereDo
-    }
-
-####+BEGIN: bx:bsip:bash/processArgsAndStdin 
-     function processArgsAndStdin {
-	local effectiveArgs=( "$@" )
-	local stdinArgs
-	local each
-	if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
-	    readarray stdinArgs < /dev/stdin
-	    effectiveArgs=( "$@" "${stdinArgs[@]}" )
-	fi
-	if [ ${#effectiveArgs[@]} -eq 0 ] ; then
-	    ANT_raw "No Args And Stdin Is Empty"
-	    lpReturn
-	fi
-	for each in "${effectiveArgs[@]}"; do
-	    lpDo processEach "${each%$'\n'}"
-	done
-    }
-    lpDo processArgsAndStdin "$@"
-####+END:
-    
-    lpReturn
-}	
-
 
 
 _CommentBegin_
@@ -476,7 +423,9 @@ function addCommitPush {
 Based on addCommitPushClout, runs either git add --update or git add -all.
 _EOF_
     }
-    EH_assert [[ $# -eq 0 ]]
+    EH_assert [[ $# -eq 1 ]]
+
+    local addCommitPushClout="$1"
 
     local here=$(pwd)
     local gitOutput=""
@@ -516,31 +465,6 @@ _EOF_
 }	
 
 
-function vis_addCommitPush_modifieds {
-    G_funcEntry
-    function describeF {  cat  << _EOF_
-If there are any args, process those.
-If there are no args, process stdin.
-_EOF_
-		       }
-    
-    addCommitPushClout="modifieds"
-    lpDo vis_addCommitPush "$@"
-}
-
-function vis_addCommitPush_all {
-    G_funcEntry
-    function describeF {  cat  << _EOF_
-If there are any args, process those.
-If there are no args, process stdin.
-_EOF_
-		       }
-    
-    addCommitPushClout="all"
-    lpDo vis_addCommitPush "$@"
-}
-
-
 _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || IIF       ::  vis_addCommitPush  [[elisp:(org-cycle)][| ]]
 _CommentEnd_
@@ -554,39 +478,38 @@ _EOF_
 		       }
 
     function hereDo {
-	EH_assert [[ $# -eq 0 ]]
+	EH_assert [[ $# -eq 1 ]]
 	local here=$(pwd)
 
-	lpDo addCommitPush
+	lpDo addCommitPush "$@"
     }
 
     function processEach {
-	EH_assert [[ $# -eq 1 ]]
-	local thisOne="$1"
+	EH_assert [[ $# -gt 1 ]]
+	local each="$1"
+	shift 
 
 	inBaseDirDo \
-	    ${thisOne} \
-	    hereDo
+	    ${each} \
+	    hereDo "$@"
     }
 
-####+BEGIN: bx:bsip:bash/processArgsAndStdin 
-     function processArgsAndStdin {
-	local effectiveArgs=( "$@" )
+####+BEGIN: bx:bsip:bash/processStdinWithArgs 
+    function processStdinWithArgs {
 	local stdinArgs
 	local each
 	if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
 	    readarray stdinArgs < /dev/stdin
-	    effectiveArgs=( "$@" "${stdinArgs[@]}" )
 	fi
-	if [ ${#effectiveArgs[@]} -eq 0 ] ; then
-	    ANT_raw "No Args And Stdin Is Empty"
+	if [ ${#stdinArgs[@]} -eq 0 ] ; then
+	    ANT_raw "No StdinArgs -- Processing Skipped"
 	    lpReturn
 	fi
-	for each in "${effectiveArgs[@]}"; do
-	    lpDo processEach "${each%$'\n'}"
+	for each in "${stdinArgs[@]}"; do
+	    lpDo processEach "${each%$'\n'}" "$@"
 	done
     }
-    lpDo processArgsAndStdin "$@"
+    lpDo processStdinWithArgs "$@"
 ####+END:
     
     lpReturn
@@ -604,14 +527,20 @@ function gitBaseIsCollection {
 operates on cwd -- NOTYET: Library Candidate
 _EOF_
     }
-    EH_assert [[ $# -eq 0 ]]
+    EH_assert [[ $# -lt 2 ]]
 
-    local remoteGitPath=""
     local remoteGitName=""
+    local remoteGitPath=""
+    local fetchUrl=""
     
-    remoteGitPath=$( git remote show origin | grep 'Fetch URL' | cut -d ':' -f 2-100 | xargs uriParseStdout.py | grep -i path | cut -d '=' -f 2 )
-    remoteGitName=$( basename "${remoteGitPath}" )
-
+    if [ $# -eq 1 ] ; then
+	remoteGitName="$1"
+    else
+	fetchUrl=$( git remote show origin | grep 'Fetch URL' | cut -d ':' -f 2-100 | xargs uriParseStdout.py )        
+	remoteGitPath=$( printf "${fetchUrl}" | grep -i path | cut -d '=' -f 2 )
+	remoteGitName=$( basename "${remoteGitPath}" )
+    fi
+    
     local retVal=0
 
     if [ "${remoteGitName}" == "base.git" ] ; then
@@ -695,63 +624,133 @@ Returns 0, if current -- 1 if changed. For Collections, only modifieds are relev
 NOTYET: Library Candidate
 _EOF_
     }
-    EH_assert [[ $# -eq 0 ]]
+    local remoteReport=0
+    local localReport=0
+    local locRemReport=0
+    local each=""
+
+    for each in "$@" ; do
+	if [ "${each}" == "loc" ] ; then
+	    localReport=1
+	    if (( ${remoteReport} != 0 )) ; then
+		locRemReport=1
+	    fi
+	elif [ "${each}" == "rem" ] ; then
+	    remoteReport=1
+	    if (( ${localReport} != 0 )) ; then
+		locRemReport=1
+	    fi
+	else
+	    EH_problem "Bad usage -- expected loc or rem, got: ${each}"
+	    EH_retOnFail
+	fi
+    done
 
     local remoteGitPath=""
     local remoteGitName=""
     local remoteHostName=""
-    local retVal=0
-    local gitStatusOutput=""
+    local fetchUrl=""
 
-    remoteHostName=$( git remote show origin | grep 'Fetch URL' | cut -d ':' -f 2-100 | xargs uriParseStdout.py | grep -i hostname | cut -d '=' -f 2 )    
-    remoteGitPath=$( git remote show origin | grep 'Fetch URL' | cut -d ':' -f 2-100 | xargs uriParseStdout.py | grep -i path | cut -d '=' -f 2 )
+    fetchUrl=$( git remote show origin | grep 'Fetch URL' | cut -d ':' -f 2-100 | xargs uriParseStdout.py )        
+    
+    remoteHostName=$( printf "${fetchUrl}" | grep -i hostname | cut -d '=' -f 2 )    
+    remoteGitPath=$( printf "${fetchUrl}" | grep -i path | cut -d '=' -f 2 )
     remoteGitName=$( basename "${remoteGitPath}" )
 
+    local locRetVal=0
+    local remRetVal=0
+    local retVal=0
+    
+    local gitLocStatusOutput=""
+ 
+    local gitRemStatusOutput=""
+    
     function gitDigest {    
-	EH_assert [[ $# -eq 2 ]]
+	EH_assert [[ $# -eq 3 ]]
 
-	local retVal=$1
-	local collectionOrAtom=$2
+	local locRetVal=$1
+	local remRetVal=$2
+	local collectionOrAtom=$3
 
-	if [ "${retVal}" == 0 ] ; then
-	    # grep for Changes was empty
-	    echo  "GIT-DIGEST:current:${collectionOrAtom}: ${here} ::${remoteHostName}:${remoteGitPath}"
+	if (( ${locRemReport} != 0 )) ; then
+	    if (( "${locRetVal}" == 0 )) ; then
+		printf "LOC+REM:${collectionOrAtom}:current:"
+	    else
+		printf "LOC+REM:${collectionOrAtom}:CHANGED:"
+	    fi
+	    if (( "${remRetVal}" == 0 )) ; then
+		printf ":same:"
+	    else
+		printf ":FETCH:"
+	    fi
+	elif (( ${localReport} != 0 )) ; then
+	    if (( "${locRetVal}" == 0 )) ; then
+		printf "LOC:${collectionOrAtom}:current:"
+	    else
+		printf "LOC:${collectionOrAtom}:CHANGED:"
+	    fi
+	elif (( ${remoteReport} != 0 )) ; then
+	    if (( "${remRetVal}" == 0 )) ; then
+		printf "REM:${collectionOrAtom}:same:"
+	    else
+		printf "REM:${collectionOrAtom}:FETCH:"
+	    fi
 	else
-	    echo  "GIT-DIGEST:-CHANGED-:${collectionOrAtom}: ${here} ::${remoteHostName}:${remoteGitPath}"	    
+	    EH_problem "OOPS"
+	    EH_retOnFail
 	fi
 
+	printf  " ${here} ::${remoteHostName}:${remoteGitPath}\n"
+
+	lpReturn
     }
-
-    gitStatusOutput=$( git status  --porcelain )
-    # git status does not return a proper exit code
-
-    if [ -z "${gitStatusOutput}" ] ; then
-	retVal=0
-    else
-	retVal=1
+    
+    if (( ${remoteReport} != 0 )) || (( ${locRemReport} != 0 )) ; then
+	gitRemStatusOutput=$( git fetch --dry-run 2>&1 )
+	if [ -z "${gitRemStatusOutput}" ] ; then
+	    remRetVal=0
+	else
+	    remRetVal=1
+	fi
     fi
 
-    if gitBaseIsCollection ; then
-	if [ $retVal != 0 ] ; then
-	    gitStatusOutput=$( git status --untracked-files=no --porcelain )
-	    if [ -z "${gitStatusOutput}" ] ; then
-		# In a collection and no modified files.
-		retVal=0
-		lpDo gitDigest ${retVal} "COLLECTION"
-	    else
-		lpDo gitDigest ${retVal} "COLLECTION"		
-		lpDo echo "${gitStatusOutput}"
-	    fi
+    if (( ${localReport} != 0 )) || (( ${locRemReport} != 0 )) ; then    
+	gitLocStatusOutput=$( git status  --porcelain )
+	# git status does not return a proper exit code
+
+	if [ -z "${gitLocStatusOutput}" ] ; then
+	    locRetVal=0
+	else
+	    locRetVal=1
 	fi
-	
+    fi
+
+    if gitBaseIsCollection "${remoteGitName}" ; then
+	if [ $locRetVal != 0 ] ; then
+	    gitLocStatusOutput=$( git status --untracked-files=no --porcelain )
+	    if [ -z "${gitLocStatusOutput}" ] ; then
+		# In a collection and no modified files.
+		locRetVal=0
+		lpDo gitDigest ${locRetVal} ${remRetVal} "COLLECTION"
+	    else
+		lpDo gitDigest ${locRetVal} ${remRetVal} "COLLECTION"		
+		lpDo echo "${gitLocStatusOutput}"
+	    fi
+	else
+	    lpDo gitDigest ${locRetVal} ${remRetVal} "COLLECTION"
+	fi
     else
-	lpDo gitDigest ${retVal} "REPO-ATOM"
-	if [ $retVal != 0 ] ; then
-	   lpDo echo "${gitStatusOutput}"
+	lpDo gitDigest ${locRetVal} ${remRetVal} "REPO-ATOM"
+	if [ $locRetVal != 0 ] ; then
+	   lpDo echo "${gitLocStatusOutput}"
 	fi
     fi
     
-    lpReturn ${retVal}
+    if (( $remRetVal != 0 )) ; then
+	lpDo echo "${gitRemStatusOutput}"
+    fi
+    
+    lpReturn ${locRetVal}
 }	
 
 
@@ -760,53 +759,49 @@ _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || IIF       ::  vis_gitBaseIsCollection  [[elisp:(org-cycle)][| ]]
 _CommentEnd_
 
-function vis_gitStatusReport {
+function vis_status {
     G_funcEntry
     function describeF {  cat  << _EOF_
-If there are any args, process those.
-If there are no args, process stdin.
+Apply args to each line of stdin.
 _EOF_
 		       }
 
     function hereDo {
-	EH_assert [[ $# -eq 0 ]]
 	local here=$(pwd)
 	
-	lpDo gitStatusReport
+	lpDo gitStatusReport "$@"
     }
 
     function processEach {
-	EH_assert [[ $# -eq 1 ]]
-	local thisOne="$1"
+	EH_assert [[ $# -gt 1 ]]
+	local each="$1"
+	shift 
 
 	inBaseDirDo \
-	    ${thisOne} \
-	    hereDo
+	    ${each} \
+	    hereDo "$@"
     }
 
-####+BEGIN: bx:bsip:bash/processArgsAndStdin 
-     function processArgsAndStdin {
-	local effectiveArgs=( "$@" )
+####+BEGIN: bx:bsip:bash/processStdinWithArgs 
+    function processStdinWithArgs {
 	local stdinArgs
 	local each
 	if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
 	    readarray stdinArgs < /dev/stdin
-	    effectiveArgs=( "$@" "${stdinArgs[@]}" )
 	fi
-	if [ ${#effectiveArgs[@]} -eq 0 ] ; then
-	    ANT_raw "No Args And Stdin Is Empty"
+	if [ ${#stdinArgs[@]} -eq 0 ] ; then
+	    ANT_raw "No StdinArgs -- Processing Skipped"
 	    lpReturn
 	fi
-	for each in "${effectiveArgs[@]}"; do
-	    lpDo processEach "${each%$'\n'}"
+	for each in "${stdinArgs[@]}"; do
+	    lpDo processEach "${each%$'\n'}" "$@"
 	done
     }
-    lpDo processArgsAndStdin "$@"
+    lpDo processStdinWithArgs "$@"
 ####+END:
-
+    
     lpReturn
 }	
-
 
 _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || IIF       ::  vis_baseUpdateDotIgnore  [[elisp:(org-cycle)][| ]]
@@ -879,7 +874,6 @@ _EOF_
     }
     lpDo processArgsAndStdin "$@"
 ####+END:
-    
 
     lpReturn
 }	
