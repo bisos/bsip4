@@ -19,6 +19,7 @@ __author__="
 "
 
 
+
 ####+BEGIN: bx:bsip:bash:seed-spec :types "seedActions.bash"
 SEED="
 *  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
@@ -70,7 +71,8 @@ _CommentEnd_
 
 # PRE parameters
 
-baseDir=""   # defaults to /bisos/git/auth/bxRepos or /bisos/git/anon/bxRepos based on vcMode
+baseDir="${baseDir-}"   # defaults to /bisos/git/auth/bxRepos or /bisos/git/anon/bxRepos based on vcMode
+
              # -- or could be anything
 vcMode="auth"  # authenticated or anonymous "anon"
 
@@ -114,7 +116,7 @@ ${G_myName} -p vcMode=anon -i cachedLsFileName  # $( ${G_myName} -p vcMode=anon 
 ls -l $( ${G_myName} -i cachedLsFileName ) $( ${G_myName} -p vcMode=anon -i cachedLsFileName )
 ${G_myName} ${extraInfo} -i cachedLsRefresh
 ${G_myName} ${extraInfo} -p vcMode=anon -i cachedLsRefresh
-${G_myName} ${extraInfo} -p basedDir="/bisos/git/auth/bxRepos/bisos-pip" -p vcMode=auth -i cachedLsRefresh
+${G_myName} ${extraInfo} -p baseDir="/bisos/git/auth/bxRepos/bisos-pip" -p vcMode=auth -i cachedLsRefresh
 ${G_myName} ${extraInfo} -i cachedLs
 ${G_myName} ${extraInfo} -p vcMode=anon -i cachedLs
 $( examplesSeperatorSection "gitBaseIsCollection Git Repo Base Directories" )
@@ -215,7 +217,7 @@ _EOF_
 
     local bxReposListFileName=$( vis_cachedLsFileName )
     EH_assert [[ "${bxReposListFileName}X" != "X" ]]
-    
+
     ANT_cooked "Creating The Cache File at ${bxReposListFileName}:"
     lpDo stdbuf -i0 -o0 -e0 ${G_myName} -h -v -n showRun -p baseDir="${baseDir}" -p vcMode=${vcMode} -i bxReposList | tee "${bxReposListFileName}"
 
