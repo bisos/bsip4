@@ -25,6 +25,7 @@ loadSegment=""
 opRunDistFamily=""
 opRunDistGeneration=""
 skipIt=""
+tm_setFile=""
 
 #OSMTROOT="/opt/public/osmt"
 OSMTROOT="/bisos/core/bsip"
@@ -328,14 +329,14 @@ function iimParamFuncsInvoke {
 iimParamFuncsInvoke
 
 if [[ -f ${dotMeParamTmpFile} ]] ; then
-  . ${dotMeParamTmpFile}
-  rm ${dotMeParamTmpFile}
+    . ${dotMeParamTmpFile}
+    rm ${dotMeParamTmpFile}
 fi
 
 
 G_postParamHookVal=`ListFuncs | egrep '^G_postParamHook$'`
 if [ "${G_postParamHookVal}X" != "X" ] ;   then
-  G_postParamHook 
+    G_postParamHook 
 fi
 
 

@@ -7,7 +7,15 @@ ORIGIN="
 "
 
 ####+BEGIN: bx:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
-
+### Args: :control "enabled|disabled|hide|release|fVar"  :vc "cvs|git|nil" :partof "bystar|nil" :copyleft "halaal+minimal|halaal+brief|nil"
+typeset RcsId="$Id: dblock-iim-bash.el,v 1.4 2017-02-08 06:42:32 lsipusr Exp $"
+# *CopyLeft*
+__copying__="
+* Libre-Halaal Software"
+#  This is part of ByStar Libre Services. http://www.by-star.net
+# Copyright (c) 2011 Neda Communications, Inc. -- http://www.neda.com
+# See PLPC-120001 for restrictions.
+# This is a Halaal Poly-Existential intended to remain perpetually Halaal.
 ####+END:
 
 __author__="
@@ -20,7 +28,7 @@ SEED="
 *  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
 "
 FILE="
-*  /This File/ :: /bisos/core/bsip/bin/usgAcctManage.sh 
+*  /This File/ :: /bisos/core/bsip/bin/seedBleePanelProc.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
     /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
@@ -62,19 +70,10 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
-# ./platformBases_lib.sh
-. ${opBinBase}/platformBases_lib.sh
-
-. ${opBinBase}/distHook.libSh
-
-. ${opBinBase}/unisosAccounts_lib.sh
-. ${opBinBase}/bisosGroupAccount_lib.sh
-. ${opBinBase}/bisosAccounts_lib.sh
 
 # PRE parameters
 
 baseDir=""
-acctName=""
 
 function G_postParamHook {
      return 0
@@ -94,49 +93,42 @@ function vis_examples {
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
     visLibExamplesOutput ${G_myName} 
-    cat  << _EOF_
+  cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
+$( examplesSeperatorChapter "Blee Panel Proc" )
+$( examplesSeperatorSection "This Node/Leaf Processors" )
+${G_myName} ${extraInfo} -i fullUpdate
+${G_myName} ${extraInfo} -i refresh     # reruns startOrgPanel.sh and dblockUpdates fullUsagePanel-en.org
+${G_myName} ${extraInfo} -i renew       # dblockUpdates fullUsagePanel-en.org ftpProc.sh bleePanelProc.sh
+${G_myName} ${extraInfo} -i dblockBlankPanels   # dblockBlank fullUsagePanel-en.org
+${G_myName} ${extraInfo} -i clean
 _EOF_
 
-    vis_usgAccountsExamples
-    
-    vis_thisProvisionExamples
-    
-    vis_thisIcmExamples
+  vis_ftoProcExamples  
+
+  hookRun "examplesHookPost"
 }
 
-
-function vis_thisIcmExamples {
+function vis_ftoProcExamples {
     typeset extraInfo="-h -v -n showRun"
     #typeset extraInfo=""
     typeset runInfo="-p ri=lsipusr:passive"
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
-  cat  << _EOF_
-$( examplesSeperatorChapter "List And Report On Existing USG Accounts" )
-${G_myName} ${extraInfo} -i list usgAccts
-${G_myName} ${extraInfo} -i report listOfAccounts
-$( examplesSeperatorChapter "Setup Bases For Specified Account" )
-${G_myName} ${extraInfo} -i acctBase_bashrcUpdate bystar
-blee ${extraInfo} -p acctName=bystar -i provisionSetup
-_EOF_
-}
-
-function vis_thisProvisionExamples {
-    typeset extraInfo="-h -v -n showRun"
-    #typeset extraInfo=""
-    typeset runInfo="-p ri=lsipusr:passive"
-
-    typeset examplesInfo="${extraInfo} ${runInfo}"
-
-  cat  << _EOF_
-$( examplesSeperatorChapter "USG Provisioning Setups" )
-${G_myName} -i provisionSetup   # Summary outputs
-${G_myName} ${extraInfo} -i provisionSetup    # Detailed outputs
-$( examplesSeperatorSection "USG Provisioning Account Setups" )
-${G_myName} -p acctName=bystar -i provisionSetupAcct   # Summary outputs
-${G_myName} ${extraInfo} -p acctName=bystar -i provisionSetupAcct    # Detailed outputs
+    cat  << _EOF_
+$( examplesSeperatorChapter "Initial Base Update" )
+find . -type f -print | egrep 'ftoProc.sh$' | xargs bx-dblock -h -v -n showRun -i dblockUpdateFiles
+ftoProc.sh ${extraInfo} -i ftoWalkRunCmnd startOrgPanel.sh -h -v -n showRun -i bleePanelBaseUpdate .
+$( examplesSeperatorChapter "Initial Under Files Update" )
+ftoProc.sh -v -n showRun -i updateUnderFilesTo  /libre/ByStar/InitialTemplates/update/fto/start/commonProc/anyFtoItem/ftoProcNode.sh ftoProc.sh
+ftoProc.sh -v -n showRun -i updateUnderFilesTo /libre/ByStar/InitialTemplates/software/starts/pypiProc.sh pypiProc.sh 
+$( examplesSeperatorChapter "ftoWalks of ${G_myName}" )
+ftoProc.sh
+ftoProc.sh -v -n showRun -i ftoWalkRunCmnd ${G_myName} ${extraInfo} -i fullUpdate
+ftoProc.sh -v -n showRun -i ftoWalkRunCmnd ${G_myName} ${extraInfo} -i refresh
+ftoProc.sh -v -n showRun -i ftoWalkRunCmnd ${G_myName} ${extraInfo} -i renew
+ftoProc.sh -v -n showRun -i ftoWalkRunCmnd ${G_myName} ${extraInfo} -i clean
 _EOF_
 }
 
@@ -149,86 +141,136 @@ _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
 _CommentEnd_
 
-function vis_provisionSetup {
+
+function vis_fullUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-In acctName's (mandtaory) HOME, with vis_prepUpdateInit create emacs init files.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    acctName=bystar
-    lpDo vis_provisionSetupAcct
+    opDo echo NOTYET bx-dblock -i dblockUpdateFile ${each}
+
+    EH_retOnFail
+
+    lpReturn
 }
 
-
-function vis_provisionSetupAcct {
+function vis_refresh {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-In acctName's (mandtaory) HOME, with vis_prepUpdateInit create emacs init files.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    if [ -z "${acctName}" ] ; then
-	EH_problem "Missing acctName"
-	lpReturn 101
+    if [ ! -f "./_tree_" ] ; then
+	EH_problem "Missing ./_tree_"
+	lpReturn
     fi
+    
+    local treeItem=$( cat ./_tree_)
 
-    # NOTYET, verify that acctName is valid (source needed lib)    
+    case ${treeItem} in
+	"node")
+	    if [ -d "./_nodeBase_" ] ; then
+		lpDo startOrgPanel.sh -h -v -n showRun -i bleePanelBase node .
+	    else
+		lpDo bx-dblock -i dblockUpdateFile ./fullUsagePanel-en.org
+	    fi
+	    ;;
+	"auxNode")
+	    EH_problem ""
+	    ;;
+	"leaf")
+	    lpDo startOrgPanel.sh -h -v -n showRun -i bleePanelBase leaf .
+	    lpDo bx-dblock -i dblockUpdateFile ./fullUsagePanel-en.org	    
+	    ;;
+	"auxLeaf")
+	    EH_problem ""
+	    ;;
+	"ignore")
+	    doNothing
+	    ;;
+	*)
+	    EH_problem ""
+	    ;;		
+    esac
 
-    lpDo vis_acctBase_bashrcUpdate ${acctName}
-
-    lpDo blee -v -n showRun -p acctName=${acctName} -i provisionSetup
+    lpReturn
 }
 
-
-function vis_acctBase_bashrcUpdate {
+function dblockUpdateIfThere {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-acctName bxo.ue
 _EOF_
     }
     EH_assert [[ $# -eq 1 ]]
-    local usgAcctName=$1
 
-    local usgAcctHome=$( eval echo ~${usgAcctName} )
-    local profileDefaultFile="/bisos/apps/defaults/bashrc/usg/_profile"
-    local bashrcDefaultFile="/bisos/apps/defaults/bashrc/usg/_bashrc"
-
-    lpDo sudo -u ${usgAcctName} cp ${profileDefaultFile} ${usgAcctHome}/_profile
-    lpDo sudo -u ${usgAcctName} cp ${bashrcDefaultFile} ${usgAcctHome}/_bashrc
-
-    lpDo sudo -u ${usgAcctName} ln -s ${usgAcctHome}/_profile ${usgAcctHome}/.profile
-    lpDo sudo -u ${usgAcctName} ln -s ${usgAcctHome}/_bashrc ${usgAcctHome}/.bashrc            
-
-    lpReturn
+    local thisFile="$1"
+    
+    if [ -f "${thisFile}" ] ; then
+	lpDo bx-dblock -v -n showRun -i dblockUpdateFiles "${thisFile}"
+    else
+	ANT_raw "Missing ${thisFile} -- Skipped"
+    fi
 }
 
-
-function vis_baseUpdate_blee {
+function dblockBlankIfThere {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-acctName bxo.ue
 _EOF_
     }
-    EH_assert [[ $# -eq gt 1 ]]
-    local usgAcctName=$1
+    EH_assert [[ $# -eq 1 ]]
 
-    lpReturn
+    local thisFile="$1"
+    
+    if [ -f "${thisFile}" ] ; then
+	lpDo bx-dblock  -v -n showRun -i dblockBlankFiles "${thisFile}"
+    else
+	ANT_raw "Missing ${thisFile} -- Skipped"
+    fi
 }
 
-function vis_baseUpdate_bue {
+function vis_renew {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-acctName bxo.ue
 _EOF_
     }
-    EH_assert [[ $# -eq gt 1 ]]
-    local usgAcctName=$1
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo dblockUpdateIfThere ./fullUsagePanel-en.org
+    lpDo dblockUpdateIfThere ./ftoProc.sh
+    lpDo dblockUpdateIfThere ./bleePanelProc.sh
+    
+    lpReturn
+}
+
+function vis_dblockBlankPanels {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo dblockBlankIfThere ./fullUsagePanel-en.org
+    
+    lpReturn
+}
+
+
+function vis_clean {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo vis_failExample
+    EH_retOnFail
 
     lpReturn
 }
+
 
 
 _CommentBegin_
