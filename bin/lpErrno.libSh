@@ -1,0 +1,87 @@
+# -*- mode: sh; -*-
+
+retValList=( retValSuccess retValFail )
+
+errnoVarList=( errnoSuccess errnoSuccessFinish errnoFailHard errnoFailTemp )
+
+#
+# For details read qmail man pages
+#
+
+retValTrue=0
+retValFalse=1
+
+
+retValSuccess=0
+retValFail=1
+
+errnoSuccess=0
+errnoSuccessFinish=99
+errnoFailHard=100
+errnoFailTemp=111
+
+uid=""
+ 
+function errNuToName {
+  EH_assert [[ $# -eq 1 ]]
+
+  case ${1} in
+    '0')
+	echo "errnoSuccess"
+	;;		
+    '99')
+	echo "errnoSuccessFinish"
+	;;		
+    '100')
+	echo "errnoFailHard"
+	;;		
+    '111')
+	echo "errnoFailTemp"
+	;;		
+    *)
+      EH_problem "Invalid lpErrno ${1}"
+      ;;	
+  esac
+}	
+
+
+
+function uidIsAsExpected {
+#set -x
+    EH_assert [[ $# -eq 1 ]]
+
+    typeset thisExpectedUid="$1"
+
+    # Valid thisExpectedUid are lsipusr+, bystar+, root, any
+
+    typeset retVal=0
+
+    curUid=$( id -u -n )
+
+    # NOTYET, verify curUid is not empty
+
+    if [[ "${uid}_" == "any_" ]] ; then
+	retVal=${retValSuccess}    
+    elif [[ "${uid}_" == "${thisExpectedUid}_" ]] ; then
+	if [[ ${curUid}_ == "${thisExpectedUid}_"  ]] ; then
+	    retVal=${retValSuccess}
+	else
+	    EH_problem "uid=${uid} -- thisExpectedUid=${thisExpectedUid} -- curUid=${curUid}"
+	    retVal=${retValFail}
+	fi
+    else
+	if [ "${uid}_" != "_" ] ; then 
+	    EH_problem "Warning: -p uid=${uid} mismatch -- thisExpectedUid=${thisExpectedUid} -- curUid=${curUid}"
+	fi
+	if [[ ${curUid}_ == "${thisExpectedUid}_"  ]] ; then
+	    retVal=${retValSuccess}
+	else
+	    # EH_problem "uid=${uid} -- thisExpectedUid=${thisExpectedUid} -- curUid=${curUid}"
+	    # retVal=${retValFail}
+	    # NOTYET, for now all are as expected -- We should check the group
+	    retVal=${retValSuccess}	    
+	fi
+    fi
+
+    return ${retVal}
+}

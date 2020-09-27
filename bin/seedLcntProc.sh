@@ -365,6 +365,7 @@ function contentProcMenu {
 
  docsListCmdLines
 
+ local plpdCategory="plpc"
  typeset plpdNu=`cat ./LCNT-INFO/lcntNu`
 
  extraInfo="-v -n showRun"

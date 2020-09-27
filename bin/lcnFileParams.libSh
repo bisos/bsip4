@@ -67,7 +67,8 @@ function fileParamsCodeGenOutput {
 
   paramsFileBaseDir=$1
 
-  if [ "${2}_" == "_" ] ; then
+
+  if [ "${2:-}_" == "_" ] ; then
       paramTag=""
   else
       paramTag=$2

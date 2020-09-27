@@ -1,0 +1,53 @@
+#!/bin/bash
+
+typeset parentLockFileBase=$( readlink -f ~/.mozilla/firefox/*BxMua*)
+
+if [ -z "${parentLockFileBase}" ] ; then
+    echo "Missing default base"
+    exit
+fi
+
+#echo ${parentLockFileBase}
+
+if [ -f "${parentLockFileBase}"/.parentlock ] ; then
+    /bin/rm "${parentLockFileBase}"/.parentlock
+fi
+
+if [ -f "${parentLockFileBase}"/lock ] ; then
+    /bin/rm "${parentLockFileBase}"/lock
+fi
+
+firefox -P 'BxMua' "$@" &
+# firefox -P 'BxMua' --new-instance "$@" &
+
+exit
+
+
+MOZ_LIBDIR=/usr/lib/firefox
+MOZ_APP_LAUNCHER=`which $0`
+MOZ_APP_NAME=firefox
+
+#typeset parentLockFileBase=$( readlink -f ~/.mozilla/firefox/*.default*)
+# With Ubuntu 14.04 *.default* worked fine. Then in 1604 it became *.Default*
+# And the dir name included spaces. So, "${}" became essential.
+#
+typeset parentLockFileBase=$( readlink -f ~/.mozilla/firefox/*efault*)
+
+if [ -z "${parentLockFileBase}" ] ; then
+    echo "Missing default base"
+    exit
+fi
+
+#echo ${parentLockFileBase}
+
+if [ -f "${parentLockFileBase}"/.parentlock ] ; then
+    /bin/rm "${parentLockFileBase}"/.parentlock
+fi
+
+if [ -f "${parentLockFileBase}"/lock ] ; then
+    /bin/rm "${parentLockFileBase}"/lock
+fi
+
+
+exec $MOZ_LIBDIR/$MOZ_APP_NAME "$@" > /tmp/$$.firefox-bx 2> /tmp/$$.firefox-bx &
+

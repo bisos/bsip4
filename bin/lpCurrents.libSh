@@ -1,5 +1,12 @@
 #!/bin/bash
-#!/bin/bash
+
+currentBystarUid=""
+currentMasterUid=""
+currentBcaUid=""
+currentDeveloper=""
+currentUser=""
+currentBynameUid=""
+currentMirrorBase=""
 
 #
 # NOTYET to be replaced by a directory of files and dir read model

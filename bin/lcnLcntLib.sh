@@ -4,6 +4,8 @@
 typeset RcsId="$Id: lcnLcntLib.sh,v 1.8 2019-11-21 08:13:59 lsipusr Exp $"
 
 lcntInfoDir="LCNT-INFO"
+dirsList=""
+lcntUnInfo=""
 
 lcntNuBaseList="/lcnt/outputs/all/lists/nuBaseDir"
 

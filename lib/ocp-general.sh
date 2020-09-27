@@ -89,8 +89,8 @@ function opBasePathSet {
       export PATH="${PATH}:."
       ;;
     'Linux')
-      export PATH="${opBase}/nedaBin"
-      export PATH="${PATH}:${opBase}/bin:${opBase}/lib:${opBase}/usrEnv"
+      export PATH="${opBase}/bin:${opBase}/lib:${opBase}/usrEnv"
+      export PATH="${PATH}:/bisos/venv/py3/dev/bisos3/bin:/bisos/venv/py3/bisos3/bin:/bisos/venv/py2/dev/bisos3/bin:/bisos/venv/py2/bisos3/bin"
       export PATH="${PATH}:/usr/local/bin:/usr/local/sbin"
       export PATH="${PATH}:/usr/5bin:/usr/ccs/bin:/usr/sbin:/bin:/sbin:/usr/bin"
       export PATH="${PATH}:."
