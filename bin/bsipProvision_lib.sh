@@ -56,8 +56,8 @@ $( examplesSeperatorSection "Emacs, Blee, PyEnv and VirtSys" )
 ${G_myName} ${extraInfo} -i provisionPySysSetup
 ${G_myName} ${extraInfo} -i provisionPyVenvSetup
 ${G_myName} ${extraInfo} -i provisionBasicBlee
+${G_myName} ${extraInfo} -i provisionVirtSysSetup
 ${G_myName} ${extraInfo} -i provisionEmacsFromSrc
-${G_myName} ${extraInfo} -i provisionBasicBlee
 _EOF_
 
     vis_fromBsipProvisionExamplesList
@@ -254,7 +254,8 @@ _EOF_
     if [ ! -x "${bisosProg}" ] ; then
 	EH_problem "Missing ${bisosProg}"
 	lpReturn 1
-    else	
+    else
+	echo $PATH
     	opDo "${bisosProg}" -h -v -n showRun  -i virtSys_provisionSetup
     fi
     
