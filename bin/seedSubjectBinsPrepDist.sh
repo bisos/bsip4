@@ -100,6 +100,10 @@ lastSubjectHook() {
   esac
 }
 
+function itemNameFor {
+    echo "$1" | sed -r 's/-/_/g'
+}
+
 function do_summary {
   binsPrepItemClear
   subjectValidatePrepare
