@@ -92,7 +92,7 @@ MODEL:
       - user (Bystar User Account)
       - developer (Bystar CVS Account)
 
-~/bystar/accounts specifies list of accounts associated with this user
+~/gatherer/bxo specifies list of accounts associated with this user
  
 develoepr+EDIT specifies the uid of CVS out files.
 
@@ -249,36 +249,23 @@ $( examplesSeperatorSection "INFORMATION" )
 ${G_myName} -i currentAssociatedShow
 ${G_myName} -p user=${oneUser} -i bystarAccountsShow
 ${G_myName} ${extraInfo} -i showCurrentDeveloper
---- ASSOCIATE BUA (ByStar User Account)  TO BSA (ByStar SERVICE Account) ---
+$( examplesSeperatorSection "Full Updates" )
+# clones in gatherer/bxo/bxoId if needed -- Then 
 ${G_myName} ${uidInfo} ${extraInfo} -p bystarUid=${oneBystarUid} -p user=${oneUser} -p developer=${oneUser} -i userServiceFullUpdate
---- ASSOCIATE BUA (ByStar User Account)  TO BSA (ByStar SERVICE Account) ---
-${G_myName} ${extraInfo} -p user=${thisUserAcct} -p developer=${oneDeveloper} -p cvsMode=EDIT -i acctUnassociatedInit
-${G_myName} ${extraInfo} -p bystarUid=unassociated -p user=${thisUserAcct} -i userServiceAssociateCurrent # Do the symlinks
+${G_myName} ${uidInfo} ${extraInfo} -p bystarUid=${oneBystarUid} -p user=${oneUser} -i bueFullUpdate
+$( examplesSeperatorSection "ASSOCIATE ~/BUE (ByStar User Account)  TO BxO-BUE" )
 ${G_myName} ${uidInfo} ${extraInfo} -p bystarUid=${oneBystarUid} -p user=${thisUserAcct} -i userServiceAssociateCurrent # Do the symlinks
---- MAEMO ---
 ${G_myName} ${uidInfo} ${extraInfo} -p bystarHome=/acct/subs/banan/1/mohsen -p bystarUid=${oneBystarUid} -p user=${thisUserAcct} -i userServiceAssociateCurrent # Do MAEMO  symlinks
-${G_myName} ${uidInfo} ${extraInfo} -p bystarUid=${oneBystarUid} -p user=${thisUserAcct} -i userServiceAssociateCurrent # Do the symlinks
---- Current Updates ---
-${G_myName} ${extraInfo} -i currentBasaBueConfigUpdate
---- BUE Capability Settings ---
-${G_myName} ${extraInfo} -i capMailRetrieve none
-${G_myName} ${extraInfo} -i capMailRetrieve imap
---- BxU-BxISo-UE Setup For Offlineimap ---
+$( examplesSeperatorSection "BxU-BxISo-UE Setup For Offlineimap" )
 ${G_myName} ${extraInfo} -p bystarUid=all -p user=${oneUser} -i offlineimapUpdate
 ${G_myName} ${extraInfo} -p bystarUid=${oneBystarUid} -p user=${oneUser} -i offlineimapUpdate
-${G_myName} ${extraInfo} -p bystarUid=ea-59043 -p user=${oneUser} -i offlineimapUpdate
 ${G_myName} ${extraInfo} -p bystarUid=${oneBystarUid} -p user=${oneUser} -i offlineimapStdout
---- EOE: ByStar Account Container/SERVER Setup ---
-${G_myName} ${extraInfo} -p bystarUid=all -p user=${oneUser} -i authInfoUpdate
+$( examplesSeperatorSection "Update ~/.authinfo" )
 ${G_myName} ${extraInfo} -p bystarUid=${oneBystarUid} -p user=${oneUser} -i authInfoUpdate
-${G_myName} ${extraInfo} -p bystarUid=ea-59043 -p user=${oneUser} -i authInfoUpdate
 ${G_myName} ${extraInfo} -p bystarUid=${oneBystarUid} -p user=${oneUser} -i authInfoStdout
----
-${G_myName} ${extraInfo} -p bystarUid=all -p user=${oneUser} -i eoeUpdate
-${G_myName} ${extraInfo} -p bystarUid=${oneBystarUid} -p user=${oneUser} -i eoeUpdateOne
-${G_myName} ${extraInfo} -p bystarUid=ea-59043 -p user=${oneUser} -i eoeUpdateOne
-${G_myName} ${extraInfo} -p bystarUid=${oneBystarUid} -p user=${oneUser} -i eoeStdoutOne
----
+$( examplesSeperatorSection "Update Blee BUE Profile -- Converts BUE pars elisp" )
+${G_myName} ${extraInfo} -p bystarUid=${oneBystarUid} -p user=${oneUser} -i bleeUpdateOne
+${G_myName} ${extraInfo} -p bystarUid=${oneBystarUid} -p user=${oneUser} -i bleeStdoutOne
 ${G_myName} ${extraInfo} -p bystarUid=${oneBystarUid} -p user=${oneUser} -i bleeAcctMainStdout
 ${G_myName} ${extraInfo} -p bystarUid=${oneBystarUid} -p user=${oneUser} -i bleeAcctMainUpdate
 _EOF_
@@ -317,12 +304,12 @@ function vis_currentAssociatedShow {
 
     userHome=$( FN_absolutePathGet ~ )
 
-    if [ ! -d ${userHome}/bystar/accounts ] ; then
+    if [ ! -d ${userHome}/gatherer/bxo ] ; then
 	ANT_raw "None: No BxISo Account Is Currently Associated With BxU"
 	lpReturn
     fi
 
-    opDoExit cd ${userHome}/bystar/accounts
+    opDoExit cd ${userHome}/gatherer/bxo
 
     currentBystarUid=$( cat currentAssociated )
 
@@ -345,7 +332,7 @@ function vis_bystarAccountsShow {
 
     userHome=$( FN_absolutePathGet ~${user} )
 
-    opDoExit cd ${userHome}/bystar/accounts
+    opDoExit cd ${userHome}/gatherer/bxo
 
     currentBystarUid=$( cat currentAssociated )
 
@@ -367,8 +354,13 @@ function vis_bystarAccountsShow {
 # 
 
 function vis_currentBasaBueConfigUpdate {
+    #
+    # This does not belong here
+    #
     EH_assert [[ $# -eq 0 ]]
 
+    lpReturn
+    
     #
     # - Get Current Basa
     # - Locate currentBasa's ~bystarUid/BUE
@@ -444,12 +436,12 @@ _EOF_
 
     userHome=$( FN_absolutePathGet ~${user} )
 
-    #opDo  sudo -u ${user} mkdir -p ${userHome}/bystar/accounts
-    opDo mkdir -p ${userHome}/bystar/accounts
-    opDo chmod g+w ${userHome}/bystar/accounts
-    opDoExit cd ${userHome}/bystar/accounts
+    #opDo  sudo -u ${user} mkdir -p ${userHome}/gatherer/bxo
+    opDo mkdir -p ${userHome}/gatherer/bxo
+    opDo chmod g+w ${userHome}/gatherer/bxo
+    opDoExit cd ${userHome}/gatherer/bxo
 
-    opDoExit cd ${userHome}/bystar/accounts
+    opDoExit cd ${userHome}/gatherer/bxo
 
     echo ${bystarUid} > currentAssociated
 
@@ -463,9 +455,10 @@ _EOF_
     # For Maemo bystarUidHome is passed as an argument
 
 
-    opDo FN_fileSymlinkUpdate ${bystarUidHome}  ${userHome}/bystar/accounts/${bystarUid}
+    opDo FN_fileSymlinkUpdate ${bystarUidHome}  ${userHome}/gatherer/bxo/${bystarUid}
 
-    opDo FN_fileSymlinkUpdate ${bystarUidHome}/LUE/dotBbdbV6 ${userHome}/.bbdbV6
+    #opDo FN_fileSymlinkUpdate ${bystarUidHome}/LUE/dotBbdbV6 ${userHome}/.bbdbV6
+    opDo FN_fileSymlinkUpdate ${bystarUidHome}/LUE/dotBbdbV9 ${userHome}/.bbdbV9    
     opDo FN_fileSymlinkUpdate ${bystarUidHome}/LUE/diary ${userHome}/diary
     opDo FN_fileSymlinkUpdate ${bystarUidHome}/LUE/org ${userHome}/org
 
@@ -492,7 +485,7 @@ _EOF_
 
     opDo vis_authInfoUpdate
 
-    opDo vis_eoeUpdate
+    opDo vis_bleeUpdate
 }
 
 
@@ -506,11 +499,22 @@ function vis_userServiceFullUpdate {
 
   userHome=$( FN_absolutePathGet ~${user} )
 
-  if [ -d ${userHome}/bystar/accounts/${bystarUid} ] ; then
-      ANT_raw "Acct ${bystarUid} Exists at ${userHome}/bystar/accounts/${bystarUid}"
+  if [ -d ${userHome}/gatherer/bxo/${bystarUid} ] ; then
+      ANT_raw "Acct ${bystarUid} Exists at ${userHome}/gatherer/bxo/${bystarUid}"
   else
       opDo vis_bystarServiceAcctAdd 
   fi
+
+  opDo vis_bueFullUpdate
+}
+
+
+function vis_bueFullUpdate {
+  EH_assert [[ $# -eq 0 ]]
+
+  EH_assert [[ "${bystarUid}_" != "MANDATORY_" ]]
+  EH_assert [[ "${user}_" != "MANDATORY_" ]]
+
 
   opDo vis_userServiceAssociateCurrent
 
@@ -518,8 +522,9 @@ function vis_userServiceFullUpdate {
 
   opDo vis_authInfoUpdate
 
-  opDo vis_eoeUpdateOne
+  opDo vis_bleeUpdateOne
 }
+
 
 #
 # 
@@ -565,9 +570,9 @@ function vis_bystarServiceAcctAdd {
       #
       # Running as root -- with sudo
       #
-      opDo  sudo -u ${user} mkdir -p ${userHome}/bystar/accounts/${bystarUid}
-      opDo chmod g+w ${userHome}/bystar/accounts/${bystarUid}
-      opDoExit cd ${userHome}/bystar/accounts/${bystarUid}
+      opDo  sudo -u ${user} mkdir -p ${userHome}/gatherer/bxo/${bystarUid}
+      opDo chmod g+w ${userHome}/gatherer/bxo/${bystarUid}
+      opDoExit cd ${userHome}/gatherer/bxo/${bystarUid}
 
       opDo sudo -u ${developer} /usr/mapFiles/bystarAcctBase/mapVerModules.sh -p bystarUid=${bystarUid} -p cvsRoot=${cvsRootParameter} -s all -a moduleCheckout
   else
@@ -576,8 +581,8 @@ function vis_bystarServiceAcctAdd {
 	  return -1
        fi
 
-      opDo  mkdir -p ${userHome}/bystar/accounts/${bystarUid}
-      opDoExit cd ${userHome}/bystar/accounts/${bystarUid}
+      opDo  mkdir -p ${userHome}/gatherer/bxo/${bystarUid}
+      opDoExit cd ${userHome}/gatherer/bxo/${bystarUid}
 
       opDo /usr/mapFiles/bystarAcctBase/mapVerModules.sh -p bystarUid=${bystarUid} -p cvsRoot=${cvsRootParameter} -s all -a moduleCheckout
   fi
@@ -658,7 +663,7 @@ function vis_offlineimapStdout {
   userHome=$( FN_absolutePathGet ~${user} )
 
   if [ "${bystarUid}_" == "all_" ] ; then
-      opDoExit cd ${userHome}/bystar/accounts
+      opDoExit cd ${userHome}/gatherer/bxo
       
       acctsList=$( echo * ) 
       for thisBystarUid in ${acctsList} ; do
@@ -682,18 +687,18 @@ function vis_offlineimapStdout {
   if [ "${opRunDistFamily}" != "MAEMO" ] ; then
       bystarUidHome=$( FN_absolutePathGet ~${bystarUid} )
   else
-      bystarUidHome="${userHome}/bystar/accounts/${bystarUid}"
+      bystarUidHome="${userHome}/gatherer/bxo/${bystarUid}"
   fi
 
-  if [ -d ${currentMirrorBase}/bystar/accounts/${bystarUid} ] ; then
-      bystarUidBase="${currentMirrorBase}/bystar/accounts/${bystarUid}"
-  elif [ -d ${userHome}/bystar/accounts/${bystarUid} ] ; then
+  if [ -d ${currentMirrorBase}/gatherer/bxo/${bystarUid} ] ; then
+      bystarUidBase="${currentMirrorBase}/gatherer/bxo/${bystarUid}"
+  elif [ -d ${userHome}/gatherer/bxo/${bystarUid} ] ; then
       # /acct/employee/bystar/
-      bystarUidBase="${userHome}/bystar/accounts/${bystarUid}"
+      bystarUidBase="${userHome}/gatherer/bxo/${bystarUid}"
   elif [ -d ${bystarUidHome} ] ; then
       bystarUidBase="${bystarUidHome}"
   else
-      EH_problem "Missing ${currentMirrorBase}/bystar/accounts/${bystarUid} or ${userHome}/bystar/accounts/${bystarUid}"
+      EH_problem "Missing ${currentMirrorBase}/gatherer/bxo/${bystarUid} or ${userHome}/gatherer/bxo/${bystarUid}"
       return 101
   fi
 
@@ -802,7 +807,7 @@ function vis_authInfoStdout {
   userHome=$( FN_absolutePathGet ~${user} )
 
   if [ "${bystarUid}_" == "all_" ] ; then
-      opDoExit cd ${userHome}/bystar/accounts
+      opDoExit cd ${userHome}/gatherer/bxo
       
       acctsList=$( echo * ) 
       for thisBystarUid in ${acctsList} ; do
@@ -826,18 +831,18 @@ function vis_authInfoStdoutOne {
   if [ "${opRunDistFamily}" != "MAEMO" ] ; then
       bystarUidHome=$( FN_absolutePathGet ~${bystarUid} )
   else
-      bystarUidHome="${userHome}/bystar/accounts/${bystarUid}"
+      bystarUidHome="${userHome}/gatherer/bxo/${bystarUid}"
   fi
 
-  if [ -d ${currentMirrorBase}/bystar/accounts/${bystarUid} ] ; then
-      bystarUidBase="${currentMirrorBase}/bystar/accounts/${bystarUid}"
-  elif [ -d ${userHome}/bystar/accounts/${bystarUid} ] ; then
+  if [ -d ${currentMirrorBase}/gatherer/bxo/${bystarUid} ] ; then
+      bystarUidBase="${currentMirrorBase}/gatherer/bxo/${bystarUid}"
+  elif [ -d ${userHome}/gatherer/bxo/${bystarUid} ] ; then
       # /acct/employee/bystar/
-      bystarUidBase="${userHome}/bystar/accounts/${bystarUid}"
+      bystarUidBase="${userHome}/gatherer/bxo/${bystarUid}"
   elif [ -d ${bystarUidHome} ] ; then
       bystarUidBase="${bystarUidHome}"
   else
-      EH_problem "Missing ${currentMirrorBase}/bystar/accounts/${bystarUid} or ${userHome}/bystar/accounts/${bystarUid}"
+      EH_problem "Missing ${currentMirrorBase}/gatherer/bxo/${bystarUid} or ${userHome}/gatherer/bxo/${bystarUid}"
       return 101
   fi
 
@@ -854,11 +859,11 @@ function vis_authInfoStdoutOne {
 
 
 _CommentBegin_
-*  [[elisp:(org-cycle)][| ]]  IIFs        :: eoeUpdate [[elisp:(org-cycle)][| ]]
+*  [[elisp:(org-cycle)][| ]]  IIFs        :: bleeUpdate [[elisp:(org-cycle)][| ]]
 _CommentEnd_
 
 
-function vis_eoeUpdate {
+function vis_bleeUpdate {
   EH_assert [[ $# -eq 0 ]]
   EH_assert [[ "${bystarUid}_" != "MANDATORY_" ]]
   EH_assert [[ "${user}_" != "MANDATORY_" ]]
@@ -866,16 +871,16 @@ function vis_eoeUpdate {
   userHome=$( FN_absolutePathGet ~${user} )
 
   if [ "${bystarUid}_" == "all_" ] ; then
-      opDoExit cd ${userHome}/bystar/accounts
+      opDoExit cd ${userHome}/gatherer/bxo
       
       acctsList=$( echo * ) 
       for thisBystarUid in ${acctsList} ; do
 	  bystarUid=${thisBystarUid}
-	  vis_eoeUpdateOne  
+	  vis_bleeUpdateOne  
       done
   else
     acctsList="${bystarUid}"
-    vis_eoeUpdateOne  
+    vis_bleeUpdateOne  
   fi
 
 #
@@ -917,7 +922,7 @@ function vis_bleeAcctMainUpdate {
 
 
 
-function vis_eoeUpdateOne {
+function vis_bleeUpdateOne {
   EH_assert [[ $# -eq 0 ]]
   EH_assert [[ "${bystarUid}_" != "MANDATORY_" ]]
   EH_assert [[ "${user}_" != "MANDATORY_" ]]
@@ -927,26 +932,26 @@ function vis_eoeUpdateOne {
   if [ "${opRunDistFamily}" != "MAEMO" ] ; then
       bystarUidHome=$( FN_absolutePathGet ~${bystarUid} )
   else
-      bystarUidHome="${userHome}/bystar/accounts/${bystarUid}"
+      bystarUidHome="${userHome}/gatherer/bxo/${bystarUid}"
   fi
 
-  if [ -d ${currentMirrorBase}/bystar/accounts/${bystarUid} ] ; then
-      bystarUidBase="${currentMirrorBase}/bystar/accounts/${bystarUid}"
-  elif [ -d ${userHome}/bystar/accounts/${bystarUid} ] ; then
+  if [ -d ${currentMirrorBase}/gatherer/bxo/${bystarUid} ] ; then
+      bystarUidBase="${currentMirrorBase}/gatherer/bxo/${bystarUid}"
+  elif [ -d ${userHome}/gatherer/bxo/${bystarUid} ] ; then
       # /acct/employee/bystar/
-      bystarUidBase="${userHome}/bystar/accounts/${bystarUid}"
+      bystarUidBase="${userHome}/gatherer/bxo/${bystarUid}"
   elif [ -d ${bystarUidHome} ] ; then
       bystarUidBase="${bystarUidHome}"
   else
-      EH_problem "Missing ${currentMirrorBase}/bystar/accounts/${bystarUid} or ${userHome}/bystar/accounts/${bystarUid}"
+      EH_problem "Missing ${currentMirrorBase}/gatherer/bxo/${bystarUid} or ${userHome}/gatherer/bxo/${bystarUid}"
       return 101
   fi
 
   opDoExit fileParamsLoadVarsFromBaseDir  ${bystarUidBase}/BAGP
  
-  #vis_eoeStdoutOne > ${userHome}/lisp/bystar-${cp_acctUid}.el
+  #vis_bleeStdoutOne > ${userHome}/lisp/bystar-${cp_acctUid}.el
   # ~/BUE/elisp/
-  vis_eoeStdoutOne > ${userHome}/BUE/elisp/bystar-this-acct.el
+  vis_bleeStdoutOne > ${userHome}/BUE/elisp/bystar-this-acct.el
 
   opDo ls -l  ${userHome}/BUE/elisp/bystar-this-acct.el
 }
@@ -981,7 +986,7 @@ _EOF_
 }
 
 
-function vis_eoeStdoutOne {
+function vis_bleeStdoutOne {
   EH_assert [[ $# -eq 0 ]]
   EH_assert [[ "${bystarUid}_" != "MANDATORY_" ]]
   EH_assert [[ "${user}_" != "MANDATORY_" ]]
@@ -989,15 +994,15 @@ function vis_eoeStdoutOne {
   userHome=$( FN_absolutePathGet ~${user} )
   bystarUidHome=$( FN_absolutePathGet ~${bystarUid} )
 
-  if [ -d ${currentMirrorBase}/bystar/accounts/${bystarUid} ] ; then
-      bystarUidBase="${currentMirrorBase}/bystar/accounts/${bystarUid}"
-  elif [ -d ${userHome}/bystar/accounts/${bystarUid} ] ; then
+  if [ -d ${currentMirrorBase}/gatherer/bxo/${bystarUid} ] ; then
+      bystarUidBase="${currentMirrorBase}/gatherer/bxo/${bystarUid}"
+  elif [ -d ${userHome}/gatherer/bxo/${bystarUid} ] ; then
       # /acct/employee/bystar/
-      bystarUidBase="${userHome}/bystar/accounts/${bystarUid}"
+      bystarUidBase="${userHome}/gatherer/bxo/${bystarUid}"
   elif [ -d ${bystarUidHome} ] ; then
       bystarUidBase="${bystarUidHome}"
   else
-      EH_problem "Missing ${currentMirrorBase}/bystar/accounts/${bystarUid} or ${userHome}/bystar/accounts/${bystarUid}"
+      EH_problem "Missing ${currentMirrorBase}/gatherer/bxo/${bystarUid} or ${userHome}/gatherer/bxo/${bystarUid}"
       return 101
   fi
 
@@ -1040,18 +1045,6 @@ done
 (provide 'bystar-this-acct)  
 
 _EOF_
-}
-
-
-
-function vis_capMailRetrieve  {
-    EH_assert [[ $# -eq 1 ]]
-
-    #opDoExit platformDiskVerify
-
-    echo $1 > /libre/etc/bystar/usage/bueCapMailRetrieve
-
-    opDo ls -l /libre/etc/bystar/usage/*
 }
 
 
