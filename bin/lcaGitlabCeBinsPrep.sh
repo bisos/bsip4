@@ -65,10 +65,6 @@ _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  Pkgs-List     :: Components List [[elisp:(org-cycle)][| ]]
 _CommentEnd_
 
-function itemNameFor {
-    echo "$1" | sed -r 's/-/_/g'
-}
-
 #apt-cache search something | egrep '^something'
 
 function pkgsList_DEFAULT_DEFAULT {

@@ -631,7 +631,7 @@ addSupplementaryGroups_UBUNTU_1804 () {
 }
 
 addSupplementaryGroups_UBUNTU_2004 () {
-  supplementaryGroupsList=("employee" "subscrbr" "adm" dialout cdrom floppy dip video plugdev lpadmin scanner "audio" netdev  "vboxsf" "vboxusers")
+  supplementaryGroupsList=("employee" "subscrbr" "adm" dialout cdrom floppy dip video plugdev lpadmin scanner "audio" netdev  "vboxsf" "vboxusers" "libvirt" "kvm")
 }
 
 addSupplementaryGroups_DEBIAN_LENNY () {
