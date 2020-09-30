@@ -152,8 +152,6 @@ function examplesHookPost {
 dmesg | grep kvm   # Verify that virtualization has not been disabled in the bios
 kvm-ok
 ${G_myName} -v -n showRun -i fullUpdatePlus
-${G_myName} -v -n showRun -i virtSupportP
-${G_myName} -v -n showRun -i x64P
 _EOF_
 }
 
@@ -184,22 +182,6 @@ _EOF_
 
     opDo vis_fullUpdate
     opDo sudo adduser lsipusr ${libvirtGroupName}
-}
-
-
-_CommentBegin_
-*      ======[[elisp:(org-cycle)][Fold]]====== virtSupportP
-_CommentEnd_
-
-function vis_virtSupportP {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
-    egrep -c '(vmx|svm)' /proc/cpuinfo
 }
 
 

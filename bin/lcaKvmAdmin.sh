@@ -6,7 +6,7 @@ ORIGIN="
 * Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee
 "
 
-####+BEGIN: bx:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
+####+BEGIN: bx:dblock:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
 
 ####+END:
 
@@ -20,7 +20,7 @@ SEED="
 *  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
 "
 FILE="
-*  /This File/ :: /bisos/core/bsip/bin/usgAcctManage.sh 
+*  /This File/ :: /bisos/core/bsip/bin/lcaKvmAdmin.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
     /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
@@ -47,7 +47,7 @@ function vis_moduleDescription {  cat  << _EOF_
 *  [[elisp:(org-cycle)][| ]]  Info          :: *[Module Description:]* [[elisp:(org-cycle)][| ]]
 
 _EOF_
-			       }
+}
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *Seed Extensions*
@@ -62,19 +62,14 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
-# ./platformBases_lib.sh
-. ${opBinBase}/platformBases_lib.sh
-
 . ${opBinBase}/distHook.libSh
 
-. ${opBinBase}/unisosAccounts_lib.sh
-. ${opBinBase}/bisosGroupAccount_lib.sh
+# . ${opBinBase}/bisosGroupAccount_lib.sh
 . ${opBinBase}/bisosAccounts_lib.sh
 
 # PRE parameters
 
 baseDir=""
-acctName=""
 
 function G_postParamHook {
      return 0
@@ -86,64 +81,32 @@ _CommentBegin_
 _CommentEnd_
 
 
-echo $PATH
-
 function vis_examples {
     typeset extraInfo="-h -v -n showRun"
     #typeset extraInfo=""
     typeset runInfo="-p ri=lsipusr:passive"
 
+    local curUser=$( id -u -n )
+
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
     visLibExamplesOutput ${G_myName} 
-    cat  << _EOF_
+  cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
-_EOF_
-
-    vis_usgAccountsExamples
-    
-    vis_thisProvisionExamples
-    
-    vis_thisIcmExamples
-}
-
-
-function vis_thisIcmExamples {
-    typeset extraInfo="-h -v -n showRun"
-    #typeset extraInfo=""
-    typeset runInfo="-p ri=lsipusr:passive"
-
- 
-
-    typeset examplesInfo="${extraInfo} ${runInfo}"
-
-  cat  << _EOF_
-$( examplesSeperatorChapter "List And Report On Existing USG Accounts" )
-${G_myName} ${extraInfo} -i list usgAccts
-${G_myName} ${extraInfo} -i report listOfAccounts
-$( examplesSeperatorChapter "Setup Bases For Specified Account" )
-${G_myName} ${extraInfo} -i acctBase_bashrcUpdate bystar
-blee ${extraInfo} -p acctName=bystar -i provisionSetup
+$( examplesSeperatorChapter "Virtualization Management" )
+$( examplesSeperatorSection "Virtualization Support" )
+${G_myName} -v -n showRun -i virtSupportP
+dmesg | grep kvm   # Verify that virtualization has not been disabled in the bios
+kvm-ok
+$( examplesSeperatorSection "Add KVM Supplementary Groups For Users" )
+${G_myName} ${extraInfo} -i usgAcct_supplementaryGroupsUpdate ${curUser}
+usgAcctManage.sh
+$( examplesSeperatorSection "Full Actions" )
+${G_myName} ${extraInfo} -i fullUpdate
 _EOF_
 }
 
-function vis_thisProvisionExamples {
-    typeset extraInfo="-h -v -n showRun"
-    #typeset extraInfo=""
-    typeset runInfo="-p ri=lsipusr:passive"
-
-    typeset examplesInfo="${extraInfo} ${runInfo}"
-
-  cat  << _EOF_
-$( examplesSeperatorChapter "USG Provisioning Setups" )
-${G_myName} -i provisionSetup   # Summary outputs
-${G_myName} ${extraInfo} -i provisionSetup    # Detailed outputs
-$( examplesSeperatorSection "USG Provisioning Account Setups" )
-${G_myName} -p acctName=bystar -i provisionSetupAcct   # Summary outputs
-${G_myName} ${extraInfo} -p acctName=bystar -i provisionSetupAcct    # Detailed outputs
-_EOF_
-}
-
+# ${G_myName} -v -n showRun -i x64P
 
 noArgsHook() {
   vis_examples
@@ -153,85 +116,34 @@ _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
 _CommentEnd_
 
-function vis_provisionSetup {
+
+_CommentBegin_
+*      ======[[elisp:(org-cycle)][Fold]]====== virtSupportP
+_CommentEnd_
+
+function vis_virtSupportP {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-In acctName's (mandtaory) HOME, with vis_prepUpdateInit create emacs init files.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    acctName=bystar
-    lpDo vis_provisionSetupAcct
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
+    
+    egrep -c '(vmx|svm)' /proc/cpuinfo
 }
 
 
-function vis_provisionSetupAcct {
+function vis_fullUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-In acctName's (mandtaory) HOME, with vis_prepUpdateInit create emacs init files.
+To be run after lcaKvmBinsPrep.sh. 
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-
-    if [ -z "${acctName}" ] ; then
-	EH_problem "Missing acctName"
-	lpReturn 101
-    fi
-
-    # NOTYET, verify that acctName is valid (source needed lib)    
-
-    lpDo vis_acctBase_bashrcUpdate ${acctName}
-
-    lpDo blee -v -n showRun -p acctName=${acctName} -i provisionSetup
-}
-
-
-function vis_acctBase_bashrcUpdate {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-acctName bxo.ue
-_EOF_
-    }
-    EH_assert [[ $# -eq 1 ]]
-    local usgAcctName=$1
-
-    local usgAcctHome=$( eval echo ~${usgAcctName} )
-    local profileDefaultFile="/bisos/apps/defaults/bashrc/usg/_profile"
-    local bashrcDefaultFile="/bisos/apps/defaults/bashrc/usg/_bashrc"
-
-    lpDo sudo -u ${usgAcctName} cp ${profileDefaultFile} ${usgAcctHome}/_profile
-    lpDo sudo -u ${usgAcctName} cp ${bashrcDefaultFile} ${usgAcctHome}/_bashrc
-
-    lpDo sudo -u ${usgAcctName} ln -s ${usgAcctHome}/_profile ${usgAcctHome}/.profile
-    lpDo sudo -u ${usgAcctName} ln -s ${usgAcctHome}/_bashrc ${usgAcctHome}/.bashrc            
-
-    lpReturn
-}
-
-
-function vis_baseUpdate_blee {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-acctName bxo.ue
-_EOF_
-    }
-    EH_assert [[ $# -eq gt 1 ]]
-    local usgAcctName=$1
-
-    lpReturn
-}
-
-function vis_baseUpdate_bue {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-acctName bxo.ue
-_EOF_
-    }
-    EH_assert [[ $# -eq gt 1 ]]
-    local usgAcctName=$1
-
-    lpReturn
+    local curUser=$( id -u -n )
+    
+    lpDo vis_usgAcct_supplementaryGroupsUpdate ${curUser}
 }
 
 
