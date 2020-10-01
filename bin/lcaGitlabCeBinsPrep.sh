@@ -339,8 +339,6 @@ binsPrep_gitlabCe_repoAdd_DEFAULT_DEFAULT () {
     }
 }
 
-!
-
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*
