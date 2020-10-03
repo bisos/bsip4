@@ -38,7 +38,7 @@ _EOF_
 
 itemOrderedList=( 
     "vagrant"
-    "vagrantDebUpstream"
+    # "vagrantDebUpstream"
 )
 
 # }}}

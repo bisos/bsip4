@@ -117,9 +117,33 @@ function vis_fullUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 To be run after BinsPrep.sh. 
+
+/bin/systemctl status libvirtd
+
+VAGRANT_LOG=debug VAGRANT_DEFAULT_PROVIDER=libvirt vagrant up
+
+Vagrant.configure("2") do |config|
+  config.vm.define :dbserver do |dbserver|
+    dbserver.vm.box = "centos64"
+    dbserver.vm.provider :libvirt do |domain|
+      domain.memory = 2048
+      domain.cpus = 2
+      domain.nested = true
+      domain.volume_cache = 'none'
+    end
+  end
+
+for net in $(virsh net-list --name); do virsh net-dhcp-leases ${net}; done
+
+virt-install --machine=pseries --name=xenial1 --network=default,model=virtio --disk path=/var/lib/libvirt/images/xenial1.qcow2,format=qcow2,bus=virtio,cache=none --memory=2048 --vcpu=1 --os-type=linux --os-variant=ubuntu16.04 --cdrom=./ubuntu-16.04.6-server-ppc64el.iso --nographics
+
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
+
+    lpDo vagrant plugin list
+
+    lpDo vagrant box list
 }
 
 

@@ -87,13 +87,20 @@ function vis_examples {
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
-$( examplesSeperatorChapter "Chapter Title" )
-$( examplesSeperatorSection "Section Title" )
+$( examplesSeperatorChapter "Convert And Update" )
+$( examplesSeperatorSection "All Repos" )
 find /bisos/git/auth/bxRepos -type f -print | egrep '/ftoProc\.sh$' | wc
 find /bisos/git/auth/bxRepos -type f -print | egrep '/ftoProc\.sh$' | ${G_myName} -i report
 find /bisos/git/auth/bxRepos -type f -print | egrep '/ftoProc\.sh$' | ${G_myName} ${extraInfo} -i commonAspects
 find /bisos/git/auth/bxRepos -type f -print | egrep '/ftoProc\.sh$' | bx-dblock -i dblockUpdateFiles
 find /bisos/git/auth/bxRepos -type f -print | egrep '/ftoProc\.sh\.2020[0-9]+$' | wc
+$( examplesSeperatorSection "Current Dir And Below" )
+find . -type f -print | egrep '/ftoProc\.sh$' | wc
+find . -type f -print | egrep '/ftoProc\.sh$' | ${G_myName} -i report
+find . -type f -print | egrep '/ftoProc\.sh$' | ${G_myName} ${extraInfo} -i commonAspects
+find . -type f -print | egrep '/ftoProc\.sh$' | bx-dblock -i dblockUpdateFiles
+find . -type f -print | egrep '/ftoProc\.sh\.2020[0-9]+$' | wc
+$( examplesSeperatorSection "Current Dir" )
 ${G_myName} ${extraInfo} -i commonAspects *
 $( examplesSeperatorSection "Report" )
 ${G_myName} ${extraInfo} -i report *

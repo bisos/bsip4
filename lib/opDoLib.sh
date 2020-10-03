@@ -210,7 +210,7 @@ if [[ "${BASH_VERSION}X" != "X" ]] ; then
     alias opDoRetFail='print -u2 "opDoRetFail,${G_myName}::$FUNCNAME:$LINENO"; return 101'
 
     #alias opDoAfterPause='print -u2 "$FUNCNAME"; _pauseForVerification ; if [[ ${skipIt} == "true" ]] ; then return; fi;_opDo "${BASH_SOURCE[0]}" "${G_myName}" "$FUNCNAME" $LINENO "JUST_DO"'
-    alias opDoAfterPause='_opDoAfterPause "${G_myName}" "$FUNCNAME" $LINENO "JUST_DO"'
+    alias opDoAfterPause='_opDoAfterPause "${BASH_SOURCE[0]}" "${G_myName}" "$FUNCNAME" "$LINENO" "JUST_DO"'
 else
 
     alias rightHere='rightHere_ "${G_myName}" "$LINENO" "$0" '
@@ -384,12 +384,13 @@ function _opDoSeeRun {
 }
 
 
-function shift4ThenEcho {
+function shift5ThenEcho {
     shift || exit
     shift || exit
     shift || exit
     shift || exit
-    echo $*
+    shift || exit    
+    echo "$@"
 }
 
 function G_funcEntryShow {
@@ -401,7 +402,7 @@ function _opDoAfterPause {
     #shift
     #shift
     #shift
-    shift4ThenEcho "$@"
+    shift5ThenEcho "$@"
     _pauseForVerification ; if [[ ${skipIt} == "true" ]] ; then return; fi;
     _opDo "$@"
 }

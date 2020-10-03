@@ -98,6 +98,8 @@ $( examplesSeperatorSection "Virtualization Support" )
 ${G_myName} -v -n showRun -i virtSupportP
 dmesg | grep kvm   # Verify that virtualization has not been disabled in the bios
 kvm-ok
+$( examplesSeperatorSection "Gui Interface" )
+virt-manager
 $( examplesSeperatorSection "Add KVM Supplementary Groups For Users" )
 ${G_myName} ${extraInfo} -i usgAcct_supplementaryGroupsUpdate ${curUser}
 usgAcctManage.sh
