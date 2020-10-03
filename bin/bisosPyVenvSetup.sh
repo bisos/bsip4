@@ -141,9 +141,9 @@ _EOF_
 	lpReturn 101
     fi
 
-    lpDo ${pdb_venv_py2Bisos3}/bin/pip2 install --upgrade bisos.py2-all
+    lpDo sudo -u bisos ${pdb_venv_py2Bisos3}/bin/pip2 install --upgrade bisos.py2-all
 
-    lpDo ${pdb_venv_py2Bisos3}/bin/pip2 list 
+    lpDo sudo -u bisos ${pdb_venv_py2Bisos3}/bin/pip2 list 
 
     lpReturn
 
@@ -175,9 +175,9 @@ _EOF_
 	lpReturn 101
     fi
 
-    lpDo ${pdb_venv_py3Bisos3}/bin/pip3 install --upgrade bisos.py3-all
+    lpDo sudo -u bisos ${pdb_venv_py3Bisos3}/bin/pip3 install --upgrade bisos.py3-all
 
-    lpDo ${pdb_venv_py3Bisos3}/bin/pip3 list 
+    lpDo sudo -u bisos ${pdb_venv_py3Bisos3}/bin/pip3 list 
 
     lpReturn
 
