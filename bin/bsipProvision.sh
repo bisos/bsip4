@@ -63,8 +63,6 @@ $( examplesSeperatorTopLabel "${G_myName}" )
 _EOF_
     
     vis_bisosProvisionExamples "${extraInfo}"
-
-    vis_bsipProvsionNativeExamples
 }
 
 function vis_postSysBaseExamples {
@@ -75,28 +73,16 @@ function vis_postSysBaseExamples {
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
     cat  << _EOF_
-$( examplesSeperatorChapter "Post SysBase Examples" )
-$( examplesSeperatorSection "Base BxoContainer" )
-${G_myName} ${extraInfo} -i bxoContainer_provisionSetup
+$( examplesSeperatorChapter "Post SysBase -- BISOS Features" )
+$( examplesSeperatorSection "KVM Hosting" )
+${G_myName} ${extraInfo} -i kvmHosting_provisionSetup
+$( examplesSeperatorSection "Base BxioContainer -- Information Object" )
+${G_myName} ${extraInfo} -i bxioContainer_provisionSetup
+$( examplesSeperatorSection "Base BxsoContainer -- Service Object" )
+${G_myName} ${extraInfo} -i bxsoContainer_provisionSetup  # includes bxio
 _EOF_
     
 }
-
-function vis_bsipProvsionNativeExamples {
-    typeset extraInfo="-h -v -n showRun"
-    #typeset extraInfo=""
-    typeset runInfo="-p ri=lsipusr:passive"
-
-    typeset examplesInfo="${extraInfo} ${runInfo}"
-
-    cat  << _EOF_
-$( examplesSeperatorChapter "Native Examples" )
-$( examplesSeperatorSection "Native Base BxoContainer" )
-${G_myName} ${extraInfo} -i bxoContainer_provisionSetup
-_EOF_
-    
-}
-
 
 
 function osmtTmpExamples {
@@ -125,7 +111,7 @@ noArgsHook() {
   vis_examples
 }
 
-function vis_bxoContainer_provisionSetup {
+function vis_bxioContainer_provisionSetup {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -133,6 +119,42 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     local bisosBinBase="$( bisosBinBaseGet )"
+
+    echo "Setup tex, fonts, tools and needed scripts and preps for bxo old and new"
+    
+    lpReturn
+}
+
+function vis_bxsoContainer_provisionSetup {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    echo "Setup tex, fonts, tools and needed scripts and preps for bxo old and new"
+    
+    lpReturn
+}
+
+function vis_gitlabServer_provisionSetup {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    echo "Setup tex, fonts, tools and needed scripts and preps for bxo old and new"
+    
+    lpReturn
+}
+
+function vis_kvmHosting_provisionSetup {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
 
     echo "Setup tex, fonts, tools and needed scripts and preps for bxo old and new"
     

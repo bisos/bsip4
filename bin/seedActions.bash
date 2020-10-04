@@ -16,6 +16,7 @@ G_myName=""
 FUNCNAME=""
 
 CURENVBASE=""
+opDomainName=""
 opRunOsType=""
 opRunSiteName=""
 opRunClusterName=""
