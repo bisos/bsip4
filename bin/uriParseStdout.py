@@ -1,1 +1,1 @@
-../../bpip/adopt/uriParseStdout.py
+../../bpip1/adopt/uriParseStdout.py
