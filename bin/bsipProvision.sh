@@ -156,7 +156,9 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    echo "Setup tex, fonts, tools and needed scripts and preps for bxo old and new"
+    lpDo fgcKvmHostingSw.sh -h -v -n showRun -i  fullUpdate
+
+    lpDo fgcKvmHostingSvc.sh -h -v -n showRun -i  fullUpdate    
     
     lpReturn
 }
