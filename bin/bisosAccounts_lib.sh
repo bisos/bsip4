@@ -98,19 +98,22 @@ function vis_bxisoAccountsExamples {
     #typeset extraInfo=""
     typeset runInfo="-p ri=lsipusr:passive"
 
+    local oneBxisoAcct="site-default"
+    local oneBxisoComment="oid-2.23.34.20000"
+
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
   cat  << _EOF_
 $( examplesSeperatorChapter "BxISO (Info and Service Objects) Accounts" )
 ${G_myName} ${extraInfo} -i bxisoAcctNextLocalUidNu
 ${G_myName} ${extraInfo} -i bxisoAcctAdd bxisoDelimiter
-${G_myName} ${extraInfo} -i bxisoAcctAdd oneBxsoAcct
+${G_myName} ${extraInfo} -p acctComment=${oneBxisoComment} -i bxisoAcctAdd ${oneBxisoAcct}
 ${G_myName} ${extraInfo} -i bxisoAcctCreate bxisoDelimiter  # acctAdd, sudoers, report
-${G_myName} ${extraInfo} -i bxisoAcctCreate oneBxsoAcct
+${G_myName} ${extraInfo} -p acctComment=${oneBxisoComment} -i bxisoAcctCreate ${oneBxisoAcct}
 ${G_myName} ${extraInfo} -i bxisoAcctDelete bxisoDelimiter
-${G_myName} ${extraInfo} -i bxisoAcctDelete oneBxsoAcct
+${G_myName} ${extraInfo} -i bxisoAcctDelete ${oneBxisoAcct}
 ${G_myName} ${extraInfo} -i bxisoAcctVerify bxisoDelimiter
-${G_myName} ${extraInfo} -i bxisoAcctVerify oneBxsoAcct
+${G_myName} ${extraInfo} -i bxisoAcctVerify ${oneBxisoAcct}
 _EOF_
 }
 
@@ -506,7 +509,6 @@ _EOF_
 
     local acctGid="$( vis_bisosAcct_bxisoGid )"
     local acctUid=""
-    local acctComment=""
     local acctHome="$( vis_bisosAcct_bxisoHomeBase )/${acctName}"    
     local supplementaryGroups="adm"  # NOTYET, locate existing code in 
 
@@ -515,7 +517,10 @@ _EOF_
 	acctComment="BISOS Default BXISO Accts Delimiter"
     else
 	acctUid=$( vis_bxisoAcctNextLocalUidNu )
-	acctComment="BISOS OID of BXISO Acct"	
+	if [ -z "${acctComment}" ] ; then
+	    EH_problem "Missing Acct Comment"
+	    lpReturn 101
+	fi
     fi
 
     lpDo useradd \
@@ -529,6 +534,24 @@ _EOF_
     
     lpReturn
 }
+
+
+function vis_bxisoAcctDelete {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Delete the bxiso account.
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local acctName="$1"
+
+    lpDo vis_userAcctsDelete ${acctName}
+
+    lpReturn
+}
+
+
 
 function vis_getInitialPasswdForAcct {
     G_funcEntry
