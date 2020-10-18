@@ -1,0 +1,109 @@
+#!/bin/bash
+
+####+BEGIN: bx:dblock:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
+# {{{ DBLOCK-top-of-file
+typeset RcsId="$Id: lpXparams.libSh,v 1.1.1.1 2016-06-08 23:49:51 lsipusr Exp $"
+#  This is part of ByStar Libre Services. http://www.by-star.net
+#  Copyright (c) 2011 Neda Communications, Inc. -- http://www.neda.com
+#  Subject to Libre Services License Version 1.0 -- See PLPC-120001 for restrictions.
+#  This is a Halaal Poly-Existential intended to remain perpetually Halaal. 
+# }}} DBLOCK-top-of-file
+####+END:
+
+####+BEGIN: bx:dblock:lsip:bash:function :func "vis_xparamsProg" :type "nonidempotent"
+# {{{ vis_xparamsProg
+function vis_xparamsProg {
+    thisFuncName=$( thisFuncNameBashOrKsh "$0" "$FUNCNAME" )
+####+END:
+    EH_assert [[ $# -gt 0 ]]
+    function describeF {  cat  << _EOF_
+Reads from stdin one line at a time. For each line,
+invokes each arg with line as argument. optionally prompts.
+_EOF_
+  }
+
+    if [[ "${inList}_" != "INVALID_" && "${inList}_" != "_" ]] ; then
+	EH_assert [[ -f  ${inList} ]]
+	cat ${inList} |
+	while read thisLine ; do
+	    eval ${thisLine}
+	    expandedLine=$( eval echo ${@} )
+	    opDo ${expandedLine}
+	done
+    else
+	typeset tmpFile=$( FN_tempFile )
+	
+	#opDo eval "cat > ${tmpFile}"
+	eval "cat > ${tmpFile}"
+
+	cat ${tmpFile} |
+	while read thisLine ; do
+	    eval ${thisLine}
+	    expandedLine=$( eval echo ${@} )
+	    #opDo ${expandedLine}
+	    ${expandedLine}
+	done
+
+	#opDo /bin/rm ${tmpFile}
+	/bin/rm ${tmpFile}
+    fi
+}
+# }}}
+
+####+BEGIN: bx:dblock:lsip:bash:function :func "vis_xparamsFuncs" :type "nonidempotent"
+# {{{ vis_xparamsFuncs
+function vis_xparamsFuncs {
+    thisFuncName=$( thisFuncNameBashOrKsh "$0" "$FUNCNAME" )
+####+END:
+    EH_assert [[ $# -gt 0 ]]
+    function describeF {  cat  << _EOF_
+Reads from stdin one line at a time. For each line,
+invokes each arg with line as argument. optionally prompts.
+_EOF_
+  }
+
+    typeset tmpFile=$( FN_tempFile )
+
+    opDo eval "cat > ${tmpFile}"
+
+    cat ${tmpFile} |
+    while read thisLine ; do
+	for this in $@; do
+	    eval ${thisLine}
+	    opDo ${this} 
+	done
+    done
+
+    opDo /bin/rm ${tmpFile}
+}
+# }}}
+
+
+####+BEGIN: bx:dblock:lsip:bash:function :func "vis_vis_apply" :type "nonidempotent"
+# {{{ vis_vis_apply
+function vis_vis_apply {
+    TM_funcEntered
+    thisFuncName=$( thisFuncNameBashOrKsh "$0" "$FUNCNAME" )
+####+END:
+    EH_assert [[ $# -gt 0 ]]
+    function describeF {  cat  << _EOF_
+Invokes each arg in sequence.
+_EOF_
+  }
+
+    for this in $@; do
+	opDo vis_${this} 
+    done
+}
+# }}}
+
+
+# {{{ end of file
+
+#local variables:
+#major-mode: shellscript-mode
+#folded-file: t
+#fill-column: 90
+# end:
+
+# }}}

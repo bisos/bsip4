@@ -76,7 +76,6 @@ function vis_usgAccountsExamples {
 
   cat  << _EOF_
 $( examplesSeperatorChapter "Usage (usg) Accounts" )
-${G_myName} ${extraInfo} -i usgAcctNextLocalUidNu
 ${G_myName} ${extraInfo} -i usgAcctPasswd bystar
 ${G_myName} ${extraInfo} -i usgAcctPasswd oneUsgAcct
 ${G_myName} ${extraInfo} -i usgAcctAdd bystar
@@ -90,6 +89,9 @@ ${G_myName} ${extraInfo} -i usgAcctVerify oneUsgAcct
 ${G_myName} ${extraInfo} -i usgAcct_supplementaryGroupsUpdate bystar
 ${G_myName} ${extraInfo} -i usgAcct_sshKeysUpdate bystar
 ${G_myName} ${extraInfo} -i usgAcct_gitConfigUpdate bystar
+$( examplesSeperatorChapter "Usage (usg) List Accounts" )
+${G_myName} ${extraInfo} -i usgAcctNextLocalUidNu
+${G_myName} ${extraInfo} -i usgAcctsList
 _EOF_
 }
 
@@ -98,22 +100,25 @@ function vis_bxisoAccountsExamples {
     #typeset extraInfo=""
     typeset runInfo="-p ri=lsipusr:passive"
 
-    local oneBxisoAcct="site-default"
+    local oneAutonomousBxisoAcct="ai-first.last"    
+    local oneControlledBxisoAcct="site-default"
     local oneBxisoComment="oid-2.23.34.20000"
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
   cat  << _EOF_
 $( examplesSeperatorChapter "BxISO (Info and Service Objects) Accounts" )
-${G_myName} ${extraInfo} -i bxisoAcctNextLocalUidNu
 ${G_myName} ${extraInfo} -i bxisoAcctAdd bxisoDelimiter
-${G_myName} ${extraInfo} -p acctComment=${oneBxisoComment} -i bxisoAcctAdd ${oneBxisoAcct}
+${G_myName} ${extraInfo} -p acctComment=${oneBxisoComment} -i bxisoAcctAdd ${oneAutonomousBxisoAcct}  # Autonomous Individual
 ${G_myName} ${extraInfo} -i bxisoAcctCreate bxisoDelimiter  # acctAdd, sudoers, report
-${G_myName} ${extraInfo} -p acctComment=${oneBxisoComment} -i bxisoAcctCreate ${oneBxisoAcct}
+${G_myName} ${extraInfo} -p acctComment=${oneBxisoComment} -i bxisoAcctCreate ${oneAutonomousBxisoAcct}  # Autonomous Individual
 ${G_myName} ${extraInfo} -i bxisoAcctDelete bxisoDelimiter
-${G_myName} ${extraInfo} -i bxisoAcctDelete ${oneBxisoAcct}
+${G_myName} ${extraInfo} -i bxisoAcctDelete ${oneAutonomousBxisoAcct}
 ${G_myName} ${extraInfo} -i bxisoAcctVerify bxisoDelimiter
-${G_myName} ${extraInfo} -i bxisoAcctVerify ${oneBxisoAcct}
+${G_myName} ${extraInfo} -i bxisoAcctVerify ${oneAutonomousBxisoAcct}
+$( examplesSeperatorChapter "BxISO (Info and Service Objects) List Accounts" )
+${G_myName} ${extraInfo} -i bxisoAcctNextLocalUidNu
+${G_myName} ${extraInfo} -i bxisoAcctsList
 _EOF_
 }
 
@@ -311,11 +316,40 @@ _EOF_
     lpReturn
 }
 
+function vis_usgAcctsList {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+List all usg accounts
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    
+    uidMinSpec=2000
+    uidMaxSpec=10000
+
+    vis_uidRangePasswdFile
+}
+
+function vis_bxisoAcctsList {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+List all usg accounts
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    
+    uidMinSpec=1000000
+    uidMaxSpec=2000000
+
+    vis_uidRangePasswdFile
+}
+
+
 
 function vis_acct_createHome {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-Create home dir for specified acct
+Create home dir for specified acct -- acctHome is taken from passwd entry.
 _EOF_
     }
     EH_assert [[ $# -eq 1 ]]
@@ -416,6 +450,21 @@ _EOF_
     lpReturn
 }
 
+function vis_usgAcctPasswdList {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Delete the usg account.
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local acctName="$1"
+
+    lpDo vis_userAcctsDelete ${acctName}
+
+    lpReturn
+}
+
 
 
 function vis_bxisoAcctVerify {
@@ -485,7 +534,11 @@ _EOF_
    fi
 
    lpDo vis_acct_createHome ${acctName}
-   
+
+   lpDo vis_bxisoAcct_supplementaryGroupsUpdate ${acctName}
+
+   lpDo vis_bxisoAcct_sshKeysUpdate ${acctName}   
+
    # the sudo -u ${acctName} id -- results in creation of the homeDir
    opDo vis_userAcctsReport ${acctName}   
 }
@@ -551,6 +604,50 @@ _EOF_
     lpReturn
 }
 
+
+function vis_bxisoAcct_supplementaryGroupsUpdate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Add needed supplementary groups to the specified USG account.
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local acctName="$1"
+    # local eachGroup=""
+
+    # lpDo distFamilyGenerationHookRun "addSupplementaryGroups"
+
+    # for eachGroup in ${supplementaryGroupsList[@]} ; do
+    # 	opDo sudo usermod -G ${eachGroup} --append ${acctName}    
+    # done
+}
+
+function vis_bxisoAcct_sshKeysUpdate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Add sshKeys if not there, with forceMode update existing ones.
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;        
+    
+    local acctName="$1"
+
+    if lcaSshAdmin.sh -p localUser="${acctName}" -i userKeyVerify; then
+	if [ "${G_forceMode}" == "force" ] ; then
+	    ANT_raw "Ssh Keys Exist -- Overwriting Them"
+	    opDo lcaSshAdmin.sh -p localUser="${acctName}" -i userKeyUpdate
+	else
+	    ANT_raw "Ssh Keys Exist and No G_forceMode -- Updating Skipped"
+	fi
+    else
+	opDo lcaSshAdmin.sh -v -n showRun -p localUser="${acctName}" -i userKeyUpdate
+    fi
+
+
+}
 
 
 function vis_getInitialPasswdForAcct {

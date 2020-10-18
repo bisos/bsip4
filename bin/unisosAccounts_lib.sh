@@ -33,7 +33,11 @@ function vis_moduleDescription {  cat  << _EOF_
 *  [[elisp:(org-cycle)][| ]]  Info          :: *[Module Description:]* [[elisp:(org-cycle)][| ]]
 
 _EOF_
-}
+			       }
+
+
+minUidSpec=1000
+maxUidSpec=20000
 
 function vis_unisosAccountsExamples {
     typeset extraInfo="-h -v -n showRun"
@@ -46,6 +50,7 @@ function vis_unisosAccountsExamples {
 $( examplesSeperatorChapter "Unisos User Accounts Management" )
 ${G_myName} -i uidSortPasswdFile
 ${G_myName} -i gidSortGroupFile
+${G_myName} -p uidMinSpec=2000 -p uidMaxSpec=5000 -i uidRangePasswdFile
 ${G_myName} ${extraInfo} -i userAcctsExist bisos bystar lsipusr ; echo \$?
 $( examplesSeperatorSection "Accounts Manipulation" )
 ${G_myName} ${extraInfo} -i groupsExist bisos bystar lsipusr ; echo \$?
@@ -75,6 +80,28 @@ function vis_gidSortGroupFile {
 _EOF_
     }
     opDo eval sort -g -t : -k 3 /etc/group
+}
+
+function vis_uidRangePasswdFile {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		       }
+
+    local passwdLines
+    local eachUid
+    local each
+
+    local sortedPasswd=$( sort -g -t : -k 3 /etc/passwd )
+
+    readarray passwdLines <<< ${sortedPasswd}
+    
+    for each in "${passwdLines[@]}" ; do
+	eachUid=$( echo ${each} | cut -d : -f 3 )
+	if (( eachUid > uidMinSpec )) && (( eachUid < uidMaxSpec )) ; then
+	    echo "${each}"
+	fi
+    done
 }
 
 
@@ -129,6 +156,7 @@ function vis_groupsAdd {
 Add specified groups.
 Design Pattern: processEach based on args or stdin.
 Runs groupadd as root.
+** TODO Modernize processEachArgsOrStdin to processEachArgsAndStdin
 _EOF_
     }
 

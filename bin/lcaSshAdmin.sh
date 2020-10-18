@@ -333,17 +333,12 @@ _EOF_
 		return 0
 	    fi
 	fi
+
+	eval $(ssh-agent -s)
 	
-	if [ "$( id -u ${currentUser})X" == "$( id -u ${localUser})X" ] ; then
-	    opDoComplain ssh-keygen -t dsa -f ${opAcct_homeDir}/.ssh/id_dsa -N ""
-	    opDoComplain ssh-keygen -t rsa -f ${opAcct_homeDir}/.ssh/id_rsa -N ""
-	    opDo ssh-add   # inform ssh-agent of the change
-	else
-	    opDoComplain sudo -u ${localUser} ssh-keygen -t dsa -f ${opAcct_homeDir}/.ssh/id_dsa -N ""
-	    #opDoComplain sudo -u ${localUser} ssh-keygen -t dsa -f ${opAcct_homeDir}/.ssh/id_dsa -N "digDeep"
-	    # eval $(ssh-agent -s)
-	    opDo ssh-add   # inform ssh-agent of the change
-	fi
+	opDoComplain ssh-keygen -t dsa -f ${opAcct_homeDir}/.ssh/id_dsa -N ""
+	opDoComplain ssh-keygen -t rsa -f ${opAcct_homeDir}/.ssh/id_rsa -N ""
+	opDo ssh-add   # inform ssh-agent of the change
     fi
 
     opDo ls -ld ${opAcct_homeDir}/.ssh  ${opAcct_homeDir}/.ssh/id_dsa ${opAcct_homeDir}/.ssh/id_dsa.pub
