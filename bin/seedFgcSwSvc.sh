@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IimBriefDescription="Seed For Functionally Grouped Components (fgc) Sw and Svc"
+IcmBriefDescription="Seed For Functionally Grouped Components (fgc) Sw and Svc"
 
 ORIGIN="
 * Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee

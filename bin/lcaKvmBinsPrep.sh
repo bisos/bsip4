@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IimBriefDescription="MODULE BinsPrep based on apt based seedSubjectBinsPrepDist.sh"
+IcmBriefDescription="MODULE BinsPrep based on apt based seedSubjectBinsPrepDist.sh"
 
 ORIGIN="
 * Revision And Libre-Halaal CopyLeft

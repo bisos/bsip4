@@ -161,20 +161,21 @@ function prUid {
 }
 
 function opAcctUidGidAnalyze {
-  # $1=acctType
+    # # $1=acctType
 
-    # /opt/public/osmt/policies/acct/opUidGidAssignments.mma 
-  . ${opPoliciesBase}/acct/opUidGidAssignments.mma
+    EH_assert [[ $# -eq 1 ]]
 
-  targetSubject=item_uidGid_${1}
-    ${targetSubject}
+  #   # /opt/public/osmt/policies/acct/opUidGidAssignments.mma 
+  # . ${opPoliciesBase}/acct/opUidGidAssignments.mma
 
-  uidPolicy_PasswdFileAcct="${iv_uidPolicy_PasswdFileAcct}"
-  uidPolicy_PasswdIdStart="${iv_uidPolicy_PasswdIdStart}"
-  uidPolicy_PasswdIdEnd="${iv_uidPolicy_PasswdIdEnd}"
-  uidPolicy_loginShell="${iv_uidPolicy_loginShell}"
-  uidPolicy_homeDir="${iv_uidPolicy_homeDir}"
-  groupPolicy_grpName="${iv_groupPolicy_grpName}"
-  groupPolicy_grpId="${iv_groupPolicy_grpId}"
+  # targetSubject=item_uidGid_${1}
+  #   ${targetSubject}
 
+  # uidPolicy_PasswdFileAcct="${iv_uidPolicy_PasswdFileAcct}"
+  # uidPolicy_PasswdIdStart="${iv_uidPolicy_PasswdIdStart}"
+  # uidPolicy_PasswdIdEnd="${iv_uidPolicy_PasswdIdEnd}"
+  # uidPolicy_loginShell="${iv_uidPolicy_loginShell}"
+  # uidPolicy_homeDir="${iv_uidPolicy_homeDir}"
+  # groupPolicy_grpName="${iv_groupPolicy_grpName}"
+  # groupPolicy_grpId="${iv_groupPolicy_grpId}"
 }

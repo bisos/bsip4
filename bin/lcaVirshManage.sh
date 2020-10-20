@@ -1,12 +1,12 @@
 #!/bin/bash
 
-IimBriefDescription="Qemu-KVM (libvirt -- virsh) Management Facilities"
+IcmBriefDescription="Qemu-KVM (libvirt -- virsh) Management Facilities"
 
 ORIGIN="
 * Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee
 "
 
-####+BEGIN: bx:dblock:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
+####+BEGIN: bx:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
 typeset RcsId="$Id: lcaVirshManage.sh,v 1.6 2017-02-22 00:55:30 lsipusr Exp $"
 # *CopyLeft*
 # Copyright (c) 2011 Neda Communications, Inc. -- http://www.neda.com
@@ -19,7 +19,7 @@ __author__="
 "
 
 
-####+BEGIN: bx:dblock:lsip:bash:seed-spec :types "seedActions.bash"
+####+BEGIN: bx:bsip:bash:seed-spec :types "seedActions.bash"
 SEED="
 *  /[dblock]/ /Seed/ :: [[file:/opt/public/osmt/bin/seedActions.bash]] | 
 "

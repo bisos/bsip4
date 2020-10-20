@@ -1,6 +1,6 @@
 #!/bin/bash
 
-####+BEGIN: bx:dblock:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
+####+BEGIN: bx:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
 # {{{ DBLOCK-top-of-file
 typeset RcsId="$Id: lpXparamsApply.sh,v 1.1.1.1 2016-06-08 23:49:52 lsipusr Exp $"
 #  This is part of ByStar Libre Services. http://www.by-star.net
@@ -10,7 +10,7 @@ typeset RcsId="$Id: lpXparamsApply.sh,v 1.1.1.1 2016-06-08 23:49:52 lsipusr Exp 
 # }}} DBLOCK-top-of-file
 ####+END:
 
-####+BEGIN: bx:dblock:lsip:bash:seed-spec :types "seedActions.bash"
+####+BEGIN: bx:bsip:bash:seed-spec :types "seedActions.bash"
 # {{{ DBLOCK-seed-spec
 if [ "${loadFiles}X" == "X" ] ; then
     /opt/public/osmt/bin/seedActions.bash -l $0 "$@" 

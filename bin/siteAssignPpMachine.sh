@@ -56,7 +56,7 @@ _CommentEnd_
 . ${opBinBase}/platformBases_lib.sh
 
 
-. ${opBinBase}/bystarLib.sh
+. ${opBinBase}/bxo_lib.sh
 
 # ./lcnFileParams.libSh
 . ${opBinBase}/lcnFileParams.libSh
@@ -64,7 +64,7 @@ _CommentEnd_
 # ./bystarInfoBase.libSh
 . ${opBinBase}/bystarInfoBase.libSh
 
-. ${opBinBase}/lpCurrents.libSh
+. ${opBinBase}/bisosCurrents_lib.sh
 
 
 setBasicItemsFiles opMachineItems

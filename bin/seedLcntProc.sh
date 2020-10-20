@@ -1,12 +1,12 @@
 #!/bin/bash
 
-IimBriefDescription="Seed For Processing LCNT."
+IcmBriefDescription="Seed For Processing LCNT."
 
 ORIGIN="
 * Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee
 "
 
-####+BEGIN: bx:dblock:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
+####+BEGIN: bx:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
 typeset RcsId="$Id: seedLcntProc.sh,v 1.51 2020-03-02 17:25:47 lsipusr Exp $"
 # *CopyLeft*
 # Copyright (c) 2011 Neda Communications, Inc. -- http://www.neda.com

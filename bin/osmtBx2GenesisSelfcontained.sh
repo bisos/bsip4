@@ -5,7 +5,7 @@ logFile=~/bx2Genesis-${dateTag}.log
 
 exec &> >(tee "${logFile}")
 
-StandaloneIimBriefDescription="Bx2 Genesis -- Transforms The Distro To The Specified BxPlatform SwProfile"
+StandaloneIcmBriefDescription="Bx2 Genesis -- Transforms The Distro To The Specified BxPlatform SwProfile"
 
 ORIGIN="
 * Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee

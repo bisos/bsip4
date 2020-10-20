@@ -1,5 +1,5 @@
-#!/bin/osmtKsh 
-#!/bin/osmtKsh
+#!/bin/bash 
+#!/bin/bash
 
 typeset RcsId="$Id: bystarRbaeAdmin.sh,v 1.1.1.1 2016-06-08 23:49:51 lsipusr Exp $"
 
@@ -10,7 +10,7 @@ fi
 
 
 . ${opBinBase}/opAcctLib.sh
-. ${opBinBase}/bystarLib.sh
+. ${opBinBase}/bxo_lib.sh
 
 # /opt/public/osmt/bin/bystarBarc.libSh 
 . ${opBinBase}/bystarBarc.libSh
@@ -25,7 +25,7 @@ fi
 # ./bystarPlatform.libSh
 . ${opBinBase}/bystarPlatform.libSh
 
-. ${opBinBase}/lpCurrents.libSh
+. ${opBinBase}/bisosCurrents_lib.sh
 
 # PRE parameters
 typeset -t BarcFile="MANDATORY"

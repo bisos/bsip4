@@ -1,64 +1,81 @@
-#!/bin/osmtKsh 
-#!/bin/osmtKsh
+#!/bin/bash
 
-typeset RcsId="$Id: bystarBarcStart.sh,v 1.1.1.1 2016-06-08 23:49:52 lsipusr Exp $"
+IimBriefDescription="NOTYET: Short Description Of The Module"
 
-if [ "${loadFiles}X" == "X" ] ; then
-  `dirname $0`/seedActions.sh -l $0 "$@"
-  exit $?
+ORIGIN="
+* Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee
+"
+
+####+BEGIN: bx:dblock:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
+
+####+END:
+
+__author__="
+* Authors: Mohsen BANAN, http://mohsen.banan.1.byname.net/contact
+"
+
+
+####+BEGIN: bx:bsip:bash:seed-spec :types "seedActions.bash"
+SEED="
+*  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
+"
+FILE="
+*  /This File/ :: /bisos/core/bsip/bin/bxeRrPkgCreate.sh 
+"
+if [ "${loadFiles}" == "" ] ; then
+    /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
+    exit $?
 fi
+####+END:
 
+_CommentBegin_
+####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/libre/ByStar/InitialTemplates/software/plusOrg/dblock/inserts/topControls.org"
+*  /Controls/ ::  [[elisp:(org-cycle)][| ]]  [[elisp:(show-all)][Show-All]]  [[elisp:(org-shifttab)][Overview]]  [[elisp:(progn (org-shifttab) (org-content))][Content]] | [[file:Panel.org][Panel]] | [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] | [[elisp:(bx:org:run-me)][Run]] | [[elisp:(bx:org:run-me-eml)][RunEml]] | [[elisp:(delete-other-windows)][(1)]] | [[elisp:(progn (save-buffer) (kill-buffer))][S&Q]]  [[elisp:(save-buffer)][Save]]  [[elisp:(kill-buffer)][Quit]] [[elisp:(org-cycle)][| ]]
+** /Version Control/ ::  [[elisp:(call-interactively (quote cvs-update))][cvs-update]]  [[elisp:(vc-update)][vc-update]] | [[elisp:(bx:org:agenda:this-file-otherWin)][Agenda-List]]  [[elisp:(bx:org:todo:this-file-otherWin)][ToDo-List]]
+####+END:
+_CommentEnd_
 
-vis_help () {
- cat  << _EOF_
+_CommentBegin_
+*      ================
+*  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]] CONTENTS-LIST ################
+*  [[elisp:(org-cycle)][| ]]  Notes         :: *[Current-Info:]*  Status, Notes (Tasks/Todo Lists, etc.) [[elisp:(org-cycle)][| ]]
+_CommentEnd_
 
-  TODO:
-  =====
-
-- Add reason as a parameter. Capture in BARC.
-
-- Add acctUid=xxx For PreBuilt sites
-
-- Add Features="Continuum,Student"
-
-Bystar Account Creation Starts Here -- ByStar Factory Script.
-
-Creates a BARC (Bystar Account Request Container) based on command line 
-and processes it to various degrees.
-
-On Command Line, 
-   ${G_myName}
-   ${G_myName} byname
-   ${G_myName} bysmb
-for examples.
-
-With Bbdb,
-    x bystar-
-See bbdb-bystarFactory.el
-
-From the web
-
-
-
+function vis_moduleDescription {  cat  << _EOF_
+*  [[elisp:(org-cycle)][| ]]  Xrefs         :: *[Related/Xrefs:]*  <<Xref-Here->>  -- External Documents  [[elisp:(org-cycle)][| ]]
+**  [[elisp:(org-cycle)][| ]]  Panel        :: [[file:/libre/ByStar/InitialTemplates/activeDocs/bxServices/versionControl/fullUsagePanel-en.org::Xref-VersionControl][Panel Roadmap Documentation]] [[elisp:(org-cycle)][| ]]
+*  [[elisp:(org-cycle)][| ]]  Info          :: *[Module Description:]* [[elisp:(org-cycle)][| ]]
+** 
+** Creates a BARC (Bystar Account Request Container) based on command line.
+** E|
 _EOF_
 }
 
+_CommentBegin_
+*  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *Seed Extensions*
+_CommentEnd_
+
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  Imports       :: Prefaces (Imports/Libraries) [[elisp:(org-cycle)][| ]]
+_CommentEnd_
 
 . ${opBinBase}/opAcctLib.sh
-. ${opBinBase}/bystarLib.sh
-. ${opBinBase}/bystarBarc.libSh
 . ${opBinBase}/opDoAtAsLib.sh
+. ${opBinBase}/lpParams.libSh
+. ${opBinBase}/lpReRunAs.libSh
 
 . ${opBinBase}/bystarHook.libSh
-. ${opBinBase}/bystarNspLib.sh
 
-# ./bystarPlatform.libSh
-. ${opBinBase}/bystarPlatform.libSh
+# PRE parameters
 
-. ${opBinBase}/lpCurrents.libSh
+baseDir=""
 
-. ${opBinBase}/lpInBaseDirDo.libSh
-. ${opBinBase}/lpReRunAs.libSh
+bystarServiceType=NOTYET
+bystarServiceSupportType=NOTYET
+
+typeset -t ServiceType=""
+typeset -t ServiceSupportType=""
+
 
 typeset -t ServiceType=""
 typeset -t ServiceSupportType=""
@@ -100,6 +117,11 @@ typeset -t originationMethod=""
 # PRE parameters optional 
 
 typeset -t none=""
+
+
+function G_postParamHook {
+     return 0
+}
 
 
 
@@ -151,12 +173,28 @@ noArgsHook() {
 }
 
 
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  Examples      :: Examples [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+
+
 function vis_examples {
-    extraInfo="-h -v -n showRun"
+    typeset extraInfo="-h -v -n showRun"
+    #typeset extraInfo=""
+    typeset runInfo="-p ri=lsipusr:passive"
 
-  typeset visLibExamples=`visLibExamplesOutput ${G_myName}`
+    typeset examplesInfo="${extraInfo} ${runInfo}"
 
-vis_examplesBysmb
+    # vis_examplesBysmb
+    
+    visLibExamplesOutput ${G_myName} 
+  cat  << _EOF_
+$( examplesSeperatorTopLabel "${G_myName}" )
+$( examplesSeperatorChapter "Chapter Title" )
+$( examplesSeperatorSection "Section Title" )
+${G_myName} ${extraInfo} -i doTheWork
+_EOF_
+
 
  cat  << _EOF_
 #### BYNAME ####
@@ -173,6 +211,12 @@ ${G_myName} bca
 _EOF_
 }
 
+
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+
+
 function vis_examplesCommon {
     extraInfo="-h -v -n showRun"
 
@@ -181,22 +225,9 @@ EXAMPLES:
 #### $1 ####
 ${G_myName} ${extraInfo} ${bystarParamsMini} -i BarcStdout
 ${G_myName} ${extraInfo} ${bystarParamsMini} -i BarcFileCreate
-${G_myName} ${extraInfo} ${bystarParamsMini} -i startToRegister
-${G_myName} ${extraInfo} ${bystarParamsMini} -i startToFullFg
-${G_myName} ${extraInfo} ${bystarParamsMini} -i startToEssentials
-${G_myName} -v -n showRun ${bystarParamsMini} -i startToEssentials
-${G_myName} ${extraInfo} ${bystarParamsMini} -i startToFullBg
-${G_myName} ${extraInfo} ${bystarParamsMini} -i startToFullDev
---- RENEW/RELOCATE Existing Account ---
-${G_myName} ${extraInfo} -p bystarUid=ua-35011 ${bystarParamsMini} -i renewPassive
-${G_myName} ${extraInfo} -p bystarUid=ua-35011 ${bystarParamsMini} -i startToFullFg
 --- Full ---
 ${G_myName} ${extraInfo} ${bystarParamsFull} -i BarcStdout
 ${G_myName} ${extraInfo} ${bystarParamsFull} -i BarcFileCreate
-${G_myName} ${extraInfo} ${bystarParamsFull} -i startToRegister
-${G_myName} ${extraInfo} ${bystarParamsFull} -i startToFullFg
-${G_myName} ${extraInfo} ${bystarParamsFull} -i startToFullBg
-${G_myName} ${extraInfo} ${bystarParamsFull} -i startToFullDev
 _EOF_
 }
 
@@ -435,94 +466,31 @@ function vis_BarcFileCreate {
     echo ${BarcBaseDir}/${BarcFileName}
 }
 
-function vis_startToRegister {
-    BarcFile=$( vis_BarcFileCreate 2> /dev/null )
 
-    opDo bystarBarcProc.sh ${G_commandOptions} -p BarcFile="${BarcFile}" -i BarcRegister
-}
-
-function vis_startToEssentials {
+function vis_doTheWork {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
+    lpDo vis_failExample
+    EH_retOnFail
 
-    BarcFile=$( vis_BarcFileCreate 2> /dev/null )
-
-    #bystarUid=$( bystarBarcProc.sh ${G_commandOptions} -p BarcFile="${BarcFile}" -i startToEssentials )
-    #echo ${bystarUid}
-
-    opDo bystarBarcProc.sh ${G_commandOptions} -p BarcFile="${BarcFile}" -i startToEssentials
+    lpReturn
 }
 
+_CommentBegin_
+*  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*
+_CommentEnd_
 
-function vis_startToFullFg {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
-
-    ANT_raw "Gen BarcFile"
-    pauseForVerification
-
-    #BarcFile=$( vis_BarcFileCreate 2> /dev/null )
-    BarcFile=$( vis_BarcFileCreate )
-    ANT_raw "About to Run bystarBarcProc.sh"
-    pauseForVerification
-    opDo bystarBarcProc.sh ${G_commandOptions} -p BarcFile="${BarcFile}" -i fullCreateFg
-}
-
-function vis_startToFullBg {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
-    BarcFile=$( vis_BarcFileCreate 2> /dev/null )
-
-    opDo bystarBarcProc.sh ${G_commandOptions} -p BarcFile="${BarcFile}" -i fullCreateBg
-}
-
-function vis_startToFullDev {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
-    # Notyet
-    # PauseForVerifications
-    # Lots of debug
-    #
-    BarcFile=$( vis_BarcFileCreate 2> /dev/null )
-
-    opDo bystarBarcProc.sh ${G_commandOptions} -p BarcFile="${BarcFile}" -i fullCreateFg
-}
-
-function vis_renewPassive {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
-
-    # Notyet
-    # PauseForVerifications
-    # Lots of debug
-    #
-    BarcFile=$( vis_BarcFileCreate 2> /dev/null )
-
-    opDo bystarBarcProc.sh ${G_commandOptions} -p BarcFile="${BarcFile}" -i fullCreateFg
-}
-
+####+BEGIN: bx:dblock:bash:end-of-file :type "basic"
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  Common        ::  /[dblock] -- End-Of-File Controls/ [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+#+STARTUP: showall
+#local variables:
+#major-mode: sh-mode
+#fill-column: 90
+# end:
+####+END:

@@ -1,12 +1,12 @@
 #!/bin/bash
 
-IimBriefDescription="NOTYET: Short Description Of The Module"
+IcmBriefDescription="NOTYET: Short Description Of The Module"
 
 ORIGIN="
 * Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee
 "
 
-####+BEGIN: bx:dblock:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
+####+BEGIN: bx:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
 
 ####+END:
 
@@ -159,8 +159,8 @@ _CommentEnd_
 
 # . ${opBinBase}/bystarHook.libSh
 
-# bystarLib.sh
-# . ${opBinBase}/bystarLib.sh
+# bxo_lib.sh
+# . ${opBinBase}/bxo_lib.sh
 # . ${opBinBase}/bynameLib.sh
 # . ${opBinBase}/mmaLib.sh
 # . ${opBinBase}/mmaQmailLib.sh
@@ -169,7 +169,7 @@ _CommentEnd_
 # . ${opBinBase}/opAcctLib.sh
 # . ${opBinBase}/lcaPloneLib.sh
 
-. ${opBinBase}/lpCurrents.libSh
+. ${opBinBase}/bisosCurrents_lib.sh
 
 
 # PRE parameters

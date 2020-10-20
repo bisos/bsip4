@@ -1,6 +1,6 @@
 #!/bin/bash # -*- mode: sh-mode; -*-
 
-IimBriefDescription="Library: For BISOS Accounts -- BleePanel: XXX"
+IcmBriefDescription="Library: For BISOS Accounts -- BleePanel: XXX"
 
 ORIGIN="
 * Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee

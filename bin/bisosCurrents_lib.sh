@@ -11,8 +11,6 @@ currentUsgUname=""
 # NOTYET to be replaced by a directory of files and dir read model
 #
 
-. ${opBinBase}/bystarLib.sh
-
 bisosCurrentsFileName="/bisos/var/currents"
 bisosCurrentsIcm="bisosCurrentsManage.sh"
 

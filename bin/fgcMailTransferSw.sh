@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IimBriefDescription="Functionally Grouped Components Software: Mail Transfer"
+IcmBriefDescription="Functionally Grouped Components Software: Mail Transfer"
 
 ORIGIN="
 * Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee

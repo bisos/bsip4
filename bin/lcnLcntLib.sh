@@ -1,5 +1,5 @@
-#!/bin/osmtKsh
-#!/bin/osmtKsh
+#!/bin/bash
+#!/bin/bash
 
 typeset RcsId="$Id: lcnLcntLib.sh,v 1.8 2019-11-21 08:13:59 lsipusr Exp $"
 

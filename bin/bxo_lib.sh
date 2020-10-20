@@ -1,11 +1,12 @@
 #!/bin/bash
 
-typeset RcsId="$Id: bxo_lib.sh,v 1.3 2016-07-29 02:02:53 lsipusr Exp $"
-
-# if [ "${loadFiles}X" == "X" ] ; then
-#   seedActions.sh -l $0 "$@"
-#   exit $?
-# fi
+####+BEGIN: bx:bsip:bash/libLoadOnce :libName "auto"
+if [ -z "${bxo_lib:-}" ] ; then
+    bxoLib="LOADED" ; TM_trace 7 "bxo_lib :: Loading Library -- /bisos/bsip/bin/bxo_lib.sh"
+else
+    TM_trace 7 "bxo_lib :: Prviously Loaded -- Skipping /bisos/bsip/bin/bxo_lib.sh" ; return
+fi
+####+END:
 
 # ./opAcctLib.sh
 . ${opBinBase}/opAcctLib.sh
@@ -14,67 +15,47 @@ typeset RcsId="$Id: bxo_lib.sh,v 1.3 2016-07-29 02:02:53 lsipusr Exp $"
 . ${opBinBase}/lcnFileParams.libSh
 
 
-bystarBackupHost=198.62.92.131
-#bystarBackupDestDir="/backup/plone/${opRunHostName}"
-bystarBackupDestDir="/backup/${opRunHostName}"
-bystarBackupBaseDir="/backup"
+function bxoNextDisposableScopeAcctNu {
+    EH_assert [[ $# -eq  0 ]]
 
-function bystarNextDisposableScopeAcctNu {
-  EH_assert [[ $# -eq  0 ]]
+    passwdFileInfo=$( egrep '^..-15' /etc/passwd | sort | tail -1 | cut -d: -f1 )
 
-  passwdFileInfo=$( egrep '^..-15' /etc/passwd | sort | tail -1 | cut -d: -f1 )
-
-  if [ "${passwdFileInfo}_" == "_" ] ; then 
-    echo "15001"
-  else
-    lastNuStr=$( expr substr  ${passwdFileInfo}  4 10 )
-    nextNu=$( expr $lastNuStr +  1 )
-    echo ${nextNu}
-  fi
+    if [ "${passwdFileInfo}_" == "_" ] ; then 
+	echo "15001"
+    else
+	lastNuStr=$( expr substr  ${passwdFileInfo}  4 10 )
+	nextNu=$( expr $lastNuStr +  1 )
+	echo ${nextNu}
+    fi
 }
 
-function bystarNextLocalScopeAcctNu {
-  EH_assert [[ $# -eq  0 ]]
+function bxoNextLocalScopeAcctNu {
+    EH_assert [[ $# -eq  0 ]]
+    
+    passwdFileInfo=$( egrep '^..-16' /etc/passwd | sort | tail -1 | cut -d: -f1 )
 
-  passwdFileInfo=$( egrep '^..-16' /etc/passwd | sort | tail -1 | cut -d: -f1 )
-
-  if [ "${passwdFileInfo}_" == "_" ] ; then 
-    echo "16001"
-  else
-    lastNuStr=$( expr substr  ${passwdFileInfo}  4 10 )
-    nextNu=$( expr $lastNuStr +  1 )
-    echo ${nextNu}
-  fi
+    if [ "${passwdFileInfo}_" == "_" ] ; then 
+	echo "16001"
+    else
+	lastNuStr=$( expr substr  ${passwdFileInfo}  4 10 )
+	nextNu=$( expr $lastNuStr +  1 )
+	echo ${nextNu}
+    fi
 }
 
 
-function bystarNextControlledAcct {
+function bxoNextControlledAcct {
   EH_assert [[ $# -eq  0 ]]
 
-    nextNu=$( bystarNextLocalScopeAcctNu )
+    nextNu=$( bxoNextLocalScopeAcctNu )
     echo ca-${nextNu}
 }
 
-
-function bystarNextControlledAcctOld {
-  EH_assert [[ $# -eq  0 ]]
-
-  passwdFileInfo=$( egrep '^ca-' /etc/passwd | sort | tail -1 | cut -d: -f1 )
-
-  if [ "${passwdFileInfo}_" == "_" ] ; then 
-    echo "ca-16001"
-  else
-    lastNuStr=${passwdFileInfo##ca-}
-    nextNu=$( expr $lastNuStr +  1 )
-    echo ca-${nextNu}
-  fi
-}
-
-function bystarIsControlledAcct {
+function bxoIsControlledAcct {
   EH_assert [[ $# -eq  1 ]]
 
-  bystarUid=$1	
-  bystarBagpLoad
+  bxoUid=$1	
+  bxoBagpLoad
 
   if [ "${cp_MasterAcct}_" == "_" ] ; then
     #EH_problem "Missing Master Acct"
@@ -83,57 +64,46 @@ function bystarIsControlledAcct {
   return 0
 }
 
-function bystarIsMasterAcct {
+function bxoIsMasterAcct {
   EH_assert [[ $# -eq 1 ]]
-
-  # NOTYET, uid
-
-  # NOTYET, test for BCA directory
-  #
-  #
-  #if [ "${cp_MasterAcct}_" == "_" ] ; then
-    #EH_problem "Missing Master Acct"
-    #return 101
-  #fi
   return 0
 }
 
-
-function bystarBacpBaseDirVerifyAndFix {
+function bxoBacpBaseDirVerifyAndFix {
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [[ "${bystarUid}_" != "MANDATORY_" ]]
-    EH_assert [[ "${bystarUid}_" != "_" ]]
+    EH_assert [[ "${bxoUid}_" != "MANDATORY_" ]]
+    EH_assert [[ "${bxoUid}_" != "_" ]]
 
-    bystarUidHome=$( FN_absolutePathGet ~${bystarUid} )
-    if [ ! -d ${bystarUidHome} ] ; then
-	EH_problem "Missing ${bystarUidHome}"
+    bxoUidHome=$( FN_absolutePathGet ~${bxoUid} )
+    if [ ! -d ${bxoUidHome} ] ; then
+	EH_problem "Missing ${bxoUidHome}"
 	return 101
     fi
 
-    if [ ! -d ${bystarUidHome}/BACP ] ; then
-	FN_dirCreatePathIfNotThere ${bystarUidHome}/BACP
+    if [ ! -d ${bxoUidHome}/BACP ] ; then
+	FN_dirCreatePathIfNotThere ${bxoUidHome}/BACP
     fi
 }
 
-function bystarBagpLoad {
+function bxoBagpLoad {
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [[ "${bystarUid}_" != "MANDATORY_" ]]
-    EH_assert [[ "${bystarUid}_" != "_" ]]
+    EH_assert [[ "${bxoUid}_" != "MANDATORY_" ]]
+    EH_assert [[ "${bxoUid}_" != "_" ]]
 
 
-    bystarUidHome=$( FN_absolutePathGet ~${bystarUid} )
+    bxoUidHome=$( FN_absolutePathGet ~${bxoUid} )
 
-    if [ ! -d ${bystarUidHome} ] ; then
-	EH_problem "Missing ${bystarUidHome}"
+    if [ ! -d ${bxoUidHome} ] ; then
+	EH_problem "Missing ${bxoUidHome}"
 	return 101
     fi
 
-    if [ ! -d ${bystarUidHome}/BAGP ] ; then
-	EH_problem "Missing ${bystarUidHome}/BAGP"
+    if [ ! -d ${bxoUidHome}/BAGP ] ; then
+	EH_problem "Missing ${bxoUidHome}/BAGP"
 	return 101
     fi
 
-    opDo fileParamsLoadVarsFromBaseDir  ${bystarUidHome}/BAGP 2> /dev/null
+    opDo fileParamsLoadVarsFromBaseDir  ${bxoUidHome}/BAGP 2> /dev/null
 }
 
 
@@ -186,7 +156,7 @@ function nextUserId {
   fi
 }
 
-function bystarBacsAcctsList {
+function bxoBacsAcctsList {
   EH_assert [[ $# -ge 0 ]]
   
   #acctsList=$(cat /etc/passwd | egrep \'^ea-[0-9]\*:\|sa-[0-9]\*:\' | cut -d: -f1 )
@@ -202,173 +172,280 @@ function bystarBacsAcctsList {
 }
 
 #
-# VERY DIRTY. There should just be one bystarAcctAnalyze
+# VERY DIRTY. There should just be one bxoAcctAnalyze
 #
 
-function bystarAcctPrefixAnalyze {
+function bxoAcctPrefixAnalyze {
   EH_assert [[ $# -eq 1 ]]
-  bystar_acct_acctTypePrefix=$1
+  bxo_acct_acctTypePrefix=$1
 
-    case ${bystar_acct_acctTypePrefix} in 
+    case ${bxo_acct_acctTypePrefix} in 
       "ea")
-	    bystarUidGidTag="smb"
+	    bxoUidGidTag="smb"
 	    ;;
       "ma")
-	    bystarUidGidTag="memory"
+	    bxoUidGidTag="memory"
 	    ;;
       "mu")
-	    bystarUidGidTag="memoryUser"
+	    bxoUidGidTag="memoryUser"
 	    ;;
       "sa")
-	    bystarUidGidTag="subscriber"
+	    bxoUidGidTag="subscriber"
 	    ;;
       "ua")
-	    bystarUidGidTag="user"
+	    bxoUidGidTag="user"
 	    ;;
       "aa")
-	    bystarUidGidTag="alias"
+	    bxoUidGidTag="alias"
 	    ;;
       "au")
-	    bystarUidGidTag="aliasUsr"
+	    bxoUidGidTag="aliasUsr"
 	    ;;
       "ca")
-	    bystarUidGidTag="reserved"
+	    bxoUidGidTag="reserved"
 	    ;;
-	*)
-	    EH_problem "Unknown ${bystar_acct_acctTypePrefix}"
+
+      ##
+      #####  BXO Generation
+      ##
+      "ai")
+	    bxoUidGidTag="autonomousIndividual"
+	    ;;
+      *)
+	    EH_problem "Unknown ${bxo_acct_acctTypePrefix}"
 	    return 101
     esac
-    opAcctUidGidAnalyze ${bystarUidGidTag}
+    opAcctUidGidAnalyze ${bxoUidGidTag}
 
-    case ${bystar_acct_acctTypePrefix} in 
+    case ${bxo_acct_acctTypePrefix} in 
       "ea")
-	    bystarServiceType="BYSMB"
-	    bystarServiceSupportType="COMMITTED"
-	    bystarDomainsList=("bysmb.net" "bysmb.com" "libresite.org")
+	    bxoServiceType="BYSMB"
+	    bxoServiceSupportType="COMMITTED"
+	    bxoDomainsList=("bysmb.net" "bysmb.com" "libresite.org")
 	    thisHomeDir="${iv_uidPolicy_homeDir}/${cp_Domain1}/${cp_Domain2}"
 	    ;;
       "ma")
-	    bystarServiceType="BYMEMORY"
-	    bystarServiceSupportType="COMMITTED"
-	    bystarDomainsList=("bymemory.net")
+	    bxoServiceType="BYMEMORY"
+	    bxoServiceSupportType="COMMITTED"
+	    bxoDomainsList=("bymemory.net")
 	    thisHomeDir="${iv_uidPolicy_homeDir}/${cp_LastName}/1/${cp_FirstName}"
 	    ;;
       "mu")
-	    bystarServiceType="BYMEMORY"
-	    bystarServiceSupportType="TRIAL"
-	    bystarDomainsList=("bymemory.com")
+	    bxoServiceType="BYMEMORY"
+	    bxoServiceSupportType="TRIAL"
+	    bxoDomainsList=("bymemory.com")
 	    thisHomeDir="${iv_uidPolicy_homeDir}/${cp_LastName}/1/${cp_FirstName}"
 	    ;;
       "sa")
-	    bystarUidGidTag="subscriber"
-	    bystarServiceType="BYNAME"
-	    bystarServiceSupportType="COMMITTED"
-	    bystarDomainsList=("byname.net")
+	    bxoUidGidTag="subscriber"
+	    bxoServiceType="BYNAME"
+	    bxoServiceSupportType="COMMITTED"
+	    bxoDomainsList=("byname.net")
 	    thisHomeDir="${iv_uidPolicy_homeDir}/${cp_LastName}/${cp_nameSelector}/${cp_FirstName}"
 	    ;;
       "ua")
-	    bystarUidGidTag="user"
-	    bystarServiceType="BYNAME"
-	    bystarServiceSupportType="TRIAL"
-	    bystarDomainsList=("byname.com")
+	    bxoUidGidTag="user"
+	    bxoServiceType="BYNAME"
+	    bxoServiceSupportType="TRIAL"
+	    bxoDomainsList=("byname.com")
 	    thisHomeDir="${iv_uidPolicy_homeDir}/${cp_LastName}/${cp_nameSelector}/${cp_FirstName}"
 	    ;;
       "aa")
-	    bystarServiceType="BYALIAS"
-	    bystarServiceSupportType="COMMITTED"
-	    bystarDomainsList=("byname.net")
+	    bxoServiceType="BYALIAS"
+	    bxoServiceSupportType="COMMITTED"
+	    bxoDomainsList=("byname.net")
 	    thisHomeDir="${iv_uidPolicy_homeDir}/${aliasName}"
 	    ;;
       "au")
-	    bystarUidGidTag="aliasusr"
-	    bystarServiceType="BYALIAS"
-	    bystarServiceSupportType="TRIAL"
-	    bystarDomainsList=("byalias.com")
+	    bxoUidGidTag="aliasusr"
+	    bxoServiceType="BYALIAS"
+	    bxoServiceSupportType="TRIAL"
+	    bxoDomainsList=("byalias.com")
 	    thisHomeDir="${iv_uidPolicy_homeDir}/${aliasName}"
 	    ;;
       "ca")
-	    bystarServiceType="BCA"
-	    bystarServiceSupportType="COMMITTED"
-	    bystarDomainsList=("BCA")
+	    bxoServiceType="BCA"
+	    bxoServiceSupportType="COMMITTED"
+	    bxoDomainsList=("BCA")
 	    thisHomeDir="${iv_uidPolicy_homeDir}/${cp_acctNu}"
 	    ;;
-	*)
-	    EH_problem "Unknown ${bystar_acct_acctTypePrefix}"
+      ##
+      #####  BXO Generation
+      ##
+      "ai")
+	    bxoServiceType="BXO"
+	    bxoServiceSupportType="BXO"
+	    bxoDomainsList=("BXO")
+	    # thisHomeDir=$( FN_absolutePathGet ${cp_acctNu} )
+	    ;;
+      
+      *)
+	    EH_problem "Unknown ${bxo_acct_acctTypePrefix}"
 	    return 101
     esac
   return 0
 }
 
 
-function bystarAcctAnalyze {
+function bxoAcctAnalyze {
   EH_assert [[ $# -eq 1 ]]
-  bystarUid=$1
+  bxoUid=$1
 
-  opAcctInfoGet ${bystarUid}
+  opAcctInfoGet ${bxoUid}
   EH_retOnFail
 
-  bystar_acct_uid=${opAcct_uid}
-  bystar_acct_homedir=${opAcct_homeDir}
-  bystar_acct_NSPdir=${opAcct_homeDir}/NSP
-  bystar_acct_acctTypePrefix=${bystarUid%%-*}
+  bxo_acct_uid=${opAcct_uid}
+  bxo_acct_homedir=${opAcct_homeDir}
+  bxo_acct_NSPdir=${opAcct_homeDir}/NSP
+  bxo_acct_acctTypePrefix=${bxoUid%%-*}
 
-  bystar_acct_decryptedPasswd=$( bystarAcctAdmin.sh -p bystarUid="${bystarUid}" -i acctPasswdGet )
-  bystarUidPasswdDecrypted=${bystar_acct_decryptedPasswd}
+  #bxo_acct_decryptedPasswd=$( bxoAcctAdmin.sh -p bxoUid="${bxoUid}" -i acctPasswdGet )
+  bxo_acct_decryptedPasswd="MissingBystarAcctAdmin.sh"
+  bxoUidPasswdDecrypted=${bxo_acct_decryptedPasswd}
 
-    bystarAcctPrefixAnalyze ${bystar_acct_acctTypePrefix}
-    case ${bystar_acct_acctTypePrefix} in 
+    bxoAcctPrefixAnalyze ${bxo_acct_acctTypePrefix}
+    case ${bxo_acct_acctTypePrefix} in 
       "ea")
-	    bystarServiceType="BYSMB"
-	    bystarServiceSupportType="COMMITTED"
+	    bxoServiceType="BYSMB"
+	    bxoServiceSupportType="COMMITTED"
 	    ;;
       "ma")
-	    bystarServiceType="BYMEMORY"
-	    bystarServiceSupportType="COMMITTED"
+	    bxoServiceType="BYMEMORY"
+	    bxoServiceSupportType="COMMITTED"
 	    ;;
       "mu")
-	    bystarServiceType="BYMEMORY"
-	    bystarServiceSupportType="TRIAL"
+	    bxoServiceType="BYMEMORY"
+	    bxoServiceSupportType="TRIAL"
 	    ;;
       "sa")
-	    bystarServiceType="BYNAME"
-	    bystarServiceSupportType="COMMITTED"
+	    bxoServiceType="BYNAME"
+	    bxoServiceSupportType="COMMITTED"
 	    ;;
       "ua")
-	    bystarServiceType="BYNAME"
-	    bystarServiceSupportType="TRIAL"
+	    bxoServiceType="BYNAME"
+	    bxoServiceSupportType="TRIAL"
 	    ;;
       "aa")
-	    bystarServiceType="BYALIAS"
-	    bystarServiceSupportType="COMMITTED"
+	    bxoServiceType="BYALIAS"
+	    bxoServiceSupportType="COMMITTED"
 	    ;;
       "au")
-	    bystarServiceType="BYALIAS"
-	    bystarServiceSupportType="TRIAL"
+	    bxoServiceType="BYALIAS"
+	    bxoServiceSupportType="TRIAL"
 	    ;;
       "ca")
-	    bystarServiceType="BCA"
-	    bystarServiceSupportType="COMMITTED"
+	    bxoServiceType="BCA"
+	    bxoServiceSupportType="COMMITTED"
+	    ;;
+
+      ##
+      #####  BXO Generation
+      ##
+      "ai")
+	    bxoServiceType="BXO"
+	    bxoServiceSupportType="BXO"
 	    ;;
 	*)
-	    EH_problem "Unknown ${bystar_acct_acctTypePrefix}"
+	    EH_problem "Unknown ${bxo_acct_acctTypePrefix}"
 	    return 101
     esac
 
-   bystarUidHome=$( FN_absolutePathGet ~${bystarUid} )
-   opDo fileParamsLoadVarsFromBaseDir  ${bystarUidHome}/BAGP 2> /dev/null
+   bxoUidHome=$( FN_absolutePathGet ~${bxoUid} )
+   opDo fileParamsLoadVarsFromBaseDir  ${bxoUidHome}/BAGP 2> /dev/null
 
 
-  #. ${bystar_acct_NSPdir}/bystarSubscriberProfiles.nsp
+  #. ${bxo_acct_NSPdir}/bxoSubscriberProfiles.nsp
 
-  #if [[ "${bystar_acct_acctTypePrefix}_" == "ua_" ]] ; then
+  #if [[ "${bxo_acct_acctTypePrefix}_" == "ua_" ]] ; then
   #typeset subsSelectorType="t"
   #else
   #typeset subsSelectorType=""
   #fi
-  #bystar_acct_baseDomain="${iv_subsFirstName}.${iv_subsLastName}.${subsSelectorType}${iv_subsSelector}.${bystarCluster_myDomain}"
-  #bystar_acct_numberDomain="${bystar_acct_uid}.${bystarCluster_myDomainByNumber}"
+  #bxo_acct_baseDomain="${iv_subsFirstName}.${iv_subsLastName}.${subsSelectorType}${iv_subsSelector}.${bxoCluster_myDomain}"
+  #bxo_acct_numberDomain="${bxo_acct_uid}.${bxoCluster_myDomainByNumber}"
   return 0
 }
+
+
+
+function bxoCentralPrep {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Returns none-zero for assertion 
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    case ${bxo} in 
+      "")
+	    EH_problem "bxo=\"\" -- empty/blank -- invalid bxo"
+	    lpReturn 101
+	    ;;
+      "INVALID"|"MANDATORY")
+	    EH_problem "bxo=${bxo} -- empty/blank -- invalid bxo"
+	    lpReturn 101
+	    ;;
+      "current")
+	    lpCurrentsGet
+	    if [ "${currentBystarUid}" != "" ] ; then
+		bxo=${currentBystarUid}
+	    else
+		EH_problem "bxo=current But current is unset -- invalid bxo"
+		lpReturn 101
+	    fi	
+	    ;;
+      "prompt")
+	    echo -n "Specify bxo: "
+	    read bxo
+	    ;;
+      "default")   # e.g., first applicable entry in /etc/passwd
+            doNothing
+	    ;;	
+      "all")
+            doNothing
+	    ;;	
+	*)
+	    doNothing
+	    ;;
+    esac
+
+    #lpDo bxoCentralIsValid 
+    bxoCentralIsValid 
+    EH_retOnFail
+
+    lpReturn 0
+}
+
+function bxoCentralIsValid {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    case ${bxo} in 
+      "all")
+	    lpReturn 0
+	    ;;
+	*)
+	    doNothing
+    esac
+
+    #
+    # Verify that a given buid is in BxCentralInfoBase.
+    #
+
+    lpReturn 0
+}
+
+#
+# NOTYET, Figure if this is totally unused.
+#
+function bystarCentral {
+  EH_assert [[ $# -eq 0 ]]
+  EH_assert [[ "${bxo}_" != "INVALID_" ]]
+}
+
 
 
 
@@ -465,16 +542,16 @@ function developerVerify {
 	  ;;
   esac
 
-  mirrorBystarAccountsBase="/mirror/bystar/accounts"
+  mirrorBxoAccountsBase="/mirror/bxo/accounts"
 
 }
 
 
 _CommentBegin_
-*      ======[[elisp:(org-cycle)][Fold]]====== bystarSrAnalyze
+*      ======[[elisp:(org-cycle)][Fold]]====== bxoSrAnalyze
 _CommentEnd_
 
-function bystarSrAnalyze {
+function bxoSrAnalyze {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -486,17 +563,17 @@ _EOF_
 	lpReturn 101
     fi
 
-    srBaseDir="${bystarUidHome}/${sr}"
+    srBaseDir="${bxoUidHome}/${sr}"
 
     if [ ! -d ${srBaseDir} ] ; then 
 	EH_problem "Missing srBaseDir=${srBaseDir}"
 	lpReturn 101
     fi
 
-    srAgent="${bystarUidHome}/${sr}/bsrAgent.sh"
+    srAgent="${bxoUidHome}/${sr}/bsrAgent.sh"
 
     if [ ! -f ${srAgent} ] ; then 
-	srAgent="${bystarUidHome}/${sr}/srAgent.sh"
+	srAgent="${bxoUidHome}/${sr}/srAgent.sh"
 	if [ ! -f ${srAgent} ] ; then 
 	    EH_problem "Missing srAgent=${srAgent} and also missing bsrAgent.sh"
 	    lpReturn 101
@@ -573,7 +650,7 @@ _EOF_
     fi
 
 
-    #echo ${bystarUid} ${bystarUidHome} ${sr} ${srFqdn}
+    #echo ${bxoUid} ${bxoUidHome} ${sr} ${srFqdn}
 
     return
 }
@@ -587,19 +664,19 @@ _CommentEnd_
 function vis_srBaseDirGet {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-With \${bystarUidHome} and \${sr} using bsrAgent.sh get srFqdn
+With \${bxoUidHome} and \${sr} using bsrAgent.sh get srFqdn
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert bystarUidCentralPrep
-    opDoRet bystarAcctAnalyze ${bystarUid}
+    EH_assert bxoUidCentralPrep
+    opDoRet bxoAcctAnalyze ${bxoUid}
 
     if [ -z "${sr}" ] ; then
 	EH_problem ""
 	lpReturn
     fi
 
-    echo ${bystarUidHome}/${sr}
+    echo ${bxoUidHome}/${sr}
 
     lpReturn
 }
@@ -608,7 +685,7 @@ _EOF_
 function vis_srFqdnGet {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-With \${bystarUidHome} and \${sr} using bsrAgent.sh get srFqdn
+With \${bxoUidHome} and \${sr} using bsrAgent.sh get srFqdn
 _EOF_
     }
     EH_assert [[ $# -eq 1 ]]
@@ -627,12 +704,12 @@ function vis_srA2LogBaseDirGet {
 _EOF_
     }
     EH_assert [[ $# -eq 1 ]]
-    EH_assert bystarUidCentralPrep
-    opDoRet bystarAcctAnalyze ${bystarUid}
+    EH_assert bxoUidCentralPrep
+    opDoRet bxoAcctAnalyze ${bxoUid}
 
     typeset srFqdn=$1
 
-    echo ${bystarUidHome}/var/log/apache2/${srFqdn}
+    echo ${bxoUidHome}/var/log/apache2/${srFqdn}
 
     lpReturn
 }
@@ -679,3 +756,4 @@ _EOF_
     # 	EH_problem ""
     # 	lpReturn
     # fi
+

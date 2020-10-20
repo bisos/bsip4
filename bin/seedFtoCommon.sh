@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IimBriefDescription="Seed For Creating And Processing Of File Tree Objects"
+IcmBriefDescription="Seed For Creating And Processing Of File Tree Objects"
 
 ORIGIN="
 * Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee
@@ -78,7 +78,7 @@ _CommentEnd_
 
 
 . ${opBinBase}/opAcctLib.sh
-#. ${opBinBase}/bystarLib.sh
+#. ${opBinBase}/bxo_lib.sh
 . ${opBinBase}/opDoAtAsLib.sh
 # ./lcnFileParams.libSh
 . ${opBinBase}/lcnFileParams.libSh
@@ -89,8 +89,8 @@ _CommentEnd_
 
 # . ${opBinBase}/bystarHook.libSh
 
-# ./bystarLib.sh
-# . ${opBinBase}/bystarLib.sh
+# ./bxo_lib.sh
+# . ${opBinBase}/bxo_lib.sh
 # ./bystarHereAcct.libSh
 # . ${opBinBase}/bystarHereAcct.libSh
 
@@ -107,7 +107,7 @@ _CommentEnd_
 
 # . ${opBinBase}/bystarCentralAcct.libSh
 
-. ${opBinBase}/lpCurrents.libSh
+. ${opBinBase}/bisosCurrents_lib.sh
 
 . ${opBinBase}/fileVariable.libSh
 

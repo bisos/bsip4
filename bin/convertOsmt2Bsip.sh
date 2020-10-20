@@ -102,10 +102,14 @@ find . -type f -print | egrep '/ftoProc\.sh$' | bx-dblock -i dblockUpdateFiles
 find . -type f -print | egrep '/ftoProc\.sh\.2020[0-9]+$' | wc
 $( examplesSeperatorSection "Current Dir" )
 ${G_myName} ${extraInfo} -i commonAspects *
+find . -type f -print | grep -v ${G_myName} | ${G_myName} ${extraInfo} -i commonAspects
 $( examplesSeperatorSection "Report" )
 ${G_myName} ${extraInfo} -i report *
+find . -type f -print | grep -v ${G_myName} | ${G_myName} -i report
 ${G_myName} -i report *
+$( examplesSeperatorSection "Cleanup" )
 find . -type f -print |  egrep '\.2020[0-9]+$' 
+find . -type f -print |  egrep '\.2020[0-9]+$' | xargs /bin/rm
 _EOF_
 }
 
@@ -140,6 +144,8 @@ _EOF_
 	lpDo egrep "^\#\!/bin/osmtKsh" ${each}
 	lpDo egrep bx:dblock:lsip:bash:seed-spec ${each}
 	lpDo egrep bx:dblock:bash:top-of-file ${each}
+	lpDo egrep lpCurrents.libSh ${each}
+	lpDo egrep bystarLib.sh ${each}	
 
 	lpReturn 0
     }
@@ -193,6 +199,8 @@ _EOF_
 	    sed -e "s@\#\!/bin/osmtKsh@#!/bin/bash@g" \
 		-e "s@IimBriefDescription=@IcmBriefDescription=@g" \
 		-e "s@bx:dblock:lsip:bash:seed-spec@bx:bsip:bash:seed-spec@g" \
+		-e "s@lpCurrents.libSh@bisosCurrents_lib.sh@g" \
+		-e "s@bystarLib.sh@bxo_lib.sh@g" \
 		-e "s@bx:dblock:bash:top-of-file@bx:bash:top-of-file@g"  > ${each}
 	
 	lpReturn 0

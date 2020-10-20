@@ -1,0 +1,123 @@
+#!/bin/osmtKsh
+#!/bin/osmtKsh 
+
+typeset RcsId="$Id: bystarHook.libSh,v 1.1.1.1 2016-06-08 23:49:51 lsipusr Exp $"
+
+bystarServiceSupportHookParamsSet () {
+  EH_assert [[ $# -eq 2 ]]
+    
+  bystarServiceType=$1
+  bystarServiceSupportType=$2
+
+  bystarServiceInfoIsSetAssert || return 1
+}
+
+bystarServiceInfoIsSetAssert () {
+
+  if [ "${bystarServiceType}_" == "_" ]  ; then
+    EH_problem "bystarServiceType is not set -- STOP"
+    ANT_raw "Need to run -- NOTYET - opSysIdentities.sh -i osmtInfoExpand"
+    #opDo distInfoAdmin.sh -v -n showRun  -i bystarServiceTypeSet
+    return 1
+  fi
+
+  if [ "${bystarServiceSupportType}_" == "_" ]  ; then
+    EH_problem "bystarServiceType is not set -- STOP"
+    ANT_raw "Need to run -- NOTYET - opSysIdentities.sh -i osmtInfoExpand"
+    #opDo distInfoAdmin.sh -v -n showRun  -i bystarServiceTypeSet
+    return 1
+  fi
+
+  return 0
+}
+
+bystarServiceSupportHookRun () {
+
+  # Determine if any of the functions
+  #     ${HookFuncName}_${bystarServiceType}_${bystarServiceSupportType}
+  #     ${HookFuncName}_${bystarServiceType}_DEFAULT
+  #     ${HookFuncName}_DEFAULT_DEFAULT
+  # in that order exists, If it exists, run the first in order
+  # and return that functions exist code.
+  #
+  # Otherwise NAG.
+  #
+
+  #EH_assert [[ $# -eq 1 ]]
+
+  hookFuncName=$1
+  shift 1
+
+  #bystarServiceType=""
+
+  bystarServiceInfoIsSetAssert || return 1
+
+  fullFuncName="${hookFuncName}_${bystarServiceType}_${bystarServiceSupportType}"
+
+  funcListResult=`ListFuncs | egrep "^${fullFuncName}\$" || true`
+  if [ "${funcListResult}X" != "X" ] ; then
+    ${fullFuncName} $@
+    return $?
+  fi
+  
+  fullFuncName="${hookFuncName}_${bystarServiceType}_DEFAULT"
+
+  funcListResult=`ListFuncs | egrep "^${fullFuncName}\$" || true`
+  if [ "${funcListResult}X" != "X" ] ; then
+    ${fullFuncName} $@
+    return $?
+  fi
+
+  fullFuncName="${hookFuncName}_DEFAULT_DEFAULT"
+
+  funcListResult=`ListFuncs | egrep "^${fullFuncName}\$" || true`
+  if [ "${funcListResult}X" != "X" ] ; then
+    ${fullFuncName}  $@
+    return $?
+  fi
+
+  ANT_raw "No ${fullFuncName} for ${bystarServiceType}_${bystarServiceSupportType} -- skipped"
+  return 1
+}
+
+
+
+serviceInfoFamilyGenerationArchList=( \
+    "serviceInfo_BYSMB_COMMITTED" \
+    "serviceInfo_BYSMB_TRIAL" \
+    "serviceInfo_BYNAME_COMMITTED" \
+    "serviceInfo_BYNAME_TRIAL" \
+)
+
+serviceInfo_BYSMB_COMMITTED () {
+   adoptedDistFamily="debian"
+   adoptedDistGeneration="sarge"
+   adoptedDistRev="3.1"
+   adoptedDistArchs=( "i386"  "sparc" )
+}
+
+serviceInfo_BYSMB_TRIAL () {
+   adoptedDistFamily="debian"
+   adoptedDistGeneration="etch"
+   adoptedDistRev="4.0"
+   adoptedDistArchs=( "i386"  "sparc" )
+}
+
+serviceInfo_BYNAME_COMMITTED () {
+   adoptedDistFamily="ubuntu"
+   adoptedDistGeneration="gutsy"
+   adoptedDistRev="7.10"
+   adoptedDistArchs=( "i386"  "sparc" )
+}
+
+
+serviceInfo_BYNAME_TRIAL () {
+   adoptedDistFamily="ubuntu"
+   adoptedDistGeneration="hardy"
+   adoptedDistRev="8.04"
+   adoptedDistArchs=( "i386"  "sparc" )
+}
+
+
+
+
