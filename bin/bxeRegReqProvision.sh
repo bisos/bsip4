@@ -6,8 +6,16 @@ ORIGIN="
 * Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee
 "
 
-####+BEGIN: bx:dblock:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
-
+####+BEGIN: bx:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
+### Args: :control "enabled|disabled|hide|release|fVar"  :vc "cvs|git|nil" :partof "bystar|nil" :copyleft "halaal+minimal|halaal+brief|nil"
+typeset RcsId="$Id: dblock-iim-bash.el,v 1.4 2017-02-08 06:42:32 lsipusr Exp $"
+# *CopyLeft*
+__copying__="
+* Libre-Halaal Software"
+#  This is part of ByStar Libre Services. http://www.by-star.net
+# Copyright (c) 2011 Neda Communications, Inc. -- http://www.neda.com
+# See PLPC-120001 for restrictions.
+# This is a Halaal Poly-Existential intended to remain perpetually Halaal.
 ####+END:
 
 __author__="
@@ -125,16 +133,16 @@ function G_postParamHook {
 
 
 
-noArgsHook() {
+function noArgsHook {
     if [[ $# -eq 0 ]] ; then
 	vis_examples
 	return
     fi
 
     case "$1" in
-	bysmb)
+	bxae)
 	    shift
-	    vis_examplesBysmb $@   
+	    vis_examplesBxAE $@   
 	    ;;
 	bca)
 	    shift
@@ -185,22 +193,15 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
-    # vis_examplesBysmb
-    
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
-$( examplesSeperatorChapter "Chapter Title" )
-$( examplesSeperatorSection "Section Title" )
-${G_myName} ${extraInfo} -i doTheWork
-_EOF_
-
-
- cat  << _EOF_
-#### BYNAME ####
-${G_myName} byname
-#### BYMEMORY ####
+$( examplesSeperatorChapter "Bx Autonomous Information Entity" )
+${G_myName} bxae # all all (create, bxReg, selfReg, bxRealize, selfRealize)
+${G_myName} bxae indiv create  # indiv|corp|sys
+$( examplesSeperatorChapter "Bx Controlled Information Entity" )
 ${G_myName} bymemory
+$( examplesSeperatorChapter "Bx Controlled Service Entity" )
 #### BYALIAS ####
 ${G_myName} byalias
 #### BYSMB ####
@@ -217,19 +218,254 @@ _CommentBegin_
 _CommentEnd_
 
 
-function vis_examplesCommon {
-    extraInfo="-h -v -n showRun"
+function vis_examplesHeader {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    
+    visLibExamplesOutput ${G_myName} 
+  cat  << _EOF_
+$( examplesSeperatorTopLabel "${G_myName}" )
+_EOF_
+}
 
- cat  << _EOF_
-EXAMPLES:
-#### $1 ####
+
+function vis_examplesCommon {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+    
+    extraInfo="-h -v -n showRun"
+    typeset extraInfo="-h -v -n showRun"
+    #typeset extraInfo=""
+    typeset runInfo="-p ri=lsipusr:passive"
+
+    typeset examplesInfo="${extraInfo} ${runInfo}"
+
+    visLibExamplesOutput ${G_myName} 
+  cat  << _EOF_
+$( examplesSeperatorTopLabel "${G_myName}" )
+$( examplesSeperatorChapter "${1} -- With Essential Params" )
 ${G_myName} ${extraInfo} ${bystarParamsMini} -i BarcStdout
 ${G_myName} ${extraInfo} ${bystarParamsMini} -i BarcFileCreate
---- Full ---
+$( examplesSeperatorChapter "${1} -- With Full Params" )
 ${G_myName} ${extraInfo} ${bystarParamsFull} -i BarcStdout
 ${G_myName} ${extraInfo} ${bystarParamsFull} -i BarcFileCreate
 _EOF_
 }
+
+
+function vis_examplesApply {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 2 ]]
+
+    local secTitle=$1
+    local provisioningScope=$2
+    
+    extraInfo="-h -v -n showRun"
+    typeset extraInfo="-h -v -n showRun"
+    #typeset extraInfo=""
+    typeset runInfo="-p ri=lsipusr:passive"
+
+    typeset examplesInfo="${extraInfo} ${runInfo}"
+
+    function examplesCreateMini {
+	EH_assert [[ $# -lt 2 ]]
+
+	if [ $# -eq 1 ] ; then
+	    cat  << _EOF_
+$( examplesSeperatorSection "${1} -- With Essential Params" )
+_EOF_
+	fi
+
+	cat  << _EOF_
+${G_myName} ${extraInfo} ${bystarParamsMini} -i BarcStdout
+${G_myName} ${extraInfo} ${bystarParamsMini} -i BarcFileCreate
+_EOF_
+    }
+
+    function examplesCreateFull {
+	EH_assert [[ $# -lt 2 ]]
+
+	if [ $# -eq 1 ] ; then
+	    cat  << _EOF_
+$( examplesSeperatorSection "${1} -- With Full Params" )
+_EOF_
+	fi
+
+	cat  << _EOF_
+${G_myName} ${extraInfo} ${bystarParamsFull} -i BarcStdout
+${G_myName} ${extraInfo} ${bystarParamsFull} -i BarcFileCreate
+_EOF_
+    }
+
+
+    function examplesBxRegMini {
+	EH_assert [[ $# -lt 2 ]]
+
+	if [ $# -eq 1 ] ; then
+	    cat  << _EOF_
+$( examplesSeperatorSection "${1} -- With Essential Params" )
+_EOF_
+	fi
+
+	cat  << _EOF_
+${G_myName} ${extraInfo} ${bystarParamsMini} -i bxReg
+_EOF_
+    }
+
+    function examplesBxRegFull {
+	EH_assert [[ $# -lt 2 ]]
+
+	if [ $# -eq 1 ] ; then
+	    cat  << _EOF_
+$( examplesSeperatorSection "${1} -- With Full Params" )
+_EOF_
+	fi
+
+	cat  << _EOF_
+${G_myName} ${extraInfo} ${bystarParamsFull} -i bxReg
+_EOF_
+    }
+    
+    
+    case "${provisioningScope}" in
+	create)
+	    examplesCreateMini "$1"
+	    examplesCreateFull "$1"	    
+	    ;;
+	bxReg)
+	    examplesBxRegMini "$1"
+	    examplesBxRegFull "$1"	    
+	    ;;
+	selfReg)
+	    examplesCreateMini "$1"
+	    examplesCreateFull "$1"	    
+	    ;;
+	bxRealize)
+	    examplesCreateMini "$1"
+	    examplesCreateFull "$1"	    
+	    ;;
+	selfRealize)
+	    examplesCreateMini "$1"
+	    examplesCreateFull "$1"	    
+	    ;;
+	all)
+	    cat  << _EOF_
+$( examplesSeperatorSection "${1} -- With Essential Params" )
+_EOF_
+	    examplesCreateMini
+	    examplesBxRegMini
+
+	    cat  << _EOF_
+$( examplesSeperatorSection "${1} -- With Full Params" )
+_EOF_
+	    examplesCreateFull
+	    examplesBxRegFull
+	    ;;
+	*)
+	    EH_problem "Bad bxeType -- ${bxeType}"
+	    lpReturn 101
+	    ;;
+    esac
+}
+
+
+
+function vis_examplesBxAE {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -ge 0 ]]
+
+    local bxeType="all"
+    local provisioningScope="all"
+
+    if [ $# -eq 0 ] ; then
+	bxeType="all"
+	provisioningScope="all"
+    elif [ $# -eq 1 ] ; then
+	bxeType="$1"
+	provisioningScope="all"
+    elif [ $# -eq 2 ] ; then
+    	bxeType="$1"
+	provisioningScope="$2"
+    else
+	EH_Problem "Expected 0,1,2 args, got $#"
+	lpReturn 101
+    fi
+    
+    extraInfo="-h -v -n showRun"
+    typeset extraInfo="-h -v -n showRun"
+    #typeset extraInfo=""
+    typeset runInfo="-p ri=lsipusr:passive"
+
+    typeset examplesInfo="${extraInfo} ${runInfo}"
+
+    vis_examplesHeader    
+
+    cat  << _EOF_
+$( examplesSeperatorChapter "Bx Autonomous Information Entity" )
+_EOF_
+
+    function examplesBxAutonomousIndiv {
+	EH_assert [[ $# -eq 1 ]]
+
+	bystarParamsMini="-p serviceType=\"BYSMB\" -p supportType=\"COMMITTED\" -p Domain2=\"mydomain\" -p Domain1=\"com\" "
+	bystarParamsFull="-p companyName=\"Some Name\" -p businessType=\"RetailStore\" -p domainName=\"mydomain\" -p domainNameExt=\"com\" -p contactPerson= -p emailAdmin= -p streetAddress= -p cityAddress= -p stateAddress= -p zipcodeAddress= -p phone= -p fax= -p domainHost=\"bysmb.net\""
+
+	vis_examplesApply "ByStar Autonomous Individual Entity" $1
+    }
+
+    function examplesBxAutonomousCorp {
+	EH_assert [[ $# -eq 1 ]]
+
+	bystarParamsMini="-p serviceType=\"BYSMB\" -p supportType=\"COMMITTED\" -p Domain2=\"mydomain\" -p Domain1=\"com\" "
+	bystarParamsFull="-p companyName=\"Some Name\" -p businessType=\"RetailStore\" -p domainName=\"mydomain\" -p domainNameExt=\"com\" -p contactPerson= -p emailAdmin= -p streetAddress= -p cityAddress= -p stateAddress= -p zipcodeAddress= -p phone= -p fax= -p domainHost=\"bysmb.net\""
+
+	vis_examplesApply "ByStar Autonomous Corporate Entity" $1
+    }
+    
+    function examplesBxAutonomousSys {
+	EH_assert [[ $# -eq 1 ]]
+
+	bystarParamsMini="-p serviceType=\"BYSMB\" -p supportType=\"COMMITTED\" -p Domain2=\"mydomain\" -p Domain1=\"com\" "
+	bystarParamsFull="-p companyName=\"Some Name\" -p businessType=\"RetailStore\" -p domainName=\"mydomain\" -p domainNameExt=\"com\" -p contactPerson= -p emailAdmin= -p streetAddress= -p cityAddress= -p stateAddress= -p zipcodeAddress= -p phone= -p fax= -p domainHost=\"bysmb.net\""
+
+	vis_examplesApply "ByStar Autonomous System Entity" $1
+    }
+	
+    case "${bxeType}" in
+	indiv)
+	    examplesBxAutonomousIndiv ${provisioningScope} 
+	    ;;
+	corp)
+	    examplesBxAutonomousCorp ${provisioningScope}
+	    ;;
+	sys)
+	    examplesBxAutonomousSys ${provisioningScope}
+	    ;;
+	all)
+	    examplesBxAutonomousIndiv ${provisioningScope}
+	    examplesBxAutonomousCorp ${provisioningScope}
+	    examplesBxAutonomousSys ${provisioningScope}	    
+	    ;;
+	*)
+	    EH_problem "Bad bxeType -- ${bxeType}"
+	    lpReturn 101
+	    ;;
+    esac
+
+}
+
 
 
 function vis_examplesBysmb {
@@ -446,7 +682,7 @@ function vis_BarcFileCreate {
     if isDisposableRegisterUid ; then
         BarcInfoBasePath="/libre/etc/bystar/infoBase/barc"
     else
-	BarcInfoBasePath="/libre/ByStar/InfoBase/BARC"
+	BarcInfoBasePath="/bisos/var/bxae/bxeRegReq"
     fi
 
     opDo mkdir -p ${BarcInfoBasePath}
@@ -479,6 +715,25 @@ _EOF_
 
     lpReturn
 }
+
+
+function isDisposableRegisterUid  {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Just a place holder. It should perhaps be eliminated.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    opDo fileParamsLoadVarsFromBaseDir /libre/etc/bystar/usage
+
+    if [[ "${cp_platformUsageRegisterUid:-}_" == "DISPOSABLE_" ]] ; then
+       return 0
+    else   
+	return 101
+    fi
+}
+
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*
