@@ -250,6 +250,96 @@ _EOF_
 }
 
 
+function vis_startToRegister {
+    BarcFile=$( vis_BarcFileCreate 2> /dev/null )
+
+    opDo bystarBarcProc.sh ${G_commandOptions} -p BarcFile="${BarcFile}" -i BarcRegister
+}
+
+function vis_startToEssentials {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
+
+    BarcFile=$( vis_BarcFileCreate 2> /dev/null )
+
+    #bystarUid=$( bystarBarcProc.sh ${G_commandOptions} -p BarcFile="${BarcFile}" -i startToEssentials )
+    #echo ${bystarUid}
+
+    opDo bystarBarcProc.sh ${G_commandOptions} -p BarcFile="${BarcFile}" -i startToEssentials
+}
+
+
+function vis_startToFullFg {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
+
+    ANT_raw "Gen BarcFile"
+    pauseForVerification
+
+    #BarcFile=$( vis_BarcFileCreate 2> /dev/null )
+    BarcFile=$( vis_BarcFileCreate )
+    ANT_raw "About to Run bystarBarcProc.sh"
+    pauseForVerification
+    opDo bystarBarcProc.sh ${G_commandOptions} -p BarcFile="${BarcFile}" -i fullCreateFg
+}
+
+function vis_startToFullBg {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
+    BarcFile=$( vis_BarcFileCreate 2> /dev/null )
+
+    opDo bystarBarcProc.sh ${G_commandOptions} -p BarcFile="${BarcFile}" -i fullCreateBg
+}
+
+function vis_startToFullDev {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
+    # Notyet
+    # PauseForVerifications
+    # Lots of debug
+    #
+    BarcFile=$( vis_BarcFileCreate 2> /dev/null )
+
+    opDo bystarBarcProc.sh ${G_commandOptions} -p BarcFile="${BarcFile}" -i fullCreateFg
+}
+
+function vis_renewPassive {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
+
+    # Notyet
+    # PauseForVerifications
+    # Lots of debug
+    #
+    BarcFile=$( vis_BarcFileCreate 2> /dev/null )
+
+    opDo bystarBarcProc.sh ${G_commandOptions} -p BarcFile="${BarcFile}" -i fullCreateFg
+}
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*
