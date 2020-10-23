@@ -1,13 +1,21 @@
 #!/bin/bash
 
-IimBriefDescription="NOTYET: Short Description Of The Module"
+IimBriefDescription="Bx Controlled Service Entity Provisioning -- From RegReq to Realize"
 
 ORIGIN="
 * Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee
 "
 
-####+BEGIN: bx:dblock:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
-
+####+BEGIN: bx:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
+### Args: :control "enabled|disabled|hide|release|fVar"  :vc "cvs|git|nil" :partof "bystar|nil" :copyleft "halaal+minimal|halaal+brief|nil"
+typeset RcsId="$Id: dblock-iim-bash.el,v 1.4 2017-02-08 06:42:32 lsipusr Exp $"
+# *CopyLeft*
+__copying__="
+* Libre-Halaal Software"
+#  This is part of ByStar Libre Services. http://www.by-star.net
+# Copyright (c) 2011 Neda Communications, Inc. -- http://www.neda.com
+# See PLPC-120001 for restrictions.
+# This is a Halaal Poly-Existential intended to remain perpetually Halaal.
 ####+END:
 
 __author__="
@@ -20,7 +28,7 @@ SEED="
 *  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
 "
 FILE="
-*  /This File/ :: /bisos/bsip/bin/selfCentralRegistrar.sh 
+*  /This File/ :: /bisos/core/bsip/bin/bxeRrPkgCreate.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
     /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
@@ -45,7 +53,9 @@ function vis_moduleDescription {  cat  << _EOF_
 *  [[elisp:(org-cycle)][| ]]  Xrefs         :: *[Related/Xrefs:]*  <<Xref-Here->>  -- External Documents  [[elisp:(org-cycle)][| ]]
 **  [[elisp:(org-cycle)][| ]]  Panel        :: [[file:/libre/ByStar/InitialTemplates/activeDocs/bxServices/versionControl/fullUsagePanel-en.org::Xref-VersionControl][Panel Roadmap Documentation]] [[elisp:(org-cycle)][| ]]
 *  [[elisp:(org-cycle)][| ]]  Info          :: *[Module Description:]* [[elisp:(org-cycle)][| ]]
-
+** 
+** Creates a BARC (Bystar Account Request Container) based on command line.
+** E|
 _EOF_
 }
 
@@ -62,33 +72,21 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
-. ${opBinBase}/bxeDesc_lib.sh
-
 . ${opBinBase}/bystarHook.libSh
 
-. ${opBinBase}/lcnFileParams.libSh
+. ${opBinBase}/bxeRegReq_lib.sh
 
-# . ${opBinBase}/bystarInfoBase.libSh
-
-# . ${opBinBase}/bisosCurrents_lib.sh
+. ${opBinBase}/bxeProvision_lib.sh
 
 # PRE parameters
-typeset -t RegReqFile="MANDATORY"
-typeset -t RBAE="MANDATORY"
+
 
 function G_postParamHook {
-    # lpCurrentsGet
-
-    if [ "${RegReqFile}_" != "MANDATORY_" ] ; then
-	RegReqFile=$( FN_absolutePathGet ${RegReqFile} )
-    fi
-    if [ "${RBAE}_" != "MANDATORY_" ] ; then
-	RBAE=$( FN_absolutePathGet ${RBAE} )
-    fi
+     return 0
 }
 
-noArgsHook() {
-  vis_examples
+function noArgsHook {
+	vis_examples
 }
 
 
@@ -104,25 +102,22 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
-    oneRegReqFile="$( ls /bisos/var/bxae/bxeRegReq/A/system/A_system_bisos.2*.REGREQ | head -1 )"
-    if [ -z "${oneRegReqFile}" ] ; then
-	oneRegReqFile="Missing"
-	EH_problem "Missing oneRegReqFile"
-    fi
-    
-    oneRBAE="/libre/ByStar/InfoBase/RBAE/BYSMB/ea/59001"
-
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
-$( examplesSeperatorChapter "Register The bxeRegReq" )
-${G_myName} ${extraInfo} -p RegReqFile="${oneRegReqFile}" -i RbaeCreate
 _EOF_
+  vis_examplesBxAE all create
+   cat  << _EOF_
+$( examplesSeperatorChapter "Bx Autonomous Entity" )
+${G_myName} ${extraInfo} -i examplesBxAE indiv create
+${G_myName} ${extraInfo} -i examplesBxAE corp create
+${G_myName} ${extraInfo} -i examplesBxAE sys create
+$( examplesSeperatorChapter "Bx Controlled Information Entity" )
+$( examplesSeperatorChapter "Bx Controlled Service Entity" )
+_EOF_
+
 }
 
-_CommentBegin_
-*  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
-_CommentEnd_
 
 
 _CommentBegin_

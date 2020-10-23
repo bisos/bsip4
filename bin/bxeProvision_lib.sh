@@ -98,8 +98,8 @@ _EOF_
 	fi
 
 	cat  << _EOF_
-${G_myName} ${extraInfo} ${bystarParamsMini} -i BarcStdout
-${G_myName} ${extraInfo} ${bystarParamsMini} -i BarcFileCreate
+${G_myName} ${extraInfo} ${bxeParamsMini} -i RegReqStdout
+${G_myName} ${extraInfo} ${bxeParamsMini} -i RegReqFileCreate
 _EOF_
     }
 
@@ -111,8 +111,8 @@ _EOF_
 	fi
 
 	cat  << _EOF_
-${G_myName} ${extraInfo} ${bystarParamsFull} -i BarcStdout
-${G_myName} ${extraInfo} ${bystarParamsFull} -i BarcFileCreate
+${G_myName} ${extraInfo} ${bxeParamsFull} -i RegReqStdout
+${G_myName} ${extraInfo} ${bxeParamsFull} -i RegReqFileCreate
 _EOF_
     }
 
@@ -125,7 +125,7 @@ _EOF_
 	fi
 
 	cat  << _EOF_
-${G_myName} ${extraInfo} ${bystarParamsMini} -i bxReg
+${G_myName} ${extraInfo} ${bxeParamsMini} -i bxReg
 _EOF_
     }
 
@@ -137,7 +137,7 @@ _EOF_
 	fi
 
 	cat  << _EOF_
-${G_myName} ${extraInfo} ${bystarParamsFull} -i bxReg
+${G_myName} ${extraInfo} ${bxeParamsFull} -i bxReg
 _EOF_
     }
     
@@ -251,9 +251,9 @@ _EOF_
 
 
 function vis_startToRegister {
-    BarcFile=$( vis_BarcFileCreate 2> /dev/null )
+    RegReqFile=$( vis_RegReqFileCreate 2> /dev/null )
 
-    opDo bystarBarcProc.sh ${G_commandOptions} -p BarcFile="${BarcFile}" -i BarcRegister
+    opDo bystarRegReqProc.sh ${G_commandOptions} -p RegReqFile="${RegReqFile}" -i RegReqRegister
 }
 
 function vis_startToEssentials {
@@ -265,12 +265,12 @@ _EOF_
 
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
 
-    BarcFile=$( vis_BarcFileCreate 2> /dev/null )
+    RegReqFile=$( vis_RegReqFileCreate 2> /dev/null )
 
-    #bystarUid=$( bystarBarcProc.sh ${G_commandOptions} -p BarcFile="${BarcFile}" -i startToEssentials )
+    #bystarUid=$( bystarRegReqProc.sh ${G_commandOptions} -p RegReqFile="${RegReqFile}" -i startToEssentials )
     #echo ${bystarUid}
 
-    opDo bystarBarcProc.sh ${G_commandOptions} -p BarcFile="${BarcFile}" -i startToEssentials
+    opDo bystarRegReqProc.sh ${G_commandOptions} -p RegReqFile="${RegReqFile}" -i startToEssentials
 }
 
 
@@ -283,14 +283,14 @@ _EOF_
 
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
 
-    ANT_raw "Gen BarcFile"
+    ANT_raw "Gen RegReqFile"
     pauseForVerification
 
-    #BarcFile=$( vis_BarcFileCreate 2> /dev/null )
-    BarcFile=$( vis_BarcFileCreate )
-    ANT_raw "About to Run bystarBarcProc.sh"
+    #RegReqFile=$( vis_RegReqFileCreate 2> /dev/null )
+    RegReqFile=$( vis_RegReqFileCreate )
+    ANT_raw "About to Run bystarRegReqProc.sh"
     pauseForVerification
-    opDo bystarBarcProc.sh ${G_commandOptions} -p BarcFile="${BarcFile}" -i fullCreateFg
+    opDo bystarRegReqProc.sh ${G_commandOptions} -p RegReqFile="${RegReqFile}" -i fullCreateFg
 }
 
 function vis_startToFullBg {
@@ -301,9 +301,9 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
-    BarcFile=$( vis_BarcFileCreate 2> /dev/null )
+    RegReqFile=$( vis_RegReqFileCreate 2> /dev/null )
 
-    opDo bystarBarcProc.sh ${G_commandOptions} -p BarcFile="${BarcFile}" -i fullCreateBg
+    opDo bystarRegReqProc.sh ${G_commandOptions} -p RegReqFile="${RegReqFile}" -i fullCreateBg
 }
 
 function vis_startToFullDev {
@@ -318,9 +318,9 @@ _EOF_
     # PauseForVerifications
     # Lots of debug
     #
-    BarcFile=$( vis_BarcFileCreate 2> /dev/null )
+    RegReqFile=$( vis_RegReqFileCreate 2> /dev/null )
 
-    opDo bystarBarcProc.sh ${G_commandOptions} -p BarcFile="${BarcFile}" -i fullCreateFg
+    opDo bystarRegReqProc.sh ${G_commandOptions} -p RegReqFile="${RegReqFile}" -i fullCreateFg
 }
 
 function vis_renewPassive {
@@ -336,9 +336,9 @@ _EOF_
     # PauseForVerifications
     # Lots of debug
     #
-    BarcFile=$( vis_BarcFileCreate 2> /dev/null )
+    RegReqFile=$( vis_RegReqFileCreate 2> /dev/null )
 
-    opDo bystarBarcProc.sh ${G_commandOptions} -p BarcFile="${BarcFile}" -i fullCreateFg
+    opDo bystarRegReqProc.sh ${G_commandOptions} -p RegReqFile="${RegReqFile}" -i fullCreateFg
 }
 
 _CommentBegin_

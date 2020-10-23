@@ -27,7 +27,7 @@ function vis_moduleDescription {  cat  << _EOF_
 **  [[elisp:(org-cycle)][| ]]  Panel        :: [[file:/libre/ByStar/InitialTemplates/activeDocs/bxServices/versionControl/fullUsagePanel-en.org::Xref-VersionControl][Panel Roadmap Documentation]] [[elisp:(org-cycle)][| ]]
 *  [[elisp:(org-cycle)][| ]]  Info          :: *[Module Description:]* [[elisp:(org-cycle)][| ]]
 ** 
-** Creates a BARC (Bystar Account Request Container) based on command line.
+** Creates a REGREQ (Bystar Account Request Container) based on command line.
 ** E|
 _EOF_
 }
@@ -49,173 +49,162 @@ typeset -t ServiceType=""
 typeset -t ServiceSupportType=""
 
 
-typeset -t ServiceType=""
-typeset -t ServiceSupportType=""
-
-# PRE parameters for SMB
-typeset -t CompanyName=""
-typeset -t BusinessType=""
-typeset -t Domain1="MANDATORY"
-typeset -t Domain2="MANDATORY"
-typeset -t streetAddress=""
-typeset -t cityAddress=""
-typeset -t stateAddress=""
-typeset -t zipcodeAddress=""
-typeset -t phone=""
-typeset -t fax=""
+typeset -t autonomy=""
+typeset -t type=""
 
 # PRE parameters for bymemory
-typeset -t FirstName=MANDATORY
-typeset -t LastName=MANDATORY
-typeset -t datebirth=""
-typeset -t datedeath=""
+typeset -t firstName=MANDATORY
+typeset -t lastName=MANDATORY
 
-# PRE parameters for byalias
-typeset -t FirstName=""
-typeset -t LastName=""
-typeset -t AliasName=""
+typeset -t corpName=MANDATORY
+typeset -t sysName=MANDATORY
 
-# PRE parameters common
-typeset -t contactPerson=""
-typeset -t emailAdmin=""
-typeset -t domainHost=""
-typeset -t hostName=""
+typeset -t email=""
 
-# default bystarUid Must Be "" not MANDATORY
-typeset -t bystarUid=""
 typeset -t originationMethod=""
 
-
-# PRE parameters optional 
-
-typeset -t none=""
 
 
 _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
 _CommentEnd_
 
+# BarcFileName=/libre/ByStar/InfoBase/BARC/BYNAME/COMMITTED/BYNAME_COMMITTED_banan_mohsen.090215212754.BARC
+# function BarcContainer {
+#     function BarcContainerCommon {
+#       bc_serviceType="BYNAME"
+#       bc_serviceSupportType="COMMITTED"
+
+#       bc_originationDate="090215212754"
+#       bc_originationMethod="bap2barc"
+#       bc_originatorHost="bisp0003"
+#       bc_originatorId="mohsen"
+
+#       bc_bystarUid="sa-20000"
+#     }
+#     function BarcContainer_BYNAME_COMMITTED {
+#       bc_firstName="mohsen"
+#       bc_lastName="banan"
+#     }
+#   BarcContainerCommon
+#   BarcContainer_BYNAME_COMMITTED
+# }
+# date="Sun Feb 15 21:27:54 PST 2009"
+# RBAE=/libre/ByStar/InfoBase/RBAE/BYNAME/sa/20000
+
+
+# bxeAutonomy          autonomous|controlled (A or C)
+# bxeType              individual|corp|system
+# bxeInfoOrSvc         info|service
+# firstName
+# lastName
+# identification
 
 
 function vis_examplesBxAutonomousIndiv {
-    bystarParamsMini="-p serviceType=\"BYSMB\" -p supportType=\"COMMITTED\" -p Domain2=\"mydomain\" -p Domain1=\"com\" "
-    bystarParamsFull="-p companyName=\"Some Name\" -p businessType=\"RetailStore\" -p domainName=\"mydomain\" -p domainNameExt=\"com\" -p contactPerson= -p emailAdmin= -p streetAddress= -p cityAddress= -p stateAddress= -p zipcodeAddress= -p phone= -p fax= -p domainHost=\"bysmb.net\""
+    bxeParamsMini="-p autonomy=\"A\" -p type=\"individual\" -p firstName=\"first\" -p lastName=\"last\" "
+    bxeParamsFull="-p autonomy=\"A\" -p type=\"individual\" -p firstName=\"first\" -p lastName=\"last\" -p email=\"email\" "    
 }
 
 function vis_examplesBxAutonomousCorp {
-    bystarParamsMini="-p serviceType=\"BYSMB\" -p supportType=\"COMMITTED\" -p Domain2=\"mydomain\" -p Domain1=\"com\" "
-    bystarParamsFull="-p companyName=\"Some Name\" -p businessType=\"RetailStore\" -p domainName=\"mydomain\" -p domainNameExt=\"com\" -p contactPerson= -p emailAdmin= -p streetAddress= -p cityAddress= -p stateAddress= -p zipcodeAddress= -p phone= -p fax= -p domainHost=\"bysmb.net\""
+    bxeParamsMini="-p autonomy=\"A\" -p type=\"corp\" -p corpName=\"corpName\" "
+    bxeParamsFull="-p autonomy=\"A\" -p type=\"corp\" -p corpName=\"corpName\" -p email=\"email\" "    
 }
     
 function vis_examplesBxAutonomousSys {
-    bystarParamsMini="-p serviceType=\"BYSMB\" -p supportType=\"COMMITTED\" -p Domain2=\"mydomain\" -p Domain1=\"com\" "
-    bystarParamsFull="-p companyName=\"Some Name\" -p businessType=\"RetailStore\" -p domainName=\"mydomain\" -p domainNameExt=\"com\" -p contactPerson= -p emailAdmin= -p streetAddress= -p cityAddress= -p stateAddress= -p zipcodeAddress= -p phone= -p fax= -p domainHost=\"bysmb.net\""
+    bxeParamsMini="-p autonomy=\"A\" -p type=\"system\" -p sysName=\"bisos\" "
+    bxeParamsFull="-p autonomy=\"A\" -p type=\"system\" -p sysName=\"bisos\" "
 }
 
+function vis_RegReqStdout {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
 
+    ANT_raw "creating a RegReq Container"
 
-function vis_examplesByname {
-    extraInfo="-h -v -n showRun"
-
-  #bystarParamsMini="-p serviceType=\"BYNAME\" -p supportType=\"TRIAL\" -p FirstName=\"jim\" -p LastName=\"jones\" "
-  bystarParamsMini="-p serviceType=\"BYNAME\" -p supportType=\"COMMITTED\" -p FirstName=\"jim\" -p LastName=\"jones\" "
-  bystarParamsFull="-p serviceType=\"BYNAME\" -p supportType=\"TRIAL\" -p FirstName=\"\" -p LastName=\"\" -p contactPerson= -p emailAdmin= -p domainHost=\"byname.net\""
-
-    #vis_examplesCommon "BYNAME"
-}
-
-function vis_BarcStdout {
-   EH_assert [[ $# -eq 0 ]]
-
-  ANT_raw "creating a BARC Container"
-
-  if [ "${serviceType}_" == "BCA_" ] ; then
-    cp_MasterAcct=${masterAcct}
-    masterAcctBagpLoad
-    supportType="${cp_master_ServiceSupportType}"
-  fi
-
-   bystarServiceSupportHookParamsSet ${serviceType} ${supportType}
+    
+    
+    bystarServiceSupportHookParamsSet ${autonomy} ${type}
  
-   if [ "${originationMethod}_" == "_" ] ; then
-       originationMethod="cmdLine"
-   fi
+    if [ "${originationMethod}_" == "_" ] ; then
+	originationMethod="cmdLine"
+    fi
 
  
  cat  << _EOF_
-function BarcContainer {
-    function BarcContainerCommon {
-      bc_serviceType="${serviceType}"
-      bc_serviceSupportType="${supportType}"
+function RegReqContainer {
+    function RegReqContainerCommon {
+      bc_autonomy="${autonomy}"
+      bc_type="${type}"
 
       bc_originationDate="${dateTag}"
       bc_originationMethod="${originationMethod}"
       bc_originatorHost="${opRunHostName}"
       bc_originatorId="${opRunAcctName}"
-
-      bc_bystarUid="${bystarUid}"
     }
 _EOF_
 
 
-  bystarServiceSupportHookRun barcContainerStdoutSpecific "active"
+  bystarServiceSupportHookRun regReqContainerStdoutSpecific "active"
 
 
   cat  << _EOF_
-  BarcContainerCommon
-  BarcContainer_${bystarServiceType}_${bystarServiceSupportType}
+  RegReqContainerCommon
+  RegReqContainer_${bystarServiceType}_${bystarServiceSupportType}
 }
 _EOF_
 }
 
 
-barcContainerStdoutSpecific_BYNAME_DEFAULT () {
+regReqContainerStdoutSpecific_A_individual () {
    EH_assert [[ $# -eq 1 ]]
 
     if [ "$1_" = "passive_" ] ; then
-	BarcTag="${bystarServiceType}_${bystarServiceSupportType}_${LastName}_${FirstName}"
+	RegReqTag="${bystarServiceType}_${bystarServiceSupportType}_${LastName}_${FirstName}"
 	return
     fi
 
 
   cat  << _EOF_
-    function BarcContainer_${bystarServiceType}_${bystarServiceSupportType} {
-      bc_firstName="${FirstName}"
-      bc_lastName="${LastName}"
+    function RegReqContainer_${bystarServiceType}_${bystarServiceSupportType} {
+      bc_firstName="${firstName}"
+      bc_lastName="${lastName}"
     }
 _EOF_
 
 }
 
-barcContainerStdoutSpecific_BYMEMORY_DEFAULT () {
+regReqContainerStdoutSpecific_A_corp () {
    EH_assert [[ $# -eq 1 ]]
 
     if [ "$1_" = "passive_" ] ; then
-	BarcTag="${bystarServiceType}_${bystarServiceSupportType}_${LastName}_${FirstName}"
+	RegReqTag="${bystarServiceType}_${bystarServiceSupportType}_${LastName}_${FirstName}"
 	return
     fi
 
   cat  << _EOF_
-    function BarcContainer_${bystarServiceType}_${bystarServiceSupportType} {
-      bc_firstName="${FirstName}"
-      bc_lastName="${LastName}"
+    function RegReqContainer_${bystarServiceType}_${bystarServiceSupportType} {
+      bc_corpName="${corpName}"
     }
 _EOF_
 
 }
 
 
-barcContainerStdoutSpecific_BYALIAS_DEFAULT () {
+regReqContainerStdoutSpecific_A_system () {
    EH_assert [[ $# -eq 1 ]]
 
     if [ "$1_" = "passive_" ] ; then
-	BarcTag="${bystarServiceType}_${bystarServiceSupportType}_${AliasName}"
+	RegReqTag="${bystarServiceType}_${bystarServiceSupportType}_${sysName}"
 	return
     fi
 
   cat  << _EOF_
-    function BarcContainer_${bystarServiceType}_${bystarServiceSupportType} {
-      bc_AliasName="${AliasName}"
+    function RegReqContainer_${bystarServiceType}_${bystarServiceSupportType} {
+      bc_sysName="${sysName}"
     }
 _EOF_
 
@@ -223,81 +212,35 @@ _EOF_
 }
 
 
-barcContainerStdoutSpecific_BYSMB_DEFAULT () {
-   EH_assert [[ $# -eq 1 ]]
+function vis_RegReqFileCreate {
+    EH_assert [[ $# -eq 0 ]]
 
-    if [ "$1_" = "passive_" ] ; then
-	BarcTag="${bystarServiceType}_${bystarServiceSupportType}_${Domain1}_${Domain2}"
-	return
-    fi
+    bystarServiceSupportHookParamsSet ${autonomy} ${type}
 
-  cat  << _EOF_
-    function BarcContainer_${bystarServiceType}_${bystarServiceSupportType} {
-      bc_companyName=""
-      bc_Domain1="${Domain1}"
-      bc_Domain2="${Domain2}"
-    }
-_EOF_
-}
-
-barcContainerStdoutSpecific_BCA_DEFAULT () {
-   EH_assert [[ $# -eq 1 ]]
-
-    if [ "$1_" = "passive_" ] ; then
-	BarcTag="${bystarServiceType}_${bystarServiceSupportType}_${masterAcct}_${LastName}_${FirstName}"
-	return
-    fi
-
-  cat  << _EOF_
-    function BarcContainer_${bystarServiceType}_${bystarServiceSupportType} {
-      bc_masterAcct="${masterAcct}"
-      bc_firstName="${FirstName}"
-      bc_lastName="${LastName}"
-      bc_BcaTag="${BcaTag}"
-    }
-_EOF_
-}
-
-barcContainerStdoutSpecific_DEFAULT_DEFAULT () {
-   ANT_raw "Missing ${bystarServiceType}_${bystarServiceSupportType}"
-}
-
-
-function vis_BarcFileCreate {
-   EH_assert [[ $# -eq 0 ]]
-
-  if [ "${serviceType}_" == "BCA_" ] ; then
-    cp_MasterAcct=${masterAcct}
-    masterAcctBagpLoad
-    supportType="${cp_master_ServiceSupportType}"
-  fi
-
-    bystarServiceSupportHookParamsSet ${serviceType} ${supportType}
-
-    bystarServiceSupportHookRun barcContainerStdoutSpecific "passive"
+    bystarServiceSupportHookRun regReqContainerStdoutSpecific "passive"
 
 
     if isDisposableRegisterUid ; then
-        BarcInfoBasePath="/libre/etc/bystar/infoBase/barc"
+        RegReqInfoBasePath="/libre/etc/bystar/infoBase/regReq"
     else
-	BarcInfoBasePath="/bisos/var/bxae/bxeRegReq"
+	RegReqInfoBasePath="/bisos/var/bxae/bxeRegReq"
     fi
 
-    opDo mkdir -p ${BarcInfoBasePath}
+    opDo mkdir -p ${RegReqInfoBasePath}
 
-    BarcBaseDir="${BarcInfoBasePath}/${bystarServiceType}/${bystarServiceSupportType}"
+    RegReqBaseDir="${RegReqInfoBasePath}/${bystarServiceType}/${bystarServiceSupportType}"
 
-    opDo mkdir -p ${BarcBaseDir}
+    opDo mkdir -p ${RegReqBaseDir}
 
-    BarcFileName=${BarcTag}.${dateTag}.BARC
+    RegReqFileName=${RegReqTag}.${dateTag}.REGREQ
     
-    echo BarcFileName=${BarcBaseDir}/${BarcFileName} > ${BarcBaseDir}/${BarcFileName} 
+    echo RegReqFileName=${RegReqBaseDir}/${RegReqFileName} > ${RegReqBaseDir}/${RegReqFileName} 
 
-    vis_BarcStdout 1>> ${BarcBaseDir}/${BarcFileName} 
+    vis_RegReqStdout 1>> ${RegReqBaseDir}/${RegReqFileName} 
 
-    opDo ls -l ${BarcBaseDir}/${BarcFileName} 1>&2 
+    opDo ls -l ${RegReqBaseDir}/${RegReqFileName} 1>&2 
 
-    echo ${BarcBaseDir}/${BarcFileName}
+    echo ${RegReqBaseDir}/${RegReqFileName}
 }
 
 
