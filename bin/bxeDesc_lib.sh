@@ -1,20 +1,5 @@
 #!/bin/bash 
 
-# PRE parameters
-typeset -t RegReqFile="MANDATORY"
-typeset -t RBAE="MANDATORY"
-
-function G_postParamHook {
-    lpCurrentsGet
-
-    if [ "${RegReqFile}_" != "MANDATORY_" ] ; then
-	RegReqFile=$( FN_absolutePathGet ${RegReqFile} )
-    fi
-    if [ "${RBAE}_" != "MANDATORY_" ] ; then
-	RBAE=$( FN_absolutePathGet ${RBAE} )
-    fi
-}
-
 bystarIbParamSpecific_A_system () {
     bystarAcctTypePrefix="sa"
 
@@ -101,34 +86,33 @@ RbaeMatchesBystarUid () {
 
 RBAeParamInitSpecificCommon () {
     EH_assert [[ $# -eq 1 ]]
-    thisDir=${1}
+    local thisDir=${1}
 
-  #
-  # COMMON PARAMETERS
-  #
-  echo ${nextNu} > ${thisDir}/acctNu:mr
+    #
+    # COMMON PARAMETERS
+    #
+    echo ${nextNu} > ${thisDir}/acctNu:mr
 
-  echo "${opRunHostName}" > ${thisDir}/BacsId:mr
+    echo "${opRunHostName}" > ${thisDir}/BacsId:mr
 
-  echo "${bc_autonomy}" > ${thisDir}/ServiceType:mr
+    echo "${bc_autonomy}" > ${thisDir}/ServiceType:mr
+    
+    echo "${bc_type}" > ${thisDir}/ServiceSupportType:mr
 
-  echo "${bc_type}" > ${thisDir}/ServiceSupportType:mr
+    echo "${bc_originationMethod}" > ${thisDir}/RegReqOriginationMethod:mr
+    
+    echo "${RegReqFileName}" > ${thisDir}/RegReqFileName:mr
 
-  echo "${bc_originationMethod}" > ${thisDir}/RegReqOriginationMethod:mr
+    echo "${bystarAcctTypePrefix}" > ${thisDir}/acctPrefix:dr
 
-  echo "${RegReqFileName}" > ${thisDir}/RegReqFileName:mr
+    # acctBystarDomain
+    # acctMainDomain
 
+    #
+    # Admin PARAMETERS
+    #
 
-  echo "${bystarAcctTypePrefix}" > ${thisDir}/acctPrefix:dr
-
-  # acctBystarDomain
-  # acctMainDomain
-
-  #
-  # Admin PARAMETERS
-  #
-
-  echo "service@mohsen.banan.1.byname.net" > ${thisDir}/AdminContactEmail:m
+    echo "service@mohsen.banan.1.byname.net" > ${thisDir}/AdminContactEmail:m
 }
 
 RBAeParamInitSpecific_A_system () {
@@ -137,16 +121,16 @@ RBAeParamInitSpecific_A_system () {
 
     RBAeParamInitSpecificCommon ${1}
 
-  #
-  # SERVICE SPECIFIC PARAMETERS
-  #
+    #
+    # SERVICE SPECIFIC PARAMETERS
+    #
 
-  echo "${bc_sysName}" > ${thisDir}/sysName:m
+    echo "${bc_sysName}" > ${thisDir}/sysName:m
 }
 
 
 RBAeParamInitSpecific_DEFAULT_DEFAULT () {
-   ANT_cooked "Missing ${bystarServiceType}_${bystarServiceSupportType}"
+    ANT_cooked "Missing ${bystarServiceType}_${bystarServiceSupportType}"
 }
 
 RBAeParamInitSpecific () {
@@ -207,57 +191,38 @@ vis_RbaeCreate () {
 
     bystarServiceSupportHookParamsSet ${autonomy} ${type}
 
- 
 
-bystarTypeSpecific_BCA_DEFAULT () {
-    cp_MasterAcct=${bc_masterAcct}
-    opDo masterAcctBagpLoad
+    bystarTypeSpecific_DEFAULT_DEFAULT () {
+	bystarIbParamSpecific
 
-    # NOTYET: Check Duplicate -- Perhaps in bystarCtldAcctAdmin.sh -p barc=xxx
+	opDoExit cd ${bystarIbAcctTypeRBAEBase}
 
-    controlledAcctUid=$( bystarNextControlledAcct )
+	if isDisposableRegisterUid ; then
+	    selectorNu=1
 
-    RBAeBaseDir=${cp_master_acctUidHome}/BAGP/BCA/${controlledAcctUid}/RBAE
-
-    opDoExit mkdir -p ${RBAeBaseDir}
-
-    thisDir=${RBAeBaseDir}
-    nextNu=${controlledAcctUid##ca-}
-
-    bystarIbParamSpecific
-}
-
-bystarTypeSpecific_DEFAULT_DEFAULT () {
-    bystarIbParamSpecific
-
-    opDoExit cd ${bystarIbAcctTypeRBAEBase}
-
-    if isDisposableRegisterUid ; then
-	selectorNu=1
-
-	nextNu=$( bystarNextDisposableScopeAcctNu )
-	FN_dirSafeKeep ${nextNu}
-	opDoExit mkdir ${nextNu}
-    else
-	RBAEList=$( ls | grep -v CVS | sort )
+	    nextNu=$( bystarNextDisposableScopeAcctNu )
+	    FN_dirSafeKeep ${nextNu}
+	    opDoExit mkdir ${nextNu}
+	else
+	    RBAEList=$( ls | grep -v CVS | sort )
 	
-	selectorNu=1
+	    selectorNu=1
     
-	for thisDir in ${RBAEList} ; do
-	    if ! RBAeCheckDuplicateSpecific ${thisDir} ; then 
-		return 101
-	    fi
-	done
+	    for thisDir in ${RBAEList} ; do
+		if ! RBAeCheckDuplicateSpecific ${thisDir} ; then 
+		    return 101
+		fi
+	    done
 
-	lastNuStr=${thisDir} 
+	    lastNuStr=${thisDir} 
 
-	nextNu=$( expr $lastNuStr +  1 )
-	opDoExit mkdir ${nextNu}
-    fi
+	    nextNu=$( expr $lastNuStr +  1 )
+	    opDoExit mkdir ${nextNu}
+	fi
 
 
-    thisDir=${nextNu}
-}
+	thisDir=${nextNu}
+    }
 
   #if [ "${bc_bystarUid}_" == "_" ] ; then
       bystarServiceSupportHookRun bystarTypeSpecific $*
@@ -276,19 +241,19 @@ bystarTypeSpecific_DEFAULT_DEFAULT () {
   #     fi
   # fi
 
-  RBAeParamInitSpecific ${thisDir}
+      RBAeParamInitSpecific ${thisDir}
 
-  opDoExit cd ${thisDir}
+      opDoExit cd ${thisDir}
 
-  echo "date=\"$( date )\"" >>  ${RegReqFile}
-  echo "RBAE=$( pwd )" >> ${RegReqFile}
+      echo "date=\"$( date )\"" >>  ${RegReqFile}
+      echo "RBAE=$( pwd )" >> ${RegReqFile}
 
-  opDo sudo chown -R bisos:bisos .
+      opDo sudo chown -R bisos:bisos .
 
-  opDo pwd 1>&2
-  opDo grep ^ *  1>&2
+      opDo pwd 1>&2
+      opDo grep ^ *  1>&2
 
-  pwd
+      pwd
 }
 
 
@@ -297,7 +262,7 @@ function isDisposableRegisterUid  {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Just a place holder. It should perhaps be eliminated.
 _EOF_
-    }
+		       }
     EH_assert [[ $# -eq 0 ]]
 
     lpReturn 101  # for now NOTYET
