@@ -1,21 +1,5 @@
 #!/bin/bash 
 
-bystarIbParamSpecific_A_system () {
-    bystarAcctTypePrefix="sa"
-
-    if isDisposableRegisterUid ; then
-        bystarIbAcctTypeRBAEBase="/libre/etc/bystar/infoBase/rbae/byName/sa"
-    else
-	if [ ! -d /bisos/var/bxae/bxeDesc/A/system ] ; then
-	    opDo mkdir -p /bisos/var/bxae/bxeDesc/A/system
-	fi
-        bystarIbAcctTypeRBAEBase="/bisos/var/bxae/bxeDesc/A/system"	
-    fi
-}
-
-bystarIbParamSpecific () {
-    bystarServiceSupportHookRun bystarIbParamSpecific $*
-}
 
 function vis_RbaeInfo {
     EH_assert [[ $# -eq 0 ]]
@@ -82,38 +66,6 @@ RbaeMatchesBystarUid () {
 }
 
 
-
-
-RBAeParamInitSpecificCommon () {
-    EH_assert [[ $# -eq 1 ]]
-    local thisDir=${1}
-
-    #
-    # COMMON PARAMETERS
-    #
-    echo ${nextNu} > ${thisDir}/acctNu:mr
-
-    echo "${opRunHostName}" > ${thisDir}/BacsId:mr
-
-    echo "${bc_autonomy}" > ${thisDir}/ServiceType:mr
-    
-    echo "${bc_type}" > ${thisDir}/ServiceSupportType:mr
-
-    echo "${bc_originationMethod}" > ${thisDir}/RegReqOriginationMethod:mr
-    
-    echo "${RegReqFileName}" > ${thisDir}/RegReqFileName:mr
-
-    echo "${bystarAcctTypePrefix}" > ${thisDir}/acctPrefix:dr
-
-    # acctBystarDomain
-    # acctMainDomain
-
-    #
-    # Admin PARAMETERS
-    #
-
-    echo "service@mohsen.banan.1.byname.net" > ${thisDir}/AdminContactEmail:m
-}
 
 RBAeParamInitSpecific_A_system () {
     EH_assert [[ $# -eq 1 ]]

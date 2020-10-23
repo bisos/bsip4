@@ -62,7 +62,7 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
-. ${opBinBase}/bxeDesc_lib.sh
+# . ${opBinBase}/bxeDesc_lib.sh
 
 . ${opBinBase}/bystarHook.libSh
 
@@ -110,8 +110,6 @@ function vis_examples {
 	EH_problem "Missing oneRegReqFile"
     fi
     
-    oneRBAE="/libre/ByStar/InfoBase/RBAE/BYSMB/ea/59001"
-
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
@@ -123,6 +121,171 @@ _EOF_
 _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
 _CommentEnd_
+
+
+bystarIbParamSpecific_A_system () {
+    local registrarBase="/bisos/var/selfRegistrar"
+    local asBaseDir="${registrarBase}/bxeDesc/A/system"
+    
+    bystarAcctTypePrefix="as"
+    
+    if [ ! -d "${asBaseDir}" ] ; then
+	opDo mkdir -p "${asBaseDir}"
+    fi
+    bystarIbAcctTypeRBAEBase="${asBaseDir}"
+}
+
+bystarIbParamSpecific () {
+    bystarServiceSupportHookRun bystarIbParamSpecific
+}
+
+
+RBAeParamInitSpecificCommon () {
+    EH_assert [[ $# -eq 1 ]]
+    local thisDir=${1}
+
+    #
+    # COMMON PARAMETERS
+    #
+    echo ${nextNu} > ${thisDir}/acctNu:mr
+
+    echo "${opRunHostName}" > ${thisDir}/BacsId:mr
+
+    echo "${bc_autonomy}" > ${thisDir}/ServiceType:mr
+    
+    echo "${bc_type}" > ${thisDir}/ServiceSupportType:mr
+
+    echo "${bc_originationMethod}" > ${thisDir}/RegReqOriginationMethod:mr
+    
+    echo "${RegReqFileName}" > ${thisDir}/RegReqFileName:mr
+
+    echo "${bystarAcctTypePrefix}" > ${thisDir}/acctPrefix:dr
+
+    # acctBystarDomain
+    # acctMainDomain
+
+    #
+    # Admin PARAMETERS
+    #
+
+    echo "service@example.com" > ${thisDir}/AdminContactEmail:m
+}
+
+
+RBAeParamInitSpecific_A_system () {
+    EH_assert [[ $# -eq 1 ]]
+    local thisDir=${1}
+
+    RBAeParamInitSpecificCommon ${1}
+
+    #
+    # SERVICE SPECIFIC PARAMETERS
+    #
+
+    echo "${bc_sysName}" > ${thisDir}/sysName:m
+}
+
+
+RBAeParamInitSpecific_DEFAULT_DEFAULT () {
+    ANT_cooked "Missing ${bystarServiceType}_${bystarServiceSupportType}"
+}
+
+RBAeParamInitSpecific () {
+    bystarServiceSupportHookRun RBAeParamInitSpecific $*
+}
+
+#
+# RBAeCheckDuplicate
+#
+
+RBAeCheckDuplicateSpecificCommon () {
+    EH_assert [[ $# -eq 1 ]]
+    
+    lpDo fileParamsLoadVarsFromBaseDir  ${1}
+
+    thisRegReqFileName=$( FN_absolutePathGet ${cp_RegReqFileName} )
+    if [ "${thisRegReqFileName}" == "${RegReqFile}" ] ; then
+	EH_problem "DUPLICATE RegReqFile=${RegReqFile}"
+	return 0
+    else
+	return 101
+    fi
+}
+
+RBAeCheckDuplicateSpecific_A_system () {
+    EH_assert [[ $# -eq 1 ]]
+    RBAeCheckDuplicateSpecificCommon ${1}
+
+    lpReturn # NOTYET, for now 
+    
+    if [ "${bc_firstName}_" == "${cp_FirstName}_" -a  "${bc_lastName}_" == "${cp_LastName}_" ] ; then
+	ANT_raw "$1: DUPLICATE, ${selectorNu}"
+	selectorNu=$( expr ${selectorNu} +  1 )
+    fi
+
+}
+
+RBAeCheckDuplicateSpecific_DEFAULT_DEFAULT () {
+   ANT_cooked "Missing ${bystarServiceType}_${bystarServiceSupportType}"
+}
+
+RBAeCheckDuplicateSpecific () {
+    bystarServiceSupportHookRun RBAeCheckDuplicateSpecific $*
+}
+
+vis_RbaeCreate () {
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [[ "${RegReqFile}_" != "MANDATORY_" ]]
+
+    local thisDir=""
+    
+    . ${RegReqFile}
+    RegReqContainer
+
+    autonomy="${bc_autonomy}"
+    type="${bc_type}"
+
+    bystarServiceSupportHookParamsSet ${autonomy} ${type}
+
+    bystarIbParamSpecific
+
+    opDoExit cd ${bystarIbAcctTypeRBAEBase}
+
+    RBAEList=$( ls | grep -v CVS | sort )
+	
+    selectorNu=1
+    
+    for thisDir in ${RBAEList} ; do
+	if RBAeCheckDuplicateSpecific ${thisDir} ; then
+	    ANT_cooked "duplicate Detected -- ${thisDir}"
+	    echo $(pwd)/${thisDir}
+	    lpReturn
+	fi
+    done
+
+    lastNuStr=${thisDir} 
+
+    nextNu=$( expr $lastNuStr +  1 )
+    opDoExit mkdir ${nextNu}
+
+    thisDir=${nextNu}
+
+    RBAeParamInitSpecific ${thisDir}
+
+    opDoExit cd ${thisDir}
+
+    echo "date=\"$( date )\"" >>  ${RegReqFile}
+    echo "RBAE=$( pwd )" >> ${RegReqFile}
+
+    opDo sudo chown -R bisos:bisos .
+
+    opDo pwd 1>&2
+    opDo grep ^ *  1>&2
+
+    pwd
+}
+
+
 
 
 _CommentBegin_
