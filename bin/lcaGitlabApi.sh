@@ -144,18 +144,19 @@ _EOF_
 
     cat  << _EOF_
 [global]
-default = somewhere
-ssl_verify = true
+default = bisosAdmin
+ssl_verify = false
 timeout = 5
 
-[somewhere]
-url = https://some.whe.re
-private_token = vTbFeqJYCY3sibBP7BZM
+[bisosAdmin]
+url = http://192.168.0.56
+private_token = qji9-_YqoqzZ4Rymk_qG
 api_version = 4
+timeout = 1
 
-[elsewhere]
-url = http://else.whe.re:8080
-private_token = CkqsjqcQSFH5FQKDccu4
+[bisos]
+url = http://http://192.168.0.56
+private_token = aW9rVKoXZhyNqTRKs5PT
 timeout = 1
 
 _EOF_
@@ -170,11 +171,11 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    typeset thisConfigFile="~/.python-gitlab.cfg"
+    typeset thisConfigFile="${HOME}/.python-gitlab.cfg"
 
     FN_fileSafeKeep ${thisConfigFile}
 
-    vis_configStdout > ${thisConfigFile}
+    lpDo eval vis_configStdout \> ${thisConfigFile}
 
     #lpDo chmod 600 ${thisConfigFile}
 
