@@ -64,22 +64,29 @@ _CommentEnd_
 
 . ${opBinBase}/bxeDesc_lib.sh
 
+. ${opBinBase}/bystarHook.libSh
+
+. ${opBinBase}/lcnFileParams.libSh
+
+# . ${opBinBase}/bystarInfoBase.libSh
+
 # . ${opBinBase}/bisosCurrents_lib.sh
 
 # PRE parameters
-typeset -t BarcFile="MANDATORY"
-typeset -t RBAE="MANDATORY"
+typeset -t RegReqFile="MANDATORY"
+typeset -t bxeDesc="MANDATORY"
 
 function G_postParamHook {
     # lpCurrentsGet
 
-    if [ "${BarcFile}_" != "MANDATORY_" ] ; then
-	BarcFile=$( FN_absolutePathGet ${BarcFile} )
+    if [ "${RegReqFile}" != "MANDATORY" ] ; then
+	RegReqFile=$( FN_absolutePathGet ${RegReqFile} )
     fi
-    if [ "${RBAE}_" != "MANDATORY_" ] ; then
-	RBAE=$( FN_absolutePathGet ${RBAE} )
+    if [ "${bxeDesc}" != "MANDATORY" ] ; then
+     	bxeDesc=$( FN_absolutePathGet ${bxeDesc} )
     fi
 }
+
 
 noArgsHook() {
   vis_examples
@@ -98,26 +105,29 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
-    oneBarcFile="/libre/ByStar/InfoBase/BARC/BYNAME/TRIAL/090125235441_25039.BARC"
-    oneRBAE="/libre/ByStar/InfoBase/RBAE/BYSMB/ea/59001"
+    oneRegReqFile="$( ls /bisos/var/bxae/bxeRegReq/A/system/A_system_bisos.2*.REGREQ | head -1 )"
+    if [ -z "${oneRegReqFile}" ] ; then
+	oneRegReqFile="Missing"
+	EH_problem "Missing oneRegReqFile"
+    fi
+
+    oneRegBxeDesc="/bisos/var/selfRegistrar/bxeDesc/A/system/1"
+
+    oneBxeDesc="/bisos/var/bxae/bxeDesc/A/system/as-bisos"    
 
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Register The bxeRegReq" )
 selfCentralRegistrar.sh
-selfCentralRegistrar.sh ${extraInfo} -p BarcFile="${oneBarcFile}" -i RbaeCreate
+selfCentralRegistrar.sh ${extraInfo} -p RegReqFile="${oneRegReqFile}" -i bxeDescCreate
 bxCentralRegistrar.sh
-bxCentralRegistrar.sh ${extraInfo} -p BarcFile="${oneBarcFile}" -i RbaeCreate
+bxCentralRegistrar.sh ${extraInfo} -p RegReqFile="${oneRegReqFile}" -i bxeDescCreate
 $( examplesSeperatorChapter "Manage bxeDesc" )
+$( examplesSeperatorSection "Registered BxeDesc Capture" )
+${G_myName} ${extraInfo} -p bxeDesc="${oneRegBxeDesc}" -i bxeDescCapture
 $( examplesSeperatorSection "INFO" )
-${G_myName} ${extraInfo} -p RBAE="${oneRBAE}" -i RbaeInfo
-$( examplesSeperatorSection "Create RBAE from BARC" )
-${G_myName} ${extraInfo} -p BarcFile="${oneBarcFile}" -i RbaeUpdate
-${G_myName} ${extraInfo} -p RBAE="${oneRBAE}" -i RbaeUpdate
-$( examplesSeperatorSection "Locate bystarUid" )
-${G_myName} ${extraInfo} -p bystarUid="ea-59001" -i RbaeLocate
-${G_myName} ${extraInfo} -p bystarUid="ea-59001" -i RbaeDeleteWithUid
+${G_myName} ${extraInfo} -p bxeDesc="${oneBxeDesc}" -i bxeDescInfo
 _EOF_
 }
 

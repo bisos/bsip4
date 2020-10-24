@@ -74,16 +74,12 @@ _CommentEnd_
 
 # PRE parameters
 typeset -t RegReqFile="MANDATORY"
-typeset -t RBAE="MANDATORY"
 
 function G_postParamHook {
     # lpCurrentsGet
 
-    if [ "${RegReqFile}_" != "MANDATORY_" ] ; then
+    if [ "${RegReqFile}" != "MANDATORY" ] ; then
 	RegReqFile=$( FN_absolutePathGet ${RegReqFile} )
-    fi
-    if [ "${RBAE}_" != "MANDATORY_" ] ; then
-	RBAE=$( FN_absolutePathGet ${RBAE} )
     fi
 }
 
@@ -114,7 +110,7 @@ function vis_examples {
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Register The bxeRegReq" )
-${G_myName} ${extraInfo} -p RegReqFile="${oneRegReqFile}" -i RbaeCreate
+${G_myName} ${extraInfo} -p RegReqFile="${oneRegReqFile}" -i bxeDescCreate
 _EOF_
 }
 
@@ -122,44 +118,59 @@ _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
 _CommentEnd_
 
+function registrarBaseGet {
+    echo "/bisos/var/selfRegistrar"
+}
 
-bystarIbParamSpecific_A_system () {
-    local registrarBase="/bisos/var/selfRegistrar"
+function registrarROidGet {
+    cat $(registrarBaseGet)/registrar.roid
+}
+
+function bxeTypeROidGet {
+    cat bxeType.roid
+}
+
+
+selfRegParamSpecific_A_system () {
+    local registrarBase=$( registrarBaseGet )
     local asBaseDir="${registrarBase}/bxeDesc/A/system"
     
-    bystarAcctTypePrefix="as"
+    bxePrefix="as"  # Autonomous System
     
     if [ ! -d "${asBaseDir}" ] ; then
 	opDo mkdir -p "${asBaseDir}"
+	echo 3 > ${asBaseDir}/bxeType.roid
     fi
-    bystarIbAcctTypeRBAEBase="${asBaseDir}"
+    selfRegAcctTypeBxeDescBase="${asBaseDir}"
 }
 
-bystarIbParamSpecific () {
-    bystarServiceSupportHookRun bystarIbParamSpecific
+selfRegParamSpecific () {
+    bystarServiceSupportHookRun selfRegParamSpecific
 }
 
 
-RBAeParamInitSpecificCommon () {
+bxeDescParamInitSpecificCommon () {
     EH_assert [[ $# -eq 1 ]]
     local thisDir=${1}
 
     #
     # COMMON PARAMETERS
     #
-    echo ${nextNu} > ${thisDir}/acctNu:mr
+    echo ${nextNu} > ${thisDir}/bxeROid:mr
+
+    bxeOidGet ${nextNu} > ${thisDir}/bxeOid:mr    
 
     echo "${opRunHostName}" > ${thisDir}/BacsId:mr
 
-    echo "${bc_autonomy}" > ${thisDir}/ServiceType:mr
+    echo "${bc_autonomy}" > ${thisDir}/bxeAutonomy:mr
     
-    echo "${bc_type}" > ${thisDir}/ServiceSupportType:mr
+    echo "${bc_type}" > ${thisDir}/bxeType:mr
 
     echo "${bc_originationMethod}" > ${thisDir}/RegReqOriginationMethod:mr
     
     echo "${RegReqFileName}" > ${thisDir}/RegReqFileName:mr
 
-    echo "${bystarAcctTypePrefix}" > ${thisDir}/acctPrefix:dr
+    echo "${bxePrefix}" > ${thisDir}/bxePrefix:dr
 
     # acctBystarDomain
     # acctMainDomain
@@ -171,71 +182,99 @@ RBAeParamInitSpecificCommon () {
     echo "service@example.com" > ${thisDir}/AdminContactEmail:m
 }
 
+function bxeOidGet {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
 
-RBAeParamInitSpecific_A_system () {
+    local bxeROid="$1"
+
+    local registrarROid=$( registrarROidGet )
+    local bxeTypeROid=$( bxeTypeROidGet )
+    
+    local bxeOid="${registrarROid}.${bxeTypeROid}.${bxeROid}"
+
+    echo ${bxeOid}
+    lpReturn
+}	
+
+bxeDescParamInitSpecific_A_system () {
     EH_assert [[ $# -eq 1 ]]
     local thisDir=${1}
 
-    RBAeParamInitSpecificCommon ${1}
+    local rdnSelectorTag=""
+
+    bxeDescParamInitSpecificCommon ${1}
 
     #
     # SERVICE SPECIFIC PARAMETERS
     #
 
     echo "${bc_sysName}" > ${thisDir}/sysName:m
+
+    if (( selectorNu == 1 )) ; then
+	rdnSelectorTag=""
+    else
+	rdnSelectorTag="_${selectorNu}"
+    fi
+
+    echo "${bc_sysName}${rdnSelectorTag}" > ${thisDir}/rdn:m
 }
 
 
-RBAeParamInitSpecific_DEFAULT_DEFAULT () {
+bxeDescParamInitSpecific_DEFAULT_DEFAULT () {
     ANT_cooked "Missing ${bystarServiceType}_${bystarServiceSupportType}"
 }
 
-RBAeParamInitSpecific () {
-    bystarServiceSupportHookRun RBAeParamInitSpecific $*
+bxeDescParamInitSpecific () {
+    bystarServiceSupportHookRun bxeDescParamInitSpecific $*
 }
 
 #
-# RBAeCheckDuplicate
+# bxeDescCheckDuplicate
 #
 
-RBAeCheckDuplicateSpecificCommon () {
+bxeDescCheckDuplicateSpecificCommon () {
     EH_assert [[ $# -eq 1 ]]
     
     lpDo fileParamsLoadVarsFromBaseDir  ${1}
 
     thisRegReqFileName=$( FN_absolutePathGet ${cp_RegReqFileName} )
     if [ "${thisRegReqFileName}" == "${RegReqFile}" ] ; then
-	EH_problem "DUPLICATE RegReqFile=${RegReqFile}"
+	ANT_cooked "DUPLICATE RegReqFile=${RegReqFile}"
 	return 0
     else
 	return 101
     fi
 }
 
-RBAeCheckDuplicateSpecific_A_system () {
+bxeDescCheckDuplicateSpecific_A_system () {
     EH_assert [[ $# -eq 1 ]]
-    RBAeCheckDuplicateSpecificCommon ${1}
-
-    lpReturn # NOTYET, for now 
+    local retVal=""
+    bxeDescCheckDuplicateSpecificCommon ${1}
+    retVal=$?
     
-    if [ "${bc_firstName}_" == "${cp_FirstName}_" -a  "${bc_lastName}_" == "${cp_LastName}_" ] ; then
-	ANT_raw "$1: DUPLICATE, ${selectorNu}"
+    if [ "${bc_sysName}_" == "${cp_sysName}_" ] ; then
+	ANT_cooked "$1: DUPLICATE, ${selectorNu}"
 	selectorNu=$( expr ${selectorNu} +  1 )
     fi
 
+    lpReturn ${retVal}
 }
 
-RBAeCheckDuplicateSpecific_DEFAULT_DEFAULT () {
+bxeDescCheckDuplicateSpecific_DEFAULT_DEFAULT () {
    ANT_cooked "Missing ${bystarServiceType}_${bystarServiceSupportType}"
 }
 
-RBAeCheckDuplicateSpecific () {
-    bystarServiceSupportHookRun RBAeCheckDuplicateSpecific $*
+bxeDescCheckDuplicateSpecific () {
+    bystarServiceSupportHookRun bxeDescCheckDuplicateSpecific $*
 }
 
-vis_RbaeCreate () {
+vis_bxeDescCreate () {
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [[ "${RegReqFile}_" != "MANDATORY_" ]]
+    EH_assert [[ "${RegReqFile}" != "MANDATORY" ]]
 
     local thisDir=""
     
@@ -247,16 +286,16 @@ vis_RbaeCreate () {
 
     bystarServiceSupportHookParamsSet ${autonomy} ${type}
 
-    bystarIbParamSpecific
+    selfRegParamSpecific
 
-    opDoExit cd ${bystarIbAcctTypeRBAEBase}
+    opDoExit cd ${selfRegAcctTypeBxeDescBase}
 
-    RBAEList=$( ls | grep -v CVS | sort )
+    BxeDescList=$( ls | grep -v CVS | grep -v bxeType.roid | sort )
 	
     selectorNu=1
     
-    for thisDir in ${RBAEList} ; do
-	if RBAeCheckDuplicateSpecific ${thisDir} ; then
+    for thisDir in ${BxeDescList} ; do
+	if bxeDescCheckDuplicateSpecific ${thisDir} ; then
 	    ANT_cooked "duplicate Detected -- ${thisDir}"
 	    echo $(pwd)/${thisDir}
 	    lpReturn
@@ -270,12 +309,12 @@ vis_RbaeCreate () {
 
     thisDir=${nextNu}
 
-    RBAeParamInitSpecific ${thisDir}
+    bxeDescParamInitSpecific ${thisDir}
 
     opDoExit cd ${thisDir}
 
     echo "date=\"$( date )\"" >>  ${RegReqFile}
-    echo "RBAE=$( pwd )" >> ${RegReqFile}
+    echo "BxeDesc=$( pwd )" >> ${RegReqFile}
 
     opDo sudo chown -R bisos:bisos .
 
@@ -284,7 +323,6 @@ vis_RbaeCreate () {
 
     pwd
 }
-
 
 
 

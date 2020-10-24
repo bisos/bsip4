@@ -112,6 +112,9 @@ $( examplesSeperatorChapter "Selected Specific Types and Scopes" )
 ${G_myName} ${extraInfo} -i examplesBxAE indiv create
 ${G_myName} ${extraInfo} -i examplesBxAE corp create
 ${G_myName} ${extraInfo} -i examplesBxAE sys create
+${G_myName} ${extraInfo} -i examplesBxAE indiv selfRealize
+${G_myName} ${extraInfo} -i examplesBxAE corp selfRealize
+${G_myName} ${extraInfo} -i examplesBxAE sys selfRealize
 ${G_myName} ${extraInfo} -i examplesBxAE indiv all   # create+bxReg|selfReg+bxRealize|selfRealize
 ${G_myName} ${extraInfo} -i examplesBxAE corp all
 ${G_myName} ${extraInfo} -i examplesBxAE sys all

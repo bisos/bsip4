@@ -63,12 +63,36 @@ _CommentEnd_
 . ${opBinBase}/lpReRunAs.libSh
 
 
+. ${opBinBase}/bxeDesc_lib.sh
+
+. ${opBinBase}/bystarHook.libSh
+
+. ${opBinBase}/lcnFileParams.libSh
+
+# . ${opBinBase}/bystarInfoBase.libSh
+
+# . ${opBinBase}/bisosCurrents_lib.sh
+
 # PRE parameters
 
-baseDir=""
+typeset -t bxeDesc="MANDATORY"
+typeset -t bxo=""
 
 function G_postParamHook {
-     return 0
+    # lpCurrentsGet
+
+    if [ "${bxeDesc}" != "MANDATORY" ] ; then
+     	bxeDesc=$( FN_absolutePathGet ${bxeDesc} )
+    fi
+    if [ ! -z "${bxo}" ] ; then
+     	bxoHome=$( FN_absolutePathGet ~${bxo} )
+    fi
+
+}
+
+
+noArgsHook() {
+  vis_examples
 }
 
 
@@ -84,17 +108,20 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
+    oneBxeDesc="/bisos/var/bxae/bxeDesc/A/system/as-bisos"
+
+    oneBxo="as-bisos"
+    
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Chapter Title" )
 $( examplesSeperatorSection "Section Title" )
-${G_myName} ${extraInfo} -i doTheWork
+$( examplesSeperatorSection "INFO" )
+${G_myName} ${extraInfo} -p bxeDesc="${oneBxeDesc}" -i bxeBxoAcctCreate
+${G_myName} ${extraInfo} -p bxeDesc="${oneBxeDesc}" -i bxoBxeDescCopy
+${G_myName} ${extraInfo} -p bxo="${oneBxo}" -i bxoGitServerDesc
 _EOF_
-}
-
-noArgsHook() {
-  vis_examples
 }
 
 _CommentBegin_
@@ -102,18 +129,81 @@ _CommentBegin_
 _CommentEnd_
 
 
-function vis_doTheWork {
+function vis_bxeBxoAcctCreate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
+    EH_assert [[ "${bxeDesc}" != "MANDATORY" ]]    
 
-    lpDo vis_failExample
-    EH_retOnFail
+    lpDo fileParamsLoadVarsFromBaseDir  ${bxeDesc}
+
+    local bxeLocalName="${cp_bxePrefix}-${cp_rdn}"
+    local bxeOidComment="oid-${cp_bxeOid}"
+
+    lpDo bxoAcctManage.sh -h -v -n showRun -p acctComment="${bxeOidComment}" -i bxisoAcctCreate ${bxeLocalName}
 
     lpReturn
 }
+
+
+function vis_bxoBxeDescCopy {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [[ "${bxeDesc}" != "MANDATORY" ]]    
+
+    lpDo fileParamsLoadVarsFromBaseDir  ${bxeDesc}w
+
+    local bxeLocalName="${cp_bxePrefix}-${cp_rdn}"
+
+    bxoHome=$( FN_absolutePathGet ~${bxeLocalName} )
+    
+    lpDo sudo -u ${bxeLocalName} cp -r ${bxeDesc} ${bxoHome}/bxeDesc
+
+    lpReturn
+}
+
+
+function vis_bxoGitServerDesc {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [[ ! -z "${bxo}" ]]    
+
+    # lpDo fileParamsLoadVarsFromBaseDir  ${bxoHome}/bxeDesc
+    
+    lpDo sudo -u ${bxo} mkdir ${bxoHome}/gitServerInfo
+    echo 192.168.0.56 | sudo -u ${bxo} tee  ${bxoHome}/gitServerInfo/gitServer > /dev/null
+
+    lpReturn
+}
+
+function vis_bxoGitServerProvision {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [[ ! -z "${bxo}" ]]    
+
+    # Create bxo account on git server
+    # setup ssh keys
+    # create repos for this bxo
+
+    lpReturn
+}
+
+
+
+
+
+
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*

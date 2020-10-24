@@ -140,6 +140,79 @@ _EOF_
 ${G_myName} ${extraInfo} ${bxeParamsFull} -i bxReg
 _EOF_
     }
+
+    function examplesSelfRegMini {
+	EH_assert [[ $# -lt 2 ]]
+
+	if [ $# -eq 1 ] ; then
+	    sectionHeaderEssentials	    
+	fi
+
+	cat  << _EOF_
+${G_myName} ${extraInfo} ${bxeParamsMini} -i selfReg
+_EOF_
+    }
+
+    function examplesSelfRegFull {
+	EH_assert [[ $# -lt 2 ]]
+
+	if [ $# -eq 1 ] ; then
+	    sectionHeaderFull	    
+	fi
+
+	cat  << _EOF_
+${G_myName} ${extraInfo} ${bxeParamsFull} -i selfReg
+_EOF_
+    }
+
+    function examplesBxRealizeMini {
+	EH_assert [[ $# -lt 2 ]]
+
+	if [ $# -eq 1 ] ; then
+	    sectionHeaderEssentials	    
+	fi
+
+	cat  << _EOF_
+${G_myName} ${extraInfo} ${bxeParamsMini} -i bxRealize
+_EOF_
+    }
+
+    function examplesBxRealizeFull {
+	EH_assert [[ $# -lt 2 ]]
+
+	if [ $# -eq 1 ] ; then
+	    sectionHeaderFull	    
+	fi
+
+	cat  << _EOF_
+${G_myName} ${extraInfo} ${bxeParamsFull} -i bxRealize
+_EOF_
+    }
+
+    function examplesSelfRealizeMini {
+	EH_assert [[ $# -lt 2 ]]
+
+	if [ $# -eq 1 ] ; then
+	    sectionHeaderEssentials	    
+	fi
+
+	cat  << _EOF_
+${G_myName} ${extraInfo} ${bxeParamsMini} -i selfRealize
+_EOF_
+    }
+
+    function examplesSelfRealizeFull {
+	EH_assert [[ $# -lt 2 ]]
+
+	if [ $# -eq 1 ] ; then
+	    sectionHeaderFull	    
+	fi
+
+	cat  << _EOF_
+${G_myName} ${extraInfo} ${bxeParamsFull} -i selfRealize
+_EOF_
+    }
+    
     
     
     case "${provisioningScope}" in
@@ -152,27 +225,33 @@ _EOF_
 	    examplesBxRegFull "$1"	    
 	    ;;
 	selfReg)
-	    examplesCreateMini "$1"
-	    examplesCreateFull "$1"	    
+	    examplesSelfRegMini "$1"
+	    examplesSelfRegFull "$1"	    
 	    ;;
 	bxRealize)
-	    examplesCreateMini "$1"
-	    examplesCreateFull "$1"	    
+	    examplesBxRealizeMini "$1"
+	    examplesBxRealizeFull "$1"	    
 	    ;;
 	selfRealize)
-	    examplesCreateMini "$1"
-	    examplesCreateFull "$1"	    
+	    examplesSelfRealizeMini "$1"
+	    examplesSelfRealizeFull "$1"	    
 	    ;;
 	all)
 	    sectionHeaderEssentials
 
 	    examplesCreateMini
 	    examplesBxRegMini
-
+	    examplesSelfRegMini	    
+	    examplesBxRealizeMini
+	    examplesSelfRealizeMini
+	    
 	    sectionHeaderFull
 	    
 	    examplesCreateFull
 	    examplesBxRegFull
+	    examplesSelfRegFull
+	    examplesBxRealizeFull
+	    examplesSelfRealizeFull
 	    ;;
 	*)
 	    EH_problem "Bad bxeType -- ${bxeType}"
