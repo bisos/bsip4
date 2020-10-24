@@ -89,8 +89,14 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Python Gitlab Api" )
 $( examplesSeperatorSection "Installation -- BinsPrep" )
-${G_myName} ${extraInfo} -i pipInstallUpdate
-${G_myName} ${extraInfo} -i pipInstallVerify
+${G_myName} ${extraInfo} -i pip2nstallUpdate
+${G_myName} ${extraInfo} -i pip2InstallVerify
+/bisos/venv/py2/bisos3/bin/pip2 list | grep -i python-gitlab
+/bisos/venv/py2/bisos3/bin/pip2 install --upgrade python-gitlab
+${G_myName} ${extraInfo} -i pip3InstallUpdate
+${G_myName} ${extraInfo} -i pip3InstallVerify
+/bisos/venv/py3/bisos3/bin/pip3 list | grep -i python-gitlab
+/bisos/venv/py3/bisos3/bin/pip3 install --upgrade python-gitlab
 $( examplesSeperatorSection "Config Parameters" )
 env | grep PYTHON_GITLAB_CFG #  contains the path to a configuration file
 ls -l /etc/python-gitlab.cfg #     System-wide configuration file
@@ -98,6 +104,10 @@ ls -l ~/.python-gitlab.cfg #     User configuration file
 $( examplesSeperatorSection "Config Setup" )
 ${G_myName} ${extraInfo} -i configStdout
 ${G_myName} ${extraInfo} -i configFileUpdate
+$( examplesSeperatorSection "Examples" )
+gitlab user create  --name "Api Example2" --username "as-api2" --email "some3@example.com" --password "getIn2gitlab"
+gitlab -o json user list | json_pp
+gitlab -o json project list | json_pp
 _EOF_
 }
 
@@ -110,7 +120,7 @@ _CommentBegin_
 _CommentEnd_
 
 
-function vis_pipInstallUpdate {
+function vis_pip3InstallUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -119,7 +129,7 @@ _EOF_
 
 }
 
-function vis_pipInstallVerify {
+function vis_pip3InstallVerify {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -152,12 +162,12 @@ timeout = 5
 url = http://192.168.0.56
 private_token = qji9-_YqoqzZ4Rymk_qG
 api_version = 4
-timeout = 1
+timeout = 10
 
 [bisos]
 url = http://http://192.168.0.56
 private_token = aW9rVKoXZhyNqTRKs5PT
-timeout = 1
+timeout = 10
 
 _EOF_
 }
