@@ -11,37 +11,41 @@ fi
 
 
 function bxaeBxeDescBaseGet {
+    local cp_bxeAutonomy=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxeAutonomy )
+    local cp_bxeType=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxeType )        
+    
     echo "/bisos/var/bxae/bxeDesc/${cp_bxeAutonomy}/${cp_bxeType}"
 }
 
 
-function vis_bxeDescCapture {
+function vis_bxeDescStash {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [[ "${bxeDesc}" != "MANDATORY" ]]    
+    EH_assert [[ "${bxeDesc}" != "MANDATORY" ]]
 
-    lpDo fileParamsLoadVarsFromBaseDir  ${bxeDesc}
+    local cp_bxePrefix=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxePrefix )
+    local cp_rdn=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} rdn )        
 
     local bxeLocalName="${cp_bxePrefix}-${cp_rdn}"
-    local capturedBxeDescBase="$( bxaeBxeDescBaseGet )/${bxeLocalName}"
+    local stashedBxeDescBase="$( bxaeBxeDescBaseGet )/${bxeLocalName}"
 
-    lpDo cp -r "${bxeDesc}" "${capturedBxeDescBase}"
+    lpDo cp -r "${bxeDesc}" "${stashedBxeDescBase}"
 
-    lpDo ls -ld "${capturedBxeDescBase}"
+    echo "${stashedBxeDescBase}"
 
     lpReturn
 }	
-
 
 
 function vis_bxeDescInfo {
     EH_assert [[ $# -eq 0 ]]
     EH_assert [[ "${bxeDesc}" != "MANDATORY" ]]
 
-    ANT_raw "Running: lcnFileParamsAdmin.sh  -p fileParamsBaseDir=${bxeDesc} -i fileParamsShow"
-    opDo lcnFileParamsAdmin.sh  -p fileParamsBaseDir=${bxeDesc} -i fileParamsShow 2> /dev/null
+    #ANT_raw "Running: lcnFileParamsAdmin.sh  -p fileParamsBaseDir=${bxeDesc} -i fileParamsShow"
+    # opDo lcnFileParamsAdmin.sh  -p fileParamsBaseDir=${bxeDesc} -i fileParamsShow 2> /dev/null
+    lpDo fileParamManage.py  -i fileParamDictReadDeep  "${bxeDesc}"
 }
 

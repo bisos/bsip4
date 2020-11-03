@@ -44,7 +44,7 @@ opRunUserGet
 
 . ${opLibBase}/ocp-sup.sh
 
-. ${opBinBase}/fileParam.libSh
+. ${opBinBase}/fileParam_lib.sh
 
 . ${opLibBase}/visLib.sh
 

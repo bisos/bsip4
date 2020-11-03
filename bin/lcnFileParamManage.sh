@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IimBriefDescription="Bx Controlled Service Entity Provisioning -- From RegReq to Realize"
+IimBriefDescription="NOTYET: Short Description Of The Module"
 
 ORIGIN="
 * Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee
@@ -28,7 +28,7 @@ SEED="
 *  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
 "
 FILE="
-*  /This File/ :: /bisos/core/bsip/bin/bxeRrPkgCreate.sh 
+*  /This File/ :: /bisos/bsip/bin/lcnFileParamManage.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
     /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
@@ -39,7 +39,8 @@ fi
 _CommentBegin_
 ####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/libre/ByStar/InitialTemplates/software/plusOrg/dblock/inserts/topControls.org"
 *  /Controls/ ::  [[elisp:(org-cycle)][| ]]  [[elisp:(show-all)][Show-All]]  [[elisp:(org-shifttab)][Overview]]  [[elisp:(progn (org-shifttab) (org-content))][Content]] | [[file:Panel.org][Panel]] | [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] | [[elisp:(bx:org:run-me)][Run]] | [[elisp:(bx:org:run-me-eml)][RunEml]] | [[elisp:(delete-other-windows)][(1)]] | [[elisp:(progn (save-buffer) (kill-buffer))][S&Q]]  [[elisp:(save-buffer)][Save]]  [[elisp:(kill-buffer)][Quit]] [[elisp:(org-cycle)][| ]]
-** /Version Control/ ::  [[elisp:(call-interactively (quote cvs-update))][cvs-update]]  [[elisp:(vc-update)][vc-update]] | [[elisp:(bx:org:agenda:this-file-otherWin)][Agenda-List]]  [[elisp:(bx:org:todo:this-file-otherWin)][ToDo-List]]
+** /Version Control/ ::  [[elisp:(call-interactively (quote cvs-update))][cvs-update]]  [[elisp:(vc-update)][vc-update]] | [[elisp:(bx:org:agenda:this-file-otherWin)][Agenda-List]]  [[elisp:(bx:org:todo:this-file-otherWin)][ToDo-List]] 
+
 ####+END:
 _CommentEnd_
 
@@ -53,9 +54,7 @@ function vis_moduleDescription {  cat  << _EOF_
 *  [[elisp:(org-cycle)][| ]]  Xrefs         :: *[Related/Xrefs:]*  <<Xref-Here->>  -- External Documents  [[elisp:(org-cycle)][| ]]
 **  [[elisp:(org-cycle)][| ]]  Panel        :: [[file:/libre/ByStar/InitialTemplates/activeDocs/bxServices/versionControl/fullUsagePanel-en.org::Xref-VersionControl][Panel Roadmap Documentation]] [[elisp:(org-cycle)][| ]]
 *  [[elisp:(org-cycle)][| ]]  Info          :: *[Module Description:]* [[elisp:(org-cycle)][| ]]
-** 
-** Creates a BARC (Bystar Account Request Container) based on command line.
-** E|
+
 _EOF_
 }
 
@@ -72,21 +71,14 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
-. ${opBinBase}/bystarHook.libSh
-
-. ${opBinBase}/bxeRegReq_lib.sh
-
-. ${opBinBase}/bxeProvision_lib.sh
+. ${opBinBase}/fileParam_lib.sh
 
 # PRE parameters
 
+baseDir=""
 
 function G_postParamHook {
      return 0
-}
-
-function noArgsHook {
-	vis_examples
 }
 
 
@@ -105,30 +97,89 @@ function vis_examples {
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
+$( examplesSeperatorChapter "Write One File Parameter" )
+$( examplesSeperatorSection "-i fileParamWrite fileParamPath paramName paramValue" )
+${G_myName} ${extraInfo} -i fileParam_write /tmp paramName1 paramValue1
+$( examplesSeperatorSection "-i fileParamFullPath paramValue" )
+${G_myName} ${extraInfo} -i fileParam_writePath /tmp/paramName1 paramValue1
+$( examplesSeperatorChapter "Read One File Parameter" )
+$( examplesSeperatorSection "-i fileParam_read fileParamPath paramName" )
+${G_myName} ${extraInfo} -i fileParam_read /tmp paramName1
+$( examplesSeperatorSection "-i fileParamReadFullPath fileParamPath" )
+${G_myName} ${extraInfo} -i fileParam_readPath /tmp/paramName1
 _EOF_
-  vis_examplesBxAE all all
-   cat  << _EOF_
-$( examplesSeperatorChapter "Selected Specific Types and Scopes" )
-${G_myName} ${extraInfo} -i examplesBxAE indiv regReqCreate
-${G_myName} ${extraInfo} -i examplesBxAE corp regReqCreate
-${G_myName} ${extraInfo} -i examplesBxAE sys regReqCreate
-${G_myName} ${extraInfo} -i examplesBxAE indiv startToSelfRealize
-${G_myName} ${extraInfo} -i examplesBxAE corp startToSelfRealize
-${G_myName} ${extraInfo} -i examplesBxAE sys startToSelfRealize
-${G_myName} ${extraInfo} -i examplesBxAE indiv all   # create+bxReg|selfReg+bxRealize|startToSelfRealize
-${G_myName} ${extraInfo} -i examplesBxAE corp all
-${G_myName} ${extraInfo} -i examplesBxAE sys all
-$( examplesSeperatorChapter "Registraion Request -- RegReq Creation" )
-bxeRegReqManage.sh
-$( examplesSeperatorChapter "Central Registration Of The Request -- BxeDesc Creation" )
-selfCentralRegistrar.sh
-bxCentralRegistrar.sh
-$( examplesSeperatorChapter "Capturing Of The Registration -- BxeDesc Stach" )
-bxeDescManage.sh
-$( examplesSeperatorChapter "BxO And Git Accts Creation -- BxeRealization and BxO Instantiation" )
-bxeRealize.sh
-_EOF_
+}
 
+noArgsHook() {
+  vis_examples
+}
+
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+
+
+function vis_fileParam_write {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 3 ]]
+
+    typeset parRoot=$1
+    typeset parName=$2
+    typeset parValue=$3
+
+    opDo fileParam_write ${parRoot} ${parName} ${parValue}
+   
+    lpReturn
+}
+
+
+
+function vis_fileParam_writePath {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 2 ]]
+
+    typeset parNameFullPath=$1
+    typeset parValue=$2
+
+    opDo fileParam_writePath ${parNameFullPath} ${parValue}
+    
+    lpReturn
+}
+
+
+function vis_fileParam_read {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 2 ]]
+
+    typeset parRoot=$1
+    typeset parName=$2
+
+    opDo fileParam_read ${parRoot} ${parName}
+   
+    lpReturn
+}
+
+function vis_fileParam_readPath {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    typeset parNameFullPath=$1
+
+    opDo fileParam_readPath ${parNameFullPath}
+   
+    lpReturn
 }
 
 

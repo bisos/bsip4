@@ -62,6 +62,8 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
+. ${opBinBase}/fileParam_lib.sh
+
 # . ${opBinBase}/bxeDesc_lib.sh
 
 . ${opBinBase}/bystarHook.libSh
@@ -73,13 +75,13 @@ _CommentEnd_
 # . ${opBinBase}/bisosCurrents_lib.sh
 
 # PRE parameters
-typeset -t RegReqFile="MANDATORY"
+typeset -t regReqFile="MANDATORY"
 
 function G_postParamHook {
     # lpCurrentsGet
 
-    if [ "${RegReqFile}" != "MANDATORY" ] ; then
-	RegReqFile=$( FN_absolutePathGet ${RegReqFile} )
+    if [ "${regReqFile}" != "MANDATORY" ] ; then
+	regReqFile=$( FN_absolutePathGet ${regReqFile} )
     fi
 }
 
@@ -100,17 +102,17 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
-    oneRegReqFile="$( ls /bisos/var/bxae/bxeRegReq/A/system/A_system_bisos.2*.REGREQ | head -1 )"
-    if [ -z "${oneRegReqFile}" ] ; then
-	oneRegReqFile="Missing"
-	EH_problem "Missing oneRegReqFile"
+    oneregReqFile="$( ls /bisos/var/bxae/bxeRegReq/A/system/A_system_bisos.2*.REGREQ | head -1 )"
+    if [ -z "${oneregReqFile}" ] ; then
+	oneregReqFile="Missing"
+	EH_problem "Missing oneregReqFile"
     fi
     
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Register The bxeRegReq" )
-${G_myName} ${extraInfo} -p RegReqFile="${oneRegReqFile}" -i bxeDescCreate
+${G_myName} ${extraInfo} -p regReqFile="${oneregReqFile}" -i bxeDescCreate
 _EOF_
 }
 
@@ -119,7 +121,8 @@ _CommentBegin_
 _CommentEnd_
 
 function registrarBaseGet {
-    echo "/bisos/var/selfRegistrar"
+    # Before creation of intraSite, /bisos/var/init is used.
+    echo "/bisos/var/init/selfRegistrar"
 }
 
 function registrarROidGet {
@@ -152,34 +155,24 @@ selfRegParamSpecific () {
 bxeDescParamInitSpecificCommon () {
     EH_assert [[ $# -eq 1 ]]
     local thisDir=${1}
+    local thisPath="$(pwd)/${thisDir}"
 
     #
     # COMMON PARAMETERS
     #
-    echo ${nextNu} > ${thisDir}/bxeROid:mr
 
-    bxeOidGet ${nextNu} > ${thisDir}/bxeOid:mr    
+    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} bxeROid "${nextNu}"
+    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} bxeOid "$( bxeOidGet ${nextNu} )"
 
-    echo "${opRunHostName}" > ${thisDir}/BacsId:mr
+    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} bxeAutonomy  "${bc_autonomy}"
+    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} bxeType  "${bc_type}"
+    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} bxePrefix  "${bxePrefix}"    
 
-    echo "${bc_autonomy}" > ${thisDir}/bxeAutonomy:mr
-    
-    echo "${bc_type}" > ${thisDir}/bxeType:mr
+    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} RegReqOriginationMethod  "${bc_originationMethod}"    
+    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} requestingSysId "${opRunHostName}"
+    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} AdminContactEmail "${bc_email}"
 
-    echo "${bc_originationMethod}" > ${thisDir}/RegReqOriginationMethod:mr
-    
-    echo "${RegReqFileName}" > ${thisDir}/RegReqFileName:mr
-
-    echo "${bxePrefix}" > ${thisDir}/bxePrefix:dr
-
-    # acctBystarDomain
-    # acctMainDomain
-
-    #
-    # Admin PARAMETERS
-    #
-
-    echo "service@example.com" > ${thisDir}/AdminContactEmail:m
+    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} regReqFileName "${RegReqFileName}"
 }
 
 function bxeOidGet {
@@ -203,6 +196,7 @@ _EOF_
 bxeDescParamInitSpecific_A_system () {
     EH_assert [[ $# -eq 1 ]]
     local thisDir=${1}
+    local thisPath="$(pwd)/${thisDir}"    
 
     local rdnSelectorTag=""
 
@@ -212,7 +206,7 @@ bxeDescParamInitSpecific_A_system () {
     # SERVICE SPECIFIC PARAMETERS
     #
 
-    echo "${bc_sysName}" > ${thisDir}/sysName:m
+    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} sysName "${bc_sysName}"
 
     if (( selectorNu == 1 )) ; then
 	rdnSelectorTag=""
@@ -220,7 +214,7 @@ bxeDescParamInitSpecific_A_system () {
 	rdnSelectorTag="_${selectorNu}"
     fi
 
-    echo "${bc_sysName}${rdnSelectorTag}" > ${thisDir}/rdn:m
+    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} rdn "${bc_sysName}${rdnSelectorTag}"
 }
 
 
@@ -238,12 +232,14 @@ bxeDescParamInitSpecific () {
 
 bxeDescCheckDuplicateSpecificCommon () {
     EH_assert [[ $# -eq 1 ]]
-    
-    lpDo fileParamsLoadVarsFromBaseDir  ${1}
+    local thisDir=${1}
+    local thisPath="$(pwd)/${thisDir}"    
 
-    thisRegReqFileName=$( FN_absolutePathGet ${cp_RegReqFileName} )
-    if [ "${thisRegReqFileName}" == "${RegReqFile}" ] ; then
-	ANT_cooked "DUPLICATE RegReqFile=${RegReqFile}"
+    local cp_regReqFileName=$( fileParamManage.py  -i fileParamRead  ${thisPath} regReqFileName )
+    
+    thisregReqFileName=$( FN_absolutePathGet ${cp_regReqFileName} )
+    if [ "${thisregReqFileName}" == "${regReqFile}" ] ; then
+	ANT_cooked "DUPLICATE regReqFile=${regReqFile}"
 	return 0
     else
 	return 101
@@ -252,9 +248,14 @@ bxeDescCheckDuplicateSpecificCommon () {
 
 bxeDescCheckDuplicateSpecific_A_system () {
     EH_assert [[ $# -eq 1 ]]
+    local thisDir=${1}
+    local thisPath="$(pwd)/${thisDir}"    
     local retVal=""
+    
     bxeDescCheckDuplicateSpecificCommon ${1}
     retVal=$?
+
+    local cp_sysName=$( fileParamManage.py  -i fileParamRead  ${thisPath} sysName )    
     
     if [ "${bc_sysName}_" == "${cp_sysName}_" ] ; then
 	ANT_cooked "$1: DUPLICATE, ${selectorNu}"
@@ -274,11 +275,11 @@ bxeDescCheckDuplicateSpecific () {
 
 vis_bxeDescCreate () {
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [[ "${RegReqFile}" != "MANDATORY" ]]
+    EH_assert [[ "${regReqFile}" != "MANDATORY" ]]
 
     local thisDir=""
     
-    . ${RegReqFile}
+    . ${regReqFile}
     RegReqContainer
 
     autonomy="${bc_autonomy}"
@@ -313,13 +314,13 @@ vis_bxeDescCreate () {
 
     opDoExit cd ${thisDir}
 
-    echo "date=\"$( date )\"" >>  ${RegReqFile}
-    echo "BxeDesc=$( pwd )" >> ${RegReqFile}
+    echo "date=\"$( date )\"" >>  ${regReqFile}
+    echo "BxeDesc=$( pwd )" >> ${regReqFile}
 
     opDo sudo chown -R bisos:bisos .
 
-    opDo pwd 1>&2
-    opDo grep ^ *  1>&2
+    #opDo pwd 1>&2
+    #opDo grep ^ *  1>&2
 
     pwd
 }

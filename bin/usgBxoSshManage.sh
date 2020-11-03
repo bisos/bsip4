@@ -74,16 +74,21 @@ _CommentEnd_
 . ${opBinBase}/bisosCurrents_lib.sh
 
 # PRE parameters
-typeset -t bxo=""
+typeset -t bxoId=""
 typeset -t usg=""
 
 function G_postParamHook {
-    bxoHome=$( FN_absolutePathGet ~${bxo} )
+
+    bxoIdPrepValidate
+    
+    bxoHome=$( FN_absolutePathGet ~${bxoId} )
 
     if [ -z "${usg}" ] ; then
 	usg=$( id -u -n )
     fi
     usgHome=$( FN_absolutePathGet ~${usg} )
+
+    usgSshConfigSeg_baseDir=${usgHome}/.ssh/configSeg    
     
     lpCurrentsGet
 }
@@ -101,7 +106,7 @@ function vis_examples {
     #typeset examplesInfo="${extraInfo} ${runInfo}"
     typeset examplesInfo="${extraInfo}"
 
-    local oneBxo=${currentBxoUname}
+    local oneBxoId=${currentBxoId}
     #local oneGitBxSeLn="git.bysource.org"
     local oneGitBxSeLn="192.168.0.56"
 
@@ -110,35 +115,41 @@ function vis_examples {
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
-$( examplesSeperatorChapter "Full Actions" )
-${G_myName} ${examplesInfo} -p bxo=${oneBxo} -i fullUpdate   
-${G_myName} ${examplesInfo} -p bxo=${oneBxo} -i usgBxoFullUpdate
+${G_myName} ${examplesInfo} -p usg=${oneUsg} -p bxoId=${oneBxoId} -i usgBxoFullUpdate
+${G_myName} ${examplesInfo} -p usg=${oneUsg} -p bxoId=${oneBxoId} -i usgBxoFullDelete
 $( examplesSeperatorChapter "Bxo Ssh Private Keys" )
 $( examplesSeperatorSection "lcaSshAdmin.sh" )
 lcaSshAdmin.sh
 lcaSshAdmin.sh -p localUser=lsipusr -p remoteHost=cvs.bysource.org -i hostIsInKnownHostsFile
-lcaSshAdmin.sh -p localUser=${oneBxo} -i userKeyVerify
-lcaSshAdmin.sh -p localUser=${oneBxo} -i userKeyUpdate
-${G_myName} ${examplesInfo} -p bxo=${oneBxo} -i bxoSshAcctKeyVerify
-${G_myName} ${examplesInfo} -p bxo=${oneBxo} -i bxoSshAcctKeyUpdate
-$( examplesSeperatorSection "Ssh Invoker Keys" )
-${G_myName} ${examplesInfo} -p usg=${oneUsg} -p bxo=${oneBxo} -i usgAcctBxoCredentialsUpdate
-${G_myName} ${examplesInfo} -p usg=${oneUsg} -i usgAcctBxoList
-$( examplesSeperatorChapter "Ssh Config File Manipulation" )
+lcaSshAdmin.sh -p localUser=${oneBxoId} -p sshDir=rbxe/credentials/ssh -i userKeyVerify
+lcaSshAdmin.sh -p localUser=${oneBxoId} -p sshDir=rbxe/credentials/ssh -i userKeyUpdate
+${G_myName} ${examplesInfo} -p bxoId=${oneBxoId} -i bxoSshKeyVerify
+${G_myName} ${examplesInfo} -p bxoId=${oneBxoId} -i bxoSshKeyUpdate
+$( examplesSeperatorSection "USG Ssh Invoker Keys" )
+${G_myName} ${examplesInfo} -p usg=${oneUsg} -p bxoId=${oneBxoId} -i usgAcctBxoCredentialsUpdate bxoPriv
+${G_myName} ${examplesInfo} -p usg=${oneUsg} -p bxoId=${oneBxoId} -i usgAcctBxoCredentialsDelete bxoPriv
+${G_myName} ${examplesInfo} -p usg=${oneUsg} -i usgAcctCredentialsList bxoPriv
+$( examplesSeperatorChapter "USG Ssh Config File Manipulation" )
+$( examplesSeperatorSection "USG Ssh Config Segments Base" )
+${G_myName} ${extraInfo} -i usgSshConfigSegBasePrep
+${G_myName} -i usgSshConfigSegBaseList
+$( examplesSeperatorSection "USG Ssh Bxo Config Segment File Update" )
+${G_myName} -p bxoId=${oneBxoId} -i bxoConfigSegStdout bxoPriv 192.168.0.56
+${G_myName} ${extraInfo} -p bxoId=${oneBxoId} -i bxoConfigSegStdout bxoPriv 192.168.0.56  # Verbose
+${G_myName} ${extraInfo} -p bxoId=${oneBxoId} -i bxoConfigSegUpdate bxoPriv 192.168.0.56
+${G_myName} ${extraInfo} -p bxoId=${oneBxoId} -i bxoConfigSegDelete bxoPriv
+${G_myName} ${extraInfo} -p bxoId=${oneBxoId} -i bxoConfigSegExists bxoPriv
+$( examplesSeperatorSection "USG Ssh Config File Update" )
 ${G_myName} ${extraInfo} -i configFileNameGet
-${G_myName} ${extraInfo} -i sshFullConfigStdout
 ${G_myName} ${extraInfo} -i configSegsCollectStdout
-${G_myName} ${extraInfo} -p bxo=${oneBxo} -i configSegmentGitBxSeLnStdout ${oneGitBxSeLn} 2> /dev/null
-${G_myName} ${extraInfo} -p bxo=${oneBxo} -i configSegmentGitBxSeLnStdout ${oneGitBxSeLn} 2> /dev/null > ~/.ssh/dest-${oneBxo}-${oneGitBxSeLn}
-${G_myName} ${extraInfo} -p bxo=${oneBxo} -i configSegmentStdout 2> /dev/null  # Per Bxo Segment
 ${G_myName} ${extraInfo} -i configFileUpdate
 ${G_myName} ${extraInfo} -i configFileVerify
 ${G_myName} ${extraInfo} -i configFileShow
 ${G_myName} ${extraInfo} -i configFileDelete
 $( examplesSeperatorSection "Tests And Verifications" )
 $( examplesSeperatorChapter "Access, Verification And Test" )
-${G_myName} ${extraInfo} -p bxo="${oneBxo}" -i  sshAccessGitolite
-${G_myName} ${extraInfo} -p bxo="${oneBxo}" -i  sshAccessGitlab
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i  sshAccessGitolite
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i  sshAccessGitlab
 _EOF_
 }
 
@@ -151,75 +162,74 @@ _CommentBegin_
 *      ======[[elisp:(org-cycle)][Fold]]====== Full Actions
 _CommentEnd_
 
-function vis_fullUpdate {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    opDo vis_usgBxoFullUpdate
-    lpReturn
-}
-
-
 function vis_usgBxoFullUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${usg}" ]    
+    
+    opDo vis_usgAcctBxoCredentialsUpdate bxoPriv
 
-    #if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
-
-    EH_assert bxoCentralPrep
-    opDoRet bxoAcctAnalyze ${bxo}
-
-    opDo vis_bxoSshAcctKeyUpdate
-
-    opDo vis_usgAcctBxoCredentialsUpdate
+    opDo vis_bxoConfigSegUpdate bxoPriv 192.168.0.56
+    
     opDo vis_configFileUpdate
 
     lpReturn
 }
 
 
+function vis_usgBxoFullDelete {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${usg}" ]    
+    
+    opDo vis_usgAcctBxoCredentialsDelete  bxoPriv
+
+    opDo vis_bxoConfigSegDelete bxoPriv
+    
+    opDo vis_configFileUpdate
+
+    lpReturn
+}
+
 
 _CommentBegin_
-*      ======[[elisp:(org-cycle)][Fold]]====== Manage Bxo Ssh Acct Keys
+*      ======[[elisp:(org-cycle)][Fold]]====== Manage Bxo Ssh Config Seg
 _CommentEnd_
 
-
-function vis_bxoSshAcctKeyVerify {
+function vis_usgSshConfigSegBasePrep {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-    describeF
+		       }
+    
 
-    EH_assert bxoCentralPrep
-    opDoRet bxoAcctAnalyze ${bxo}
-
-    opDo lcaSshAdmin.sh -p localUser=${bxo} -i userKeyVerify
+    if [ ! -d "${usgSshConfigSeg_baseDir}" ] ; then
+	lpDo mkdir "${usgSshConfigSeg_baseDir}"
+    fi
 
     lpReturn
 }
 
-
-function vis_bxoSshAcctKeyUpdate {
+function vis_usgSshConfigSegBaseList {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-    describeF
+		       }
 
-    EH_assert bxoCentralPrep
-    opDoRet bxoAcctAnalyze ${bxo}
-
-    opDo lcaSshAdmin.sh -p localUser=${bxo} -i userKeyUpdate
+    lpDo vis_usgSshConfigSegBasePrep
+    lpDo ls "${usgSshConfigSeg_baseDir}"
 
     lpReturn
 }
+
 
 
 _CommentBegin_
@@ -230,67 +240,70 @@ _CommentEnd_
 function vis_usgAcctBxoCredentialsUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-Take the Bxo's public and private keys and copy them to lsipusr.
+Take the specified BxO's (${bxoId}) public and private keys and copy them to specified usg (${usg}).
 _EOF_
     }
-    EH_assert [[ $# -eq 0 ]]
+    EH_assert [[ $# -eq 1 ]]
 
     EH_assert [ ! -z "${usg}" ]
-    EH_assert [ ! -z "${bxo}" ]
+    EH_assert [ ! -z "${bxoId}" ]
 
-    # EH_assert bxoCentralPrep
-    opDoRet bxoAcctAnalyze ${bxo}
+    local bxoGitLabel="$1"    
 
-    #opDo sudo cp ${bxoHome}/.ssh/id_dsa.pub ${usgHome}/.ssh/${bxo}.pub
-    opDo sudo cp ${bxoHome}/.ssh/id_rsa.pub ${usgHome}/.ssh/${bxo}.pub
+    opDo sudo cp ${bxoHome}/$(rbxeSshBase)/id_rsa.pub ${usgHome}/.ssh/${bxoGitLabel}_${bxoId}_rsa.pub
     EH_retOnFail
 
-    #opDo sudo cp ${bxoHome}/.ssh/id_dsa ${usgHome}/.ssh/${bxo}
-    opDo sudo cp ${bxoHome}/.ssh/id_rsa ${usgHome}/.ssh/${bxo}
+    opDo sudo cp ${bxoHome}/$(rbxeSshBase)/id_rsa ${usgHome}/.ssh/${bxoGitLabel}_${bxoId}_rsa
     EH_retOnFail
 
-    opDo sudo chown ${usg}:bisos ${usgHome}/.ssh/${bxo}.pub
-    opDo sudo chown ${usg}:bisos ${usgHome}/.ssh/${bxo}
+    opDo sudo chown ${usg}:bisos ${usgHome}/.ssh/${bxoGitLabel}_${bxoId}_rsa.pub
+    opDo sudo chown ${usg}:bisos ${usgHome}/.ssh/${bxoGitLabel}_${bxoId}_rsa
 
-    opDo chmod 644 ${usgHome}/.ssh/${bxo}.pub
-    opDo chmod 600 ${usgHome}/.ssh/${bxo}
+    opDo chmod 644 ${usgHome}/.ssh/${bxoGitLabel}_${bxoId}_rsa.pub
+    opDo chmod 600 ${usgHome}/.ssh/${bxoGitLabel}_${bxoId}_rsa
 
     lpReturn
 }
 
-function vis_destUsgAcctBxoList {
+
+function vis_usgAcctBxoCredentialsDelete {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-List Bxo keys at USG ssh client.
+Delete the specified BxO's (${bxoId}) public and private keys and copy them to specified usg (${usg}).
 _EOF_
     }
-    EH_assert [[ $# -eq 0 ]]
+    EH_assert [[ $# -eq 1 ]]
 
-    typeset lsResults=$( inBaseDirDo ${usgHome}/.ssh ls dest-*-[0-9][0-9][0-9][0-9][0-9]-* 2> /dev/null )
+    EH_assert [ ! -z "${usg}" ]
+    EH_assert [ ! -z "${bxoId}" ]
 
-    if [ -z "${lsResults}" ] ; then
-	ANT_raw "No Bxo Accounts found in ${usgHome}/.ssh"
-	return 1
-    else
-	echo ${lsResults}
-	return 0
-    fi
+    local bxoGitLabel="$1"    
+
+    opDo sudo rm ${usgHome}/.ssh/${bxoGitLabel}_${bxoId}_rsa.pub
+    EH_retOnFail
+
+    opDo sudo rm ${usgHome}/.ssh/${bxoGitLabel}_${bxoId}_rsa
+    EH_retOnFail
+
+    lpReturn
 }
 
 
-function vis_usgAcctBxoList {
+function vis_usgAcctCredentialsList {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 List Bxo keys at USG ssh client.
+
 _EOF_
     }
-    EH_assert [[ $# -eq 0 ]]
+    EH_assert [[ $# -eq 1 ]]
 
-    #typeset lsResults=$( inBaseDirDo ${usgHome}/.ssh ls * 2> /dev/null )
-    local lsResults=$( inBaseDirDo ${usgHome}/.ssh ls ai-* | grep -v pub )
+    local bxoGitLabel="$1"    
+
+    typeset lsResults=$( inBaseDirDo ${usgHome}/.ssh ls ${bxoGitLabel}_*_rsa | grep -v pub 2> /dev/null )
 
     if [ -z "${lsResults}" ] ; then
-	ANT_raw "No Bxo Accounts found in ${usgHome}/.ssh"
+	ANT_raw "No credentials found in ${usgHome}/.ssh"
 	return 1
     else
 	echo ${lsResults}
@@ -304,39 +317,96 @@ _CommentBegin_
 _CommentEnd_
 
 
-function vis_configFileNameGet {
+function vis_bxoConfigSegStdout {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
-    EH_assert [[ $# -eq 0 ]]
-    #EH_assert bxoCentralPrep
-    echo $( FN_absolutePathGet ${usgHome}/.ssh/config )
+    EH_assert [[ $# -eq 2 ]]
+    EH_assert [[ ! -z "${bxoId}" ]]    
+
+    local bxoGitLabel="$1"
+    local bxoGitServerName="$2"
+
+    cat  << _EOF_
+# BxoId=${bxoId}  bxoGitLabel=${bxoGitLabel}  bxoGitServerName=${bxoGitServerName}
+Host ${bxoGitLabel}_${bxoId}
+	Hostname ${bxoGitServerName}
+	User git
+	IdentityFile ~/.ssh/${bxoGitLabel}_${bxoId}_rsa
+_EOF_
 
     lpReturn
 }
 
 
-function vis_sshFullConfigStdout {
+function vis_bxoConfigSegUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
-    EH_assert [[ $# -eq 0 ]]
+    EH_assert [[ $# -eq 2 ]]
+    EH_assert [[ ! -z "${bxoId}" ]]    
 
-    typeset bxAcctsList=$( vis_usgAcctBxoList )
-    EH_retOnFail
+    local bxoGitLabel="$1"
+    local bxoGitServerName="$2"
 
-    cat  << _EOF_
-# Machine Generated by ${G_myName}:${G_thisFunc} on $( date ) -- Do Not Hand Edit
-_EOF_
+    local outFileName="${usgSshConfigSeg_baseDir}/${bxoGitLabel}_${bxoId}.configSeg"
 
-    
-    for thisAcct in ${bxAcctsList}; do
-	bxo=${thisAcct}
-	vis_configSegmentStdout
-    done
+    lpDo eval vis_bxoConfigSegStdout ${bxoGitLabel} ${bxoGitServerName} \> "${outFileName}"
+
+    lpReturn
 }
+
+function vis_bxoConfigSegExists {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+    EH_assert [[ ! -z "${bxoId}" ]]    
+
+    local bxoGitLabel="$1"
+    local retVal=0
+
+    local outFileName="${usgSshConfigSeg_baseDir}/${bxoGitLabel}_${bxoId}.configSeg"
+
+    if [ -f ${outFileName} ] ; then
+	# ANT_cooked "${outFileName} exists"
+	retVal=0
+    else
+	# ANT_cooked "${outFileName} does not exists"
+	retVal=1
+    fi
+
+    lpReturn ${retVal}
+}
+
+
+function vis_bxoConfigSegDelete {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+    EH_assert [[ ! -z "${bxoId}" ]]    
+
+    local bxoGitLabel="$1"
+
+    local outFileName="${usgSshConfigSeg_baseDir}/${bxoGitLabel}_${bxoId}.configSeg"
+
+    lpDo sudo rm "${outFileName}"
+
+    lpReturn
+}
+
+
+
+
+function vis_configFileNameGet {
+    echo $( FN_absolutePathGet ${usgHome}/.ssh/config )
+}
+
 
 function vis_configSegsCollectStdout {
     G_funcEntry
@@ -345,102 +415,18 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    typeset destBxAcctsList=$( vis_destUsgAcctBxoList )
+    typeset segFilesList=$( vis_usgSshConfigSegBaseList )
     EH_retOnFail
 
     cat  << _EOF_
 # Machine Generated by ${G_myName}:${G_thisFunc} on $( date ) -- Do Not Hand Edit
-_EOF_
 
+_EOF_
     
-    for thisDestFile in ${destBxAcctsList}; do
-	inBaseDirDo ${usgHome}/.ssh cat ${thisDestFile}
+    for thisSegFile in ${segFilesList}; do
+	inBaseDirDo "${usgSshConfigSeg_baseDir}" cat ${thisSegFile}
+	echo ""
     done
-}
-
-
-function vis_configSegmentGitBxSeLnStdout {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 1 ]]
-
-    gitBxSeLn="$1"
-
-    typeset thisFunc="${G_thisFunc}"
-
-    EH_assert bxoCentralPrep
-    opDoRet bxoAcctAnalyze ${bxo}
-
-    cat  << _EOF_
-# Bxo=${bxo}  gitBxSeLn=${gitBxSeLn}
-Host ${bxo}.${gitBxSeLn}
-	Hostname ${gitBxSeLn}
-	User git
-	IdentityFile ~/.ssh/${bxo}
-_EOF_
-
-    lpReturn
-}
-
-function vis_configSegmentStdout {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    typeset thisFunc="${G_thisFunc}"
-
-    EH_assert bxoCentralPrep
-    # opDoRet bxoAcctAnalyze ${bxo}
-
-    if [ -f  ${usgHome}/.ssh/${bxo}.dest ] ; then
-
-	cat ${usgHome}/.ssh/${bxo}.dest |
-	while read  thisLine  ; do
-	    destAddr=$( echo  ${thisLine} | cut -d ':' -f 1 )
-	    destUser=$( echo  ${thisLine} | cut -d ':' -f 2 )
-
-	    cat  << _EOF_
-# Bxo=${bxo} -- destAddr=${destAddr} destUser=${destUser}
-Host ${bxo}%${destAddr}
-	Hostname ${destAddr}
-	User ${bxo}
-	IdentityFile ~/.ssh/${bxo}
-_EOF_
-	done
-    fi
-
-    cat  << _EOF_
-# Bxo=${bxo}
-Host 192.168.0.56
-	Hostname 192.168.0.56
-	User ${bxo}
-	IdentityFile ~/.ssh/${bxo}
-_EOF_
-
-    lpReturn
-}
-
-function vis_configFileUpdateOther {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-    #EH_assert bxoCentralPrep
-
-    typeset thisConfigFile=$( vis_configFileNameGet )
-
-    FN_fileSafeKeep ${thisConfigFile}
-
-    vis_configSegsCollectStdout > ${thisConfigFile}
-
-    opDo chmod 600 ${thisConfigFile}
-
-    opDo ls -l ${thisConfigFile}
 }
 
 
@@ -456,12 +442,13 @@ _EOF_
 
     FN_fileSafeKeep ${thisConfigFile}
 
-    vis_sshFullConfigStdout > ${thisConfigFile}
+    eval vis_configSegsCollectStdout  \> ${thisConfigFile}
 
     opDo chmod 600 ${thisConfigFile}
 
     opDo ls -l ${thisConfigFile}
 }
+
 
 function vis_configFileVerify {
     G_funcEntry
@@ -521,22 +508,22 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     EH_assert bxoCentralPrep
-    bxoAcctAnalyze ${bxo}
+    bxoAcctAnalyze ${bxoId}
 
     #bxurl="git.${cp_acctMainBaseDomain}"
     bxurl="192.168.0.56"
 
-    if [ -f  ${usgHome}/.ssh/${bxo}.dest ] ; then
+    if [ -f  ${usgHome}/.ssh/${bxoId}.dest ] ; then
 
-	cat ${usgHome}/.ssh/${bxo}.dest |
+	cat ${usgHome}/.ssh/${bxoId}.dest |
 	while read  thisLine  ; do
 	    destAddr=$( echo  ${thisLine} | cut -d ':' -f 1 )
 	    destUser=$( echo  ${thisLine} | cut -d ':' -f 2 )
 
 	    cat  << _EOF_
-ssh -vT git@${bxo}%${destAddr}
-ssh ${bxo}%${destAddr}
-ssh git@${bxo}%${destAddr} info
+ssh -vT git@${bxoId}%${destAddr}
+ssh ${bxoId}%${destAddr}
+ssh git@${bxoId}%${destAddr} info
 _EOF_
 	done
     fi
@@ -567,38 +554,38 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     EH_assert bxoCentralPrep
-    bxoAcctAnalyze ${bxo}
+    bxoAcctAnalyze ${bxoId}
 
     #bxurl="git.${cp_acctMainBaseDomain}"
     bxurl="192.168.0.56"
 
-    if [ -f  ${usgHome}/.ssh/${bxo}.dest ] ; then
+    if [ -f  ${usgHome}/.ssh/${bxoId}.dest ] ; then
 
-	cat ${usgHome}/.ssh/${bxo}.dest |
+	cat ${usgHome}/.ssh/${bxoId}.dest |
 	while read  thisLine  ; do
 	    destAddr=$( echo  ${thisLine} | cut -d ':' -f 1 )
 	    destUser=$( echo  ${thisLine} | cut -d ':' -f 2 )
 
 	    cat  << _EOF_
-ssh -vT git@${bxo}%${destAddr}
-ssh ${bxo}%${destAddr}
-ssh git@${bxo}%${destAddr} info
+ssh -vT git@${bxoId}%${destAddr}
+ssh ${bxoId}%${destAddr}
+ssh git@${bxoId}%${destAddr} info
 _EOF_
 	done
     fi
 
     cat  << _EOF_
-ssh -vT ${bxo}@${bxurl}
+ssh -vT ${bxoId}@${bxurl}
 ssh ${bxurl}
 ssh git@${bxurl} info
 _EOF_
 
-    bxurl=${bxo}.git.bysource.org
+    bxurl=${bxoId}.git.bysource.org
 
     cat  << _EOF_
-ssh -vT ${bxo}@${bxurl} LLL
+ssh -vT ${bxoId}@${bxurl} LLL
 ssh ${bxurl}
-ssh ${bxo}@${bxurl} info
+ssh ${bxoId}@${bxurl} info
 _EOF_
 
 

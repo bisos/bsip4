@@ -1,5 +1,7 @@
 #!/bin/bash # -*- mode: shellscript-mode; -*-
 
+
+
 ####+BEGIN: bx:bash:top-of-file :vc "cvs" :partof "bystar" :copyleft "halaal+brief"
 typeset RcsId="$Id: fileParam.libSh,v 1.3 2017-03-11 07:34:10 lsipusr Exp $"
 # *CopyLeft*
@@ -8,6 +10,15 @@ typeset RcsId="$Id: fileParam.libSh,v 1.3 2017-03-11 07:34:10 lsipusr Exp $"
 # See PLPC-120001 for restrictions.
 # This is a Halaal Poly-Existential intended to remain perpetually Halaal.
 ####+END:
+
+####+BEGIN: bx:bsip:bash/libLoadOnce :libName "auto"
+if [ -z "${fileParam_lib:-}" ] ; then
+    bxoLib="LOADED" ; TM_trace 7 "fileParam_lib :: Loading Library -- /bisos/bsip/bin/fileParam_lib.sh"
+else
+    TM_trace 7 "fileParam_lib :: Prviously Loaded -- Skipping /bisos/bsip/bin/fileParam_lib.sh" ; return
+fi
+####+END:
+
 
 _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  IIFs          :: vis_describe [[elisp:(org-cycle)][| ]]
@@ -38,7 +49,7 @@ _EOF_
     typeset parName=$2
     typeset parValue=$3
 
-    opDo fileParamManage.py -i fileParamWrite -- "${parRoot}" "${parName}" "${parValue}"
+    opDo fileParamManage.py -i fileParamWrite "${parRoot}" "${parName}" "${parValue}"
    
     lpReturn
 }
@@ -116,7 +127,7 @@ _EOF_
     typeset parNameFullPath=$1
     typeset parValue=$2
 
-    opDo fileParamManage.py -i fileParamWrite -- "${parNameFullPath}" "${parValue}"
+    opDo fileParamManage.py -i fileParamWrite "${parNameFullPath}" "${parValue}"
     
     lpReturn
 }
@@ -132,7 +143,7 @@ _EOF_
     typeset parRoot=$1
     typeset parName=$2
 
-    opDo fileParamManage.py  -i fileParamRead -- "${parRoot}" "${parName}"
+    opDo fileParamManage.py  -i fileParamRead "${parRoot}" "${parName}"
    
     lpReturn
 }

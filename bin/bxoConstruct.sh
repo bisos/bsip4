@@ -62,28 +62,24 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
-. ${opBinBase}/bxo_lib.sh
 
 . ${opBinBase}/bxeDesc_lib.sh
 
 . ${opBinBase}/bystarHook.libSh
 
-. ${opBinBase}/bystarLib.sh
-
 . ${opBinBase}/lcnFileParams.libSh
 
 # . ${opBinBase}/bystarInfoBase.libSh
 
-. ${opBinBase}/bisosCurrents_lib.sh
+# . ${opBinBase}/bisosCurrents_lib.sh
 
 # PRE parameters
 
-typeset -t bxeDesc="MANDATORY"
 typeset -t bxoId=""
 # usg=""
 
 function G_postParamHook {
-    bxoIdPrepValidate    
+    # lpCurrentsGet
 
     if [ "${bxeDesc}" != "MANDATORY" ] ; then
      	bxeDesc=$( FN_absolutePathGet ${bxeDesc} )
@@ -92,7 +88,6 @@ function G_postParamHook {
      	bxoHome=$( FN_absolutePathGet ~${bxoId} )
     fi
 
-    bisosCurrentsGet
 }
 
 
@@ -116,38 +111,19 @@ function vis_examples {
     oneBxeDesc="/bisos/var/bxae/bxeDesc/A/system/as-bisos"
 
     #oneBxoId="as-bisos"
-    oneBxoId="${currentBxoId}"
-    oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )    
+    oneBxoId="as-test1_5"    
     
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
-$( examplesSeperatorChapter "Realize A BxE -- Create BxoAcct and Push Initial Repos" )
-$( examplesSeperatorSection "BxO Local Acct Creation" )
+$( examplesSeperatorChapter "Construct A BxO From Its Realized BxE" )
+$( examplesSeperatorSection "BxO-ISO Retrieval" )
+bxoGitlab.py -v 20 --bxoId="as-bisos" --outFile="/tmp/git-as-bisos-iso.tar"  -i reposList iso
+mkdir /tmp/as-bisos-iso.git; tar xf /tmp/git-as-bisos-iso.tar
+git clone /tmp/as-bisos-iso.git  ~bxoId/var/iso
+$( examplesSeperatorSection "BxO Creation Based On ISO Info" )
 ${G_myName} ${extraInfo} -p bxeDesc="${oneBxeDesc}" -i bxoAcctCreate
-$( examplesSeperatorSection "BxO/rbxe Setup" )
-${G_myName} ${extraInfo} -p bxeDesc="${oneBxeDesc}" -i rbxeSetup
-${G_myName} ${extraInfo} -p bxeDesc="${oneBxeDesc}" -i bxoBxeDescCopy
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i bxoCredentialsUpdate
-${G_myName} ${extraInfo} -f -p bxoId="${oneBxoId}" -i bxoCredentialsUpdate
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i bxoGitServerDescUpdate
-${G_myName} ${extraInfo} -p bxeDesc="${oneBxeDesc}" -i getBxoId
-$( examplesSeperatorSection "BxO GitServer Provision -- Git Acct Creation" )
-bxoGitlab.py
-bxoGitlab.py -v 20 --bxoId="${oneBxoId}" -i acctCreate 
-bxoGitlab.py -v 20 --bxoId="${oneBxoId}" -i reposList 
-bxoGitlab.py -v 20 --bxoId="${oneBxoId}" -i reposCreate 
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i gitServerAcctCreate
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i gitServerPubkeyUpload
-$( examplesSeperatorSection "BxO Ssh Config Update" )
-usgBxoSshManage.sh
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -p usg=current -i sshConfigUpdate
-$( examplesSeperatorSection "Initial Repos Push" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i initialReposPush
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoCreateAndPush "rbxe" "${oneBxoHome}/rbxe" "priv"
-$( examplesSeperatorSection "Full Realization" )
-${G_myName} ${extraInfo} -p bxeDesc="${oneBxeDesc}" -i realize
-$( examplesSeperatorChapter "bxoGitlab.py -- For Git Server Provisioning" )
+$( examplesSeperatorSection "BxO Repos Clone Map" )
 _EOF_
 }
 
@@ -165,7 +141,7 @@ _EOF_
 
     lpDo vis_bxoAcctCreate
 
-    lpDo vis_rbxeSetup
+    lpDo vis_isoSetup
 
     local cp_bxePrefix=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxePrefix )
     local cp_rdn=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} rdn )
@@ -173,9 +149,9 @@ _EOF_
 
     # The rest will be based on bxoId
 
-    lpDo vis_rbxeSetup    # create the ~bxo/
+    lpDo vis_isoSetup
 
-    lpDo vis_gitAcct
+    lpDo vis_bxoGitServerProvision
 
     lpDo vis_sshConfigUpdate
 
@@ -223,7 +199,7 @@ _EOF_
 }
 
 
-function vis_rbxeSetup {
+function vis_isoSetup {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Even though bxo exists at this stage, the bxeDesc param is needed for the cp.
@@ -235,11 +211,11 @@ _EOF_
     local cp_bxePrefix=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxePrefix )
     local cp_rdn=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} rdn )        
 
-    bxoId="${cp_bxePrefix}-${cp_rdn}"
+    local bxeLocalName="${cp_bxePrefix}-${cp_rdn}"
 
-    bxoHome=$( FN_absolutePathGet ~${bxoId} )
+    bxoHome=$( FN_absolutePathGet ~${bxeLocalName} )
     
-    lpDo sudo -u ${bxoId} mkdir ${bxoHome}/rbxe
+    lpDo sudo -u ${bxeLocalName} mkdir ${bxoHome}/iso
 
     lpDo vis_bxoBxeDescCopy
 
@@ -247,7 +223,6 @@ _EOF_
 
     lpDo vis_bxoGitServerDescUpdate    
 
-    
     lpReturn
 }
 
@@ -268,11 +243,11 @@ _EOF_
 
     bxoHome=$( FN_absolutePathGet ~${bxeLocalName} )
 
-    if [ ! -d ${bxoHome}/rbxe ] ; then
-	lpDo mkdir ${bxoHome}/rbxe
+    if [ ! -d ${bxoHome}/iso ] ; then
+	lpDo sudo -u ${bxeLocalName} mkdir ${bxoHome}/iso
     fi
     
-    lpDo cp -r ${bxeDesc} ${bxoHome}/rbxe/bxeDesc
+    lpDo sudo -u ${bxeLocalName} cp -r ${bxeDesc} ${bxoHome}/iso/bxeDesc
 
     lpReturn
 }
@@ -280,35 +255,13 @@ _EOF_
 function vis_bxoCredentialsUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-This should be subjected to forceMode and should not recreate
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [[ ! -z "${bxoId}" ]]
+    EH_assert [[ ! -z "${bxoId}" ]]    
 
-    function bxoCredentialsUpdate {
-	lpDo vis_bxoSshKeyUpdate    # in bxo_lib.sh which calls lcaSshAdmin.sh
 
-	# Copy the above generated ssh keys to ~usg/.ssh
-	lpDo usgBxoSshManage.sh ${G_commandOptions} -p bxoId=${bxoId} -i usgAcctBxoCredentialsUpdate bxoPriv
-
-	# NOTYET -- Where should 192.168.0.56  come from?
-	# Create a .configSeg file
-	lpDo usgBxoSshManage.sh ${G_commandOptions} -p bxoId=${bxoId} -i bxoConfigSegUpdate bxoPriv 192.168.0.56    
-
-	lpDo usgBxoSshManage.sh ${G_commandOptions} -i configFileUpdate
-    }
-
-    if usgBxoSshManage.sh -p bxoId=${bxoId} -i bxoConfigSegExists bxoPriv ; then
-	if [ "${G_forceMode}" == "force" ] ; then
-	    ANT_raw "Re-Creating -- bxoConfigSegExists and forceMode is specified."	    
-	    lpDo bxoCredentialsUpdate
-	else
-	    ANT_raw "bxoConfigSegExists and forceMode is not specified."
-	fi
-    else
-	lpDo bxoCredentialsUpdate
-    fi
+    lpDo lcaSshAdmin.sh -p localUser=${bxoId} -p sshDir=iso/credentials/ssh -i userKeyUpdate    
     
     lpReturn
 }
@@ -321,13 +274,14 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
     EH_assert [[ ! -z "${bxoId}" ]]    
 
-    lpDo mkdir -p ${bxoHome}/rbxe/gitServerInfo
-    lpDo fileParamManage.py -i fileParamWrite ${bxoHome}/rbxe/gitServerInfo gitServer 192.168.0.56
-    
+    lpDo sudo -u ${bxoId} mkdir ${bxoHome}/iso/gitServerInfo
+
+    fileParamManage.py  -i fileParamWrite  ${bxoHome}/iso/gitServerInfo gitServer 192.168.0.56
+
     lpReturn
 }
 
-function vis_gitServerAcctCreate {
+function vis_bxoGitServerProvision {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -337,28 +291,10 @@ _EOF_
 
     lpDo bxoGitlab.py -v 20 --bxoId="${bxoId}" -i acctCreate
 
-    lpReturn
-}
-
-function vis_gitServerPubkeyUpload {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert [[ ! -z "${bxoId}" ]]
-
-    local priv_pubkeyPath="${bxoHome}/rbxe/credentials/ssh/id_rsa.pub"
-
-    if [ -f "${priv_pubkeyPath}" ] ; then
-	lpDo bxoGitlab.py -v 20 --bxoId="${bxoId}" --keyName="priv-pubkey" -i pubkeyUpload ${priv_pubkeyPath}
-    else
-	EH_problem "Missing ${priv_pubkeyPath}"
-    fi	
+    lpDo bxoGitlab.py -v 20 --bxoId="${bxoId}" -i pubkeyUpload        
 
     lpReturn
 }
-
 
 function vis_sshConfigUpdate {
     G_funcEntry
@@ -368,42 +304,7 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
     EH_assert [[ ! -z "${bxoId}" ]]    
 
-    echo NOTYET usgBxoSshManage.sh
-
-    lpReturn
-}
-
-
-function vis_repoCreateAndPush {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 3 ]]
-    EH_assert [[ ! -z "${bxoId}" ]]
-
-    local repoName="$1"
-    local baseDir="$2"
-    local gitServerSelector="$3"
-
-    local gitServerUrl=git@bxoGit-${gitServerSelector}.${bxoId}:${bxoId}/${repoName}.git
-
-    local curUser=$( id -u -n )
-
-    lpDo bxoGitlab.py -v 20 --bxoId="${bxoId}" -i reposCreate ${repoName}      
-
-    #lpDo sudo chown -R "${curUser}":bisos ${baseDir}
-
-    # previous example of using bxoId user: 
-    # inBaseDirDo ${bxoHome}/rbxe sudo -u ${bxoId} git init
-    
-    inBaseDirDo ${baseDir} git init    
-    inBaseDirDo ${baseDir} git add .
-    inBaseDirDo ${baseDir} git commit -m "Initial bxeRealize.sh commit of ${baseDir}"
-
-    inBaseDirDo ${baseDir} git remote add origin ${gitServerUrl}
-    inBaseDirDo ${baseDir} git remote -v
-    inBaseDirDo ${baseDir} git push origin main
+    echo NOTYET
 
     lpReturn
 }
@@ -417,8 +318,19 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
     EH_assert [[ ! -z "${bxoId}" ]]
 
-    lpDo vis_repoCreateAndPush "rbxe" "${bxoHome}/rbxe" "priv"
+    lpDo bxoGitlab.py -v 20 --bxoId="${bxoId}" -i reposCreate iso       
     
+
+    lpDo sudo chown -R "${bxoId}":bisos ${bxoHome}/iso
+
+    inBaseDirDo ${bxoHome}/iso sudo -u ${bxoId} git init
+    inBaseDirDo ${bxoHome}/iso sudo -u ${bxoId} git add .
+    inBaseDirDo ${bxoHome}/iso sudo -u ${bxoId} git commit -m "bxeRealize.sh commit"
+
+    inBaseDirDo ${bxoHome}/iso sudo -u ${bxoId} git remote add origin git@bxogit.${bxoId}:${bxoId}/iso.git
+    inBaseDirDo ${bxoHome}/iso sudo -u ${bxoId} git remote -v
+    inBaseDirDo ${bxoHome}/iso sudo -u ${bxoId} git push origin main
+
     lpReturn
 }
 

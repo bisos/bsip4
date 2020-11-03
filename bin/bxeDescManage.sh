@@ -125,7 +125,7 @@ bxCentralRegistrar.sh
 bxCentralRegistrar.sh ${extraInfo} -p RegReqFile="${oneRegReqFile}" -i bxeDescCreate
 $( examplesSeperatorChapter "Manage bxeDesc" )
 $( examplesSeperatorSection "Registered BxeDesc Capture" )
-${G_myName} ${extraInfo} -p bxeDesc="${oneRegBxeDesc}" -i bxeDescCapture
+${G_myName} ${extraInfo} -p bxeDesc="${oneRegBxeDesc}" -i bxeDescStash
 $( examplesSeperatorSection "INFO" )
 ${G_myName} ${extraInfo} -p bxeDesc="${oneBxeDesc}" -i bxeDescInfo
 _EOF_

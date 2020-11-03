@@ -115,6 +115,7 @@ ${G_myName} ${extraInfo} -i currentsSetRecent
 ${G_myName} ${extraInfo} -i currentsFileCreate
 ${G_myName} ${extraInfo} -i setParam currentBxoUname ${currentBxoUname}
 ${G_myName} ${extraInfo} -i validateParam currentBxoUname ${currentBxoUname}
+${G_myName} ${extraInfo} -i setParam currentBxoId ${currentBxoId}
 ${G_myName} ${extraInfo} -i setParam currentBxoAutonomousUname ${currentBxoAutonomousUname}
 ${G_myName} ${extraInfo} -i setParam currentBxoUeUname ${currentBxoUeUname}
 ${G_myName} ${extraInfo} -i setParam currentBxoSiteUname ${currentBxoSiteUname}
@@ -140,7 +141,10 @@ function vis_currentsGetThenShow {
   lpCurrentsGet
   lpCurrentsShow
 
-  lpEach.sh -i prepend "bystarUname=" ${currentBxoUname} ${currentBxoAutonomousUname} 2> /dev/null | lpXparamsApply.sh -i xparamsProg bystarAcctInfo.sh -p bystarUname='${bystarUname}' -i bystarHereAnalyzeAcct_summary  1>&2
+
+  return
+  
+  # lpEach.sh -i prepend "bystarUname=" ${currentBxoUname} ${currentBxoAutonomousUname} 2> /dev/null | lpXparamsApply.sh -i xparamsProg bystarAcctInfo.sh -p bystarUname='${bystarUname}' -i bystarHereAnalyzeAcct_summary  1>&2
 
   #echo bystarUname=${currentBxoUname} | lpXparamsApply.sh -i xparamsProg bystarAcctInfo.sh -p bystarUname='${bystarUname}' -i bystarHereAnalyzeAcct_summary 1>&2
 

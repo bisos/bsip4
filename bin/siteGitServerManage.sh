@@ -1,21 +1,13 @@
 #!/bin/bash
 
-IimBriefDescription="Bx Controlled Service Entity Provisioning -- From RegReq to Realize"
+IimBriefDescription="NOTYET: Short Description Of The Module"
 
 ORIGIN="
 * Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee
 "
 
-####+BEGIN: bx:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
-### Args: :control "enabled|disabled|hide|release|fVar"  :vc "cvs|git|nil" :partof "bystar|nil" :copyleft "halaal+minimal|halaal+brief|nil"
-typeset RcsId="$Id: dblock-iim-bash.el,v 1.4 2017-02-08 06:42:32 lsipusr Exp $"
-# *CopyLeft*
-__copying__="
-* Libre-Halaal Software"
-#  This is part of ByStar Libre Services. http://www.by-star.net
-# Copyright (c) 2011 Neda Communications, Inc. -- http://www.neda.com
-# See PLPC-120001 for restrictions.
-# This is a Halaal Poly-Existential intended to remain perpetually Halaal.
+####+BEGIN: bx:dblock:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
+
 ####+END:
 
 __author__="
@@ -28,7 +20,7 @@ SEED="
 *  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
 "
 FILE="
-*  /This File/ :: /bisos/core/bsip/bin/bxeRrPkgCreate.sh 
+*  /This File/ :: /bisos/core/bsip/bin/siteGitServerManage.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
     /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
@@ -53,9 +45,7 @@ function vis_moduleDescription {  cat  << _EOF_
 *  [[elisp:(org-cycle)][| ]]  Xrefs         :: *[Related/Xrefs:]*  <<Xref-Here->>  -- External Documents  [[elisp:(org-cycle)][| ]]
 **  [[elisp:(org-cycle)][| ]]  Panel        :: [[file:/libre/ByStar/InitialTemplates/activeDocs/bxServices/versionControl/fullUsagePanel-en.org::Xref-VersionControl][Panel Roadmap Documentation]] [[elisp:(org-cycle)][| ]]
 *  [[elisp:(org-cycle)][| ]]  Info          :: *[Module Description:]* [[elisp:(org-cycle)][| ]]
-** 
-** Creates a BARC (Bystar Account Request Container) based on command line.
-** E|
+
 _EOF_
 }
 
@@ -72,21 +62,14 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
-. ${opBinBase}/bystarHook.libSh
-
-. ${opBinBase}/bxeRegReq_lib.sh
-
-. ${opBinBase}/bxeProvision_lib.sh
 
 # PRE parameters
 
+gitServerUrl=""
+gitServerPrivToken=""
 
 function G_postParamHook {
      return 0
-}
-
-function noArgsHook {
-	vis_examples
 }
 
 
@@ -105,32 +88,68 @@ function vis_examples {
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
+$( examplesSeperatorChapter "Site Git Server Profile" )
+$( examplesSeperatorSection "Specify" )
+${G_myName} ${extraInfo} -p gitServerUrl=http://192.168.0.56 -p gitServerPrivToken=qji9-_YqoqzZ4Rymk_qG -i gitServerInfoSet
+${G_myName} ${extraInfo} -i gitServerInfoShow
 _EOF_
-  vis_examplesBxAE all all
-   cat  << _EOF_
-$( examplesSeperatorChapter "Selected Specific Types and Scopes" )
-${G_myName} ${extraInfo} -i examplesBxAE indiv regReqCreate
-${G_myName} ${extraInfo} -i examplesBxAE corp regReqCreate
-${G_myName} ${extraInfo} -i examplesBxAE sys regReqCreate
-${G_myName} ${extraInfo} -i examplesBxAE indiv startToSelfRealize
-${G_myName} ${extraInfo} -i examplesBxAE corp startToSelfRealize
-${G_myName} ${extraInfo} -i examplesBxAE sys startToSelfRealize
-${G_myName} ${extraInfo} -i examplesBxAE indiv all   # create+bxReg|selfReg+bxRealize|startToSelfRealize
-${G_myName} ${extraInfo} -i examplesBxAE corp all
-${G_myName} ${extraInfo} -i examplesBxAE sys all
-$( examplesSeperatorChapter "Registraion Request -- RegReq Creation" )
-bxeRegReqManage.sh
-$( examplesSeperatorChapter "Central Registration Of The Request -- BxeDesc Creation" )
-selfCentralRegistrar.sh
-bxCentralRegistrar.sh
-$( examplesSeperatorChapter "Capturing Of The Registration -- BxeDesc Stach" )
-bxeDescManage.sh
-$( examplesSeperatorChapter "BxO And Git Accts Creation -- BxeRealization and BxO Instantiation" )
-bxeRealize.sh
-_EOF_
-
 }
 
+noArgsHook() {
+  vis_examples
+}
+
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+
+
+function vis_gitServerInfoSet {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [[ ! -z "${gitServerUrl}" ]]
+    EH_assert [[ ! -z "${gitServerPrivToken}" ]]
+
+    local selectedSite=${HOME}/bisos/sites/selected
+    local gitServerInfoBase="${selectedSite}/gitServerInfo"
+
+    if [ ! -e "${selectedSite}" ] ; then
+	EH_problem "Missing ${selectedSite}"
+	lpReturn 101
+    fi
+
+    if [ ! -d "${gitServerInfoBase}" ] ; then
+	lpDo mkdir "${gitServerInfoBase}"
+    fi
+
+    lpDo fileParamManage.py -i fileParamWrite "${gitServerInfoBase}" gitServerUrl "${gitServerUrl}"
+    lpDo fileParamManage.py -i fileParamWrite "${gitServerInfoBase}" gitServerPrivToken "${gitServerPrivToken}"    
+
+    lpReturn
+}
+
+function vis_gitServerInfoShow {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local selectedSite=${HOME}/bisos/sites/selected
+    local gitServerInfoBase="${selectedSite}/gitServerInfo"
+
+    if [ ! -e "${selectedSite}" ] ; then
+	EH_problem "Missing ${selectedSite}"
+	lpReturn 101
+    fi
+
+    lpDo fileParamManage.py -i fileParamDictRead "${gitServerInfoBase}"
+
+    lpReturn
+}
 
 
 _CommentBegin_

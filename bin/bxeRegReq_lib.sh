@@ -116,7 +116,12 @@ function vis_examplesBxAutonomousSys {
     bxeParamsFull="-p autonomy=\"A\" -p type=\"system\" -p sysName=\"bisos\" "
 }
 
-function vis_RegReqStdout {
+function vis_examplesBxAutonomousSysTest {
+    bxeParamsMini="-p autonomy=\"A\" -p type=\"system\" -p sysName=\"test1\" "    
+    bxeParamsFull="-p autonomy=\"A\" -p type=\"system\" -p sysName=\"test1\" -p email=\"git-test1@byname.net\" "
+}
+
+function vis_regReqStdout {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -129,16 +134,22 @@ _EOF_
     
     bystarServiceSupportHookParamsSet ${autonomy} ${type}
  
-    if [ "${originationMethod}_" == "_" ] ; then
+    if [ "${originationMethod}" == "" ] ; then
 	originationMethod="cmdLine"
     fi
 
+    if [ -z "${email}" ] ; then
+	email="NA"
+    fi
+    
  
  cat  << _EOF_
 function RegReqContainer {
     function RegReqContainerCommon {
       bc_autonomy="${autonomy}"
       bc_type="${type}"
+
+      bc_email="${email}"
 
       bc_originationDate="${dateTag}"
       bc_originationMethod="${originationMethod}"
@@ -212,7 +223,7 @@ _EOF_
 }
 
 
-function vis_RegReqFileCreate {
+function vis_regReqFileCreate {
     EH_assert [[ $# -eq 0 ]]
 
     bystarServiceSupportHookParamsSet ${autonomy} ${type}
@@ -236,7 +247,7 @@ function vis_RegReqFileCreate {
     
     echo RegReqFileName=${RegReqBaseDir}/${RegReqFileName} > ${RegReqBaseDir}/${RegReqFileName} 
 
-    vis_RegReqStdout 1>> ${RegReqBaseDir}/${RegReqFileName} 
+    vis_regReqStdout 1>> ${RegReqBaseDir}/${RegReqFileName} 
 
     opDo ls -l ${RegReqBaseDir}/${RegReqFileName} 1>&2 
 
@@ -252,7 +263,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    opDo fileParamsLoadVarsFromBaseDir /libre/etc/bystar/usage
+    # opDo fileParamsLoadVarsFromBaseDir /libre/etc/bystar/usage
 
     if [[ "${cp_platformUsageRegisterUid:-}_" == "DISPOSABLE_" ]] ; then
        return 0

@@ -90,7 +90,7 @@ $( examplesSeperatorSection "${secTitle} -- With Full Params" )
 _EOF_
     }
 
-    function examplesCreateMini {
+    function examplesRegReqCreateMini {
 	EH_assert [[ $# -lt 2 ]]
 
 	if [ $# -eq 1 ] ; then
@@ -98,12 +98,12 @@ _EOF_
 	fi
 
 	cat  << _EOF_
-${G_myName} ${extraInfo} ${bxeParamsMini} -i RegReqStdout
-${G_myName} ${extraInfo} ${bxeParamsMini} -i RegReqFileCreate
+${G_myName} ${extraInfo} ${bxeParamsMini} -i regReqStdout
+${G_myName} ${extraInfo} ${bxeParamsMini} -i regReqFileCreate
 _EOF_
     }
 
-    function examplesCreateFull {
+    function examplesRegReqCreateFull {
 	EH_assert [[ $# -lt 2 ]]
 
 	if [ $# -eq 1 ] ; then
@@ -111,8 +111,8 @@ _EOF_
 	fi
 
 	cat  << _EOF_
-${G_myName} ${extraInfo} ${bxeParamsFull} -i RegReqStdout
-${G_myName} ${extraInfo} ${bxeParamsFull} -i RegReqFileCreate
+${G_myName} ${extraInfo} ${bxeParamsFull} -i regReqStdout
+${G_myName} ${extraInfo} ${bxeParamsFull} -i regReqFileCreate
 _EOF_
     }
 
@@ -125,7 +125,7 @@ _EOF_
 	fi
 
 	cat  << _EOF_
-${G_myName} ${extraInfo} ${bxeParamsMini} -i bxReg
+${G_myName} ${extraInfo} ${bxeParamsMini} -i startToBxReg
 _EOF_
     }
 
@@ -137,7 +137,7 @@ _EOF_
 	fi
 
 	cat  << _EOF_
-${G_myName} ${extraInfo} ${bxeParamsFull} -i bxReg
+${G_myName} ${extraInfo} ${bxeParamsFull} -i startToBxReg
 _EOF_
     }
 
@@ -149,7 +149,7 @@ _EOF_
 	fi
 
 	cat  << _EOF_
-${G_myName} ${extraInfo} ${bxeParamsMini} -i selfReg
+${G_myName} ${extraInfo} ${bxeParamsMini} -i startToSelfReg
 _EOF_
     }
 
@@ -161,10 +161,34 @@ _EOF_
 	fi
 
 	cat  << _EOF_
-${G_myName} ${extraInfo} ${bxeParamsFull} -i selfReg
+${G_myName} ${extraInfo} ${bxeParamsFull} -i startToSelfReg
 _EOF_
     }
 
+    function examplesBxeDescStashMini {
+	EH_assert [[ $# -lt 2 ]]
+
+	if [ $# -eq 1 ] ; then
+	    sectionHeaderEssentials	    
+	fi
+
+	cat  << _EOF_
+${G_myName} ${extraInfo} ${bxeParamsMini} -i startToBxeDescStash
+_EOF_
+    }
+
+    function examplesBxeDescStashFull {
+	EH_assert [[ $# -lt 2 ]]
+
+	if [ $# -eq 1 ] ; then
+	    sectionHeaderFull	    
+	fi
+
+	cat  << _EOF_
+${G_myName} ${extraInfo} ${bxeParamsFull} -i startToBxeDescStash
+_EOF_
+    }
+    
     function examplesBxRealizeMini {
 	EH_assert [[ $# -lt 2 ]]
 
@@ -173,7 +197,7 @@ _EOF_
 	fi
 
 	cat  << _EOF_
-${G_myName} ${extraInfo} ${bxeParamsMini} -i bxRealize
+${G_myName} ${extraInfo} ${bxeParamsMini} -i startToBxRealize
 _EOF_
     }
 
@@ -185,7 +209,7 @@ _EOF_
 	fi
 
 	cat  << _EOF_
-${G_myName} ${extraInfo} ${bxeParamsFull} -i bxRealize
+${G_myName} ${extraInfo} ${bxeParamsFull} -i startToBxRealize
 _EOF_
     }
 
@@ -197,7 +221,7 @@ _EOF_
 	fi
 
 	cat  << _EOF_
-${G_myName} ${extraInfo} ${bxeParamsMini} -i selfRealize
+${G_myName} ${extraInfo} ${bxeParamsMini} -i startToSelfRealize
 _EOF_
     }
 
@@ -209,52 +233,58 @@ _EOF_
 	fi
 
 	cat  << _EOF_
-${G_myName} ${extraInfo} ${bxeParamsFull} -i selfRealize
+${G_myName} ${extraInfo} ${bxeParamsFull} -i startToSelfRealize
 _EOF_
     }
     
     
     
     case "${provisioningScope}" in
-	create)
-	    examplesCreateMini "$1"
-	    examplesCreateFull "$1"	    
+	regReqCreate)
+	    examplesRegReqCreateMini "$1"
+	    examplesRegReqCreateFull "$1"	    
 	    ;;
-	bxReg)
+	startToBxReg)
 	    examplesBxRegMini "$1"
 	    examplesBxRegFull "$1"	    
 	    ;;
-	selfReg)
+	startToSelfReg)
 	    examplesSelfRegMini "$1"
 	    examplesSelfRegFull "$1"	    
 	    ;;
-	bxRealize)
+	startToBxeDescStash)
+	    examplesBxeDescStashMini "$1"
+	    examplesBxeDescStashFull "$1"	    
+	    ;;
+	startToBxRealize)
 	    examplesBxRealizeMini "$1"
 	    examplesBxRealizeFull "$1"	    
 	    ;;
-	selfRealize)
+	startToSelfRealize)
 	    examplesSelfRealizeMini "$1"
 	    examplesSelfRealizeFull "$1"	    
 	    ;;
 	all)
 	    sectionHeaderEssentials
 
-	    examplesCreateMini
+	    examplesRegReqCreateMini
 	    examplesBxRegMini
-	    examplesSelfRegMini	    
+	    examplesSelfRegMini
+	    examplesBxeDescStashMini	    	    
 	    examplesBxRealizeMini
 	    examplesSelfRealizeMini
 	    
 	    sectionHeaderFull
 	    
-	    examplesCreateFull
+	    examplesRegReqCreateFull
 	    examplesBxRegFull
 	    examplesSelfRegFull
+	    examplesBxeDescStashFull	    
 	    examplesBxRealizeFull
 	    examplesSelfRealizeFull
 	    ;;
 	*)
-	    EH_problem "Bad bxeType -- ${bxeType}"
+	    EH_problem "Bad provisioningScope -- ${provisioningScope}"
 	    lpReturn 101
 	    ;;
     esac
@@ -311,6 +341,8 @@ _EOF_
 	sys)
 	    vis_examplesBxAutonomousSys
 	    vis_examplesApplyProvisioners "ByStar Autonomous System Entity" ${provisioningScope}
+	    vis_examplesBxAutonomousSysTest
+	    vis_examplesApplyProvisioners "ByStar Autonomous System Test Entity" ${provisioningScope}
 	    ;;
 	all)
 	    vis_examplesBxAutonomousIndiv
@@ -319,6 +351,8 @@ _EOF_
 	    vis_examplesApplyProvisioners "ByStar Autonomous Corporate Entity" ${provisioningScope}
 	    vis_examplesBxAutonomousSys
 	    vis_examplesApplyProvisioners "ByStar Autonomous System Entity" ${provisioningScope}
+	    vis_examplesBxAutonomousSysTest
+	    vis_examplesApplyProvisioners "ByStar Autonomous System Test Entity" ${provisioningScope}
 	    ;;
 	*)
 	    EH_problem "Bad bxeType -- ${bxeType}"
@@ -328,97 +362,73 @@ _EOF_
 
 }
 
-
-function vis_startToRegister {
-    RegReqFile=$( vis_RegReqFileCreate 2> /dev/null )
-
-    opDo bystarRegReqProc.sh ${G_commandOptions} -p RegReqFile="${RegReqFile}" -i RegReqRegister
+function vis_startToBxReg {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    
+    regReqFile=$( vis_regReqFileCreate 2> /dev/null )
+    
+    lpDo echo NOTYET selfCentralRegistrar.sh ${G_commandOptions} -p regReqFile="${regReqFile}" -i bxeDescCreate
 }
 
-function vis_startToEssentials {
+function vis_startToSelfReg {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    
+    regReqFile=$( vis_regReqFileCreate 2> /dev/null )
+    
+    lpDo selfCentralRegistrar.sh ${G_commandOptions} -p regReqFile="${regReqFile}" -i bxeDescCreate
+}
+
+
+function vis_startToBxeDescStash {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    
+    bxeDescFile=$( vis_startToSelfReg 2> /dev/null )
+    
+    lpDo bxeDescManage.sh ${G_commandOptions} -p bxeDesc="${bxeDescFile}" -i bxeDescStash
+}
+
+function vis_startToBxRealize {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
+    echo "NOTYET"
 
-    RegReqFile=$( vis_RegReqFileCreate 2> /dev/null )
-
-    #bystarUid=$( bystarRegReqProc.sh ${G_commandOptions} -p RegReqFile="${RegReqFile}" -i startToEssentials )
-    #echo ${bystarUid}
-
-    opDo bystarRegReqProc.sh ${G_commandOptions} -p RegReqFile="${RegReqFile}" -i startToEssentials
+    lpReturn
+    
+    bxeDescFile=$( vis_startToBxReg 2> /dev/null )
+    
+    lpDo bxeDescManage.sh ${G_commandOptions} -p bxeDesc="${bxeDescFile}" -i bxeDescStash
 }
 
-
-function vis_startToFullFg {
+function vis_startToSelfRealize {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
+    local bxeDescRegFile=$( vis_startToSelfReg 2> /dev/null )
+    
+    local bxeDescFile=$( bxeDescManage.sh ${G_commandOptions} -p bxeDesc="${bxeDescRegFile}" -i bxeDescStash )
 
-    ANT_raw "Gen RegReqFile"
-    pauseForVerification
-
-    #RegReqFile=$( vis_RegReqFileCreate 2> /dev/null )
-    RegReqFile=$( vis_RegReqFileCreate )
-    ANT_raw "About to Run bystarRegReqProc.sh"
-    pauseForVerification
-    opDo bystarRegReqProc.sh ${G_commandOptions} -p RegReqFile="${RegReqFile}" -i fullCreateFg
+    lpDo bxeRealize.sh ${G_commandOptions} -p bxeDesc="${bxeDescFile}" -i realize
 }
 
-function vis_startToFullBg {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
-    RegReqFile=$( vis_RegReqFileCreate 2> /dev/null )
-
-    opDo bystarRegReqProc.sh ${G_commandOptions} -p RegReqFile="${RegReqFile}" -i fullCreateBg
-}
-
-function vis_startToFullDev {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
-    # Notyet
-    # PauseForVerifications
-    # Lots of debug
-    #
-    RegReqFile=$( vis_RegReqFileCreate 2> /dev/null )
-
-    opDo bystarRegReqProc.sh ${G_commandOptions} -p RegReqFile="${RegReqFile}" -i fullCreateFg
-}
-
-function vis_renewPassive {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
-
-    # Notyet
-    # PauseForVerifications
-    # Lots of debug
-    #
-    RegReqFile=$( vis_RegReqFileCreate 2> /dev/null )
-
-    opDo bystarRegReqProc.sh ${G_commandOptions} -p RegReqFile="${RegReqFile}" -i fullCreateFg
-}
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*

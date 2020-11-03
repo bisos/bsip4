@@ -45,7 +45,7 @@ tm_trace() {
 
 	#print "in $0"
 
-  if [ ${traceLevel} ]
+  if [ ${traceLevel:-} ]
   then
     if test $1 -le ${traceLevel}
     then

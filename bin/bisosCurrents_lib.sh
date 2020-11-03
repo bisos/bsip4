@@ -1,5 +1,6 @@
 #!/bin/bash
 
+currentBxoId=""
 currentBxoUname=""
 currentBxoAutonomousUname=""
 currentBxoUeUname=""
@@ -71,7 +72,14 @@ function vis_validateParam {
 }
 
 function bxoAcctsList {
-    vis_bxisoAcctsList
+    # NOTYET
+    doNothing
+    #bystarBacsAcctsList
+    #vis_bxisoAcctsList
+}
+
+function bisosCurrentsGet {
+    lpCurrentsGet $@
 }
 
 function lpCurrentsGet {
@@ -83,6 +91,9 @@ function lpCurrentsGet {
 
     typeset acctsList=$( bxoAcctsList )
 
+    if [ "${currentBxoId}" == "" ] ; then
+	currentBxoId=$( LIST_getFirst ${acctsList} | cut -d ':' -f 1 )
+    fi
     if [ "${currentBxoUname}" == "" ] ; then
 	currentBxoUname=$( LIST_getFirst ${acctsList} | cut -d ':' -f 1 )
 	#currentBxoUname=$( echo ${acctsList} | head -1 )
@@ -117,6 +128,7 @@ function lpCurrentsShow {
     EH_assert [[ $# -eq 0 ]]
 
  cat  << _EOF_
+currentBxoId=${currentBxoId}
 currentBxoUname=${currentBxoUname}
 currentBxoAutonomousUname=${currentBxoAutonomousUname}
 currentBxoUeUname=${currentBxoUeUname}

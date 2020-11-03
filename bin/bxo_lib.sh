@@ -14,6 +14,39 @@ fi
 # ./lcnFileParams.libSh
 . ${opBinBase}/lcnFileParams.libSh
 
+function rbxeSshBase { echo "rbxe/credentials/ssh"; }
+
+function vis_bxoSshAcctKeyVerify {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [[ ! -z "${bxoId}" ]]    
+
+    lpDo lcaSshAdmin.sh ${G_commandOptions} -p localUser=${bxoId} -p sshDir=rbxe/credentials/ssh -i userKeyVerify
+
+    lpReturn
+}
+
+
+function vis_bxoSshKeyUpdate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [[ ! -z "${bxoId}" ]]    
+
+    lpDo lcaSshAdmin.sh ${G_commandOptions} -p localUser=${bxoId} -p sshDir=rbxe/credentials/ssh -i userKeyUpdate
+
+    local curUser=$( id -u -n )    
+    bxoHome=$( FN_absolutePathGet ~${bxoId} )
+    lpDo sudo chown -R "${curUser}":bisos ${bxoHome}/rbxe/credentials/ssh
+    
+    lpReturn
+}
+
 
 function bxoNextDisposableScopeAcctNu {
     EH_assert [[ $# -eq  0 ]]
@@ -366,7 +399,9 @@ function bxoAcctAnalyze {
   return 0
 }
 
-
+function bxoIdPrepValidate {
+    bxoCentralPrep $@
+}
 
 function bxoCentralPrep {
     G_funcEntry
@@ -376,27 +411,28 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    case ${bxo} in 
+    case ${bxoId} in 
       "")
-	    EH_problem "bxo=\"\" -- empty/blank -- invalid bxo"
+	    # EH_problem "bxoId=\"\" -- empty/blank -- invalid bxo"
 	    lpReturn 101
 	    ;;
       "INVALID"|"MANDATORY")
-	    EH_problem "bxo=${bxo} -- empty/blank -- invalid bxo"
+	    EH_problem "bxoId=${bxoId} -- empty/blank -- invalid bxo"
 	    lpReturn 101
 	    ;;
       "current")
 	    lpCurrentsGet
-	    if [ "${currentBystarUid}" != "" ] ; then
-		bxo=${currentBystarUid}
+	    #if [ "${currentBystarUid}" != "" ] ; then
+	    if [ "${currentBxoId}" != "" ] ; then	    
+		bxoId=${currentBxoId}
 	    else
-		EH_problem "bxo=current But current is unset -- invalid bxo"
+		EH_problem "bxoId=current But current is unset -- invalid bxo"
 		lpReturn 101
 	    fi	
 	    ;;
       "prompt")
-	    echo -n "Specify bxo: "
-	    read bxo
+	    echo -n "Specify bxoId: "
+	    read bxoId
 	    ;;
       "default")   # e.g., first applicable entry in /etc/passwd
             doNothing
@@ -423,7 +459,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    case ${bxo} in 
+    case ${bxoId} in 
       "all")
 	    lpReturn 0
 	    ;;
@@ -443,7 +479,7 @@ _EOF_
 #
 function bystarCentral {
   EH_assert [[ $# -eq 0 ]]
-  EH_assert [[ "${bxo}_" != "INVALID_" ]]
+  EH_assert [[ "${bxoId}_" != "INVALID_" ]]
 }
 
 
