@@ -92,6 +92,10 @@ function G_postParamHook {
      	bxoHome=$( FN_absolutePathGet ~${bxoId} )
     fi
 
+    local siteGitServerInfoBaseDir=$( siteGitServerManage.sh -i gitServerInfoBaseDir )
+    
+    site_gitServerName=$( fileParamManage.py -i fileParamRead ${siteGitServerInfoBaseDir} gitServerName )
+    
     bisosCurrentsGet
 }
 
@@ -128,8 +132,8 @@ ${G_myName} ${extraInfo} -p bxeDesc="${oneBxeDesc}" -i bxoAcctCreate
 $( examplesSeperatorSection "BxO/rbxe Setup" )
 ${G_myName} ${extraInfo} -p bxeDesc="${oneBxeDesc}" -i rbxeSetup
 ${G_myName} ${extraInfo} -p bxeDesc="${oneBxeDesc}" -i bxoBxeDescCopy
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i bxoCredentialsUpdate
-${G_myName} ${extraInfo} -f -p bxoId="${oneBxoId}" -i bxoCredentialsUpdate
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i bxoCredentialsUpdate      # calls bxoSshKeyUpdate & invokes lcaSshAdmin.sh
+${G_myName} ${extraInfo} -f -p bxoId="${oneBxoId}" -i bxoCredentialsUpdate   # G_forceMode 
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i bxoGitServerDescUpdate
 ${G_myName} ${extraInfo} -p bxeDesc="${oneBxeDesc}" -i getBxoId
 $( examplesSeperatorSection "BxO GitServer Provision -- Git Acct Creation" )
@@ -137,17 +141,17 @@ bxoGitlab.py
 bxoGitlab.py -v 20 --bxoId="${oneBxoId}" -i acctCreate 
 bxoGitlab.py -v 20 --bxoId="${oneBxoId}" -i reposList 
 bxoGitlab.py -v 20 --bxoId="${oneBxoId}" -i reposCreate 
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i gitServerAcctCreate
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i gitServerPubkeyUpload
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i gitServerBxoAcctCreate
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i gitServerBxoPubkeyUpload
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i gitServerBxoPubkeyVerify
 $( examplesSeperatorSection "BxO Ssh Config Update" )
 usgBxoSshManage.sh
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -p usg=current -i sshConfigUpdate
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -p usg=current -i sshConfigUpdate   # Sets up ~usg/.ssh/config
 $( examplesSeperatorSection "Initial Repos Push" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i initialReposPush
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i initialReposPush  # aggregator for repoCreateAndPush
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoCreateAndPush "rbxe" "${oneBxoHome}/rbxe" "priv"
 $( examplesSeperatorSection "Full Realization" )
-${G_myName} ${extraInfo} -p bxeDesc="${oneBxeDesc}" -i realize
-$( examplesSeperatorChapter "bxoGitlab.py -- For Git Server Provisioning" )
+${G_myName} ${extraInfo} -p bxeDesc="${oneBxeDesc}" -i realize   # invokes all of the above
 _EOF_
 }
 
@@ -163,20 +167,19 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
     EH_assert [[ "${bxeDesc}" != "MANDATORY" ]]    
 
-    lpDo vis_bxoAcctCreate
+    lpDo vis_bxoAcctCreate    # creates ~bxoId
 
-    lpDo vis_rbxeSetup
+    lpDo vis_rbxeSetup        # bxoBxeDescCopy + bxoCredentialsUpdate + bxoGitServerDescUpdate
 
     local cp_bxePrefix=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxePrefix )
     local cp_rdn=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} rdn )
-    local bxoId="${cp_bxePrefix}-${cp_rdn}"
 
-    # The rest will be based on bxoId
+    bxoId="${cp_bxePrefix}-${cp_rdn}"
 
-    lpDo vis_rbxeSetup    # create the ~bxo/
+    lpDo vis_gitServerBxoAcctCreate
 
-    lpDo vis_gitAcct
-
+    lpDo vis_gitServerBxoPubkeyUpload
+    
     lpDo vis_sshConfigUpdate
 
     lpDo vis_initialReposPush
@@ -246,7 +249,6 @@ _EOF_
     lpDo vis_bxoCredentialsUpdate
 
     lpDo vis_bxoGitServerDescUpdate    
-
     
     lpReturn
 }
@@ -288,23 +290,14 @@ _EOF_
 
     function bxoCredentialsUpdate {
 	lpDo vis_bxoSshKeyUpdate    # in bxo_lib.sh which calls lcaSshAdmin.sh
-
-	# Copy the above generated ssh keys to ~usg/.ssh
-	lpDo usgBxoSshManage.sh ${G_commandOptions} -p bxoId=${bxoId} -i usgAcctBxoCredentialsUpdate bxoPriv
-
-	# NOTYET -- Where should 192.168.0.56  come from?
-	# Create a .configSeg file
-	lpDo usgBxoSshManage.sh ${G_commandOptions} -p bxoId=${bxoId} -i bxoConfigSegUpdate bxoPriv 192.168.0.56    
-
-	lpDo usgBxoSshManage.sh ${G_commandOptions} -i configFileUpdate
     }
 
-    if usgBxoSshManage.sh -p bxoId=${bxoId} -i bxoConfigSegExists bxoPriv ; then
+    if vis_bxoSshAcctKeyVerify ; then
 	if [ "${G_forceMode}" == "force" ] ; then
-	    ANT_raw "Re-Creating -- bxoConfigSegExists and forceMode is specified."	    
+	    ANT_raw "Re-Creating -- $(rbxeSshBase) and forceMode is specified."	    
 	    lpDo bxoCredentialsUpdate
 	else
-	    ANT_raw "bxoConfigSegExists and forceMode is not specified."
+	    ANT_raw "$(rbxeSshBase) and forceMode is not specified."
 	fi
     else
 	lpDo bxoCredentialsUpdate
@@ -322,12 +315,12 @@ _EOF_
     EH_assert [[ ! -z "${bxoId}" ]]    
 
     lpDo mkdir -p ${bxoHome}/rbxe/gitServerInfo
-    lpDo fileParamManage.py -i fileParamWrite ${bxoHome}/rbxe/gitServerInfo gitServer 192.168.0.56
+    lpDo fileParamManage.py -i fileParamWrite ${bxoHome}/rbxe/gitServerInfo gitServer ${site_gitServerName}
     
     lpReturn
 }
 
-function vis_gitServerAcctCreate {
+function vis_gitServerBxoAcctCreate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -340,7 +333,43 @@ _EOF_
     lpReturn
 }
 
-function vis_gitServerPubkeyUpload {
+function vis_gitServerBxoPubkeyVerify {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [[ ! -z "${bxoId}" ]]
+
+    local retVal=0
+    local priv_pubkeyPath="${bxoHome}/rbxe/credentials/ssh/id_rsa.pub"
+
+    if [ ! -f "${priv_pubkeyPath}" ] ; then
+	EH_problem "Missing ${priv_pubkeyPath}"
+	lpReturn 1
+    fi	
+
+    local gotKeyTmpFile=$(mktemp).sshKey
+    
+    lpDo eval bxoGitlab.py --bxoId="${bxoId}" --keyName="_priv-pubkey" -i pubkeyObtain \> ${gotKeyTmpFile}
+
+    local local_fingerPrint=$( ssh-keygen -l -f ${priv_pubkeyPath} | cut -d ' ' -f 2 )
+    local gitlab_fingerPrint=$( ssh-keygen -l -f ${gotKeyTmpFile} | cut -d ' ' -f 2 )
+
+    if [ "${local_fingerPrint}" == "${gitlab_fingerPrint}" ] ; then
+	ANT_raw "Key finger prints match -- ${gitlab_fingerPrint}"
+	retVal=0
+    else
+	ANT_raw "Key finger prints do not match -- ${gitlab_fingerPrint} -- ${local_fingerPrint}"
+	retVal=1
+    fi
+
+    lpReturn ${retVal}
+}
+
+
+
+function vis_gitServerBxoPubkeyUpload {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -350,8 +379,13 @@ _EOF_
 
     local priv_pubkeyPath="${bxoHome}/rbxe/credentials/ssh/id_rsa.pub"
 
+    if vis_gitServerBxoPubkeyVerify ; then
+	ANT_raw "Same keys -- Uploading skipped"
+	lpReturn
+    fi
+
     if [ -f "${priv_pubkeyPath}" ] ; then
-	lpDo bxoGitlab.py -v 20 --bxoId="${bxoId}" --keyName="priv-pubkey" -i pubkeyUpload ${priv_pubkeyPath}
+	lpDo bxoGitlab.py -v 20 --bxoId="${bxoId}" --keyName="_priv-pubkey" -i pubkeyUpload ${priv_pubkeyPath}
     else
 	EH_problem "Missing ${priv_pubkeyPath}"
     fi	
@@ -368,7 +402,9 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
     EH_assert [[ ! -z "${bxoId}" ]]    
 
-    echo NOTYET usgBxoSshManage.sh
+    local usg=$( id -u -n )
+
+    lpDo usgBxoSshManage.sh ${G_commandOptions} -p usg=${usg} -p bxoId=${bxoId} -i usgBxoFullUpdate
 
     lpReturn
 }
@@ -386,7 +422,8 @@ _EOF_
     local baseDir="$2"
     local gitServerSelector="$3"
 
-    local gitServerUrl=git@bxoGit-${gitServerSelector}.${bxoId}:${bxoId}/${repoName}.git
+    #local gitServerUrl=git@bxoGit-${gitServerSelector}.${bxoId}:${bxoId}/${repoName}.git
+    local gitServerUrl=git@bxoPriv_${bxoId}:${bxoId}/${repoName}.git    
 
     local curUser=$( id -u -n )
 
@@ -399,11 +436,11 @@ _EOF_
     
     inBaseDirDo ${baseDir} git init    
     inBaseDirDo ${baseDir} git add .
-    inBaseDirDo ${baseDir} git commit -m "Initial bxeRealize.sh commit of ${baseDir}"
+    inBaseDirDo ${baseDir} git commit -m "Initial_bxeRealize.sh_commit_of_${baseDir}"
 
     inBaseDirDo ${baseDir} git remote add origin ${gitServerUrl}
     inBaseDirDo ${baseDir} git remote -v
-    inBaseDirDo ${baseDir} git push origin main
+    inBaseDirDo ${baseDir} git push origin master
 
     lpReturn
 }

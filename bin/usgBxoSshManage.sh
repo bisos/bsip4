@@ -76,6 +76,7 @@ _CommentEnd_
 # PRE parameters
 typeset -t bxoId=""
 typeset -t usg=""
+typeset -t bxosBase=""
 
 function G_postParamHook {
 
@@ -88,7 +89,11 @@ function G_postParamHook {
     fi
     usgHome=$( FN_absolutePathGet ~${usg} )
 
-    usgSshConfigSeg_baseDir=${usgHome}/.ssh/configSeg    
+    usgSshConfigSeg_baseDir=${usgHome}/.ssh/configSeg
+
+    local siteGitServerInfoBaseDir=$( siteGitServerManage.sh -i gitServerInfoBaseDir )
+    
+    site_gitServerName=$( fileParamManage.py -i fileParamRead ${siteGitServerInfoBaseDir} gitServerName )
     
     lpCurrentsGet
 }
@@ -108,9 +113,11 @@ function vis_examples {
 
     local oneBxoId=${currentBxoId}
     #local oneGitBxSeLn="git.bysource.org"
-    local oneGitBxSeLn="192.168.0.56"
+    local oneGitBxSeLn="${site_gitServerName}"
 
-    local oneUsg=${currentUsgUname}    
+    local oneUsg=${currentUsgUname}
+
+    local oneBxosBase="/bisos/var/bxo/construct"
 
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
@@ -127,6 +134,7 @@ ${G_myName} ${examplesInfo} -p bxoId=${oneBxoId} -i bxoSshKeyVerify
 ${G_myName} ${examplesInfo} -p bxoId=${oneBxoId} -i bxoSshKeyUpdate
 $( examplesSeperatorSection "USG Ssh Invoker Keys" )
 ${G_myName} ${examplesInfo} -p usg=${oneUsg} -p bxoId=${oneBxoId} -i usgAcctBxoCredentialsUpdate bxoPriv
+${G_myName} ${examplesInfo} -p usg=${oneUsg} -p bxoId=${oneBxoId} -p bxosBase=${oneBxosBase} -i usgAcctBxoCredentialsUpdate bxoPriv
 ${G_myName} ${examplesInfo} -p usg=${oneUsg} -p bxoId=${oneBxoId} -i usgAcctBxoCredentialsDelete bxoPriv
 ${G_myName} ${examplesInfo} -p usg=${oneUsg} -i usgAcctCredentialsList bxoPriv
 $( examplesSeperatorChapter "USG Ssh Config File Manipulation" )
@@ -134,9 +142,9 @@ $( examplesSeperatorSection "USG Ssh Config Segments Base" )
 ${G_myName} ${extraInfo} -i usgSshConfigSegBasePrep
 ${G_myName} -i usgSshConfigSegBaseList
 $( examplesSeperatorSection "USG Ssh Bxo Config Segment File Update" )
-${G_myName} -p bxoId=${oneBxoId} -i bxoConfigSegStdout bxoPriv 192.168.0.56
-${G_myName} ${extraInfo} -p bxoId=${oneBxoId} -i bxoConfigSegStdout bxoPriv 192.168.0.56  # Verbose
-${G_myName} ${extraInfo} -p bxoId=${oneBxoId} -i bxoConfigSegUpdate bxoPriv 192.168.0.56
+${G_myName} -p bxoId=${oneBxoId} -i bxoConfigSegStdout bxoPriv ${site_gitServerName}
+${G_myName} ${extraInfo} -p bxoId=${oneBxoId} -i bxoConfigSegStdout bxoPriv ${site_gitServerName}  # Verbose
+${G_myName} ${extraInfo} -p bxoId=${oneBxoId} -i bxoConfigSegUpdate bxoPriv ${site_gitServerName}
 ${G_myName} ${extraInfo} -p bxoId=${oneBxoId} -i bxoConfigSegDelete bxoPriv
 ${G_myName} ${extraInfo} -p bxoId=${oneBxoId} -i bxoConfigSegExists bxoPriv
 $( examplesSeperatorSection "USG Ssh Config File Update" )
@@ -162,6 +170,22 @@ _CommentBegin_
 *      ======[[elisp:(org-cycle)][Fold]]====== Full Actions
 _CommentEnd_
 
+function bxosBasePrep {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bxoId}" ]    
+
+    if [ ! -z "${bxosBase}" ] ; then
+	bxoHome=$( FN_absolutePathGet ${bxosBase}/${bxoId} )
+    fi
+
+    lpReturn
+}
+
+
 function vis_usgBxoFullUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -169,11 +193,13 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
     EH_assert [ ! -z "${bxoId}" ]
-    EH_assert [ ! -z "${usg}" ]    
-    
+    EH_assert [ ! -z "${usg}" ]
+
+    lpDo bxosBasePrep
+
     opDo vis_usgAcctBxoCredentialsUpdate bxoPriv
 
-    opDo vis_bxoConfigSegUpdate bxoPriv 192.168.0.56
+    opDo vis_bxoConfigSegUpdate bxoPriv ${site_gitServerName}
     
     opDo vis_configFileUpdate
 
@@ -248,7 +274,9 @@ _EOF_
     EH_assert [ ! -z "${usg}" ]
     EH_assert [ ! -z "${bxoId}" ]
 
-    local bxoGitLabel="$1"    
+    local bxoGitLabel="$1"
+
+    lpDo bxosBasePrep
 
     opDo sudo cp ${bxoHome}/$(rbxeSshBase)/id_rsa.pub ${usgHome}/.ssh/${bxoGitLabel}_${bxoId}_rsa.pub
     EH_retOnFail
@@ -511,7 +539,7 @@ _EOF_
     bxoAcctAnalyze ${bxoId}
 
     #bxurl="git.${cp_acctMainBaseDomain}"
-    bxurl="192.168.0.56"
+    bxurl="${site_gitServerName}"
 
     if [ -f  ${usgHome}/.ssh/${bxoId}.dest ] ; then
 
@@ -557,7 +585,7 @@ _EOF_
     bxoAcctAnalyze ${bxoId}
 
     #bxurl="git.${cp_acctMainBaseDomain}"
-    bxurl="192.168.0.56"
+    bxurl="${site_gitServerName}"
 
     if [ -f  ${usgHome}/.ssh/${bxoId}.dest ] ; then
 

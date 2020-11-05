@@ -22,11 +22,14 @@ function vis_bxoSshAcctKeyVerify {
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [[ ! -z "${bxoId}" ]]    
+    EH_assert [[ ! -z "${bxoId}" ]]
+
+    local retVal=0
 
     lpDo lcaSshAdmin.sh ${G_commandOptions} -p localUser=${bxoId} -p sshDir=rbxe/credentials/ssh -i userKeyVerify
+    retVal=$?
 
-    lpReturn
+    lpReturn ${retVal}
 }
 
 

@@ -81,14 +81,13 @@ typeset -t bxoId=""
 function G_postParamHook {
     # lpCurrentsGet
 
-    if [ "${bxeDesc}" != "MANDATORY" ] ; then
-     	bxeDesc=$( FN_absolutePathGet ${bxeDesc} )
-    fi
     if [ ! -z "${bxoId}" ] ; then
      	bxoHome=$( FN_absolutePathGet ~${bxoId} )
     fi
 
 }
+
+function bxoConstructBaseDir_obtain { echo /bisos/var/bxo/construct; }
 
 
 noArgsHook() {
@@ -110,20 +109,26 @@ function vis_examples {
 
     oneBxeDesc="/bisos/var/bxae/bxeDesc/A/system/as-bisos"
 
-    #oneBxoId="as-bisos"
-    oneBxoId="as-test1_5"    
+    oneBxoId="as-bisos"
+    #oneBxoId="as-test1_5"    
     
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Construct A BxO From Its Realized BxE" )
-$( examplesSeperatorSection "BxO-ISO Retrieval" )
-bxoGitlab.py -v 20 --bxoId="as-bisos" --outFile="/tmp/git-as-bisos-iso.tar"  -i reposList iso
-mkdir /tmp/as-bisos-iso.git; tar xf /tmp/git-as-bisos-iso.tar
-git clone /tmp/as-bisos-iso.git  ~bxoId/var/iso
+$( examplesSeperatorSection "Obtain A Snapshot Of RBxE At $(bxoConstructBaseDir_obtain)" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i obtainRepoSnapshot rbxe
+$( examplesSeperatorSection "BxO Ssh Config Update" )
+usgBxoSshManage.sh
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -p usg=current -i usgSshConfigUpdate   # Sets up ~usg/.ssh/config
 $( examplesSeperatorSection "BxO Creation Based On ISO Info" )
-${G_myName} ${extraInfo} -p bxeDesc="${oneBxeDesc}" -i bxoAcctCreate
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i bxoAcctCreate
 $( examplesSeperatorSection "BxO Repos Clone Map" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i initialReposClone $(bxoConstructBaseDir_obtain)/${oneBxoId}/home
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i initialReposClone
+$( examplesSeperatorSection "BxO Construct Full Update -- All Of The Above" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i fullUpdate $(bxoConstructBaseDir_obtain)/${oneBxoId}/home
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i fullUpdate
 _EOF_
 }
 
@@ -131,35 +136,49 @@ _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
 _CommentEnd_
 
-function vis_realize {
+function vis_obtainRepoSnapshot {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+    EH_assert [[ ! -z "${bxoId}" ]]    
+
+    local repoName=$1
+    
+    local bxoConstructBaseDir=$(bxoConstructBaseDir_obtain)
+
+    local repoTarFile="${bxoConstructBaseDir}/${bxoId}/${repoName}-gitSnapot.tar"
+    local gitRepoBaseDir="${bxoConstructBaseDir}/${bxoId}/${repoName}.git"
+
+    opDo FN_dirCreatePathIfNotThere "${bxoConstructBaseDir}/${bxoId}"
+    
+    lpDo bxoGitlab.py -v 20 --bxoId=${bxoId} --outFile="${repoTarFile}"  -i repoSnapshot ${repoName}
+
+    lpDo mkdir "${gitRepoBaseDir}"
+
+    inBaseDirDo "${gitRepoBaseDir}" tar xf "${repoTarFile}"
+
+    lpDo git clone "${gitRepoBaseDir}" "${bxoConstructBaseDir}/${bxoId}/${repoName}"
+    
+    lpReturn
+}
+
+
+function vis_usgSshConfigUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [[ "${bxeDesc}" != "MANDATORY" ]]    
+    EH_assert [[ ! -z "${bxoId}" ]]    
 
-    lpDo vis_bxoAcctCreate
+    local usg=$( id -u -n )
 
-    lpDo vis_isoSetup
+    lpDo usgBxoSshManage.sh ${G_commandOptions} -p usg=${usg} -p bxoId=${bxoId} -p bxosBase=$(bxoConstructBaseDir_obtain) -i usgBxoFullUpdate
 
-    local cp_bxePrefix=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxePrefix )
-    local cp_rdn=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} rdn )
-    local bxoId="${cp_bxePrefix}-${cp_rdn}"
-
-    # The rest will be based on bxoId
-
-    lpDo vis_isoSetup
-
-    lpDo vis_bxoGitServerProvision
-
-    lpDo vis_sshConfigUpdate
-
-    lpDo vis_initialReposPush
-    
     lpReturn
 }
-
 
 function vis_bxoAcctCreate {
     G_funcEntry
@@ -167,172 +186,84 @@ function vis_bxoAcctCreate {
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [[ "${bxeDesc}" != "MANDATORY" ]]    
-
-    local cp_bxePrefix=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxePrefix )
-    local cp_rdn=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} rdn )
-    local cp_bxeOid=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxeOid )    
-
-    local bxeLocalName="${cp_bxePrefix}-${cp_rdn}"
-    local bxeOidComment="oid-${cp_bxeOid}"
-
-    lpDo bxoAcctManage.sh -h -v -n showRun -p acctComment="${bxeOidComment}" -i bxisoAcctCreate ${bxeLocalName}
-
-    lpReturn
-}
-
-function vis_getBxoId {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-Even though bxo exists at this stage, the bxeDesc param is needed for the cp.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert [[ "${bxeDesc}" != "MANDATORY" ]]
-
-    local cp_bxePrefix=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxePrefix )
-    local cp_rdn=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} rdn )        
-
-    echo "${cp_bxePrefix}-${cp_rdn}"
-
-    lpReturn
-}
-
-
-function vis_isoSetup {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-Even though bxo exists at this stage, the bxeDesc param is needed for the cp.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert [[ "${bxeDesc}" != "MANDATORY" ]]
-
-    local cp_bxePrefix=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxePrefix )
-    local cp_rdn=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} rdn )        
-
-    local bxeLocalName="${cp_bxePrefix}-${cp_rdn}"
-
-    bxoHome=$( FN_absolutePathGet ~${bxeLocalName} )
-    
-    lpDo sudo -u ${bxeLocalName} mkdir ${bxoHome}/iso
-
-    lpDo vis_bxoBxeDescCopy
-
-    lpDo vis_bxoCredentialsUpdate
-
-    lpDo vis_bxoGitServerDescUpdate    
-
-    lpReturn
-}
-
-
-function vis_bxoBxeDescCopy {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-Even though bxo exists at this stage, the bxeDesc param is needed for the cp.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert [[ "${bxeDesc}" != "MANDATORY" ]]
-
-    local cp_bxePrefix=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxePrefix )
-    local cp_rdn=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} rdn )        
-
-    local bxeLocalName="${cp_bxePrefix}-${cp_rdn}"
-
-    bxoHome=$( FN_absolutePathGet ~${bxeLocalName} )
-
-    if [ ! -d ${bxoHome}/iso ] ; then
-	lpDo sudo -u ${bxeLocalName} mkdir ${bxoHome}/iso
-    fi
-    
-    lpDo sudo -u ${bxeLocalName} cp -r ${bxeDesc} ${bxoHome}/iso/bxeDesc
-
-    lpReturn
-}
-
-function vis_bxoCredentialsUpdate {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert [[ ! -z "${bxoId}" ]]    
-
-
-    lpDo lcaSshAdmin.sh -p localUser=${bxoId} -p sshDir=iso/credentials/ssh -i userKeyUpdate    
-    
-    lpReturn
-}
-
-function vis_bxoGitServerDescUpdate {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert [[ ! -z "${bxoId}" ]]    
-
-    lpDo sudo -u ${bxoId} mkdir ${bxoHome}/iso/gitServerInfo
-
-    fileParamManage.py  -i fileParamWrite  ${bxoHome}/iso/gitServerInfo gitServer 192.168.0.56
-
-    lpReturn
-}
-
-function vis_bxoGitServerProvision {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert [[ ! -z "${bxoId}" ]]    
-
-    lpDo bxoGitlab.py -v 20 --bxoId="${bxoId}" -i acctCreate
-
-    lpDo bxoGitlab.py -v 20 --bxoId="${bxoId}" -i pubkeyUpload        
-
-    lpReturn
-}
-
-function vis_sshConfigUpdate {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert [[ ! -z "${bxoId}" ]]    
-
-    echo NOTYET
-
-    lpReturn
-}
-
-
-function vis_initialReposPush {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
     EH_assert [[ ! -z "${bxoId}" ]]
 
-    lpDo bxoGitlab.py -v 20 --bxoId="${bxoId}" -i reposCreate iso       
-    
+    local bxeDesc="$(bxoConstructBaseDir_obtain)/${bxoId}/rbxe/bxeDesc"
 
-    lpDo sudo chown -R "${bxoId}":bisos ${bxoHome}/iso
-
-    inBaseDirDo ${bxoHome}/iso sudo -u ${bxoId} git init
-    inBaseDirDo ${bxoHome}/iso sudo -u ${bxoId} git add .
-    inBaseDirDo ${bxoHome}/iso sudo -u ${bxoId} git commit -m "bxeRealize.sh commit"
-
-    inBaseDirDo ${bxoHome}/iso sudo -u ${bxoId} git remote add origin git@bxogit.${bxoId}:${bxoId}/iso.git
-    inBaseDirDo ${bxoHome}/iso sudo -u ${bxoId} git remote -v
-    inBaseDirDo ${bxoHome}/iso sudo -u ${bxoId} git push origin main
+    lpDo bxeRealize.sh ${G_commandOptions} -p bxeDesc="${bxeDesc}" -i bxoAcctCreate    
 
     lpReturn
 }
+
+function vis_initialReposClone {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -lt 2 ]]
+    EH_assert [[ ! -z "${bxoId}" ]]
+
+    local gitCloneDest=""
+    
+    if [ $# -eq 0 ] ; then
+	gitCloneDest=${bxoHome}
+    elif [ $# -eq 1 ] ; then
+	gitCloneDest=$1
+    else
+	EH_oops ""
+	lpReturn
+    fi
+    
+    local reposList=$( bxoGitlab.py -v 20 --bxoId="${bxoId}"  -i reposList )
+
+    local eachRepo=""
+    local gitServerUrl=""
+
+    opDo FN_dirCreatePathIfNotThere "${gitCloneDest}"
+    
+    for eachRepo in ${reposList} ; do
+	gitServerUrl=git@bxoPriv_${bxoId}:${bxoId}/${eachRepo}.git
+	lpDo git clone "${gitServerUrl}" "${gitCloneDest}/${eachRepo}"    	
+    done
+
+    lpReturn
+}
+
+
+function vis_fullUpdate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -lt 2 ]]
+    EH_assert [[ ! -z "${bxoId}" ]]
+
+    local gitCloneDest=""
+
+    lpDo vis_obtainRepoSnapshot rbxe
+
+    lpDo vis_usgSshConfigUpdate
+
+    if [ $# -eq 0 ] ; then
+	lpDo vis_bxoAcctCreate
+
+	lpDo vis_initialReposClone
+	
+    elif [ $# -eq 1 ] ; then
+	gitCloneDest=$1
+
+	lpDo vis_initialReposClone ${gitCloneDest}	
+	
+    else
+	EH_oops ""
+	lpReturn
+    fi
+
+
+    
+    lpReturn
+}
+
 
 
 _CommentBegin_

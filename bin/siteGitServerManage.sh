@@ -90,8 +90,9 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Site Git Server Profile" )
 $( examplesSeperatorSection "Specify" )
-${G_myName} ${extraInfo} -p gitServerUrl=http://192.168.0.56 -p gitServerPrivToken=qji9-_YqoqzZ4Rymk_qG -i gitServerInfoSet
-${G_myName} ${extraInfo} -i gitServerInfoShow
+${G_myName} ${extraInfo} -p gitServerName=192.168.0.56 -p gitServerUrl=http://192.168.0.56 -p gitServerPrivToken=qji9-_YqoqzZ4Rymk_qG -i gitServerInfoSet
+${G_myName} -i gitServerInfoShow
+${G_myName} -i gitServerInfoBaseDir
 _EOF_
 }
 
@@ -110,6 +111,7 @@ function vis_gitServerInfoSet {
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
+    EH_assert [[ ! -z "${gitServerName}" ]]
     EH_assert [[ ! -z "${gitServerUrl}" ]]
     EH_assert [[ ! -z "${gitServerPrivToken}" ]]
 
@@ -124,7 +126,8 @@ _EOF_
     if [ ! -d "${gitServerInfoBase}" ] ; then
 	lpDo mkdir "${gitServerInfoBase}"
     fi
-
+    
+    lpDo fileParamManage.py -i fileParamWrite "${gitServerInfoBase}" gitServerName "${gitServerName}"
     lpDo fileParamManage.py -i fileParamWrite "${gitServerInfoBase}" gitServerUrl "${gitServerUrl}"
     lpDo fileParamManage.py -i fileParamWrite "${gitServerInfoBase}" gitServerPrivToken "${gitServerPrivToken}"    
 
@@ -147,6 +150,27 @@ _EOF_
     fi
 
     lpDo fileParamManage.py -i fileParamDictRead "${gitServerInfoBase}"
+
+    lpReturn
+}
+
+
+function vis_gitServerInfoBaseDir {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local selectedSite=${HOME}/bisos/sites/selected
+    local gitServerInfoBase="${selectedSite}/gitServerInfo"
+
+    if [ ! -e "${selectedSite}" ] ; then
+	EH_problem "Missing ${selectedSite}"
+	lpReturn 101
+    fi
+
+    lpDo echo "${gitServerInfoBase}"
 
     lpReturn
 }

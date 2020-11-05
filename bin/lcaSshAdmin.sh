@@ -120,6 +120,7 @@ ${G_myName} -i serverKeyUpdate
 --- KNOWN HOSTS MANIPULATION ---
 ${G_myName} -p localUser=${oneLocalUser} -p remoteHost=${oneRemoteHost} -i hostIsInKnownHostsFile
 --- USER KEY MANIPULATORS ---
+${G_myName} -p localUser=${oneLocalUser} -i keysFilesList
 ${G_myName} -p localUser=${oneLocalUser} -i userKeyVerify
 ${G_myName} -p localUser=${oneLocalUser} -i userKeyDelete
 ${G_myName} -p localUser=${oneLocalUser} -i userKeyUpdate
@@ -233,6 +234,51 @@ _EOF_
     opDo ls -ld ${opAcct_homeDir}/${sshDir}  # ${opAcct_homeDir}/${sshDir}/id_dsa ${opAcct_homeDir}/${sshDir}/id_dsa.pub
 }
 
+function vis_keysFilesList {
+    EH_assert [[ $# -eq 0 ]]    
+    if [ "${localUser}" == "" ] ; then
+	localUser=${opRunAcctName}
+    fi
+
+    if [ -z "${sshDir}" ] ; then
+	sshDir=".ssh"
+    fi
+
+    opDoRet opAcctInfoGet ${localUser} || return $?
+
+    echo ${opAcct_homeDir}/${sshDir}    
+    echo ${opAcct_homeDir}/${sshDir}/id_dsa
+    echo ${opAcct_homeDir}/${sshDir}/id_dsa.pub
+    echo ${opAcct_homeDir}/${sshDir}/id_rsa
+    echo ${opAcct_homeDir}/${sshDir}/id_rsa.pub
+}
+
+function vis_lsKeysFiles {
+    EH_assert [[ $# -eq 0 ]]
+    local keyFiles=$( vis_keysFilesList )
+    local eachKeyFile=""
+
+    for eachKeyFile in ${keyFiles} ; do
+	if [ -e ${eachKeyFile} ] ; then
+	    opDo ls -l ${eachKeyFile}
+	fi
+    done
+}
+
+function verifyKeysFiles {
+    EH_assert [[ $# -eq 0 ]]
+    local keyFiles=$( vis_keysFilesList )
+    local eachKeyFile=""
+    local retVal=0
+
+    for eachKeyFile in ${keyFiles} ; do
+	if [ ! -e ${eachKeyFile} ] ; then
+	    lpReturn 1
+	fi
+    done
+    lpReturn 0
+}
+
 
 function vis_userKeyVerify {
     G_funcEntry
@@ -253,61 +299,15 @@ _EOF_
 
     opDoRet opAcctInfoGet ${localUser} || return $?
 
-    if ( test -f ${opAcct_homeDir}/${sshDir}/id_dsa && test -f ${opAcct_homeDir}/${sshDir}/id_dsa.pub ) ; then
+    if verifyKeysFiles ; then
 	ANT_cooked "SSH User Priv/Pub keys in place"
-	opDo ls -ld ${opAcct_homeDir}/${sshDir}  ${opAcct_homeDir}/${sshDir}/id_dsa ${opAcct_homeDir}/${sshDir}/id_dsa.pub
+	opDo vis_lsKeysFiles	
 	return 0
     else
 	ANT_cooked "SSH User Priv/Pub keys not found"
-	opDo ls -ld ${opAcct_homeDir}/${sshDir}  ${opAcct_homeDir}/${sshDir}/id_dsa ${opAcct_homeDir}/${sshDir}/id_dsa.pub
+	opDo vis_lsKeysFiles
 	return 1
     fi
-}
-
-
-function vis_userKeyUpdateOrig {
-  if [ "${localUser}X" == "X" ] ; then
-    localUser=${opRunAcctName}
-  fi
-
-  #typeset currentUser=${opRunAcctName}
-  if [[ "${opRunOsType}_" == "SunOS_" ]] ; then
-    typeset currentUser=`/usr/ucb/whoami`
-  else
-    typeset currentUser=`whoami`
-  fi
-
-
-  if [ "${currentUser}X" != "${localUser}X" -a "${currentUser}X" != "rootX" -a "$( id -u ${currentUser})X" != "$( id -u ${localUser})X" ] ; then
-    EH_problem "You are not ${localUser} or root. currentUser=${currentUser} Permission denied."
-    return 1
-  else
-    opDoRet opAcctInfoGet ${localUser} || return $?
-
-    if ! test -d ${opAcct_homeDir}/.ssh ; then
-	FN_dirCreateIfNotThere ${opAcct_homeDir}/.ssh
-	opDoComplain chown ${localUser} ${opAcct_homeDir}/.ssh
-	opDoComplain chmod 700 ${opAcct_homeDir}/.ssh
-    fi
-
-    if [[ "${G_forceMode}_" != "force_" ]] ; then
-      if ( test -f ${opAcct_homeDir}/.ssh/id_dsa && test -f ${opAcct_homeDir}/.ssh/id_dsa.pub ) ; then
-	ANT_cooked "User keys in place, skipped"
-	return 0
-      fi
-    fi
-      
-
-    if [ "$( id -u ${currentUser})X" == "$( id -u ${localUser})X" ] ; then
-      opDoComplain ssh-keygen -t dsa -f ${opAcct_homeDir}/.ssh/id_dsa -N ""
-      #opDoComplain ssh-keygen -t rsa -f ${opAcct_homeDir}/.ssh/ssh_host_rsa_key -N ""
-      opDo ssh-add   # inform ssh-agent of the change
-    else
-      opDoComplain sudo -u ${localUser} ssh-keygen -t dsa -f ${opAcct_homeDir}/.ssh/id_dsa -N ""
-    #opDoComplain sudo -u ${localUser} ssh-keygen -t dsa -f ${opAcct_homeDir}/.ssh/id_dsa -N "digDeep"
-      opDo ssh-add   # inform ssh-agent of the change
-    fi
-  fi
 }
 
 function vis_userKeyUpdate {
@@ -345,30 +345,29 @@ _EOF_
 	fi
 
 	if [[ "${G_forceMode}_" != "force_" ]] ; then
-	    if ( test -f ${opAcct_homeDir}/${sshDir}/id_dsa && test -f ${opAcct_homeDir}/${sshDir}/id_dsa.pub ) ; then
-		ANT_cooked "User keys in place, skipped"
-		opDo ls -ld ${opAcct_homeDir}/${sshDir}  ${opAcct_homeDir}/${sshDir}/id_dsa ${opAcct_homeDir}/${sshDir}/id_dsa.pub
+	    if verifyKeysFiles ; then	    
+		ANT_cooked "User keys in place, skipped -- Use G_forceMode to over-write"
+		opDo ls -ld ${opAcct_homeDir}/${sshDir}
+		opDo vis_lsKeysFiles			
 		return 0
 	    fi
 	else
-	    lpDo rm ${opAcct_homeDir}/${sshDir}/id_dsa
-	    lpDo rm ${opAcct_homeDir}/${sshDir}/id_dsa.pub	    
-	    lpDo rm ${opAcct_homeDir}/${sshDir}/id_rsa
-	    lpDo rm ${opAcct_homeDir}/${sshDir}/id_rsa.pub	    
+	    lpDo eval vis_keysFilesList \| xargs rm 
 	fi
 
 	eval $(ssh-agent -s)
-	
+
+	# No Passphrase (-N "")
 	opDoComplain ssh-keygen -t dsa -f ${opAcct_homeDir}/${sshDir}/id_dsa -N ""
-	opDoComplain ssh-keygen -t rsa -f ${opAcct_homeDir}/${sshDir}/id_rsa -N ""
+	opDoComplain ssh-keygen -t rsa -b 4096 -f ${opAcct_homeDir}/${sshDir}/id_rsa -N ""
 
 	opDoComplain chown -R ${localUser}:bisos ${opAcct_homeDir}/${sshDir}
 	
 	opDo ssh-add   # inform ssh-agent of the change
     fi
 
-    opDo ls -ld ${opAcct_homeDir}/${sshDir}  ${opAcct_homeDir}/${sshDir}/id_dsa ${opAcct_homeDir}/${sshDir}/id_dsa.pub
-    opDo ls -ld ${opAcct_homeDir}/${sshDir}  ${opAcct_homeDir}/${sshDir}/id_rsa ${opAcct_homeDir}/${sshDir}/id_rsa.pub
+    opDo ls -ld ${opAcct_homeDir}/${sshDir}
+    lpDo vis_lsKeysFiles
 }
 
 

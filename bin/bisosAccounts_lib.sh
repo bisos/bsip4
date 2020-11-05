@@ -537,7 +537,7 @@ _EOF_
 
    lpDo vis_bxisoAcct_supplementaryGroupsUpdate ${acctName}
 
-   lpDo vis_bxisoAcct_sshKeysUpdate ${acctName}   
+   # lpDo vis_bxisoAcct_sshKeysUpdate ${acctName}   
 
    # the sudo -u ${acctName} id -- results in creation of the homeDir
    opDo vis_userAcctsReport ${acctName}   
