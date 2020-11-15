@@ -6,8 +6,16 @@ ORIGIN="
 * Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee
 "
 
-####+BEGIN: bx:dblock:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
-
+####+BEGIN: bx:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
+### Args: :control "enabled|disabled|hide|release|fVar"  :vc "cvs|git|nil" :partof "bystar|nil" :copyleft "halaal+minimal|halaal+brief|nil"
+typeset RcsId="$Id: dblock-iim-bash.el,v 1.4 2017-02-08 06:42:32 lsipusr Exp $"
+# *CopyLeft*
+__copying__="
+* Libre-Halaal Software"
+#  This is part of ByStar Libre Services. http://www.by-star.net
+# Copyright (c) 2011 Neda Communications, Inc. -- http://www.neda.com
+# See PLPC-120001 for restrictions.
+# This is a Halaal Poly-Existential intended to remain perpetually Halaal.
 ####+END:
 
 __author__="
@@ -78,14 +86,14 @@ _CommentEnd_
 
 # PRE parameters
 
-typeset -t bxeDesc="MANDATORY"
+typeset -t bxeDesc=""
 typeset -t bxoId=""
 # usg=""
 
 function G_postParamHook {
     bxoIdPrepValidate    
 
-    if [ "${bxeDesc}" != "MANDATORY" ] ; then
+    if [ ! -z "${bxeDesc}" ] ; then
      	bxeDesc=$( FN_absolutePathGet ${bxeDesc} )
     fi
     if [ ! -z "${bxoId}" ] ; then
@@ -117,15 +125,18 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
-    oneBxeDesc="/bisos/var/bxae/bxeDesc/A/system/as-bisos"
+    local bxeDescBase="$(vis_bxeDescBase_obtain)"
+    
+    local oneBxeDesc="${bxeDescBase}/priv/real/system/prs_bisos"    
 
-    #oneBxoId="as-bisos"
+    #oneBxoId="prs-bisos"
     oneBxoId="${currentBxoId}"
     oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )    
     
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
+bisosCurrentsManage.sh
 $( examplesSeperatorChapter "Realize A BxE -- Create BxoAcct and Push Initial Repos" )
 $( examplesSeperatorSection "BxO Local Acct Creation" )
 ${G_myName} ${extraInfo} -p bxeDesc="${oneBxeDesc}" -i bxoAcctCreate
@@ -135,7 +146,7 @@ ${G_myName} ${extraInfo} -p bxeDesc="${oneBxeDesc}" -i bxoBxeDescCopy
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i bxoCredentialsUpdate      # calls bxoSshKeyUpdate & invokes lcaSshAdmin.sh
 ${G_myName} ${extraInfo} -f -p bxoId="${oneBxoId}" -i bxoCredentialsUpdate   # G_forceMode 
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i bxoGitServerDescUpdate
-${G_myName} ${extraInfo} -p bxeDesc="${oneBxeDesc}" -i getBxoId
+${G_myName} ${extraInfo} -i bxoIdFromBxeDesc "${oneBxeDesc}"
 $( examplesSeperatorSection "BxO GitServer Provision -- Git Acct Creation" )
 bxoGitlab.py
 bxoGitlab.py -v 20 --bxoId="${oneBxoId}" -i acctCreate 
@@ -165,16 +176,18 @@ function vis_realize {
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [[ "${bxeDesc}" != "MANDATORY" ]]    
+    EH_assert [[ ! -z "${bxeDesc}" ]]    
 
     lpDo vis_bxoAcctCreate    # creates ~bxoId
 
     lpDo vis_rbxeSetup        # bxoBxeDescCopy + bxoCredentialsUpdate + bxoGitServerDescUpdate
 
-    local cp_bxePrefix=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxePrefix )
-    local cp_rdn=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} rdn )
+    # local cp_bxePrefix=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxePrefix )
+    # local cp_rdn=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} rdn )
 
-    bxoId="${cp_bxePrefix}-${cp_rdn}"
+    # bxoId="${cp_bxePrefix}-${cp_rdn}"
+
+    bxoId="$( vis_bxoIdFromBxeDesc ${bxeDesc} )"
 
     lpDo vis_gitServerBxoAcctCreate
 
@@ -194,33 +207,15 @@ function vis_bxoAcctCreate {
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [[ "${bxeDesc}" != "MANDATORY" ]]    
+    EH_assert [[ ! -z "${bxeDesc}" ]]    
 
-    local cp_bxePrefix=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxePrefix )
-    local cp_rdn=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} rdn )
     local cp_bxeOid=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxeOid )    
 
-    local bxeLocalName="${cp_bxePrefix}-${cp_rdn}"
+    local bxeLocalName="$(vis_bxoIdFromBxeDesc ${bxeDesc})"
+
     local bxeOidComment="oid-${cp_bxeOid}"
 
     lpDo bxoAcctManage.sh -h -v -n showRun -p acctComment="${bxeOidComment}" -i bxisoAcctCreate ${bxeLocalName}
-
-    lpReturn
-}
-
-function vis_getBxoId {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-Even though bxo exists at this stage, the bxeDesc param is needed for the cp.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert [[ "${bxeDesc}" != "MANDATORY" ]]
-
-    local cp_bxePrefix=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxePrefix )
-    local cp_rdn=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} rdn )        
-
-    echo "${cp_bxePrefix}-${cp_rdn}"
 
     lpReturn
 }
@@ -233,12 +228,9 @@ Even though bxo exists at this stage, the bxeDesc param is needed for the cp.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [[ "${bxeDesc}" != "MANDATORY" ]]
+    EH_assert [[ ! -z "${bxeDesc}" ]]
 
-    local cp_bxePrefix=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxePrefix )
-    local cp_rdn=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} rdn )        
-
-    bxoId="${cp_bxePrefix}-${cp_rdn}"
+    bxoId="$(vis_bxoIdFromBxeDesc ${bxeDesc})"
 
     bxoHome=$( FN_absolutePathGet ~${bxoId} )
     
@@ -261,12 +253,9 @@ Even though bxo exists at this stage, the bxeDesc param is needed for the cp.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [[ "${bxeDesc}" != "MANDATORY" ]]
+    EH_assert [[ ! -z "${bxeDesc}" ]]
 
-    local cp_bxePrefix=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxePrefix )
-    local cp_rdn=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} rdn )        
-
-    local bxeLocalName="${cp_bxePrefix}-${cp_rdn}"
+    local bxeLocalName="$(vis_bxoIdFromBxeDesc ${bxeDesc})"
 
     bxoHome=$( FN_absolutePathGet ~${bxeLocalName} )
 
@@ -343,15 +332,23 @@ _EOF_
 
     local retVal=0
     local priv_pubkeyPath="${bxoHome}/rbxe/credentials/ssh/id_rsa.pub"
+    local keyName="$(bxoGitServerSshKeyName $(bxoGitServerPrivTag) ${bxoId} rsa)"
 
     if [ ! -f "${priv_pubkeyPath}" ] ; then
 	EH_problem "Missing ${priv_pubkeyPath}"
 	lpReturn 1
-    fi	
+    fi
 
     local gotKeyTmpFile=$(mktemp).sshKey
     
-    lpDo eval bxoGitlab.py --bxoId="${bxoId}" --keyName="_priv-pubkey" -i pubkeyObtain \> ${gotKeyTmpFile}
+    lpDo eval bxoGitlab.py --bxoId="${bxoId}" --keyName="${keyName}" -i pubkeyObtain \> ${gotKeyTmpFile}
+
+    if [ ! -s "${gotKeyTmpFile}" ] ; then
+	ANT_raw "No pubkey Found for bxoId=${bxoId} keyName=${keyName}"
+	lpDo rm ${gotKeyTmpFile}
+	retVal=1
+	lpReturn ${retVal}
+    fi
 
     local local_fingerPrint=$( ssh-keygen -l -f ${priv_pubkeyPath} | cut -d ' ' -f 2 )
     local gitlab_fingerPrint=$( ssh-keygen -l -f ${gotKeyTmpFile} | cut -d ' ' -f 2 )
@@ -364,6 +361,8 @@ _EOF_
 	retVal=1
     fi
 
+    lpDo rm ${gotKeyTmpFile}
+    
     lpReturn ${retVal}
 }
 
@@ -378,6 +377,7 @@ _EOF_
     EH_assert [[ ! -z "${bxoId}" ]]
 
     local priv_pubkeyPath="${bxoHome}/rbxe/credentials/ssh/id_rsa.pub"
+    local keyName="$(bxoGitServerSshKeyName $(bxoGitServerPrivTag) ${bxoId} rsa)"
 
     if vis_gitServerBxoPubkeyVerify ; then
 	ANT_raw "Same keys -- Uploading skipped"
@@ -385,7 +385,7 @@ _EOF_
     fi
 
     if [ -f "${priv_pubkeyPath}" ] ; then
-	lpDo bxoGitlab.py -v 20 --bxoId="${bxoId}" --keyName="_priv-pubkey" -i pubkeyUpload ${priv_pubkeyPath}
+	lpDo bxoGitlab.py -v 20 --bxoId="${bxoId}" --keyName="${keyName}" -i pubkeyUpload ${priv_pubkeyPath}
     else
 	EH_problem "Missing ${priv_pubkeyPath}"
     fi	
@@ -409,41 +409,6 @@ _EOF_
     lpReturn
 }
 
-
-function vis_repoCreateAndPush {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 3 ]]
-    EH_assert [[ ! -z "${bxoId}" ]]
-
-    local repoName="$1"
-    local baseDir="$2"
-    local gitServerSelector="$3"
-
-    #local gitServerUrl=git@bxoGit-${gitServerSelector}.${bxoId}:${bxoId}/${repoName}.git
-    local gitServerUrl=git@bxoPriv_${bxoId}:${bxoId}/${repoName}.git    
-
-    local curUser=$( id -u -n )
-
-    lpDo bxoGitlab.py -v 20 --bxoId="${bxoId}" -i reposCreate ${repoName}      
-
-    #lpDo sudo chown -R "${curUser}":bisos ${baseDir}
-
-    # previous example of using bxoId user: 
-    # inBaseDirDo ${bxoHome}/rbxe sudo -u ${bxoId} git init
-    
-    inBaseDirDo ${baseDir} git init    
-    inBaseDirDo ${baseDir} git add .
-    inBaseDirDo ${baseDir} git commit -m "Initial_bxeRealize.sh_commit_of_${baseDir}"
-
-    inBaseDirDo ${baseDir} git remote add origin ${gitServerUrl}
-    inBaseDirDo ${baseDir} git remote -v
-    inBaseDirDo ${baseDir} git push origin master
-
-    lpReturn
-}
 
 
 function vis_initialReposPush {

@@ -72,8 +72,7 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
-# . ${opBinBase}/bystarHook.libSh
-. ${opBinBase}/bxeHookRun_lib.sh
+. ${opBinBase}/bystarHook.libSh
 
 . ${opBinBase}/bxeRegReq_lib.sh
 
@@ -104,34 +103,30 @@ function vis_examples {
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
     visLibExamplesOutput ${G_myName} 
-    cat  << _EOF_
+  cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 _EOF_
-  
-    vis_examplesRegReqBases  
-    vis_examplesBxRealEntity all regReqCreate
-  
-    cat  << _EOF_
-$( examplesSeperatorChapter "Bx Real Entity" )
-${G_myName} ${extraInfo} -i examplesBxRealEntity all all full
-${G_myName} ${extraInfo} -i examplesBxRealEntity all regReqCreate all
-${G_myName} ${extraInfo} -i examplesBxRealEntity indiv all essentials
-${G_myName} ${extraInfo} -i examplesBxRealEntity corp all essentials
-${G_myName} ${extraInfo} -i examplesBxRealEntity sys all essentials
-$( examplesSeperatorChapter "Bx Information Entity" )
-${G_myName} ${extraInfo} -i examplesBxInfoEntity all all full
-${G_myName} ${extraInfo} -i examplesBxServiceEntity all regReqCreate all
-${G_myName} ${extraInfo} -i examplesBxInfoEntity registrar all essentials
-${G_myName} ${extraInfo} -i examplesBxInfoEntity site all essentials
-${G_myName} ${extraInfo} -i examplesBxInfoEntity sysChar all essentials
-${G_myName} ${extraInfo} -i examplesBxInfoEntity usage all essentials
-${G_myName} ${extraInfo} -i examplesBxInfoEntity project all essentials
-${G_myName} ${extraInfo} -i examplesBxInfoEntity virtGuest all essentials
-$( examplesSeperatorChapter "Bx Service Entity" )
-${G_myName} ${extraInfo} -i examplesBxServiceEntity all all full
-${G_myName} ${extraInfo} -i examplesBxServiceEntity all regReqCreate all
-${G_myName} ${extraInfo} -i examplesBxServiceEntity byname all essentials
-${G_myName} ${extraInfo} -i examplesBxServiceEntity bysmb all essentials
+  vis_examplesBxRE all all
+   cat  << _EOF_
+$( examplesSeperatorChapter "Selected Specific Types and Scopes" )
+${G_myName} ${extraInfo} -i examplesBxRE indiv regReqCreate
+${G_myName} ${extraInfo} -i examplesBxRE corp regReqCreate
+${G_myName} ${extraInfo} -i examplesBxRE sys regReqCreate
+${G_myName} ${extraInfo} -i examplesBxRE indiv startToPrivRealize
+${G_myName} ${extraInfo} -i examplesBxRE corp startToPrivRealize
+${G_myName} ${extraInfo} -i examplesBxRE sys startToPrivRealize
+${G_myName} ${extraInfo} -i examplesBxRE indiv all   # create+bxReg|selfReg+bxRealize|startToPrivRealize
+${G_myName} ${extraInfo} -i examplesBxRE corp all
+${G_myName} ${extraInfo} -i examplesBxRE sys all
+$( examplesSeperatorChapter "Registraion Request -- RegReq Creation" )
+bxeRegReqManage.sh
+$( examplesSeperatorChapter "Central Registration Of The Request -- BxeDesc Creation" )
+selfCentralRegistrar.sh
+bxCentralRegistrar.sh
+$( examplesSeperatorChapter "Capturing Of The Registration -- BxeDesc Stash" )
+bxeDescManage.sh
+$( examplesSeperatorChapter "BxO And Git Accts Creation -- BxeRealization and BxO Instantiation" )
+bxeRealize.sh
 _EOF_
 
 }

@@ -144,6 +144,7 @@ ${G_myName} -i usgSshConfigSegBaseList
 $( examplesSeperatorSection "USG Ssh Bxo Config Segment File Update" )
 ${G_myName} -p bxoId=${oneBxoId} -i bxoConfigSegStdout bxoPriv ${site_gitServerName}
 ${G_myName} ${extraInfo} -p bxoId=${oneBxoId} -i bxoConfigSegStdout bxoPriv ${site_gitServerName}  # Verbose
+${G_myName} ${extraInfo} -p bxoId=${oneBxoId} -i bxoConfigSegFileName bxoPriv ${site_gitServerName}
 ${G_myName} ${extraInfo} -p bxoId=${oneBxoId} -i bxoConfigSegUpdate bxoPriv ${site_gitServerName}
 ${G_myName} ${extraInfo} -p bxoId=${oneBxoId} -i bxoConfigSegDelete bxoPriv
 ${G_myName} ${extraInfo} -p bxoId=${oneBxoId} -i bxoConfigSegExists bxoPriv
@@ -357,6 +358,7 @@ _EOF_
     local bxoGitServerName="$2"
 
     cat  << _EOF_
+# at $( DATE_nowTag ) by $(id -u -n) on $(hostname)
 # BxoId=${bxoId}  bxoGitLabel=${bxoGitLabel}  bxoGitServerName=${bxoGitServerName}
 Host ${bxoGitLabel}_${bxoId}
 	Hostname ${bxoGitServerName}
@@ -365,6 +367,20 @@ Host ${bxoGitLabel}_${bxoId}
 _EOF_
 
     lpReturn
+}
+
+function vis_bxoConfigSegFileName {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 2 ]]
+    EH_assert [[ ! -z "${bxoId}" ]]    
+
+    local bxoGitLabel="$1"
+    local bxoGitServerName="$2"
+
+    echo "${usgSshConfigSeg_baseDir}/${bxoGitLabel}_${bxoId}.configSeg"
 }
 
 
@@ -379,7 +395,7 @@ _EOF_
     local bxoGitLabel="$1"
     local bxoGitServerName="$2"
 
-    local outFileName="${usgSshConfigSeg_baseDir}/${bxoGitLabel}_${bxoId}.configSeg"
+    local outFileName="$( vis_bxoConfigSegFileName ${bxoGitLabel} ${bxoGitServerName} )"
 
     lpDo eval vis_bxoConfigSegStdout ${bxoGitLabel} ${bxoGitServerName} \> "${outFileName}"
 

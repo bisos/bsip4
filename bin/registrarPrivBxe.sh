@@ -20,7 +20,7 @@ SEED="
 *  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
 "
 FILE="
-*  /This File/ :: /bisos/bsip/bin/selfCentralRegistrar.sh 
+*  /This File/ :: /bisos/bsip/bin/privCentralRegistrar.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
     /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
@@ -64,7 +64,7 @@ _CommentEnd_
 
 . ${opBinBase}/fileParam_lib.sh
 
-# . ${opBinBase}/bxeDesc_lib.sh
+. ${opBinBase}/bxeDesc_lib.sh
 
 . ${opBinBase}/bystarHook.libSh
 
@@ -75,12 +75,12 @@ _CommentEnd_
 # . ${opBinBase}/bisosCurrents_lib.sh
 
 # PRE parameters
-typeset -t regReqFile="MANDATORY"
+typeset -t regReqFile=""
 
 function G_postParamHook {
     # lpCurrentsGet
 
-    if [ "${regReqFile}" != "MANDATORY" ] ; then
+    if [ ! -z "${regReqFile}" ] ; then
 	regReqFile=$( FN_absolutePathGet ${regReqFile} )
     fi
 }
@@ -102,17 +102,23 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
-    oneregReqFile="$( ls /bisos/var/bxae/bxeRegReq/A/system/A_system_bisos.2*.REGREQ | head -1 )"
-    if [ -z "${oneregReqFile}" ] ; then
-	oneregReqFile="Missing"
-	EH_problem "Missing oneregReqFile"
+    local regReqInfoBasePath=$( bxeRegReqManage.sh -i regReqInfoBasePath_obtain )
+    
+    #local oneRegReqFile="$( ls /bisos/var/bxe/regReq/real/system/real_system_bisos.2*.REGREQ | head -1 )"
+    local oneRegReqFile="$( ls ${regReqInfoBasePath}/real/system/real_system_bisos.2*.REGREQ | head -1 )"
+    
+    if [ -z "${oneRegReqFile}" ] ; then
+	oneRegReqFile="Missing"
+	EH_problem "Missing oneRegReqFile"
     fi
     
     visLibExamplesOutput ${G_myName} 
-  cat  << _EOF_
+    cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
+$( examplesSeperatorChapter "Registrar Bases" )
+${G_myName} ${extraInfo} -i registrarBaseGet
 $( examplesSeperatorChapter "Register The bxeRegReq" )
-${G_myName} ${extraInfo} -p regReqFile="${oneregReqFile}" -i bxeDescCreate
+${G_myName} ${extraInfo} -p regReqFile="${oneRegReqFile}" -i bxeDescCreate
 _EOF_
 }
 
@@ -120,35 +126,169 @@ _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
 _CommentEnd_
 
-function registrarBaseGet {
-    # Before creation of intraSite, /bisos/var/init is used.
-    echo "/bisos/var/init/selfRegistrar"
+
+function vis_registrarBaseGet { registrarBaseGet; }
+
+function registrarBaseGet {     
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    readonly privRegistrarBxoId="pir_privRegistrar"
+    local bxoHome=""
+    
+    if ! unisosAccts.sh -i userAcctExists "${privRegistrarBxoId}" ; then
+	# Missing bxoId
+	# Before creation of privRegistrarBxoId, /bisos/var/init is used.
+	echo "/bisos/var/init/privRegistrar"
+	lpReturn 
+    else
+	bxoHome=$( FN_absolutePathGet ~${privRegistrarBxoId} )
+	if [ -z "${bxoHome}" ] ; then
+	    EH_problem "Missing bxoHome -- privRegistrarBxoId=${privRegistrarBxoId}"
+	    lpReturn 101
+	fi
+	bxePrivRegBase="${bxoHome}/regBxe"
+	if [ ! -d "${bxePrivRegBase}" ] ; then
+	    lpDo mkdir "${bxePrivRegBase}"
+	fi
+	echo "${bxePrivRegBase}"
+    fi
 }
+    
 
 function registrarROidGet {
-    cat $(registrarBaseGet)/registrar.roid
-}
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
 
-function bxeTypeROidGet {
-    cat bxeType.roid
-}
+    local bxoHome=""
+    local subBxeDir=""
+    local regReqBaseDir=""
 
-
-selfRegParamSpecific_A_system () {
-    local registrarBase=$( registrarBaseGet )
-    local asBaseDir="${registrarBase}/bxeDesc/A/system"
-    
-    bxePrefix="as"  # Autonomous System
-    
-    if [ ! -d "${asBaseDir}" ] ; then
-	opDo mkdir -p "${asBaseDir}"
-	echo 3 > ${asBaseDir}/bxeType.roid
+    if [ -z "${parent}" ] ; then
+	lpDo cat $(registrarBaseGet)/registrar.roid    
+    else
+	if ! unisosAccts.sh -i userAcctExists "${parent}" ; then
+	    EH_problem "Missing bxoId -- parent=${parent}"
+	    lpReturn 101
+	fi
+	bxoHome=$( FN_absolutePathGet ~${parent} )
+	if [ -z "${bxoHome}" ] ; then
+	    EH_problem "Missing bxoHome -- parent=${parent}"
+	    lpReturn 101
+	fi
+	bxeDescDir="${bxoHome}/rbxe/bxeDesc"
+	if [ ! -d "${bxeDescDir}" ] ; then
+	    EH_problem "Missing bxeDescDir=${bxeDescDir}"
+	    lpReturn 101
+	fi
+	lpDo fileParamManage.py  -i fileParamRead  ${bxeDescDir} bxeOid
     fi
-    selfRegAcctTypeBxeDescBase="${asBaseDir}"
+}
+    
+function bxeTypeROidGet {
+
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    # cat bxeType.roid    # obsoleted
+    
+    local bxeTypeROid=$( vis_kindTypeTag_obtain ${kind} ${type} "numeric" )
+
+    echo ${bxeTypeROid}
 }
 
-selfRegParamSpecific () {
-    bystarServiceSupportHookRun selfRegParamSpecific
+
+function privRegBxeDescKindType_prep {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 2 ]]
+    local baseDir=$1
+    local bxeTypeROid=$2
+    
+    if [ ! -d "${baseDir}" ] ; then    
+	opDo mkdir -p "${baseDir}"
+    fi
+    if [ ! -f ${baseDir}/bxeType.roid ] ; then
+	lpDo eval echo ${bxeTypeROid} \> ${baseDir}/bxeType.roid
+    fi
+}
+
+
+function vis_regReqFileName {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local bxoHome=""
+    local subBxeDir=""
+    local regReqBaseDir=""    
+
+    if [ -z "${parent}" ] ; then
+	local regReqInfoBasePath=$(vis_regReqInfoBasePath_obtain)
+    
+	opDo mkdir -p ${regReqInfoBasePath}
+
+	regReqBaseDir="${regReqInfoBasePath}/${kind}/${type}"
+    else
+	if ! unisosAccts.sh -i userAcctExists "${parent}" ; then
+	    EH_problem "Missing bxoId -- parent=${parent}"
+	    lpReturn 101
+	fi
+	bxoHome=$( FN_absolutePathGet ~${parent} )
+	if [ -z "${bxoHome}" ] ; then
+	    EH_problem "Missing bxoHome -- parent=${parent}"
+	    lpReturn 101
+	fi
+	subBxeDir="${bxoHome}/subBxe"
+	if [ ! -d "${subBxeDir}" ] ; then
+	    EH_problem "Missing subBxeDir=${subBxeDir}"
+	    lpReturn 101
+	fi
+	regReqBaseDir="${subBxeDir}/regReq/${kind}/${type}"
+    fi
+}
+
+privRegParamSpecific_real_system () {
+    #
+    # Left here as an example -- other wise same as default_default
+    #
+    local registrarBase=$( registrarBaseGet )
+    privRegAcctTypeBxeDescBase="${registrarBase}/bxeDesc/real/system"
+    
+    bxePrefix="prs"  # Real System
+
+    local bxeTypeROid=$( vis_kindTypeTag_obtain ${kind} ${type} "numeric" )
+
+    lpDo privRegBxeDescKindType_prep ${privRegAcctTypeBxeDescBase} ${bxeTypeROid}
+}
+
+privRegParamSpecific_DEFAULT_DEFAULT () {
+    local registrarBase=$( registrarBaseGet )
+    privRegAcctTypeBxeDescBase="${registrarBase}/bxeDesc/${kind}/${type}"
+    
+    bxePrefix=$( vis_bxePrefix_obtain "priv" ${kind} ${type} )
+
+    local bxeTypeROid=$( vis_kindTypeTag_obtain ${kind} ${type} "numeric" )
+
+    lpDo privRegBxeDescKindType_prep ${privRegAcctTypeBxeDescBase} ${bxeTypeROid}
+}
+
+
+privRegParamSpecific () {
+    bystarServiceSupportHookRun privRegParamSpecific
 }
 
 
@@ -164,15 +304,18 @@ bxeDescParamInitSpecificCommon () {
     lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} bxeROid "${nextNu}"
     lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} bxeOid "$( bxeOidGet ${nextNu} )"
 
-    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} bxeAutonomy  "${bc_autonomy}"
+    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} bxePrivacy  "${bc_privacy}"
+    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} bxeKind  "${bc_kind}"    
     lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} bxeType  "${bc_type}"
-    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} bxePrefix  "${bxePrefix}"    
+    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} bxePrefix  "${bxePrefix}"
 
+    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} parentBxoId  "${bc_parentBxoId}"
+    
     lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} RegReqOriginationMethod  "${bc_originationMethod}"    
     lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} requestingSysId "${opRunHostName}"
     lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} AdminContactEmail "${bc_email}"
 
-    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} regReqFileName "${RegReqFileName}"
+    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} regReqFileName "${regReqFileName}"
 }
 
 function bxeOidGet {
@@ -193,7 +336,7 @@ _EOF_
     lpReturn
 }	
 
-bxeDescParamInitSpecific_A_system () {
+bxeDescParamInitSpecific_real_system () {
     EH_assert [[ $# -eq 1 ]]
     local thisDir=${1}
     local thisPath="$(pwd)/${thisDir}"    
@@ -219,7 +362,27 @@ bxeDescParamInitSpecific_A_system () {
 
 
 bxeDescParamInitSpecific_DEFAULT_DEFAULT () {
-    ANT_cooked "Missing ${bystarServiceType}_${bystarServiceSupportType}"
+    EH_assert [[ $# -eq 1 ]]
+    local thisDir=${1}
+    local thisPath="$(pwd)/${thisDir}"    
+
+    local rdnSelectorTag=""
+
+    bxeDescParamInitSpecificCommon ${1}
+
+    #
+    # SERVICE SPECIFIC PARAMETERS
+    #
+
+    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} name "${bc_name}"
+
+    if (( selectorNu == 1 )) ; then
+	rdnSelectorTag=""
+    else
+	rdnSelectorTag="_${selectorNu}"
+    fi
+
+    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} rdn "${bc_name}${rdnSelectorTag}"
 }
 
 bxeDescParamInitSpecific () {
@@ -246,7 +409,7 @@ bxeDescCheckDuplicateSpecificCommon () {
     fi
 }
 
-bxeDescCheckDuplicateSpecific_A_system () {
+bxeDescCheckDuplicateSpecific_real_system () {
     EH_assert [[ $# -eq 1 ]]
     local thisDir=${1}
     local thisPath="$(pwd)/${thisDir}"    
@@ -257,7 +420,7 @@ bxeDescCheckDuplicateSpecific_A_system () {
 
     local cp_sysName=$( fileParamManage.py  -i fileParamRead  ${thisPath} sysName )    
     
-    if [ "${bc_sysName}_" == "${cp_sysName}_" ] ; then
+    if [ "${bc_sysName}" == "${cp_sysName}" ] ; then
 	ANT_cooked "$1: DUPLICATE, ${selectorNu}"
 	selectorNu=$( expr ${selectorNu} +  1 )
     fi
@@ -266,7 +429,22 @@ bxeDescCheckDuplicateSpecific_A_system () {
 }
 
 bxeDescCheckDuplicateSpecific_DEFAULT_DEFAULT () {
-   ANT_cooked "Missing ${bystarServiceType}_${bystarServiceSupportType}"
+    EH_assert [[ $# -eq 1 ]]
+    local thisDir=${1}
+    local thisPath="$(pwd)/${thisDir}"    
+    local retVal=""
+    
+    bxeDescCheckDuplicateSpecificCommon ${1}
+    retVal=$?
+
+    local cp_name=$( fileParamManage.py  -i fileParamRead  ${thisPath} name )    
+    
+    if [ "${bc_name}" == "${cp_name}" ] ; then
+	ANT_cooked "$1: DUPLICATE, ${selectorNu}"
+	selectorNu=$( expr ${selectorNu} +  1 )
+    fi
+
+    lpReturn ${retVal}
 }
 
 bxeDescCheckDuplicateSpecific () {
@@ -275,46 +453,45 @@ bxeDescCheckDuplicateSpecific () {
 
 vis_bxeDescCreate () {
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [[ "${regReqFile}" != "MANDATORY" ]]
+    EH_assert [[ ! -z "${regReqFile}" ]]
 
     local thisDir=""
     
     . ${regReqFile}
-    RegReqContainer
+    regReqContainer
 
-    autonomy="${bc_autonomy}"
+    kind="${bc_kind}"
     type="${bc_type}"
 
-    bystarServiceSupportHookParamsSet ${autonomy} ${type}
+    bystarServiceSupportHookParamsSet ${kind} ${type}
 
-    selfRegParamSpecific
+    privRegParamSpecific
 
-    opDoExit cd ${selfRegAcctTypeBxeDescBase}
+    opDoExit cd ${privRegAcctTypeBxeDescBase}
 
     BxeDescList=$( ls | grep -v CVS | grep -v bxeType.roid | sort )
 	
     selectorNu=1
     
     for thisDir in ${BxeDescList} ; do
+	# bxeDescCheckDuplicateSpecific increments selectorNu for RDN if needed
 	if bxeDescCheckDuplicateSpecific ${thisDir} ; then
 	    ANT_cooked "duplicate Detected -- ${thisDir}"
+	    ANT_cooked "$(pwd)/${thisDir}/regReqFileName/value  is same as -p regReqFileName"
 	    echo $(pwd)/${thisDir}
 	    lpReturn
 	fi
     done
 
-    lastNuStr=${thisDir} 
-
-    nextNu=$( expr $lastNuStr +  1 )
+    nextNu=$( expr ${thisDir} +  1 )
     opDoExit mkdir ${nextNu}
-
     thisDir=${nextNu}
 
-    bxeDescParamInitSpecific ${thisDir}
+    bxeDescParamInitSpecific ${thisDir}    # writes fileparams and RDN
 
     opDoExit cd ${thisDir}
-
-    echo "date=\"$( date )\"" >>  ${regReqFile}
+    
+    echo "date=\"$( date )\"" >>  ${regReqFile}  # as specified with -p regReqFile=
     echo "BxeDesc=$( pwd )" >> ${regReqFile}
 
     opDo sudo chown -R bisos:bisos .

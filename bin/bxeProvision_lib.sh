@@ -54,7 +54,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
     
-    visLibExamplesOutput ${G_myName} 
+    #visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 _EOF_
@@ -66,10 +66,11 @@ function vis_examplesApplyProvisioners {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
-    EH_assert [[ $# -eq 2 ]]
+    EH_assert [[ $# -eq 3 ]]
 
     local secTitle=$1
     local provisioningScope=$2
+    local paramsDetail=$3
     
     extraInfo="-h -v -n showRun"
     typeset extraInfo="-h -v -n showRun"
@@ -90,198 +91,214 @@ $( examplesSeperatorSection "${secTitle} -- With Full Params" )
 _EOF_
     }
 
-    function examplesRegReqCreateMini {
-	EH_assert [[ $# -lt 2 ]]
+    function examplesRegReqCreate {
+	EH_assert [[ $# -le 2 ]]
+	EH_assert [[ $# -gt 0 ]]
 
-	if [ $# -eq 1 ] ; then
-	    sectionHeaderEssentials
-	fi
+	local paramsDetail=$1
 
-	cat  << _EOF_
+	if [ "${paramsDetail}" == "essentials" ] || [ "${paramsDetail}" == "all" ] ; then
+	    if [ $# -eq 2 ] ; then
+		sectionHeaderEssentials
+	    fi
+
+	    cat  << _EOF_
 ${G_myName} ${extraInfo} ${bxeParamsMini} -i regReqStdout
 ${G_myName} ${extraInfo} ${bxeParamsMini} -i regReqFileCreate
 _EOF_
-    }
-
-    function examplesRegReqCreateFull {
-	EH_assert [[ $# -lt 2 ]]
-
-	if [ $# -eq 1 ] ; then
-	    sectionHeaderFull
 	fi
+	if [ "${paramsDetail}" == "full" ] || [ "${paramsDetail}" == "all" ] ; then
+	    if [ $# -eq 2 ] ; then
+		sectionHeaderFull
+	    fi
 
-	cat  << _EOF_
+	    cat  << _EOF_
 ${G_myName} ${extraInfo} ${bxeParamsFull} -i regReqStdout
 ${G_myName} ${extraInfo} ${bxeParamsFull} -i regReqFileCreate
 _EOF_
+	fi
     }
 
+    function examplesBxReg {
+	EH_assert [[ $# -le 2 ]]
+	EH_assert [[ $# -gt 0 ]]
 
-    function examplesBxRegMini {
-	EH_assert [[ $# -lt 2 ]]
+	local paramsDetail=$1
 
-	if [ $# -eq 1 ] ; then
-	    sectionHeaderEssentials	    
-	fi
+	if [ "${paramsDetail}" == "essentials" ] || [ "${paramsDetail}" == "all" ] ; then
+	    if [ $# -eq 2 ] ; then
+		sectionHeaderEssentials
+	    fi
 
-	cat  << _EOF_
+	    cat  << _EOF_
 ${G_myName} ${extraInfo} ${bxeParamsMini} -i startToBxReg
 _EOF_
-    }
-
-    function examplesBxRegFull {
-	EH_assert [[ $# -lt 2 ]]
-
-	if [ $# -eq 1 ] ; then
-	    sectionHeaderFull	    
 	fi
+	if [ "${paramsDetail}" == "full" ] || [ "${paramsDetail}" == "all" ] ; then
+	    if [ $# -eq 2 ] ; then
+		sectionHeaderFull
+	    fi
 
-	cat  << _EOF_
+	    cat  << _EOF_
 ${G_myName} ${extraInfo} ${bxeParamsFull} -i startToBxReg
 _EOF_
+	fi
     }
 
-    function examplesSelfRegMini {
-	EH_assert [[ $# -lt 2 ]]
+    function examplesPrivReg {
+	EH_assert [[ $# -le 2 ]]
+	EH_assert [[ $# -gt 0 ]]
 
-	if [ $# -eq 1 ] ; then
-	    sectionHeaderEssentials	    
-	fi
+	local paramsDetail=$1
 
-	cat  << _EOF_
-${G_myName} ${extraInfo} ${bxeParamsMini} -i startToSelfReg
+	if [ "${paramsDetail}" == "essentials" ] || [ "${paramsDetail}" == "all" ] ; then
+	    if [ $# -eq 2 ] ; then
+		sectionHeaderEssentials
+	    fi
+
+	    cat  << _EOF_
+${G_myName} ${extraInfo} ${bxeParamsMini} -i startToPrivReg
 _EOF_
-    }
-
-    function examplesSelfRegFull {
-	EH_assert [[ $# -lt 2 ]]
-
-	if [ $# -eq 1 ] ; then
-	    sectionHeaderFull	    
 	fi
+	if [ "${paramsDetail}" == "full" ] || [ "${paramsDetail}" == "all" ] ; then
+	    if [ $# -eq 2 ] ; then
+		sectionHeaderFull
+	    fi
 
-	cat  << _EOF_
-${G_myName} ${extraInfo} ${bxeParamsFull} -i startToSelfReg
+	    cat  << _EOF_
+${G_myName} ${extraInfo} ${bxeParamsFull} -i startToPrivReg
 _EOF_
+	fi
     }
 
-    function examplesBxeDescStashMini {
-	EH_assert [[ $# -lt 2 ]]
+    function examplesBxeDescStash {
+	EH_assert [[ $# -le 2 ]]
+	EH_assert [[ $# -gt 0 ]]
 
-	if [ $# -eq 1 ] ; then
-	    sectionHeaderEssentials	    
-	fi
+	local paramsDetail=$1
 
-	cat  << _EOF_
+	if [ "${paramsDetail}" == "essentials" ] || [ "${paramsDetail}" == "all" ] ; then
+	    if [ $# -eq 2 ] ; then
+		sectionHeaderEssentials
+	    fi
+
+	    cat  << _EOF_
 ${G_myName} ${extraInfo} ${bxeParamsMini} -i startToBxeDescStash
 _EOF_
-    }
-
-    function examplesBxeDescStashFull {
-	EH_assert [[ $# -lt 2 ]]
-
-	if [ $# -eq 1 ] ; then
-	    sectionHeaderFull	    
 	fi
+	if [ "${paramsDetail}" == "full" ] || [ "${paramsDetail}" == "all" ] ; then
+	    if [ $# -eq 2 ] ; then
+		sectionHeaderFull
+	    fi
 
-	cat  << _EOF_
+	    cat  << _EOF_
 ${G_myName} ${extraInfo} ${bxeParamsFull} -i startToBxeDescStash
 _EOF_
-    }
-    
-    function examplesBxRealizeMini {
-	EH_assert [[ $# -lt 2 ]]
-
-	if [ $# -eq 1 ] ; then
-	    sectionHeaderEssentials	    
 	fi
+    }
 
-	cat  << _EOF_
+    function examplesBxRealize {
+	EH_assert [[ $# -le 2 ]]
+	EH_assert [[ $# -gt 0 ]]
+
+	local paramsDetail=$1
+
+	if [ "${paramsDetail}" == "essentials" ] || [ "${paramsDetail}" == "all" ] ; then
+	    if [ $# -eq 2 ] ; then
+		sectionHeaderEssentials
+	    fi
+
+	    cat  << _EOF_
 ${G_myName} ${extraInfo} ${bxeParamsMini} -i startToBxRealize
 _EOF_
-    }
-
-    function examplesBxRealizeFull {
-	EH_assert [[ $# -lt 2 ]]
-
-	if [ $# -eq 1 ] ; then
-	    sectionHeaderFull	    
 	fi
+	if [ "${paramsDetail}" == "full" ] || [ "${paramsDetail}" == "all" ] ; then
+	    if [ $# -eq 2 ] ; then
+		sectionHeaderFull
+	    fi
 
-	cat  << _EOF_
+	    cat  << _EOF_
 ${G_myName} ${extraInfo} ${bxeParamsFull} -i startToBxRealize
 _EOF_
-    }
-
-    function examplesSelfRealizeMini {
-	EH_assert [[ $# -lt 2 ]]
-
-	if [ $# -eq 1 ] ; then
-	    sectionHeaderEssentials	    
 	fi
-
-	cat  << _EOF_
-${G_myName} ${extraInfo} ${bxeParamsMini} -i startToSelfRealize
-_EOF_
     }
 
-    function examplesSelfRealizeFull {
-	EH_assert [[ $# -lt 2 ]]
+    function examplesPrivRealize {
+	EH_assert [[ $# -le 2 ]]
+	EH_assert [[ $# -gt 0 ]]
 
-	if [ $# -eq 1 ] ; then
-	    sectionHeaderFull	    
+	local paramsDetail=$1
+
+	if [ "${paramsDetail}" == "essentials" ] || [ "${paramsDetail}" == "all" ] ; then
+	    if [ $# -eq 2 ] ; then
+		sectionHeaderEssentials
+	    fi
+
+	    cat  << _EOF_
+${G_myName} ${extraInfo} ${bxeParamsMini} -i startToPrivRealize
+_EOF_
 	fi
+	if [ "${paramsDetail}" == "full" ] || [ "${paramsDetail}" == "all" ] ; then
+	    if [ $# -eq 2 ] ; then
+		sectionHeaderFull
+	    fi
 
-	cat  << _EOF_
-${G_myName} ${extraInfo} ${bxeParamsFull} -i startToSelfRealize
+	    cat  << _EOF_
+${G_myName} ${extraInfo} ${bxeParamsFull} -i startToPrivRealize
 _EOF_
+	fi
     }
-    
     
     
     case "${provisioningScope}" in
 	regReqCreate)
-	    examplesRegReqCreateMini "$1"
-	    examplesRegReqCreateFull "$1"	    
+	    examplesRegReqCreate "${paramsDetail}" "${secTitle}"
 	    ;;
 	startToBxReg)
-	    examplesBxRegMini "$1"
-	    examplesBxRegFull "$1"	    
+	    examplesBxReg "${paramsDetail}" "${secTitle}"
 	    ;;
-	startToSelfReg)
-	    examplesSelfRegMini "$1"
-	    examplesSelfRegFull "$1"	    
+	startToPrivReg)
+	    examplesPrivReg "${paramsDetail}" "${secTitle}"
 	    ;;
 	startToBxeDescStash)
-	    examplesBxeDescStashMini "$1"
-	    examplesBxeDescStashFull "$1"	    
+	    examplesBxeDescStash "${paramsDetail}" "${secTitle}"
 	    ;;
 	startToBxRealize)
-	    examplesBxRealizeMini "$1"
-	    examplesBxRealizeFull "$1"	    
+	    examplesBxRealize "${paramsDetail}" "${secTitle}"
 	    ;;
-	startToSelfRealize)
-	    examplesSelfRealizeMini "$1"
-	    examplesSelfRealizeFull "$1"	    
+	startToPrivRealize)
+	    examplesPrivRealize "${paramsDetail}" "${secTitle}"
 	    ;;
 	all)
-	    sectionHeaderEssentials
+	    if [ "${paramsDetail}" == "essentials" ] || [ "${paramsDetail}" == "all" ] ; then
+		sectionHeaderEssentials
 
-	    examplesRegReqCreateMini
-	    examplesBxRegMini
-	    examplesSelfRegMini
-	    examplesBxeDescStashMini	    	    
-	    examplesBxRealizeMini
-	    examplesSelfRealizeMini
+		examplesRegReqCreate "essentials"
+		if [ "${bxeKind}" == "real" ] ; then
+		    examplesBxReg "essentials"
+		fi
+		examplesPrivReg "essentials"
+		examplesBxeDescStash "essentials"
+		if [ "${bxeKind}" == "real" ] ; then		
+		    examplesBxRealize "essentials"
+		fi
+		examplesPrivRealize "essentials"
+	    fi
+	    if [ "${paramsDetail}" == "full" ] || [ "${paramsDetail}" == "all" ] ; then
+		
+		sectionHeaderFull
 	    
-	    sectionHeaderFull
-	    
-	    examplesRegReqCreateFull
-	    examplesBxRegFull
-	    examplesSelfRegFull
-	    examplesBxeDescStashFull	    
-	    examplesBxRealizeFull
-	    examplesSelfRealizeFull
+		examplesRegReqCreate "full"
+		if [ "${bxeKind}" == "real" ] ; then
+		    examplesBxReg "full"
+		fi
+		examplesPrivReg "full"
+		examplesBxeDescStash "full"
+		if [ "${bxeKind}" == "real" ] ; then		
+		    examplesBxRealize "full"
+		fi
+		examplesPrivRealize "full"
+	    fi
 	    ;;
 	*)
 	    EH_problem "Bad provisioningScope -- ${provisioningScope}"
@@ -291,30 +308,40 @@ _EOF_
 }
 
 
-
-function vis_examplesBxAE {
+function vis_examplesBxRealEntity {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
     EH_assert [[ $# -ge 0 ]]
 
+    bxeKind="real"    
+
     local bxeType="all"
     local provisioningScope="all"
+    local paramsDetail="all"
 
     if [ $# -eq 0 ] ; then
 	bxeType="all"
 	provisioningScope="all"
+	paramsDetail="all"	
     elif [ $# -eq 1 ] ; then
 	vis_examplesHeader
 	bxeType="$1"
 	provisioningScope="all"
+	paramsDetail="all"		
     elif [ $# -eq 2 ] ; then
 	vis_examplesHeader
     	bxeType="$1"
 	provisioningScope="$2"
+	paramsDetail="all"			
+    elif [ $# -eq 3 ] ; then
+	vis_examplesHeader
+    	bxeType="$1"
+	provisioningScope="$2"
+	paramsDetail="$3"			
     else
-	EH_Problem "Expected 0,1,2 args, got $#"
+	EH_Problem "Expected 0,1,2or3 args, got $#"
 	lpReturn 101
     fi
     
@@ -326,33 +353,33 @@ _EOF_
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
     cat  << _EOF_
-$( examplesSeperatorChapter "Bx Autonomous Information Entity" )
+$( examplesSeperatorChapter "Bx Real Information Entity" )
 _EOF_
 	
     case "${bxeType}" in
 	indiv)
-	    vis_examplesBxAutonomousIndiv
-	    vis_examplesApplyProvisioners "ByStar Autonomous Individual Entity" ${provisioningScope} 
+	    vis_examplesBxRealIndiv
+	    vis_examplesApplyProvisioners "ByStar Real Individual Entity" ${provisioningScope} ${paramsDetail}
 	    ;;
 	corp)
-	    vis_examplesBxAutonomousCorp
-	    vis_examplesApplyProvisioners "ByStar Autonomous Corporate Entity" ${provisioningScope}
+	    vis_examplesBxRealCorp
+	    vis_examplesApplyProvisioners "ByStar Real Corporate Entity" ${provisioningScope} ${paramsDetail}
 	    ;;
 	sys)
-	    vis_examplesBxAutonomousSys
-	    vis_examplesApplyProvisioners "ByStar Autonomous System Entity" ${provisioningScope}
-	    vis_examplesBxAutonomousSysTest
-	    vis_examplesApplyProvisioners "ByStar Autonomous System Test Entity" ${provisioningScope}
+	    vis_examplesBxRealSys
+	    vis_examplesApplyProvisioners "ByStar Real System Entity" ${provisioningScope} ${paramsDetail}
+	    vis_examplesBxRealSysTest
+	    vis_examplesApplyProvisioners "ByStar Real System Test Entity" ${provisioningScope} ${paramsDetail}
 	    ;;
 	all)
-	    vis_examplesBxAutonomousIndiv
-	    vis_examplesApplyProvisioners "ByStar Autonomous Individual Entity" ${provisioningScope} 
-	    vis_examplesBxAutonomousCorp
-	    vis_examplesApplyProvisioners "ByStar Autonomous Corporate Entity" ${provisioningScope}
-	    vis_examplesBxAutonomousSys
-	    vis_examplesApplyProvisioners "ByStar Autonomous System Entity" ${provisioningScope}
-	    vis_examplesBxAutonomousSysTest
-	    vis_examplesApplyProvisioners "ByStar Autonomous System Test Entity" ${provisioningScope}
+	    vis_examplesBxRealIndiv
+	    vis_examplesApplyProvisioners "ByStar Real Individual Entity" ${provisioningScope}  ${paramsDetail}
+	    vis_examplesBxRealCorp
+	    vis_examplesApplyProvisioners "ByStar Real Corporate Entity" ${provisioningScope} ${paramsDetail}
+	    vis_examplesBxRealSys
+	    vis_examplesApplyProvisioners "ByStar Real System Entity" ${provisioningScope} ${paramsDetail}
+	    vis_examplesBxRealSysTest
+	    vis_examplesApplyProvisioners "ByStar Real System Test Entity" ${provisioningScope} ${paramsDetail}
 	    ;;
 	*)
 	    EH_problem "Bad bxeType -- ${bxeType}"
@@ -361,6 +388,174 @@ _EOF_
     esac
 
 }
+
+function vis_examplesBxInfoEntity {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -ge 0 ]]
+
+    bxeKind="info"
+
+    local bxeType="all"
+    local provisioningScope="all"
+    local paramsDetail="all"
+
+    if [ $# -eq 0 ] ; then
+	bxeType="all"
+	provisioningScope="all"
+	paramsDetail="all"	
+    elif [ $# -eq 1 ] ; then
+	vis_examplesHeader
+	bxeType="$1"
+	provisioningScope="all"
+	paramsDetail="all"		
+    elif [ $# -eq 2 ] ; then
+	vis_examplesHeader
+    	bxeType="$1"
+	provisioningScope="$2"
+	paramsDetail="all"			
+    elif [ $# -eq 3 ] ; then
+	vis_examplesHeader
+    	bxeType="$1"
+	provisioningScope="$2"
+	paramsDetail="$3"			
+    else
+	EH_Problem "Expected 0,1,2or3 args, got $#"
+	lpReturn 101
+    fi
+    
+    extraInfo="-h -v -n showRun"
+    typeset extraInfo="-h -v -n showRun"
+    #typeset extraInfo=""
+    typeset runInfo="-p ri=lsipusr:passive"
+
+    typeset examplesInfo="${extraInfo} ${runInfo}"
+
+    cat  << _EOF_
+$( examplesSeperatorChapter "Bx Information Entity" )
+_EOF_
+	
+    case "${bxeType}" in
+	registrar)	
+	    vis_examplesBxInfoRegistrar
+	    vis_examplesApplyProvisioners "ByStar Registrar Information Entity" ${provisioningScope} ${paramsDetail} 
+	    ;;
+	site)
+	    vis_examplesBxInfoSite
+	    vis_examplesApplyProvisioners "ByStar Site Information Entity" ${provisioningScope} ${paramsDetail}
+	    ;;
+	sysChar)
+	    vis_examplesBxInfoSysChar
+	    vis_examplesApplyProvisioners "ByStar System Characteristics Information Entity" ${provisioningScope}
+	    ;;
+	usage)
+	    vis_examplesBxInfoUsage
+	    vis_examplesApplyProvisioners "ByStar Usage Information Entity" ${provisioningScope} ${paramsDetail}
+	    ;;
+	project)
+	    vis_examplesBxInfoProject
+	    vis_examplesApplyProvisioners "ByStar Project Information Entity" ${provisioningScope} ${paramsDetail}
+	    ;;
+	virtGuest)
+	    vis_examplesBxInfoVirtGuest
+	    vis_examplesApplyProvisioners "ByStar Virtual Guest Entity" ${provisioningScope} ${paramsDetail}
+	    ;;
+	all)	
+	    vis_examplesBxInfoRegistrar
+	    vis_examplesApplyProvisioners "ByStar Registrar Information Entity" ${provisioningScope} ${paramsDetail} 
+	    vis_examplesBxInfoSite
+	    vis_examplesApplyProvisioners "ByStar Site Information Entity" ${provisioningScope} ${paramsDetail}
+	    vis_examplesBxInfoSysChar
+	    vis_examplesApplyProvisioners "ByStar System Characteristics Information Entity" ${provisioningScope} ${paramsDetail}
+	    vis_examplesBxInfoUsage
+	    vis_examplesApplyProvisioners "ByStar Usage Information Entity" ${provisioningScope} ${paramsDetail}
+	    vis_examplesBxInfoProject
+	    vis_examplesApplyProvisioners "ByStar Project Information Entity" ${provisioningScope} ${paramsDetail}
+	    vis_examplesBxInfoVirtGuest
+	    vis_examplesApplyProvisioners "ByStar Virtual Guest Entity" ${provisioningScope} ${paramsDetail}
+	    ;;
+	*)
+	    EH_problem "Bad bxeType -- ${bxeType}"
+	    lpReturn 101
+	    ;;
+    esac
+
+}
+
+
+function vis_examplesBxServiceEntity {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -ge 0 ]]
+
+    bxeKind="svc"    
+
+    local bxeType="all"
+    local provisioningScope="all"
+    local paramsDetail="all"
+
+    if [ $# -eq 0 ] ; then
+	bxeType="all"
+	provisioningScope="all"
+	paramsDetail="all"	
+    elif [ $# -eq 1 ] ; then
+	vis_examplesHeader
+	bxeType="$1"
+	provisioningScope="all"
+	paramsDetail="all"		
+    elif [ $# -eq 2 ] ; then
+	vis_examplesHeader
+    	bxeType="$1"
+	provisioningScope="$2"
+	paramsDetail="all"			
+    elif [ $# -eq 3 ] ; then
+	vis_examplesHeader
+    	bxeType="$1"
+	provisioningScope="$2"
+	paramsDetail="$3"			
+    else
+	EH_Problem "Expected 0,1,2or3 args, got $#"
+	lpReturn 101
+    fi
+    
+    extraInfo="-h -v -n showRun"
+    typeset extraInfo="-h -v -n showRun"
+    #typeset extraInfo=""
+    typeset runInfo="-p ri=lsipusr:passive"
+
+    typeset examplesInfo="${extraInfo} ${runInfo}"
+
+    cat  << _EOF_
+$( examplesSeperatorChapter "Bx Service Entity" )
+_EOF_
+	
+    case "${bxeType}" in
+	byname)
+	    vis_examplesBxSvcByname
+	    vis_examplesApplyProvisioners "ByStar ByName Service Entity" ${provisioningScope}  ${paramsDetail}
+	    ;;
+	bysmb)
+	    vis_examplesBxSvcBysmb
+	    vis_examplesApplyProvisioners "ByStar BySmb Service Entity" ${provisioningScope} ${paramsDetail}
+	    ;;
+	all)
+	    vis_examplesBxSvcByname
+	    vis_examplesApplyProvisioners "ByStar ByName Service Entity" ${provisioningScope} ${paramsDetail}
+	    vis_examplesBxSvcBysmb	    
+	    vis_examplesApplyProvisioners "ByStar BySmb Service Entity" ${provisioningScope} ${paramsDetail}
+	    ;;
+	*)
+	    EH_problem "Bad bxeType -- ${bxeType}"
+	    lpReturn 101
+	    ;;
+    esac
+
+}
+
 
 function vis_startToBxReg {
     G_funcEntry
@@ -371,10 +566,10 @@ _EOF_
     
     regReqFile=$( vis_regReqFileCreate 2> /dev/null )
     
-    lpDo echo NOTYET selfCentralRegistrar.sh ${G_commandOptions} -p regReqFile="${regReqFile}" -i bxeDescCreate
+    lpDo echo NOTYET privCentralRegistrar.sh ${G_commandOptions} -p regReqFile="${regReqFile}" -i bxeDescCreate
 }
 
-function vis_startToSelfReg {
+function vis_startToPrivReg {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -382,8 +577,13 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
     
     regReqFile=$( vis_regReqFileCreate 2> /dev/null )
+
+    if [ -z "${regReqFile}" ] ; then
+	EH_problem "Missing regReqFile=${regReqFile}"
+	lpReturn 101
+    fi
     
-    lpDo selfCentralRegistrar.sh ${G_commandOptions} -p regReqFile="${regReqFile}" -i bxeDescCreate
+    lpDo registrarPrivBxe.sh ${G_commandOptions} -p regReqFile="${regReqFile}" -i bxeDescCreate
 }
 
 
@@ -394,7 +594,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
     
-    bxeDescFile=$( vis_startToSelfReg 2> /dev/null )
+    bxeDescFile=$( vis_startToPrivReg 2> /dev/null )
     
     lpDo bxeDescManage.sh ${G_commandOptions} -p bxeDesc="${bxeDescFile}" -i bxeDescStash
 }
@@ -415,14 +615,14 @@ _EOF_
     lpDo bxeDescManage.sh ${G_commandOptions} -p bxeDesc="${bxeDescFile}" -i bxeDescStash
 }
 
-function vis_startToSelfRealize {
+function vis_startToPrivRealize {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    local bxeDescRegFile=$( vis_startToSelfReg 2> /dev/null )
+    local bxeDescRegFile=$( vis_startToPrivReg 2> /dev/null )
     
     local bxeDescFile=$( bxeDescManage.sh ${G_commandOptions} -p bxeDesc="${bxeDescRegFile}" -i bxeDescStash )
 

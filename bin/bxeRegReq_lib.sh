@@ -42,14 +42,8 @@ _CommentEnd_
 
 # PRE parameters
 
-bystarServiceType=NOTYET
-bystarServiceSupportType=NOTYET
-
-typeset -t ServiceType=""
-typeset -t ServiceSupportType=""
-
-
-typeset -t autonomy=""
+typeset -t privacy=""
+typeset -t kind=""
 typeset -t type=""
 
 # PRE parameters for bymemory
@@ -63,63 +57,109 @@ typeset -t email=""
 
 typeset -t originationMethod=""
 
+typeset -t name=""
+
+typeset -t parent=""
+
 
 
 _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
 _CommentEnd_
 
-# BarcFileName=/libre/ByStar/InfoBase/BARC/BYNAME/COMMITTED/BYNAME_COMMITTED_banan_mohsen.090215212754.BARC
-# function BarcContainer {
-#     function BarcContainerCommon {
-#       bc_serviceType="BYNAME"
-#       bc_serviceSupportType="COMMITTED"
 
-#       bc_originationDate="090215212754"
-#       bc_originationMethod="bap2barc"
-#       bc_originatorHost="bisp0003"
-#       bc_originatorId="mohsen"
+function vis_regReqInfoBasePath_obtain {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Check for ~/bisos/sites/selected/bxe/
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
 
-#       bc_bystarUid="sa-20000"
-#     }
-#     function BarcContainer_BYNAME_COMMITTED {
-#       bc_firstName="mohsen"
-#       bc_lastName="banan"
-#     }
-#   BarcContainerCommon
-#   BarcContainer_BYNAME_COMMITTED
-# }
-# date="Sun Feb 15 21:27:54 PST 2009"
-# RBAE=/libre/ByStar/InfoBase/RBAE/BYNAME/sa/20000
+    local sitePath="$( FN_absolutePathGet ~ )/bisos/sites/selected/bxe/regReq"    
+    local sysVarPath="/bisos/var/bxe/regReq"
 
+    if [ -d "${sitePath}" ] ; then
+	echo "${sitePath}"
+    elif [ -d "${sysVarPath}" ] ; then
+	echo "${sysVarPath}"
+    else
+	EH_problem "Missing ${sitePath} and ${sysVarPath}"
+    fi
 
-# bxeAutonomy          autonomous|controlled (A or C)
-# bxeType              individual|corp|system
-# bxeInfoOrSvc         info|service
-# firstName
-# lastName
-# identification
+    lpReturn
+}	
 
-
-function vis_examplesBxAutonomousIndiv {
-    bxeParamsMini="-p autonomy=\"A\" -p type=\"individual\" -p firstName=\"first\" -p lastName=\"last\" "
-    bxeParamsFull="-p autonomy=\"A\" -p type=\"individual\" -p firstName=\"first\" -p lastName=\"last\" -p email=\"email\" "    
+function vis_examplesRegReqBases {
+    cat  << _EOF_
+$( examplesSeperatorChapter "RegReq Bases" )
+${G_myName} ${extraInfo} -i regReqInfoBasePath_obtain
+_EOF_
 }
 
-function vis_examplesBxAutonomousCorp {
-    bxeParamsMini="-p autonomy=\"A\" -p type=\"corp\" -p corpName=\"corpName\" "
-    bxeParamsFull="-p autonomy=\"A\" -p type=\"corp\" -p corpName=\"corpName\" -p email=\"email\" "    
+
+
+function vis_examplesBxRealIndiv {
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"real\" -p type=\"individual\" -p firstName=\"first\" -p lastName=\"last\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"real\" -p type=\"individual\" -p firstName=\"first\" -p lastName=\"last\" -p email=\"email\" "    
+}
+
+function vis_examplesBxRealCorp {
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"real\" -p type=\"corp\" -p corpName=\"corpName\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"real\" -p type=\"corp\" -p corpName=\"corpName\" -p email=\"email\" "    
 }
     
-function vis_examplesBxAutonomousSys {
-    bxeParamsMini="-p autonomy=\"A\" -p type=\"system\" -p sysName=\"bisos\" "
-    bxeParamsFull="-p autonomy=\"A\" -p type=\"system\" -p sysName=\"bisos\" "
+function vis_examplesBxRealSys {
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"real\" -p type=\"system\" -p sysName=\"bisos\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"real\" -p type=\"system\" -p sysName=\"bisos\" "
 }
 
-function vis_examplesBxAutonomousSysTest {
-    bxeParamsMini="-p autonomy=\"A\" -p type=\"system\" -p sysName=\"test1\" "    
-    bxeParamsFull="-p autonomy=\"A\" -p type=\"system\" -p sysName=\"test1\" -p email=\"git-test1@byname.net\" "
+function vis_examplesBxRealSysTest {
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"real\" -p type=\"system\" -p sysName=\"test1\" "    
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"real\" -p type=\"system\" -p sysName=\"test1\" -p email=\"git-test1@byname.net\" "
 }
+
+
+function vis_examplesBxInfoRegistrar {
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"registrar\" -p parent=\"prs_bisos\" -p name=\"privRegistrar\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"registrar\" -p parent=\"prs_bisos\" -p name=\"privRegistrar\" "
+}
+
+function vis_examplesBxInfoSite {
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"site\" -p parent=\"prs_bisos\" -p name=\"privSite\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"site\" -p parent=\"prs_bisos\" -p name=\"privSite\" "    
+}
+
+function vis_examplesBxInfoSysChar {
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"sysChar\" -p parent=\"pis_privSite\" -p name=\"gitlabServer\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"sysChar\" -p parent=\"pis_privSite\" -p name=\"gitlabServer\" "
+}
+
+function vis_examplesBxInfoUsage {
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"usage\" -p parent=\"pri_firstLast-1\" -p name=\"full\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"usage\" -p parent=\"pri_firstLast-1\" -p name=\"full\" "
+}
+
+function vis_examplesBxInfoProject {
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"project\" -p parent=\"pri_firstLast-1\" -p name=\"home\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"project\" -p parent=\"pri_firstLast-1\" -p name=\"home\" "
+}
+
+function vis_examplesBxInfoVirtGuest {
+    bxeParamsMini="-p privacy=\"all\" -p kind=\"info\" -p type=\"virtGuest\" -p parent=\"pis_privSite\" -p name=\"ubCur\" "
+    bxeParamsFull="-p privacy=\"all\" -p kind=\"info\" -p type=\"virtGuest\" -p parent=\"pis_privSite\" -p name=\"ubCur\" "
+}
+
+function vis_examplesBxSvcByname {
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"svc\" -p type=\"byname\" -p parent=\"pri_firstLast-1\" -p name=\"first.last\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"svc\" -p type=\"byname\" -p parent=\"pri_firstLast-1\" -p name=\"first.last\" "
+}
+
+function vis_examplesBxSvcBysmb {
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"svc\" -p type=\"bysmb\" -p parent=\"prc_exampleCom\" -p name=\"exampleCom\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"svc\" -p type=\"bysmb\" -p parent=\"prc_exampleCom\" -p name=\"exampleCom\" "
+}
+
 
 function vis_regReqStdout {
    G_funcEntry
@@ -128,11 +168,9 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    ANT_raw "creating a RegReq Container"
-
+    # ANT_raw "creating a RegReq Container"
     
-    
-    bystarServiceSupportHookParamsSet ${autonomy} ${type}
+    bxeKindTypeHookParamsSet ${kind} ${type}
  
     if [ "${originationMethod}" == "" ] ; then
 	originationMethod="cmdLine"
@@ -144,10 +182,13 @@ _EOF_
     
  
  cat  << _EOF_
-function RegReqContainer {
-    function RegReqContainerCommon {
-      bc_autonomy="${autonomy}"
+function regReqContainer {
+    function regReqContainerCommon {
+      bc_privacy="${privacy}"
+      bc_kind="${kind}"
       bc_type="${type}"
+
+      bc_parentBxoId="${parent}"
 
       bc_email="${email}"
 
@@ -159,119 +200,249 @@ function RegReqContainer {
 _EOF_
 
 
-  bystarServiceSupportHookRun regReqContainerStdoutSpecific "active"
+  bxeKindTypeHookRun regReqContainerStdoutSpecific "active"
 
 
   cat  << _EOF_
-  RegReqContainerCommon
-  RegReqContainer_${bystarServiceType}_${bystarServiceSupportType}
+  regReqContainerCommon
+  regReqContainer_${kind}_${type}
 }
 _EOF_
 }
 
 
-regReqContainerStdoutSpecific_A_individual () {
-   EH_assert [[ $# -eq 1 ]]
+regReqContainerStdoutSpecific_real_individual () {
+    EH_assert [[ $# -eq 1 ]]
 
-    if [ "$1_" = "passive_" ] ; then
-	RegReqTag="${bystarServiceType}_${bystarServiceSupportType}_${LastName}_${FirstName}"
+    if [ "$1" = "passive" ] ; then
+	regReqTag="${kind}_${type}_${lastName}_${firstName}"
 	return
     fi
 
-
-  cat  << _EOF_
-    function RegReqContainer_${bystarServiceType}_${bystarServiceSupportType} {
+    cat  << _EOF_
+    function regReqContainer_${kind}_${type} {
       bc_firstName="${firstName}"
       bc_lastName="${lastName}"
     }
 _EOF_
-
 }
 
-regReqContainerStdoutSpecific_A_corp () {
-   EH_assert [[ $# -eq 1 ]]
+regReqContainerStdoutSpecific_real_corp () {
+    EH_assert [[ $# -eq 1 ]]
 
-    if [ "$1_" = "passive_" ] ; then
-	RegReqTag="${bystarServiceType}_${bystarServiceSupportType}_${LastName}_${FirstName}"
+    if [ "$1" = "passive" ] ; then
+	regReqTag="${kind}_${type}_${corpName}"
 	return
     fi
 
-  cat  << _EOF_
-    function RegReqContainer_${bystarServiceType}_${bystarServiceSupportType} {
+    cat  << _EOF_
+    function regReqContainer_${kind}_${type} {
       bc_corpName="${corpName}"
     }
 _EOF_
-
 }
 
 
-regReqContainerStdoutSpecific_A_system () {
-   EH_assert [[ $# -eq 1 ]]
+regReqContainerStdoutSpecific_real_system () {
+    EH_assert [[ $# -eq 1 ]]
 
-    if [ "$1_" = "passive_" ] ; then
-	RegReqTag="${bystarServiceType}_${bystarServiceSupportType}_${sysName}"
+    if [ "$1" = "passive" ] ; then
+	regReqTag="${kind}_${type}_${sysName}"
 	return
     fi
 
-  cat  << _EOF_
-    function RegReqContainer_${bystarServiceType}_${bystarServiceSupportType} {
+    cat  << _EOF_
+    function regReqContainer_${kind}_${type} {
       bc_sysName="${sysName}"
     }
 _EOF_
-
-
 }
 
+regReqContainerStdoutSpecific_info_registrar () {
+    EH_assert [[ $# -eq 1 ]]
+
+    if [ "$1" = "passive" ] ; then
+	regReqTag="${kind}_${type}_${name}"
+	return
+    fi
+
+    cat  << _EOF_
+    function regReqContainer_${kind}_${type} {
+      bc_name="${name}"
+    }
+_EOF_
+}
+
+regReqContainerStdoutSpecific_info_site () {
+    EH_assert [[ $# -eq 1 ]]
+
+    if [ "$1" = "passive" ] ; then
+	regReqTag="${kind}_${type}_${name}"
+	return
+    fi
+
+    cat  << _EOF_
+    function regReqContainer_${kind}_${type} {
+      bc_name="${name}"
+    }
+_EOF_
+}
+
+regReqContainerStdoutSpecific_info_sysChar () {
+    EH_assert [[ $# -eq 1 ]]
+
+    if [ "$1" = "passive" ] ; then
+	regReqTag="${kind}_${type}_${name}"
+	return
+    fi
+
+    cat  << _EOF_
+    function regReqContainer_${kind}_${type} {
+      bc_name="${name}"
+    }
+_EOF_
+}
+
+regReqContainerStdoutSpecific_info_usage () {
+    EH_assert [[ $# -eq 1 ]]
+
+    if [ "$1" = "passive" ] ; then
+	regReqTag="${kind}_${type}_${name}"
+	return
+    fi
+
+    cat  << _EOF_
+    function regReqContainer_${kind}_${type} {
+      bc_name="${name}"		     
+    }
+_EOF_
+}
+
+regReqContainerStdoutSpecific_info_project () {
+    EH_assert [[ $# -eq 1 ]]
+
+    if [ "$1" = "passive" ] ; then
+	regReqTag="${kind}_${type}_${name}"
+	return
+    fi
+
+    cat  << _EOF_
+    function regReqContainer_${kind}_${type} {
+      bc_name="${name}"
+    }
+_EOF_
+}
+
+regReqContainerStdoutSpecific_info_virtGuest () {
+    EH_assert [[ $# -eq 1 ]]
+
+    if [ "$1" = "passive" ] ; then
+	regReqTag="${kind}_${type}_${name}"
+	return
+    fi
+
+    cat  << _EOF_
+    function regReqContainer_${kind}_${type} {
+      bc_name="${name}"
+    }
+_EOF_
+}
+
+regReqContainerStdoutSpecific_svc_byname () {
+    EH_assert [[ $# -eq 1 ]]
+
+    if [ "$1" = "passive" ] ; then
+	regReqTag="${kind}_${type}_${name}"
+	return
+    fi
+
+    cat  << _EOF_
+    function regReqContainer_${kind}_${type} {
+      bc_name="${name}"
+    }
+_EOF_
+}
+
+regReqContainerStdoutSpecific_svc_bysmb () {
+    EH_assert [[ $# -eq 1 ]]
+
+    if [ "$1" = "passive" ] ; then
+	regReqTag="${kind}_${type}_${name}"
+	return
+    fi
+
+    cat  << _EOF_
+    function regReqContainer_${kind}_${type} {
+      bc_name="${name}"
+    }
+_EOF_
+}
+
+function vis_regReqFileName {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local bxoHome=""
+    local subBxeDir=""
+    local regReqBaseDir=""    
+
+    if [ -z "${parent}" ] ; then
+	local regReqInfoBasePath=$(vis_regReqInfoBasePath_obtain)
+    
+	opDo mkdir -p ${regReqInfoBasePath}
+
+	regReqBaseDir="${regReqInfoBasePath}/${kind}/${type}"
+    else
+	if ! unisosAccts.sh -i userAcctExists "${parent}" ; then
+	    EH_problem "Missing bxoId -- parent=${parent}"
+	    lpReturn 101
+	fi
+	bxoHome=$( FN_absolutePathGet ~${parent} )
+	if [ -z "${bxoHome}" ] ; then
+	    EH_problem "Missing bxoHome -- parent=${parent}"
+	    lpReturn 101
+	fi
+	subBxeDir="${bxoHome}/subBxe"
+	if [ ! -d "${subBxeDir}" ] ; then
+	    EH_problem "Missing subBxeDir=${subBxeDir}"
+	    lpReturn 101
+	fi
+	regReqBaseDir="${subBxeDir}/regReq/${kind}/${type}"
+    fi
+
+    bxeKindTypeHookParamsSet ${kind} ${type}
+
+    bxeKindTypeHookRun regReqContainerStdoutSpecific "passive"  # sets up regReqTag based on kind+type
+    
+    lpDo FN_dirCreatePathIfNotThere "${regReqBaseDir}"
+
+    local regReqFileName=${regReqTag}.${dateTag}.REGREQ
+    local regReqFilePath="${regReqBaseDir}/${regReqFileName}"
+ 
+    echo ${regReqFilePath}
+}
 
 function vis_regReqFileCreate {
     EH_assert [[ $# -eq 0 ]]
 
-    bystarServiceSupportHookParamsSet ${autonomy} ${type}
+    local regReqFilePath=$( vis_regReqFileName )
 
-    bystarServiceSupportHookRun regReqContainerStdoutSpecific "passive"
-
-
-    if isDisposableRegisterUid ; then
-        RegReqInfoBasePath="/libre/etc/bystar/infoBase/regReq"
-    else
-	RegReqInfoBasePath="/bisos/var/bxae/bxeRegReq"
+    if [ -z "${regReqFilePath}" ] ; then
+	EH_problem "Missing regReqFilePath=${regReqFilePath}"
+	lpReturn 101
     fi
+   
+    echo regReqFileName=${regReqFilePath} > ${regReqFilePath}
 
-    opDo mkdir -p ${RegReqInfoBasePath}
+    vis_regReqStdout 1>> ${regReqFilePath}
 
-    RegReqBaseDir="${RegReqInfoBasePath}/${bystarServiceType}/${bystarServiceSupportType}"
+    opDo ls -l ${regReqFilePath} 1>&2
 
-    opDo mkdir -p ${RegReqBaseDir}
-
-    RegReqFileName=${RegReqTag}.${dateTag}.REGREQ
-    
-    echo RegReqFileName=${RegReqBaseDir}/${RegReqFileName} > ${RegReqBaseDir}/${RegReqFileName} 
-
-    vis_regReqStdout 1>> ${RegReqBaseDir}/${RegReqFileName} 
-
-    opDo ls -l ${RegReqBaseDir}/${RegReqFileName} 1>&2 
-
-    echo ${RegReqBaseDir}/${RegReqFileName}
+    echo ${regReqFilePath}
 }
-
-
-function isDisposableRegisterUid  {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-Just a place holder. It should perhaps be eliminated.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    # opDo fileParamsLoadVarsFromBaseDir /libre/etc/bystar/usage
-
-    if [[ "${cp_platformUsageRegisterUid:-}_" == "DISPOSABLE_" ]] ; then
-       return 0
-    else   
-	return 101
-    fi
-}
-
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*

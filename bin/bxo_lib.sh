@@ -14,6 +14,36 @@ fi
 # ./lcnFileParams.libSh
 . ${opBinBase}/lcnFileParams.libSh
 
+
+function bxoGitServerPrivTag { echo "bxoPriv"; }   # used to prefix entries in ~usg/.ssh/config and corresponding git urls
+
+function bxoGitServerSshKeyName {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Used both for pushing key to server and also for keeping at ~usg/.ssh.
+_EOF_
+    }
+    EH_assert [[ $# -eq 3 ]]
+    local gitServerType=$1
+    local bxoId=$2
+    local sshKeyType=$3
+
+    echo "${gitServerType}_${bxoId}_${sshKeyType}"
+}
+
+function bxoGitServerSshAlias {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Used as Host in ~usg/.ssh/config -- and ~usg/.ssh/configSeg/bxoPriv_as-bisos.configSeg.
+_EOF_
+    }
+    EH_assert [[ $# -eq 3 ]]
+    local gitServerType=$1
+    local bxoId=$2
+
+    echo "${gitServerType}_${bxoId}"
+}
+
 function rbxeSshBase { echo "rbxe/credentials/ssh"; }
 
 function vis_bxoSshAcctKeyVerify {
@@ -50,6 +80,108 @@ _EOF_
     lpReturn
 }
 
+function vis_bxoIdObtainForPath {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local inPath="$1"
+    local canonInPath=$( FN_absolutePathGet ${inPath} )
+    local thisElem=""
+
+    typeset bxoBaseFound="FALSE"
+
+    pathToArray ${canonInPath}
+
+    set ${pathArray[@]}
+
+    for thisElem in ${pathArray[@]} ; do
+	#echo "${thisElem}"
+	shift
+	if [[ "${bxoBaseFound}" == "TRUE" ]] ; then
+	    break
+	fi
+	if [[ "${thisElem}" == "iso" ]] ; then
+	    bxoBaseFound="TRUE"
+	fi
+    done
+    
+    if [[ "${bxoBaseFound}" != "TRUE" ]] ; then
+	ANT_raw "bxoId not found"
+	lpReturn 101
+    fi
+
+    echo "${thisElem}"
+    lpReturn
+}
+
+function vis_repoCreateAndPushBasedOnPath {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local repoPath="$1"
+    local canonRepoPath=$( FN_absolutePathGet ${repoPath} )
+    local gitRemote=$( inBaseDirDo ${canonRepoPath} git remote 2> /dev/null )
+
+    if [ ! -z "${gitRemote}" ] ; then
+	EH_problem "${canonRepoPath} Is Already A Git Repo -- Skipped"
+	lpReturn 101
+    fi
+
+    local baseName=$( basename "${canonRepoPath}" )
+    
+    bxoId=$( vis_bxoIdObtainForPath "${canonRepoPath}" )
+
+    lpDo vis_repoCreateAndPush "${baseName}" "${canonRepoPath}" priv
+    
+    lpReturn
+}
+
+
+function vis_repoCreateAndPush {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 3 ]]
+    EH_assert [[ ! -z "${bxoId}" ]]
+
+    local repoName="$1"
+    local baseDir="$2"
+    local gitServerSelector="$3"
+
+    #local gitServerUrl=git@bxoGit-${gitServerSelector}.${bxoId}:${bxoId}/${repoName}.git
+    local gitServerUrl=git@bxoPriv_${bxoId}:${bxoId}/${repoName}.git    
+
+    local curUser=$( id -u -n )
+
+    lpDo bxoGitlab.py -v 20 --bxoId="${bxoId}" -i reposCreate ${repoName}      
+
+    #lpDo sudo chown -R "${curUser}":bisos ${baseDir}
+
+    # previous example of using bxoId user: 
+    # inBaseDirDo ${bxoHome}/rbxe sudo -u ${bxoId} git init
+    
+    inBaseDirDo ${baseDir} git init    
+    inBaseDirDo ${baseDir} git add .
+    inBaseDirDo ${baseDir} git commit -m "Initial_bxeRealize.sh_commit_of_${baseDir}"
+
+    inBaseDirDo ${baseDir} git remote add origin ${gitServerUrl}
+    inBaseDirDo ${baseDir} git remote -v
+    inBaseDirDo ${baseDir} git push origin master
+
+    lpReturn
+}
+
+
+#
+# Left Over From OSMT -- To be sorted.
+#
 
 function bxoNextDisposableScopeAcctNu {
     EH_assert [[ $# -eq  0 ]]
@@ -174,7 +306,6 @@ function masterAcctBagpLoad {
 
    opDo rm ${tmpFileName}
 }
-
 
 
 function nextUserId {

@@ -73,16 +73,16 @@ _CommentEnd_
 # . ${opBinBase}/bisosCurrents_lib.sh
 
 # PRE parameters
-typeset -t RegReqFile="MANDATORY"
-typeset -t bxeDesc="MANDATORY"
+typeset -t RegReqFile=""
+typeset -t bxeDesc=""
 
 function G_postParamHook {
     # lpCurrentsGet
 
-    if [ "${RegReqFile}" != "MANDATORY" ] ; then
+    if [ ! -z "${RegReqFile}" ] ; then
 	RegReqFile=$( FN_absolutePathGet ${RegReqFile} )
     fi
-    if [ "${bxeDesc}" != "MANDATORY" ] ; then
+    if [ ! -z "${bxeDesc}" ] ; then
      	bxeDesc=$( FN_absolutePathGet ${bxeDesc} )
     fi
 }
@@ -105,29 +105,41 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
-    oneRegReqFile="$( ls /bisos/var/bxae/bxeRegReq/A/system/A_system_bisos.2*.REGREQ | head -1 )"
+    local regReqInfoBasePath=$( bxeRegReqManage.sh -i regReqInfoBasePath_obtain )
+    
+    #local oneRegReqFile="$( ls /bisos/var/bxe/regReq/real/system/real_system_bisos.2*.REGREQ | head -1 )"
+    local oneRegReqFile="$( ls ${regReqInfoBasePath}/real/system/real_system_bisos.2*.REGREQ | head -1 )"
+    
     if [ -z "${oneRegReqFile}" ] ; then
 	oneRegReqFile="Missing"
 	EH_problem "Missing oneRegReqFile"
     fi
 
-    oneRegBxeDesc="/bisos/var/selfRegistrar/bxeDesc/A/system/1"
+    local registrarPrivBase=$( registrarPrivBxe.sh -i registrarBaseGet )
+    #     /bisos/var/init/privRegistrar/bxeDesc/r/system/1
+    local oneRegBxeDesc="${registrarPrivBase}/bxeDesc/real/system/4"
 
-    oneBxeDesc="/bisos/var/bxae/bxeDesc/A/system/as-bisos"    
+    local bxeDescBase="$(vis_bxeDescBase_obtain)"
+    
+    local oneBxeDesc="${bxeDescBase}/priv/real/system/prs_bisos"    
 
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Register The bxeRegReq" )
-selfCentralRegistrar.sh
-selfCentralRegistrar.sh ${extraInfo} -p RegReqFile="${oneRegReqFile}" -i bxeDescCreate
-bxCentralRegistrar.sh
-bxCentralRegistrar.sh ${extraInfo} -p RegReqFile="${oneRegReqFile}" -i bxeDescCreate
+registrarPrivBxe.sh
+registrarPrivBxe.sh ${extraInfo} -p RegReqFile="${oneRegReqFile}" -i bxeDescCreate
+registrarCentralBxe.sh
+registrarCentralBxe.sh ${extraInfo} -p RegReqFile="${oneRegReqFile}" -i bxeDescCreate
 $( examplesSeperatorChapter "Manage bxeDesc" )
 $( examplesSeperatorSection "Registered BxeDesc Capture" )
 ${G_myName} ${extraInfo} -p bxeDesc="${oneRegBxeDesc}" -i bxeDescStash
 $( examplesSeperatorSection "INFO" )
+${G_myName} ${extraInfo} -i bxeDescBase_obtain
+${G_myName} ${extraInfo} -p bxeDesc="${oneRegBxeDesc}" -i bxceBxeDescBaseGet
 ${G_myName} ${extraInfo} -p bxeDesc="${oneBxeDesc}" -i bxeDescInfo
+${G_myName} ${extraInfo} -i bxoIdFromBxeDesc "${oneRegBxeDesc}"
+${G_myName} ${extraInfo} -i parentBxoIdFromBxeDesc "${oneRegBxeDesc}"
 _EOF_
 }
 

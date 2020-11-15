@@ -65,6 +65,8 @@ _CommentEnd_
 
 . ${opBinBase}/bxeDesc_lib.sh
 
+. ${opBinBase}/bxo_lib.sh
+
 . ${opBinBase}/bystarHook.libSh
 
 . ${opBinBase}/lcnFileParams.libSh
@@ -76,6 +78,7 @@ _CommentEnd_
 # PRE parameters
 
 typeset -t bxoId=""
+typeset -t privacy=""
 # usg=""
 
 function G_postParamHook {
@@ -87,7 +90,19 @@ function G_postParamHook {
 
 }
 
-function bxoConstructBaseDir_obtain { echo /bisos/var/bxo/construct; }
+function vis_bxoConstructBaseDir_obtain  {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+    local privacy="$1"
+
+    echo /bisos/var/bxo/construct/${privacy}
+
+    lpReturn
+}	
+
 
 
 noArgsHook() {
@@ -106,29 +121,37 @@ function vis_examples {
     typeset runInfo="-p ri=lsipusr:passive"
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
-
-    oneBxeDesc="/bisos/var/bxae/bxeDesc/A/system/as-bisos"
-
-    oneBxoId="as-bisos"
-    #oneBxoId="as-test1_5"    
     
-    visLibExamplesOutput ${G_myName} 
+    #local privacy="priv"
+    local priv="priv"    
+    local oneBxoId="p-rs_bisos"
+    #oneBxoId="as-test1_5"    
+    oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )    
+
+    visLibExamplesOutput ${G_myName}
+
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
+$( examplesSeperatorChapter "BxO Management Information" )
+${G_myName} ${extraInfo} -i bxoConstructBaseDir_obtain "${priv}"
 $( examplesSeperatorChapter "Construct A BxO From Its Realized BxE" )
-$( examplesSeperatorSection "Obtain A Snapshot Of RBxE At $(bxoConstructBaseDir_obtain)" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i obtainRepoSnapshot rbxe
+$( examplesSeperatorSection "Obtain A Snapshot Of RBxE At $(vis_bxoConstructBaseDir_obtain priv)" )
+${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i obtainRepoSnapshot rbxe
 $( examplesSeperatorSection "BxO Ssh Config Update" )
 usgBxoSshManage.sh
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -p usg=current -i usgSshConfigUpdate   # Sets up ~usg/.ssh/config
+${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -p usg=current -i usgSshConfigUpdate   # Sets up ~usg/.ssh/config
 $( examplesSeperatorSection "BxO Creation Based On ISO Info" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i bxoAcctCreate
+${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i bxoAcctCreate
 $( examplesSeperatorSection "BxO Repos Clone Map" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i initialReposClone $(bxoConstructBaseDir_obtain)/${oneBxoId}/home
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i initialReposClone
+${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i initialReposClone $(vis_bxoConstructBaseDir_obtain priv)/${oneBxoId}/home
+${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i initialReposClone
 $( examplesSeperatorSection "BxO Construct Full Update -- All Of The Above" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i fullUpdate $(bxoConstructBaseDir_obtain)/${oneBxoId}/home
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i fullUpdate
+${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i fullUpdate $(vis_bxoConstructBaseDir_obtain priv)/${oneBxoId}/home
+${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i fullUpdate
+$( examplesSeperatorChapter "BxO Repos Create And Push And Pull" )
+$( examplesSeperatorSection "BxO Repo Create And Push" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoCreateAndPush "rbxe" "${oneBxoHome}/rbxe" "priv"
+${G_myName} ${extraInfo} -i repoCreateAndPushBasedOnPath .
 _EOF_
 }
 
@@ -139,14 +162,52 @@ _CommentEnd_
 function vis_obtainRepoSnapshot {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+Dispatches to priv/group/all gitServers to obtain repo snap shot.
 _EOF_
     }
     EH_assert [[ $# -eq 1 ]]
-    EH_assert [[ ! -z "${bxoId}" ]]    
+    EH_assert [[ ! -z "${bxoId}" ]]
 
     local repoName=$1
+
+    if [ -z "${privacy}" ] ; then
+	privacy="priv"
+    fi
+
+    case ${privacy} in
+	"priv"|"private")
+	    lpDo obtainRepoSnapshot_priv
+	    ;;
+	"group")
+	    lpDo obtainRepoSnapshot_group
+	    ;;
+	"all"|"public")
+	    lpDo obtainRepoSnapshot_all
+	    ;;
+	*)
+	    EH_problem "privacy=${privacy} -- Unexpected"
+	    return
+	    ;;
+      esac
     
-    local bxoConstructBaseDir=$(bxoConstructBaseDir_obtain)
+    lpReturn
+}
+
+function obtainRepoSnapshot_priv {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Obtain repoSnapshot.tar in /bisos/var/bxo/construct (NOTYET to be verified)
+** Untar the file in a .git dir
+** clone based on the .git dir
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+    EH_assert [[ ! -z "${bxoId}" ]]
+    EH_assert [[ ! -z "${privacy}" ]]    
+
+    local repoName=$1
+
+    local bxoConstructBaseDir=$(vis_bxoConstructBaseDir_obtain "${privacy}")
 
     local repoTarFile="${bxoConstructBaseDir}/${bxoId}/${repoName}-gitSnapot.tar"
     local gitRepoBaseDir="${bxoConstructBaseDir}/${bxoId}/${repoName}.git"
@@ -165,17 +226,60 @@ _EOF_
 }
 
 
-function vis_usgSshConfigUpdate {
+function obtainRepoSnapshot_group {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+NOTYET -- TBD
 _EOF_
     }
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert [[ ! -z "${bxoId}" ]]    
+    EH_assert [[ $# -eq 1 ]]
+    EH_assert [[ ! -z "${bxoId}" ]]
+    EH_assert [[ ! -z "${privacy}" ]]    
+
+    local repoName=$1
+
+    local bxoConstructBaseDir=$(vis_bxoConstructBaseDir_obtain "${privacy}")
+
+    echo "NOTYET"
+    
+    lpReturn
+}
+
+function obtainRepoSnapshot_all {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+NOTYET --
+** anon git clone ${bxoId}.rbxe
+** anon git clone ${bxoId}.maps
+Based on those run one of the _mapFile.sh
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+    EH_assert [[ ! -z "${bxoId}" ]]
+    EH_assert [[ ! -z "${privacy}" ]]    
+
+    local repoName=$1
+
+    local bxoConstructBaseDir=$(vis_bxoConstructBaseDir_obtain "${privacy}")
+
+    echo "NOTYET"
+    
+    lpReturn
+}
+
+
+function vis_usgSshConfigUpdate {
+    EH_assert [ $# -eq 0 ]
+    EH_assert [ ! -z "${bxoId}" ]
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+With bxeDesc obtained from the snapShotObtain, create needed entries in ~usg/.ssh/config
+_EOF_
+    }
 
     local usg=$( id -u -n )
 
-    lpDo usgBxoSshManage.sh ${G_commandOptions} -p usg=${usg} -p bxoId=${bxoId} -p bxosBase=$(bxoConstructBaseDir_obtain) -i usgBxoFullUpdate
+    lpDo usgBxoSshManage.sh ${G_commandOptions} -p usg=${usg} -p bxoId=${bxoId} -p bxosBase=$(vis_bxoConstructBaseDir_obtain) -i usgBxoFullUpdate
 
     lpReturn
 }
@@ -183,12 +287,13 @@ _EOF_
 function vis_bxoAcctCreate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+With bxeDesc obtained from the snapShotObtain, create the bxo
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
     EH_assert [[ ! -z "${bxoId}" ]]
 
-    local bxeDesc="$(bxoConstructBaseDir_obtain)/${bxoId}/rbxe/bxeDesc"
+    local bxeDesc="$(vis_bxoConstructBaseDir_obtain)/${bxoId}/rbxe/bxeDesc"
 
     lpDo bxeRealize.sh ${G_commandOptions} -p bxeDesc="${bxeDesc}" -i bxoAcctCreate    
 
@@ -198,6 +303,8 @@ _EOF_
 function vis_initialReposClone {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+Get a list of repos for the specified bxoId.
+Then clone those repos at the specified base or bxoHome if not specified.
 _EOF_
     }
     EH_assert [[ $# -lt 2 ]]
@@ -219,7 +326,7 @@ _EOF_
     local eachRepo=""
     local gitServerUrl=""
 
-    opDo FN_dirCreatePathIfNotThere "${gitCloneDest}"
+    opDo FN_dirCreatePathIfNotThere "${gitCloneDest}"  # NOTYET
     
     for eachRepo in ${reposList} ; do
 	gitServerUrl=git@bxoPriv_${bxoId}:${bxoId}/${eachRepo}.git
@@ -233,6 +340,9 @@ _EOF_
 function vis_fullUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+Get a snapshot for the specified bxoId.
+Setup the ~usg/.ssh/config.
+Clone the repos in bxoHome or where specified.
 _EOF_
     }
     EH_assert [[ $# -lt 2 ]]
@@ -259,11 +369,9 @@ _EOF_
 	lpReturn
     fi
 
-
     
     lpReturn
 }
-
 
 
 _CommentBegin_

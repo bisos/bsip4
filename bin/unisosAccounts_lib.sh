@@ -51,10 +51,10 @@ $( examplesSeperatorChapter "Unisos User Accounts Management" )
 ${G_myName} -i uidSortPasswdFile
 ${G_myName} -i gidSortGroupFile
 ${G_myName} -p uidMinSpec=2000 -p uidMaxSpec=5000 -i uidRangePasswdFile
-${G_myName} ${extraInfo} -i userAcctsExist bisos bystar lsipusr ; echo \$?
+${G_myName} ${extraInfo} -i userAcctExists bystar ; echo \$?
 $( examplesSeperatorSection "Accounts Manipulation" )
-${G_myName} ${extraInfo} -i groupsExist bisos bystar lsipusr ; echo \$?
-${G_myName} ${extraInfo} -i userAcctsExist bisos bystar lsipusr ; echo \$?
+${G_myName} ${extraInfo} -i groupExists bystar ; echo \$?
+${G_myName} ${extraInfo} -i userAcctExists bystar ; echo \$?
 ${G_myName} ${extraInfo} -i userAcctsDelete bisos bystar ; echo \$?
 ${G_myName} ${extraInfo} -i groupsDelete bystar ; echo \$?
 $( examplesSeperatorChapter "General Purpose Accounts Processing Facilities" )
