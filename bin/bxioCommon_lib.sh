@@ -1,32 +1,15 @@
 #!/bin/bash
 
-IimBriefDescription="Bx Controlled Information Entity Provisioning -- From RegReq to Realize"
-
-ORIGIN="
-* Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee
-"
-
-####+BEGIN: bx:dblock:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
-
-####+END:
-
-__author__="
-* Authors: Mohsen BANAN, http://mohsen.banan.1.byname.net/contact
-"
-
-
-####+BEGIN: bx:bsip:bash:seed-spec :types "seedActions.bash"
-SEED="
-*  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
-"
-FILE="
-*  /This File/ :: /bisos/core/bsip/bin/bxcieProvision.sh 
-"
-if [ "${loadFiles}" == "" ] ; then
-    /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
-    exit $?
+####+BEGIN: bx:bsip:bash/libLoadOnce :libName "auto"
+if [ -z "${bxioCommon_lib:-}" ] ; then
+    bxoLib="LOADED"
+    TM_trace 7 "bxioCommon_lib :: Loading Library -- /bisos/bsip/bin/bxioCommon_lib.sh"
+else
+    TM_trace 7 "bxioCommon_lib :: Prviously Loaded -- Skipping /bisos/bsip/bin/bxioCommon_lib.sh"
+    return
 fi
 ####+END:
+
 
 _CommentBegin_
 ####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/libre/ByStar/InitialTemplates/software/plusOrg/dblock/inserts/topControls.org"
@@ -45,75 +28,95 @@ function vis_moduleDescription {  cat  << _EOF_
 *  [[elisp:(org-cycle)][| ]]  Xrefs         :: *[Related/Xrefs:]*  <<Xref-Here->>  -- External Documents  [[elisp:(org-cycle)][| ]]
 **  [[elisp:(org-cycle)][| ]]  Panel        :: [[file:/libre/ByStar/InitialTemplates/activeDocs/bxServices/versionControl/fullUsagePanel-en.org::Xref-VersionControl][Panel Roadmap Documentation]] [[elisp:(org-cycle)][| ]]
 *  [[elisp:(org-cycle)][| ]]  Info          :: *[Module Description:]* [[elisp:(org-cycle)][| ]]
-
+** 
+** Creates a BARC (Bystar Account Request Container) based on command line.
+** E|
 _EOF_
 }
 
-_CommentBegin_
-*  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *Seed Extensions*
-_CommentEnd_
-
-_CommentBegin_
-*  [[elisp:(org-cycle)][| ]]  Imports       :: Prefaces (Imports/Libraries) [[elisp:(org-cycle)][| ]]
-_CommentEnd_
-
-. ${opBinBase}/opAcctLib.sh
-. ${opBinBase}/opDoAtAsLib.sh
-. ${opBinBase}/lpParams.libSh
-. ${opBinBase}/lpReRunAs.libSh
-
-
-# PRE parameters
-
-baseDir=""
-
-function G_postParamHook {
-     return 0
-}
-
-
-_CommentBegin_
-*  [[elisp:(org-cycle)][| ]]  Examples      :: Examples [[elisp:(org-cycle)][| ]]
-_CommentEnd_
-
-
-function vis_examples {
-    typeset extraInfo="-h -v -n showRun"
-    #typeset extraInfo=""
-    typeset runInfo="-p ri=lsipusr:passive"
-
-    typeset examplesInfo="${extraInfo} ${runInfo}"
-
-    visLibExamplesOutput ${G_myName} 
-  cat  << _EOF_
-$( examplesSeperatorTopLabel "${G_myName}" )
-$( examplesSeperatorChapter "Chapter Title" )
-$( examplesSeperatorSection "Section Title" )
-${G_myName} ${extraInfo} -i doTheWork
+function vis_bxioExamples {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
+    }
+    EH_assert [[ $# -ge 0 ]]
 }
 
-noArgsHook() {
-  vis_examples
-}
 
-_CommentBegin_
-*  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
-_CommentEnd_
-
-
-function vis_doTheWork {
+function vis_commonInitialReposPush {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
+    EH_assert [[ ! -z "${bxoId}" ]]
 
-    lpDo vis_failExample
-    EH_retOnFail
-
+    lpDo vis_repoCreateAndPush "subBxe" "${bxoHome}/subBxe" "priv"
+    
     lpReturn
 }
+
+function vis_assembleInitialBxoCommonRepoBases {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+In addition to bxo, the bxeDesc param is needed for the rbxeSetup.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bxoId}" ]
+
+    if ! vis_userAcctExists "${bxoId}" ; then
+	ANT_raw "${bxoId} account is not valid." ; lpReturn 101
+    fi
+
+    lpDo vis_assembleInitial_subBxe
+    
+    lpReturn
+}
+
+
+function vis_assembleInitial_subBxe {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Node could be leaf or branch.
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+    EH_assert [ ! -z "${bxoId}" ]
+
+    local node=$1
+
+    EH_assert  vis_userAcctExists "${bxoId}"
+
+    bxoHome=$( FN_absolutePathGet ~${bxoId} )
+
+    function doIt {
+	lpDo mkdir ${bxoHome}/subBxe
+	if [ "${node}" == "leaf" ] ; then
+	    lpDo fileParamManage.py -i fileParamWrite ${bxoHome}/subBxe node leaf
+	elif [ "${node}" == "branch" ] ; then
+	    lpDo fileParamManage.py -i fileParamWrite ${bxoHome}/subBxe node branch
+	    lpDo mkdir ${bxoHome}/subBxe/regReq
+	    lpDo mkdir ${bxoHome}/subBxe/bxeDesc
+	else
+	    EH_problem ""
+	fi
+    }
+
+    if [ -d "${bxoHome}/subBxe" ] ; then
+	if [ "${G_forceMode}" == "force" ] ; then
+	    lpDo doIt
+	else
+	    ANT_raw "${bxoHome}/subBxe exists and forceMode is not specified."
+	fi
+    else
+	lpDo doIt
+    fi
+    
+    lpReturn
+}
+
+
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*

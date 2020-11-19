@@ -378,12 +378,14 @@ regReqContainerStdoutSpecific_svc_bysmb () {
 _EOF_
 }
 
-function vis_regReqFileName {
+function vis_regReqFileNameOrTag {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
-    EH_assert [[ $# -eq 0 ]]
+    EH_assert [[ $# -eq 1 ]]
+
+    local nameOrTag="$1"
 
     local bxoHome=""
     local subBxeDir=""
@@ -419,29 +421,71 @@ _EOF_
     
     lpDo FN_dirCreatePathIfNotThere "${regReqBaseDir}"
 
-    local regReqFileName=${regReqTag}.${dateTag}.REGREQ
-    local regReqFilePath="${regReqBaseDir}/${regReqFileName}"
- 
+    local regReqFileName=""
+    local regReqFilePath=""
+
+    if [ "${nameOrTag}" == "name" ] ; then
+	regReqFileName=${regReqTag}.${dateTag}.REGREQ
+	regReqFilePath="${regReqBaseDir}/${regReqFileName}"
+    elif [ "${nameOrTag}" == "tag" ] ; then
+	regReqFileName=${regReqTag}
+	regReqFilePath="${regReqBaseDir}/${regReqFileName}"
+    else
+	EH_problem "Neither name nor tag -- nameOrTag=${nameOrTag}"
+	lpReturn 101
+    fi
+    
     echo ${regReqFilePath}
 }
 
 function vis_regReqFileCreate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Creates a regReq file if the existing one is not same as this request.
+forceMode creates the file without regard to existance of others.
+_EOF_
+    }
     EH_assert [[ $# -eq 0 ]]
 
-    local regReqFilePath=$( vis_regReqFileName )
+    local regReqFileNamePath=$( vis_regReqFileNameOrTag "name" )
+    local regReqFileTagPath=$( vis_regReqFileNameOrTag "tag" )    
+    local tmpFile=$( FN_tempFile )
+    local tmpFile2=$( FN_tempFile )
+    local existingFile=$( ls ${regReqFileTagPath}* | head -1 )
+    local diffResult=""
 
-    if [ -z "${regReqFilePath}" ] ; then
-	EH_problem "Missing regReqFilePath=${regReqFilePath}"
+    if [ -z "${regReqFileNamePath}" ] ; then
+	EH_problem "Missing regReqFilePath=${regReqFileNamePath}"
 	lpReturn 101
     fi
-   
-    echo regReqFileName=${regReqFilePath} > ${regReqFilePath}
 
-    vis_regReqStdout 1>> ${regReqFilePath}
+    if [ "${G_forceMode}" != "force" ] ; then
+	if [ ! -z "${existingFile}" ] ; then
+	    lpDo eval vis_regReqStdout \| grep -v bc_originationDate= \> ${tmpFile}
+	    lpDo eval cat "${existingFile}" \| grep -v bc_originationDate= \| grep -v 'regReqFileName=' \| grep -v 'date=' \| grep -v 'BxeDesc='  \> ${tmpFile2}
+	    diffResult=$( diff ${tmpFile} ${tmpFile2} )
 
-    opDo ls -l ${regReqFilePath} 1>&2
+	    if [ -z "${diffResult}" ] ; then
+		# The existing file is same this request, there is nothing to do.
+		lpDo rm ${tmpFile} ${tmpFile2}
+		echo ${existingFile}
+		lpReturn
+	    fi
+	fi
+    fi
+    
+    #
+    # Existing file is different from this registration request,
+    # So, we create a new file.
+    # 
+    
+    echo regReqFileName=${regReqFileNamePath} > ${regReqFileNamePath}
 
-    echo ${regReqFilePath}
+    vis_regReqStdout 1>> ${regReqFileNamePath}
+
+    opDo ls -l ${regReqFileNamePath} 1>&2
+
+    echo ${regReqFileNamePath}
 }
 
 _CommentBegin_

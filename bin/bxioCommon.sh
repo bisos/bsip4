@@ -1,13 +1,21 @@
 #!/bin/bash
 
-IcmBriefDescription="NOTYET: Short Description Of The Module"
+IimBriefDescription="NOTYET: Short Description Of The Module"
 
 ORIGIN="
 * Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee
 "
 
 ####+BEGIN: bx:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
-
+### Args: :control "enabled|disabled|hide|release|fVar"  :vc "cvs|git|nil" :partof "bystar|nil" :copyleft "halaal+minimal|halaal+brief|nil"
+typeset RcsId="$Id: dblock-iim-bash.el,v 1.4 2017-02-08 06:42:32 lsipusr Exp $"
+# *CopyLeft*
+__copying__="
+* Libre-Halaal Software"
+#  This is part of ByStar Libre Services. http://www.by-star.net
+# Copyright (c) 2011 Neda Communications, Inc. -- http://www.neda.com
+# See PLPC-120001 for restrictions.
+# This is a Halaal Poly-Existential intended to remain perpetually Halaal.
 ####+END:
 
 __author__="
@@ -20,7 +28,7 @@ SEED="
 *  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
 "
 FILE="
-*  /This File/ :: /bisos/core/bsip/bin/usgAcctManage.sh 
+*  /This File/ :: /bisos/core/bsip/bin/bxeRealize.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
     /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
@@ -43,11 +51,11 @@ _CommentEnd_
 
 function vis_moduleDescription {  cat  << _EOF_
 *  [[elisp:(org-cycle)][| ]]  Xrefs         :: *[Related/Xrefs:]*  <<Xref-Here->>  -- External Documents  [[elisp:(org-cycle)][| ]]
-**  [[elisp:(org-cycle)][| ]]  Panel        :: [[file:/libre/ByStar/InitialTemplates/activeDocs/bxServices/versionControl/fullUsagePanel-en.org::Xref-VersionControl][Panel Roadmap Documentation]] [[elisp:(org-cycle)][| ]]
+**  [[elisp:(org-cycle)][| ]]  Panel        :: [[file:/bisos/panels/bisos/core/bxeAndBxo/_nodeBase_/fullUsagePanel-en.org::Panel][Panel Roadmap Documentation]] [[elisp:(org-cycle)][| ]]
 *  [[elisp:(org-cycle)][| ]]  Info          :: *[Module Description:]* [[elisp:(org-cycle)][| ]]
 
 _EOF_
-			       }
+}
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *Seed Extensions*
@@ -62,29 +70,52 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
-# ./platformBases_lib.sh
-. ${opBinBase}/platformBases_lib.sh
+. ${opBinBase}/bxo_lib.sh
 
-. ${opBinBase}/distHook.libSh
+. ${opBinBase}/bxeDesc_lib.sh
+
+. ${opBinBase}/bystarHook.libSh
+
+. ${opBinBase}/bystarLib.sh
+
+. ${opBinBase}/lcnFileParams.libSh
+
+# . ${opBinBase}/bystarInfoBase.libSh
 
 . ${opBinBase}/unisosAccounts_lib.sh
 . ${opBinBase}/bisosGroupAccount_lib.sh
 . ${opBinBase}/bisosAccounts_lib.sh
 
+. ${opBinBase}/bxioCommon_lib.sh
+
+. ${opBinBase}/bisosCurrents_lib.sh
+
 # PRE parameters
 
-baseDir=""
-acctName=""
-acctComment=""
+typeset -t bxeDesc=""
+typeset -t bxoId=""
+# usg=""
 
 function G_postParamHook {
-     return 0
+    bxoIdPrepValidate    
+
+    if [ ! -z "${bxoId}" ] ; then
+     	bxoHome=$( FN_absolutePathGet ~${bxoId} )
+    fi
+    
+    bisosCurrentsGet
+}
+
+
+noArgsHook() {
+  vis_examples
 }
 
 
 _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  Examples      :: Examples [[elisp:(org-cycle)][| ]]
 _CommentEnd_
+
 
 function vis_examples {
     typeset extraInfo="-h -v -n showRun"
@@ -93,94 +124,22 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
+    #oneBxoId="prs-bisos"
+    oneBxoId="${currentBxoId}"
+    oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )    
+    
     visLibExamplesOutput ${G_myName} 
-    cat  << _EOF_
+  cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
-_EOF_
-
-    vis_bxoAccountsExamples
-    
-    vis_thisProvisionExamples
-    
-    vis_thisIcmExamples
-}
-
-
-function vis_thisIcmExamples {
-    typeset extraInfo="-h -v -n showRun"
-    #typeset extraInfo=""
-    typeset runInfo="-p ri=lsipusr:passive"
-
- 
-
-    typeset examplesInfo="${extraInfo} ${runInfo}"
-
-  cat  << _EOF_
-$( examplesSeperatorChapter "List And Report On Existing BxISO Accounts" )
-${G_myName} ${extraInfo} -i list bxoAccts
-${G_myName} ${extraInfo} -i report listOfAccounts
-$( examplesSeperatorChapter "Setup Bases For Specified Account" )
-${G_myName} ${extraInfo} -i acctBase_bashrcUpdate bystar
-blee ${extraInfo} -p acctName=bystar -i provisionSetup
+bisosCurrentsManage.sh
+bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
+$( examplesSeperatorChapter "Assemble Initial Bxo Repo Bases" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i assembleInitialBxoCommonRepoBases
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i assembleInitial_subBxe
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i commonInitialReposPush
 _EOF_
 }
 
-function vis_thisProvisionExamples {
-    typeset extraInfo="-h -v -n showRun"
-    #typeset extraInfo=""
-    typeset runInfo="-p ri=lsipusr:passive"
-
-    typeset examplesInfo="${extraInfo} ${runInfo}"
-
-  cat  << _EOF_
-$( examplesSeperatorChapter "BxISO Provisioning Setups" )
-${G_myName} -i provisionSetup   # Summary outputs
-${G_myName} ${extraInfo} -i provisionSetup    # Detailed outputs
-$( examplesSeperatorSection "BxISO Provisioning Account Setups" )
-${G_myName} -p acctName=bystar -i provisionSetupAcct   # Summary outputs
-${G_myName} ${extraInfo} -p acctName=bystar -i provisionSetupAcct    # Detailed outputs
-_EOF_
-}
-
-
-noArgsHook() {
-  vis_examples
-}
-
-_CommentBegin_
-*  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
-_CommentEnd_
-
-function vis_provisionSetup {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-In acctName's (mandtaory) HOME, with vis_prepUpdateInit create emacs init files.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    acctName=bystar
-    lpDo vis_provisionSetupAcct
-}
-
-
-function vis_provisionSetupAcct {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-In acctName's (mandtaory) HOME, with vis_prepUpdateInit create emacs init files.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    if [ -z "${acctName}" ] ; then
-	EH_problem "Missing acctName"
-	lpReturn 101
-    fi
-
-    # NOTYET, verify that acctName is valid (source needed lib)    
-
-    #  lpDo blee -v -n showRun -p acctName=${acctName} -i provisionSetup
-}
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*

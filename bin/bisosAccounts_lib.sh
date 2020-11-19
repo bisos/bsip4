@@ -95,30 +95,30 @@ ${G_myName} ${extraInfo} -i usgAcctsList
 _EOF_
 }
 
-function vis_bxisoAccountsExamples {
+function vis_bxoAccountsExamples {
     typeset extraInfo="-h -v -n showRun"
     #typeset extraInfo=""
     typeset runInfo="-p ri=lsipusr:passive"
 
-    local oneAutonomousBxisoAcct="ai-first.last"    
-    local oneControlledBxisoAcct="site-default"
+    local oneAutonomousBxoAcct="ai-first.last"    
+    local oneControlledBxoAcct="site-default"
     local oneBxisoComment="oid-2.23.34.20000"
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
   cat  << _EOF_
 $( examplesSeperatorChapter "BxISO (Info and Service Objects) Accounts" )
-${G_myName} ${extraInfo} -i bxisoAcctAdd bxisoDelimiter
-${G_myName} ${extraInfo} -p acctComment=${oneBxisoComment} -i bxisoAcctAdd ${oneAutonomousBxisoAcct}  # Autonomous Individual
-${G_myName} ${extraInfo} -i bxisoAcctCreate bxisoDelimiter  # acctAdd, sudoers, report
-${G_myName} ${extraInfo} -p acctComment=${oneBxisoComment} -i bxisoAcctCreate ${oneAutonomousBxisoAcct}  # Autonomous Individual
-${G_myName} ${extraInfo} -i bxisoAcctDelete bxisoDelimiter
-${G_myName} ${extraInfo} -i bxisoAcctDelete ${oneAutonomousBxisoAcct}
-${G_myName} ${extraInfo} -i bxisoAcctVerify bxisoDelimiter
-${G_myName} ${extraInfo} -i bxisoAcctVerify ${oneAutonomousBxisoAcct}
+${G_myName} ${extraInfo} -i bxoAcctAdd bxisoDelimiter
+${G_myName} ${extraInfo} -p acctComment=${oneBxisoComment} -i bxoAcctAdd ${oneAutonomousBxoAcct}  # Autonomous Individual
+${G_myName} ${extraInfo} -i bxoAcctCreate bxisoDelimiter  # acctAdd, sudoers, report
+${G_myName} ${extraInfo} -p acctComment=${oneBxisoComment} -i bxoAcctCreate ${oneAutonomousBxoAcct}  # Autonomous Individual
+${G_myName} ${extraInfo} -i bxoAcctDelete bxisoDelimiter
+${G_myName} ${extraInfo} -i bxoAcctDelete ${oneAutonomousBxoAcct}
+${G_myName} ${extraInfo} -i bxoAcctVerify bxisoDelimiter
+${G_myName} ${extraInfo} -i bxoAcctVerify ${oneAutonomousBxoAcct}
 $( examplesSeperatorChapter "BxISO (Info and Service Objects) List Accounts" )
-${G_myName} ${extraInfo} -i bxisoAcctNextLocalUidNu
-${G_myName} ${extraInfo} -i bxisoAcctsList
+${G_myName} ${extraInfo} -i bxoAcctNextLocalUidNu
+${G_myName} ${extraInfo} -i bxoAcctsList
 _EOF_
 }
 
@@ -159,7 +159,7 @@ _EOF_
 
     opDo vis_usgAcctCreate bystar
 
-    opDo vis_bxisoAcctCreate bxisoDelimiter
+    opDo vis_bxoAcctCreate bxisoDelimiter
 
     lpReturn
 }
@@ -330,7 +330,7 @@ _EOF_
     vis_uidRangePasswdFile
 }
 
-function vis_bxisoAcctsList {
+function vis_bxoAcctsList {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 List all usg accounts
@@ -467,7 +467,7 @@ _EOF_
 
 
 
-function vis_bxisoAcctVerify {
+function vis_bxoAcctVerify {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Verify a bxiso account.
@@ -500,7 +500,7 @@ _EOF_
 
 
 
-function vis_bxisoAcctCreate {
+function vis_bxoAcctCreate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 When acctUidIncrement is 0, use bystarUid for uid.
@@ -523,27 +523,27 @@ _EOF_
     fi
 
    if vis_userAcctExists "${acctName}" ; then
-       if vis_bxisoAcctVerify "${acctName}" ; then
+       if vis_bxoAcctVerify "${acctName}" ; then
 	   ANT_raw "${acctName} exists and is properly configured. It will be used"
        else
 	   EH_problem "${acctName} account is misconfigured"
 	   lpReturn 101
        fi
    else
-       opDo vis_bxisoAcctAdd ${acctName}
+       opDo vis_bxoAcctAdd ${acctName}
    fi
 
    lpDo vis_acct_createHome ${acctName}
 
-   lpDo vis_bxisoAcct_supplementaryGroupsUpdate ${acctName}
+   lpDo vis_bxoAcct_supplementaryGroupsUpdate ${acctName}
 
-   # lpDo vis_bxisoAcct_sshKeysUpdate ${acctName}   
+   # lpDo vis_bxoAcct_sshKeysUpdate ${acctName}   
 
    # the sudo -u ${acctName} id -- results in creation of the homeDir
    opDo vis_userAcctsReport ${acctName}   
 }
 
-function vis_bxisoAcctAdd {
+function vis_bxoAcctAdd {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 When acctUidIncrement is 0, use bystarUid for uid.
@@ -569,7 +569,7 @@ _EOF_
 	acctUid=$( vis_bisosAcct_bxisoDelimiterUid )
 	acctComment="BISOS Default BXISO Accts Delimiter"
     else
-	acctUid=$( vis_bxisoAcctNextLocalUidNu )
+	acctUid=$( vis_bxoAcctNextLocalUidNu )
 	if [ -z "${acctComment}" ] ; then
 	    EH_problem "Missing Acct Comment"
 	    lpReturn 101
@@ -589,7 +589,7 @@ _EOF_
 }
 
 
-function vis_bxisoAcctDelete {
+function vis_bxoAcctDelete {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Delete the bxiso account.
@@ -605,7 +605,7 @@ _EOF_
 }
 
 
-function vis_bxisoAcct_supplementaryGroupsUpdate {
+function vis_bxoAcct_supplementaryGroupsUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Add needed supplementary groups to the specified USG account.
@@ -623,7 +623,7 @@ _EOF_
     # done
 }
 
-function vis_bxisoAcct_sshKeysUpdate {
+function vis_bxoAcct_sshKeysUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Add sshKeys if not there, with forceMode update existing ones.
@@ -709,10 +709,10 @@ _EOF_
     lpReturn
 }	
 
-function vis_bxisoAcctNextLocalUidNu {
+function vis_bxoAcctNextLocalUidNu {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-ByStar Information Or Service Object Account (bxiso) -- bxisoAcctMin=1000000 -- hence :1[0-9][0-9][0-9][0-9][0-9][0-9]:
+ByStar Information Or Service Object Account (bxiso) -- bxoAcctMin=1000000 -- hence :1[0-9][0-9][0-9][0-9][0-9][0-9]:
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]

@@ -104,7 +104,9 @@ _EOF_
 
 	    cat  << _EOF_
 ${G_myName} ${extraInfo} ${bxeParamsMini} -i regReqStdout
+${G_myName} ${extraInfo} ${bxeParamsMini} -i regReqFileName
 ${G_myName} ${extraInfo} ${bxeParamsMini} -i regReqFileCreate
+${G_myName} -f ${extraInfo} ${bxeParamsMini} -i regReqFileCreate  # forceMode
 _EOF_
 	fi
 	if [ "${paramsDetail}" == "full" ] || [ "${paramsDetail}" == "all" ] ; then
@@ -114,7 +116,9 @@ _EOF_
 
 	    cat  << _EOF_
 ${G_myName} ${extraInfo} ${bxeParamsFull} -i regReqStdout
+${G_myName} ${extraInfo} ${bxeParamsFull} -i regReqFileName
 ${G_myName} ${extraInfo} ${bxeParamsFull} -i regReqFileCreate
+${G_myName} -f ${extraInfo} ${bxeParamsFull} -i regReqFileCreate  # forceMode
 _EOF_
 	fi
     }

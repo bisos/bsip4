@@ -105,6 +105,102 @@ _EOF_
 }
 
 
+function vis_userHomeAcctsDelete {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Delete specified user home directory.
+Design Pattern: processEach based on args or stdin.
+_EOF_
+    }
+
+    local inputsList="$@"
+    local thisFunc=${G_thisFunc}
+
+    function processEach {
+	EH_assert [[ $# -eq 1 ]]
+	local userAcctName=$1
+	if ! vis_userAcctExists ${userAcctName} ; then
+	    EH_problem "${userAcctName} Account Does Not Exist -- ${thisFunc} Processing Skipped"
+	    lpReturn 101
+	fi
+	local userAcctHome=$( vis_forAcctNameGetHome ${userAcctName} )
+	
+	lpDo sudo rm -r ${userAcctHome}
+    }
+
+####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
+    if [ $# -gt 0 ] ; then
+	local each=""
+	for each in ${inputsList} ; do
+	    lpDo processEach ${each}
+	done
+    else
+	local eachLine=""
+	while read -r -t 1 eachLine ; do
+	    if [ ! -z "${eachLine}" ] ; then
+		local each=""
+		for each in ${eachLine} ; do
+		    lpDo processEach ${each}
+		done
+	    fi
+	done
+    fi
+
+####+END:
+    
+    lpReturn
+}
+
+
+function vis_userHomeAcctsDefunct {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Delete specified user home directory.
+Design Pattern: processEach based on args or stdin.
+_EOF_
+    }
+
+    local inputsList="$@"
+    local thisFunc=${G_thisFunc}
+
+    function processEach {
+	EH_assert [[ $# -eq 1 ]]
+	local userAcctName=$1
+	if ! vis_userAcctExists ${userAcctName} ; then
+	    EH_problem "${userAcctName} Account Does Not Exist -- ${thisFunc} Processing Skipped"
+	    lpReturn 101
+	fi
+	local userAcctHome=$( vis_forAcctNameGetHome ${userAcctName} )
+	
+	lpDo sudo mv ${userAcctHome} ${userAcctHome}.defunct
+	lpDo sudo chmod 000 ${userAcctHome}.defunct
+    }
+
+####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
+    if [ $# -gt 0 ] ; then
+	local each=""
+	for each in ${inputsList} ; do
+	    lpDo processEach ${each}
+	done
+    else
+	local eachLine=""
+	while read -r -t 1 eachLine ; do
+	    if [ ! -z "${eachLine}" ] ; then
+		local each=""
+		for each in ${eachLine} ; do
+		    lpDo processEach ${each}
+		done
+	    fi
+	done
+    fi
+
+####+END:
+    
+    
+    lpReturn
+}
+
+
 function vis_userAcctsDelete {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -358,6 +454,17 @@ _EOF_
     EH_assert [[ $# -eq 1 ]]
 
     forAcctNameGetFieldNu $1 3
+}
+
+function vis_forAcctNameGetHome {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+For acctName return home -- the 6th field.
+_EOF_
+		       }
+    EH_assert [[ $# -eq 1 ]]
+
+    forAcctNameGetFieldNu $1 6
 }
 
 

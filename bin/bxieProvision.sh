@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IimBriefDescription="Bx Controlled Service Entity Provisioning -- From RegReq to Realize"
+IimBriefDescription="Bx Information Entity Provisioning -- From RegReq to Realize"
 
 ORIGIN="
 * Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee
@@ -20,7 +20,7 @@ SEED="
 *  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
 "
 FILE="
-*  /This File/ :: /bisos/core/bsip/bin/bxcseProvision.sh 
+*  /This File/ :: /bisos/core/bsip/bin/bxcieProvision.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
     /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 

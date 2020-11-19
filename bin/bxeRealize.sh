@@ -82,6 +82,12 @@ _CommentEnd_
 
 # . ${opBinBase}/bystarInfoBase.libSh
 
+. ${opBinBase}/unisosAccounts_lib.sh
+. ${opBinBase}/bisosGroupAccount_lib.sh
+. ${opBinBase}/bisosAccounts_lib.sh
+
+. ${opBinBase}/bxioCommon_lib.sh
+
 . ${opBinBase}/bisosCurrents_lib.sh
 
 # PRE parameters
@@ -137,9 +143,13 @@ function vis_examples {
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
+bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
 $( examplesSeperatorChapter "Realize A BxE -- Create BxoAcct and Push Initial Repos" )
 $( examplesSeperatorSection "BxO Local Acct Creation" )
 ${G_myName} ${extraInfo} -p bxeDesc="${oneBxeDesc}" -i bxoAcctCreate
+$( examplesSeperatorChapter "Assemble Initial Bxo Repo Bases" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -p bxeDesc="${oneBxeDesc}" -i assembleInitialBxoRepoBases
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i assembleInitial_subBxe
 $( examplesSeperatorSection "BxO/rbxe Setup" )
 ${G_myName} ${extraInfo} -p bxeDesc="${oneBxeDesc}" -i rbxeSetup
 ${G_myName} ${extraInfo} -p bxeDesc="${oneBxeDesc}" -i bxoBxeDescCopy
@@ -215,10 +225,32 @@ _EOF_
 
     local bxeOidComment="oid-${cp_bxeOid}"
 
-    lpDo bxoAcctManage.sh -h -v -n showRun -p acctComment="${bxeOidComment}" -i bxisoAcctCreate ${bxeLocalName}
+    lpDo bxoAcctManage.sh -h -v -n showRun -p acctComment="${bxeOidComment}" -i bxoAcctCreate ${bxeLocalName}
 
     lpReturn
 }
+
+
+function vis_assembleInitialBxoRepoBases {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+In addition to bxo, the bxeDesc param is needed for the rbxeSetup.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bxoId}" ]
+
+    if ! vis_userAcctExists "${bxoId}" ; then
+	ANT_raw "${bxoId} account is not valid." ; lpReturn 101
+    fi
+
+    lpDo vis_rbxeSetup
+
+    lpDo vis_assembleInitialBxoCommonRepoBases
+    
+    lpReturn
+}
+
 
 
 function vis_rbxeSetup {
@@ -228,19 +260,35 @@ Even though bxo exists at this stage, the bxeDesc param is needed for the cp.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [[ ! -z "${bxeDesc}" ]]
+    EH_assert [ ! -z "${bxeDesc}" ]
 
     bxoId="$(vis_bxoIdFromBxeDesc ${bxeDesc})"
 
+    if ! vis_userAcctExists "${bxoId}" ; then
+	ANT_raw "${bxoId} account is not valid." ; lpReturn 101
+    fi
+
     bxoHome=$( FN_absolutePathGet ~${bxoId} )
-    
-    lpDo sudo -u ${bxoId} mkdir ${bxoHome}/rbxe
 
-    lpDo vis_bxoBxeDescCopy
+    function doIt {
+	lpDo sudo -u ${bxoId} mkdir ${bxoHome}/rbxe
 
-    lpDo vis_bxoCredentialsUpdate
+	lpDo vis_bxoBxeDescCopy
 
-    lpDo vis_bxoGitServerDescUpdate    
+	lpDo vis_bxoCredentialsUpdate
+
+	lpDo vis_bxoGitServerDescUpdate
+    }
+
+    if [ -d "${bxoHome}/rbxe" ] ; then
+	if [ "${G_forceMode}" == "force" ] ; then
+	    lpDo doIt
+	else
+	    ANT_raw "${bxoHome}/rbxe exists and forceMode is not specified."
+	fi
+    else
+	lpDo doIt
+    fi
     
     lpReturn
 }
@@ -408,7 +456,6 @@ _EOF_
 
     lpReturn
 }
-
 
 
 function vis_initialReposPush {

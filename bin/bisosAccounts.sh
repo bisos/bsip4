@@ -103,7 +103,7 @@ _EOF_
     vis_unisosAccountsExamples
     vis_bisosGroupExamples
     vis_usgAccountsExamples
-    vis_bxisoAccountsExamples
+    vis_bxoAccountsExamples
 }
 
 noArgsHook() {

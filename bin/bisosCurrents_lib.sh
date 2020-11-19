@@ -75,7 +75,7 @@ function bxoAcctsList {
     # NOTYET
     doNothing
     #bystarBacsAcctsList
-    #vis_bxisoAcctsList
+    #vis_bxoAcctsList
 }
 
 function bisosCurrentsGet {

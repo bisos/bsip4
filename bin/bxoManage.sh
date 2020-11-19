@@ -69,11 +69,13 @@ _CommentEnd_
 
 . ${opBinBase}/bystarHook.libSh
 
-. ${opBinBase}/lcnFileParams.libSh
+. ${opBinBase}/platformBases_lib.sh
 
-# . ${opBinBase}/bystarInfoBase.libSh
+. ${opBinBase}/unisosAccounts_lib.sh
+. ${opBinBase}/bisosGroupAccount_lib.sh
+. ${opBinBase}/bisosAccounts_lib.sh
 
-# . ${opBinBase}/bisosCurrents_lib.sh
+. ${opBinBase}/bisosCurrents_lib.sh
 
 # PRE parameters
 
@@ -88,6 +90,7 @@ function G_postParamHook {
      	bxoHome=$( FN_absolutePathGet ~${bxoId} )
     fi
 
+    lpCurrentsGet
 }
 
 function vis_bxoConstructBaseDir_obtain  {
@@ -124,7 +127,8 @@ function vis_examples {
     
     #local privacy="priv"
     local priv="priv"    
-    local oneBxoId="p-rs_bisos"
+    #local oneBxoId="prs_bisos"
+    local oneBxoId=${currentBxoId}    
     #oneBxoId="as-test1_5"    
     oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )    
 
@@ -132,8 +136,26 @@ function vis_examples {
 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
-$( examplesSeperatorChapter "BxO Management Information" )
+$( examplesSeperatorChapter "Currents And BxO Management Information" )
+bisosCurrentsManage.sh
+bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
 ${G_myName} ${extraInfo} -i bxoConstructBaseDir_obtain "${priv}"
+$( examplesSeperatorChapter "Delete A BxO Local Acct" )
+bxoAcctManage.sh
+bxoAcctManage.sh ${extraInfo} -i bxoAcctDelete ${oneBxoId}
+usgBxoSshManage.sh
+usgBxoSshManage.sh ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}"  -i usgBxoFullDelete
+${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i fullRemove $(vis_bxoConstructBaseDir_obtain priv)/${oneBxoId}/home # noAcct
+${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i fullRemove # Delete Acct and remove ${oneBxoHome}
+${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i fullDelete # FullRemove + bxoGitServerFullDelete
+$( examplesSeperatorChapter "Delete A BxO At privGitServer" )
+bxoGitlab.py
+bxoGitlab.py -v 20 --bxoId="${oneBxoId}" -i reposDelete repoName1
+bxoGitlab.py -v 20 --bxoId="${oneBxoId}" --keyName="_priv-pubkey"  -i pubkeyDelete 
+bxoGitlab.py -v 20 --bxoId="${oneBxoId}" -i acctDelete
+${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i bxoGitServerReposDeleteAll
+${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i bxoGitServerKeysDeleteAll
+${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i bxoGitServerFullDelete
 $( examplesSeperatorChapter "Construct A BxO From Its Realized BxE" )
 $( examplesSeperatorSection "Obtain A Snapshot Of RBxE At $(vis_bxoConstructBaseDir_obtain priv)" )
 ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i obtainRepoSnapshot rbxe
@@ -146,8 +168,8 @@ $( examplesSeperatorSection "BxO Repos Clone Map" )
 ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i initialReposClone $(vis_bxoConstructBaseDir_obtain priv)/${oneBxoId}/home
 ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i initialReposClone
 $( examplesSeperatorSection "BxO Construct Full Update -- All Of The Above" )
-${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i fullUpdate $(vis_bxoConstructBaseDir_obtain priv)/${oneBxoId}/home
-${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i fullUpdate
+${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i fullConstruct $(vis_bxoConstructBaseDir_obtain priv)/${oneBxoId}/home # noAcct
+${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i fullConstruct # Creats Acct & clones in ${oneBxoHome}
 $( examplesSeperatorChapter "BxO Repos Create And Push And Pull" )
 $( examplesSeperatorSection "BxO Repo Create And Push" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoCreateAndPush "rbxe" "${oneBxoHome}/rbxe" "priv"
@@ -291,7 +313,7 @@ With bxeDesc obtained from the snapShotObtain, create the bxo
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [[ ! -z "${bxoId}" ]]
+    EH_assert [ ! -z "${bxoId}" ]
 
     local bxeDesc="$(vis_bxoConstructBaseDir_obtain)/${bxoId}/rbxe/bxeDesc"
 
@@ -299,6 +321,8 @@ _EOF_
 
     lpReturn
 }
+
+
 
 function vis_initialReposClone {
     G_funcEntry
@@ -310,6 +334,11 @@ _EOF_
     EH_assert [[ $# -lt 2 ]]
     EH_assert [[ ! -z "${bxoId}" ]]
 
+    if ! vis_userAcctExists "${bxoId}" ; then
+	ANT_raw "${bxoId} account is not valid."
+	lpReturn 101
+    fi
+    
     local gitCloneDest=""
     
     if [ $# -eq 0 ] ; then
@@ -337,7 +366,7 @@ _EOF_
 }
 
 
-function vis_fullUpdate {
+function vis_fullConstruct {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Get a snapshot for the specified bxoId.
@@ -346,7 +375,14 @@ Clone the repos in bxoHome or where specified.
 _EOF_
     }
     EH_assert [[ $# -lt 2 ]]
-    EH_assert [[ ! -z "${bxoId}" ]]
+    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${privacy}" ]
+
+    if vis_userAcctExists "${bxoId}" ; then
+	ANT_raw "${bxoId} account already exists."
+	lpReturn 101
+    fi
+
 
     local gitCloneDest=""
 
@@ -372,6 +408,130 @@ _EOF_
     
     lpReturn
 }
+
+
+function vis_fullRemove {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Removes everything related to specified bxoId on local system.
+- usgBxoFullDelete
+- bxoAcctDelete
+_EOF_
+    }
+    EH_assert [[ $# -lt 2 ]]
+    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${privacy}" ]
+
+    if ! vis_userAcctExists "${bxoId}" ; then
+	ANT_raw "${bxoId} account is not valid." ; lpReturn 101
+    fi
+
+    local gitCloneDest=""
+
+    lpDo usgBxoSshManage.sh ${G_commandOptions}  -p bxoId=${bxoId} -i usgBxoFullDelete
+    
+    if [ $# -eq 0 ] ; then
+	lpDo echo NOTYET instead of vis_initialReposClone
+	
+    elif [ $# -eq 1 ] ; then
+	gitCloneDest=$1
+
+	lpDo echo NOTYET instead of vis_initialReposClone ${gitCloneDest}	
+	
+    else
+	EH_oops ""
+	lpReturn
+    fi
+
+    lpDo vis_userHomeAcctsDelete "${bxoId}"    
+
+    lpDo vis_bxoAcctDelete "${bxoId}"
+    
+    lpReturn
+}
+
+
+function vis_fullDelete {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+FullRemove + bxoGitServerFullDelete
+_EOF_
+    }
+    EH_assert [[ $# -lt 2 ]]
+    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${privacy}" ]
+
+    if ! vis_userAcctExists "${bxoId}" ; then
+	ANT_raw "${bxoId} account is not valid." ; lpReturn 101
+    fi
+
+    lpDo vis_fullRemove $@
+    
+    lpDo vis_bxoGitServerFullDelete
+    
+    lpReturn
+}
+
+function vis_bxoGitServerReposDeleteAll {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+FullRemove + bxoGitServerFullDelete
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${privacy}" ]
+
+    local reposList=$( bxoGitlab.py --bxoId="${bxoId}"  -i reposList )
+    local each=""
+
+    for each in ${reposList} ; do
+	lpDo bxoGitlab.py -v 20 --bxoId="${bxoId}" -i reposDelete ${each}
+    done
+    
+    lpReturn
+}
+
+function vis_bxoGitServerKeysDeleteAll {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+FullRemove + bxoGitServerFullDelete
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${privacy}" ]    
+
+    local keysList=$( bxoGitlab.py --bxoId="${bxoId}" -i pubkeysList )
+    local each=""
+
+    for each in ${keysList} ; do
+	lpDo bxoGitlab.py -v 20 --bxoId="${bxoId}" --keyName="${each}" -i pubkeyDelete 
+    done
+    
+    lpReturn
+}
+
+function vis_bxoGitServerFullDelete {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+FullRemove + bxoGitServerFullDelete
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${privacy}" ]
+
+    lpDo vis_bxoGitServerKeysDeleteAll
+
+    lpDo vis_bxoGitServerReposDeleteAll
+
+    lpDo bxoGitlab.py -v 20 --bxoId="${bxoId}" -i acctDelete
+    
+    lpReturn
+}
+
+
 
 
 _CommentBegin_

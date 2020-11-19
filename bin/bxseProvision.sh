@@ -1,12 +1,12 @@
 #!/bin/bash
 
-IcmBriefDescription="NOTYET: Short Description Of The Module"
+IimBriefDescription="Bx Service Entity Provisioning -- From RegReq to Realize"
 
 ORIGIN="
 * Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee
 "
 
-####+BEGIN: bx:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
+####+BEGIN: bx:dblock:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
 
 ####+END:
 
@@ -20,7 +20,7 @@ SEED="
 *  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
 "
 FILE="
-*  /This File/ :: /bisos/core/bsip/bin/usgAcctManage.sh 
+*  /This File/ :: /bisos/core/bsip/bin/bxcseProvision.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
     /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
@@ -47,7 +47,7 @@ function vis_moduleDescription {  cat  << _EOF_
 *  [[elisp:(org-cycle)][| ]]  Info          :: *[Module Description:]* [[elisp:(org-cycle)][| ]]
 
 _EOF_
-			       }
+}
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *Seed Extensions*
@@ -62,20 +62,10 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
-# ./platformBases_lib.sh
-. ${opBinBase}/platformBases_lib.sh
-
-. ${opBinBase}/distHook.libSh
-
-. ${opBinBase}/unisosAccounts_lib.sh
-. ${opBinBase}/bisosGroupAccount_lib.sh
-. ${opBinBase}/bisosAccounts_lib.sh
 
 # PRE parameters
 
 baseDir=""
-acctName=""
-acctComment=""
 
 function G_postParamHook {
      return 0
@@ -86,6 +76,7 @@ _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  Examples      :: Examples [[elisp:(org-cycle)][| ]]
 _CommentEnd_
 
+
 function vis_examples {
     typeset extraInfo="-h -v -n showRun"
     #typeset extraInfo=""
@@ -94,54 +85,13 @@ function vis_examples {
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
     visLibExamplesOutput ${G_myName} 
-    cat  << _EOF_
+  cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
-_EOF_
-
-    vis_bxoAccountsExamples
-    
-    vis_thisProvisionExamples
-    
-    vis_thisIcmExamples
-}
-
-
-function vis_thisIcmExamples {
-    typeset extraInfo="-h -v -n showRun"
-    #typeset extraInfo=""
-    typeset runInfo="-p ri=lsipusr:passive"
-
- 
-
-    typeset examplesInfo="${extraInfo} ${runInfo}"
-
-  cat  << _EOF_
-$( examplesSeperatorChapter "List And Report On Existing BxISO Accounts" )
-${G_myName} ${extraInfo} -i list bxoAccts
-${G_myName} ${extraInfo} -i report listOfAccounts
-$( examplesSeperatorChapter "Setup Bases For Specified Account" )
-${G_myName} ${extraInfo} -i acctBase_bashrcUpdate bystar
-blee ${extraInfo} -p acctName=bystar -i provisionSetup
+$( examplesSeperatorChapter "Chapter Title" )
+$( examplesSeperatorSection "Section Title" )
+${G_myName} ${extraInfo} -i doTheWork
 _EOF_
 }
-
-function vis_thisProvisionExamples {
-    typeset extraInfo="-h -v -n showRun"
-    #typeset extraInfo=""
-    typeset runInfo="-p ri=lsipusr:passive"
-
-    typeset examplesInfo="${extraInfo} ${runInfo}"
-
-  cat  << _EOF_
-$( examplesSeperatorChapter "BxISO Provisioning Setups" )
-${G_myName} -i provisionSetup   # Summary outputs
-${G_myName} ${extraInfo} -i provisionSetup    # Detailed outputs
-$( examplesSeperatorSection "BxISO Provisioning Account Setups" )
-${G_myName} -p acctName=bystar -i provisionSetupAcct   # Summary outputs
-${G_myName} ${extraInfo} -p acctName=bystar -i provisionSetupAcct    # Detailed outputs
-_EOF_
-}
-
 
 noArgsHook() {
   vis_examples
@@ -151,35 +101,18 @@ _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
 _CommentEnd_
 
-function vis_provisionSetup {
+
+function vis_doTheWork {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-In acctName's (mandtaory) HOME, with vis_prepUpdateInit create emacs init files.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    acctName=bystar
-    lpDo vis_provisionSetupAcct
-}
+    lpDo vis_failExample
+    EH_retOnFail
 
-
-function vis_provisionSetupAcct {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-In acctName's (mandtaory) HOME, with vis_prepUpdateInit create emacs init files.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    if [ -z "${acctName}" ] ; then
-	EH_problem "Missing acctName"
-	lpReturn 101
-    fi
-
-    # NOTYET, verify that acctName is valid (source needed lib)    
-
-    #  lpDo blee -v -n showRun -p acctName=${acctName} -i provisionSetup
+    lpReturn
 }
 
 _CommentBegin_

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IimBriefDescription="Bx Controlled Service Entity Provisioning -- From RegReq to Realize"
+IimBriefDescription="Bx Real Entity Provisioning -- From RegReq to Realize"
 
 ORIGIN="
 * Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee
