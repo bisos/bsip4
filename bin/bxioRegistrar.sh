@@ -133,6 +133,9 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
+$( examplesSeperatorChapter "Initial Bxe Realize" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i kindTypeInitialRepoBasesCreate
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i kindTypeInitialRepoBasesPush
 $( examplesSeperatorChapter "Assemble Initial Bxo Repo Bases" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i assembleInitialBxoCommonRepoBases
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i assembleInitial_subBxe

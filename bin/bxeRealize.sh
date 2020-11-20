@@ -169,7 +169,7 @@ $( examplesSeperatorSection "BxO Ssh Config Update" )
 usgBxoSshManage.sh
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -p usg=current -i sshConfigUpdate   # Sets up ~usg/.ssh/config
 $( examplesSeperatorSection "Initial Repos Push" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i initialReposPush  # aggregator for repoCreateAndPush
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i initialReposCreateAndPush  # aggregator for repoCreateAndPush
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoCreateAndPush "rbxe" "${oneBxoHome}/rbxe" "priv"
 $( examplesSeperatorSection "Full Realization" )
 ${G_myName} ${extraInfo} -p bxeDesc="${oneBxeDesc}" -i realize   # invokes all of the above
@@ -205,7 +205,7 @@ _EOF_
     
     lpDo vis_sshConfigUpdate
 
-    lpDo vis_initialReposPush
+    lpDo vis_initialReposCreateAndPush
     
     lpReturn
 }
@@ -458,7 +458,22 @@ _EOF_
 }
 
 
-function vis_initialReposPush {
+function vis_initialReposCreateAndPush {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [[ ! -z "${bxoId}" ]]
+
+    lpDo vis_initialCommonReposCreateAndPush
+
+    lpDo vis_initialSpecificReposCreateAndPush
+    
+    lpReturn
+}
+
+function vis_initialCommonReposCreateAndPush {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -470,6 +485,22 @@ _EOF_
     
     lpReturn
 }
+
+
+function vis_initialSpecificReposCreateAndPush {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+At this point we have kind and type available. So we invoke kindType.sh -i initRealize.sh
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [[ ! -z "${bxoId}" ]]
+
+    #lpDo vis_repoCreateAndPush "rbxe" "${bxoHome}/rbxe" "priv"
+    
+    lpReturn
+}
+
 
 
 _CommentBegin_
