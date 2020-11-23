@@ -138,16 +138,16 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Currents And BxO Management Information" )
 bisosCurrentsManage.sh
-bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
+bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId ${oneBxoId}
 ${G_myName} ${extraInfo} -i bxoConstructBaseDir_obtain "${priv}"
 $( examplesSeperatorChapter "Delete A BxO Local Acct" )
 bxoAcctManage.sh
 bxoAcctManage.sh ${extraInfo} -i bxoAcctDelete ${oneBxoId}
 usgBxoSshManage.sh
-usgBxoSshManage.sh ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}"  -i usgBxoFullDelete
-${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i fullRemove $(vis_bxoConstructBaseDir_obtain priv)/${oneBxoId}/home # noAcct
-${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i fullRemove # Delete Acct and remove ${oneBxoHome}
-${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i fullDelete # FullRemove + bxoGitServerFullDelete
+usgBxoSshManage.sh ${extraInfo}  -p bxoId="${oneBxoId}"  -i usgBxoFullDelete
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i fullRemove $(vis_bxoConstructBaseDir_obtain priv)/${oneBxoId}/home # noAcct
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i fullRemove # Delete Acct and remove ${oneBxoHome}
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i fullDelete # FullRemove + bxoGitServerFullDelete
 $( examplesSeperatorChapter "Delete A BxO At privGitServer" )
 bxoGitlab.py
 bxoGitlab.py -v 20 --bxoId="${oneBxoId}" -i reposDelete repoName1
@@ -161,9 +161,9 @@ $( examplesSeperatorSection "Obtain A Snapshot Of RBxE At $(vis_bxoConstructBase
 ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i obtainRepoSnapshot rbxe
 $( examplesSeperatorSection "BxO Ssh Config Update" )
 usgBxoSshManage.sh
-${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -p usg=current -i usgSshConfigUpdate   # Sets up ~usg/.ssh/config
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -p usg=current -i usgSshConfigUpdate   # Sets up ~usg/.ssh/config
 $( examplesSeperatorSection "BxO Creation Based On ISO Info" )
-${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i bxoAcctCreate
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i bxoAcctCreate
 $( examplesSeperatorSection "BxO Repos Clone Map" )
 ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i initialReposClone $(vis_bxoConstructBaseDir_obtain priv)/${oneBxoId}/home
 ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i initialReposClone
@@ -420,7 +420,7 @@ _EOF_
     }
     EH_assert [[ $# -lt 2 ]]
     EH_assert [ ! -z "${bxoId}" ]
-    EH_assert [ ! -z "${privacy}" ]
+    #EH_assert [ ! -z "${privacy}" ]
 
     if ! vis_userAcctExists "${bxoId}" ; then
 	ANT_raw "${bxoId} account is not valid." ; lpReturn 101
@@ -459,7 +459,7 @@ _EOF_
     }
     EH_assert [[ $# -lt 2 ]]
     EH_assert [ ! -z "${bxoId}" ]
-    EH_assert [ ! -z "${privacy}" ]
+    #EH_assert [ ! -z "${privacy}" ]
 
     if ! vis_userAcctExists "${bxoId}" ; then
 	ANT_raw "${bxoId} account is not valid." ; lpReturn 101
@@ -480,7 +480,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
     EH_assert [ ! -z "${bxoId}" ]
-    EH_assert [ ! -z "${privacy}" ]
+    #EH_assert [ ! -z "${privacy}" ]
 
     local reposList=$( bxoGitlab.py --bxoId="${bxoId}"  -i reposList )
     local each=""
@@ -500,7 +500,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
     EH_assert [ ! -z "${bxoId}" ]
-    EH_assert [ ! -z "${privacy}" ]    
+    #EH_assert [ ! -z "${privacy}" ]    
 
     local keysList=$( bxoGitlab.py --bxoId="${bxoId}" -i pubkeysList )
     local each=""
@@ -520,7 +520,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
     EH_assert [ ! -z "${bxoId}" ]
-    EH_assert [ ! -z "${privacy}" ]
+    # EH_assert [ ! -z "${privacy}" ]
 
     lpDo vis_bxoGitServerKeysDeleteAll
 

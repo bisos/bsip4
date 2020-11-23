@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IimBriefDescription="Bx Service Entity Provisioning -- From RegReq to Realize"
+IimBriefDescription="NOTYET: Short Description Of The Module"
 
 ORIGIN="
 * Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee
@@ -20,7 +20,7 @@ SEED="
 *  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
 "
 FILE="
-*  /This File/ :: /bisos/core/bsip/bin/bxcseProvision.sh 
+*  /This File/ :: /bisos/core/bsip/bin/bxeRealize.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
     /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
@@ -43,7 +43,7 @@ _CommentEnd_
 
 function vis_moduleDescription {  cat  << _EOF_
 *  [[elisp:(org-cycle)][| ]]  Xrefs         :: *[Related/Xrefs:]*  <<Xref-Here->>  -- External Documents  [[elisp:(org-cycle)][| ]]
-**  [[elisp:(org-cycle)][| ]]  Panel        :: [[file:/libre/ByStar/InitialTemplates/activeDocs/bxServices/versionControl/fullUsagePanel-en.org::Xref-VersionControl][Panel Roadmap Documentation]] [[elisp:(org-cycle)][| ]]
+**  [[elisp:(org-cycle)][| ]]  Panel        :: [[file:/bisos/panels/bisos/core/bxeAndBxo/_nodeBase_/fullUsagePanel-en.org::Panel][Panel Roadmap Documentation]] [[elisp:(org-cycle)][| ]]
 *  [[elisp:(org-cycle)][| ]]  Info          :: *[Module Description:]* [[elisp:(org-cycle)][| ]]
 
 _EOF_
@@ -63,19 +63,53 @@ _CommentEnd_
 . ${opBinBase}/lpReRunAs.libSh
 
 
-# . ${opBinBase}/bystarHook.libSh
-. ${opBinBase}/bxeHookRun_lib.sh
+. ${opBinBase}/bxeDesc_lib.sh
 
-. ${opBinBase}/bxeRegReq_lib.sh
+. ${opBinBase}/bxo_lib.sh
 
-. ${opBinBase}/bxeProvision_lib.sh
+. ${opBinBase}/bystarHook.libSh
+
+. ${opBinBase}/platformBases_lib.sh
+
+. ${opBinBase}/unisosAccounts_lib.sh
+. ${opBinBase}/bisosGroupAccount_lib.sh
+. ${opBinBase}/bisosAccounts_lib.sh
+
+. ${opBinBase}/bisosCurrents_lib.sh
 
 # PRE parameters
 
-baseDir=""
+typeset -t bxoId=""
+typeset -t privacy=""
+# usg=""
 
 function G_postParamHook {
-     return 0
+    # lpCurrentsGet
+
+    if [ ! -z "${bxoId}" ] ; then
+     	bxoHome=$( FN_absolutePathGet ~${bxoId} )
+    fi
+
+    lpCurrentsGet
+}
+
+function vis_bxoConstructBaseDir_obtain  {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+    local privacy="$1"
+
+    echo /bisos/var/bxo/construct/${privacy}
+
+    lpReturn
+}	
+
+
+
+noArgsHook() {
+  vis_examples
 }
 
 
@@ -90,53 +124,42 @@ function vis_examples {
     typeset runInfo="-p ri=lsipusr:passive"
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
+    
+    #local privacy="priv"
+    local priv="priv"    
+    #local oneBxoId="prs_bisos"
+    local oneBxoId=${currentBxoId}    
+    #oneBxoId="as-test1_5"    
+    oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )    
 
-    visLibExamplesOutput ${G_myName} 
+    visLibExamplesOutput ${G_myName}
+
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
+$( examplesSeperatorChapter "Currents And BxO Management Information" )
+bisosCurrentsManage.sh
+bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId ${oneBxoId}
+${G_myName} ${extraInfo} -i bxoConstructBaseDir_obtain "${priv}"
+$( examplesSeperatorChapter "Delete A BxO At privGitServer" )
+bxoGitlab.py
+bxoGitlab.py -v 20 --bxoId="${oneBxoId}" -i reposList
+$( examplesSeperatorChapter "bxoIds List" )
+bxoAcctManage.sh
+bxoAcctManage.sh ${extraInfo} -i bxoAcctsList
+bxoAcctManage.sh ${extraInfo} -i bxoIdsList
+( examplesSeperatorChapter "OId Tree Info" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i ancestorsList  # NOTYET
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i childrenList  # NOTYET
 _EOF_
-  vis_examplesBxServiceEntity all all
-   cat  << _EOF_
-$( examplesSeperatorChapter "Selected Specific Types and Scopes" )
-${G_myName} ${extraInfo} -i examplesBxServiceEntity all all full
-${G_myName} ${extraInfo} -i examplesBxServiceEntity all regReqCreate all
-${G_myName} ${extraInfo} -i examplesBxServiceEntity byname all essentials
-${G_myName} ${extraInfo} -i examplesBxServiceEntity bysmb all essentials
-$( examplesSeperatorChapter "Registraion Request -- RegReq Creation" )
-bxeRegReqManage.sh
-$( examplesSeperatorChapter "Central Registration Of The Request -- BxeDesc Creation" )
-selfCentralRegistrar.sh
-bxCentralRegistrar.sh
-$( examplesSeperatorChapter "Capturing Of The Registration -- BxeDesc Stash" )
-bxeDescManage.sh
-$( examplesSeperatorChapter "BxO And Git Accts Creation -- BxeRealization and BxO Instantiation" )
-bxeRealize.sh
-_EOF_
-
-    
 }
 
-noArgsHook() {
-  vis_examples
-}
+
 
 _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
 _CommentEnd_
 
 
-function vis_doTheWork {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    lpDo vis_failExample
-    EH_retOnFail
-
-    lpReturn
-}
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*

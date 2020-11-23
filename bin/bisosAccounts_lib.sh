@@ -119,6 +119,7 @@ ${G_myName} ${extraInfo} -i bxoAcctVerify ${oneAutonomousBxoAcct}
 $( examplesSeperatorChapter "BxISO (Info and Service Objects) List Accounts" )
 ${G_myName} ${extraInfo} -i bxoAcctNextLocalUidNu
 ${G_myName} ${extraInfo} -i bxoAcctsList
+${G_myName} ${extraInfo} -i bxoIdsList
 _EOF_
 }
 
@@ -333,7 +334,7 @@ _EOF_
 function vis_bxoAcctsList {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-List all usg accounts
+List all bxo accounts
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -342,6 +343,19 @@ _EOF_
     uidMaxSpec=2000000
 
     vis_uidRangePasswdFile
+}
+
+
+function vis_bxoIdsList {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Based on vis_bxoAcctsList
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    vis_bxoAcctsList | cut -d ":" -f 1
+    
 }
 
 

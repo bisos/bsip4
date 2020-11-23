@@ -106,18 +106,18 @@ function vis_examples {
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 _EOF_
-  vis_examplesBxRE all all
+  vis_examplesBxRealEntity all all
    cat  << _EOF_
 $( examplesSeperatorChapter "Selected Specific Types and Scopes" )
-${G_myName} ${extraInfo} -i examplesBxRE indiv regReqCreate
-${G_myName} ${extraInfo} -i examplesBxRE corp regReqCreate
-${G_myName} ${extraInfo} -i examplesBxRE sys regReqCreate
-${G_myName} ${extraInfo} -i examplesBxRE indiv startToPrivRealize
-${G_myName} ${extraInfo} -i examplesBxRE corp startToPrivRealize
-${G_myName} ${extraInfo} -i examplesBxRE sys startToPrivRealize
-${G_myName} ${extraInfo} -i examplesBxRE indiv all   # create+bxReg|selfReg+bxRealize|startToPrivRealize
-${G_myName} ${extraInfo} -i examplesBxRE corp all
-${G_myName} ${extraInfo} -i examplesBxRE sys all
+${G_myName} ${extraInfo} -i examplesBxRealEntity indiv regReqCreate
+${G_myName} ${extraInfo} -i examplesBxRealEntity corp regReqCreate
+${G_myName} ${extraInfo} -i examplesBxRealEntity sys regReqCreate
+${G_myName} ${extraInfo} -i examplesBxRealEntity indiv startToPrivRealize
+${G_myName} ${extraInfo} -i examplesBxRealEntity corp startToPrivRealize
+${G_myName} ${extraInfo} -i examplesBxRealEntity sys startToPrivRealize
+${G_myName} ${extraInfo} -i examplesBxRealEntity indiv all   # create+bxReg|selfReg+bxRealize|startToPrivRealize
+${G_myName} ${extraInfo} -i examplesBxRealEntity corp all
+${G_myName} ${extraInfo} -i examplesBxRealEntity sys all
 $( examplesSeperatorChapter "Registraion Request -- RegReq Creation" )
 bxeRegReqManage.sh
 $( examplesSeperatorChapter "Central Registration Of The Request -- BxeDesc Creation" )

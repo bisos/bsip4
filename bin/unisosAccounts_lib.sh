@@ -99,7 +99,7 @@ _EOF_
     for each in "${passwdLines[@]}" ; do
 	eachUid=$( echo ${each} | cut -d : -f 3 )
 	if (( eachUid > uidMinSpec )) && (( eachUid < uidMaxSpec )) ; then
-	    echo "${each}"
+	    echo -n "${each}"
 	fi
     done
 }

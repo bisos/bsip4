@@ -62,6 +62,12 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
+# . ${opBinBase}/bystarHook.libSh
+. ${opBinBase}/bxeHookRun_lib.sh
+
+. ${opBinBase}/bxeRegReq_lib.sh
+
+. ${opBinBase}/bxeProvision_lib.sh
 
 # PRE parameters
 
@@ -87,10 +93,29 @@ function vis_examples {
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
-$( examplesSeperatorChapter "Chapter Title" )
-$( examplesSeperatorSection "Section Title" )
-${G_myName} ${extraInfo} -i doTheWork
 _EOF_
+  vis_examplesBxInfoEntity all all
+   cat  << _EOF_
+$( examplesSeperatorChapter "Selected Specific Types and Scopes" )
+${G_myName} ${extraInfo} -i examplesBxInfoEntity all all full
+${G_myName} ${extraInfo} -i examplesBxInfoEntity all regReqCreate all
+${G_myName} ${extraInfo} -i examplesBxInfoEntity registrar all essentials
+${G_myName} ${extraInfo} -i examplesBxInfoEntity site all essentials
+${G_myName} ${extraInfo} -i examplesBxInfoEntity sysChar all essentials
+${G_myName} ${extraInfo} -i examplesBxInfoEntity usage all essentials
+${G_myName} ${extraInfo} -i examplesBxInfoEntity project all essentials
+${G_myName} ${extraInfo} -i examplesBxInfoEntity virtGuest all essentials
+$( examplesSeperatorChapter "Registraion Request -- RegReq Creation" )
+bxeRegReqManage.sh
+$( examplesSeperatorChapter "Central Registration Of The Request -- BxeDesc Creation" )
+selfCentralRegistrar.sh
+bxCentralRegistrar.sh
+$( examplesSeperatorChapter "Capturing Of The Registration -- BxeDesc Stash" )
+bxeDescManage.sh
+$( examplesSeperatorChapter "BxO And Git Accts Creation -- BxeRealization and BxO Instantiation" )
+bxeRealize.sh
+_EOF_
+
 }
 
 noArgsHook() {

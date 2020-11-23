@@ -62,6 +62,43 @@ _EOF_
     lpReturn ${retVal}
 }
 
+function vis_bxoKindTypeFacility {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+For example for bxoId=pir_privRegistrar, facility=bxioRegistrar.sh
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bxoId}" ]
+
+    local bxeDescBase="${bxoHome}/rbxe/bxeDesc"
+    
+    local bxeKind=$( fileParamManage.py  -i fileParamRead  ${bxeDescBase} bxeKind )    
+    local bxeType=$( fileParamManage.py  -i fileParamRead  ${bxeDescBase} bxeType )
+
+    local bxeTypeWord=${bxeType^}
+
+    local bxeKindTag=""
+    
+    case ${bxeKind} in 
+      real|info)
+	    bxeKindTag="bxio"
+	    ;;
+      svc)
+	    bxeKindTag="bxso"
+	    ;;
+      
+      *)
+	    EH_problem "Unknown bxeKind=${bxeKind}"
+	    return 101
+    esac
+
+    echo "${bxeKindTag}${bxeTypeWord}.sh"
+    
+    lpReturn
+}
+
+
 
 function vis_bxoSshKeyUpdate {
     G_funcEntry
@@ -152,28 +189,39 @@ _EOF_
     EH_assert [[ ! -z "${bxoId}" ]]
 
     local repoName="$1"
-    local baseDir="$2"
+    local repoPath="$2"
     local gitServerSelector="$3"
+
+    local canonRepoPath=$( FN_absolutePathGet ${repoPath} )
+    local gitRemote=$( inBaseDirDo ${canonRepoPath} git remote 2> /dev/null )
+
+    if [ ! -z "${gitRemote}" ] ; then
+	EH_problem "${canonRepoPath} Is Already A Git Repo -- Skipped"
+	lpReturn 101
+    fi
 
     #local gitServerUrl=git@bxoGit-${gitServerSelector}.${bxoId}:${bxoId}/${repoName}.git
     local gitServerUrl=git@bxoPriv_${bxoId}:${bxoId}/${repoName}.git    
 
     local curUser=$( id -u -n )
 
-    lpDo bxoGitlab.py -v 20 --bxoId="${bxoId}" -i reposCreate ${repoName}      
+    if ! lpDo bxoGitlab.py -v 20 --bxoId="${bxoId}" -i reposCreate ${repoName} ; then
+	ANT_cooked "${repoName} exists -- git push skipped"
+	lpReturn 101
+    fi
 
     #lpDo sudo chown -R "${curUser}":bisos ${baseDir}
 
     # previous example of using bxoId user: 
     # inBaseDirDo ${bxoHome}/rbxe sudo -u ${bxoId} git init
     
-    inBaseDirDo ${baseDir} git init    
-    inBaseDirDo ${baseDir} git add .
-    inBaseDirDo ${baseDir} git commit -m "Initial_bxeRealize.sh_commit_of_${baseDir}"
+    inBaseDirDo ${canonRepoPath} git init    
+    inBaseDirDo ${canonRepoPath} git add .
+    inBaseDirDo ${canonRepoPath} git commit -m "Initial_bxeRealize.sh_commit_of_${canonRepoPath}"
 
-    inBaseDirDo ${baseDir} git remote add origin ${gitServerUrl}
-    inBaseDirDo ${baseDir} git remote -v
-    inBaseDirDo ${baseDir} git push origin master
+    inBaseDirDo ${canonRepoPath} git remote add origin ${gitServerUrl}
+    inBaseDirDo ${canonRepoPath} git remote -v
+    inBaseDirDo ${canonRepoPath} git push origin master
 
     lpReturn
 }

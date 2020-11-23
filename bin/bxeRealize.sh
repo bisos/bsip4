@@ -168,11 +168,18 @@ ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i gitServerBxoPubkeyVerify
 $( examplesSeperatorSection "BxO Ssh Config Update" )
 usgBxoSshManage.sh
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -p usg=current -i sshConfigUpdate   # Sets up ~usg/.ssh/config
-$( examplesSeperatorSection "Initial Repos Push" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i initialReposCreateAndPush  # aggregator for repoCreateAndPush
+$( examplesSeperatorSection "Initial rbxe Repo Push" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i rbxeRepoCreateAndPush  # 
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoCreateAndPush "rbxe" "${oneBxoHome}/rbxe" "priv"
+$( examplesSeperatorSection "Account And rbxe Repo Realization" )
+${G_myName} ${extraInfo} -p bxeDesc="${oneBxeDesc}" -i acctRbxeRealize   # invokes all of the above
+$( examplesSeperatorSection "Initial Repos Create And Push" )
+bxioCommon.sh
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i initialReposCreateAndPush  # aggregator for repoCreateAndPush
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i initialCommonReposCreateAndPush
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i initialSpecificReposCreateAndPush
 $( examplesSeperatorSection "Full Realization" )
-${G_myName} ${extraInfo} -p bxeDesc="${oneBxeDesc}" -i realize   # invokes all of the above
+${G_myName} ${extraInfo} -p bxeDesc="${oneBxeDesc}" -i fullRealize   # invokes all of the above
 _EOF_
 }
 
@@ -180,13 +187,30 @@ _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
 _CommentEnd_
 
-function vis_realize {
+function vis_fullRealize {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [[ ! -z "${bxeDesc}" ]]    
+    EH_assert [ ! -z "${bxeDesc}" ]
+
+    lpDo vis_acctRbxeRealize
+
+    lpDo vis_initialReposCreateAndPush
+    
+    lpReturn
+}
+
+
+
+function vis_acctRbxeRealize {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bxeDesc}" ]
 
     lpDo vis_bxoAcctCreate    # creates ~bxoId
 
@@ -205,7 +229,7 @@ _EOF_
     
     lpDo vis_sshConfigUpdate
 
-    lpDo vis_initialReposCreateAndPush
+    lpDo vis_rbxeRepoCreateAndPush
     
     lpReturn
 }
@@ -458,6 +482,21 @@ _EOF_
 }
 
 
+function vis_rbxeRepoCreateAndPush {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bxoId}" ]
+
+    lpDo vis_repoCreateAndPush "rbxe" "${bxoHome}/rbxe" "priv"
+    
+    lpReturn
+}
+
+
+
 function vis_initialReposCreateAndPush {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -479,9 +518,11 @@ function vis_initialCommonReposCreateAndPush {
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [[ ! -z "${bxoId}" ]]
+    EH_assert [ ! -z "${bxoId}" ]
 
-    lpDo vis_repoCreateAndPush "rbxe" "${bxoHome}/rbxe" "priv"
+    lpDo bxioCommon.sh ${G_commandOptions} -p bxoId="${bxoId}" -i assembleInitialBxoCommonRepoBases
+
+    lpDo bxioCommon.sh ${G_commandOptions} -p bxoId="${bxoId}" -i pushInitialBxoCommonRepoBases
     
     lpReturn
 }
@@ -494,9 +535,18 @@ At this point we have kind and type available. So we invoke kindType.sh -i initR
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [[ ! -z "${bxoId}" ]]
+    EH_assert [ ! -z "${bxoId}" ]
 
-    #lpDo vis_repoCreateAndPush "rbxe" "${bxoHome}/rbxe" "priv"
+    local scriptName=$( vis_bxoKindTypeFacility )
+
+    if ! type "${scriptName}" > /dev/null; then
+	EH_problem "Missing scriptName=${scriptName}"
+	lpReturn 101
+    fi
+
+    lpDo ${scriptName} ${G_commandOptions} -i kindTypeRealizeRepoBasesCreate
+    
+    lpDo ${scriptName} ${G_commandOptions} -i kindTypeRealizeRepoBasesPush
     
     lpReturn
 }

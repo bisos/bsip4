@@ -92,7 +92,6 @@ _CommentEnd_
 
 # PRE parameters
 
-typeset -t bxeDesc=""
 typeset -t bxoId=""
 # usg=""
 
@@ -134,14 +133,75 @@ $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
 $( examplesSeperatorChapter "Initial Bxe Realize" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i kindTypeInitialRepoBasesCreate
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i kindTypeInitialRepoBasesPush
-$( examplesSeperatorChapter "Assemble Initial Bxo Repo Bases" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i assembleInitialBxoCommonRepoBases
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i assembleInitial_subBxe
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i commonInitialReposPush
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i kindTypeRealizeRepoBasesCreate
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i kindTypeRealizeRepoBasesPush
+$( examplesSeperatorChapter "Specialized SubTypes" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i regBxeBasesCreate
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i regBxeBasesPush
+$( examplesSeperatorChapter "Using Facilities" )
+registrarCentralBxe.sh  # Need not be visible to BISOS
+registrarPrivBxe.sh
+registrarPrivNic.sh     # NOTYET -- Priv Nic -- Priv IP addr reg
+registrarPubNic.sh     # NOTYET -- Pub Nic -- Pub IP addr reg
 _EOF_
 }
+
+
+function vis_kindTypeRealizeRepoBasesCreate {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bxoId}" ]
+
+    EH_assert  vis_userAcctExists "${bxoId}"    
+
+    lpReturn
+}
+
+
+function vis_kindTypeRealizeRepoBasesPush {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bxoId}" ]
+
+    EH_assert  vis_userAcctExists "${bxoId}"    
+
+    lpReturn
+}	
+
+
+function vis_regBxeBasesCreate {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bxoId}" ]
+
+    EH_assert  vis_userAcctExists "${bxoId}"    
+
+    lpReturn
+}	
+
+
+function vis_regBxeBasesPush {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bxoId}" ]
+
+    EH_assert  vis_userAcctExists "${bxoId}"    
+
+    lpReturn
+}	
+
 
 
 _CommentBegin_

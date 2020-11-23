@@ -120,7 +120,7 @@ ${G_myName} ${extraInfo} -i examplesBxRealEntity corp all essentials
 ${G_myName} ${extraInfo} -i examplesBxRealEntity sys all essentials
 $( examplesSeperatorChapter "Bx Information Entity" )
 ${G_myName} ${extraInfo} -i examplesBxInfoEntity all all full
-${G_myName} ${extraInfo} -i examplesBxServiceEntity all regReqCreate all
+${G_myName} ${extraInfo} -i examplesBxInfoEntity all regReqCreate all
 ${G_myName} ${extraInfo} -i examplesBxInfoEntity registrar all essentials
 ${G_myName} ${extraInfo} -i examplesBxInfoEntity site all essentials
 ${G_myName} ${extraInfo} -i examplesBxInfoEntity sysChar all essentials

@@ -34,24 +34,41 @@ function vis_moduleDescription {  cat  << _EOF_
 _EOF_
 }
 
-function vis_bxioExamples {
+function vis_bxioCommonExamples {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
     EH_assert [[ $# -ge 0 ]]
+    cat  << _EOF_
+$( examplesSeperatorChapter "Assemble And Push Initial Bxo Repo Bases" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i assembleInitialBxoCommonRepoBases
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i pushInitialBxoCommonRepoBases
+$( examplesSeperatorChapter "Assemble And Push Initial subBxe Base" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i assembleInitial_subBxe leaf
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -f -i assembleInitial_subBxe leaf
+${G_myName} ${extraInfo} -i repoCreateAndPushBasedOnPath "${oneBxoHome}/subBxe"
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoCreateAndPush "subBxe" "${oneBxoHome}/subBxe" "priv"
+$( examplesSeperatorChapter "Assemble And Push Initial mapFiles Base" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i assembleInitial_mapFiles
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoCreateAndPush "mapFiles" "${oneBxoHome}/mapFiles" "priv"
+_EOF_
 }
 
 
-function vis_commonInitialReposPush {
+function vis_pushInitialBxoCommonRepoBases {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [[ ! -z "${bxoId}" ]]
+    EH_assert [ ! -z "${bxoId}" ]
+
+    EH_assert  vis_userAcctExists "${bxoId}"    
 
     lpDo vis_repoCreateAndPush "subBxe" "${bxoHome}/subBxe" "priv"
+
+    lpDo vis_repoCreateAndPush "mapFiles" "${bxoHome}/mapFiles" "priv"    
     
     lpReturn
 }
@@ -65,11 +82,11 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
     EH_assert [ ! -z "${bxoId}" ]
 
-    if ! vis_userAcctExists "${bxoId}" ; then
-	ANT_raw "${bxoId} account is not valid." ; lpReturn 101
-    fi
+    EH_assert  vis_userAcctExists "${bxoId}"
+    
+    lpDo vis_assembleInitial_subBxe leaf
 
-    lpDo vis_assembleInitial_subBxe
+    lpDo vis_assembleInitial_mapFiles    
     
     lpReturn
 }
@@ -84,13 +101,13 @@ _EOF_
     EH_assert [[ $# -eq 1 ]]
     EH_assert [ ! -z "${bxoId}" ]
 
-    local node=$1
-
     EH_assert  vis_userAcctExists "${bxoId}"
+    
+    local node=$1
 
     bxoHome=$( FN_absolutePathGet ~${bxoId} )
 
-    function doIt {
+    function doThis {
 	lpDo mkdir ${bxoHome}/subBxe
 	if [ "${node}" == "leaf" ] ; then
 	    lpDo fileParamManage.py -i fileParamWrite ${bxoHome}/subBxe node leaf
@@ -105,16 +122,52 @@ _EOF_
 
     if [ -d "${bxoHome}/subBxe" ] ; then
 	if [ "${G_forceMode}" == "force" ] ; then
-	    lpDo doIt
+	    lpDo doThis
 	else
 	    ANT_raw "${bxoHome}/subBxe exists and forceMode is not specified."
 	fi
     else
-	lpDo doIt
+	lpDo doThis
     fi
     
     lpReturn
 }
+
+
+function vis_assembleInitial_mapFiles {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bxoId}" ]
+
+    EH_assert  vis_userAcctExists "${bxoId}"
+    
+    local bxoRepoBase="mapFiles"
+
+    bxoHome=$( FN_absolutePathGet ~${bxoId} )
+
+    function doThis {
+	lpDo FN_dirCreatePathIfNotThere ${bxoHome}/${bxoRepoBase}
+
+	lpDo FN_FileCreateIfNotThere ${bxoHome}/${bxoRepoBase}/fullMap.sh
+    }
+
+    if [ -d "${bxoHome}/${bxoRepoBase}" ] ; then
+	if [ "${G_forceMode}" == "force" ] ; then
+	    lpDo doThis
+	else
+	    ANT_raw "${bxoHome}/${bxoRepoBase} exists and forceMode is not specified."
+	fi
+    else
+	lpDo doThis
+    fi
+    
+    lpReturn
+}
+
+
 
 
 

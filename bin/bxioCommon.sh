@@ -129,15 +129,12 @@ function vis_examples {
     oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )    
     
     visLibExamplesOutput ${G_myName} 
-  cat  << _EOF_
+    cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
-$( examplesSeperatorChapter "Assemble Initial Bxo Repo Bases" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i assembleInitialBxoCommonRepoBases
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i assembleInitial_subBxe
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i commonInitialReposPush
 _EOF_
+    vis_bxioCommonExamples
 }
 
 
