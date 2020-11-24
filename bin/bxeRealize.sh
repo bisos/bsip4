@@ -249,8 +249,19 @@ _EOF_
 
     local bxeOidComment="oid-${cp_bxeOid}"
 
-    lpDo bxoAcctManage.sh -h -v -n showRun -p acctComment="${bxeOidComment}" -i bxoAcctCreate ${bxeLocalName}
+    #
+    # NOTYET, if kind==info and type=usg, use usgAcctManage.sh instead of bxoAcctManage.sh
+    #
 
+    local bxeKind=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxeKind )    
+    local bxeType=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxeType )
+
+    if [ "${bxeKind}" == "info" ] && [ "${bxeType}" == "usgAcct" ] ; then
+	EH_problem "NOTYET, usgAcct realization has not been implemented yet."
+    else
+	lpDo bxoAcctManage.sh -h -v -n showRun -p acctComment="${bxeOidComment}" -i bxoAcctCreate ${bxeLocalName}
+    fi
+    
     lpReturn
 }
 

@@ -68,13 +68,16 @@ _CommentEnd_
 
 . ${opBinBase}/bxeProvision_lib.sh
 
+. ${opBinBase}/bisosCurrents_lib.sh
+
 # PRE parameters
 
 gitServerUrl=""
 gitServerPrivToken=""
 
 function G_postParamHook {
-     return 0
+    lpCurrentsGet
+    lpReturn
 }
 
 
@@ -95,7 +98,7 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Site Git Server Profile" )
 $( examplesSeperatorSection "Specify" )
-${G_myName} ${extraInfo} -p gitServerName=192.168.0.56 -p gitServerUrl=http://192.168.0.56 -p gitServerPrivToken=qji9-_YqoqzZ4Rymk_qG -i gitServerInfoSet
+${G_myName} ${extraInfo} -p gitServerName=${cur_gitServerName} -p gitServerUrl=${cur_gitServerUrl} -p gitServerPrivToken=${cur_gitServerPrivToken} -i gitServerInfoSet
 ${G_myName} -i gitServerInfoShow
 ${G_myName} -i gitServerInfoBaseDir
 ${G_myName} ${extraInfo} -i examplesBxRE sys startToPrivRealize

@@ -135,6 +135,11 @@ function vis_examplesBxInfoSysChar {
     bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"sysChar\" -p parent=\"pis_privSite\" -p name=\"gitlabServer\" "
 }
 
+function vis_examplesBxInfoUsgAcct {
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"usage\" -p parent=\"pri_firstLast-1\" -p name=\"usg_name\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"usage\" -p parent=\"pri_firstLast-1\" -p name=\"usg_name\" "
+}
+
 function vis_examplesBxInfoUsage {
     bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"usage\" -p parent=\"pri_firstLast-1\" -p name=\"full\" "
     bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"usage\" -p parent=\"pri_firstLast-1\" -p name=\"full\" "

@@ -454,9 +454,13 @@ _EOF_
 	    vis_examplesBxInfoSysChar
 	    vis_examplesApplyProvisioners "ByStar System Characteristics Information Entity" ${provisioningScope}
 	    ;;
+	usgAcct)
+	    vis_examplesBxInfoUsage
+	    vis_examplesApplyProvisioners "ByStar Usage Acct Information Entity" ${provisioningScope} ${paramsDetail}
+	    ;;
 	usage)
 	    vis_examplesBxInfoUsage
-	    vis_examplesApplyProvisioners "ByStar Usage Information Entity" ${provisioningScope} ${paramsDetail}
+	    vis_examplesApplyProvisioners "ByStar Usage Environment Information Entity" ${provisioningScope} ${paramsDetail}
 	    ;;
 	project)
 	    vis_examplesBxInfoProject
@@ -473,8 +477,10 @@ _EOF_
 	    vis_examplesApplyProvisioners "ByStar Site Information Entity" ${provisioningScope} ${paramsDetail}
 	    vis_examplesBxInfoSysChar
 	    vis_examplesApplyProvisioners "ByStar System Characteristics Information Entity" ${provisioningScope} ${paramsDetail}
+	    vis_examplesBxInfoUsgAcct
+	    vis_examplesApplyProvisioners "ByStar Usage Account Information Entity" ${provisioningScope} ${paramsDetail}
 	    vis_examplesBxInfoUsage
-	    vis_examplesApplyProvisioners "ByStar Usage Information Entity" ${provisioningScope} ${paramsDetail}
+	    vis_examplesApplyProvisioners "ByStar Usage Environment Information Entity" ${provisioningScope} ${paramsDetail}
 	    vis_examplesBxInfoProject
 	    vis_examplesApplyProvisioners "ByStar Project Information Entity" ${provisioningScope} ${paramsDetail}
 	    vis_examplesBxInfoVirtGuest

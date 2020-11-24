@@ -17,6 +17,15 @@ bisosCurrentsIcm="bisosCurrentsManage.sh"
 
 typeset lpXauthorityFile=/tmp/lp.Xauthority
 
+function curSetParam {
+    vis_setParam $@
+}
+
+
+function vis_curSetParam {
+    vis_setParam $@
+}
+
 function vis_setParam {
     EH_assert [[ $# -eq 2 ]]
 
