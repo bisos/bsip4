@@ -74,6 +74,8 @@ _CommentEnd_
 
 . ${opBinBase}/bystarHook.libSh
 
+. ${opBinBase}/bxeHookRun_lib.sh
+
 . ${opBinBase}/bxeRegReq_lib.sh
 
 . ${opBinBase}/bxeProvision_lib.sh
@@ -109,15 +111,15 @@ _EOF_
   vis_examplesBxRealEntity all all
    cat  << _EOF_
 $( examplesSeperatorChapter "Selected Specific Types and Scopes" )
-${G_myName} ${extraInfo} -i examplesBxRealEntity indiv regReqCreate
+${G_myName} ${extraInfo} -i examplesBxRealEntity individual regReqCreate
 ${G_myName} ${extraInfo} -i examplesBxRealEntity corp regReqCreate
-${G_myName} ${extraInfo} -i examplesBxRealEntity sys regReqCreate
-${G_myName} ${extraInfo} -i examplesBxRealEntity indiv startToPrivRealize
+${G_myName} ${extraInfo} -i examplesBxRealEntity system regReqCreate
+${G_myName} ${extraInfo} -i examplesBxRealEntity individual startToPrivRealize
 ${G_myName} ${extraInfo} -i examplesBxRealEntity corp startToPrivRealize
-${G_myName} ${extraInfo} -i examplesBxRealEntity sys startToPrivRealize
-${G_myName} ${extraInfo} -i examplesBxRealEntity indiv all   # create+bxReg|selfReg+bxRealize|startToPrivRealize
+${G_myName} ${extraInfo} -i examplesBxRealEntity system startToPrivRealize
+${G_myName} ${extraInfo} -i examplesBxRealEntity individual all   # create+bxReg|selfReg+bxRealize|startToPrivRealize
 ${G_myName} ${extraInfo} -i examplesBxRealEntity corp all
-${G_myName} ${extraInfo} -i examplesBxRealEntity sys all
+${G_myName} ${extraInfo} -i examplesBxRealEntity system all
 $( examplesSeperatorChapter "Registraion Request -- RegReq Creation" )
 bxeRegReqManage.sh
 $( examplesSeperatorChapter "Central Registration Of The Request -- BxeDesc Creation" )

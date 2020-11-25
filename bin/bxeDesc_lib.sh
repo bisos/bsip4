@@ -114,7 +114,7 @@ _EOF_
     case ${bxeKind} in
 	"real")
 	    case ${bxeType} in
-		"indiv")
+		"individual")
 		    alpha="ri"
 		    numeric=1
 		    ;;
@@ -122,7 +122,7 @@ _EOF_
 		    alpha="rc"
 		    numeric=2
 		    ;;
-		"sys")
+		"system")
 		    alpha="rs"
 		    numeric=3
 		    ;;
@@ -237,7 +237,7 @@ Stash src (${bxeDesc}) is either /bisos/var/init/privRegistrar/ or ~pir_privRegi
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [[ ! -z "${bxeDesc}" ]]
+    EH_assert [ ! -z "${bxeDesc}" ]
 
     local parentBxoId="$(vis_parentBxoIdFromBxeDesc ${bxeDesc})"   
     local bxeLocalName="$(vis_bxoIdFromBxeDesc ${bxeDesc})"

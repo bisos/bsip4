@@ -81,7 +81,10 @@ _EOF_
     local bxeKindTag=""
     
     case ${bxeKind} in 
-      real|info)
+      real)
+	    bxeKindTag="bxro"
+	    ;;
+      info)
 	    bxeKindTag="bxio"
 	    ;;
       svc)

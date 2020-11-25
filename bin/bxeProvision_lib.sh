@@ -361,7 +361,7 @@ $( examplesSeperatorChapter "Bx Real Information Entity" )
 _EOF_
 	
     case "${bxeType}" in
-	indiv)
+	individual)
 	    vis_examplesBxRealIndiv
 	    vis_examplesApplyProvisioners "ByStar Real Individual Entity" ${provisioningScope} ${paramsDetail}
 	    ;;
@@ -369,7 +369,7 @@ _EOF_
 	    vis_examplesBxRealCorp
 	    vis_examplesApplyProvisioners "ByStar Real Corporate Entity" ${provisioningScope} ${paramsDetail}
 	    ;;
-	sys)
+	system)
 	    vis_examplesBxRealSys
 	    vis_examplesApplyProvisioners "ByStar Real System Entity" ${provisioningScope} ${paramsDetail}
 	    vis_examplesBxRealSysTest
@@ -636,7 +636,7 @@ _EOF_
     
     local bxeDescFile=$( bxeDescManage.sh ${G_commandOptions} -p bxeDesc="${bxeDescRegFile}" -i bxeDescStash )
 
-    lpDo bxeRealize.sh ${G_commandOptions} -p bxeDesc="${bxeDescFile}" -i realize
+    lpDo bxeRealize.sh ${G_commandOptions} -p bxeDesc="${bxeDescFile}" -i fullRealize
 }
 
 

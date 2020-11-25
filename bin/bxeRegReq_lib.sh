@@ -121,48 +121,48 @@ function vis_examplesBxRealSysTest {
 
 
 function vis_examplesBxInfoRegistrar {
-    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"registrar\" -p parent=\"prs_bisos\" -p name=\"privRegistrar\" "
-    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"registrar\" -p parent=\"prs_bisos\" -p name=\"privRegistrar\" "
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"registrar\" -p parent=\"${cur_bxoId_parent}\" -p name=\"privRegistrar\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"registrar\" -p parent=\"${cur_bxoId_parent}\" -p name=\"privRegistrar\" "
 }
 
 function vis_examplesBxInfoSite {
-    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"site\" -p parent=\"prs_bisos\" -p name=\"privSite\" "
-    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"site\" -p parent=\"prs_bisos\" -p name=\"privSite\" "    
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"site\" -p parent=\"${cur_bxoId_parent}\" -p name=\"privSite\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"site\" -p parent=\"${cur_bxoId_parent}\" -p name=\"privSite\" "    
 }
 
 function vis_examplesBxInfoSysChar {
-    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"sysChar\" -p parent=\"pis_privSite\" -p name=\"gitlabServer\" "
-    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"sysChar\" -p parent=\"pis_privSite\" -p name=\"gitlabServer\" "
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"sysChar\" -p parent=\"${cur_bxoId_parent}\" -p name=\"gitlabServer\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"sysChar\" -p parent=\"${cur_bxoId_parent}\" -p name=\"gitlabServer\" "
 }
 
 function vis_examplesBxInfoUsgAcct {
-    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"usage\" -p parent=\"pri_firstLast-1\" -p name=\"usg_name\" "
-    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"usage\" -p parent=\"pri_firstLast-1\" -p name=\"usg_name\" "
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"usage\" -p parent=\"${cur_bxoId_parent}\" -p name=\"usg_name\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"usage\" -p parent=\"${cur_bxoId_parent}\" -p name=\"usg_name\" "
 }
 
 function vis_examplesBxInfoUsage {
-    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"usage\" -p parent=\"pri_firstLast-1\" -p name=\"full\" "
-    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"usage\" -p parent=\"pri_firstLast-1\" -p name=\"full\" "
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"usage\" -p parent=\"${cur_bxoId_parent}\" -p name=\"full\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"usage\" -p parent=\"${cur_bxoId_parent}\" -p name=\"full\" "
 }
 
 function vis_examplesBxInfoProject {
-    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"project\" -p parent=\"pri_firstLast-1\" -p name=\"home\" "
-    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"project\" -p parent=\"pri_firstLast-1\" -p name=\"home\" "
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"project\" -p parent=\"${cur_bxoId_parent}\" -p name=\"home\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"project\" -p parent=\"${cur_bxoId_parent}\" -p name=\"home\" "
 }
 
 function vis_examplesBxInfoVirtGuest {
-    bxeParamsMini="-p privacy=\"all\" -p kind=\"info\" -p type=\"virtGuest\" -p parent=\"pis_privSite\" -p name=\"ubCur\" "
-    bxeParamsFull="-p privacy=\"all\" -p kind=\"info\" -p type=\"virtGuest\" -p parent=\"pis_privSite\" -p name=\"ubCur\" "
+    bxeParamsMini="-p privacy=\"all\" -p kind=\"info\" -p type=\"virtGuest\" -p parent=\"${cur_bxoId_parent}\" -p name=\"ubCur\" "
+    bxeParamsFull="-p privacy=\"all\" -p kind=\"info\" -p type=\"virtGuest\" -p parent=\"${cur_bxoId_parent}\" -p name=\"ubCur\" "
 }
 
 function vis_examplesBxSvcByname {
-    bxeParamsMini="-p privacy=\"priv\" -p kind=\"svc\" -p type=\"byname\" -p parent=\"pri_firstLast-1\" -p name=\"first.last\" "
-    bxeParamsFull="-p privacy=\"priv\" -p kind=\"svc\" -p type=\"byname\" -p parent=\"pri_firstLast-1\" -p name=\"first.last\" "
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"svc\" -p type=\"byname\" -p parent=\"${cur_bxoId_parent}\" -p name=\"first.last\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"svc\" -p type=\"byname\" -p parent=\"${cur_bxoId_parent}\" -p name=\"first.last\" "
 }
 
 function vis_examplesBxSvcBysmb {
-    bxeParamsMini="-p privacy=\"priv\" -p kind=\"svc\" -p type=\"bysmb\" -p parent=\"prc_exampleCom\" -p name=\"exampleCom\" "
-    bxeParamsFull="-p privacy=\"priv\" -p kind=\"svc\" -p type=\"bysmb\" -p parent=\"prc_exampleCom\" -p name=\"exampleCom\" "
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"svc\" -p type=\"bysmb\" -p parent=\"${cur_bxoId_parent}\" -p name=\"exampleCom\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"svc\" -p type=\"bysmb\" -p parent=\"${cur_bxoId_parent}\" -p name=\"exampleCom\" "
 }
 
 
@@ -383,6 +383,46 @@ regReqContainerStdoutSpecific_svc_bysmb () {
 _EOF_
 }
 
+
+function vis_regReqFileName {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local bxoHome=""
+    local subBxeDir=""
+    local regReqBaseDir=""    
+
+    if [ -z "${parent}" ] ; then
+	local regReqInfoBasePath=$(vis_regReqInfoBasePath_obtain)
+    
+	opDo FN_dirCreatePathIfNotThere ${regReqInfoBasePath}
+
+	regReqBaseDir="${regReqInfoBasePath}/${kind}/${type}"
+    else
+	if ! unisosAccts.sh -i userAcctExists "${parent}" ; then
+	    EH_problem "Missing bxoId -- parent=${parent}"
+	    lpReturn 101
+	fi
+	bxoHome=$( FN_absolutePathGet ~${parent} )
+	if [ -z "${bxoHome}" ] ; then
+	    EH_problem "Missing bxoHome -- parent=${parent}"
+	    lpReturn 101
+	fi
+	subBxeDir="${bxoHome}/subBxe"
+	if [ ! -d "${subBxeDir}" ] ; then
+	    EH_problem "Missing subBxeDir=${subBxeDir}"
+	    lpReturn 101
+	fi
+	regReqBaseDir="${subBxeDir}/regReq/${kind}/${type}"
+    fi
+
+    echo ${regReqBaseDir}
+}
+
+
 function vis_regReqFileNameOrTag {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -399,7 +439,7 @@ _EOF_
     if [ -z "${parent}" ] ; then
 	local regReqInfoBasePath=$(vis_regReqInfoBasePath_obtain)
     
-	opDo mkdir -p ${regReqInfoBasePath}
+	lpDo FN_dirCreatePathIfNotThere ${regReqInfoBasePath}
 
 	regReqBaseDir="${regReqInfoBasePath}/${kind}/${type}"
     else
@@ -456,7 +496,7 @@ _EOF_
     local regReqFileTagPath=$( vis_regReqFileNameOrTag "tag" )    
     local tmpFile=$( FN_tempFile )
     local tmpFile2=$( FN_tempFile )
-    local existingFile=$( ls ${regReqFileTagPath}* | head -1 )
+    local existingFile=$( ls ${regReqFileTagPath}* 2> /dev/null | head -1 )
     local diffResult=""
 
     if [ -z "${regReqFileNamePath}" ] ; then
@@ -475,6 +515,9 @@ _EOF_
 		lpDo rm ${tmpFile} ${tmpFile2}
 		echo ${existingFile}
 		lpReturn
+	    else
+		ANT_cooked "existingFile and This request are different"
+		lpDo diff ${tmpFile} ${tmpFile2}
 	    fi
 	fi
     fi

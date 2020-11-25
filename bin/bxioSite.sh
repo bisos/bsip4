@@ -6,8 +6,16 @@ ORIGIN="
 * Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee
 "
 
-####+BEGIN: bx:dblock:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
-
+####+BEGIN: bx:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
+### Args: :control "enabled|disabled|hide|release|fVar"  :vc "cvs|git|nil" :partof "bystar|nil" :copyleft "halaal+minimal|halaal+brief|nil"
+typeset RcsId="$Id: dblock-iim-bash.el,v 1.4 2017-02-08 06:42:32 lsipusr Exp $"
+# *CopyLeft*
+__copying__="
+* Libre-Halaal Software"
+#  This is part of ByStar Libre Services. http://www.by-star.net
+# Copyright (c) 2011 Neda Communications, Inc. -- http://www.neda.com
+# See PLPC-120001 for restrictions.
+# This is a Halaal Poly-Existential intended to remain perpetually Halaal.
 ####+END:
 
 __author__="
@@ -20,7 +28,7 @@ SEED="
 *  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
 "
 FILE="
-*  /This File/ :: /bisos/core/bsip/bin/siteGitServerManage.sh 
+*  /This File/ :: /bisos/core/bsip/bin/bxeRealize.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
     /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
@@ -43,7 +51,7 @@ _CommentEnd_
 
 function vis_moduleDescription {  cat  << _EOF_
 *  [[elisp:(org-cycle)][| ]]  Xrefs         :: *[Related/Xrefs:]*  <<Xref-Here->>  -- External Documents  [[elisp:(org-cycle)][| ]]
-**  [[elisp:(org-cycle)][| ]]  Panel        :: [[file:/libre/ByStar/InitialTemplates/activeDocs/bxServices/versionControl/fullUsagePanel-en.org::Xref-VersionControl][Panel Roadmap Documentation]] [[elisp:(org-cycle)][| ]]
+**  [[elisp:(org-cycle)][| ]]  Panel        :: [[file:/bisos/panels/bisos/core/bxeAndBxo/_nodeBase_/fullUsagePanel-en.org::Panel][Panel Roadmap Documentation]] [[elisp:(org-cycle)][| ]]
 *  [[elisp:(org-cycle)][| ]]  Info          :: *[Module Description:]* [[elisp:(org-cycle)][| ]]
 
 _EOF_
@@ -62,22 +70,44 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
+. ${opBinBase}/bxo_lib.sh
+
+. ${opBinBase}/bxeDesc_lib.sh
+
 . ${opBinBase}/bystarHook.libSh
 
-. ${opBinBase}/bxeRegReq_lib.sh
+. ${opBinBase}/bystarLib.sh
 
-. ${opBinBase}/bxeProvision_lib.sh
+. ${opBinBase}/lcnFileParams.libSh
+
+# . ${opBinBase}/bystarInfoBase.libSh
+
+. ${opBinBase}/unisosAccounts_lib.sh
+. ${opBinBase}/bisosGroupAccount_lib.sh
+. ${opBinBase}/bisosAccounts_lib.sh
+
+. ${opBinBase}/bxioCommon_lib.sh
 
 . ${opBinBase}/bisosCurrents_lib.sh
 
 # PRE parameters
 
-gitServerUrl=""
-gitServerPrivToken=""
+typeset -t bxoId=""
+# usg=""
 
 function G_postParamHook {
-    lpCurrentsGet
-    lpReturn
+    bxoIdPrepValidate    
+
+    if [ ! -z "${bxoId}" ] ; then
+     	bxoHome=$( FN_absolutePathGet ~${bxoId} )
+    fi
+    
+    bisosCurrentsGet
+}
+
+
+noArgsHook() {
+  vis_examples
 }
 
 
@@ -93,79 +123,57 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
+    #oneBxoId="prs-bisos"
+    oneBxoId="${currentBxoId}"
+    oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )    
+    
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
-$( examplesSeperatorChapter "Private Registrar And Default Site" )
-${G_myName} ${extraInfo} -i create_prs_bisos
-${G_myName} ${extraInfo} -i create_pir_privRegistrar
-${G_myName} ${extraInfo} -i create_pis_defaultSite
-${G_myName} ${extraInfo} -i createAll
+bisosCurrentsManage.sh
+bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
+$( examplesSeperatorChapter "Initial Bxe Realize" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i kindTypeRealizeRepoBasesCreate
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i kindTypeRealizeRepoBasesPush
+$( examplesSeperatorChapter "Specialized SubTypes" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i regBxeBasesCreate
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i regBxeBasesPush
+$( examplesSeperatorChapter "Using Facilities" )
+registrarCentralBxe.sh  # Need not be visible to BISOS
+registrarPrivBxe.sh
+registrarPrivNic.sh     # NOTYET -- Priv Nic -- Priv IP addr reg
+registrarPubNic.sh     # NOTYET -- Pub Nic -- Pub IP addr reg
 _EOF_
 }
 
-noArgsHook() {
-  vis_examples
-}
 
-_CommentBegin_
-*  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
-_CommentEnd_
-
-function vis_createAll {
-    G_funcEntry
+function vis_kindTypeRealizeRepoBasesCreate {
+   G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bxoId}" ]
 
-    lpDo vis_create_prs_bisos
-
-    lpDo vis_create_pir_privRegistrar
-
-    lpDo vis_create_pis_defaultSite
-    
-    lpReturn
-}
-
-
-function vis_create_prs_bisos {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    lpDo bxreProvision.sh ${G_commandOptions} -p privacy="priv" -p kind="real" -p type="system" -p sysName="bisos"  -i startToPrivRealize
+    EH_assert  vis_userAcctExists "${bxoId}"    
 
     lpReturn
 }
 
 
-function vis_create_pir_privRegistrar {
-    G_funcEntry
+function vis_kindTypeRealizeRepoBasesPush {
+   G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bxoId}" ]
 
-    lpDo bxieProvision.sh ${G_commandOptions} -p privacy="priv" -p kind="info" -p type="registrar" -p parent="prs_bisos" -p name="privRegistrar"  -i startToPrivRealize
-    
+    EH_assert  vis_userAcctExists "${bxoId}"    
+
     lpReturn
-}
+}	
 
-
-function vis_create_pis_defaultSite {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    lpDo bxieProvision.sh ${G_commandOptions} -p privacy="priv" -p kind="info" -p type="site" -p parent="prs_bisos" -p name="defaultSite"  -i startToPrivRealize    
-    
-    lpReturn
-}
 
 
 _CommentBegin_

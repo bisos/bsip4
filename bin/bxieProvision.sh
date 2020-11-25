@@ -69,12 +69,16 @@ _CommentEnd_
 
 . ${opBinBase}/bxeProvision_lib.sh
 
+. ${opBinBase}/bisosCurrents_lib.sh
+
+
 # PRE parameters
 
 baseDir=""
 
 function G_postParamHook {
-     return 0
+    lpCurrentsGet    
+    return 0
 }
 
 
@@ -90,9 +94,14 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
+    local oneBxoId=${currentBxoId}    
+    
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
+( examplesSeperatorChapter "Currents And BxO Management Information" )
+bisosCurrentsManage.sh
+bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId ${oneBxoId}
 _EOF_
   vis_examplesBxInfoEntity all all
    cat  << _EOF_

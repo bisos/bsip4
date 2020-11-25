@@ -77,6 +77,8 @@ _CommentEnd_
 # PRE parameters
 typeset -t regReqFile=""
 
+parent=""
+
 function G_postParamHook {
     # lpCurrentsGet
 
@@ -153,6 +155,7 @@ _EOF_
 	bxePrivRegBase="${bxoHome}/regBxe"
 	if [ ! -d "${bxePrivRegBase}" ] ; then
 	    lpDo mkdir "${bxePrivRegBase}"
+	    lpDo eval echo 102 \> ${bxePrivRegBase}
 	fi
 	echo "${bxePrivRegBase}"
     fi
@@ -224,42 +227,6 @@ _EOF_
     fi
 }
 
-
-function vis_regReqFileName {
-   G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    local bxoHome=""
-    local subBxeDir=""
-    local regReqBaseDir=""    
-
-    if [ -z "${parent}" ] ; then
-	local regReqInfoBasePath=$(vis_regReqInfoBasePath_obtain)
-    
-	opDo mkdir -p ${regReqInfoBasePath}
-
-	regReqBaseDir="${regReqInfoBasePath}/${kind}/${type}"
-    else
-	if ! unisosAccts.sh -i userAcctExists "${parent}" ; then
-	    EH_problem "Missing bxoId -- parent=${parent}"
-	    lpReturn 101
-	fi
-	bxoHome=$( FN_absolutePathGet ~${parent} )
-	if [ -z "${bxoHome}" ] ; then
-	    EH_problem "Missing bxoHome -- parent=${parent}"
-	    lpReturn 101
-	fi
-	subBxeDir="${bxoHome}/subBxe"
-	if [ ! -d "${subBxeDir}" ] ; then
-	    EH_problem "Missing subBxeDir=${subBxeDir}"
-	    lpReturn 101
-	fi
-	regReqBaseDir="${subBxeDir}/regReq/${kind}/${type}"
-    fi
-}
 
 privRegParamSpecific_real_system () {
     #
@@ -336,6 +303,31 @@ _EOF_
     lpReturn
 }	
 
+bxeDescParamInitSpecific_real_individual () {
+    EH_assert [[ $# -eq 1 ]]
+    local thisDir=${1}
+    local thisPath="$(pwd)/${thisDir}"    
+
+    local rdnSelectorTag=""
+
+    bxeDescParamInitSpecificCommon ${1}
+
+    #
+    # SERVICE SPECIFIC PARAMETERS
+    #
+
+    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} firstName "${bc_firstName}"
+    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} lastName "${bc_lastName}"    
+
+    if (( selectorNu == 1 )) ; then
+	rdnSelectorTag=""
+    else
+	rdnSelectorTag="_${selectorNu}"
+    fi
+
+    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} rdn "${bc_firstName}_${bc_lastName}${rdnSelectorTag}"
+}
+
 bxeDescParamInitSpecific_real_system () {
     EH_assert [[ $# -eq 1 ]]
     local thisDir=${1}
@@ -359,6 +351,7 @@ bxeDescParamInitSpecific_real_system () {
 
     lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} rdn "${bc_sysName}${rdnSelectorTag}"
 }
+
 
 
 bxeDescParamInitSpecific_DEFAULT_DEFAULT () {
@@ -408,6 +401,27 @@ bxeDescCheckDuplicateSpecificCommon () {
 	return 101
     fi
 }
+
+bxeDescCheckDuplicateSpecific_real_individual () {
+    EH_assert [[ $# -eq 1 ]]
+    local thisDir=${1}
+    local thisPath="$(pwd)/${thisDir}"    
+    local retVal=""
+    
+    bxeDescCheckDuplicateSpecificCommon ${1}
+    retVal=$?
+
+    local cp_firstName=$( fileParamManage.py  -i fileParamRead  ${thisPath} firstName )
+    local cp_lastName=$( fileParamManage.py  -i fileParamRead  ${thisPath} lastName )
+    
+    if [ "${bc_firstName}" == "${cp_firstName}" ] && [ "${bc_lastName}" == "${cp_lastName}" ] ; then
+	ANT_cooked "$1: DUPLICATE, ${selectorNu}"
+	selectorNu=$( expr ${selectorNu} +  1 )
+    fi
+
+    lpReturn ${retVal}
+}
+
 
 bxeDescCheckDuplicateSpecific_real_system () {
     EH_assert [[ $# -eq 1 ]]

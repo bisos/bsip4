@@ -555,9 +555,9 @@ _EOF_
 	lpReturn 101
     fi
 
-    lpDo ${scriptName} ${G_commandOptions} -i kindTypeRealizeRepoBasesCreate
+    lpDo ${scriptName} ${G_commandOptions} -p bxoId="${bxoId}" -i kindTypeRealizeRepoBasesCreate
     
-    lpDo ${scriptName} ${G_commandOptions} -i kindTypeRealizeRepoBasesPush
+    lpDo ${scriptName} ${G_commandOptions} -p bxoId="${bxoId}" -i kindTypeRealizeRepoBasesPush
     
     lpReturn
 }
