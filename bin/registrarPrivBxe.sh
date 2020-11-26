@@ -352,6 +352,30 @@ bxeDescParamInitSpecific_real_system () {
     lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} rdn "${bc_sysName}${rdnSelectorTag}"
 }
 
+bxeDescParamInitSpecific_real_corp () {
+    EH_assert [[ $# -eq 1 ]]
+    local thisDir=${1}
+    local thisPath="$(pwd)/${thisDir}"    
+
+    local rdnSelectorTag=""
+
+    bxeDescParamInitSpecificCommon ${1}
+
+    #
+    # SERVICE SPECIFIC PARAMETERS
+    #
+
+    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} sysName "${bc_corpName}"
+
+    if (( selectorNu == 1 )) ; then
+	rdnSelectorTag=""
+    else
+	rdnSelectorTag="_${selectorNu}"
+    fi
+
+    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} rdn "${bc_corpName}${rdnSelectorTag}"
+}
+
 
 
 bxeDescParamInitSpecific_DEFAULT_DEFAULT () {
@@ -441,6 +465,27 @@ bxeDescCheckDuplicateSpecific_real_system () {
 
     lpReturn ${retVal}
 }
+
+
+bxeDescCheckDuplicateSpecific_real_corp () {
+    EH_assert [[ $# -eq 1 ]]
+    local thisDir=${1}
+    local thisPath="$(pwd)/${thisDir}"    
+    local retVal=""
+    
+    bxeDescCheckDuplicateSpecificCommon ${1}
+    retVal=$?
+
+    local cp_corpName=$( fileParamManage.py  -i fileParamRead  ${thisPath} corpName )    
+    
+    if [ "${bc_corpName}" == "${cp_corpName}" ] ; then
+	ANT_cooked "$1: DUPLICATE, ${selectorNu}"
+	selectorNu=$( expr ${selectorNu} +  1 )
+    fi
+
+    lpReturn ${retVal}
+}
+
 
 bxeDescCheckDuplicateSpecific_DEFAULT_DEFAULT () {
     EH_assert [[ $# -eq 1 ]]

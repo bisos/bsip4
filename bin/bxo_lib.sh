@@ -230,6 +230,161 @@ _EOF_
 }
 
 
+function vis_bxoConstructBaseDir_obtain  {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+    local privacy="$1"
+
+    echo /bisos/var/bxo/construct/${privacy}
+
+    lpReturn
+}	
+
+
+function vis_obtainRepoSnapshot {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Dispatches to priv/group/all gitServers to obtain repo snap shot.
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+    EH_assert [ ! -z "${bxoId}" ]
+
+    local repoName=$1
+
+    if [ -z "${privacy}" ] ; then
+	privacy="priv"
+    fi
+
+    case ${privacy} in
+	"priv"|"private")
+	    lpDo obtainRepoSnapshot_priv $@
+	    ;;
+	"group")
+	    lpDo obtainRepoSnapshot_group $@
+	    ;;
+	"all"|"public")
+	    lpDo obtainRepoSnapshot_all $@
+	    ;;
+	"allGithub")
+	    lpDo obtainRepoSnapshot_allGithub $@
+	    ;;
+	*)
+	    EH_problem "privacy=${privacy} -- Unexpected"
+	    return
+	    ;;
+      esac
+    
+    lpReturn
+}
+
+function obtainRepoSnapshot_priv {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Obtain repoSnapshot.tar in /bisos/var/bxo/construct (NOTYET to be verified)
+** Untar the file in a .git dir
+** clone based on the .git dir
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+    EH_assert [[ ! -z "${bxoId}" ]]
+    EH_assert [[ ! -z "${privacy}" ]]    
+
+    local repoName=$1
+
+    local bxoConstructBaseDir=$(vis_bxoConstructBaseDir_obtain "${privacy}")
+
+    local repoTarFile="${bxoConstructBaseDir}/${bxoId}/${repoName}-gitSnapot.tar"
+    local gitRepoBaseDir="${bxoConstructBaseDir}/${bxoId}/${repoName}.git"
+
+    opDo FN_dirCreatePathIfNotThere "${bxoConstructBaseDir}/${bxoId}"
+    
+    lpDo bxoGitlab.py -v 20 --bxoId=${bxoId} --outFile="${repoTarFile}"  -i repoSnapshot ${repoName}
+
+    lpDo mkdir "${gitRepoBaseDir}"
+
+    inBaseDirDo "${gitRepoBaseDir}" tar xf "${repoTarFile}"
+
+    lpDo git clone "${gitRepoBaseDir}" "${bxoConstructBaseDir}/${bxoId}/${repoName}"
+    
+    lpReturn
+}
+
+
+
+function obtainRepoSnapshot_group {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+NOTYET -- TBD
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+    EH_assert [[ ! -z "${bxoId}" ]]
+    EH_assert [[ ! -z "${privacy}" ]]    
+
+    local repoName=$1
+
+    local bxoConstructBaseDir=$(vis_bxoConstructBaseDir_obtain "${privacy}")
+
+    echo "NOTYET"
+    
+    lpReturn
+}
+
+function obtainRepoSnapshot_all {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+NOTYET --
+** anon git clone ${bxoId}.rbxe
+** anon git clone ${bxoId}.maps
+Based on those run one of the _mapFile.sh
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+    EH_assert [[ ! -z "${bxoId}" ]]
+    EH_assert [[ ! -z "${privacy}" ]]    
+
+    local repoName=$1
+
+    local bxoConstructBaseDir=$(vis_bxoConstructBaseDir_obtain "${privacy}")
+
+    echo "NOTYET"
+    
+    lpReturn
+}
+
+
+function obtainRepoSnapshot_allGithub {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+NOTYET --
+** anon git clone ${bxoId}.rbxe
+** anon git clone ${bxoId}.maps
+Based on those run one of the _mapFile.sh
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${privacy}" ]    
+
+    local repoName=$1
+
+    local bxoConstructBaseDir=$(vis_bxoConstructBaseDir_obtain "${privacy}")
+
+    echo "NOTYET GITHUB ${bxoConstructBaseDir} ${bxoId}"
+
+    opDo FN_dirCreatePathIfNotThere "${bxoConstructBaseDir}/${bxoId}"
+    
+    lpDo git clone git://github.com/bxObjects/${bxoId}.${repoName}.git "${bxoConstructBaseDir}/${bxoId}/${repoName}"
+
+    
+    lpReturn
+}
+
+
 #
 # Left Over From OSMT -- To be sorted.
 #
