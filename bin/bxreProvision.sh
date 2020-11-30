@@ -80,11 +80,14 @@ _CommentEnd_
 
 . ${opBinBase}/bxeProvision_lib.sh
 
+. ${opBinBase}/bisosCurrents_lib.sh
+
 # PRE parameters
 
 
 function G_postParamHook {
-     return 0
+    lpDo lpCurrentsGet
+    return 0
 }
 
 function noArgsHook {

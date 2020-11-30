@@ -86,7 +86,11 @@ function G_postParamHook {
     # lpCurrentsGet
 
     if [ ! -z "${bxoId}" ] ; then
-     	bxoHome=$( FN_absolutePathGet ~${bxoId} )
+	if vis_userAcctExists "${bxoId}" ; then
+     	    bxoHome=$( FN_absolutePathGet ~${bxoId} )
+	else
+	    bxoHome=$( echo ~${bxoId} )
+	fi
     fi
 
     lpCurrentsGet
@@ -114,9 +118,10 @@ function vis_examples {
     local priv="allGithub"    
 
     #local oneBxoId=${currentBxoId}
-    local oneBxoId="aig_ubCur"
+    local oneBxoId="aip_vagrantBaseBoxes"
     
-    oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )    
+    #oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )
+    oneBxoHome=$( echo ~${oneBxoId} )        
 
     visLibExamplesOutput ${G_myName}
 
@@ -131,7 +136,6 @@ bxoAcctManage.sh
 bxoAcctManage.sh ${extraInfo} -i bxoAcctDelete ${oneBxoId}
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i fullRemove $(vis_bxoConstructBaseDir_obtain priv)/${oneBxoId}/home # noAcct
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i fullRemove # Delete Acct and remove ${oneBxoHome}
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i fullDelete # FullRemove + bxoGitServerFullDelete
 $( examplesSeperatorChapter "Construct A BxO From Its Realized BxE" )
 $( examplesSeperatorSection "Obtain A Snapshot Of RBxE At $(vis_bxoConstructBaseDir_obtain priv)" )
 ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i obtainRepoSnapshot rbxe
@@ -139,7 +143,7 @@ $( examplesSeperatorSection "BxO Creation Based On ISO Info" )
 ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i bxoAcctCreate
 $( examplesSeperatorSection "BxO Construct Full Update -- All Of The Above" )
 ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i fullConstruct $(vis_bxoConstructBaseDir_obtain priv)/${oneBxoId}/home # noAcct
-${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i fullConstruct # Creats Acct & clones in ${oneBxoHome}
+${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i fullConstruct # Creats Acct & git clones in ${oneBxoHome}
 _EOF_
 }
 
@@ -164,7 +168,51 @@ _EOF_
     
     local bxeDesc="$(vis_bxoConstructBaseDir_obtain ${privacy})/${bxoId}/rbxe/bxeDesc"
 
-    lpDo echo  bxeRealize.sh ${G_commandOptions} -p bxeDesc="${bxeDesc}" -i bxoAcctCreate    
+    lpDo bxeRealize.sh ${G_commandOptions} -p bxeDesc="${bxeDesc}" -i bxoAcctCreate    
+
+    lpReturn
+}
+
+
+
+function vis_initialReposClone {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Get a list of repos for the specified bxoId.
+Then clone those repos at the specified base or bxoHome if not specified.
+_EOF_
+    }
+    EH_assert [[ $# -lt 2 ]]
+    EH_assert [[ ! -z "${bxoId}" ]]
+
+    if ! vis_userAcctExists "${bxoId}" ; then
+	ANT_raw "${bxoId} account is not valid."
+	lpReturn 101
+    fi
+
+    bxoHome=$( FN_absolutePathGet ~${bxoId} )    
+    
+    local gitCloneDest=""
+    
+    if [ $# -eq 0 ] ; then
+	gitCloneDest=${bxoHome}
+    elif [ $# -eq 1 ] ; then
+	gitCloneDest=$1
+    else
+	EH_oops ""
+	lpReturn
+    fi
+    
+    local reposList="rbxe subBxe mapFiles"
+
+    local eachRepo=""
+    local gitServerUrl=""
+
+    opDo FN_dirCreatePathIfNotThere "${gitCloneDest}"  # NOTYET
+    
+    for eachRepo in ${reposList} ; do
+	lpDo git clone git://github.com/bxObjects/${bxoId}.${eachRepo}.git "${gitCloneDest}/${eachRepo}"
+    done
 
     lpReturn
 }
@@ -193,7 +241,7 @@ _EOF_
 
     lpDo vis_obtainRepoSnapshot rbxe
 
-    lpDo vis_usgSshConfigUpdate
+    #lpDo vis_usgSshConfigUpdate
 
     if [ $# -eq 0 ] ; then
 	lpDo vis_bxoAcctCreate
@@ -276,27 +324,6 @@ _EOF_
     
     lpReturn
 }
-
-function vis_bxoGitServerFullDelete {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-FullRemove + bxoGitServerFullDelete
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
-    # EH_assert [ ! -z "${privacy}" ]
-
-    lpDo vis_bxoGitServerKeysDeleteAll
-
-    lpDo vis_bxoGitServerReposDeleteAll
-
-    lpDo bxoGitlab.py -v 20 --bxoId="${bxoId}" -i acctDelete
-    
-    lpReturn
-}
-
-
 
 
 _CommentBegin_

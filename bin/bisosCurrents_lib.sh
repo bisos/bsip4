@@ -96,6 +96,8 @@ function lpCurrentsGet {
 
     if [ -f "${bisosCurrentsFileName}" ] ; then
 	. "${bisosCurrentsFileName}"
+    else
+	EH_problem "Missing bisosCurrentsFileName=${bisosCurrentsFileName}"
     fi
 
     typeset acctsList=$( bxoAcctsList )

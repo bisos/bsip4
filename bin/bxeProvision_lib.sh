@@ -452,7 +452,7 @@ _EOF_
 	    ;;
 	sysChar)
 	    vis_examplesBxInfoSysChar
-	    vis_examplesApplyProvisioners "ByStar System Characteristics Information Entity" ${provisioningScope}
+	    vis_examplesApplyProvisioners "ByStar System Characteristics Information Entity" ${provisioningScope} ${paramsDetail}
 	    ;;
 	usgAcct)
 	    vis_examplesBxInfoUsage
@@ -528,7 +528,7 @@ _EOF_
 	provisioningScope="$2"
 	paramsDetail="$3"			
     else
-	EH_Problem "Expected 0,1,2or3 args, got $#"
+	EH_problem "Expected 0,1,2or3 args, got $#"
 	lpReturn 101
     fi
     

@@ -1,12 +1,12 @@
 #!/bin/bash
 
-IcmBriefDescription="NOTYET: Short Description Of The Module"
+IimBriefDescription="NOTYET: Short Description Of The Module"
 
 ORIGIN="
 * Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee
 "
 
-####+BEGIN: bx:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
+####+BEGIN: bx:dblock:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
 
 ####+END:
 
@@ -20,7 +20,7 @@ SEED="
 *  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
 "
 FILE="
-*  /This File/ :: /bisos/core/bsip/bin/lcaVagrantAdmin.sh 
+*  /This File/ :: /bisos/core/bsip/bin/lcaVagrantBoxBuild.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
     /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
@@ -45,7 +45,8 @@ function vis_moduleDescription {  cat  << _EOF_
 *  [[elisp:(org-cycle)][| ]]  Xrefs         :: *[Related/Xrefs:]*  <<Xref-Here->>  -- External Documents  [[elisp:(org-cycle)][| ]]
 **  [[elisp:(org-cycle)][| ]]  Panel        :: [[file:/libre/ByStar/InitialTemplates/activeDocs/bxServices/versionControl/fullUsagePanel-en.org::Xref-VersionControl][Panel Roadmap Documentation]] [[elisp:(org-cycle)][| ]]
 *  [[elisp:(org-cycle)][| ]]  Info          :: *[Module Description:]* [[elisp:(org-cycle)][| ]]
-
+* 
+*
 _EOF_
 }
 
@@ -62,10 +63,6 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
-. ${opBinBase}/distHook.libSh
-
-# . ${opBinBase}/bisosGroupAccount_lib.sh
-. ${opBinBase}/bisosAccounts_lib.sh
 
 # PRE parameters
 
@@ -86,46 +83,16 @@ function vis_examples {
     #typeset extraInfo=""
     typeset runInfo="-p ri=lsipusr:passive"
 
-    local curUser=$( id -u -n )
-
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
-$( examplesSeperatorChapter "Installation Profile" )
-$( examplesSeperatorSection "Full Actions" )
-${G_myName} ${extraInfo} -i fullUpdate
-$( examplesSeperatorSection "Vagrant Base Boxes" )
-ls -ld ~bystar/.vagrant.d/boxes
-tree ~bystar/.vagrant.d/boxes
-vagrant box list
-vagrant box list -i 
-vagrant box --help
-vagrant box add --provider libvirt peru/ubuntu-20.04-desktop-amd64
-vagrant box outdated   # Applies to current Vagrant directory 
-vagrant box outdated --global
-vagrant box prune --provider libvirt peru/ubuntu-20.04-desktop-amd64
-$( examplesSeperatorSection "Vagrant Plugins" )
-vagrant plugin list --local
-vagrant plugin update
-vagrant plugin install NOTYET
-$( examplesSeperatorSection "Vagrant Status And Information" )
-vagrant --version
-vagrant global-status
-vagrant global-status --prune   # rechecks cache and prunes invalid entries
-vagrant status 6cd2a10
-$( examplesSeperatorSection "Creation Of Current Vagrant Directory" )
-vagrant init
-$( examplesSeperatorSection "Interact With Current Vagrant Directory" )
-vagrant validate
-vagrant status
-vagrant up
-vagrant provision
+$( examplesSeperatorChapter "Chapter Title" )
+$( examplesSeperatorSection "Section Title" )
+${G_myName} ${extraInfo} -i doTheWork
 _EOF_
 }
-
-# ${G_myName} -v -n showRun -i x64P
 
 noArgsHook() {
   vis_examples
@@ -136,40 +103,18 @@ _CommentBegin_
 _CommentEnd_
 
 
-
-function vis_fullUpdate {
+function vis_doTheWork {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-To be run after BinsPrep.sh. 
-
-/bin/systemctl status libvirtd
-
-VAGRANT_LOG=debug VAGRANT_DEFAULT_PROVIDER=libvirt vagrant up
-
-Vagrant.configure("2") do |config|
-  config.vm.define :dbserver do |dbserver|
-    dbserver.vm.box = "centos64"
-    dbserver.vm.provider :libvirt do |domain|
-      domain.memory = 2048
-      domain.cpus = 2
-      domain.nested = true
-      domain.volume_cache = 'none'
-    end
-  end
-
-for net in $(virsh net-list --name); do virsh net-dhcp-leases ${net}; done
-
-virt-install --machine=pseries --name=xenial1 --network=default,model=virtio --disk path=/var/lib/libvirt/images/xenial1.qcow2,format=qcow2,bus=virtio,cache=none --memory=2048 --vcpu=1 --os-type=linux --os-variant=ubuntu16.04 --cdrom=./ubuntu-16.04.6-server-ppc64el.iso --nographics
-
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo vagrant plugin list
+    lpDo vis_failExample
+    EH_retOnFail
 
-    lpDo vagrant box list
+    lpReturn
 }
-
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*

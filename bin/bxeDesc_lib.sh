@@ -59,13 +59,11 @@ _EOF_
 	fi
 	subBxeDir="${bxoHome}/subBxe"
 	if [ ! -d "${subBxeDir}" ] ; then
-	    EH_problem "Missing subBxeDir=${subBxeDir}"
-	    lpReturn 101
+	    lpDo mkdir -p ${subBxeDir}
 	fi
 	subBxeDescDir="${bxoHome}/subBxe/bxeDesc"
 	if [ ! -d "${subBxeDescDir}" ] ; then
-	    EH_problem "Missing subBxeDescDir=${subBxeDescDir}"
-	    lpReturn 101
+	    lpDo mkdir -p ${subBxeDescDir}
 	fi
 	echo "${subBxeDescDir}"
     fi	
