@@ -141,12 +141,20 @@ ${G_myName} ${extraInfo} -i repoBasesList
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBaseCreate_sysChar
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBaseCreate_sysInfo
 $( examplesSeperatorChapter "Specialized Actions" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_base
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_create
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_run
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vmCustomize
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vmDeploy
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i recordDeployment
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_base      # on host
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_create    # on host - vag-ssh
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_run       # on host - ends with image
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vmCustomize           # using virsh sets up guest ip addrs
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vmRun                 # on host
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i postCustomize  # on host - bx-ssh
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i secureSeal     # on host - bx-ssh
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i recordDeployment      # inside of parent bxo
+$( examplesSeperatorChapter "Host Actions" )
+NOTYET, connect to guest
+NOTYET, monitor guest
+$( examplesSeperatorChapter "Guest Actions" )
+NOTYET, Monitor common logs
+NOTYET, monitor specific logs
 $( examplesSeperatorChapter "Using Facilities" )
 something like registrarPrivBxe.sh that uses sysChars
 _EOF_

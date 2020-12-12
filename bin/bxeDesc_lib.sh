@@ -178,6 +178,34 @@ _EOF_
 		    ;;
 	    esac
 	    ;;
+	"container")
+	    case ${bxeType} in
+		"exposed")
+		    alpha="ce"
+		    numeric=91
+		    ;;
+		"intra")
+		    alpha="ci"
+		    numeric=92
+		    ;;
+		"usage")
+		    alpha="cu"
+		    numeric=93
+		    ;;
+		"dev")
+		    alpha="cd"
+		    numeric=94
+		    ;;
+		"android")
+		    alpha="ca"
+		    numeric=95
+		    ;;
+		*)
+		    EH_problem "bxeType=${bxeType} -- Unexpected"
+		    return
+		    ;;
+	    esac
+	    ;;
 	*)
 	    EH_problem "bxeKind=${bxeKind} -- Unexpected"
 	    return

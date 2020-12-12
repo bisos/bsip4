@@ -90,7 +90,9 @@ _EOF_
       svc)
 	    bxeKindTag="bxso"
 	    ;;
-      
+      container)
+	    bxeKindTag="bxco"
+	    ;;
       *)
 	    EH_problem "Unknown bxeKind=${bxeKind}"
 	    return 101

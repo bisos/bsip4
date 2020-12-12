@@ -165,6 +165,33 @@ function vis_examplesBxSvcBysmb {
     bxeParamsFull="-p privacy=\"priv\" -p kind=\"svc\" -p type=\"bysmb\" -p parent=\"${cur_bxoId_parent}\" -p name=\"exampleCom\" "
 }
 
+function vis_examplesBxContainerExposed {
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"container\" -p type=\"exposed\" -p parent=\"${cur_bxoId_parent}\" -p name=\"bacs\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"container\" -p type=\"exposed\" -p parent=\"${cur_bxoId_parent}\" -p name=\"bacs\" "    
+}
+
+function vis_examplesBxContainerIntra {
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"container\" -p type=\"intra\" -p parent=\"${cur_bxoId_parent}\" -p name=\"bisp\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"container\" -p type=\"intra\" -p parent=\"${cur_bxoId_parent}\" -p name=\"bisp\" "    
+}
+
+function vis_examplesBxContainerUsage {
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"container\" -p type=\"usage\" -p parent=\"${cur_bxoId_parent}\" -p name=\"bue\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"container\" -p type=\"usage\" -p parent=\"${cur_bxoId_parent}\" -p name=\"bue\" "    
+}
+
+function vis_examplesBxContainerDev {
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"container\" -p type=\"dev\" -p parent=\"${cur_bxoId_parent}\" -p name=\"bdev\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"container\" -p type=\"dev\" -p parent=\"${cur_bxoId_parent}\" -p name=\"bdev\" "    
+}
+
+
+function vis_examplesBxContainerAndroid {
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"container\" -p type=\"Android\" -p parent=\"${cur_bxoId_parent}\" -p name=\"andrd\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"container\" -p type=\"Android\" -p parent=\"${cur_bxoId_parent}\" -p name=\"andrd\" "    
+}
+
+
 
 function vis_regReqStdout {
    G_funcEntry
@@ -369,6 +396,82 @@ _EOF_
 }
 
 regReqContainerStdoutSpecific_svc_bysmb () {
+    EH_assert [[ $# -eq 1 ]]
+
+    if [ "$1" = "passive" ] ; then
+	regReqTag="${kind}_${type}_${name}"
+	return
+    fi
+
+    cat  << _EOF_
+    function regReqContainer_${kind}_${type} {
+      bc_name="${name}"
+    }
+_EOF_
+}
+
+regReqContainerStdoutSpecific_container_exposed () {
+    EH_assert [[ $# -eq 1 ]]
+
+    if [ "$1" = "passive" ] ; then
+	regReqTag="${kind}_${type}_${name}"
+	return
+    fi
+
+    cat  << _EOF_
+    function regReqContainer_${kind}_${type} {
+      bc_name="${name}"
+    }
+_EOF_
+}
+
+regReqContainerStdoutSpecific_container_intra () {
+    EH_assert [[ $# -eq 1 ]]
+
+    if [ "$1" = "passive" ] ; then
+	regReqTag="${kind}_${type}_${name}"
+	return
+    fi
+
+    cat  << _EOF_
+    function regReqContainer_${kind}_${type} {
+      bc_name="${name}"
+    }
+_EOF_
+}
+
+regReqContainerStdoutSpecific_container_usage () {
+    EH_assert [[ $# -eq 1 ]]
+
+    if [ "$1" = "passive" ] ; then
+	regReqTag="${kind}_${type}_${name}"
+	return
+    fi
+
+    cat  << _EOF_
+    function regReqContainer_${kind}_${type} {
+      bc_name="${name}"
+    }
+_EOF_
+}
+
+regReqContainerStdoutSpecific_container_dev () {
+    EH_assert [[ $# -eq 1 ]]
+
+    if [ "$1" = "passive" ] ; then
+	regReqTag="${kind}_${type}_${name}"
+	return
+    fi
+
+    cat  << _EOF_
+    function regReqContainer_${kind}_${type} {
+      bc_name="${name}"
+    }
+_EOF_
+}
+
+
+regReqContainerStdoutSpecific_container_android () {
     EH_assert [[ $# -eq 1 ]]
 
     if [ "$1" = "passive" ] ; then
