@@ -142,6 +142,31 @@ _CommentBegin_
 _CommentEnd_
 
 
+
+function vis_renewHere {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    set -x
+    find . -type f -print | egrep 'ftoProc.sh$' | xargs bx-dblock -h -v -n showRun -i dblockUpdateFiles
+    set +x
+
+    local dirsList=$(find . -maxdepth 1 -type d -print)
+    local each
+    
+    for each in ${dirsList} ; do
+	if [ -f "${each}/bleePanelProc.sh" ] ; then
+	    inBaseDirDo ${each} ftoProc.sh -v -n showRun -i ftoWalkRunCmnd bleePanelsPrep.sh -h -v -n showRun -i renew
+	fi
+    done
+    
+    lpReturn
+}
+
+
 function vis_fullUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
