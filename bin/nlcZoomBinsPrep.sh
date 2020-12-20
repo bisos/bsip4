@@ -56,7 +56,7 @@ binsPrep_zoom_DEFAULT_DEFAULT () {
 
 	inBaseDirDo /tmp wget https://zoom.us/client/latest/zoom_amd64.deb
 	
-	opDo sudo apt-get install -y /tmp/zoom_2.2.10_x86_64.deb
+	opDo sudo apt-get install -y /tmp/zoom_amd64.deb
     }
 }
 
