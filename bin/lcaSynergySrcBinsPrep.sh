@@ -109,7 +109,10 @@ binsPrep_synergy_DEFAULT_DEFAULT () {
     mmaPkgDebianMethod="custom"  #  or "apt" no need for customInstallScript but with binsPrep_installPostHook
 
     function customInstallScript {
-	lpDo sudo apt install qtcreator qtbase5-dev qttools5-dev cmake make g++ xorg-dev libssl-dev libx11-dev libsodium-dev libgl1-mesa-glx libegl1-mesa libcurl4-openssl-dev libavahi-compat-libdnssd-dev qtdeclarative5-dev libqt5svg5-dev libsystemd-dev git build-essential
+	lpDo sudo apt-get install -y qtcreator qtbase5-dev qttools5-dev cmake make g++ xorg-dev libssl-dev libx11-dev libsodium-dev libgl1-mesa-glx libegl1-mesa libcurl4-openssl-dev libavahi-compat-libdnssd-dev qtdeclarative5-dev libqt5svg5-dev libsystemd-dev git build-essential
+	
+	lpDo sudo apt-get install -y libavahi-compat-libdnssd1
+	
 	lpDo mkdir /bisos/var/srcPkgs/synergy-git
 	lpDo cd /bisos/var/srcPkgs/synergy-git
 	lDo git clone https://github.com/symless/synergy-core.git
