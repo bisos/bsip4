@@ -116,6 +116,7 @@ binsPrep_synergy_DEFAULT_DEFAULT () {
 	lpDo mkdir /bisos/var/srcPkgs/synergy-git
 	lpDo cd /bisos/var/srcPkgs/synergy-git
 	lpDo git clone https://github.com/symless/synergy-core.git
+	lpDo cd synergy-core
 	lpDo mkdir build
 	lpDo cd build
 	lpDo cmake ..
