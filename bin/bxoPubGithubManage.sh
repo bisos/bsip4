@@ -203,7 +203,7 @@ _EOF_
 	lpReturn
     fi
     
-    local reposList="rbxe subBxe mapFiles"
+    local reposList="rbxe bxeTree mapFiles"
 
     local eachRepo=""
     local gitServerUrl=""

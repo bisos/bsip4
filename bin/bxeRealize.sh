@@ -149,7 +149,7 @@ $( examplesSeperatorSection "BxO Local Acct Creation" )
 ${G_myName} ${extraInfo} -p bxeDesc="${oneBxeDesc}" -i bxoAcctCreate
 $( examplesSeperatorChapter "Assemble Initial Bxo Repo Bases" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -p bxeDesc="${oneBxeDesc}" -i assembleInitialBxoRepoBases
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i assembleInitial_subBxe
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i assembleInitial_bxeTree
 $( examplesSeperatorSection "BxO/rbxe Setup" )
 ${G_myName} ${extraInfo} -p bxeDesc="${oneBxeDesc}" -i rbxeSetup
 ${G_myName} ${extraInfo} -p bxeDesc="${oneBxeDesc}" -i bxoBxeDescCopy

@@ -495,7 +495,7 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     local bxoHome=""
-    local subBxeDir=""
+    local bxeTreeDir=""
     local regReqBaseDir=""    
 
     if [ -z "${parent}" ] ; then
@@ -514,12 +514,12 @@ _EOF_
 	    EH_problem "Missing bxoHome -- parent=${parent}"
 	    lpReturn 101
 	fi
-	subBxeDir="${bxoHome}/subBxe"
-	if [ ! -d "${subBxeDir}" ] ; then
-	    EH_problem "Missing subBxeDir=${subBxeDir}"
+	bxeTreeDir="${bxoHome}/bxeTree"
+	if [ ! -d "${bxeTreeDir}" ] ; then
+	    EH_problem "Missing bxeTreeDir=${bxeTreeDir}"
 	    lpReturn 101
 	fi
-	regReqBaseDir="${subBxeDir}/regReq/${kind}/${type}"
+	regReqBaseDir="${bxeTreeDir}/regReq/${kind}/${type}"
     fi
 
     echo ${regReqBaseDir}
@@ -536,7 +536,7 @@ _EOF_
     local nameOrTag="$1"
 
     local bxoHome=""
-    local subBxeDir=""
+    local bxeTreeDir=""
     local regReqBaseDir=""    
 
     if [ -z "${parent}" ] ; then
@@ -555,12 +555,12 @@ _EOF_
 	    EH_problem "Missing bxoHome -- parent=${parent}"
 	    lpReturn 101
 	fi
-	subBxeDir="${bxoHome}/subBxe"
-	if [ ! -d "${subBxeDir}" ] ; then
-	    EH_problem "Missing subBxeDir=${subBxeDir}"
+	bxeTreeDir="${bxoHome}/bxeTree"
+	if [ ! -d "${bxeTreeDir}" ] ; then
+	    EH_problem "Missing bxeTreeDir=${bxeTreeDir}"
 	    lpReturn 101
 	fi
-	regReqBaseDir="${subBxeDir}/regReq/${kind}/${type}"
+	regReqBaseDir="${bxeTreeDir}/regReq/${kind}/${type}"
     fi
 
     bxeKindTypeHookParamsSet ${kind} ${type}

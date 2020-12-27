@@ -170,7 +170,7 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     local bxoHome=""
-    local subBxeDir=""
+    local bxeTreeDir=""
     local regReqBaseDir=""
 
     if [ -z "${parent}" ] ; then

@@ -39,7 +39,7 @@ _EOF_
 
     local parentBxoId=$1
     local bxoHome=""
-    local subBxeDir=""
+    local bxeTreeDir=""
 
     if [ -z "${parentBxoId}" ] ; then
 	local cp_bxePrivacy=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxePrivacy )
@@ -57,15 +57,15 @@ _EOF_
 	    EH_problem "Missing bxoHome -- parentBxoId=${parentBxoId}"
 	    lpReturn 101
 	fi
-	subBxeDir="${bxoHome}/subBxe"
-	if [ ! -d "${subBxeDir}" ] ; then
-	    lpDo mkdir -p ${subBxeDir}
+	bxeTreeDir="${bxoHome}/bxeTree"
+	if [ ! -d "${bxeTreeDir}" ] ; then
+	    lpDo mkdir -p ${bxeTreeDir}
 	fi
-	subBxeDescDir="${bxoHome}/subBxe/bxeDesc"
-	if [ ! -d "${subBxeDescDir}" ] ; then
-	    lpDo mkdir -p ${subBxeDescDir}
+	bxeTreeDescDir="${bxoHome}/bxeTree/bxeDesc"
+	if [ ! -d "${bxeTreeDescDir}" ] ; then
+	    lpDo mkdir -p ${bxeTreeDescDir}
 	fi
-	echo "${subBxeDescDir}"
+	echo "${bxeTreeDescDir}"
     fi	
 }	
 
