@@ -38,6 +38,7 @@ _EOF_
 
 itemOrderedList=( 
     "vagrant"
+    "vagrantPlugins"
     # "vagrantDebUpstream"
 )
 
@@ -51,14 +52,6 @@ item_vagrant () { distFamilyGenerationHookRun binsPrep_vagrant; }
 
 binsPrep_vagrant_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "vagrant"; }
 
-####+END:
-
-####+BEGIN: bx:dblock:lsip:binsprep:apt :module "python-glade2"
-# {{{ python-glade2
-item_python_glade2 () { distFamilyGenerationHookRun binsPrep_python_glade2; }
-
-binsPrep_python_glade2_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "python-glade2"; }
-# }}}
 ####+END:
 
 item_vagrantDebUpstream () {
@@ -78,6 +71,24 @@ binsPrep_vagrantDebUpstream_DEFAULT_DEFAULT () {
 	opDo sudo dpkg -i /tmp/vagrant_2.2.10_x86_64.deb
     }
 }
+
+item_vagrantPlugins () {
+  distFamilyGenerationHookRun binsPrep_vagrantPlugins
+}
+
+binsPrep_vagrantPlugins_DEFAULT_DEFAULT () {
+    mmaThisPkgName="na"
+    mmaPkgDebianName="${mmaThisPkgName}"
+    mmaPkgDebianMethod="custom"  #  or "apt" no need for customInstallScript but with binsPrep_installPostHook
+
+    function customInstallScript {
+	lpDo sudo vagrant plugin install vagrant-libvirt
+	lpDo sudo vagrant plugin install vagrant-disksize
+
+	lpDo vagrant plugin list
+    }
+}
+
 
 ####+BEGIN: bx:dblock:bash:end-of-file :type "basic"
 # {{{ DBLOCK-end-of-file

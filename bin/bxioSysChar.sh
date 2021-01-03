@@ -126,80 +126,40 @@ function vis_examples {
     #oneBxoId="prs-bisos"
     #oneBxoId="${currentBxoId}"
     oneBxoId="pic_dnsServer"    
-    oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )    
+    oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )
+
+    function repoBaseCreateAndPushExamples {
+	EH_assert [[ $# -eq 2 ]]
+	local repoName=$1
+	local description=$2
+	cat  << _EOF_
+$( examplesSeperatorSection "${description}" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBaseCreate_${repoName}
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBasePush ${repoName}
+_EOF_
+    }	
     
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
-$( examplesSeperatorChapter "Initial Bxe Realize" )
+$( examplesSeperatorChapter "Provisioning: Initial BxE Realize -- Full Actions" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i fullCreateAndPush
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i kindTypeRealizeRepoBasesCreate
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i kindTypeRealizeRepoBasesPush
-$( examplesSeperatorChapter "Specialized SubType Repos" )
-${G_myName} ${extraInfo} -i repoBasesList
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBaseCreate_sysChar
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBaseCreate_sysInfo
-$( examplesSeperatorChapter "Specialized Actions" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_base      # on host
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_create    # on host - vag-ssh
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_run       # on host - ends with image
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vmCustomize           # using virsh sets up guest ip addrs
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vmRun                 # on host
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i postCustomize  # on host - bx-ssh
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i secureSeal     # on host - bx-ssh
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i recordDeployment      # inside of parent bxo
-$( examplesSeperatorChapter "Host Actions" )
-NOTYET, connect to guest
-NOTYET, monitor guest
-$( examplesSeperatorChapter "Guest Actions" )
-NOTYET, Monitor common logs
-NOTYET, monitor specific logs
-$( examplesSeperatorChapter "Using Facilities" )
-something like registrarPrivBxe.sh that uses sysChars
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i basesFullCreate
+$( examplesSeperatorChapter "Specific Initial Repo Realizition" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBasesList
+$( repoBaseCreateAndPushExamples svcsSpec "svcsSpec Repo (Services Specifications)" )
+$( repoBaseCreateAndPushExamples sysSpec "sysSpec Repo (System Specifications)" )
+$( repoBaseCreateAndPushExamples sysSpec "sysChar Repo (System Character)" )
+$( repoBaseCreateAndPushExamples containerBxO "Container BxO Repo" )
+$( repoBaseCreateAndPushExamples deploymentRecords "Deployment Records Repo" )
+$( repoBaseCreateAndPushExamples panel "BxO Panel Repo" )
+$( examplesSeperatorChapter "Bases Create" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i baseCreate_var
 _EOF_
-}
-
-
-function vis_kindTypeRealizeRepoBasesCreate {
-   G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
-
-    EH_assert  vis_userAcctExists "${bxoId}"    
-
-    local each
-
-    for each in $(vis_repoBasesList) ; do
-	lpDo vis_repoBaseCreate_${each}
-    done
-
-    # also create var base
-    
-    lpReturn
-}
-
-
-function vis_kindTypeRealizeRepoBasesPush {
-   G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
-
-    EH_assert  vis_userAcctExists "${bxoId}"
-
-    local each
-
-    for each in $(vis_repoBasesList) ; do
-	echo NOTYET ${each}
-    done
-    
-    lpReturn
 }
 
 function vis_repoBasesList {
@@ -210,9 +170,155 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     cat  << _EOF_
+panel
+containerBxO
+svcsSpec
+sysSpec
 sysChar
-sysInfo
+deploymentRecords
 _EOF_
+
+    lpReturn
+}
+
+function vis_basesList {
+    cat  << _EOF_
+var
+_EOF_
+}
+
+
+function vis_basesFullCreate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		       }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bxoId}" ]
+
+    EH_assert  vis_userAcctExists "${bxoId}"
+
+    local each
+
+    for each in $(vis_basesList) ; do
+	lpDo vis_baseCreate_${each}
+    done
+
+
+    lpReturn
+}	
+
+function vis_repoBaseCreate_deploymentRecords {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		       }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bxoId}" ]
+
+    EH_assert  vis_userAcctExists "${bxoId}"
+
+    local repoName=${FUNCNAME##vis_repoBaseCreate_}
+    local repoBase="${bxoHome}/${repoName}"
+
+    lpDo FN_dirCreatePathIfNotThere "${repoBase}"
+
+    lpDo eval cat  << _EOF_  \> "${repoBase}/README.org"
+BxO Repo: ${repoBase} 
+Placeholder for records/logs of materialization/deployment.
+_EOF_
+
+    lpDo bx-gitRepos -h -v -n showRun -i baseUpdateDotIgnore "${repoBase}"
+
+    lpReturn
+}	
+
+
+function vis_repoBaseCreate_containerBxO {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		       }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bxoId}" ]
+
+    EH_assert  vis_userAcctExists "${bxoId}"
+
+    local repoName=${FUNCNAME##vis_repoBaseCreate_}
+    local repoBase="${bxoHome}/${repoName}"
+
+    lpDo FN_dirCreatePathIfNotThere "${repoBase}"
+
+    lpDo eval cat  << _EOF_  \> "${repoBase}/README.org"
+BxO Repo: ${repoBase} 
+Pointer to bxoId as a filePointer
+_EOF_
+
+    lpDo FN_dirCreatePathIfNotThere ${repoBase}/bxoRef.fps
+    lpDo fileParamManage.py -i fileParamWrite ${repoBase}/bxoRef.fps bxoId UnSpecified
+
+    lpDo bx-gitRepos -h -v -n showRun -i baseUpdateDotIgnore "${repoBase}"
+
+    lpReturn
+}	
+
+
+function vis_repoBaseCreate_sysSpec {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		       }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bxoId}" ]
+
+    EH_assert  vis_userAcctExists "${bxoId}"
+
+    local repoName=${FUNCNAME##vis_repoBaseCreate_}
+    local repoBase="${bxoHome}/${repoName}"
+
+    lpDo FN_dirCreatePathIfNotThere "${repoBase}"
+
+    lpDo eval cat  << _EOF_  \> "${repoBase}/README.org"    
+BxO Repo: ${repoBase} 
+System Specification -- virtualization, resources, etc.
+_EOF_
+
+    lpDo FN_dirCreatePathIfNotThere ${repoBase}/virtualization.fps
+    lpDo fileParamManage.py -i fileParamWrite ${repoBase}/virtualization.fps virtType default
+
+    lpDo FN_dirCreatePathIfNotThere ${repoBase}/vmSpec.fps
+    lpDo fileParamManage.py -i fileParamWrite ${repoBase}/vmSpec.fps baseBox medium
+
+    lpDo bx-gitRepos -h -v -n showRun -i baseUpdateDotIgnore "${repoBase}"
+
+    lpReturn
+}	
+
+
+function vis_repoBaseCreate_svcsSpec {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		       }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bxoId}" ]
+
+    EH_assert  vis_userAcctExists "${bxoId}"
+
+    local repoName=${FUNCNAME##vis_repoBaseCreate_}
+    local repoBase="${bxoHome}/${repoName}"
+
+    lpDo FN_dirCreatePathIfNotThere "${repoBase}"
+
+    lpDo eval cat  << _EOF_  \> "${repoBase}/README.org"    
+BxO Repo: ${repoBase} 
+includes a list of BxSO's which provide the expected services
+_EOF_
+
+    lpDo FN_dirCreatePathIfNotThere ${repoBase}/fps
+    lpDo fileParamManage.py -i fileParamWrite ${repoBase}/fps bxoId UnSpecified
+
+    lpDo bx-gitRepos -h -v -n showRun -i baseUpdateDotIgnore "${repoBase}"
 
     lpReturn
 }	
@@ -222,136 +328,50 @@ function vis_repoBaseCreate_sysChar {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-    }
+		       }
     EH_assert [[ $# -eq 0 ]]
     EH_assert [ ! -z "${bxoId}" ]
 
     EH_assert  vis_userAcctExists "${bxoId}"
 
-    echo "NOTYET: Create hierarchy from dnsServer/sysChar"
+    local repoName=${FUNCNAME##vis_repoBaseCreate_}
+    local repoBase="${bxoHome}/${repoName}"
 
-    lpReturn
-}	
+    lpDo FN_dirCreatePathIfNotThere "${repoBase}"
 
-function vis_repoBaseCreate_sysInfo {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
+    lpDo eval cat  << _EOF_  \> "${repoBase}/README.org"    
+BxO Repo: ${repoBase} 
+for now just a bin directory
 _EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
 
-    EH_assert  vis_userAcctExists "${bxoId}"
+    lpDo FN_dirCreatePathIfNotThere ${repoBase}/bin
+    lpDo touch ${repoBase}/bin/materialize.sh
 
-    echo "NOTYET: Create hierarchy from dnsServer/sysInfo"
-    
-    lpReturn
-}	
+    lpDo bx-gitRepos -h -v -n showRun -i baseUpdateDotIgnore "${repoBase}"
 
-function vis_vagrantFile_base {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
-
-    EH_assert  vis_userAcctExists "${bxoId}"
-
-    lpDo FN_dirCreatePathIfNotThere ${bxoHome}/var/vagrantBase
-
-    echo ${bxoHome}/var/vagrantBase/Vagrantfile
-    
     lpReturn
 }	
 
 
-function vis_vagrantFile_create {
+function vis_baseCreate_var {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
-
-    EH_assert  vis_userAcctExists "${bxoId}"
-
-    lpDo cp ~aip_vagrantBaseBoxes/vagrants/ubuntu/20.04/server/medium-nat/bxBase/kvm/1/Vagrantfile $(vis_vagrantFile_base)
-        
-    lpReturn
-}	
-
-
-function vis_vagrantFile_run {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
-
-    EH_assert  vis_userAcctExists "${bxoId}"
-
-    lpDo echo run the vagrantFile
-    
-    lpReturn
-}	
-
-
-function vis_vmCustomize {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
-
-    EH_assert  vis_userAcctExists "${bxoId}"
-
-    lpDo describeF
-    
-    lpReturn
-}	
-
-
-function vis_vmDeploy {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-Use virsh to autostart the VM.
-Perhaps use related ICMs.
 _EOF_
 		       }
-    local thisDescribeF=describeF
     EH_assert [[ $# -eq 0 ]]
     EH_assert [ ! -z "${bxoId}" ]
 
     EH_assert  vis_userAcctExists "${bxoId}"
 
-    lpDo echo ${thisDescribeF}
+    local varBase="${bxoHome}/var"
+    local bisosVarBaseDir="/bisos/var/bxoId/${bxoId}"
+
+    lpDo FN_dirCreatePathIfNotThere ${bisosVarBaseDir}
     
+    lpDo FN_fileSymlinkUpdate ${bisosVarBaseDir} ${varBase}
+
     lpReturn
 }	
-
-
-function vis_recordDeployment {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-Use the parent site to record that the VM was deployed.
-Need its own abstractions.
-_EOF_
-		       }
-    local thisDescribeF=$(describeF)
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
-
-    EH_assert  vis_userAcctExists "${bxoId}"
-
-    lpDo printf ${thisDescribeF}
-    
-    lpReturn
-}	
-
-
 
 
 

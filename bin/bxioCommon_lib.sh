@@ -56,6 +56,93 @@ _EOF_
 }
 
 
+function vis_kindTypeRealizeRepoBasesCreate {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bxoId}" ]
+
+    EH_assert  vis_userAcctExists "${bxoId}"
+
+    local each
+
+    for each in $(vis_repoBasesList) ; do
+	lpDo vis_repoBaseCreate_${each}
+    done
+
+    lpReturn
+}
+
+
+function vis_kindTypeRealizeRepoBasesPush {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bxoId}" ]
+
+    EH_assert  vis_userAcctExists "${bxoId}"
+
+    local each
+
+    for each in $(vis_repoBasesList) ; do
+	lpDo vis_repoCreateAndPushBasedOnPath ${each}
+    done
+
+    lpReturn
+}	
+
+function vis_repoBasePush {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Based on -p bxoId and \$1=repoName, creates a repo in bxoId.
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+    EH_assert [ ! -z "${bxoId}" ]
+
+    EH_assert  vis_userAcctExists "${bxoId}"
+
+    local repoName=$1
+
+    local repoBase="${bxoHome}/${repoName}"
+
+    lpDo vis_repoCreateAndPushBasedOnPath "${repoBase}"
+    
+    lpReturn
+}	
+
+
+function vis_repoBaseCreate_panel {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bxoId}" ]
+
+    EH_assert  vis_userAcctExists "${bxoId}"
+
+    local repoBase="${bxoHome}/panel"
+
+    lpDo FN_dirCreatePathIfNotThere "${repoBase}"
+
+    cat  << _EOF_  > "${repoBase}/README.org"
+BxO Panels Base.
+_EOF_
+
+    lpDo bx-gitRepos -h -v -n showRun -i baseUpdateDotIgnore "${repoBase}"
+
+    lpDo startOrgPanel.sh -h -v -n showRun -i bleePanelBase node "${repoBase}"
+    
+    lpReturn
+}	
+
+
+
 function vis_pushInitialBxoCommonRepoBases {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_

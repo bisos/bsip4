@@ -144,8 +144,8 @@ $( examplesSeperatorSection "Blee InfoBase Repo Realization" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBaseCreate_bleeInfoBase
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBasePush bleeInfoBase
 $( examplesSeperatorSection "BxO Panels Root" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBaseCreate_panelsRoot
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBasePush panelsRoot
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBaseCreate_panel
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBasePush panel
 _EOF_
 }
 
@@ -158,43 +158,10 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     cat  << _EOF_
+panel
 realmPanels
 bleeInfoBase
 _EOF_
-
-    lpReturn
-}	
-
-
-function vis_kindTypeRealizeRepoBasesCreate {
-   G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
-
-    EH_assert  vis_userAcctExists "${bxoId}"
-
-    local each
-
-    for each in $(vis_repoBasesList) ; do
-	echo NOTYET ${each}
-    done
-
-    lpReturn
-}
-
-
-function vis_kindTypeRealizeRepoBasesPush {
-   G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
-
-    EH_assert  vis_userAcctExists "${bxoId}"    
 
     lpReturn
 }	
@@ -224,25 +191,6 @@ _EOF_
     lpReturn
 }	
 
-
-function vis_repoBasePush {
-   G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 1 ]]
-    EH_assert [ ! -z "${bxoId}" ]
-
-    EH_assert  vis_userAcctExists "${bxoId}"
-
-    local repoName=$1
-
-    local repoBase="${bxoHome}/${repoName}"
-
-    lpDo vis_repoCreateAndPushBasedOnPath "${repoBase}"
-    
-    lpReturn
-}	
 
 
 

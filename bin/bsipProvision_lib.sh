@@ -102,7 +102,11 @@ _EOF_
 
     lpDo vis_provisionVirtSysSetup    
     
-    lpDo vis_provisionEmacsFromSrc
+    lpDo echo skipping vis_provisionEmacsFromSrc
+
+    lpDo echo obtain this containers bxoId
+
+    lpDo echo then setup static ip addresses
 }
 
 
