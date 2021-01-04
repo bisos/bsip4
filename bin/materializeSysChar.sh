@@ -300,7 +300,9 @@ _EOF_
 
     lpDo eval vis_vagrantFile_stdout $@ \> Vagrantfile
 
-    lpDo eval VAGRANT_VAGRANTFILE=Vagrantfile vagrant up
+    lpDo pwd
+
+    lpDo vagrant up
     
     lpReturn
 }	
