@@ -181,18 +181,12 @@ _EOF_
 
     lpDo FN_dirCreatePathIfNotThere ${HOME}/tmp
 
-    local siteBootstrapDir=$( FN_absolutePathGet ~pis_defaultSite/bootstrap )
-
-    if [ ! -d "${siteBootstrapDir}" ] ; then
-	EH_problem "Missing siteBootstrapDir=${siteBootstrapDir}"
-	lpReturn 101
-    fi
-
     if [ -d "${HOME}/tmp/tmp-site" ] ; then
 	EH_problem "${HOME}/tmp/tmp-site already exists"
 	lpReturn 101
     fi
 
+    local siteBootstrapDir="/bxo/r3/iso/pis_defaultSite/bootstrap"
     
     lpDo sshpass -f "${passwdFile}" scp -r ${id}@${registrar}:${siteBootstrapDir} ${HOME}/tmp/tmp-site
 

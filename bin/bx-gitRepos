@@ -137,6 +137,7 @@ ${G_myName} -p vcMode=anon -i cachedLs | ${G_myName} -i status | grep CHANGED
 $( examplesSeperatorSection "Pull Remote" )
 ${G_myName} ${extraInfo} -i gitRemPull ${oneRepoBaseDir}
 ${G_myName} -i cachedLs | ${G_myName} -i gitRemPull
+${G_myName} -p vcMode=anon -i cachedLs | ${G_myName} -i gitRemPull
 $( examplesSeperatorSection "Add, Commit and Push" )
 echo ${oneRepoBaseDir}  | ${G_myName} ${extraInfo} -i addCommitPush modifieds 
 echo  ${oneRepoBaseDir} | ${G_myName} ${extraInfo} -i addCommitPush all
