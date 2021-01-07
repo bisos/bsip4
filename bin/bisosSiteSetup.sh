@@ -188,7 +188,7 @@ _EOF_
 
     local siteBootstrapDir="/bxo/r3/iso/pis_defaultSite/bootstrap"
     
-    lpDo sshpass -f "${passwdFile}" scp -r ${id}@${registrar}:${siteBootstrapDir} ${HOME}/tmp/tmp-site
+    lpDo sshpass -f "${passwdFile}" scp -o StrictHostKeyChecking=no -r ${id}@${registrar}:${siteBootstrapDir} ${HOME}/tmp/tmp-site
 
     lpReturn
 }
