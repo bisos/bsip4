@@ -68,6 +68,10 @@ _CommentEnd_
 gitServerUrl=""
 gitServerPrivToken=""
 
+# Global Vars
+selectedSite="/bisos/var/sites/selected/sys/config"
+
+
 function G_postParamHook {
      return 0
 }
@@ -118,7 +122,6 @@ _EOF_
     EH_assert [[ ! -z "${gitServerUrl}" ]]
     EH_assert [[ ! -z "${gitServerPrivToken}" ]]
 
-    local selectedSite=${HOME}/bisos/sites/selected
     local gitServerInfoBase="${selectedSite}/gitServerInfo"
 
     if [ ! -e "${selectedSite}" ] ; then
@@ -127,7 +130,7 @@ _EOF_
     fi
 
     if [ ! -d "${gitServerInfoBase}" ] ; then
-	lpDo mkdir "${gitServerInfoBase}"
+	lpDo mkdir -p "${gitServerInfoBase}"
     fi
     
     lpDo fileParamManage.py -i fileParamWrite "${gitServerInfoBase}" gitServerName "${gitServerName}"
@@ -144,7 +147,6 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    local selectedSite=${HOME}/bisos/sites/selected
     local gitServerInfoBase="${selectedSite}/gitServerInfo"
 
     if [ ! -e "${selectedSite}" ] ; then
@@ -165,7 +167,6 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    local selectedSite=${HOME}/bisos/sites/selected
     local gitServerInfoBase="${selectedSite}/gitServerInfo"
 
     if [ ! -e "${selectedSite}" ] ; then

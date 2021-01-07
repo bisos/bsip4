@@ -120,9 +120,18 @@ noArgsHook() {
 function vis_fullUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+First ${HOME}/tmp/tmp-site/bin is obtained.
+/bisos/var/sites/selected/bin/siteBisosSetup.sh -i fullUpdate sets up a gitServer
+With that gitServer, we then
+- activate "bisos" Real-System BxO
+- activate "defaultSite" BxO
+We then symlink ~pis_defaultSite to /bisos/var/sites/selected
+And git rid of ${HOME}/tmp/tmp-site
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
+
+    typeset extraInfo="-h -v -n showRun"    
 
     lpDo vis_obtainTmpSite
 
@@ -133,9 +142,9 @@ _EOF_
     
     lpDo FN_dirCreatePathIfNotThere /bisos/var/sites
     
-    lpDo FN_fileSymlinkUpdate ${HOME}/tmp/tmp-site /bisos/var/sites/current
+    lpDo FN_fileSymlinkUpdate ${HOME}/tmp/tmp-site /bisos/var/sites/selected
 
-    inBaseDirDo /bisos/var/sites/current/bin siteBisosSetup.sh -h -v -n showRun -i fullUpdate
+    inBaseDirDo /bisos/var/sites/selected/sys/bin siteBisosSetup.sh -h -v -n showRun -i fullUpdate
 
     # Activate "bisos" Real-System BxO
     lpDo bxoManage.sh -h -v -n showRun -p privacy="priv" -p bxoId="prs_bisos" -i fullConstruct
@@ -150,9 +159,13 @@ _EOF_
 	lpReturn 101
     fi
 
-    lpDo FN_fileSymlinkUpdate ${siteBootstrapDir} /bisos/var/sites/current
+    lpDo FN_fileSymlinkUpdate $(FN_absolutePathGet ~pis_defaultSite) /bisos/var/sites/selected
 
     lpDo rm -r -f ${HOME}/tmp/tmp-site
+
+    lpDo /bisos/var/sites/selected/sys/bin/siteBisosGitServer.sh ${extraInfo} -i initialize
+
+    lpDo /bisos/var/sites/selected/sys/bin/siteBisosDefaults.sh ${extraInfo} -i initialize    
     
     lpReturn
 }
