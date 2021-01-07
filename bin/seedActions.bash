@@ -336,8 +336,11 @@ fi
 
 
 G_postParamHookVal=`ListFuncs | egrep '^G_postParamHook$'`
-if [ "${G_postParamHookVal}X" != "X" ] ;   then
-    G_postParamHook 
+if [ ! -z "${G_postParamHookVal}" ] ;   then
+    if ! G_postParamHook ; then
+	printf >&2 "PROBLEM: G_postParamHook Failure\n"
+	exit 1
+    fi
 fi
 
 

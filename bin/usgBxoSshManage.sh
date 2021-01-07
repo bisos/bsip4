@@ -91,7 +91,7 @@ function G_postParamHook {
 
     usgSshConfigSeg_baseDir=${usgHome}/.ssh/configSeg
 
-    local siteGitServerInfoBaseDir=$( siteGitServerManage.sh -i gitServerInfoBaseDir )
+    local siteGitServerInfoBaseDir=$( bisosSiteGitServer.sh -i gitServerInfoBaseDir )
     
     site_gitServerName=$( fileParamManage.py -i fileParamRead ${siteGitServerInfoBaseDir} gitServerName )
     

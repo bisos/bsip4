@@ -200,6 +200,14 @@ _EOF_
 		    alpha="ca"
 		    numeric=95
 		    ;;
+		"vmHost")
+		    alpha="cv"
+		    numeric=96
+		    ;;
+		"perimeter")
+		    alpha="cp"
+		    numeric=97
+		    ;;
 		*)
 		    EH_problem "bxeType=${bxeType} -- Unexpected"
 		    return

@@ -89,7 +89,10 @@ function G_postParamHook {
      	bxoHome=$( FN_absolutePathGet ~${bxoId} )
     fi
 
-    lpCurrentsGet
+    if ! lpCurrentsGet ; then
+	EH_problem "lpCurrentsGet Failure"
+	return 101
+    fi
 }
 
 

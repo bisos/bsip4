@@ -81,10 +81,7 @@ function vis_validateParam {
 }
 
 function bxoAcctsList {
-    # NOTYET
-    doNothing
-    #bystarBacsAcctsList
-    #vis_bxoAcctsList
+    vis_bxoAcctsList
 }
 
 function bisosCurrentsGet {
@@ -98,9 +95,15 @@ function lpCurrentsGet {
 	. "${bisosCurrentsFileName}"
     else
 	EH_problem "Missing bisosCurrentsFileName=${bisosCurrentsFileName}"
+	lpReturn 101
     fi
 
     typeset acctsList=$( bxoAcctsList )
+
+    if [ -z "${acctsList}" ] ; then
+	EH_problem "Missing bxoAcctsList"
+	lpReturn 101
+    fi
 
     if [ "${currentBxoId}" == "" ] ; then
 	currentBxoId=$( LIST_getFirst ${acctsList} | cut -d ':' -f 1 )

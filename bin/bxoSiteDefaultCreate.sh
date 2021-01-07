@@ -20,7 +20,7 @@ SEED="
 *  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
 "
 FILE="
-*  /This File/ :: /bisos/core/bsip/bin/siteGitServerManage.sh 
+*  /This File/ :: /bisos/core/bsip/bin/siteBxoDefaultSetup.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
     /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 

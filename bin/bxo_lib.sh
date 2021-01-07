@@ -191,8 +191,8 @@ function vis_repoCreateAndPush {
 _EOF_
     }
     EH_assert [[ $# -eq 3 ]]
-    EH_assert [[ ! -z "${bxoId}" ]]
-
+    EH_assert [ ! -z "${bxoId}" ]
+    
     local repoName="$1"
     local repoPath="$2"
     local gitServerSelector="$3"

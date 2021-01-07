@@ -20,7 +20,7 @@ SEED="
 *  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
 "
 FILE="
-*  /This File/ :: /bisos/core/bsip/bin/siteGitServerManage.sh 
+*  /This File/ :: /bisos/core/bsip/bin/bisosSiteGitServer.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
     /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
@@ -90,9 +90,12 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Site Git Server Profile" )
 $( examplesSeperatorSection "Specify" )
-${G_myName} ${extraInfo} -p gitServerName=192.168.0.56 -p gitServerUrl=http://192.168.0.56 -p gitServerPrivToken=qji9-_YqoqzZ4Rymk_qG -i gitServerInfoSet
+${G_myName} ${extraInfo} -p gitServerName=TBD -p gitServerUrl=TBD -p gitServerPrivToken=TBD -i gitServerInfoSet
 ${G_myName} -i gitServerInfoShow
 ${G_myName} -i gitServerInfoBaseDir
+$( examplesSeperatorSection "Site Specifications" )
+siteBisosGitServer.sh
+siteBisosGitServer.sh ${extraInfo} -i initialize
 _EOF_
 }
 

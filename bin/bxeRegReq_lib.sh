@@ -165,9 +165,19 @@ function vis_examplesBxSvcBysmb {
     bxeParamsFull="-p privacy=\"priv\" -p kind=\"svc\" -p type=\"bysmb\" -p parent=\"${cur_bxoId_parent}\" -p name=\"exampleCom\" "
 }
 
+function vis_examplesBxContainerVmHost {
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"container\" -p type=\"vmHost\" -p parent=\"${cur_bxoId_parent}\" -p name=\"vmhc\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"container\" -p type=\"vmHost\" -p parent=\"${cur_bxoId_parent}\" -p name=\"vmhc\" "    
+}
+
 function vis_examplesBxContainerExposed {
     bxeParamsMini="-p privacy=\"priv\" -p kind=\"container\" -p type=\"exposed\" -p parent=\"${cur_bxoId_parent}\" -p name=\"bacs\" "
     bxeParamsFull="-p privacy=\"priv\" -p kind=\"container\" -p type=\"exposed\" -p parent=\"${cur_bxoId_parent}\" -p name=\"bacs\" "    
+}
+
+function vis_examplesBxContainerPerimeter {
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"container\" -p type=\"perimeter\" -p parent=\"${cur_bxoId_parent}\" -p name=\"bpsc\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"container\" -p type=\"perimeter\" -p parent=\"${cur_bxoId_parent}\" -p name=\"bpsc\" "    
 }
 
 function vis_examplesBxContainerIntra {

@@ -616,9 +616,17 @@ $( examplesSeperatorChapter "Bx Container Entity" )
 _EOF_
 	
     case "${bxeType}" in
+	vmHost)
+	    vis_examplesBxContainerVmHost
+	    vis_examplesApplyProvisioners "ByStar VmHost Container Entity" ${provisioningScope}  ${paramsDetail}
+	    ;;
 	exposed)
 	    vis_examplesBxContainerExposed
 	    vis_examplesApplyProvisioners "ByStar Exposed Container Entity" ${provisioningScope}  ${paramsDetail}
+	    ;;
+	perimeter)
+	    vis_examplesBxContainerPerimeter
+	    vis_examplesApplyProvisioners "ByStar Perimeter Container Entity" ${provisioningScope}  ${paramsDetail}
 	    ;;
 	intra)
 	    vis_examplesBxContainerIntra
@@ -637,8 +645,12 @@ _EOF_
 	    vis_examplesApplyProvisioners "ByStar Android Container Entity" ${provisioningScope} ${paramsDetail}
 	    ;;
 	all)	
+	    vis_examplesBxContainerVmHost
+	    vis_examplesApplyProvisioners "ByStar VmHost Container Entity" ${provisioningScope}  ${paramsDetail}
 	    vis_examplesBxContainerExposed
 	    vis_examplesApplyProvisioners "ByStar Exposed Container Entity" ${provisioningScope}  ${paramsDetail}
+	    vis_examplesBxContainerPerimeter
+	    vis_examplesApplyProvisioners "ByStar Perimeter Container Entity" ${provisioningScope}  ${paramsDetail}
 	    vis_examplesBxContainerIntra
 	    vis_examplesApplyProvisioners "ByStar Intra Container Entity" ${provisioningScope} ${paramsDetail}
 	    vis_examplesBxContainerUsage

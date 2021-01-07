@@ -103,7 +103,9 @@ _EOF_
 $( examplesSeperatorChapter "Selected Specific Types and Scopes" )
 ${G_myName} ${extraInfo} -i examplesBxContainerEntity all all full
 ${G_myName} ${extraInfo} -i examplesBxContainerEntity all regReqCreate all
+${G_myName} ${extraInfo} -i examplesBxContainerEntity vmHost all essentials
 ${G_myName} ${extraInfo} -i examplesBxContainerEntity exposed all essentials
+${G_myName} ${extraInfo} -i examplesBxContainerEntity perimeter all essentials
 ${G_myName} ${extraInfo} -i examplesBxContainerEntity intra all essentials
 ${G_myName} ${extraInfo} -i examplesBxContainerEntity usage all essentials
 ${G_myName} ${extraInfo} -i examplesBxContainerEntity dev all essentials

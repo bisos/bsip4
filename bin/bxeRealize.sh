@@ -106,7 +106,7 @@ function G_postParamHook {
      	bxoHome=$( FN_absolutePathGet ~${bxoId} )
     fi
 
-    local siteGitServerInfoBaseDir=$( siteGitServerManage.sh -i gitServerInfoBaseDir )
+    local siteGitServerInfoBaseDir=$( bisosSiteGitServer.sh -i gitServerInfoBaseDir )
     
     site_gitServerName=$( fileParamManage.py -i fileParamRead ${siteGitServerInfoBaseDir} gitServerName )
     
