@@ -90,10 +90,7 @@ function G_postParamHook {
      	bxoHome=$( FN_absolutePathGet ~${bxoId} )
     fi
 
-    if ! lpCurrentsGet ; then
-	EH_problem "lpCurrentsGet Failure"
-	#return 101
-    fi
+    return 0
 }
 
 
@@ -114,6 +111,11 @@ function vis_examples {
     typeset runInfo="-p ri=lsipusr:passive"
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
+
+    if ! lpCurrentsGet ; then
+	EH_problem "lpCurrentsGet Failure"
+	lpReturn 101
+    fi
     
     #local privacy="priv"
     local priv="priv"    

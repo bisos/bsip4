@@ -95,7 +95,6 @@ function G_postParamHook {
     
     site_gitServerName=$( fileParamManage.py -i fileParamRead ${siteGitServerInfoBaseDir} gitServerName )
     
-    lpCurrentsGet
 }
 
 _CommentBegin_
@@ -108,6 +107,8 @@ function vis_examples {
     #typeset extraInfo="
     typeset runInfo="-p ri=lsipusr:passive"
 
+    lpCurrentsGet
+    
     #typeset examplesInfo="${extraInfo} ${runInfo}"
     typeset examplesInfo="${extraInfo}"
 
