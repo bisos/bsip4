@@ -181,7 +181,7 @@ _EOF_
 
     local usg=$( id -u -n )
 
-    lpDo usgBxoSshManage.sh ${G_commandOptions} -p usg=${usg} -p bxoId=${bxoId} -p bxosBase=$(vis_bxoConstructBaseDir_obtain) -i usgBxoFullUpdate
+    lpDo usgBxoSshManage.sh ${G_commandOptions} -p usg=${usg} -p bxoId=${bxoId} -p bxosBase=$(vis_bxoConstructBaseDir_obtain priv) -i usgBxoFullUpdate
 
     lpReturn
 }
@@ -195,7 +195,7 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
     EH_assert [ ! -z "${bxoId}" ]
 
-    local bxeDesc="$(vis_bxoConstructBaseDir_obtain)/${bxoId}/rbxe/bxeDesc"
+    local bxeDesc="$(vis_bxoConstructBaseDir_obtain priv)/${bxoId}/rbxe/bxeDesc"
 
     lpDo bxeRealize.sh ${G_commandOptions} -p bxeDesc="${bxeDesc}" -i bxoAcctCreate    
 
