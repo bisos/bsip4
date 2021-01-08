@@ -243,6 +243,9 @@ _EOF_
     
     for eachRepo in ${reposList} ; do
 	gitServerUrl=git@bxoPriv_${bxoId}:${bxoId}/${eachRepo}.git
+	# NOTYET, 
+	
+	#
 	# NOTYET results into a add prompt -- needs something like below.
 	# ssh-keygen -F github.com || ssh-keyscan github.com >> ~/.ssh/known_hosts
 	lpDo git clone "${gitServerUrl}" "${gitCloneDest}/${eachRepo}"    	

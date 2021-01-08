@@ -384,6 +384,9 @@ _EOF_
     lpDo sudo mkdir "${getentAcctHome}"
     lpDo sudo chown ${getentAcctUid}:${getentAcctGid} "${getentAcctHome}"
 
+    # NOTYET, Perhaps we need a feature to tighten this 
+    lpDo sudo chmod g+w "${getentAcctHome}"
+
     lpReturn
 }
 
