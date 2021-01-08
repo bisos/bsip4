@@ -111,6 +111,8 @@ function G_postParamHook {
     site_gitServerName=$( fileParamManage.py -i fileParamRead ${siteGitServerInfoBaseDir} gitServerName )
     
     bisosCurrentsGet
+
+    lpReturn 0
 }
 
 
