@@ -85,6 +85,7 @@ function G_postParamHook {
     if [ ! -z "${regReqFile}" ] ; then
 	regReqFile=$( FN_absolutePathGet ${regReqFile} )
     fi
+    lpReturn 0
 }
 
 noArgsHook() {

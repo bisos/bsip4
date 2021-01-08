@@ -40,6 +40,7 @@ function G_postParamHook {
     if [ "${RBAE}_" != "MANDATORY_" ] ; then
 	RBAE=$( FN_absolutePathGet ${RBAE} )
     fi
+    lpReturn 0
 }
 
 noArgsHook() {

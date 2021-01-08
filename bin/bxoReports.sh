@@ -91,6 +91,8 @@ function G_postParamHook {
     fi
 
     lpCurrentsGet
+
+    lpReturn 0
 }
 
 function vis_bxoConstructBaseDir_obtain  {

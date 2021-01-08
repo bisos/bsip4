@@ -89,6 +89,7 @@ typeset -t destSpamFolder="INVALID"
 function G_postParamHook {
     bystarUidHome=$( FN_absolutePathGet ~${bystarUid} )
     lpCurrentsGet
+    lpReturn 0
 }
 
 

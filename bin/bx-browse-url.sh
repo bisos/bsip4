@@ -95,6 +95,7 @@ typeset -t bystarUid=""
 function G_postParamHook {
     bystarUidHome=$( FN_absolutePathGet ~${bystarUid} )
     lpCurrentsGet
+    lpReturn 0
 }
 
 

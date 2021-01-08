@@ -94,6 +94,8 @@ function G_postParamHook {
     fi
 
     lpCurrentsGet
+
+    lpReturn 0
 }
 
 

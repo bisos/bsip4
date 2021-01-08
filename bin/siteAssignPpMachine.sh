@@ -79,6 +79,7 @@ typeset -t siteName="MANDATORY"
 function G_postParamHook {
     bystarUidHome=$( FN_absolutePathGet ~${bystarUid} )
     lpCurrentsGet
+    lpReturn 0
 }
 
 

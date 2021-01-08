@@ -43,6 +43,7 @@ function G_postParamHook {
 	BarcFile=$( FN_absolutePathGet ${BarcFile} )
     fi
     lpCurrentsGet
+    lpReturn 0
 }
 
 noArgsHook() {
