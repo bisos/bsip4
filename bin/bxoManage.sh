@@ -86,6 +86,7 @@ function G_postParamHook {
     # lpCurrentsGet
 
     if [ ! -z "${bxoId}" ] ; then
+	# NOTYET -- This is unreliable as bxoId may not exist
      	bxoHome=$( FN_absolutePathGet ~${bxoId} )
     fi
 
@@ -220,6 +221,9 @@ _EOF_
     fi
     
     local gitCloneDest=""
+
+    # At this point bxoId exists
+    bxoHome=$( FN_absolutePathGet ~${bxoId} )    
     
     if [ $# -eq 0 ] ; then
 	gitCloneDest=${bxoHome}
@@ -239,6 +243,8 @@ _EOF_
     
     for eachRepo in ${reposList} ; do
 	gitServerUrl=git@bxoPriv_${bxoId}:${bxoId}/${eachRepo}.git
+	# NOTYET results into a add prompt -- needs something like below.
+	# ssh-keygen -F github.com || ssh-keyscan github.com >> ~/.ssh/known_hosts
 	lpDo git clone "${gitServerUrl}" "${gitCloneDest}/${eachRepo}"    	
     done
 
