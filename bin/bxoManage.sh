@@ -92,7 +92,7 @@ function G_postParamHook {
 
     if ! lpCurrentsGet ; then
 	EH_problem "lpCurrentsGet Failure"
-	return 101
+	#return 101
     fi
 }
 
