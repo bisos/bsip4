@@ -134,10 +134,12 @@ ${G_myName} -p vcMode=anon -i cachedLs | ${G_myName} -i status loc
 ${G_myName} -p vcMode=anon -i cachedLs | ${G_myName} -i status loc rem
 ${G_myName} -p vcMode=anon -i cachedLs | ${G_myName} -i status rem
 ${G_myName} -p vcMode=anon -i cachedLs | ${G_myName} -i status | grep CHANGED
+$( examplesSeperatorSection "Base Config -- userName, userEmail based on sshLabel" )
+${G_myName} ${extraInfo} -i gitBaseConfig ${oneRepoBaseDir}
+${G_myName} -i cachedLs | ${G_myName} -i gitBaseConfig
 $( examplesSeperatorSection "Pull Remote" )
 ${G_myName} ${extraInfo} -i gitRemPull ${oneRepoBaseDir}
 ${G_myName} -i cachedLs | ${G_myName} -i gitRemPull
-${G_myName} -p vcMode=anon -i cachedLs | ${G_myName} -i gitRemPull
 $( examplesSeperatorSection "Add, Commit and Push" )
 echo ${oneRepoBaseDir}  | ${G_myName} ${extraInfo} -i addCommitPush modifieds 
 echo  ${oneRepoBaseDir} | ${G_myName} ${extraInfo} -i addCommitPush all
@@ -153,6 +155,9 @@ ${G_myName} ${extraInfo} -i baseVerifyDotIgnore ${oneRepoBaseDir}
 ${G_myName} ${extraInfo} -i baseVerifyDotIgnore .
 ${G_myName} -i cachedLs | ${G_myName} -i baseVerifyDotIgnore
 ${G_myName} -i cachedLs | ${G_myName} -i baseVerifyDotIgnore | grep Missing
+$( examplesSeperatorSection "gitUrl" )
+${G_myName} ${extraInfo} -i gitUrlAtBase ${oneRepoBaseDir}
+${G_myName} ${extraInfo} -i parseGitUrl_getHostname $(${G_myName} -i gitUrlAtBase ${oneRepoBaseDir})
 _EOF_
 }
 
@@ -417,6 +422,64 @@ _EOF_
     
     lpReturn
 }	
+
+
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || IIF       ::  vis_gitBaseConfig  [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+
+function vis_gitBaseConfig {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+_EOF_
+		       }
+
+    function hereDo {
+	EH_assert [[ $# -eq 0 ]]
+	local here=$(pwd)
+
+	local gitUrl=$( vis_gitUrlAtBase ${here} )
+	local gitHostname=$( vis_parseGitUrl_getHostname ${gitUrl} )
+
+	local userName=$( usgBxoSshManage.sh -p usg=$(id -u -n) -i usgAcctCustomGitInfoRead ${gitHostname} userName )
+	local userEmail=$( usgBxoSshManage.sh -p usg=$(id -u -n) -i usgAcctCustomGitInfoRead ${gitHostname} userEmail )
+
+	lpDo git config user.name "${userName}"
+	lpDo git config user.email "${userEmail}" 	
+    }
+
+    function processEach {
+	EH_assert [[ $# -eq 1 ]]
+	local thisOne="$1"
+
+	inBaseDirDo \
+	    ${thisOne} \
+	    hereDo
+    }
+
+####+BEGIN: bx:bsip:bash/processArgsAndStdin 
+     function processArgsAndStdin {
+	local effectiveArgs=( "$@" )
+	local stdinArgs
+	local each
+	if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
+	    readarray stdinArgs < /dev/stdin
+	    effectiveArgs=( "$@" "${stdinArgs[@]}" )
+	fi
+	if [ ${#effectiveArgs[@]} -eq 0 ] ; then
+	    ANT_raw "No Args And Stdin Is Empty"
+	    lpReturn
+	fi
+	for each in "${effectiveArgs[@]}"; do
+	    lpDo processEach "${each%$'\n'}"
+	done
+    }
+    lpDo processArgsAndStdin "$@"
+####+END:
+    
+    lpReturn
+}	
+
 
 
 
@@ -948,6 +1011,86 @@ _EOF_
 }	
 
 
+
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || IIF       ::  vis_gitUrlAtBase,  [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+
+function vis_gitUrlAtBase {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+Given a fileDirBasePath get its gitUrl.
+_EOF_
+		       }
+
+    EH_assert [[ $# -eq 1 ]]
+
+    local fileDirBasePath="$1"
+    local remoteGitPath=""
+    
+    opDo pushd ${fileDirBasePath} > /dev/null
+    remoteGitPath=$( git remote show origin | grep 'Fetch URL' | cut -d ':' -f 2-100 | xargs uriParseStdout.py | grep -i path | cut -d '=' -f 2 )
+    opDo popd > /dev/null
+    
+    if [ -z "${remoteGitPath}" ] ; then
+	EH_problem "Empty remoteGitPath"
+    fi
+    echo "${remoteGitPath}"
+}
+
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || IIF       ::  vis_parseGitUrl_getHostname,  [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+
+function vis_parseGitUrl_getHostname {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+Given a git url such as git@sshLabel:gitOrg/repo.git return sshLabel.
+
+Explaination (see it in action on regex101):
+
+    ^ matches the start of a string
+    (https|git) matches and captures the characters https or git
+    (:\/\/|@) matches and captures the characters :// or @
+    ([^\/:]+) matches and captures one character or more that is not / nor :
+    [\/:] matches one character that is / or :
+    ([^\/:]+) matches and captures one character or more that is not / nor :, yet again
+    [\/:] matches the character /
+    (.+) matches and captures one character or more
+    .git matches....git, literally
+    $ matches the end of a string
+
+This if far from perfect, as something like https@github.com:some-user/my-repo.git would
+match, but I think it's fine enough for extraction.
+_EOF_
+		       }
+
+    EH_assert [[ $# -eq 1 ]]
+
+    local remoteUrl="$1"
+    local re="^(https|git)(:\/\/|@)([^\/:]+)[\/:]([^\/:]+)\/(.+).git$"
+
+    local protocol=""
+    local separator=""
+    local hostname=""
+    local user=""
+    local repo=""
+    
+    if [[ $remoteUrl =~ $re ]] ; then    
+	protocol=${BASH_REMATCH[1]}
+	separator=${BASH_REMATCH[2]}
+	hostname=${BASH_REMATCH[3]}
+	user=${BASH_REMATCH[4]}
+	repo=${BASH_REMATCH[5]}
+    else
+	EH_problem "Badly formed gitUrl"
+    fi
+
+    if [ -z "${hostname}" ] ; then
+	EH_problem "Empty hostname"
+    fi
+    echo "${hostname}"
+}
 
 
 _CommentBegin_

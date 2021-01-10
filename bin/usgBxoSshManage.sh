@@ -23,7 +23,7 @@ SEED="
 *  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
 "
 FILE="
-*  /This File/ :: /bisos/bsip/bin/usgBxoSshAdmin.sh 
+*  /This File/ :: /bisos/core/bsip/bin/usgBxoSshManage.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
     /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
@@ -89,8 +89,11 @@ function G_postParamHook {
     fi
     usgHome=$( FN_absolutePathGet ~${usg} )
 
-    usgSshConfigSeg_baseDir=${usgHome}/.ssh/configSeg
+    usgSshConfigSeg_baseDir=${usgHome}/.ssh/configSeg   # NOTYET still needed. Needs to be cleaned up.
+    #vis_usgSshConfigSegBasePrep
 
+    vis_usgSshConfigBasePrep
+    
     local siteGitServerInfoBaseDir=$( bisosSiteGitServer.sh -i gitServerInfoBaseDir )
     
     site_gitServerName=$( fileParamManage.py -i fileParamRead ${siteGitServerInfoBaseDir} gitServerName )
@@ -123,8 +126,13 @@ function vis_examples {
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
+$( examplesSeperatorSection "BxO Ssh Keys Full Actions" )
+${G_myName} ${examplesInfo} -p usg=${oneUsg} -i usgBxoFullRebuild
 ${G_myName} ${examplesInfo} -p usg=${oneUsg} -p bxoId=${oneBxoId} -i usgBxoFullUpdate
 ${G_myName} ${examplesInfo} -p usg=${oneUsg} -p bxoId=${oneBxoId} -i usgBxoFullDelete
+$( examplesSeperatorSection "Custom Ssh Keys Full Actions" )
+${G_myName} ${examplesInfo} -p usg=${oneUsg} -i usgCustomFullUpdate gitLabel keysBasePath gitServer
+${G_myName} ${examplesInfo} -p usg=${oneUsg} -i usgCustomFullDelete gitLabel
 $( examplesSeperatorChapter "Bxo Ssh Private Keys" )
 $( examplesSeperatorSection "lcaSshAdmin.sh" )
 lcaSshAdmin.sh
@@ -133,11 +141,18 @@ lcaSshAdmin.sh -p localUser=${oneBxoId} -p sshDir=rbxe/credentials/ssh -i userKe
 lcaSshAdmin.sh -p localUser=${oneBxoId} -p sshDir=rbxe/credentials/ssh -i userKeyUpdate
 ${G_myName} ${examplesInfo} -p bxoId=${oneBxoId} -i bxoSshKeyVerify
 ${G_myName} ${examplesInfo} -p bxoId=${oneBxoId} -i bxoSshKeyUpdate
-$( examplesSeperatorSection "USG Ssh Invoker Keys" )
+$( examplesSeperatorSection "USG BxO Ssh Invoker Keys Install" )
 ${G_myName} ${examplesInfo} -p usg=${oneUsg} -p bxoId=${oneBxoId} -i usgAcctBxoCredentialsUpdate bxoPriv
 ${G_myName} ${examplesInfo} -p usg=${oneUsg} -p bxoId=${oneBxoId} -p bxosBase=${oneBxosBase} -i usgAcctBxoCredentialsUpdate bxoPriv
 ${G_myName} ${examplesInfo} -p usg=${oneUsg} -p bxoId=${oneBxoId} -i usgAcctBxoCredentialsDelete bxoPriv
 ${G_myName} ${examplesInfo} -p usg=${oneUsg} -i usgAcctCredentialsList bxoPriv
+$( examplesSeperatorSection "USG Custom Ssh Invoker Keys Install" )
+${G_myName} ${examplesInfo} -p usg=${oneUsg} -i usgAcctCustomCredentialsUpdate gitLabel keysBasePath 
+${G_myName} ${examplesInfo} -p usg=${oneUsg} -i usgAcctCustomCredentialsDelete gitLabel
+$( examplesSeperatorSection "USG Custom Git Info" )
+${G_myName} ${examplesInfo} -p usg=${oneUsg} -i usgAcctCustomGitInfoUpdate gitLabel "firstNameAndLast" "email@example.com" 
+${G_myName} ${examplesInfo} -p usg=${oneUsg} -i usgAcctCustomGitInfoRead gitLabel  userName userEmail
+${G_myName} ${examplesInfo} -p usg=${oneUsg} -i usgAcctCustomGitInfoDelete gitLabel
 $( examplesSeperatorChapter "USG Ssh Config File Manipulation" )
 $( examplesSeperatorSection "USG Ssh Config Segments Base" )
 ${G_myName} ${extraInfo} -i usgSshConfigSegBasePrep
@@ -149,6 +164,13 @@ ${G_myName} ${extraInfo} -p bxoId=${oneBxoId} -i bxoConfigSegFileName bxoPriv ${
 ${G_myName} ${extraInfo} -p bxoId=${oneBxoId} -i bxoConfigSegUpdate bxoPriv ${site_gitServerName}
 ${G_myName} ${extraInfo} -p bxoId=${oneBxoId} -i bxoConfigSegDelete bxoPriv
 ${G_myName} ${extraInfo} -p bxoId=${oneBxoId} -i bxoConfigSegExists bxoPriv
+$( examplesSeperatorSection "USG Ssh Custom Config Segment File Update" )
+${G_myName} -i customConfigSegStdout gitLabel gitServerName
+${G_myName} ${extraInfo} -i customConfigSegStdout gitLabel gitServerName  # Verbose
+${G_myName} ${extraInfo} -i customConfigSegFileName gitLabel gitServerName
+${G_myName} ${extraInfo} -i customConfigSegUpdate gitLabel gitServerName
+${G_myName} ${extraInfo} -i customConfigSegDelete gitLabel
+${G_myName} ${extraInfo} -i customConfigSegExists gitLabel
 $( examplesSeperatorSection "USG Ssh Config File Update" )
 ${G_myName} ${extraInfo} -i configFileNameGet
 ${G_myName} ${extraInfo} -i configSegsCollectStdout
@@ -160,6 +182,7 @@ $( examplesSeperatorSection "Tests And Verifications" )
 $( examplesSeperatorChapter "Access, Verification And Test" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i  sshAccessGitolite
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i  sshAccessGitlab
+${G_myName%%.sh}-niche.sh
 _EOF_
 }
 
@@ -186,6 +209,36 @@ _EOF_
 
     lpReturn
 }
+
+
+function vis_usgBxoFullRebuild {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${usg}" ]
+
+    local bxoIdsList=$( bxoAcctManage.sh -i bxoIdsList )
+    local eachBxoId=""
+
+    for eachBxoId in ${bxoIdsList} ; do
+	bxoId=${eachBxoId}
+	lpDo bxosBasePrep
+
+	opDo vis_usgAcctBxoCredentialsUpdate bxoPriv
+
+	opDo vis_bxoConfigSegUpdate bxoPriv ${site_gitServerName}
+    done
+
+    if [ ! -z ${eachBxoId} ] ; then
+	opDo vis_configFileUpdate
+    fi
+
+    lpReturn
+}
+
+
 
 
 function vis_usgBxoFullUpdate {
@@ -228,11 +281,79 @@ _EOF_
 }
 
 
+
+function vis_usgCustomFullUpdate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 3 ]]
+    EH_assert [ ! -z "${usg}" ]
+
+    local sshGitLabel="$1"
+    local sshKeysBase="$2"
+    local gitServer="$3"
+
+    opDo vis_usgAcctCustomCredentialsUpdate ${sshGitLabel} ${sshKeysBase}
+
+    opDo vis_customConfigSegUpdate ${sshGitLabel} ${gitServer}
+    
+    opDo vis_configFileUpdate
+
+    lpReturn
+}
+
+
+function vis_usgCustomFullDelete {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${usg}" ]    
+    
+    opDo vis_usgAcctBxoCredentialsDelete  bxoPriv
+
+    opDo vis_bxoConfigSegDelete bxoPriv
+    
+    opDo vis_configFileUpdate
+
+    lpReturn
+}
+
+
+
 _CommentBegin_
 *      ======[[elisp:(org-cycle)][Fold]]====== Manage Bxo Ssh Config Seg
 _CommentEnd_
 
-function vis_usgSshConfigSegBasePrep {
+
+function vis_usgSshConfigBasePrep {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		       }
+    EH_assert [[ $# -eq 0 ]]
+
+    local usgSshConfigSeg_baseDir=${usgHome}/.ssh/configSeg
+    local usgSshGitConfig_baseDir=${usgHome}/.ssh/gitConfig   
+
+    if [ ! -d "${usgSshConfigSeg_baseDir}" ] ; then
+	lpDo mkdir "${usgSshConfigSeg_baseDir}"
+	EH_retOnFail
+    fi
+
+    if [ ! -d "${usgSshGitConfig_baseDir}" ] ; then
+	lpDo mkdir "${usgSshGitConfig_baseDir}"
+	EH_retOnFail
+    fi
+    
+    lpReturn
+}
+
+
+
+function vis_usgSshConfigSegBasePrep%% {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -252,7 +373,7 @@ function vis_usgSshConfigSegBaseList {
 _EOF_
 		       }
 
-    lpDo vis_usgSshConfigSegBasePrep
+    # lpDo vis_usgSshConfigSegBasePrep  # Happens in G_postProc
     lpDo ls "${usgSshConfigSeg_baseDir}"
 
     lpReturn
@@ -261,7 +382,7 @@ _EOF_
 
 
 _CommentBegin_
-*      ======[[elisp:(org-cycle)][Fold]]====== Manage Usg Acct Credentials
+*      ======[[elisp:(org-cycle)][Fold]]====== Manage Usg Acct Bxo Credentials
 _CommentEnd_
 
 
@@ -319,6 +440,142 @@ _EOF_
 }
 
 
+_CommentBegin_
+*      ======[[elisp:(org-cycle)][Fold]]====== Manage Usg Acct Custom Credentials
+_CommentEnd_
+
+
+_CommentBegin_
+*      ======[[elisp:(org-cycle)][Fold]]====== Manage Usg Acct Custom Credentials
+_CommentEnd_
+
+
+function vis_usgAcctCustomGitInfoUpdate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Take the specified BxO's (${bxoId}) public and private keys and copy them to specified usg (${usg}).
+_EOF_
+    }
+    EH_assert [[ $# -eq 3 ]]
+
+    EH_assert [ ! -z "${usg}" ]
+
+    local gitLabel="$1"
+    local gitUserName="$2"
+    local gitUserEmail="$3"
+
+    local gitLabelPath="${usgHome}/.ssh/gitConfig/${gitLabel}.fps"
+
+    opDo FN_dirCreatePathIfNotThere ${gitLabelPath}
+    EH_retOnFail
+
+    lpDo fileParamManage.py  -i fileParamWrite  ${gitLabelPath} userName "${gitUserName}"
+    EH_retOnFail
+
+    lpDo fileParamManage.py  -i fileParamWrite  ${gitLabelPath} userEmail "${gitUserEmail}"
+    EH_retOnFail
+
+    lpReturn
+}
+
+
+function vis_usgAcctCustomGitInfoRead {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Take the specified BxO's (${bxoId}) public and private keys and copy them to specified usg (${usg}).
+_EOF_
+    }
+    EH_assert [[ $# -gt 1 ]]
+
+    EH_assert [ ! -z "${usg}" ]
+
+    local gitLabel="$1"
+
+    local gitLabelPath="${usgHome}/.ssh/gitConfig/${gitLabel}.fps"
+
+    shift
+
+    local eachParam
+
+    for eachParam in $@ ; do
+	lpDo fileParamManage.py  -i fileParamRead ${gitLabelPath} ${eachParam}
+    done
+
+    lpReturn
+}
+
+
+function vis_usgAcctCustomGitInfoDelete {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Delete the specified BxO's (${bxoId}) public and private keys and copy them to specified usg (${usg}).
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    EH_assert [ ! -z "${usg}" ]
+
+    local gitLabel="$1"
+
+    local gitLabelPath="${usgHome}/.ssh/gitConfig/${gitLabel}.fps"    
+
+    lpDo rm -r -f "${gitLabelPath}"
+
+    lpReturn
+}
+
+
+function vis_usgAcctCustomCredentialsUpdate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Take the specified BxO's (${bxoId}) public and private keys and copy them to specified usg (${usg}).
+_EOF_
+    }
+    EH_assert [[ $# -eq 2 ]]
+
+    EH_assert [ ! -z "${usg}" ]
+
+    local sshGitLabel="$1"
+    local sshKeysBase="$2"    
+
+    opDo sudo cp ${sshKeysBase}/id_rsa.pub ${usgHome}/.ssh/${sshGitLabel}_rsa.pub
+    EH_retOnFail
+
+    opDo sudo cp ${sshKeysBase}/id_rsa ${usgHome}/.ssh/${sshGitLabel}_rsa    
+    EH_retOnFail
+
+    opDo sudo chown ${usg}:bisos ${usgHome}/.ssh/${sshGitLabel}_rsa.pub
+    opDo sudo chown ${usg}:bisos ${usgHome}/.ssh/${sshGitLabel}_rsa
+
+    opDo chmod 644 ${usgHome}/.ssh/${sshGitLabel}_rsa.pub
+    opDo chmod 600 ${usgHome}/.ssh/${sshGitLabel}_rsa
+
+    lpReturn
+}
+
+
+function vis_usgAcctCustomCredentialsDelete {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Delete the specified BxO's (${bxoId}) public and private keys and copy them to specified usg (${usg}).
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    EH_assert [ ! -z "${usg}" ]
+
+    local sshGitLabel="$1"    
+
+    opDo sudo rm ${usgHome}/.ssh/${sshGitLabel}_rsa.pub
+    EH_retOnFail
+
+    opDo sudo rm ${usgHome}/.ssh/${sshGitLabel}_rsa
+    EH_retOnFail
+
+    lpReturn
+}
+
+
 function vis_usgAcctCredentialsList {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -343,7 +600,7 @@ _EOF_
 
 
 _CommentBegin_
-*      ======[[elisp:(org-cycle)][Fold]]====== Config File Generate/Update
+*      ======[[elisp:(org-cycle)][Fold]]====== BxO Config File Generate/Update
 _CommentEnd_
 
 
@@ -439,6 +696,107 @@ _EOF_
     local bxoGitLabel="$1"
 
     local outFileName="${usgSshConfigSeg_baseDir}/${bxoGitLabel}_${bxoId}.configSeg"
+
+    lpDo sudo rm "${outFileName}"
+
+    lpReturn
+}
+
+
+
+_CommentBegin_
+*      ======[[elisp:(org-cycle)][Fold]]====== Custom Config File Generate/Update
+_CommentEnd_
+
+
+function vis_customConfigSegStdout {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 2 ]]
+
+    local customGitLabel="$1"
+    local customGitServerName="$2"
+
+    cat  << _EOF_
+# at $( DATE_nowTag ) by $(id -u -n) on $(hostname)
+# customGitLabel=${customGitLabel}  customGitServerName=${customGitServerName}
+Host ${customGitLabel}
+	Hostname ${customGitServerName}
+	User git
+	IdentityFile ~/.ssh/${customGitLabel}_rsa
+_EOF_
+
+    lpReturn
+}
+
+function vis_customConfigSegFileName {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 2 ]]
+
+    local customGitLabel="$1"
+    local customGitServerName="$2"  # Unused, but required
+
+    echo "${usgSshConfigSeg_baseDir}/${customGitLabel}.configSeg"
+}
+
+
+function vis_customConfigSegUpdate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 2 ]]
+
+    local customGitLabel="$1"
+    local customGitServerName="$2"
+
+    local outFileName="$( vis_customConfigSegFileName ${customGitLabel} ${customGitServerName} )"
+
+    lpDo eval vis_customConfigSegStdout ${customGitLabel} ${customGitServerName} \>  "${outFileName}"
+
+    lpReturn
+}
+
+function vis_customConfigSegExists {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+    EH_assert [[ ! -z "${bxoId}" ]]    
+
+    local customGitLabel="$1"
+    local retVal=0
+
+    local outFileName="${usgSshConfigSeg_baseDir}/${customGitLabel}.configSeg"
+
+    if [ -f ${outFileName} ] ; then
+	# ANT_cooked "${outFileName} exists"
+	retVal=0
+    else
+	# ANT_cooked "${outFileName} does not exists"
+	retVal=1
+    fi
+
+    lpReturn ${retVal}
+}
+
+
+function vis_customConfigSegDelete {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local customGitLabel="$1"
+
+    local outFileName="${usgSshConfigSeg_baseDir}/${customGitLabel}.configSeg"
 
     lpDo sudo rm "${outFileName}"
 
