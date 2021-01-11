@@ -130,6 +130,8 @@ ${G_myName} ${extraInfo} -i bxReposCurShow
 $( ls -l $( ${G_myName} ${extraInfo} -i bxReposCurShow ) )
 ${G_myName} ${extraInfo} -i bxReposAuthSet
 ${G_myName} ${extraInfo} -i bxReposAnonSet
+$( examplesSeperatorChapter "Initial Setup" )
+ssh-keygen -F github.com || ssh-keyscan github.com >> ~/.ssh/known_hosts
 _EOF_
 }
 
