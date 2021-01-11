@@ -94,12 +94,17 @@ _EOF_
 # PRE parameters
 
 vcMode="auth"  # authenticated or anonymous "anon"
+gitLabel="github.com"   # Only applies to vcMode=auth
 
 function G_postParamHook {
      return 0
 }
 
-function vis_examples {
+function vis_examples_general {
+    EH_assert [[ $# -eq 1 ]]
+
+    local context="$1"
+    
     typeset extraInfo="-h -v -n showRun"
     #typeset extraInfo=""
     typeset runInfo="-p ri=lsipusr:passive"
@@ -112,9 +117,11 @@ $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "BISOS Git Bases Rebuild" )
 ${G_myName} ${extraInfo} -i bxGitReposAnonReCloneBisos     # Runs with sudo -u bisos
 ${G_myName} ${extraInfo} -i bxGitReposAuthReCloneBisos     # Runs as current user
+${G_myName} ${extraInfo} -p gitLabel=${gitLabel} -i bxGitReposAuthReCloneBisos     # Runs as current user
 $( examplesSeperatorChapter "Git Bases Rebuild As Specified" )
 ${G_myName} ${extraInfo} -p vcMode=anon -i bxGitReposBasesReClone /bisos/git/anon   # runs as current user
 ${G_myName} ${extraInfo} -p vcMode=auth -i bxGitReposBasesReClone /bisos/git/auth   # runs as current user
+${G_myName} ${extraInfo} -p vcMode=auth -p gitLabel=${gitLabel} -i bxGitReposBasesReClone /bisos/git/auth
 find /bisos/git/auth/bxRepos -type f -print | egrep '/ftoProc\.sh$' | bx-dblock -i dblockUpdateFiles
 find /bisos/git/anon/bxRepos -type f -print | egrep '/ftoProc\.sh$' | bx-dblock -i dblockUpdateFiles
 $( examplesSeperatorChapter "Pointing Of bxRepos to Auth or Anon" )
@@ -127,7 +134,7 @@ _EOF_
 }
 
 noArgsHook() {
-  vis_examples
+  vis_examples_general "general"
 }
 
 
@@ -228,17 +235,17 @@ _EOF_
 	lpDo mv "${baseDir}/bxRepos" "${baseDir}/bxRepos.${thisDateTag}"
     fi
 
-    lpDo bx-gitReposBases -v 20 --baseDir="${baseDir}" --pbdName="bxReposCollection" --vcMode=${vcMode}  -i pbdUpdate all
+    lpDo bx-gitReposBases -v 20 --baseDir="${baseDir}" --pbdName="bxReposCollection" --vcMode=${vcMode} --gitLabel="${gitLabel}" -i pbdUpdate all
 
     EH_assert [[ -d "${baseDir}/bxRepos" ]]
 	
-    lpDo bx-gitReposBases -v 20 --baseDir="${baseDir}/bxRepos" --pbdName="bxReposRoot" --vcMode=${vcMode}  -i pbdUpdate all
+    lpDo bx-gitReposBases -v 20 --baseDir="${baseDir}/bxRepos" --pbdName="bxReposRoot" --vcMode=${vcMode} --gitLabel="${gitLabel}" -i pbdUpdate all
 
     if [ -d "${baseDir}/ext" ] ; then
 	lpDo mv "${baseDir}/ext" "${baseDir}/ext.${thisDateTag}"
     fi
 
-    lpDo bx-gitReposBases -v 20 --baseDir="${baseDir}/ext" --pbdName="extRepos" --vcMode=${vcMode}  -i pbdUpdate all
+    lpDo bx-gitReposBases -v 20 --baseDir="${baseDir}/ext" --pbdName="extRepos" --vcMode=${vcMode} --gitLabel="${gitLabel}" -i pbdUpdate all
 }
 
 
