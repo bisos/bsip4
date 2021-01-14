@@ -136,7 +136,7 @@ ${G_myName} -p vcMode=anon -i cachedLs | ${G_myName} -i status rem
 ${G_myName} -p vcMode=anon -i cachedLs | ${G_myName} -i status | grep CHANGED
 $( examplesSeperatorSection "Base Config -- userName, userEmail based on sshLabel" )
 ${G_myName} ${extraInfo} -i gitBaseConfig ${oneRepoBaseDir}
-${G_myName} -i cachedLs | ${G_myName} -i gitBaseConfig
+${G_myName} -i cachedLs | ${G_myName} ${extraInfo} -i gitBaseConfig
 $( examplesSeperatorSection "Pull Remote" )
 ${G_myName} ${extraInfo} -i gitRemPull ${oneRepoBaseDir}
 ${G_myName} -i cachedLs | ${G_myName} -i gitRemPull

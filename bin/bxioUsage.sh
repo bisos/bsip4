@@ -128,10 +128,16 @@ function vis_examples {
     oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )    
     
     visLibExamplesOutput ${G_myName} 
-  cat  << _EOF_
+    cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
+$( examplesSeperatorChapter "BxIO Common Actions" )
+_EOF_
+  
+    vis_bxioCommonExamples
+    
+    cat  << _EOF_
 $( examplesSeperatorChapter "Provisioning: Initial BxE Realize -- Full Actions" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i kindTypeRealizeRepoBasesCreate
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i kindTypeRealizeRepoBasesPush
@@ -160,8 +166,9 @@ _EOF_
     cat  << _EOF_
 panel
 realmPanels
-bleeInfoBase
 _EOF_
+
+# bleeInfoBase    
 
     lpReturn
 }	

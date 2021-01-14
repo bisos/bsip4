@@ -688,7 +688,8 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
     
-    regReqFile=$( vis_regReqFileCreate 2> /dev/null )
+    #regReqFile=$( vis_regReqFileCreate 2> /dev/null )
+    regReqFile=$( vis_regReqFileCreate )
 
     if [ -z "${regReqFile}" ] ; then
 	EH_problem "Missing regReqFile=${regReqFile}"
@@ -734,7 +735,8 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    local bxeDescRegFile=$( vis_startToPrivReg 2> /dev/null )
+    #local bxeDescRegFile=$( vis_startToPrivReg 2> /dev/null )
+    local bxeDescRegFile=$( vis_startToPrivReg )
     
     local bxeDescFile=$( bxeDescManage.sh ${G_commandOptions} -p bxeDesc="${bxeDescRegFile}" -i bxeDescStash )
 

@@ -49,9 +49,9 @@ ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i assembleInitial_bxeTree leaf
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -f -i assembleInitial_bxeTree leaf
 ${G_myName} ${extraInfo} -i repoCreateAndPushBasedOnPath "${oneBxoHome}/bxeTree"
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoCreateAndPush "bxeTree" "${oneBxoHome}/bxeTree" "priv"
-$( examplesSeperatorChapter "Assemble And Push Initial mapFiles Base" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i assembleInitial_mapFiles
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoCreateAndPush "mapFiles" "${oneBxoHome}/mapFiles" "priv"
+$( examplesSeperatorChapter "Assemble And Push Initial Sys Base" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i assembleInitial_sys
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoCreateAndPush "sys" "${oneBxoHome}/sys" "priv"
 _EOF_
 }
 
@@ -89,7 +89,7 @@ _EOF_
     local each
 
     for each in $(vis_repoBasesList) ; do
-	lpDo vis_repoCreateAndPushBasedOnPath ${each}
+	inBaseDirDo ${bxoHome} vis_repoCreateAndPushBasedOnPath ${each}
     done
 
     lpReturn
@@ -155,7 +155,8 @@ _EOF_
 
     lpDo vis_repoCreateAndPush "bxeTree" "${bxoHome}/bxeTree" "priv"
 
-    lpDo vis_repoCreateAndPush "mapFiles" "${bxoHome}/mapFiles" "priv"    
+    lpDo vis_repoCreateAndPush "sys" "${bxoHome}/sys" "priv"        
+    #lpDo vis_repoCreateAndPush "mapFiles" "${bxoHome}/mapFiles" "priv"    
     
     lpReturn
 }
@@ -173,8 +174,9 @@ _EOF_
     
     lpDo vis_assembleInitial_bxeTree leaf
 
-    lpDo vis_assembleInitial_mapFiles    
-    
+    # lpDo vis_assembleInitial_mapFiles
+    lpDo vis_assembleInitial_sys
+
     lpReturn
 }
 
@@ -221,7 +223,7 @@ _EOF_
 }
 
 
-function vis_assembleInitial_mapFiles {
+function vis_assembleInitial_mapFiles%% {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -239,6 +241,62 @@ _EOF_
 	lpDo FN_dirCreatePathIfNotThere ${bxoHome}/${bxoRepoBase}
 
 	lpDo FN_FileCreateIfNotThere ${bxoHome}/${bxoRepoBase}/fullMap.sh
+    }
+
+    if [ -d "${bxoHome}/${bxoRepoBase}" ] ; then
+	if [ "${G_forceMode}" == "force" ] ; then
+	    lpDo doThis
+	else
+	    ANT_raw "${bxoHome}/${bxoRepoBase} exists and forceMode is not specified."
+	fi
+    else
+	lpDo doThis
+    fi
+    
+    lpReturn
+}
+
+
+function vis_assembleInitial_sys {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bxoId}" ]
+
+    EH_assert  vis_userAcctExists "${bxoId}"
+    
+    local bxoRepoBase="sys"
+
+    bxoHome=$( FN_absolutePathGet ~${bxoId} )
+
+    function file_bxoPathsExtend.sh {
+	EH_assert [[ $# -eq 1 ]]
+	cat  << _EOF_  > "$1"
+# To Be Sourced
+#
+export PATH=$PATH:$(dirname ${BASH_SOURCE[${#BASH_SOURCE[@]} - 1]})
+_EOF_
+	chmod 775 "$1"
+    }
+
+    function file_placeHolder {
+	EH_assert [[ $# -eq 1 ]]
+	cat  << _EOF_  > "$1"
+# Place Holder
+_EOF_
+	chmod 775 "$1"
+    }
+    
+    function doThis {
+	lpDo FN_dirCreatePathIfNotThere ${bxoHome}/${bxoRepoBase}
+
+	lpDo FN_dirCreatePathIfNotThere ${bxoHome}/${bxoRepoBase}/bin	
+
+	lpDo file_bxoPathsExtend.sh ${bxoHome}/${bxoRepoBase}/bin/bxoPathsExtend.sh
+	lpDo file_placeHolder ${bxoHome}/${bxoRepoBase}/bin/bxoSetup.sh
+	lpDo file_placeHolder ${bxoHome}/${bxoRepoBase}/bin/mapFull.sh		
     }
 
     if [ -d "${bxoHome}/${bxoRepoBase}" ] ; then

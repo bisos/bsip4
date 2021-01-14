@@ -20,7 +20,7 @@ SEED="
 *  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
 "
 FILE="
-*  /This File/ :: /bisos/core/bsip/bin/usgAcctManage.sh 
+*  /This File/ :: /bisos/bsip/bin/bxoAcctManage.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
     /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
@@ -103,6 +103,8 @@ _EOF_
     vis_thisProvisionExamples
     
     vis_thisIcmExamples
+
+    vis_bxoIdsListExamples    
 }
 
 
@@ -110,8 +112,6 @@ function vis_thisIcmExamples {
     typeset extraInfo="-h -v -n showRun"
     #typeset extraInfo=""
     typeset runInfo="-p ri=lsipusr:passive"
-
- 
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
@@ -140,6 +140,23 @@ $( examplesSeperatorSection "BxISO Provisioning Account Setups" )
 ${G_myName} -p acctName=bystar -i provisionSetupAcct   # Summary outputs
 ${G_myName} ${extraInfo} -p acctName=bystar -i provisionSetupAcct    # Detailed outputs
 _EOF_
+}
+
+function vis_bxoIdsListExamples {
+    typeset extraInfo="-h -v -n showRun"
+    #typeset extraInfo=""
+    typeset runInfo="-p ri=lsipusr:passive"
+
+    typeset examplesInfo="${extraInfo} ${runInfo}"
+
+    cat  << _EOF_
+$( examplesSeperatorChapter "BxO Ids List" )
+_EOF_
+    local bxosList=$(vis_bxoIdsList)
+    local each
+    for each in ${bxosList} ; do
+	echo "+ ~${each}"
+    done	
 }
 
 
