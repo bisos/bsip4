@@ -184,6 +184,57 @@ _EOF_
     lpReturn
 }
 
+function vis_repoDeleteBasedOnPath {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local repoPath="$1"
+    local canonRepoPath=$( FN_absolutePathGet ${repoPath} )
+    local gitRemote=$( inBaseDirDo ${canonRepoPath} git remote 2> /dev/null )
+
+    if [ -z "${gitRemote}" ] ; then
+	EH_problem "${canonRepoPath} Is Not A Git Repo -- Deletion Skipped"
+	lpReturn 101
+    fi
+
+    local baseName=$( basename "${canonRepoPath}" )
+    
+    bxoId=$( vis_bxoIdObtainForPath "${canonRepoPath}" )
+
+    lpDo bxoGitlab.py -v 20 --bxoId="${bxoId}" -i reposDelete "${baseName}"
+
+    local repoContainerPath=$( FN_dirsPart "${canonRepoPath}" )
+
+    if [ "${G_forceMode}" == "force" ] ; then
+	inBaseDirDo ${repoContainerPath} rm -r "${baseName}"
+    else
+	ANT_raw "${canonRepoPath} not deleted -- forceMode is not specified."
+    fi
+    
+    lpReturn
+}
+
+function vis_reposListBasedOnPath {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local repoPath="$1"
+    local canonRepoPath=$( FN_absolutePathGet ${repoPath} )
+    local gitRemote=$( inBaseDirDo ${canonRepoPath} git remote 2> /dev/null )
+
+    bxoId=$( vis_bxoIdObtainForPath "${canonRepoPath}" )
+
+    lpDo bxoGitlab.py -v 30 --bxoId="${bxoId}" -i reposList    
+    
+    lpReturn
+}
+
 
 function vis_repoCreateAndPush {
     G_funcEntry

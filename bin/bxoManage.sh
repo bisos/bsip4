@@ -165,7 +165,11 @@ ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i fullCons
 $( examplesSeperatorChapter "BxO Repos Create And Push And Pull" )
 $( examplesSeperatorSection "BxO Repo Create And Push" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoCreateAndPush "rbxe" "${oneBxoHome}/rbxe" "priv"
+$( examplesSeperatorChapter "BxO Path Based Actvities" )
+${G_myName} ${extraInfo} -i bxoIdObtainForPath .
+${G_myName} -i reposListBasedOnPath .                # List Git Server's Repos
 ${G_myName} ${extraInfo} -i repoCreateAndPushBasedOnPath .
+${G_myName} ${extraInfo} -i repoDeleteBasedOnPath .  # use -f to also remove dir
 _EOF_
 }
 
