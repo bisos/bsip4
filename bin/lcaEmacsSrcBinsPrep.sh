@@ -113,6 +113,8 @@ distEmacsTarUrl="http://ftp.gnu.org/pub/gnu/emacs/${distEmacsTarFile}.gz"
 
 prepCmndLine=""
 
+srcObtainBaseDir=""  # NOTYET
+
 #
 #
 # END PKG Base Variables
