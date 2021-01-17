@@ -102,7 +102,7 @@ ${G_myName} ${extraInfo} -i bleePanels grep -i
 _EOF_
 }
 
-noArgsHook() {
+function noArgsHook {
     if [ $# -eq 0 ] ; then
 	vis_examples
     else

@@ -103,6 +103,7 @@ vagrant box list
 vagrant box list -i 
 vagrant box --help
 vagrant box add --provider libvirt peru/ubuntu-20.04-desktop-amd64
+vagrant box add --provider libvirt generic/debian10
 vagrant box outdated   # Applies to current Vagrant directory 
 vagrant box outdated --global
 vagrant box prune --provider libvirt peru/ubuntu-20.04-desktop-amd64

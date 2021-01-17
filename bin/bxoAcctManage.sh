@@ -159,10 +159,21 @@ _EOF_
     done	
 }
 
-
-noArgsHook() {
-  vis_examples
+function noArgsHook {
+    if [ $# -eq 0 ] ; then
+	vis_examples
+    else
+	if [ "$1" == "list" ] ; then
+	    vis_bxoIdsList
+	elif [ "$1" == "there" ] ; then
+	    vis_bxoIdsListExamples
+	else
+	    # No other feature supported yet.
+	    vis_bxoIdsListExamples
+	fi
+    fi
 }
+
 
 _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]

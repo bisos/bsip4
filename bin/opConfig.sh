@@ -117,13 +117,16 @@ vis_opRunDistFamilySet () {
 	      fi
        ;;
     "DEBIAN")
-	  # NOTYET -- use lsb_release -i ... instead
+	  # NOTYET -- use lsb_release -i or /etc/os-release ... instead
 	      if grep "3.1" /etc/issue ; then
 		opRunDistGeneration="SARGE"
 		opRunDistGenNu="3.1"
 	      elif grep "7.0" /etc/issue ; then
 		opRunDistGeneration="7"
 		opRunDistGenNu="7.0"
+	      elif grep "10" /etc/issue ; then
+		opRunDistGeneration="10"
+		opRunDistGenNu="10"
 	      else
 		opRunDistGeneration="UNSUPPORTED"
 		opRunDistGenNu="UNSUPORTED"

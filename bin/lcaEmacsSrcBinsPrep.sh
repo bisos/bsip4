@@ -607,6 +607,65 @@ _EOF_
 	opDo apt-get -y install  libxrender1
 	opDo apt-get -y install  zlib1g
 	# ----- END  (emacs24 on ubuntu 16.04) ------------
+
+    elif [ "${opRunDistGeneration}" == "10" ] ; then
+
+	#
+	# This is debain 10 (buster_
+	# -------- Development Pkgs -----------
+	#
+	opDo apt-get -y build-dep emacs
+	
+	# emacs (26) as distributed with Debian 10
+	#  apt-cache depends emacs-gtk | grep Depends: | grep -v emacs | cut -d ':' -f 2 | sed -e 's/^/opDo apt-get -y install /'
+	# ----- BEGIN  (emacs 26 on Debian 10) ------------
+	# -------- Run Time Pkgs -----------
+
+	opDo apt-get -y install  libacl1
+	opDo apt-get -y install  libasound2
+	opDo apt-get -y install  libatk1.0-0
+	opDo apt-get -y install  libc6
+	opDo apt-get -y install  libcairo-gobject2
+	opDo apt-get -y install  libcairo2
+	opDo apt-get -y install  libdbus-1-3
+	opDo apt-get -y install  libfontconfig1
+	opDo apt-get -y install  libfreetype6
+	opDo apt-get -y install  libgdk-pixbuf2.0-0
+	opDo apt-get -y install  libgif7
+	opDo apt-get -y install  libglib2.0-0
+	opDo apt-get -y install  libgnutls30
+	opDo apt-get -y install  libgomp1
+	opDo apt-get -y install  libgpm2
+	opDo apt-get -y install  libgtk-3-0
+	opDo apt-get -y install  libice6
+	opDo apt-get -y install  libjpeg62-turbo
+	opDo apt-get -y install  liblcms2-2
+	opDo apt-get -y install  libm17n-0
+	opDo apt-get -y install  libmagickcore-6.q16-6
+	opDo apt-get -y install  libmagickwand-6.q16-6
+	opDo apt-get -y install  libotf0
+	opDo apt-get -y install  libpango-1.0-0
+	opDo apt-get -y install  libpangocairo-1.0-0
+	opDo apt-get -y install  libpng16-16
+	opDo apt-get -y install  librsvg2-2
+	opDo apt-get -y install  libselinux1
+	opDo apt-get -y install  libsm6
+	opDo apt-get -y install  libsystemd0
+	opDo apt-get -y install  libtiff5
+	opDo apt-get -y install  libtinfo6
+	opDo apt-get -y install  libx11-6
+	opDo apt-get -y install  libx11-xcb1
+	opDo apt-get -y install  libxcb1
+	opDo apt-get -y install  libxext6
+	opDo apt-get -y install  libxfixes3
+	opDo apt-get -y install  libxft2
+	opDo apt-get -y install  libxinerama1
+	opDo apt-get -y install  libxml2
+	opDo apt-get -y install  libxpm4
+	opDo apt-get -y install  libxrandr2
+	opDo apt-get -y install  libxrender1
+	opDo apt-get -y install  zlib1g
+	# ----- END  (emacs (26) on Debian 10) ------------
 	
     else
 	EH_problem "Unsupported Distro and DistroGeneration=${opRunDistGeneration}"
