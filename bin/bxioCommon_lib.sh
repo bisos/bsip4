@@ -41,6 +41,7 @@ _EOF_
     }
     EH_assert [[ $# -ge 0 ]]
     cat  << _EOF_
+$( examplesSeperatorChapter "BxIO Common Actions" )
 $( examplesSeperatorChapter "Assemble And Push Initial Bxo Repo Bases" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i assembleInitialBxoCommonRepoBases
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i pushInitialBxoCommonRepoBases
@@ -49,9 +50,12 @@ ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i assembleInitial_bxeTree leaf
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -f -i assembleInitial_bxeTree leaf
 ${G_myName} ${extraInfo} -i repoCreateAndPushBasedOnPath "${oneBxoHome}/bxeTree"
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoCreateAndPush "bxeTree" "${oneBxoHome}/bxeTree" "priv"
-$( examplesSeperatorChapter "Assemble And Push Initial Sys Base" )
+$( examplesSeperatorChapter "Assemble And Push Initial Sys Base -- Mandatory" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i assembleInitial_sys
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoCreateAndPush "sys" "${oneBxoHome}/sys" "priv"
+$( examplesSeperatorSection "BxO Panels Root -- Mandatory" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBaseCreate_panel
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBasePush panel
 _EOF_
 }
 

@@ -96,6 +96,7 @@ function vis_examples {
     visLibExamplesOutput ${G_myName} 
     cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
+Terse Actions: "list", "there"
 _EOF_
 
     vis_bxoAccountsExamples

@@ -68,6 +68,13 @@ _EOF_
 
 vis_opRunDistFamilySet () {
 
+    # NOTYET -- Convert to these
+    # egrep '^ID=' /etc/os-release | cut -d = -f 2
+    # cat /etc/os-release | egrep '^VERSION_ID=' | cut -d = -f 2
+    # opRunDistFamily=$(egrep '^ID=' /etc/os-release | cut -d = -f 2)
+    # opRunDistFamily=${opRunDistFamily^^}  # upper case
+    #
+    
   opRunDistFamily="UNKNOWN"
   
   if grep buntu /etc/issue ; then

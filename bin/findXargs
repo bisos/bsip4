@@ -92,6 +92,7 @@ function vis_examples {
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
+Terse Actions vis_hereFiles grep -i \$@
 $( examplesSeperatorChapter "find | xargs" )
 $( examplesSeperatorSection "At . (here)" )
 ${G_myName} ${extraInfo} -i hereFiles grep -i 

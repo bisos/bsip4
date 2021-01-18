@@ -132,7 +132,6 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
-$( examplesSeperatorChapter "BxIO Common Actions" )
 _EOF_
   
     vis_bxioCommonExamples
@@ -143,15 +142,12 @@ ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i kindTypeRealizeRepoBasesCreat
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i kindTypeRealizeRepoBasesPush
 $( examplesSeperatorChapter "Specific Initial Repo Realizition" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBasesList
-$( examplesSeperatorSection "Realm Panels Repo Realization" )
+$( examplesSeperatorSection "Realm Panels Repo Realization -- Mandatory" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBaseCreate_realmPanels
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBasePush realmPanels
-$( examplesSeperatorSection "Blee InfoBase Repo Realization" )
+$( examplesSeperatorSection "Blee InfoBase Repo Realization -- Optional" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBaseCreate_bleeInfoBase
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBasePush bleeInfoBase
-$( examplesSeperatorSection "BxO Panels Root" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBaseCreate_panel
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBasePush panel
 _EOF_
 }
 
@@ -177,6 +173,8 @@ _EOF_
 function vis_repoBaseCreate_realmPanels {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+RealmPanels only apply to bxioUsage.
+The don't belong in other BxEs.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
