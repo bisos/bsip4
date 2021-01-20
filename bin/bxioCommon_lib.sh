@@ -2,11 +2,9 @@
 
 ####+BEGIN: bx:bsip:bash/libLoadOnce :libName "auto"
 if [ -z "${bxioCommon_lib:-}" ] ; then
-    bxoLib="LOADED"
-    TM_trace 7 "bxioCommon_lib :: Loading Library -- /bisos/bsip/bin/bxioCommon_lib.sh"
+    bxioCommon_lib="LOADED" ; TM_trace 7 "bxioCommon_lib :: Loading Library -- /bisos/bsip/bin/bxioCommon_lib.sh"
 else
-    TM_trace 7 "bxioCommon_lib :: Prviously Loaded -- Skipping /bisos/bsip/bin/bxioCommon_lib.sh"
-    return
+    TM_trace 7 "bxioCommon_lib :: Prviously Loaded -- Skipping /bisos/bsip/bin/bxioCommon_lib.sh" ; return
 fi
 ####+END:
 
@@ -50,6 +48,10 @@ ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i assembleInitial_bxeTree leaf
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -f -i assembleInitial_bxeTree leaf
 ${G_myName} ${extraInfo} -i repoCreateAndPushBasedOnPath "${oneBxoHome}/bxeTree"
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoCreateAndPush "bxeTree" "${oneBxoHome}/bxeTree" "priv"
+$( examplesSeperatorChapter "Specific Initial Repo Realizition" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBasesList
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i kindTypeRealizeRepoBasesCreate   # Based on repoBasesList
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i kindTypeRealizeRepoBasesPush     # Based on repoBasesList
 $( examplesSeperatorChapter "Assemble And Push Initial Sys Base -- Mandatory" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i assembleInitial_sys
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoCreateAndPush "sys" "${oneBxoHome}/sys" "priv"

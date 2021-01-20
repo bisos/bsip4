@@ -128,48 +128,62 @@ function vis_examples {
     oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )    
     
     visLibExamplesOutput ${G_myName} 
-  cat  << _EOF_
+    cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
-$( examplesSeperatorChapter "Initial Bxe Realize" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i kindTypeRealizeRepoBasesCreate
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i kindTypeRealizeRepoBasesPush
-$( examplesSeperatorChapter "Specialized SubTypes" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i regBxeBasesCreate
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i regBxeBasesPush
-$( examplesSeperatorChapter "Using Facilities" )
-registrarCentralBxe.sh  # Need not be visible to BISOS
-registrarPrivBxe.sh
-registrarPrivNic.sh     # NOTYET -- Priv Nic -- Priv IP addr reg
-registrarPubNic.sh     # NOTYET -- Pub Nic -- Pub IP addr reg
+_EOF_
+  
+    vis_bxioCommonExamples
+    
+    cat  << _EOF_
+$( examplesSeperatorChapter "Optional Type Specific Initial Repo Realizition" )
+$( examplesSeperatorSection "Realm Panels Repo Realization -- Optional" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBaseCreate_placeHolder%%
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBasePush placeHolder%%
 _EOF_
 }
 
 
-function vis_kindTypeRealizeRepoBasesCreate {
-   G_funcEntry
+function vis_repoBasesList {
+    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+List of mandatory repos for this kind/type.
+sys and bxeTree are already created.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
 
-    EH_assert  vis_userAcctExists "${bxoId}"    
+    cat  << _EOF_
+panel
+_EOF_
 
     lpReturn
-}
+}	
 
 
-function vis_kindTypeRealizeRepoBasesPush {
+function vis_repoBaseCreate_placeHolder%% {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+RealmPanels only apply to bxioUsage.
+The don't belong in other BxEs.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
     EH_assert [ ! -z "${bxoId}" ]
 
-    EH_assert  vis_userAcctExists "${bxoId}"    
+    EH_assert  vis_userAcctExists "${bxoId}"
+
+    local repoBase="${bxoHome}/realmPanels"
+
+    lpDo FN_dirCreatePathIfNotThere "${repoBase}"
+
+    cat  << _EOF_  > "${repoBase}/README.org"
+Initial directory and files in this repo are generated
+as needed by bleePanel's bxPanel:realms:user|extend
+_EOF_
+
+    lpDo bx-gitRepos -h -v -n showRun -i baseUpdateDotIgnore "${repoBase}"
 
     lpReturn
 }	

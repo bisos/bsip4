@@ -137,12 +137,8 @@ _EOF_
     vis_bxioCommonExamples
     
     cat  << _EOF_
-$( examplesSeperatorChapter "Provisioning: Initial BxE Realize -- Full Actions" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i kindTypeRealizeRepoBasesCreate
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i kindTypeRealizeRepoBasesPush
-$( examplesSeperatorChapter "Specific Initial Repo Realizition" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBasesList
-$( examplesSeperatorSection "Realm Panels Repo Realization -- Mandatory" )
+$( examplesSeperatorChapter "Optional Type Specific Initial Repo Realizition" )
+$( examplesSeperatorSection "Realm Panels Repo Realization -- Optional" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBaseCreate_realmPanels
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBasePush realmPanels
 $( examplesSeperatorSection "Blee InfoBase Repo Realization -- Optional" )
@@ -160,6 +156,7 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     cat  << _EOF_
+sys
 panel
 realmPanels
 _EOF_
