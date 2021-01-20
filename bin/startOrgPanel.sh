@@ -186,14 +186,16 @@ _EOF_
     local nodeBaseDirName="_nodeBase_"
 
     function commonFeatures {
-	if [ ! -f "./foldDesc" ] ; then
-	    opDo touch "./foldDesc"
+	EH_assert [[ $# -eq 1 ]]
+	local dstBaseDir=$1
+	if [ ! -f "${dstBaseDir}/foldDesc" ] ; then
+	    opDo touch "${dstBaseDir}/foldDesc"
 	fi
-	if [ ! -f "./destDesc" ] ; then
-	    opDo touch "./destDesc"
+	if [ ! -f "${dstBaseDir}/destDesc" ] ; then
+	    opDo touch "${dstBaseDir}/destDesc"
 	fi
-	if [ ! -f "./bleePanelProc.sh" ] ; then
-	    opDo cp /bisos/apps/defaults/update/bleePanel/start/bleePanelProc.sh ./bleePanelProc.sh
+	if [ ! -f "${dstBaseDir}/bleePanelProc.sh" ] ; then
+	    opDo cp /bisos/apps/defaults/update/bleePanel/start/bleePanelProc.sh ${dstBaseDir}/bleePanelProc.sh
 	fi
     }	
 	    
@@ -221,7 +223,7 @@ _EOF_
 		inBaseDirDo ${baseDir} bx-dblock -i dblockUpdateFiles ${panelFileName}
 	    fi
 
-	    inBaseDirDo ${baseDir} commonFeatures
+	    lpDo commonFeatures ${baseDir}
 	    ;;
 
 	"node")
@@ -242,8 +244,8 @@ _EOF_
 	    # 	inBaseDirDo ${baseDir} bx-dblock -i dblockUpdateFiles ${sisterPanelsFileName}
 	    # fi
 
-	    if [ ! -f "./bleePanelProc.sh" ] ; then
-		opDo cp /bisos/apps/defaults/update/bleePanel/start/bleePanelProc.sh ./bleePanelProc.sh
+	    if [ ! -f "${baseDir}/bleePanelProc.sh" ] ; then
+		opDo cp /bisos/apps/defaults/update/bleePanel/start/bleePanelProc.sh ${baseDir}/bleePanelProc.sh
 	    fi
 
 	    if [ ! -d "${nodeBaseDirName}" ] ; then
@@ -269,7 +271,7 @@ _EOF_
 		inBaseDirDo ${baseDir}/${nodeBaseDirName} bx-dblock -i dblockUpdateFiles ${panelFileName}
 	    fi
 
-	    inBaseDirDo ${baseDir}/${nodeBaseDirName} commonFeatures
+	    lpDo commonFeatures ${baseDir}/${nodeBaseDirName}
 	    
 	    if [ -L "${baseDir}/${panelFileName}" ] ; then	    
 		opDo rm "${baseDir}/${panelFileName}"
