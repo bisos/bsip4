@@ -108,12 +108,20 @@ _EOF_
     lpReturn
 }	
 
-
-
-noArgsHook() {
-  vis_examples
+function noArgsHook {
+    if [ $# -eq 0 ] ; then
+	vis_examples
+    else
+	if [ "$1" == "list" ] ; then
+	    vis_bxoIdsList
+	elif [ "$1" == "there" ] ; then
+	    vis_bxoIdsListExamples
+	else
+	    # No other feature supported yet.
+	    vis_bxoIdsListExamples
+	fi
+    fi
 }
-
 
 _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  Examples      :: Examples [[elisp:(org-cycle)][| ]]
@@ -147,8 +155,8 @@ bxoGitlab.py
 bxoGitlab.py -v 20 --bxoId="${oneBxoId}" -i reposList
 $( examplesSeperatorChapter "bxoIds List" )
 bxoAcctManage.sh
-bxoAcctManage.sh ${extraInfo} -i bxoAcctsList
-bxoAcctManage.sh ${extraInfo} -i bxoIdsList
+${G_myName} ${extraInfo} -i bxoAcctsList
+${G_myName} ${extraInfo} -i bxoIdsList
 ( examplesSeperatorChapter "OId Tree Info" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i ancestorsList  # NOTYET
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i childrenList  # NOTYET
