@@ -59,6 +59,7 @@ $( examplesSeperatorSection "BxO Panels Root -- Mandatory" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBaseCreate_panel
 ${G_myName} ${extraInfo} -p bxoPath="." -i repoBaseCreate_panel
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBasePush panel
+${G_myName} ${extraInfo} -p bxoPath="." -i repoBasePush panel
 _EOF_
 }
 
@@ -109,7 +110,7 @@ Based on -p bxoId and \$1=repoName, creates a repo in bxoId.
 _EOF_
     }
     EH_assert [[ $# -eq 1 ]]
-    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert bxoIdAssert
 
     EH_assert  vis_userAcctExists "${bxoId}"
 

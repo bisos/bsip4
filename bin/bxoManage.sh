@@ -145,6 +145,7 @@ bxoGitlab.py
 bxoGitlab.py -v 20 --bxoId="${oneBxoId}" -i reposDelete repoName1
 bxoGitlab.py -v 20 --bxoId="${oneBxoId}" --keyName="_priv-pubkey"  -i pubkeyDelete 
 bxoGitlab.py -v 20 --bxoId="${oneBxoId}" -i acctDelete
+${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoPath="." -i reposDelete repoName1
 ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i bxoGitServerReposDeleteAll
 ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i bxoGitServerKeysDeleteAll
 ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i bxoGitServerFullDelete
@@ -426,6 +427,23 @@ _EOF_
     lpReturn
 }
 
+
+function vis_reposDelete {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Based on -p bxoId and \$1=repoName, creates a repo in bxoId.
+_EOF_
+    }
+    EH_assert [[ $# -gt 0 ]]
+    local args=$@
+    EH_assert bxoIdAssert
+
+    EH_assert  vis_userAcctExists "${bxoId}"
+
+    lpDo bxoGitlab.py -v 20 --bxoId="${bxoId}" -i reposDelete ${args}
+    
+    lpReturn
+}	
 
 
 

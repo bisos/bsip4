@@ -194,6 +194,11 @@ _EOF_
     local canonRepoPath=$( FN_absolutePathGet ${repoPath} )
     local gitRemote=$( inBaseDirDo ${canonRepoPath} git remote 2> /dev/null )
 
+    if [ ! -d "${canonRepoPath}" ] ; then
+	EH_problem "${canonRepoPath} -- does not exist  -- Skipped"
+	lpReturn 101
+    fi
+
     if [ ! -z "${gitRemote}" ] ; then
 	EH_problem "${canonRepoPath} Is Already A Git Repo -- Skipped"
 	lpReturn 101
@@ -202,6 +207,8 @@ _EOF_
     local baseName=$( basename "${canonRepoPath}" )
     
     bxoId=$( vis_bxoIdObtainForPath "${canonRepoPath}" )
+ 
+    EH_assert  vis_userAcctExists "${bxoId}"
 
     lpDo vis_repoCreateAndPush "${baseName}" "${canonRepoPath}" priv
     
