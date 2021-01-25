@@ -57,6 +57,7 @@ ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i assembleInitial_sys
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoCreateAndPush "sys" "${oneBxoHome}/sys" "priv"
 $( examplesSeperatorSection "BxO Panels Root -- Mandatory" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBaseCreate_panel
+${G_myName} ${extraInfo} -p bxoPath="." -i repoBaseCreate_panel
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBasePush panel
 _EOF_
 }
@@ -128,11 +129,16 @@ function vis_repoBaseCreate_panel {
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert bxoIdAssert
 
     EH_assert  vis_userAcctExists "${bxoId}"
 
     local repoBase="${bxoHome}/panel"
+
+    if [ -d "${repoBase}" ] ; then
+	EH_problem "${repoBase} already exists -- creation skipped"
+	lpReturn 101
+    fi
 
     lpDo FN_dirCreatePathIfNotThere "${repoBase}"
 

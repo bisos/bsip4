@@ -15,6 +15,30 @@ fi
 . ${opBinBase}/lcnFileParams.libSh
 
 
+function bxoIdAssert {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Return 0 if bxoId has been specified or is determinable. Otherwise, non-zero.
+Side-effecft: bxoId may be set based on bxoPath
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    if [ ! -z "${bxoId}" ] ; then
+	return 0
+    elif [ ! -z "${bxoPath:-}" ] ; then
+	bxoId=$( vis_bxoIdObtainForPath "${bxoPath}" )
+	if [ -z ${bxoId} ] ; then
+	    return 101
+	else
+	    bxoHome=$( FN_absolutePathGet ~${bxoId} )
+	fi
+    else
+	return 101
+    fi
+    return 0
+}
+
+
 function bxoGitServerPrivTag { echo "bxoPriv"; }   # used to prefix entries in ~usg/.ssh/config and corresponding git urls
 
 function bxoGitServerSshKeyName {
