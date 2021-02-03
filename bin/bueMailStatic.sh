@@ -95,22 +95,22 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Static Mailings Starting Point Generator" )
 $( examplesSeperatorSection "Start -- With Default Parameters" )
-${G_myName} ${extraInfo} -i staticStart                    # Mailing Name Will Be Date Tagged
-${G_myName} ${extraInfo} -i staticStart dated                   # Mailing Name Will Be Date Tagged
-${G_myName} ${extraInfo} -i staticStart mailingName ""       # mailingName is specified
-${G_myName} ${extraInfo} -p base=~/BUE/mailings/statics -p template="/libre/ByStar/InitialTemplates/mailing/staticMailing/enFa/generic" -p header=~/BUE/mailings/mohsenProfessional/consulting/lookingForProjs/2013/content.mail -i staticStart mailingName
-${G_myName} ${extraInfo} -p base=~/BUE/mailings/statics -p template="/libre/ByStar/InitialTemplates/mailing/staticMailing/enFa/generic" -p header=~/BUE/mailings/mohsenProfessional/consulting/lookingForProjs/2013/content.mail -i staticStart mailingName ""
-${G_myName} ${extraInfo} -p pdf=pdf -p base=~/BUE/mailings/statics -p template="/libre/ByStar/InitialTemplates/mailing/staticMailing/enFa/generic" -p header=~/BUE/mailings/mohsenProfessional/consulting/lookingForProjs/2013/content.mail -i staticStart mailingName "qualifier"
-${G_myName} ${extraInfo} -p base=. -p template="/libre/ByStar/InitialTemplates/mailing/staticMailing/enFa/generic" -p header=~/BUE/mailings/mohsenProfessional/consulting/lookingForProjs/2013/content.mail -i staticStart mailingName
-${G_myName} ${extraInfo} -p base=. -p template="/libre/ByStar/InitialTemplates/mailing/staticMailing/faEn/generic" -p header=~/BUE/mailings/mohsenProfessional/consulting/lookingForProjs/2013/content.mail -i staticStart mailingName
+${G_myName} ${extraInfo} -i composeStart                    # Mailing Name Will Be Date Tagged
+${G_myName} ${extraInfo} -i composeStart dated                   # Mailing Name Will Be Date Tagged
+${G_myName} ${extraInfo} -i composeStart mailingName ""       # mailingName is specified
+${G_myName} ${extraInfo} -p base=~/BUE/mailings/statics -p template="/libre/ByStar/InitialTemplates/mailing/staticMailing/enFa/generic" -p header=~/BUE/mailings/mohsenProfessional/consulting/lookingForProjs/2013/content.mail -i composeStart mailingName
+${G_myName} ${extraInfo} -p base=~/BUE/mailings/statics -p template="/libre/ByStar/InitialTemplates/mailing/staticMailing/enFa/generic" -p header=~/BUE/mailings/mohsenProfessional/consulting/lookingForProjs/2013/content.mail -i composeStart mailingName ""
+${G_myName} ${extraInfo} -p pdf=pdf -p base=~/BUE/mailings/statics -p template="/libre/ByStar/InitialTemplates/mailing/staticMailing/enFa/generic" -p header=~/BUE/mailings/mohsenProfessional/consulting/lookingForProjs/2013/content.mail -i composeStart mailingName "qualifier"
+${G_myName} ${extraInfo} -p base=. -p template="/libre/ByStar/InitialTemplates/mailing/staticMailing/enFa/generic" -p header=~/BUE/mailings/mohsenProfessional/consulting/lookingForProjs/2013/content.mail -i composeStart mailingName
+${G_myName} ${extraInfo} -p base=. -p template="/libre/ByStar/InitialTemplates/mailing/staticMailing/faEn/generic" -p header=~/BUE/mailings/mohsenProfessional/consulting/lookingForProjs/2013/content.mail -i composeStart mailingName
 $( examplesSeperatorSection "Start Globish -- EnFa -- With Specified Parameters" )
-${G_myName} ${extraInfo} -p base=~/BUE/mailings/statics -p template="/libre/ByStar/InitialTemplates/mailing/staticMailing/enFa/generic" -p header="~/BUE/mailings/headers/enFa-office.mail" -i staticStart mailingName 
-${G_myName} ${extraInfo} -p base=~/BUE/mailings/statics -p template="/libre/ByStar/InitialTemplates/mailing/staticMailing/enFa/generic" -p header="~/BUE/mailings/headers/enFa-office.mail" -i staticStart mailingName ""
-${G_myName} ${extraInfo} -p pdf=pdf -p base=~/BUE/mailings/statics -p template="/libre/ByStar/InitialTemplates/mailing/staticMailing/enFa/generic" -p header="~/BUE/mailings/headers/enFa-office.mail" -i staticStart mailingName "qualifier"
-${G_myName} ${extraInfo} -p base=. -p template="/libre/ByStar/InitialTemplates/mailing/staticMailing/enFa/generic" -p header="~/BUE/mailings/headers/enFa-office.mail" -i staticStart mailingName
+${G_myName} ${extraInfo} -p base=~/BUE/mailings/statics -p template="/libre/ByStar/InitialTemplates/mailing/staticMailing/enFa/generic" -p header="~/BUE/mailings/headers/enFa-office.mail" -i composeStart mailingName 
+${G_myName} ${extraInfo} -p base=~/BUE/mailings/statics -p template="/libre/ByStar/InitialTemplates/mailing/staticMailing/enFa/generic" -p header="~/BUE/mailings/headers/enFa-office.mail" -i composeStart mailingName ""
+${G_myName} ${extraInfo} -p pdf=pdf -p base=~/BUE/mailings/statics -p template="/libre/ByStar/InitialTemplates/mailing/staticMailing/enFa/generic" -p header="~/BUE/mailings/headers/enFa-office.mail" -i composeStart mailingName "qualifier"
+${G_myName} ${extraInfo} -p base=. -p template="/libre/ByStar/InitialTemplates/mailing/staticMailing/enFa/generic" -p header="~/BUE/mailings/headers/enFa-office.mail" -i composeStart mailingName
 $( examplesSeperatorSection "Start Farsi -- FaEn -- With Specified Parameters" )
-${G_myName} ${extraInfo} -p base=${selectedBxoBase}/mailings/statics -p template="/bisos/apps/defaults/mailing/staticMailing/faEn/generic" -p header="${selectedBxoBase}/mailings/headers/faEn-family.mail" -i staticStart mailingName 
-${G_myName} ${extraInfo} -p base=${selectedBxoBase}/mailings/statics -p template="/bisos/apps/defaults/mailing/staticMailing/faEn/generic" -p header="${selectedBxoBase}/mailings/headers/faEn-family.mail" -i staticStart mailingName ""
+${G_myName} ${extraInfo} -p base=${selectedBxoBase}/mailings/statics -p template="/bisos/apps/defaults/mailing/staticMailing/faEn/generic" -p header="${selectedBxoBase}/mailings/headers/faEn-family.mail" -i composeStart mailingName 
+${G_myName} ${extraInfo} -p base=${selectedBxoBase}/mailings/statics -p template="/bisos/apps/defaults/mailing/staticMailing/faEn/generic" -p header="${selectedBxoBase}/mailings/headers/faEn-family.mail" -i composeStart mailingName ""
 _EOF_
 }
 
@@ -120,14 +120,14 @@ noArgsHook() {
 
 
 _CommentBegin_
-*  [[elisp:(org-cycle)][| ]]  IIF            :: vis_staticStart |  [[elisp:(org-cycle)][| ]]
+*  [[elisp:(org-cycle)][| ]]  IIF            :: vis_composeStart |  [[elisp:(org-cycle)][| ]]
 _CommentEnd_
 
 
-function vis_staticStart {
+function vis_composeStart {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Example:  ${G_myName} -p base=~/BUE/mailings/com/example/statics -p header=~/BUE/mailings/com/example/pabloLopez/content.mail -p template=baseDir -i staticStart mailName
+** Example:  ${G_myName} -p base=~/BUE/mailings/com/example/statics -p header=~/BUE/mailings/com/example/pabloLopez/content.mail -p template=baseDir -i composeStart mailName
 ** 
 ** -p base=~/BUE/mailings/statics  -- Specifies where the mailing will be created in
 ** -p header=~/BUE/mailings/mohsenProfessional/common/content.mail  -- Mail header fields will be extracted from this -- Body will be ignored
@@ -212,7 +212,7 @@ _EOF_
 
 
 
-#${G_myName} ${extraInfo} -p base=~/BUE/mailings/statics -p template=~/BUE/mailings/templates/static/enFa/generic -p header=~/BUE/mailings/mohsenProfessional/consulting/lookingForProjs/2013/content.mail -i staticStart mailingName
+#${G_myName} ${extraInfo} -p base=~/BUE/mailings/statics -p template=~/BUE/mailings/templates/static/enFa/generic -p header=~/BUE/mailings/mohsenProfessional/consulting/lookingForProjs/2013/content.mail -i composeStart mailingName
 
 #~/BUE/mailings/templates/static/enFa/generic/mailingStatic/mailingName
 
