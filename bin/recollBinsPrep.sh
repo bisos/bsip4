@@ -73,15 +73,10 @@ _EOF_
     #  [[elisp:(lsip-local-run-command "apt-cache search something | egrep '^something'")][apt-cache search something | egrep '^something']]
 
     itemOrderedList=( 
-	"emacs"
-	"dict"
- 	"sqlite3"     # Used by: org-roam, 
-	"graphviz"    # Used by: org-roam,
+	"recoll"
     )
 
-    itemOptionalOrderedList=(
-	"ripgrep"     # Used by: org-roam,
-    )
+    itemOptionalOrderedList=()
     itemLaterOrderedList=()
 }
 
@@ -100,53 +95,14 @@ ${G_myName} -i moduleDescription
 _EOF_
 }
 
-####+BEGIN: bx:dblock:lsip:binsprep:apt :module "emacs"
+
+####+BEGIN: bx:dblock:lsip:binsprep:apt :module "recoll"
 _CommentBegin_
-*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || Apt-Pkg       :: emacs [[elisp:(org-cycle)][| ]]
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || Apt-Pkg       :: recoll [[elisp:(org-cycle)][| ]]
 _CommentEnd_
-item_emacs () { distFamilyGenerationHookRun binsPrep_emacs; }
+item_recoll () { distFamilyGenerationHookRun binsPrep_recoll; }
 
-binsPrep_emacs_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "emacs"; }
-
-####+END:
-
-####+BEGIN: bx:dblock:lsip:binsprep:apt :module "dict"
-_CommentBegin_
-*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || Apt-Pkg       :: dict [[elisp:(org-cycle)][| ]]
-_CommentEnd_
-item_dict () { distFamilyGenerationHookRun binsPrep_dict; }
-
-binsPrep_dict_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "dict"; }
-
-####+END:
-
-####+BEGIN: bx:dblock:lsip:binsprep:apt :module "graphviz"
-_CommentBegin_
-*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || Apt-Pkg       :: graphviz [[elisp:(org-cycle)][| ]]
-_CommentEnd_
-item_graphviz () { distFamilyGenerationHookRun binsPrep_graphviz; }
-
-binsPrep_graphviz_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "graphviz"; }
-
-####+END:
-
-####+BEGIN: bx:dblock:lsip:binsprep:apt :module "sqlite3"
-_CommentBegin_
-*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || Apt-Pkg       :: sqlite3 [[elisp:(org-cycle)][| ]]
-_CommentEnd_
-item_sqlite3 () { distFamilyGenerationHookRun binsPrep_sqlite3; }
-
-binsPrep_sqlite3_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "sqlite3"; }
-
-####+END:
-
-####+BEGIN: bx:dblock:lsip:binsprep:apt :module "ripgrep"
-_CommentBegin_
-*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || Apt-Pkg       :: ripgrep [[elisp:(org-cycle)][| ]]
-_CommentEnd_
-item_ripgrep () { distFamilyGenerationHookRun binsPrep_ripgrep; }
-
-binsPrep_ripgrep_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "ripgrep"; }
+binsPrep_recoll_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "recoll"; }
 
 ####+END:
 

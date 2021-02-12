@@ -44,7 +44,7 @@ function vis_examples_bleeLib {
 
     local thisEmacsClient=$( vis_thisEmacsClient )
     local emacsServerSocket=$(vis_emacsServerSocketFromEnv)
-    local emacsServerVersion=$(vis_emacsServerSocketEmacsVersion ${emacsServerSocket})
+    local emacsServerVersion=$(vis_emacsServerSocketEmacsVersion ${emacsServerSocket})    
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
@@ -52,6 +52,7 @@ function vis_examples_bleeLib {
 $( examplesSeperatorChapter "Blee Lib Feature Examples" )
 $( examplesSeperatorSection "Locating The Server" )
 ${G_myName} ${extraInfo} -i thisEmacsClient                                            # Obatin qualified emacsclient for this Bash
+${G_myName} ${extraInfo} -i emacsServerSocketDefault                                   # Obatin the default emacsclient name
 ${G_myName} ${extraInfo} -i emacsclientProgOfEmacsServerVersion ${emacsServerVersion}  # Obtain emacsclient based on EmacsVersion
 ${G_myName} ${extraInfo} -i emacsServerSocketBleeVersion ${emacsServerSocket}          # Obtain BleeVersion in Bash
 ${G_myName} ${extraInfo} -i emacsServerSocketEmacsVersion ${emacsServerSocket}         # Obtain EmacsVersion in Bash
@@ -59,7 +60,7 @@ ${G_myName} ${extraInfo} -i emacsServerSocketFromEnv                            
 ${G_myName} ${extraInfo} -i emacsServerPidFromEnv				       # Obatin ServerPid from environment
 $( examplesSeperatorSection "Raw emacsclient Invocations" )
 $( vis_thisEmacsClient ) --eval "(emacs-version)"
-$( vis_examples_bleeLib )
+$( vis_examples_bleeLibLine )
 _EOF_
 }
 
@@ -76,6 +77,23 @@ _EOF_
 }
 
 
+function vis_defaultEmacsClient {
+    function describeF {  cat  << _EOF_
+
+_EOF_
+  }
+    EH_assert [[ $# -eq 0 ]]
+
+    local emacsServerSocket=$(vis_emacsServerSocketDefault)
+    if [ -z "${emacsServerSocket}" ] ; then
+	EH_problem "Missing emacsServerSocket"
+    fi
+    
+    local emacsServerVersion=$(vis_emacsServerSocketEmacsVersion ${emacsServerSocket})
+    local emacsClientProg=$(vis_emacsclientProgOfEmacsServerVersion ${emacsServerVersion})
+
+    echo "${emacsClientProg} --socket-name=${emacsServerSocket}"
+}
 
 
 function vis_thisEmacsClient {
@@ -148,6 +166,22 @@ _EOF_
     local serverSocket="$1"
     
     echo $( basename "${serverSocket}" | cut -d '-' -f 3 ) 
+}
+
+function vis_emacsServerSocketDefault {
+    function describeF {  cat  << _EOF_
+The most recent file in /run/user/$(id -u)/emacs is considered default and is returned.
+_EOF_
+  }
+    EH_assert [[ $# -eq 0 ]]
+
+    local serverSocket=$( ls -t -1 /run/user/$(id -u)/emacs/* | head -1 ) #2> /dev/null )
+
+    if [ -z "${serverSocket}" ] ; then
+	EH_problem "No blee emacs sockets were found"
+    fi
+    
+    echo ${serverSocket}
 }
 
 

@@ -18,13 +18,13 @@ __author__="
 
 ####+BEGIN: bx:bsip:bash:seed-spec :types "seedActions.bash"
 SEED="
-*  /[dblock]/ /Seed/ :: [[file:/opt/public/osmt/bin/seedActions.bash]] | 
+*  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
 "
 FILE="
-*  /This File/ :: /opt/public/osmt/bin/bleeclient 
+*  /This File/ :: /bisos/core/bsip/bin/bleeclient 
 "
 if [ "${loadFiles}" == "" ] ; then
-    /opt/public/osmt/bin/seedActions.bash -l $0 "$@" 
+    /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
     exit $?
 fi
 ####+END:
@@ -84,6 +84,8 @@ function vis_examples {
     typeset runInfo="-p ri=lsipusr:passive"
     local oneFileName="/etc/passwd"
 
+    #set -x
+    
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
     visLibExamplesOutput ${G_myName} 
@@ -98,6 +100,7 @@ $( examplesSeperatorChapter "Blee Client" )
 $( examplesSeperatorSection "Run Raw Blee Client -- deliver args to emacsclient" )
 ${G_myName} ${extraInfo} -i run -- --eval "(blee:bnsm:panel-goto \"/libre/ByStar/InitialTemplates/activeDocs/blee/bleeActivities\")"
 ${G_myName} ${extraInfo} -i run -- --eval "(emacs-version)"
+${G_myName} ${extraInfo} -i defaultRun org-protocol://roam-file?file=/bisos/panels/panelsRoot/fullUsagePanel-en.org
 ${G_myName} ${extraInfo} -- --eval "(emacs-version)"
 ${G_myName} ${extraInfo} -- --no-wait ${oneFileName}
 $( examplesSeperatorSection "Visit File" )
@@ -120,6 +123,26 @@ function noArgsHook {
 _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
 _CommentEnd_
+
+
+function vis_defaultRun {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+This is incomplete and untested. It should become a dispatcher for emacsclient(s).
+_EOF_
+    }
+    EH_assert [[ $# -gt 0 ]]
+
+    local thisEmacsClient=$( vis_defaultEmacsClient )
+
+    if [ -z "${thisEmacsClient}" ] ; then
+	EH_problem "Missing emacs client"
+    else
+	opDo ${thisEmacsClient} "$@"
+    fi
+
+    lpReturn
+}
 
 
 function vis_run {
@@ -187,7 +210,7 @@ _EOF_
     if [ -f "$1" ] ; then
 	opDo ${thisEmacsClient} -n --eval "(find-file \"$1\")"
     else
-	EH_problem "Missing File -- $1"
+	opDo ${thisEmacsClient} "$1"
     fi
 
     lpReturn

@@ -195,7 +195,7 @@ _EOF_
 	    opDo touch "${dstBaseDir}/destDesc"
 	fi
 	if [ ! -f "${dstBaseDir}/bleePanelProc.sh" ] ; then
-	    opDo cp /bisos/apps/defaults/update/bleePanel/start/bleePanelProc.sh ${dstBaseDir}/bleePanelProc.sh
+	    opDo cp /bisos/apps/defaults/begin/bleePanel/start/bleePanelProc.sh ${dstBaseDir}/bleePanelProc.sh
 	fi
     }	
 	    
@@ -218,7 +218,7 @@ _EOF_
 		inBaseDirDo ${baseDir} touch ${panelFileName}
 
 		bleeclient -h -v -n showRun -i run -- --eval \
-		"(progn (interactive) (find-file \"${baseDir}/${panelFileName}\") (yas--expand-or-visit-from-menu 'bx-org-mode-begin \"Blee Leaf Panel\") (save-buffer) (kill-buffer))"
+		"(progn (find-file \"${baseDir}/${panelFileName}\") (yas--expand-or-visit-from-menu 'bx-org-mode-begin \"Blee Leaf Panel\") (save-buffer) (kill-buffer))"
 	    
 		inBaseDirDo ${baseDir} bx-dblock -i dblockUpdateFiles ${panelFileName}
 	    fi
@@ -245,7 +245,7 @@ _EOF_
 	    # fi
 
 	    if [ ! -f "${baseDir}/bleePanelProc.sh" ] ; then
-		opDo cp /bisos/apps/defaults/update/bleePanel/start/bleePanelProc.sh ${baseDir}/bleePanelProc.sh
+		opDo cp /bisos/apps/defaults/begin/bleePanel/start/bleePanelProc.sh ${baseDir}/bleePanelProc.sh
 	    fi
 
 	    if [ ! -d "${nodeBaseDirName}" ] ; then
@@ -266,7 +266,7 @@ _EOF_
 		inBaseDirDo ${baseDir}/${nodeBaseDirName} touch ${panelFileName}
 		
 		bleeclient -h -v -n showRun -i run -- --eval \
-			   "(progn (interactive) (find-file \"${baseDir}/${nodeBaseDirName}/${panelFileName}\") (yas--expand-or-visit-from-menu 'bx-org-mode-begin \"Blee Node Panel\") (save-buffer) (kill-buffer))"
+			   "(save-excursion (find-file \"${baseDir}/${nodeBaseDirName}/${panelFileName}\") (yas--expand-or-visit-from-menu 'bx-org-mode-begin \"Blee Branch Panel\") (save-buffer) (kill-buffer))"
 	    
 		inBaseDirDo ${baseDir}/${nodeBaseDirName} bx-dblock -i dblockUpdateFiles ${panelFileName}
 	    fi

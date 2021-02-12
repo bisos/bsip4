@@ -1,12 +1,32 @@
-#!/bin/osmtKsh
-#!/bin/osmtKsh
+#!/bin/bash
 
-typeset RcsId="$Id: seedElisp.sh,v 1.1.1.1 2016-06-08 23:49:51 lsipusr Exp $"
+IcmBriefDescription="NOTYET: Short Description Of The Module"
 
-if [ "${loadFiles}X" == "X" ] ; then
-  seedActions.sh -l $0 "$@"
-  exit $?
+ORIGIN="
+* Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee
+"
+
+####+BEGIN: bx:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
+
+####+END:
+
+__author__="
+* Authors: Mohsen BANAN, http://mohsen.banan.1.byname.net/contact
+"
+
+
+####+BEGIN: bx:bsip:bash:seed-spec :types "seedActions.bash"
+SEED="
+*  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
+"
+FILE="
+*  /This File/ :: /bisos/core/bsip/bin/bueMailStatic.sh 
+"
+if [ "${loadFiles}" == "" ] ; then
+    /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
+    exit $?
 fi
+####+END:
 
 typeset -t el=""
 typeset -t exec=""
@@ -86,7 +106,7 @@ lispLibFile="/tmp/$$.elispLib"
 lispBodyFile="/tmp/$$.elispBody"
 
 
-lispEntryFunc=${action}
+lispEntryFunc=${action:-}
 
 function vis_xemacs {
     # xemacs does not work when invioked from 

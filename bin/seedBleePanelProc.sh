@@ -102,6 +102,7 @@ ${G_myName} ${extraInfo} -i refresh     # reruns startOrgPanel.sh and dblockUpda
 ${G_myName} ${extraInfo} -i renew       # dblockUpdates fullUsagePanel-en.org ftpProc.sh bleePanelProc.sh
 ${G_myName} ${extraInfo} -i dblockBlankPanels   # dblockBlank fullUsagePanel-en.org
 ${G_myName} ${extraInfo} -i clean
+${G_myName} ${extraInfo} -i bleeFilterCommonActions
 _EOF_
 
   vis_ftoProcExamples  
@@ -129,6 +130,7 @@ ftoProc.sh -v -n showRun -i ftoWalkRunCmnd ${G_myName} ${extraInfo} -i fullUpdat
 ftoProc.sh -v -n showRun -i ftoWalkRunCmnd ${G_myName} ${extraInfo} -i refresh
 ftoProc.sh -v -n showRun -i ftoWalkRunCmnd ${G_myName} ${extraInfo} -i renew
 ftoProc.sh -v -n showRun -i ftoWalkRunCmnd ${G_myName} ${extraInfo} -i clean
+ftoProc.sh -v -n showRun -i ftoWalkRunCmnd ${G_myName} ${extraInfo} -i bleeFilterCommonActions
 _EOF_
 }
 
@@ -255,6 +257,19 @@ _EOF_
 	ANT_raw "Missing ${thisFile} -- Skipped"
     fi
 }
+
+function vis_bleeFilterCommonActions {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo bleeCommonAction.sh -v -n showRun -i panelActions ./fullUsagePanel-en.org
+    
+    lpReturn
+}
+
 
 function vis_renew {
     G_funcEntry

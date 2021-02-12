@@ -1,48 +1,41 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-IcmBriefDescription="
-* NOTYET: Short Description Of This Interactive Command Module"
 
-####+BEGIN: bx:bash:origin-statement :control "release"
+IcmBriefDescription="NOTYET: Short Description Of The Module"
+
 ORIGIN="
-* Part Of ByStar -- Best Used With Emacs, Blee and COMEEGA."
+* Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee
+"
+
+####+BEGIN: bx:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
+
 ####+END:
 
-####+BEGIN: bx:bash:top-of-file :control "release"
-__copying__="
-* Libre-Halaal Software"
-#  This is part of ByStar Libre Services. http://www.by-star.net
-# Copyright (c) 2011 Neda Communications, Inc. -- http://www.neda.com
-# See PLPC-120001 for restrictions.
-# This is a Halaal Poly-Existential intended to remain perpetually Halaal.
-####+END:
-
-####+BEGIN: bx:bash:author :control "release" :author "mohsenBanan"
 __author__="
-* Authors: Mohsen BANAN, http://mohsen.banan.1.byname.net/contact"
-####+END:
+* Authors: Mohsen BANAN, http://mohsen.banan.1.byname.net/contact
+"
 
-####+BEGIN: bx:bsip:bash:seed-spec :types "seedElisp.sh"
+
+####+BEGIN: bx:bsip:bash:seed-spec :types "seedActions.bash"
 SEED="
-*  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedElisp.sh]] | 
+*  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
 "
 FILE="
-*  /This File/ :: /bisos/core/bsip/bin/elispFilterBegin.sh 
+*  /This File/ :: /bisos/core/bsip/bin/blee 
 "
 if [ "${loadFiles}" == "" ] ; then
-    /bisos/core/bsip/bin/seedElisp.sh -l $0 "$@" 
+    /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
     exit $?
 fi
 ####+END:
 
-####+BEGIN: bx:dblock:global:file-insert :surround "default" :file "/libre/ByStar/InitialTemplates/software/plusOrg/dblock/inserts/topControls.org"
+
 _CommentBegin_
-* /->/ ([[file:/libre/ByStar/InitialTemplates/software/plusOrg/dblock/inserts/topControls.org][dblock-inFile]]
+####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/libre/ByStar/InitialTemplates/software/plusOrg/dblock/inserts/topControls.org"
 *  /Controls/ ::  [[elisp:(org-cycle)][| ]]  [[elisp:(show-all)][Show-All]]  [[elisp:(org-shifttab)][Overview]]  [[elisp:(progn (org-shifttab) (org-content))][Content]] | [[file:Panel.org][Panel]] | [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] | [[elisp:(bx:org:run-me)][Run]] | [[elisp:(bx:org:run-me-eml)][RunEml]] | [[elisp:(delete-other-windows)][(1)]] | [[elisp:(progn (save-buffer) (kill-buffer))][S&Q]]  [[elisp:(save-buffer)][Save]]  [[elisp:(kill-buffer)][Quit]] [[elisp:(org-cycle)][| ]]
 ** /Version Control/ ::  [[elisp:(call-interactively (quote cvs-update))][cvs-update]]  [[elisp:(vc-update)][vc-update]] | [[elisp:(bx:org:agenda:this-file-otherWin)][Agenda-List]]  [[elisp:(bx:org:todo:this-file-otherWin)][ToDo-List]]
-* /<-/ [[file:/libre/ByStar/InitialTemplates/software/plusOrg/dblock/inserts/topControls.org][dblock-inFile]])
-_CommentEnd_
 ####+END:
+_CommentEnd_
 
 _CommentBegin_
 *      ================
@@ -71,25 +64,24 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
+. ${opBinBase}/bleeLib.sh
 
 # PRE parameters
 
 baseDir=""
+acctName=""
 
 function G_postParamHook {
      return 0
 }
 
 
-function noArgsHook {
-  vis_examples
-}
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  Examples      :: Examples [[elisp:(org-cycle)][| ]]
+_CommentEnd_
 
 
-elispScriptFile="${opBinBase}/elispFilterHtml.el"
-
-
-function vis_examplesNOT {
+function vis_examples {
     typeset extraInfo="-h -v -n showRun"
     #typeset extraInfo=""
     typeset runInfo="-p ri=lsipusr:passive"
@@ -99,45 +91,75 @@ function vis_examplesNOT {
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
-$( examplesSeperatorChapter "Chapter Title" )
-$( examplesSeperatorSection "Section Title" )
-${G_myName} ${extraInfo} -i doTheWork
+$( examplesSeperatorChapter "bleeclient Org-Protocol" )
+${G_myName} ${extraInfo} -i appsBleeOrgProtocolStdout
+${G_myName} ${extraInfo} -i appsBleeOrgProtocolUpdate
+${G_myName} ${extraInfo} -f -i appsBleeOrgProtocolUpdate
+ls -l ~/.local/share/applications/blee-org-protocol.desktop
+xdg-mime default blee-org-protocol.desktop x-scheme-handler/org-protocol
+$( examplesSeperatorChapter "bleeclient Org-Protocol" )
+xdg-open "org-protocol://roam-file?file=/bisos/panels/panelsRoot/fullUsagePanel-en.org"
+xdg-open "org-protocol://capture:/bisos/panels/panelsRoot/fullUsagePanel-en.org"
 _EOF_
 }
 
+noArgsHook() {
+  vis_examples
+}
 
-#
-# See Help in seedElisp.sh 
-#
 
-function examplesHookPost {
-    typeset extraInfo="-h -v -n showRun"
-    #typeset extraInfo=""
-    typeset runInfo="-p ri=lsipusr:passive"
 
-    docName="BusPlan"
+function mimeAppFileUpdate {
+  EH_assert [[ $# -eq 2 ]]
 
+  updateFileName=$1
+  updateStdoutFunc=$2
+
+  typeset dirsPart=$( FN_dirsPart ${updateFileName} )
+  #opDoExit  FN_dirCreatePathIfNotThere ${dirsPart}
+
+  if [[ "${G_forceMode}" == "force" ]] ; then
+      FN_fileSafeKeep ${updateFileName}
+      ${updateStdoutFunc} > ${updateFileName} # 2> /dev/null 
+  else
+      if [ -f ${updateFileName} ] ; then
+	  ANT_raw "File: ${updateFileName} exists -- no action taken"
+      else
+	  FN_fileSafeKeep ${updateFileName}
+	  ${updateStdoutFunc} > ${updateFileName} # 2> /dev/null 
+      fi
+  fi
+
+  # opDoComplain chmod ugo+x ${updateFileName}
+  opDoComplain ls -l ${updateFileName}
+}
+
+
+function vis_appsBleeOrgProtocolStdout {
   cat  << _EOF_
-$( examplesSeperatorTopLabel "${G_myName}" )	
-#/bin/rm ./index.html
-${G_myFullName} ${extraInfo} -p el="${elispScriptFile}" -p exec=main -p inFile="./${docName}.html" -p outFile="./index.html" -i emacs ${docName}
-$( examplesSeperatorChapter "One Time Processing Of The elisp Script" )
-${G_myName} ${extraInfo} -i outputScript
+[Desktop Entry]
+Name=Org-Protocol
+Exec=bleeclient -i defaultRun %u
+Icon=emacs-icon
+Type=Application
+Terminal=false
+MimeType=x-scheme-handler/org-protocol
 _EOF_
 }
 
-function vis_outputScript {
-   G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
+function vis_appsBleeOrgProtocolUpdate {
+  
+  local updateFileName=$( echo ~/.local/share/applications/blee-org-protocol.desktop )
+  local updateStdoutFunc=vis_appsBleeOrgProtocolStdout
 
-  cat  << _EOF_
-Elisp code can be packaged here.
-_EOF_
-
+  lpDo mimeAppFileUpdate ${updateFileName} ${updateStdoutFunc}
 }
+
+
+
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
+_CommentEnd_
 
 
 _CommentBegin_

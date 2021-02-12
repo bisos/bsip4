@@ -108,11 +108,12 @@ ${G_myName} ${extraInfo} -p base=. -p template="/bisos/apps/defaults/mailing/com
 $( examplesSeperatorSection "Start Globish -- EnFa -- With Specified Parameters" )
 ${G_myName} ${extraInfo} -p base=~/bxo/usageEnv/selected/mailings/compose -p template="/bisos/apps/defaults/mailing/compose/enFa/generic" -p header="~/bxo/usageEnv/selected/mailings/headers/enFa-office.mail" -i composeStart mailingName 
 ${G_myName} ${extraInfo} -p base=~/bxo/usageEnv/selected/mailings/compose -p template="/bisos/apps/defaults/mailing/compose/enFa/generic" -i composeStart mailingName ""
-${G_myName} ${extraInfo} -p pdf=pdf -p base=. -p template="/bisos/apps/defaults/mailing/compose/enFa/generic" -i composeStart mailingName "qualifier"
+${G_myName} ${extraInfo} -p pdf=pdf -p base=. -p template="/bisos/apps/defaults/mailing/compose/enFa/generic" -i composeStart basicLaTeX pdf
 ${G_myName} ${extraInfo} -p base=. -p template="/bisos/apps/defaults/mailing/compose/enFa/generic" -i composeStart basicLaTeX ""
 $( examplesSeperatorSection "Start Farsi -- FaEn -- With Specified Parameters" )
 ${G_myName} ${extraInfo} -p base=${selectedBxoBase}/mailings/compose -p template="/bisos/apps/defaults/mailing/compose/faEn/generic" -i composeStart mailingName 
 ${G_myName} ${extraInfo} -p base=${selectedBxoBase}/mailings/compose -p template="/bisos/apps/defaults/mailing/compose/faEn/generic" -i composeStart mailingName ""
+${G_myName} ${extraInfo} -p pdf=pdf -p base=. -p template="/bisos/apps/defaults/mailing/compose/faEn/generic" -i composeStart basicLaTeX pdf
 ${G_myName} ${extraInfo} -p base=. -p template="/bisos/apps/defaults/mailing/compose/faEn/generic" -i composeStart basicLaTeX ""
 _EOF_
 }
@@ -126,15 +127,6 @@ _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  IIF            :: vis_composeStart |  [[elisp:(org-cycle)][| ]]
 _CommentEnd_
 
-
-function emitHtmlBodyPart {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -le 2 ]]  # 0=dateTagIt 1=nameIt+datTag 2=nameIt+Qualifier
-
-}
 
 function vis_composeStart {
     G_funcEntry
@@ -191,24 +183,29 @@ _EOF_
 	templateBaseDir=${template}
     fi
 
-    if [ ! -d ${templateBaseDir} ] ; then
+    if [ ! -d "${templateBaseDir}" ] ; then
 	EH_problem "Missing Template BaseDir: ${templateBaseDir}"
 	lpReturn 101
     fi
 
     ### headerFile
-
-    typeset headerFile="$( FN_absolutePathGet /bisos/apps/defaults/mailing/compose/headers/blank.mail )"
+    typeset headerFile="$( FN_absolutePathGet ${templateBaseDir}/content.mail )"
     if [ ! -z "${header}" ] ; then
 	headerFile="$( FN_absolutePathGet ${header} )"
+	if [ ! -f ${headerFile} ] ; then
+	    EH_problem "Missing Header File: ${headerFile}"
+	    lpReturn 101
+	fi
     fi
-
-    if [ ! -f ${headerFile} ] ; then
-	EH_problem "Missing Header File: ${headerFile}"
-	lpReturn 101
+    if [ ! -f "${headerFile}" ] ; then
+        headerFile="$( FN_absolutePathGet /bisos/apps/defaults/mailing/compose/headers/blank.mail )"
+	if [ ! -f ${headerFile} ] ; then
+	    EH_problem "Missing Header File: ${headerFile}"
+	    lpReturn 101
+	fi
     fi
-
-    if [ -d  ${mailingBaseDir} ] ; then
+	
+    if [ -d  "${mailingBaseDir}" ] ; then
 	EH_problem "${mailingBaseDir} Already In Place -- Will Not Overwrite, Force It With:"
 	ANT_raw "rm -r -f ${mailingBaseDir}"
 	lpReturn
@@ -222,33 +219,17 @@ _EOF_
 
     inBaseDirDo ${templateBaseDir} eval "find . -print | grep -v CVS | egrep -v ~\$ | cpio -o | (cd ${mailingBaseDir}; cpio -imdv)"
 
-
-#${G_myName} ${extraInfo} -p base=~/bxo/usageEnv/selected/mailings/compose -p template=~/bxo/usageEnv/selected/mailings/templates/static/enFa/generic -p header=~/bxo/usageEnv/selected/mailings/mohsenProfessional/consulting/lookingForProjs/2013/content.mail -i composeStart mailingName
-
-#~/bxo/usageEnv/selected/mailings/templates/static/enFa/generic/mailingStatic/mailingName
-
-    opDo eval "sed '/--text follows this line--/q' ${headerFile} > ${mailingBaseDir}/content.mail"
-
-    # TODO, revisit usefulness of  :load "./dblockProcess.el"
-    # <!-- ####+BEGIN: bx:dblock:global:file-insert-process :file "../rel/${mailingName}-html/index.html"  :exec "bx:dblock:body-process"
-    
-    cat  << _EOF_ >> ${mailingBaseDir}/content.mail
-<#part type="text/html" disposition=inline>
-<!--  [[elisp:(find-file "./mailing.ttytex")][Visit ./mailing.ttytex]]  -->
-<!-- ####+BEGIN: bx:dblock:global:file-insert-process :file "./rel/mailing-html/index.html" :exec "bx:dblock:body-process"
--->
-<!-- ####+END: -->
-<#/part>
-_EOF_
+    inBaseDirDo ${mailingBaseDir}  cp "${headerFile}" .
 
     if [ "${pdf}" == "pdf" ] ; then
-	cat  << _EOF_ >> ${mailingBaseDir}/content.mail
-<#part type="application/pdf" filename="./rel/${mailingName}.pdf" disposition=attachment description="Pdf File">
-<#/part>
-_EOF_
+	inBaseDirDo ${mailingBaseDir} lcntProc.sh -p pdf=pdf -v -n showRun -i bodyPartsRefresh
+    else
+	inBaseDirDo ${mailingBaseDir} lcntProc.sh -v -n showRun -i bodyPartsRefresh	
+	
     fi
 
-    opDo ${thisEmacsClient} -n -e "(progn (find-file \"${mailingBaseDir}/mailing.ttytex\") (blee:ppmm:org-mode-content-list))"
+    #opDo ${thisEmacsClient} -n -e "(progn (find-file \"${mailingBaseDir}/mailing.ttytex\") (blee:ppmm:org-mode-content-list))"
+    opDo ${thisEmacsClient} -n -e "(progn (find-file \"${mailingBaseDir}/content.mail\"))"    
 
     lpReturn
 }

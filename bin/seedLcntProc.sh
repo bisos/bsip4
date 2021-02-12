@@ -2044,7 +2044,7 @@ _EOF_
 
     heveaHtmlBasedir=heveaHtml-${1%.*}
 
-    if [ -z "${lcntAttrSource}" ] ; then
+    if [ -z "${lcntAttrSource:-}" ] ; then
 	lcntSourceTypeBaseDir="/lcnt/lgpc/bystar/permanent"
     else
 	lcntSourceTypeBaseDir="${lcntBaseDir}${lcntAttrGenPub}/${lcntAttrSource}/${lcntAttrPermanence}"
