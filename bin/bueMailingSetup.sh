@@ -217,7 +217,8 @@ _EOF_
     ls -ldt ${templateBaseDir}
     ls -ldt ${headerFile}
 
-    inBaseDirDo ${templateBaseDir} eval "find . -print | grep -v CVS | egrep -v ~\$ | cpio -o | (cd ${mailingBaseDir}; cpio -imdv)"
+    # inBaseDirDo ${templateBaseDir} eval "find . -print | grep -v CVS | egrep -v ~\$ | cpio -o | (cd ${mailingBaseDir}; cpio -imdv)"
+    inBaseDirDo ${templateBaseDir} eval "find . -print | grep -v CVS | egrep -v ~\$ | cpio -o | (cd ${mailingBaseDir}; cpio -imd)"
 
     inBaseDirDo ${mailingBaseDir}  cp "${headerFile}" .
 
@@ -229,8 +230,12 @@ _EOF_
     fi
 
     #opDo ${thisEmacsClient} -n -e "(progn (find-file \"${mailingBaseDir}/mailing.ttytex\") (blee:ppmm:org-mode-content-list))"
-    opDo ${thisEmacsClient} -n -e "(progn (find-file \"${mailingBaseDir}/content.mail\"))"    
+    # opDo ${thisEmacsClient} -n -e "(progn (find-file \"${mailingBaseDir}/content.mail\"))"
 
+    echo "===================="
+    echo "$( FN_nonDirsPart ${mailingBaseDir} ) is ready to be configured."
+    echo "+ ${mailingBaseDir}; lsf"    
+    
     lpReturn
 }
 
@@ -376,7 +381,8 @@ _EOF_
 
     ls -ldt ${mailingBaseDir}
 
-    inBaseDirDo /bisos/apps/defaults/mailing/compose/enFa/generic eval "find . -print | grep -v CVS | egrep -v ~\$ | cpio -o | (cd ${mailingBaseDir}; cpio -imdv)"
+    #inBaseDirDo /bisos/apps/defaults/mailing/compose/enFa/generic eval "find . -print | grep -v CVS | egrep -v ~\$ | cpio -o | (cd ${mailingBaseDir}; cpio -imdv)"
+    inBaseDirDo /bisos/apps/defaults/mailing/compose/enFa/generic eval "find . -print | grep -v CVS | egrep -v ~\$ | cpio -o | (cd ${mailingBaseDir}; cpio -imd)"
 
     echo "${thisEmacsClient} ${mailingBaseDir}/mailingEnFa.ttytex"
 

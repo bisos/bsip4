@@ -1,5 +1,10 @@
 #!/bin/bash
 
+echo "Obsoleted By bueMailingSetup.sh"
+
+exit
+
+
 IcmBriefDescription="NOTYET: Short Description Of The Module"
 
 ORIGIN="
