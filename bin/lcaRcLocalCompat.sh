@@ -70,9 +70,8 @@ _CommentEnd_
 
 # PRE parameters
 
-baseDir=""
-maintain=""
-
+ports=""
+sysType=""
 
 function G_postParamHook {
     #vis_loadActionEl
@@ -102,16 +101,15 @@ _EOF_
   # vis_ftoCommonExamples
   
   cat  << _EOF_
-$( examplesSeperatorChapter "Apply White List To Ports" )
-${G_myName} ${extraInfo} -i applyWhiteListToPrivatePorts
-${G_myName} ${extraInfo} -i applyPrivatePortExceptions ssh 192.168.0.0/24
-$( examplesSeperatorChapter "Delete White List From Ports" )
-${G_myName} ${extraInfo} -i deleteWhiteListFromPrivatePorts
-${G_myName} ${extraInfo} -i deletePrivatePortExceptions ssh 192.168.0.0/24
+$( examplesSeperatorChapter "Initial /etc/rc.local" )
+${G_myName} ${extraInfo} -i rcLocalStdout
+${G_myName} ${extraInfo} -i rcLocalUpdate
+${G_myName} ${extraInfo} -f -i rcLocalUpdate
+ls -l /etc/rc.local
 $( examplesSeperatorChapter "Raw iptable commands" )
-sudo iptables -L  # List
-sudo iptables -F  # Flush
-sudo iptables -L INPUT -v  # List with statistics
+sudo systemctl status rc-local.service
+sudo systemctl enable rc-local.service
+udo systemctl cat rc-local.service  # need to reboot -- perhaps it is enabled after -i rcLocalUpdate
 _EOF_
 }
 
@@ -119,125 +117,58 @@ noArgsHook() {
   vis_examples
 }
 
-function whiteListAddrs {
+
+function fileUpdateWithStdoutFunc {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
     
-    itemOrderedWhiteList=( 
-	"192.168.0.0/24"
-	"198.62.92.0/24"
-    )
+    EH_assert [[ $# -eq 2 ]]
+
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;	
+  
+    updateFileName=$1
+    updateStdoutFunc=$2
+
+    if [ "${G_forceMode}" == "force" ] ; then
+	lpDo FN_fileSafeKeep ${updateFileName}
+	${updateStdoutFunc} | sudo tee ${updateFileName} >  /dev/null 
+    else
+	if [ -f ${updateFileName} ] ; then
+	    ANT_raw "File: ${updateFileName} exists -- no action taken"
+	else
+	    lpDo FN_fileSafeKeep ${updateFileName}
+	    ${updateStdoutFunc} | sudo tee ${updateFileName} >  /dev/null 	  
+	fi
+    fi
+
+    opDoComplain chown root ${updateFileName}  
+    opDoComplain chmod ugo+x ${updateFileName}
+    opDoComplain ls -l ${updateFileName}
 }
 
-function tcpPrivatePorts {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
+
+function vis_rcLocalStdout {
+  cat  << _EOF_
+#!/bin/sh -e
+
+logger "\$0 - rc.local started."
+
+# Your commands come here
+
+logger "\$0 - rc.local ended."
+exit 0
 _EOF_
-    }
-    
-    itemOrderedPrivatePorts=( 
-	"ssh"
-	"sunrpc"
-	"netbios-ns"
-	"loc-srv"
-	"microsoft-ds"
-    )
 }
 
+function vis_rcLocalUpdate {
+  
+  local updateFileName="/etc/rc.local"
+  local updateStdoutFunc=vis_rcLocalStdout
 
-function vis_applyWhiteListToPrivatePorts {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-To make (filterFilePanelCleanups) available to vis_panelActions.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    lpDo whiteListAddrs
-    lpDo tcpPrivatePorts
-
-    local eachPrivatePort=""
-
-    for eachPrivatePort in ${itemOrderedPrivatePorts[@]} ; do
-	lpDo vis_applyPrivatePortExceptions "${eachPrivatePort}" ${itemOrderedWhiteList[@]}
-    done
-    
-    lpReturn
+  lpDo fileUpdateWithStdoutFunc ${updateFileName} ${updateStdoutFunc}
 }
-
-
-function vis_applyPrivatePortExceptions {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-save-excursion is needed, so that we visually remain in the current shell.
-_EOF_
-    }
-    EH_assert [[ $# -gt 1 ]]
-
-    local portNu="$1"
-    shift
-    local exceptionsAddrList=$@
-
-    local eachExceptionAddr=""
-
-    for eachExceptionAddr in ${exceptionsAddrList} ; do
-	lpDo sudo iptables -A INPUT -p tcp -s ${eachExceptionAddr} --dport ${portNu} -j ACCEPT
-    done
-
-    lpDo sudo iptables -A INPUT -p tcp --dport ${portNu} -j DROP
-
-    lpReturn
-}
-
-
-
-function vis_deleteWhiteListFromPrivatePorts {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-To make (filterFilePanelCleanups) available to vis_panelActions.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    lpDo whiteListAddrs
-    lpDo tcpPrivatePorts
-
-    local eachPrivatePort=""
-
-    for eachPrivatePort in ${itemOrderedPrivatePorts[@]} ; do
-	lpDo vis_deletePrivatePortExceptions "${eachPrivatePort}" ${itemOrderedWhiteList[@]}
-    done
-    
-    lpReturn
-}
-
-
-function vis_deletePrivatePortExceptions {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-save-excursion is needed, so that we visually remain in the current shell.
-_EOF_
-    }
-    EH_assert [[ $# -gt 1 ]]
-
-    local portNu="$1"
-    shift
-    local exceptionsAddrList=$@
-
-    local eachExceptionAddr=""
-
-    lpDo sudo iptables -D INPUT -p tcp --dport ${portNu} -j DROP
-    
-    for eachExceptionAddr in ${exceptionsAddrList} ; do
-	lpDo sudo iptables -D INPUT -p tcp -s ${eachExceptionAddr} --dport ${portNu} -j ACCEPT
-    done
-
-    lpReturn
-}
-
-
 
 
 
