@@ -91,15 +91,27 @@ function vis_examples {
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
-$( examplesSeperatorChapter "bleeclient Org-Protocol" )
-${G_myName} ${extraInfo} -i appsBleeOrgProtocolStdout
-${G_myName} ${extraInfo} -i appsBleeOrgProtocolUpdate
-${G_myName} ${extraInfo} -f -i appsBleeOrgProtocolUpdate
-ls -l ~/.local/share/applications/blee-org-protocol.desktop
+$( examplesSeperatorChapter "bleeclient Org-Protocol Install" )
+${G_myName} ${extraInfo} -i xdgBleeOrgProtocolStdout
+${G_myName} ${extraInfo} -i xdgBleeOrgProtocolUpdate
+${G_myName} ${extraInfo} -f -i xdgBleeOrgProtocolUpdate
+ls -l $( vis_xdgBleeOrgProtocolFile  )
 xdg-mime default blee-org-protocol.desktop x-scheme-handler/org-protocol
-$( examplesSeperatorChapter "bleeclient Org-Protocol" )
+$( examplesSeperatorChapter "bleeclient Org-Protocol Run" )
 xdg-open "org-protocol://roam-file?file=/bisos/panels/panelsRoot/fullUsagePanel-en.org"
 xdg-open "org-protocol://capture:/bisos/panels/panelsRoot/fullUsagePanel-en.org"
+$( examplesSeperatorChapter "bleeclient mailto Install" )
+${G_myName} ${extraInfo} -i xdgBleeMailtoStdout
+${G_myName} ${extraInfo} -i xdgBleeMailtoUpdate
+${G_myName} ${extraInfo} -f -i xdgBleeMailtoUpdate
+ls -l $( vis_xdgBleeMailtoFile )
+xdg-mime default blee-mailto.desktop x-scheme-handler/mailto
+$( examplesSeperatorChapter "bleeclient mailto Run" )
+xdg-email "mailto:emacs@mohsen.1.banan.byname.net"
+xdg-email "mailto:emacs@mohsen.1.banan.byname.net"
+$( examplesSeperatorChapter "DEBUGGING" )
+export XDG_UTILS_DEBUG_LEVEL=9
+xdg-mime query default 'x-scheme-handler/mailto'
 _EOF_
 }
 
@@ -135,7 +147,7 @@ function mimeAppFileUpdate {
 }
 
 
-function vis_appsBleeOrgProtocolStdout {
+function vis_xdgBleeOrgProtocolStdout {
   cat  << _EOF_
 [Desktop Entry]
 Name=Org-Protocol
@@ -147,14 +159,50 @@ MimeType=x-scheme-handler/org-protocol
 _EOF_
 }
 
-function vis_appsBleeOrgProtocolUpdate {
-  
+function vis_xdgBleeOrgProtocolFile {
   local updateFileName=$( echo ~/.local/share/applications/blee-org-protocol.desktop )
-  local updateStdoutFunc=vis_appsBleeOrgProtocolStdout
+  echo ${updateFileName}
+}
+
+function vis_xdgBleeOrgProtocolUpdate {
+  local updateFileName=$( vis_xdgBleeOrgProtocolFile  )
+  local updateStdoutFunc=vis_xdgBleeOrgProtocolStdout
 
   lpDo mimeAppFileUpdate ${updateFileName} ${updateStdoutFunc}
 }
 
+
+function vis_xdgBleeMailtoStdout {
+  cat  << _EOF_
+[Desktop Entry]
+Name=Mailto
+Exec=bleeclient -i defaultRun -- -c --eval "(xdp:email|act-on-url  \"%u\")"
+Icon=emacs-icon
+Type=Application
+Terminal=false
+MimeType=x-scheme-handler/mailto
+_EOF_
+}
+
+
+
+#
+# (browse-url-mail "mailto:emacs@mohsen.1.banan.byname.net")
+#
+
+function vis_xdgBleeMailtoFile {
+  local updateFileName=$( echo ~/.local/share/applications/blee-mailto.desktop )
+  echo ${updateFileName}
+}
+
+
+function vis_xdgBleeMailtoUpdate {
+  
+  local updateFileName=$( vis_xdgBleeMailtoFile )
+  local updateStdoutFunc=vis_xdgBleeMailtoStdout
+
+  lpDo mimeAppFileUpdate ${updateFileName} ${updateStdoutFunc}
+}
 
 
 _CommentBegin_

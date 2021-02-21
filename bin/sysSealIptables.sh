@@ -103,6 +103,7 @@ _EOF_
   cat  << _EOF_
 $( examplesSeperatorChapter "Apply White List To Ports" )
 ${G_myName} ${extraInfo} -i applyWhiteListTo tcpUdp_commonPrivatePorts
+${G_myName} ${extraInfo} -i applyWhiteListTo tcpUdp_imapPrivatePorts
 ${G_myName} ${extraInfo} -i applyPrivatePortExceptions tcp ssh 192.168.0.0/24
 $( examplesSeperatorChapter "Delete White List From Ports" )
 ${G_myName} ${extraInfo} -i deleteWhiteListFromPrivatePorts
@@ -166,6 +167,24 @@ _EOF_
     )
 }
 
+function tcpUdp_imapPrivatePorts {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    
+    tcp_privatePorts=(
+	"110"             # pop3 not encrypted
+	"995"             # pop3 encrypted
+	"143"             # IMAP non-encrypted port
+	"993"             # Secure IMAP
+    )
+    
+    udp_privatePorts=( 
+    )
+}
+
+
 function tcpUdp_mailPrivatePorts {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -226,6 +245,7 @@ _EOF_
 
     tcpUdp_portsListSpec=( 
 	"tcpUdp_commonPrivatePorts"
+	"tcpUdp_webPrivatePorts"	
     )
 }
 
@@ -238,6 +258,7 @@ _EOF_
 
     tcpUdp_portsListSpec=( 
 	"tcpUdp_commonPrivatePorts"
+	"tcpUdp_mailPrivatePorts"	
     )
 }
 
