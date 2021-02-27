@@ -1,3 +1,30 @@
+(defun latexNewlineFixFile (<fileName)
+  "General panel cleanup in current buffer."
+  (interactive "fName Of File: ")
+  (let (
+	($curBuf (current-buffer))
+	)
+    (save-excursion 
+      (find-file <fileName)
+      (latexNewlineFix)
+      (save-buffer)
+      (kill-buffer)
+      (set-buffer $curBuf)
+      )
+    )
+  )
+
+
+
+(defun latexNewlineFix ()
+  "General panel cleanup in current buffer."
+  (interactive)
+  (goto-char (point-min))
+  (show-all)
+  (replace-string "\\\\" "\\newline" nil nil nil nil nil)
+  )
+
+
 
 (defun filterBufferPanelCleanups ()
   "General panel cleanup in current buffer."

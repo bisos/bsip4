@@ -106,6 +106,9 @@ $( examplesSeperatorChapter "Load Filter Actions" )
 ${G_myName} ${extraInfo} -i loadActionEl
 $( examplesSeperatorChapter "Common Panel Filter" )
 ${G_myName} ${extraInfo} -i panelActions fileName
+$( examplesSeperatorChapter "Misc" )
+${G_myName} ${extraInfo} -i latexFix fileName
+
 _EOF_
 }
 
@@ -149,6 +152,32 @@ _EOF_
     
     bleeclient -h -v -n showRun -i run -- --eval \
 	       "(save-excursion (load-file \"${bleeCommonActionEl}\") (filterFilePanelCleanups \"${fileName}\"))"
+
+    lpReturn
+}
+
+
+
+function vis_latexFix {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+save-excursion is needed, so that we visually remain in the current shell.
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local fileName="$1"
+    local bleeCommonActionEl="${opBinBase}/bleeCommonAction.el"
+
+    if [ ! -f "${fileName}" ] ; then
+	ANT_cooked "Missing ${fileName} -- skipped"
+	lpReturn 101
+    fi
+
+    lpDo FN_fileSafeCopy ${fileName} ${fileName}.${dateTag}
+    
+    bleeclient -h -v -n showRun -i run -- --eval \
+	       "(save-excursion (load-file \"${bleeCommonActionEl}\") (latexNewlineFixFile \"${fileName}\"))"
 
     lpReturn
 }

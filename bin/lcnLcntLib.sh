@@ -473,7 +473,7 @@ _EOF_
    esac
  fi
 
- lcntAttrGroup=$4
+ lcntAttrGroup=${4:-}
 
  shift; shift; shift; shift
  # rest all together becomes

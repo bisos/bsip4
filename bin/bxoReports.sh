@@ -155,20 +155,59 @@ bxoGitlab.py
 bxoGitlab.py -v 20 --bxoId="${oneBxoId}" -i reposList
 $( examplesSeperatorChapter "bxoIds List" )
 bxoAcctManage.sh
-${G_myName} ${extraInfo} -i bxoAcctsList
-${G_myName} ${extraInfo} -i bxoIdsList
+${G_myName} ${extraInfo} -i usgAcctsList         # from /etc/passwd
+${G_myName} ${extraInfo} -i bxoAcctsList         # from /etc/passwd
+${G_myName} ${extraInfo} -i bxoIdsList           # bxoAcctsList | cut -d ":" -f 1
 ( examplesSeperatorChapter "OId Tree Info" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i ancestorsList  # NOTYET
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i childrenList  # NOTYET
+( examplesSeperatorChapter "File Parameters List" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i fileParamsShow
 _EOF_
 }
 
-
+# find . -print | grep -i value | xargs grep ^.
 
 _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
 _CommentEnd_
 
+function vis_fileParamsShow {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Given a bxoId, 
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bxoId}" ]
+
+    if ! vis_userAcctExists "${bxoId}" ; then
+	EH_problem "Missing ${bxoId}."
+	lpReturn 101
+    fi
+
+    bxoHome=$( FN_absolutePathGet ~${bxoId} )
+
+    local rbxeBase="${bxoHome}/rbxe"
+
+    if [ ! -d "${rbxeBase}" ] ; then
+	EH_problem "Missing ${rbxeBase}"
+	lpReturn 101
+    fi
+
+    ANT_raw "RBXE File Params:"
+    find ${rbxeBase} -print | grep -i value | xargs grep ^.
+
+    local bxeTreeBase="${bxoHome}/bxeTree"
+
+    if [ ! -d "${bxeTreeBase}" ] ; then
+	EH_problem "Missing ${bxeTreeBase}"
+	lpReturn 101
+    fi
+
+    ANT_raw "bxeTree File Params:"
+    find ${bxeTreeBase} -print | grep -i value | xargs grep ^.
+}
 
 
 _CommentBegin_
