@@ -529,7 +529,7 @@ vis_bxeDescCreate () {
 
     opDoExit cd ${privRegAcctTypeBxeDescBase}
 
-    BxeDescList=$( ls | grep -v CVS | grep -v bxeType.roid | sort )
+    BxeDescList=$( ls | grep -v CVS | grep -v bxeType.roid | sort -n)
 	
     selectorNu=1
     
