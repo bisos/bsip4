@@ -124,52 +124,147 @@ function vis_examples {
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
     #oneBxoId="prs-bisos"
-    oneBxoId="${currentBxoId}"
-    oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )    
+    #oneBxoId="${currentBxoId}"
+    oneBxoId="pic_dnsServer"    
+    oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )
+
+    function repoBaseCreateAndPushExamples {
+	EH_assert [[ $# -eq 2 ]]
+	local repoName=$1
+	local description=$2
+	cat  << _EOF_
+$( examplesSeperatorSection "${description}" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBaseCreate_${repoName}
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBasePush ${repoName}
+_EOF_
+    }	
     
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
-$( examplesSeperatorChapter "Initial Bxe Realize" )
+$( examplesSeperatorChapter "Provisioning: Initial BxE Realize -- Full Actions" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i fullCreateAndPush
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i kindTypeRealizeRepoBasesCreate
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i kindTypeRealizeRepoBasesPush
-$( examplesSeperatorChapter "Specialized SubTypes" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i regBxeBasesCreate
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i regBxeBasesPush
-$( examplesSeperatorChapter "Using Facilities" )
-registrarCentralBxe.sh  # Need not be visible to BISOS
-registrarPrivBxe.sh
-registrarPrivNic.sh     # NOTYET -- Priv Nic -- Priv IP addr reg
-registrarPubNic.sh     # NOTYET -- Pub Nic -- Pub IP addr reg
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i basesFullCreate
+$( examplesSeperatorChapter "Specific Initial Repo Realizition" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBasesList
+$( repoBaseCreateAndPushExamples svcsSpec "svcsSpec Repo (Services Specifications)" )
+$( repoBaseCreateAndPushExamples sysSpec "sysSpec Repo (System Specifications)" )
+$( repoBaseCreateAndPushExamples sysSpec "sysChar Repo (System Character)" )
+$( repoBaseCreateAndPushExamples containerBxO "Container BxO Repo" )
+$( repoBaseCreateAndPushExamples deploymentRecords "Deployment Records Repo" )
+$( repoBaseCreateAndPushExamples panel "BxO Panel Repo" )
+$( examplesSeperatorChapter "Bases Create" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i baseCreate_var
 _EOF_
 }
 
-
-function vis_kindTypeRealizeRepoBasesCreate {
-   G_funcEntry
+function vis_repoBasesList {
+    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
 
-    EH_assert  vis_userAcctExists "${bxoId}"    
+    cat  << _EOF_
+panel
+containerSpec
+_EOF_
 
     lpReturn
 }
 
+function vis_basesList {
+    cat  << _EOF_
+var
+_EOF_
+}
 
-function vis_kindTypeRealizeRepoBasesPush {
-   G_funcEntry
+
+function vis_basesFullCreate {
+    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-    }
+		       }
     EH_assert [[ $# -eq 0 ]]
     EH_assert [ ! -z "${bxoId}" ]
 
-    EH_assert  vis_userAcctExists "${bxoId}"    
+    EH_assert  vis_userAcctExists "${bxoId}"
+
+    local each
+
+    for each in $(vis_basesList) ; do
+	lpDo vis_baseCreate_${each}
+    done
+
+
+    lpReturn
+}	
+
+function vis_repoBaseCreate_containerSpec {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		       }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bxoId}" ]
+
+    EH_assert  vis_userAcctExists "${bxoId}"
+
+    local repoName=${FUNCNAME##vis_repoBaseCreate_}
+    local repoBase="${bxoHome}/${repoName}"
+
+    lpDo FN_dirCreatePathIfNotThere "${repoBase}"
+
+    lpDo eval cat  << _EOF_  \> "${repoBase}/README.org"
+BxO Repo: ${repoBase} 
+Base for file params
+_EOF_
+
+    local platformInfoBase=${repoBase}/platformInfo.fps
+    
+    lpDo mkdir -p ${platformInfoBase}
+
+    # One of: BxCO-VmHost, BxCO-Guest, BxCO-PureSys
+    lpDo fileParamManage.py -i fileParamWrite ${platformInfoBase} containerType "BXCO-Guest"
+    
+    lpDo fileParamManage.py -i fileParamWrite ${platformInfoBase} boxPath "~pip_clusterNedaBoxes/boxes/1001"
+    lpDo fileParamManage.py -i fileParamWrite ${platformInfoBase} vmGuestLeastSize "medium"
+
+    # Internet Exposure, one of: Exposed, Perimeter, Private
+    lpDo fileParamManage.py -i fileParamWrite ${platformInfoBase} internetExposure "private"    
+
+    # Network Mode, one of: Fixed, Anchored, Auto
+    lpDo fileParamManage.py -i fileParamWrite ${platformInfoBase} networkMode "fixed"
+
+    local netAttachmentsBase=${repoBase}/netAttachments.fps
+    lpDo mkdir -p ${netAttachmentsBase}
+
+    lpDo mkdir -p ${netAttachmentsBase}/if1
+    
+    lpDo mkdir -p ${netAttachmentsBase}/if1/ipv4
+    lpDo mkdir -p ${netAttachmentsBase}/if1/ipv4/ipAddrs
+    lpDo mkdir -p ${netAttachmentsBase}/if1/ipv4/ipAddrs/addr1.fps
+    lpDo fileParamManage.py -i fileParamWrite ${netAttachmentsBase}/if1/ipv4/ipAddrs/addr1.fps addr "192.168.0.151"
+    lpDo fileParamManage.py -i fileParamWrite ${netAttachmentsBase}/if1/ipv4/ipAddrs/addr1.fps gateway "192.168.0.220"
+    lpDo fileParamManage.py -i fileParamWrite ${netAttachmentsBase}/if1/ipv4/ipAddrs/addr1.fps netmask "24"
+    
+    lpDo mkdir -p ${netAttachmentsBase}/if1/resolvers
+    lpDo mkdir -p ${netAttachmentsBase}/if1/resolvers/auto.fps
+    lpDo mkdir -p ${netAttachmentsBase}/if1/resolvers/dns1.fps
+
+    lpDo mkdir -p ${netAttachmentsBase}/if1/routes
+    lpDo mkdir -p ${netAttachmentsBase}/if1/routes/auto.fps
+    lpDo mkdir -p ${netAttachmentsBase}/if1/routes/route1.fps
+
+    local identityBase=${repoBase}/identity.fps
+    lpDo mkdir -p ${identityBase}
+    lpDo fileParamManage.py -i fileParamWrite ${identityBase} name "bisp-9001"
+    
+    lpDo bx-gitRepos -h -v -n showRun -i baseUpdateDotIgnore "${repoBase}"
 
     lpReturn
 }	

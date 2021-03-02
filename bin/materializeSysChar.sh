@@ -139,16 +139,18 @@ ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_create    # on ho
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_create testNetSet   # on host - vag-ssh
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_run       # on host - ends with image
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_run testNetSet      # on host - ends with image
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vmCustomize           # using virsh sets up guest ip addrs
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vmRun                 # on host
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i postCustomize  # on host - bx-ssh
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i secureSeal     # on host - bx-ssh
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i recordDeployment      # inside of parent bxo
 $( examplesSeperatorChapter "Vagrantfile Stdout and Creation " )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_bottomPart
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_bottomPart testNetSet
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_stdout    # on host
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_stdout testNetSet
+$( examplesSeperatorChapter "Post Vagrant Virsh Activities" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vmCustomize           # using virsh sets up guest ip addrs
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vmRun                 # on host
+$( examplesSeperatorChapter "Ssh Based Cusomizations -- Bx Based (not vagrant based)" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i postCustomize  # on host - bx-ssh
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i secureSeal     # on host - bx-ssh
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i recordDeployment      # inside of parent bxo
 _EOF_
 }
 
@@ -156,7 +158,7 @@ _EOF_
 function vis_vagrantFile_path {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-stdout path to Vagrantfile's base directory.
+stdout path to Vagrantfile's base directory of the bxoHome.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -311,8 +313,9 @@ _EOF_
 function vis_vmCustomize {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-- bxoService preparations/settings based on svcsSpec.
+- using virsh sets up guest ip addrs
 - Network settings based on bxoContainer.
+- bxoService preparations/settings based on svcsSpec.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
