@@ -151,6 +151,12 @@ $( examplesSeperatorChapter "Site And BxO Information" )
 ls -ld ${networksBase}/*
 $( examplesSeperatorChapter "This Network Actions" )
 ${G_myName} -i netsReport
+$( examplesSeperatorChapter "This Network Actions" )
+${G_myName} -i netAddr pubNetA
+${G_myName} -i netAddr privNetA
+$( examplesSeperatorChapter "This Network Actions" )
+${G_myName} -i netmask pubNetA
+${G_myName} -i netAddr privNetA
 _EOF_
 }
 
@@ -177,3 +183,46 @@ _EOF_
    
    find ${netDefinitions} -print | grep value | xargs egrep ^.
 }
+
+function vis_netAddr {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   
+   EH_assert [[ $# -eq 1 ]]
+
+   local netName="$1"
+
+   local networksBase=$( networksBaseObtain )
+
+   EH_assert [ ! -z "${networksBase}" ]
+
+   local netBase=${networksBase}/netDefinitions.fv/${netName}
+
+   local netAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} netAddr )
+
+   echo ${netAddr}
+}
+
+function vis_netmask {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   
+   EH_assert [[ $# -eq 1 ]]
+
+   local netName="$1"
+
+   local networksBase=$( networksBaseObtain )
+
+   EH_assert [ ! -z "${networksBase}" ]
+
+   local netBase=${networksBase}/netDefinitions.fv/${netName}
+
+   local netAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} netmask )
+
+   echo ${netAddr}
+}
+
