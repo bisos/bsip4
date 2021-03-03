@@ -21,19 +21,29 @@ function vis_examples {
   typeset extraInfo="-h -v -n showRun"
   #typeset extraInfo="-h"
   local defaultInterface=$( vis_defaultInterface )
-
+  local defaultIPAddr=$( vis_defaultIPAddr )
+  
+  
     typeset visLibExamples=`visLibExamplesOutput ${G_myName}`
  cat  << _EOF_
 EXAMPLES:
 ${visLibExamples}
 --- Interfaces ---
-${G_myName} -i defaultInterface # based on default route
-${G_myName} -i givenInterfaceGetIPAddr ${defaultInterface}
 ${G_myName} -i ipLinkList
 ${G_myName} -i ipAddrList
-${G_myName} -i ipAddrFindGivenThisNet 192.168.0
-${G_myName} -i ipAddrGetGivenInterface ${defaultInterface}
-${G_myName} -i ipAddrGetGivenInterface tun0
+${G_myName} -i ipMacList
+---
+${G_myName} -i defaultInterface # based on default route
+${G_myName} -i defaultIPAddr # based on default route
+---
+${G_myName} -i givenInterfaceGetIPAddr ${defaultInterface}
+${G_myName} -i givenNetGetInterface 192.168.0.0 24
+${G_myName} -i givenNetGetIPAddr 192.168.0.0 24
+${G_myName} -i givenIPAddrGetInterface ${defaultIPAddr}
+--- 
+${G_myName} -i givenInterfaceGetBcastAddr ${defaultInterface}
+${G_myName} -i givenInterfaceGetMask ${defaultInterface}
+${G_myName} -i givenInterfaceGetMacAddr ${defaultInterface}
 --- Interfaces ---
 netstat -i
 ifconfig -a
@@ -64,7 +74,7 @@ iptables -t nat -n -L
 ${G_myName} -i modProbeIpTables
 ${G_myName} -i ipTablesShow
 --- LOGS AND REPORTS ---
-lynx -dump "http://api.hostip.info/rough.php?ip=198.62.92.15"
+lynx -dump "http://api.hostip.info/rough.php?ip=8.8.8.8"
 traceroute ftp.uu.net | cut -d"(" -f2 | cut -d")" -f1 | xargs -i lynx -dump "http://api.hostip.info/rough.php?ip={}" | grep City
 whois -h whois.radb.net 198.62.92
 ${G_myName} -i showLog
