@@ -76,17 +76,11 @@ _CommentEnd_
 
 . ${opBinBase}/bisosCurrents_lib.sh
 
-
-setBasicItemsFiles opMachineItems
-
-typeset -t opSiteName="nedaPlus"
-
-
 # PRE parameters
-typeset -t siteName="MANDATORY"
+typeset -t type=""
+typeset -t purpose=""
 
-
-function ppBoxesBaseObtain {
+function containersBaseObtain {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -94,30 +88,30 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
     
     usgHome=$( FN_absolutePathGet ~ )
-    # ~/bisos/sites/selected/siteBpos.fv/ppBoxes
-    local selectedPpBoxesPath="${usgHome}/bisos/sites/selected/siteBpos.fv/ppBoxes"
+    # ~/bisos/sites/selected/siteBpos.fv/containers
+    local selectedContainersPath="${usgHome}/bisos/sites/selected/siteBpos.fv/containers"
     
-    local ppBoxesBxoId=""
+    local containersBxoId=""
 
-    if [ -d "${selectedPpBoxesPath}" ] ; then
-	ppBoxesBxoId=$( fileParamManage.py -i fileParamReadPath ${selectedPpBoxesPath} )
-	if [ -z "${ppBoxesBxoId}" ] ; then
-	    EH_problem "Missing ppBoxesBxoId"
+    if [ -d "${selectedContainersPath}" ] ; then
+	containersBxoId=$( fileParamManage.py -i fileParamReadPath ${selectedContainersPath} )
+	if [ -z "${containersBxoId}" ] ; then
+	    EH_problem "Missing containersBxoId"
 	    lpReturn 101
 	fi
-	if ! vis_bxoAcctVerify "${ppBoxesBxoId}" ; then
-	    EH_problem "Missing ppBoxesBxoId"
+	if ! vis_bxoAcctVerify "${containersBxoId}" ; then
+	    EH_problem "Missing containersBxoId"
 	    lpReturn 101
 	fi
      else
-	EH_problem "Missing ${selectedPpBoxesPath}"
+	EH_problem "Missing ${selectedContainersPath}"
 	lpReturn 101
     fi
 
-    local ppBoxesBase=$( FN_absolutePathGet ~${ppBoxesBxoId} )/boxes
-    EH_assert [ -d "${ppBoxesBase}" ]
+    local containersBase=$( FN_absolutePathGet ~${containersBxoId} )/containers
+    EH_assert [ -d "${containersBase}" ]
 
-    echo "${ppBoxesBase}"
+    echo "${containersBase}"
 
     lpReturn
 }	
@@ -140,26 +134,21 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
-    local ppBoxesBase=$( ppBoxesBaseObtain )
+    local containersBase=$( containersBaseObtain )
+    EH_assert [ ! -z "${containersBase}" ]
 
+    local boxId=$( sitePpBoxAssign.sh -i thisBoxFindId )
+		   
     visLibExamplesOutput ${G_myName}
     # ${doLibExamples} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Site And BxO Information" )
-ls -ld ${ppBoxesBase}/*
+ls -ld ${containersBase}/*
 $( examplesSeperatorChapter "This Box Actions" )
-${G_myName} -i thisBoxNuFindNu
-${G_myName} ${extraInfo} -i thisBoxNuFindNu
-${G_myName} ${extraInfo} -i thisBoxNuFindBase
-${G_myName} ${extraInfo} -i thisBoxAdd
-${G_myName} ${extraInfo} -i thisBoxNuUpdateAt $(vis_thisBoxNuFindNu)
-$( examplesSeperatorChapter "Uniue Box Id" )
-${G_myName} ${extraInfo} -i myUniqueBoxId
-${G_myName} ${extraInfo} -i givenUniqueBoxIdFindBoxNuBase $(vis_myUniqueBoxId)
-$( examplesSeperatorChapter "Next BoxNu" )
-${G_myName} ${extraInfo} -i boxNuGetNext
-${G_myName} -i boxNuGetNext
+${G_myName} ${extraInfo} -i typePurposeBaseDirsCreate
+${G_myName} ${extraInfo} -p type=h -p purpose=bipc -i containerNuGetNext
+${G_myName} ${extraInfo} -i boxIdFindContainerBase ${boxId}
 _EOF_
 }
 
@@ -168,116 +157,86 @@ noArgsHook() {
   vis_examples
 }
 
-function vis_thisBoxNuUpdateAt {
+function vis_typePurposeBaseDirsCreate {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
 		      }
-   
-   EH_assert [[ $# -eq 1 ]]
-   local boxNu="$1"
+   EH_assert [[ $# -eq 0 ]]
 
-   local ppBoxesBase=$( ppBoxesBaseObtain )
+   local containersBase=$( containersBaseObtain )
+   EH_assert [ ! -z "${containersBase}" ] 
 
-   EH_assert [ ! -z "${ppBoxesBase}" ] 
+   local types=("h" "p" "v")
+   local purposes=("bgec" "bpsc" "bipc" "bluc" "bauc" "bdc")
 
-   local boxNuBase="${ppBoxesBase}/${boxNu}"
-
-   EH_assert [ -d "${boxNuBase}" ]
-
-   local my_uniqueBoxId=$(vis_myUniqueBoxId)
-   local stored_uniqueBoxId=$( fileParamManage.py -i fileParamRead  ${boxNuBase} uniqueBoxId )
-
-   if [ -z "${stored_uniqueBoxId}" ] ; then
-       lpDo fileParamManage.py -i fileParamWrite ${boxNuBase} uniqueBoxId "${my_uniqueBoxId}"
-   else
-       if [ "${my_uniqueBoxId}" != "${stored_uniqueBoxId}" ] ; then
-	   EH_problem "Expected ${my_uniqueBoxId} -- got ${stored_uniqueBoxId}"
-	   lpReturn 101
-       fi
-   fi
-
-   local stored_boxNu=$( fileParamManage.py -i fileParamRead  ${boxNuBase} boxNu )
-
-   if [ -z "${stored_boxNu}" ] ; then
-       lpDo fileParamManage.py -i fileParamWrite ${boxNuBase} boxNu "${boxNu}"
-   else
-       if [ "${boxNu}" != "${stored_boxNu}" ] ; then
-	   EH_problem "Expected ${boxNu} -- got ${stored_boxNu}"
-	   lpReturn 101
-       fi
-   fi
-
-   local my_boxName="box${boxNu}"
-   local stored_boxName=$( fileParamManage.py -i fileParamRead  ${boxNuBase} boxName )
-
-   if [ -z "${stored_boxName}" ] ; then
-       lpDo fileParamManage.py -i fileParamWrite ${boxNuBase} boxName "${my_boxName}"
-   else
-       if [ "${my_boxName}" != "${stored_boxName}" ] ; then
-	   EH_problem "Expected ${my_boxName} -- got ${stored_boxName}"
-	   lpReturn 101
-       fi
-   fi
+   for eachType in ${types[@]} ;  do
+       for eachPurpose in ${purposes[@]} ; do
+	   lpDo mkdir -p  ${containersBase}/${eachType}-${eachPurpose}
+       done
+   done
 
    lpReturn
 }	
 
-function vis_boxNuGetNext {
+function vis_containerNuGetNext {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
 		      }
-   
    EH_assert [[ $# -eq 0 ]]
+   EH_assert [ ! -z "${type}" ]
+   EH_assert [ ! -z "${purpose}" ]   
 
-   local ppBoxesBase=$( ppBoxesBaseObtain )
+   local containersBase=$( containersBaseObtain )
+   EH_assert [ ! -z "${containersBase}" ]
 
-   EH_assert [ ! -z "${ppBoxesBase}" ] 
-
-   opDoExit pushd "${ppBoxesBase}" > /dev/null
-   local lastBoxNu=$(  ls  | sort -n | tail -1 )
-   opDoExit popd > /dev/null
+   local typePusposeBase="${containersBase}/${type}-${purpose}"
+   EH_assert [ -d "${typePusposeBase}" ]
    
-   local nextBoxNu=$( expr ${lastBoxNu} +  1 )
+   opDoExit pushd "${typePusposeBase}" > /dev/null
+   local lastContainer=$(  ls  | sort -n | tail -1 )
+   if [ -z "${lastContainer}" ] ; then
+       lastContainer=1000
+   fi
+   opDoExit popd > /dev/null
 
-   echo ${nextBoxNu}   
+   local nextContainer=$( expr ${lastContainer} +  1 )
+
+   echo ${nextContainer}   
 }
 
 
-function vis_givenUniqueBoxIdFindBoxNuBase {
+function vis_boxIdFindContainerBase {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
 		      }
    
    EH_assert [[ $# -eq 1 ]]
-   local uniqueBoxId="$1"
+   local boxId="$1"
 
-   local ppBoxesBase=$( ppBoxesBaseObtain )
+   local containersBase=$( containersBaseObtain )
+   EH_assert [ ! -z "${containersBase}" ] 
 
-   EH_assert [ ! -z "${ppBoxesBase}" ] 
+   local boxIdFps=$( find ${containersBase} -type d -print | grep boxId )
 
-   local boxNuBaseDirs=$( ls -d ${ppBoxesBase}/* )
-
-   local eachBoxNuBase=""
-   local stored_uniqueBoxId=""
+   local eachBoxIdFp=""
+   local stored_boxId=""
    local found=""
 
-   for eachBoxNuBase in ${boxNuBaseDirs} ; do   
+   for eachBoxIdFp in ${boxIdFps} ; do   
+       stored_boxId=$( fileParamManage.py -i fileParamRead ${eachBoxIdFp} boxId )
 
-       stored_uniqueBoxId=$( fileParamManage.py -i fileParamRead ${eachBoxNuBase} uniqueBoxId )
-
-       if [ -z "${stored_uniqueBoxId}" ] ; then
-	   EH_problem "Missing uniqueBoxId in ${eachBoxNuBase}"
+       if [ -z "${stored_boxId}" ] ; then
+	   EH_problem "Missing boxId in ${eachBoxIdFp} -- continuing"
 	   continue
        else
-	   if [ "${uniqueBoxId}" == "${stored_uniqueBoxId}" ] ; then
-	       found=${eachBoxNuBase}
+	   if [ "${boxId}" == "${stored_boxId}" ] ; then
+	       found=${eachBoxIdFp}
 	       break
 	   fi
        fi
-
    done
 
    echo ${found}
@@ -285,7 +244,7 @@ _EOF_
    lpReturn
 }	
 
-function vis_thisBoxNuFindNu {
+function vis_thisBoxFindNu {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -293,10 +252,10 @@ _EOF_
 
    EH_assert [[ $# -eq 0 ]]
    
-   FN_nonDirsPart $( vis_thisBoxNuFindBase )
+   FN_nonDirsPart $( vis_thisBoxFindBase )
 }
 
-function vis_thisBoxNuFindBase {
+function vis_thisBoxFindBase {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -304,7 +263,7 @@ _EOF_
 
    EH_assert [[ $# -eq 0 ]]
    
-   vis_givenUniqueBoxIdFindBoxNuBase $(vis_myUniqueBoxId)
+   vis_givenUniqueBoxIdFindContainerBase $(vis_myUniqueBoxId)
 }
 
 
@@ -330,23 +289,23 @@ _EOF_
 
    EH_assert [[ $# -eq 0 ]]
 
-   local ppBoxesBase=$( ppBoxesBaseObtain )
+   local containersBase=$( containersBaseObtain )
 
-   EH_assert [ ! -z "${ppBoxesBase}" ]
+   EH_assert [ ! -z "${containersBase}" ]
 
-   local boxNuBase=$( vis_givenUniqueBoxIdFindBoxNuBase $(vis_myUniqueBoxId) )
-   local nextBoxNu=""
-   local nextBoxNuBase=""   
+   local containerBase=$( vis_givenUniqueBoxIdFindContainerBase $(vis_myUniqueBoxId) )
+   local nextContainer=""
+   local nextContainerBase=""   
 
-   if [ -z ${boxNuBase} ] ; then
+   if [ -z ${containerBase} ] ; then
        # So we need to create it
-       nextBoxNu=$( vis_boxNuGetNext )
-       local nextBoxNuBase="${ppBoxesBase}/${nextBoxNu}"
+       nextContainer=$( vis_containerGetNext )
+       local nextContainerBase="${containersBase}/${nextContainer}"
 
-       lpDo mkdir -p ${nextBoxNuBase}
+       lpDo mkdir -p ${nextContainerBase}
 
-       lpDo vis_thisBoxNuUpdateAt ${nextBoxNu}
+       lpDo vis_thisContainerUpdateAt ${nextContainer}
    else
-       ANT_raw "This Box Already Exists As ${boxNuBase} -- Creation/Update Skipped"
+       ANT_raw "This Box Already Exists As ${containerBase} -- Creation/Update Skipped"
    fi
 }
