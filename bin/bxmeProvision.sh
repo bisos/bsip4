@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IimBriefDescription="Bx Information Entity Provisioning -- From RegReq to Realize"
+IimBriefDescription="Bx Service Entity Provisioning -- From RegReq to Realize"
 
 ORIGIN="
 * Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee
@@ -20,7 +20,7 @@ SEED="
 *  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
 "
 FILE="
-*  /This File/ :: /bisos/core/bsip/bin/bxcieProvision.sh 
+*  /This File/ :: /bisos/core/bsip/bin/bxcseProvision.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
     /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
@@ -78,7 +78,7 @@ _CommentEnd_
 baseDir=""
 
 function G_postParamHook {
-    lpCurrentsGet    
+    lpDo lpCurrentsGet
     return 0
 }
 
@@ -96,7 +96,7 @@ function vis_examples {
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
     local oneBxoId=${currentBxoId}    
-    
+
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
@@ -105,18 +105,14 @@ bisosCurrentsManage.sh
 bisosCurrentsManage.sh ${extraInfo} -i setParam currentBxoId ${oneBxoId}
 bisosCurrentsManage.sh ${extraInfo} -i setParam cur_bxoId_parent ${oneBxoId}
 _EOF_
-  vis_examplesBxInfoEntity all all
+  vis_examplesBxMaterializationEntity all all
    cat  << _EOF_
 $( examplesSeperatorChapter "Selected Specific Types and Scopes" )
-${G_myName} ${extraInfo} -i examplesBxInfoEntity all all full
-${G_myName} ${extraInfo} -i examplesBxInfoEntity all regReqCreate all
-${G_myName} ${extraInfo} -i examplesBxInfoEntity registrar all essentials
-${G_myName} ${extraInfo} -i examplesBxInfoEntity site all essentials
-${G_myName} ${extraInfo} -i examplesBxInfoEntity sysChar all essentials
-${G_myName} ${extraInfo} -i examplesBxInfoEntity usage all essentials
-${G_myName} ${extraInfo} -i examplesBxInfoEntity project all essentials
-${G_myName} ${extraInfo} -i examplesBxInfoEntity virtGuest all essentials
-$( examplesSeperatorChapter "Registraion Request -- RegReq Creation" )
+${G_myName} ${extraInfo} -i examplesBxMaterializationEntity all all full
+${G_myName} ${extraInfo} -i examplesBxMaterializationEntity all regReqCreate all
+${G_myName} ${extraInfo} -i examplesBxMaterializationEntity container all essentials
+${G_myName} ${extraInfo} -i examplesBxMaterializationEntity sysChar all essentials
+$( examplesSeperatorChapter "Registration Request -- RegReq Creation" )
 bxeRegReqManage.sh
 $( examplesSeperatorChapter "Central Registration Of The Request -- BxeDesc Creation" )
 selfCentralRegistrar.sh
@@ -127,6 +123,7 @@ $( examplesSeperatorChapter "BxO And Git Accts Creation -- BxeRealization and Bx
 bxeRealize.sh
 _EOF_
 
+    
 }
 
 noArgsHook() {

@@ -214,6 +214,22 @@ _EOF_
 		    ;;
 	    esac
 	    ;;
+	"materialization")
+	    case ${bxeType} in
+		"container")
+		    alpha="mc"
+		    numeric=121
+		    ;;
+		"sysChar")
+		    alpha="ms"
+		    numeric=122
+		    ;;
+		*)
+		    EH_problem "bxeType=${bxeType} -- Unexpected"
+		    return
+		    ;;
+	    esac
+	    ;;
 	*)
 	    EH_problem "bxeKind=${bxeKind} -- Unexpected"
 	    return

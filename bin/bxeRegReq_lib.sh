@@ -201,6 +201,15 @@ function vis_examplesBxContainerAndroid {
     bxeParamsFull="-p privacy=\"priv\" -p kind=\"container\" -p type=\"Android\" -p parent=\"${cur_bxoId_parent}\" -p name=\"andrd\" "    
 }
 
+function vis_examplesBxMaterializationContainer {
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"materialization\" -p type=\"container\" -p parent=\"${cur_bxoId_parent}\" -p name=\"HSS-1001\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"materialization\" -p type=\"container\" -p parent=\"${cur_bxoId_parent}\" -p name=\"HSS-1001\" "    
+}
+
+function vis_examplesBxMaterializationSysChar {
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"materialization\" -p type=\"sysChar\" -p parent=\"${cur_bxoId_parent}\" -p name=\"HSS-1001\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"materialization\" -p type=\"sysChar\" -p parent=\"${cur_bxoId_parent}\" -p name=\"HSS-1001\" "    
+}
 
 
 function vis_regReqStdout {
@@ -482,6 +491,37 @@ _EOF_
 
 
 regReqContainerStdoutSpecific_container_android () {
+    EH_assert [[ $# -eq 1 ]]
+
+    if [ "$1" = "passive" ] ; then
+	regReqTag="${kind}_${type}_${name}"
+	return
+    fi
+
+    cat  << _EOF_
+    function regReqContainer_${kind}_${type} {
+      bc_name="${name}"
+    }
+_EOF_
+}
+
+
+regReqContainerStdoutSpecific_materialization_container () {
+    EH_assert [[ $# -eq 1 ]]
+
+    if [ "$1" = "passive" ] ; then
+	regReqTag="${kind}_${type}_${name}"
+	return
+    fi
+
+    cat  << _EOF_
+    function regReqContainer_${kind}_${type} {
+      bc_name="${name}"
+    }
+_EOF_
+}
+
+regReqContainerStdoutSpecific_materialization_sysType () {
     EH_assert [[ $# -eq 1 ]]
 
     if [ "$1" = "passive" ] ; then

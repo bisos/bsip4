@@ -669,6 +669,78 @@ _EOF_
 }
 
 
+function vis_examplesBxMaterializationEntity {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -ge 0 ]]
+
+    bxeKind="svc"    
+
+    local bxeType="all"
+    local provisioningScope="all"
+    local paramsDetail="all"
+
+    if [ $# -eq 0 ] ; then
+	bxeType="all"
+	provisioningScope="all"
+	paramsDetail="all"	
+    elif [ $# -eq 1 ] ; then
+	vis_examplesHeader
+	bxeType="$1"
+	provisioningScope="all"
+	paramsDetail="all"		
+    elif [ $# -eq 2 ] ; then
+	vis_examplesHeader
+    	bxeType="$1"
+	provisioningScope="$2"
+	paramsDetail="all"			
+    elif [ $# -eq 3 ] ; then
+	vis_examplesHeader
+    	bxeType="$1"
+	provisioningScope="$2"
+	paramsDetail="$3"			
+    else
+	EH_problem "Expected 0,1,2or3 args, got $#"
+	lpReturn 101
+    fi
+    
+    extraInfo="-h -v -n showRun"
+    typeset extraInfo="-h -v -n showRun"
+    #typeset extraInfo=""
+    typeset runInfo="-p ri=lsipusr:passive"
+
+    typeset examplesInfo="${extraInfo} ${runInfo}"
+
+    cat  << _EOF_
+$( examplesSeperatorChapter "Bx Materialization Entity" )
+_EOF_
+	
+    case "${bxeType}" in
+	container)
+	    vis_examplesBxMaterializationContainer
+	    vis_examplesApplyProvisioners "ByStar Container Materialization Entity" ${provisioningScope}  ${paramsDetail}
+	    ;;
+	sysChar)
+	    vis_examplesBxMaterializationSysChar
+	    vis_examplesApplyProvisioners "ByStar SysChar Materialization Entity" ${provisioningScope}  ${paramsDetail}
+	    ;;
+	all)	
+	    vis_examplesBxMaterializationContainer
+	    vis_examplesApplyProvisioners "ByStar Container Materialization Entity" ${provisioningScope}  ${paramsDetail}
+	    vis_examplesBxMaterializationSysChar
+	    vis_examplesApplyProvisioners "ByStar SysChar Materialization Entity" ${provisioningScope}  ${paramsDetail}
+	    ;;
+	*)
+	    EH_problem "Bad bxeType -- ${bxeType}"
+	    lpReturn 101
+	    ;;
+    esac
+
+}
+
+
 function vis_startToBxReg {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_

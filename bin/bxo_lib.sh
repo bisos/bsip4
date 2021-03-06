@@ -117,6 +117,9 @@ _EOF_
       container)
 	    bxeKindTag="bxco"
 	    ;;
+      materialization)
+	    bxeKindTag="bxmo"
+	    ;;
       *)
 	    EH_problem "Unknown bxeKind=${bxeKind}"
 	    return 101

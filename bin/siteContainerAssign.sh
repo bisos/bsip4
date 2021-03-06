@@ -485,10 +485,14 @@ _EOF_
        lpDo fileParamManage.py -i fileParamWrite ${containerBase} containerId "${containerId}"
    else
        if [ "${containerId}" != "${stored_containerId}" ] ; then
-	   EH_problem "Expected ${containerId} -- got ${stored_containerId}"
-	   lpReturn 101
+	   EH_problem "Expected ${containerId} -- got ${stored_containerId} -- Updating it."
+	   lpDo fileParamManage.py -i fileParamWrite ${containerBase} containerId "${containerId}"
        fi
    fi
+
+   lpDo fileParamManage.py -i fileParamWrite ${containerBase} model "${model}"
+   lpDo fileParamManage.py -i fileParamWrite ${containerBase} abode "${abode}"
+   lpDo fileParamManage.py -i fileParamWrite ${containerBase} function "${function}"         
 
    lpReturn
 }	

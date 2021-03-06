@@ -102,13 +102,14 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "vmHosting Bystar Portable Materialization Object Realization" )
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerAssign
-${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerRealize
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i sysCharRealize
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i sysCharMaterialize
 ${G_myName} ${extraInfo} -p bxoId=NOTYET -i hostingMaterialize
 $( examplesSeperatorChapter "VirtualGuest Bystar Portable Materialization Object Realization" )
 ${G_myName} ${extraInfo} -i vmGuestRealize
 ${G_myName} ${extraInfo} -i vmGuestMaterialize
+$( examplesSeperatorChapter "VirtualGuest Bystar Portable Materialization Object Realization" )
+${G_myName} ${extraInfo} -i containerRealize HSS-1001
 _EOF_
 }
 
@@ -116,43 +117,6 @@ _EOF_
 noArgsHook() {
   vis_examples
 }
-
-
-function ppBoxesBaseObtain {
-   G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-    
-    usgHome=$( FN_absolutePathGet ~ )
-    # ~/bisos/sites/selected/siteBpos.fv/ppBoxes
-    local selectedPpBoxesPath="${usgHome}/bisos/sites/selected/siteBpos.fv/ppBoxes"
-    
-    local ppBoxesBxoId=""
-
-    if [ -d "${selectedPpBoxesPath}" ] ; then
-	ppBoxesBxoId=$( fileParamManage.py -i fileParamReadPath ${selectedPpBoxesPath} )
-	if [ -z "${ppBoxesBxoId}" ] ; then
-	    EH_problem "Missing ppBoxesBxoId"
-	    lpReturn 101
-	fi
-	if ! vis_bxoAcctVerify "${ppBoxesBxoId}" ; then
-	    EH_problem "Missing ppBoxesBxoId"
-	    lpReturn 101
-	fi
-     else
-	EH_problem "Missing ${selectedPpBoxesPath}"
-	lpReturn 101
-    fi
-
-    local ppBoxesBase=$( FN_absolutePathGet ~${ppBoxesBxoId} )/boxes
-    EH_assert [ -d "${ppBoxesBase}" ]
-
-    echo "${ppBoxesBase}"
-
-    lpReturn
-}	
 
 function vis_containerAssign {
    G_funcEntry
@@ -191,13 +155,39 @@ _EOF_
        containerNu=$( FN_nonDirsPart $( FN_dirsPart ${existingContainerBase} ))
    fi
 
-   lpDo siteContainerAssign.sh -p model=${model} -p abode=${abode} -p function=${function} -i containerUpdate_atNu "${containerNu}"
+   lpDo siteContainerAssign.sh -v -n showRun -p model=${model} -p abode=${abode} -p function=${function} -i containerUpdate_atNu "${containerNu}"
 
-   local stored_containerId=$( fileParamManage.py -i fileParamRead  ${containerBase} containerId )
+   local containerBase=$( siteContainerAssign.sh -p model=${model} -p abode=${abode} -p function=${function} -i assignedContainerBase "${containerNu}" )
+
+   lpDo  fileParamManage.py -i fileParamRead  ${containerBase} containerId
+
+   lpReturn
+}	
 
 
-   #echo "We now have enough info to assign and realize a bxo for boxId=${thisBoxId} containerBase=${existingContainerBase}"
+function vis_containerRealize {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+For the subject physical sys identified by system-uuid, create a sysChar and everything else necessary.
+- First make sure that there are no exisiting entities matching system-uuid
+- We then create one number for this physical container
+- We then check the arg for sysType, (exposed, intra, etc).
+- Based on sysType, we then determine, which nets are needed.
+- We then register new IP addrs on the applicable nets for host.
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
+   local containerId=$1
 
+   local containerBase=$( siteContainerAssign.sh -i withContainerIdGetBase "${containerId}" )
+
+   model=$( fileParamManage.py -i fileParamRead  ${containerBase} model )
+   abode=$( fileParamManage.py -i fileParamRead  ${containerBase} abode )
+   function=$( fileParamManage.py -i fileParamRead  ${containerBase} function )      
+
+   echo ${containerBase}
+   echo ${function}
+   
    lpReturn
 }	
 
