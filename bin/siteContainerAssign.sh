@@ -77,8 +77,64 @@ _CommentEnd_
 . ${opBinBase}/bisosCurrents_lib.sh
 
 # PRE parameters
-typeset -t type=""
-typeset -t purpose=""
+typeset -t model=""     # one of [HPV]
+typeset -t abode=""     # one of [MAPIS]
+typeset -t function=""  # one of [LASD]
+
+function G_postParamHook {
+
+    lpCurrentsGet
+
+    lpReturn 0
+}
+
+
+function vis_examples {
+    typeset extraInfo="-h -v -n showRun"
+    #typeset extraInfo=""
+    typeset runInfo="-p ri=lsipusr:passive"
+    #typeset oneId=`ifconfig eth0 | grep HWaddr | cut -c 39-55`
+    local oneId=$( sudo dmidecode -s system-uuid )
+
+    typeset examplesInfo="${extraInfo} ${runInfo}"
+
+    local containersBase=$( containersBaseObtain )
+    EH_assert [ ! -z "${containersBase}" ]
+
+    local boxId=$( sitePpBoxAssign.sh -i thisBoxFindId )
+		   
+    visLibExamplesOutput ${G_myName}
+    # ${doLibExamples} 
+  cat  << _EOF_
+$( examplesSeperatorTopLabel "${G_myName}" )
+$( examplesSeperatorChapter "Containers Bases Information" )
+ls -ld ${containersBase}/*
+find ${containersBase} -print
+$( examplesSeperatorChapter "Containers Bases Initializations" )
+${G_myName} ${extraInfo} -i modelAbodeFunctionBaseDirsCreate    # create basis for nu assignments
+$( examplesSeperatorChapter "BoxId To ContainerId Mapping" )
+${G_myName} ${extraInfo} -i withBoxIdFindContainerNu ${boxId}
+$( examplesSeperatorChapter "Container Assignments" )
+${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerNuGetNext
+${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerUpdate_atNu
+$( examplesSeperatorChapter "Assigned Containers Report" )
+${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerReport_atNu 1001
+${G_myName} -i containerReport_atBase $( FN_dirsPart $( vis_withBoxIdFindContainerNu ${boxId} ))
+$( examplesSeperatorChapter "General Assignment Facilities" )
+${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerId 1001
+${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i assignedContainerBase 1001
+${G_myName} ${extraInfo} -i withContainerIdGetBase "HSS-1001"
+${G_myName} ${extraInfo} -i withInitialGetModel "H"     # one of: [HPV]
+${G_myName} ${extraInfo} -i withInitialGetAbode "S"     # one of: [AMPSI]
+${G_myName} ${extraInfo} -i withInitialGetFunction "S"  # one of: [LASD]
+_EOF_
+}
+
+
+noArgsHook() {
+  vis_examples
+}
+
 
 function containersBaseObtain {
    G_funcEntry
@@ -117,47 +173,7 @@ _EOF_
 }	
 
 
-function G_postParamHook {
-
-    lpCurrentsGet
-
-    lpReturn 0
-}
-
-
-function vis_examples {
-    typeset extraInfo="-h -v -n showRun"
-    #typeset extraInfo=""
-    typeset runInfo="-p ri=lsipusr:passive"
-    #typeset oneId=`ifconfig eth0 | grep HWaddr | cut -c 39-55`
-    local oneId=$( sudo dmidecode -s system-uuid )
-
-    typeset examplesInfo="${extraInfo} ${runInfo}"
-
-    local containersBase=$( containersBaseObtain )
-    EH_assert [ ! -z "${containersBase}" ]
-
-    local boxId=$( sitePpBoxAssign.sh -i thisBoxFindId )
-		   
-    visLibExamplesOutput ${G_myName}
-    # ${doLibExamples} 
-  cat  << _EOF_
-$( examplesSeperatorTopLabel "${G_myName}" )
-$( examplesSeperatorChapter "Site And BxO Information" )
-ls -ld ${containersBase}/*
-$( examplesSeperatorChapter "This Box Actions" )
-${G_myName} ${extraInfo} -i typePurposeBaseDirsCreate
-${G_myName} ${extraInfo} -p type=h -p purpose=bipc -i containerNuGetNext
-${G_myName} ${extraInfo} -i boxIdFindContainerBase ${boxId}
-_EOF_
-}
-
-
-noArgsHook() {
-  vis_examples
-}
-
-function vis_typePurposeBaseDirsCreate {
+function vis_modelAbodeFunctionBaseDirsCreate {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -167,17 +183,171 @@ _EOF_
    local containersBase=$( containersBaseObtain )
    EH_assert [ ! -z "${containersBase}" ] 
 
-   local types=("h" "p" "v")
-   local purposes=("bgec" "bpsc" "bipc" "bluc" "bauc" "bdc")
+   local models=("Host" "Pure" "Virt")
+   local abodes=("Mobile" "Auto" "Perim" "Internet" "Shield")
+   local functions=("LinuxU" "AndroidU" "Server" "Devel")   
 
-   for eachType in ${types[@]} ;  do
-       for eachPurpose in ${purposes[@]} ; do
-	   lpDo mkdir -p  ${containersBase}/${eachType}-${eachPurpose}
+   for eachModel in ${models[@]} ;  do
+       for eachAbode in ${abodes[@]} ; do
+	   for eachFunction in ${functions[@]} ; do
+	       lpDo mkdir -p  ${containersBase}/${eachModel}/${eachAbode}/${eachFunction}
+	   done
        done
    done
 
    lpReturn
-}	
+}
+
+function vis_withInitialGetModel {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
+   local modelInitial=$1
+   local result=""   
+
+   case "${modelInitial}" in
+       "H")
+	   result="Host"
+	   ;;
+       "P")
+	   result="Pure"
+	   ;;
+       "V")
+	   result="Virt"
+	   ;;
+       *)
+	   EH_problem "Bad Usage -- modelInitial=${modelInitial}"
+   esac
+   echo ${result}
+}
+
+function vis_withInitialGetAbode {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
+   local abodeInitial=$1
+   local result=""
+
+   case "${abodeInitial}" in
+       "A")
+	   result="Auto"
+	   ;;
+       "M")
+	   result="Mobile"
+	   ;;
+       "P")
+	   result="Perim"
+	   ;;
+       "S")
+	   result="Shield"
+	   ;;
+       "I")
+	   result="Internet"
+	   ;;
+       *)
+	   EH_problem "Bad Usage -- abodeInitial=${abodeInitial}"
+   esac
+   echo ${result}
+}
+
+
+function vis_withInitialGetFunction {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
+   local functionInitial=$1
+   local result=""
+
+   case "${functionInitial}" in
+       "L")
+	   result="LinuxU"
+	   ;;
+       "A")
+	   result="AndroidU"
+	   ;;
+       "S")
+	   result="Server"
+	   ;;
+       "D")
+	   result="Devel"
+	   ;;
+       *)
+	   EH_problem "Bad Usage -- functionInitial=${functionInitial}"
+   esac
+   echo ${result}
+}
+
+function vis_withContainerIdGetBase {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
+   local containerId=$1
+
+   local modelInitial=${containerId:0:1}
+   local abodeInitial=${containerId:1:1}
+   local functionInitial=${containerId:2:1}
+   local containerNu=$( echo ${containerId} |  sed -e 's:...-::' ) 
+
+   local thisModel=$( vis_withInitialGetModel ${modelInitial} )
+   local thisAbode=$( vis_withInitialGetAbode ${abodeInitial} )
+   local thisFunction=$( vis_withInitialGetFunction ${functionInitial} )
+   
+   local containersBase=$( containersBaseObtain )
+   EH_assert [ ! -z "${containersBase}" ]
+
+   local containerIdBase="${containersBase}/${thisModel}/${thisAbode}/${thisFunction}/${containerNu}"
+
+   if [ ! -d "${containerIdBase}" ] ; then
+       EH_problem "Missing containerIdBase=${containerIdBase}"
+   fi
+
+   echo ${containerIdBase}
+}
+
+
+function vis_assignedContainerBase {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
+   local containerNu=$1
+
+   local containersBase=$( containersBaseObtain )
+   EH_assert [ ! -z "${containersBase}" ]
+   
+   EH_assert [ ! -z "${model}" ]
+   EH_assert [ ! -z "${abode}" ]
+   EH_assert [ ! -z "${function}" ]
+   
+   echo "${containersBase}/${model}/${abode}/${function}/${containerNu}"
+}
+
+
+function container_modelAbodeFunctionBase {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 0 ]]
+
+   local containersBase=$( containersBaseObtain )
+   EH_assert [ ! -z "${containersBase}" ]
+   
+   EH_assert [ ! -z "${model}" ]
+   EH_assert [ ! -z "${abode}" ]
+   EH_assert [ ! -z "${function}" ]
+   
+   echo "${containersBase}/${model}/${abode}/${function}"
+}
 
 function vis_containerNuGetNext {
    G_funcEntry
@@ -185,16 +355,17 @@ function vis_containerNuGetNext {
 _EOF_
 		      }
    EH_assert [[ $# -eq 0 ]]
-   EH_assert [ ! -z "${type}" ]
-   EH_assert [ ! -z "${purpose}" ]   
+   EH_assert [ ! -z "${model}" ]
+   EH_assert [ ! -z "${abode}" ]
+   EH_assert [ ! -z "${function}" ]      
 
    local containersBase=$( containersBaseObtain )
    EH_assert [ ! -z "${containersBase}" ]
 
-   local typePusposeBase="${containersBase}/${type}-${purpose}"
-   EH_assert [ -d "${typePusposeBase}" ]
+   local modelAbodeFunctionBase=$( container_modelAbodeFunctionBase )
+   EH_assert [ -d "${modelAbodeFunctionBase}" ]
    
-   opDoExit pushd "${typePusposeBase}" > /dev/null
+   opDoExit pushd "${modelAbodeFunctionBase}" > /dev/null
    local lastContainer=$(  ls  | sort -n | tail -1 )
    if [ -z "${lastContainer}" ] ; then
        lastContainer=1000
@@ -207,7 +378,7 @@ _EOF_
 }
 
 
-function vis_boxIdFindContainerBase {
+function vis_withBoxIdFindContainerNu {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -226,15 +397,19 @@ _EOF_
    local found=""
 
    for eachBoxIdFp in ${boxIdFps} ; do   
-       stored_boxId=$( fileParamManage.py -i fileParamRead ${eachBoxIdFp} boxId )
+       stored_boxId=$( fileParamManage.py -i fileParamReadPath ${eachBoxIdFp} )
 
        if [ -z "${stored_boxId}" ] ; then
 	   EH_problem "Missing boxId in ${eachBoxIdFp} -- continuing"
 	   continue
        else
 	   if [ "${boxId}" == "${stored_boxId}" ] ; then
-	       found=${eachBoxIdFp}
-	       break
+	       if [ -z "${found}" ] ; then
+		   found=${eachBoxIdFp}
+	       else
+   		   ANT_raw "Also Found: ${eachBoxIdFp}"
+	       fi
+	       #break
 	   fi
        fi
    done
@@ -244,68 +419,122 @@ _EOF_
    lpReturn
 }	
 
-function vis_thisBoxFindNu {
+
+function vis_containerId {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
+containerId is sequence of 3 initial letters of model, abode and function.
+word="Host"; firstLetter=${word:0:1} -- "H"
 _EOF_
 		      }
+   EH_assert [[ $# -eq 1 ]]
+   local containerNu="$1"
 
-   EH_assert [[ $# -eq 0 ]]
-   
-   FN_nonDirsPart $( vis_thisBoxFindBase )
-}
+   EH_assert [ ! -z "${model}" ]
+   EH_assert [ ! -z "${abode}" ]
+   EH_assert [ ! -z "${function}" ]    
 
-function vis_thisBoxFindBase {
-   G_funcEntry
-   function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-		      }
-
-   EH_assert [[ $# -eq 0 ]]
-   
-   vis_givenUniqueBoxIdFindContainerBase $(vis_myUniqueBoxId)
+   echo "${model:0:1}${abode:0:1}${function:0:1}-${containerNu}"
 }
 
 
-function vis_myUniqueBoxId {
+function vis_containerUpdate_atNu {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
 		      }
+   EH_assert [[ $# -eq 1 ]]
+   local containerNu="$1"
 
-   EH_assert [[ $# -eq 0 ]]
-    
-    # if not physical, exit
-    sudo dmidecode -s system-uuid
-    lpReturn
-}
-
-
-function vis_thisBoxAdd {
-   G_funcEntry
-   function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-		      }
-
-   EH_assert [[ $# -eq 0 ]]
+   EH_assert [ ! -z "${model}" ]
+   EH_assert [ ! -z "${abode}" ]
+   EH_assert [ ! -z "${function}" ]      
 
    local containersBase=$( containersBaseObtain )
-
    EH_assert [ ! -z "${containersBase}" ]
 
-   local containerBase=$( vis_givenUniqueBoxIdFindContainerBase $(vis_myUniqueBoxId) )
-   local nextContainer=""
-   local nextContainerBase=""   
+   local modelAbodeFunctionBase=$( container_modelAbodeFunctionBase )
+   EH_assert [ -d "${modelAbodeFunctionBase}" ]
 
-   if [ -z ${containerBase} ] ; then
-       # So we need to create it
-       nextContainer=$( vis_containerGetNext )
-       local nextContainerBase="${containersBase}/${nextContainer}"
+   local containerBase="${modelAbodeFunctionBase}/${containerNu}"
 
-       lpDo mkdir -p ${nextContainerBase}
-
-       lpDo vis_thisContainerUpdateAt ${nextContainer}
+   if [ -d "${containerBase}" ] ; then
+       ANT_raw "containerBase=${containerBase} is in place, updating"
    else
-       ANT_raw "This Box Already Exists As ${containerBase} -- Creation/Update Skipped"
+       ANT_raw "containerBase=${containerBase} missing, creating"
+       lpDo mkdir -p ${containerBase}
    fi
-}
+   EH_assert [ -d "${containerBase}" ]
+
+   local boxId=$( sitePpBoxAssign.sh -i thisBoxFindId )
+   local stored_boxId=$( fileParamManage.py -i fileParamRead  ${containerBase} boxId )
+
+   if [ -z "${stored_boxId}" ] ; then
+       lpDo fileParamManage.py -i fileParamWrite ${containerBase} boxId "${boxId}"
+   else
+       if [ "${boxId}" != "${stored_boxId}" ] ; then
+	   EH_problem "Expected ${boxId} -- got ${stored_boxId}"
+	   lpReturn 101
+       fi
+   fi
+
+   local containerId=$( vis_containerId ${containerNu} )
+   local stored_containerId=$( fileParamManage.py -i fileParamRead  ${containerBase} containerId )
+
+   if [ -z "${stored_containerId}" ] ; then
+       lpDo fileParamManage.py -i fileParamWrite ${containerBase} containerId "${containerId}"
+   else
+       if [ "${containerId}" != "${stored_containerId}" ] ; then
+	   EH_problem "Expected ${containerId} -- got ${stored_containerId}"
+	   lpReturn 101
+       fi
+   fi
+
+   lpReturn
+}	
+
+
+function vis_containerReport_atNu {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   
+   EH_assert [[ $# -eq 1 ]]
+   local containerNu="$1"
+
+   EH_assert [ ! -z "${model}" ]
+   EH_assert [ ! -z "${abode}" ]
+   EH_assert [ ! -z "${function}" ]      
+
+   local containersBase=$( containersBaseObtain )
+   EH_assert [ ! -z "${containersBase}" ]
+
+   local modelAbodeFunctionBase=$( container_modelAbodeFunctionBase )   
+   EH_assert [ -d "${modelAbodeFunctionBase}" ]
+
+   local containerBase="${modelAbodeFunctionBase}/${containerNu}"   
+   EH_assert [ -d "${containerBase}" ]
+
+   lpDo vis_containerReport_atBase "${containerBase}"
+
+   lpReturn
+}	
+
+function vis_containerReport_atBase {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   
+   EH_assert [[ $# -eq 1 ]]
+   local containerBase="$1"
+
+   local stored_boxId=$( fileParamManage.py -i fileParamRead  ${containerBase} boxId )
+   local stored_containerId=$( fileParamManage.py -i fileParamRead  ${containerBase} containerId )
+
+   ANT_raw "boxId=${stored_boxId}"
+   ANT_raw "containerId=${stored_containerId}"
+   
+   lpReturn
+}	

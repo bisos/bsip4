@@ -72,10 +72,50 @@ _CommentEnd_
 
 . ${opBinBase}/bisosCurrents_lib.sh
 
+# PRE parameters
+typeset -t model=""     # one of {h,p,v}
+typeset -t abode=""  # one of {bpec,bpsc,bipc,bluc,bauc,bdc}
 
-setBasicItemsFiles opMachineItems
 
-typeset -t containerPurpose=""  # one of {bpec,bpsc,bipc,bluc,bauc,bdc}
+function G_postParamHook {
+
+    lpCurrentsGet
+
+    lpReturn 0
+}
+
+
+function vis_examples {
+    typeset extraInfo="-h -v -n showRun"
+    #typeset extraInfo=""
+    typeset runInfo="-p ri=lsipusr:passive"
+    #typeset oneId=`ifconfig eth0 | grep HWaddr | cut -c 39-55`
+    local oneId=$( sudo dmidecode -s system-uuid )
+
+    typeset examplesInfo="${extraInfo} ${runInfo}"
+
+    local ppBoxesBase=$( ppBoxesBaseObtain )
+
+    visLibExamplesOutput ${G_myName}
+    # ${doLibExamples} 
+  cat  << _EOF_
+$( examplesSeperatorTopLabel "${G_myName}" )
+$( examplesSeperatorChapter "vmHosting Bystar Portable Materialization Object Realization" )
+${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerAssign
+${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerRealize
+${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i sysCharRealize
+${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i sysCharMaterialize
+${G_myName} ${extraInfo} -p bxoId=NOTYET -i hostingMaterialize
+$( examplesSeperatorChapter "VirtualGuest Bystar Portable Materialization Object Realization" )
+${G_myName} ${extraInfo} -i vmGuestRealize
+${G_myName} ${extraInfo} -i vmGuestMaterialize
+_EOF_
+}
+
+
+noArgsHook() {
+  vis_examples
+}
 
 
 function ppBoxesBaseObtain {
@@ -114,45 +154,7 @@ _EOF_
     lpReturn
 }	
 
-
-function G_postParamHook {
-
-    lpCurrentsGet
-
-    lpReturn 0
-}
-
-
-function vis_examples {
-    typeset extraInfo="-h -v -n showRun"
-    #typeset extraInfo=""
-    typeset runInfo="-p ri=lsipusr:passive"
-    #typeset oneId=`ifconfig eth0 | grep HWaddr | cut -c 39-55`
-    local oneId=$( sudo dmidecode -s system-uuid )
-
-    typeset examplesInfo="${extraInfo} ${runInfo}"
-
-    local ppBoxesBase=$( ppBoxesBaseObtain )
-
-    visLibExamplesOutput ${G_myName}
-    # ${doLibExamples} 
-  cat  << _EOF_
-$( examplesSeperatorTopLabel "${G_myName}" )
-$( examplesSeperatorChapter "vmHosting Bystar Portable Materialization Object Realization" )
-${G_myName} ${extraInfo} -p containerPurpose=bipc -i hostingRealize
-${G_myName} ${extraInfo} -i hostingMaterialize
-$( examplesSeperatorChapter "VirtualGuest Bystar Portable Materialization Object Realization" )
-${G_myName} ${extraInfo} -i vmGuestRealize
-${G_myName} ${extraInfo} -i vmGuestMaterialize
-_EOF_
-}
-
-
-noArgsHook() {
-  vis_examples
-}
-
-function vis_hostingRealize {
+function vis_containerAssign {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 For the subject physical sys identified by system-uuid, create a sysChar and everything else necessary.
@@ -163,18 +165,42 @@ For the subject physical sys identified by system-uuid, create a sysChar and eve
 - We then register new IP addrs on the applicable nets for host.
 _EOF_
 		      }
-   
-   EH_assert [[ $# -eq 1 ]]
-   local containerPurpose="$1"
+   EH_assert [[ $# -eq 0 ]]
 
-   local thisBoxNu=$( siteAssignPpBox.sh -h -v -n showRun -i thisBoxFindNu )
+   EH_assert [ ! -z "${model}" ]   
+   EH_assert [ ! -z "${abode}" ]
+   EH_assert [ ! -z "${function}" ]
+
+   local thisBoxNu=$( sitePpBoxAssign.sh -h -v -n showRun -i thisBoxFindNu )
 
    if [ -z "${thisBoxNu}" ] ; then
-       siteAssignPpBox.sh -i thisBoxAdd
+       thisBoxNu=$( sitePpBoxAssign.sh -i thisBoxAdd )
    fi
+   EH_assert [ ! -z "${thisBoxNu}" ]
+
+   local thisBoxId=$( sitePpBoxAssign.sh -i boxNuToBoxId ${thisBoxNu})
+
+   local containerNu=""
+   
+   local existingContainerBase=$( siteContainerAssign.sh -p model=${model} -p abode=${abode} -p function=${function} -i withBoxIdFindContainerNu ${thisBoxId} )   
+   if [ -z "${existingContainerBase}" ] ; then
+       ANT_raw "Container for boxId=${thisBoxId} not found -- will be created"
+       containerNu=$( siteContainerAssign.sh -p model=${model} -p abode=${abode} -p function=${function} -i containerNuGetNext )
+   else
+       ANT_raw "Container of boxId=${thisBoxId} existed and will be used."
+       containerNu=$( FN_nonDirsPart $( FN_dirsPart ${existingContainerBase} ))
+   fi
+
+   lpDo siteContainerAssign.sh -p model=${model} -p abode=${abode} -p function=${function} -i containerUpdate_atNu "${containerNu}"
+
+   local stored_containerId=$( fileParamManage.py -i fileParamRead  ${containerBase} containerId )
+
+
+   #echo "We now have enough info to assign and realize a bxo for boxId=${thisBoxId} containerBase=${existingContainerBase}"
 
    lpReturn
 }	
+
 
 function vis_hostingMaterialize {
    G_funcEntry

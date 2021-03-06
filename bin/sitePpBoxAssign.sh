@@ -150,11 +150,13 @@ ${G_myName} ${extraInfo} -i thisBoxFindBase
 ${G_myName} ${extraInfo} -i thisBoxAdd
 ${G_myName} ${extraInfo} -i thisBoxNuUpdateAt $(vis_thisBoxFindNu)
 $( examplesSeperatorChapter "Uniue Box Id" )
-${G_myName} ${extraInfo} -i myUniqueBoxId
-${G_myName} ${extraInfo} -i givenUniqueBoxIdFindBoxNuBase $(vis_myUniqueBoxId)
+${G_myName} ${extraInfo} -i thisBoxUUID
+${G_myName} ${extraInfo} -i givenUniqueBoxIdFindBoxNuBase $(vis_thisBoxUUID)
 $( examplesSeperatorChapter "Next BoxNu" )
 ${G_myName} ${extraInfo} -i boxNuGetNext
 ${G_myName} -i boxNuGetNext
+$( examplesSeperatorChapter "Common Facilities" )
+${G_myName} -i boxNuToBoxId $( vis_thisBoxFindNu )
 _EOF_
 }
 
@@ -180,7 +182,7 @@ _EOF_
 
    EH_assert [ -d "${boxNuBase}" ]
 
-   local my_uniqueBoxId=$(vis_myUniqueBoxId)
+   local my_uniqueBoxId=$(vis_thisBoxUUID)
    local stored_uniqueBoxId=$( fileParamManage.py -i fileParamRead  ${boxNuBase} uniqueBoxId )
 
    if [ -z "${stored_uniqueBoxId}" ] ; then
@@ -203,14 +205,14 @@ _EOF_
        fi
    fi
 
-   local my_boxName="box${boxNu}"
-   local stored_boxName=$( fileParamManage.py -i fileParamRead  ${boxNuBase} boxName )
+   local my_boxId="box${boxNu}"
+   local stored_boxId=$( fileParamManage.py -i fileParamRead  ${boxNuBase} boxId )
 
-   if [ -z "${stored_boxName}" ] ; then
-       lpDo fileParamManage.py -i fileParamWrite ${boxNuBase} boxName "${my_boxName}"
+   if [ -z "${stored_boxId}" ] ; then
+       lpDo fileParamManage.py -i fileParamWrite ${boxNuBase} boxId "${my_boxId}"
    else
-       if [ "${my_boxName}" != "${stored_boxName}" ] ; then
-	   EH_problem "Expected ${my_boxName} -- got ${stored_boxName}"
+       if [ "${my_boxId}" != "${stored_boxId}" ] ; then
+	   EH_problem "Expected ${my_boxId} -- got ${stored_boxId}"
 	   lpReturn 101
        fi
    fi
@@ -278,20 +280,29 @@ _EOF_
    echo ${found}
 
    lpReturn
-}	
+}
+
+function vis_boxNuToBoxId {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+
+   EH_assert [[ $# -eq 1 ]]
+   
+   local boxNu=$1
+   echo "box${boxNu}"
+}
 
 function vis_thisBoxFindId {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
 		      }
-
    EH_assert [[ $# -eq 0 ]]
    
-   local boxNu=$( vis_thisBoxFindNu )
-   echo "box${boxNu}"
+   echo $( vis_boxNuToBoxId $( vis_thisBoxFindNu ))
 }
-
 
 function vis_thisBoxFindNu {
    G_funcEntry
@@ -312,11 +323,11 @@ _EOF_
 
    EH_assert [[ $# -eq 0 ]]
    
-   vis_givenUniqueBoxIdFindBoxNuBase $(vis_myUniqueBoxId)
+   vis_givenUniqueBoxIdFindBoxNuBase $(vis_thisBoxUUID)
 }
 
 
-function vis_myUniqueBoxId {
+function vis_thisBoxUUID {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -342,7 +353,7 @@ _EOF_
 
    EH_assert [ ! -z "${ppBoxesBase}" ]
 
-   local boxNuBase=$( vis_givenUniqueBoxIdFindBoxNuBase $(vis_myUniqueBoxId) )
+   local boxNuBase=$( vis_givenUniqueBoxIdFindBoxNuBase $(vis_thisBoxUUID) )
    local nextBoxNu=""
    local nextBoxNuBase=""   
 
@@ -357,4 +368,5 @@ _EOF_
    else
        ANT_raw "This Box Already Exists As ${boxNuBase} -- Creation/Update Skipped"
    fi
+   echo ${nextBoxNu}
 }
