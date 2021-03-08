@@ -132,6 +132,8 @@ ${G_myName} ${extraInfo} -i examplesBxServiceEntity all all full
 ${G_myName} ${extraInfo} -i examplesBxServiceEntity all regReqCreate all
 ${G_myName} ${extraInfo} -i examplesBxServiceEntity byname all essentials
 ${G_myName} ${extraInfo} -i examplesBxServiceEntity bysmb all essentials
+$( examplesSeperatorChapter "Bx Materialization Entity" )
+NOTYET
 _EOF_
 
 }

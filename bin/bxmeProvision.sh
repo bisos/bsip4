@@ -105,7 +105,8 @@ bisosCurrentsManage.sh
 bisosCurrentsManage.sh ${extraInfo} -i setParam currentBxoId ${oneBxoId}
 bisosCurrentsManage.sh ${extraInfo} -i setParam cur_bxoId_parent ${oneBxoId}
 _EOF_
-  vis_examplesBxMaterializationEntity all all
+  # vis_examplesBxMaterializationEntity all all
+  vis_examplesBxMaterializationEntity all all essentials  
    cat  << _EOF_
 $( examplesSeperatorChapter "Selected Specific Types and Scopes" )
 ${G_myName} ${extraInfo} -i examplesBxMaterializationEntity all all full

@@ -178,35 +178,32 @@ _EOF_
 		    ;;
 	    esac
 	    ;;
-	"container")
+	"materialization")
 	    case ${bxeType} in
-		"exposed")
-		    alpha="ce"
+		"site")
+		    alpha="ms"
 		    numeric=91
 		    ;;
-		"intra")
-		    alpha="ci"
+		"nets")
+		    alpha="mn"
 		    numeric=92
 		    ;;
-		"usage")
-		    alpha="cu"
+		"domains")
+		    alpha="md"
 		    numeric=93
 		    ;;
-		"dev")
-		    alpha="cd"
+		"boxes")
+		    alpha="mb"
 		    numeric=94
 		    ;;
-		"android")
-		    alpha="ca"
+		"containers")
+		    alpha="mc"
 		    numeric=95
 		    ;;
-		"vmHost")
-		    alpha="cv"
+		"sysChar")
+		    # c is taken by containers, p for personality instead of character
+		    alpha="mp"
 		    numeric=96
-		    ;;
-		"perimeter")
-		    alpha="cp"
-		    numeric=97
 		    ;;
 		*)
 		    EH_problem "bxeType=${bxeType} -- Unexpected"
@@ -214,15 +211,36 @@ _EOF_
 		    ;;
 	    esac
 	    ;;
-	"materialization")
+	"container")
+	    # To be obsoleted
 	    case ${bxeType} in
-		"container")
-		    alpha="mc"
+		"exposed")
+		    alpha="ce"
 		    numeric=121
 		    ;;
-		"sysChar")
-		    alpha="ms"
+		"intra")
+		    alpha="ci"
 		    numeric=122
+		    ;;
+		"usage")
+		    alpha="cu"
+		    numeric=123
+		    ;;
+		"dev")
+		    alpha="cd"
+		    numeric=124
+		    ;;
+		"android")
+		    alpha="ca"
+		    numeric=125
+		    ;;
+		"vmHost")
+		    alpha="cv"
+		    numeric=126
+		    ;;
+		"perimeter")
+		    alpha="cp"
+		    numeric=127
 		    ;;
 		*)
 		    EH_problem "bxeType=${bxeType} -- Unexpected"

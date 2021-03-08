@@ -680,7 +680,8 @@ _EOF_
 
     local bxeType="all"
     local provisioningScope="all"
-    local paramsDetail="all"
+    #local paramsDetail="all"
+    local paramsDetail="essentials"    
 
     if [ $# -eq 0 ] ; then
 	bxeType="all"
@@ -718,16 +719,40 @@ $( examplesSeperatorChapter "Bx Materialization Entity" )
 _EOF_
 	
     case "${bxeType}" in
-	container)
-	    vis_examplesBxMaterializationContainer
-	    vis_examplesApplyProvisioners "ByStar Container Materialization Entity" ${provisioningScope}  ${paramsDetail}
+	site)
+	    vis_examplesBxMaterializationSite
+	    vis_examplesApplyProvisioners "ByStar Site Materialization Entity" ${provisioningScope}  ${paramsDetail}
+	    ;;
+	nets)
+	    vis_examplesBxMaterializationNets
+	    vis_examplesApplyProvisioners "ByStar Nets Materialization Entity" ${provisioningScope}  ${paramsDetail}
+	    ;;
+	domains)
+	    vis_examplesBxMaterializationDomains
+	    vis_examplesApplyProvisioners "ByStar Domains Materialization Entity" ${provisioningScope}  ${paramsDetail}
+	    ;;
+	boxes)
+	    vis_examplesBxMaterializationBoxes
+	    vis_examplesApplyProvisioners "ByStar Boxes Materialization Entity" ${provisioningScope}  ${paramsDetail}
+	    ;;
+	containers)
+	    vis_examplesBxMaterializationContainers
+	    vis_examplesApplyProvisioners "ByStar Containers Materialization Entity" ${provisioningScope}  ${paramsDetail}
 	    ;;
 	sysChar)
 	    vis_examplesBxMaterializationSysChar
 	    vis_examplesApplyProvisioners "ByStar SysChar Materialization Entity" ${provisioningScope}  ${paramsDetail}
 	    ;;
-	all)	
-	    vis_examplesBxMaterializationContainer
+	all)
+	    vis_examplesBxMaterializationSite
+	    vis_examplesApplyProvisioners "ByStar Site Materialization Entity" ${provisioningScope}  ${paramsDetail}
+	    vis_examplesBxMaterializationNets
+	    vis_examplesApplyProvisioners "ByStar Nets Materialization Entity" ${provisioningScope}  ${paramsDetail}	    
+	    vis_examplesBxMaterializationDomains
+	    vis_examplesApplyProvisioners "ByStar Domains Materialization Entity" ${provisioningScope}  ${paramsDetail}
+	    vis_examplesBxMaterializationBoxes
+	    vis_examplesApplyProvisioners "ByStar Boxes Materialization Entity" ${provisioningScope}  ${paramsDetail}
+	    vis_examplesBxMaterializationContainers
 	    vis_examplesApplyProvisioners "ByStar Container Materialization Entity" ${provisioningScope}  ${paramsDetail}
 	    vis_examplesBxMaterializationSysChar
 	    vis_examplesApplyProvisioners "ByStar SysChar Materialization Entity" ${provisioningScope}  ${paramsDetail}

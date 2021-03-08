@@ -201,16 +201,35 @@ function vis_examplesBxContainerAndroid {
     bxeParamsFull="-p privacy=\"priv\" -p kind=\"container\" -p type=\"Android\" -p parent=\"${cur_bxoId_parent}\" -p name=\"andrd\" "    
 }
 
-function vis_examplesBxMaterializationContainer {
-    bxeParamsMini="-p privacy=\"priv\" -p kind=\"materialization\" -p type=\"container\" -p parent=\"${cur_bxoId_parent}\" -p name=\"HSS-1001\" "
-    bxeParamsFull="-p privacy=\"priv\" -p kind=\"materialization\" -p type=\"container\" -p parent=\"${cur_bxoId_parent}\" -p name=\"HSS-1001\" "    
+function vis_examplesBxMaterializationSite {
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"materialization\" -p type=\"site\" -p parent=\"${cur_bxoId_parent}\" -p name=\"clusterName\" "
+    bxeParamsFull=${bxeParamsMini}
+}
+
+function vis_examplesBxMaterializationNets {
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"materialization\" -p type=\"nets\" -p parent=\"${cur_bxoId_parent}\" -p name=\"clusterName-nets\" "
+    bxeParamsFull=${bxeParamsMini}
+}
+
+function vis_examplesBxMaterializationDomains {
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"materialization\" -p type=\"domains\" -p parent=\"${cur_bxoId_parent}\" -p name=\"clusterName-domains\" "
+    bxeParamsFull=${bxeParamsMini}
+}
+
+function vis_examplesBxMaterializationBoxes {
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"materialization\" -p type=\"boxes\" -p parent=\"${cur_bxoId_parent}\" -p name=\"clusterName-boxes\" "
+    bxeParamsFull=${bxeParamsMini}
+}
+
+function vis_examplesBxMaterializationContainers {
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"materialization\" -p type=\"containers\" -p parent=\"${cur_bxoId_parent}\" -p name=\"clusterName-containers\" "
+    bxeParamsFull=${bxeParamsMini}
 }
 
 function vis_examplesBxMaterializationSysChar {
     bxeParamsMini="-p privacy=\"priv\" -p kind=\"materialization\" -p type=\"sysChar\" -p parent=\"${cur_bxoId_parent}\" -p name=\"HSS-1001\" "
-    bxeParamsFull="-p privacy=\"priv\" -p kind=\"materialization\" -p type=\"sysChar\" -p parent=\"${cur_bxoId_parent}\" -p name=\"HSS-1001\" "    
+    bxeParamsFull=${bxeParamsMini}
 }
-
 
 function vis_regReqStdout {
    G_funcEntry
@@ -505,8 +524,7 @@ regReqContainerStdoutSpecific_container_android () {
 _EOF_
 }
 
-
-regReqContainerStdoutSpecific_materialization_container () {
+regReqContainerStdoutSpecific_materialization_site () {
     EH_assert [[ $# -eq 1 ]]
 
     if [ "$1" = "passive" ] ; then
@@ -521,7 +539,67 @@ regReqContainerStdoutSpecific_materialization_container () {
 _EOF_
 }
 
-regReqContainerStdoutSpecific_materialization_sysType () {
+regReqContainerStdoutSpecific_materialization_nets () {
+    EH_assert [[ $# -eq 1 ]]
+
+    if [ "$1" = "passive" ] ; then
+	regReqTag="${kind}_${type}_${name}"
+	return
+    fi
+
+    cat  << _EOF_
+    function regReqContainer_${kind}_${type} {
+      bc_name="${name}"
+    }
+_EOF_
+}
+
+regReqContainerStdoutSpecific_materialization_domains () {
+    EH_assert [[ $# -eq 1 ]]
+
+    if [ "$1" = "passive" ] ; then
+	regReqTag="${kind}_${type}_${name}"
+	return
+    fi
+
+    cat  << _EOF_
+    function regReqContainer_${kind}_${type} {
+      bc_name="${name}"
+    }
+_EOF_
+}
+
+regReqContainerStdoutSpecific_materialization_boxes () {
+    EH_assert [[ $# -eq 1 ]]
+
+    if [ "$1" = "passive" ] ; then
+	regReqTag="${kind}_${type}_${name}"
+	return
+    fi
+
+    cat  << _EOF_
+    function regReqContainer_${kind}_${type} {
+      bc_name="${name}"
+    }
+_EOF_
+}
+
+regReqContainerStdoutSpecific_materialization_containers () {
+    EH_assert [[ $# -eq 1 ]]
+
+    if [ "$1" = "passive" ] ; then
+	regReqTag="${kind}_${type}_${name}"
+	return
+    fi
+
+    cat  << _EOF_
+    function regReqContainer_${kind}_${type} {
+      bc_name="${name}"
+    }
+_EOF_
+}
+
+regReqContainerStdoutSpecific_materialization_sysChar () {
     EH_assert [[ $# -eq 1 ]]
 
     if [ "$1" = "passive" ] ; then
