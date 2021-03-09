@@ -101,7 +101,7 @@ function vis_examples {
     local containersBase=$( containersBaseObtain )
     EH_assert [ ! -z "${containersBase}" ]
 
-    local boxId=$( sitePpBoxAssign.sh -i thisBoxFindId )
+    local boxId=$( siteBoxAssign.sh -i thisBoxFindId )
 		   
     visLibExamplesOutput ${G_myName}
     # ${doLibExamples} 
@@ -144,8 +144,8 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
     
     usgHome=$( FN_absolutePathGet ~ )
-    # ~/bisos/sites/selected/siteBpos.fv/containers
-    local selectedContainersPath="${usgHome}/bisos/sites/selected/siteBpos.fv/containers"
+    # ~/bisos/sites/selected/siteBpos/containers.bpoFp/bpoId
+    local selectedContainersPath="${usgHome}/bisos/sites/selected/siteBpos/containers.bpoFp/bpoId"
     
     local containersBxoId=""
 
@@ -164,7 +164,7 @@ _EOF_
 	lpReturn 101
     fi
 
-    local containersBase=$( FN_absolutePathGet ~${containersBxoId} )/containers
+    local containersBase=$( FN_absolutePathGet ~${containersBxoId} )/assign
     EH_assert [ -d "${containersBase}" ]
 
     echo "${containersBase}"

@@ -80,6 +80,57 @@ _CommentEnd_
 typeset -t siteName="MANDATORY"
 
 
+
+function G_postParamHook {
+
+    lpCurrentsGet
+
+    lpReturn 0
+}
+
+
+function vis_examples {
+    typeset extraInfo="-h -v -n showRun"
+    #typeset extraInfo=""
+    typeset runInfo="-p ri=lsipusr:passive"
+    #typeset oneId=`ifconfig eth0 | grep HWaddr | cut -c 39-55`
+    local oneId=$( sudo dmidecode -s system-uuid )
+
+    typeset examplesInfo="${extraInfo} ${runInfo}"
+
+    local ppBoxesBase=$( ppBoxesBaseObtain )
+
+    visLibExamplesOutput ${G_myName}
+    # ${doLibExamples}
+
+  cat  << _EOF_
+$( examplesSeperatorTopLabel "${G_myName}" )
+$( examplesSeperatorChapter "Site And BxO Information" )
+ls -ld ${ppBoxesBase}/*
+$( examplesSeperatorChapter "This Box Actions" )
+${G_myName} -i thisBoxNuFindNu
+${G_myName} ${extraInfo} -i thisBoxFindNu
+${G_myName} ${extraInfo} -i thisBoxFindId
+${G_myName} ${extraInfo} -i thisBoxFindBase
+${G_myName} ${extraInfo} -i thisBoxAdd   # =Primary Usage=
+${G_myName} ${extraInfo} -i thisBoxNuUpdateAt "$(vis_thisBoxFindNu)"
+$( examplesSeperatorChapter "Uniue Box Id" )
+${G_myName} ${extraInfo} -i thisBoxUUID
+${G_myName} ${extraInfo} -i givenUniqueBoxIdFindBoxNuBase "$(vis_thisBoxUUID)"
+$( examplesSeperatorChapter "Next BoxNu" )
+${G_myName} ${extraInfo} -i boxNuGetNext
+${G_myName} -i boxNuGetNext
+$( examplesSeperatorChapter "Common Facilities" )
+${G_myName} -i boxNuToBoxId "$( vis_thisBoxFindNu )"
+_EOF_
+}
+
+
+noArgsHook() {
+  vis_examples
+}
+
+
 function ppBoxesBaseObtain {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -88,8 +139,9 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
     
     usgHome=$( FN_absolutePathGet ~ )
-    # ~/bisos/sites/selected/siteBpos.fv/ppBoxes
-    local selectedPpBoxesPath="${usgHome}/bisos/sites/selected/siteBpos.fv/ppBoxes"
+    # ~/bisos/sites/selected/siteBpos/boxes.bpoFp/bpoId
+    #local selectedPpBoxesPath="${usgHome}/bisos/sites/selected/siteBpos.fv/ppBoxes"
+    local selectedPpBoxesPath="${usgHome}/bisos/sites/selected/siteBpos/boxes.bpoFp/bpoId"    
     
     local ppBoxesBxoId=""
 
@@ -116,54 +168,6 @@ _EOF_
     lpReturn
 }	
 
-
-function G_postParamHook {
-
-    lpCurrentsGet
-
-    lpReturn 0
-}
-
-
-function vis_examples {
-    typeset extraInfo="-h -v -n showRun"
-    #typeset extraInfo=""
-    typeset runInfo="-p ri=lsipusr:passive"
-    #typeset oneId=`ifconfig eth0 | grep HWaddr | cut -c 39-55`
-    local oneId=$( sudo dmidecode -s system-uuid )
-
-    typeset examplesInfo="${extraInfo} ${runInfo}"
-
-    local ppBoxesBase=$( ppBoxesBaseObtain )
-
-    visLibExamplesOutput ${G_myName}
-    # ${doLibExamples} 
-  cat  << _EOF_
-$( examplesSeperatorTopLabel "${G_myName}" )
-$( examplesSeperatorChapter "Site And BxO Information" )
-ls -ld ${ppBoxesBase}/*
-$( examplesSeperatorChapter "This Box Actions" )
-${G_myName} -i thisBoxNuFindNu
-${G_myName} ${extraInfo} -i thisBoxFindNu
-${G_myName} ${extraInfo} -i thisBoxFindId
-${G_myName} ${extraInfo} -i thisBoxFindBase
-${G_myName} ${extraInfo} -i thisBoxAdd
-${G_myName} ${extraInfo} -i thisBoxNuUpdateAt $(vis_thisBoxFindNu)
-$( examplesSeperatorChapter "Uniue Box Id" )
-${G_myName} ${extraInfo} -i thisBoxUUID
-${G_myName} ${extraInfo} -i givenUniqueBoxIdFindBoxNuBase $(vis_thisBoxUUID)
-$( examplesSeperatorChapter "Next BoxNu" )
-${G_myName} ${extraInfo} -i boxNuGetNext
-${G_myName} -i boxNuGetNext
-$( examplesSeperatorChapter "Common Facilities" )
-${G_myName} -i boxNuToBoxId $( vis_thisBoxFindNu )
-_EOF_
-}
-
-
-noArgsHook() {
-  vis_examples
-}
 
 function vis_thisBoxNuUpdateAt {
    G_funcEntry
@@ -234,6 +238,9 @@ _EOF_
 
    opDoExit pushd "${ppBoxesBase}" > /dev/null
    local lastBoxNu=$(  ls  | sort -n | tail -1 )
+   if [ -z "${lastBoxNu}" ] ; then
+       lastBoxNu=1000
+   fi
    opDoExit popd > /dev/null
    
    local nextBoxNu=$( expr ${lastBoxNu} +  1 )
@@ -255,7 +262,7 @@ _EOF_
 
    EH_assert [ ! -z "${ppBoxesBase}" ] 
 
-   local boxNuBaseDirs=$( ls -d ${ppBoxesBase}/* )
+   local boxNuBaseDirs=$( ls -d ${ppBoxesBase}/* 2> /dev/null )
 
    local eachBoxNuBase=""
    local stored_uniqueBoxId=""
@@ -312,7 +319,7 @@ _EOF_
 
    EH_assert [[ $# -eq 0 ]]
    
-   FN_nonDirsPart $( vis_thisBoxFindBase )
+   FN_nonDirsPart "$( vis_thisBoxFindBase )"
 }
 
 function vis_thisBoxFindBase {
@@ -323,7 +330,7 @@ _EOF_
 
    EH_assert [[ $# -eq 0 ]]
    
-   vis_givenUniqueBoxIdFindBoxNuBase $(vis_thisBoxUUID)
+   vis_givenUniqueBoxIdFindBoxNuBase "$(vis_thisBoxUUID)"
 }
 
 
