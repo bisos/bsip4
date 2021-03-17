@@ -132,6 +132,8 @@ function vis_examples {
 
     local containerBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
     local sysCharContainerBxoId=$( vis_sysCharContainerBxoId ${containerBase} )
+    local selectedSiteBxoId=$( vis_selectedSiteBxoId )
+    local containersBase=$( vis_containersBaseObtain )
     
     #oneBxoId="prs-bisos"
     #oneBxoId="${currentBxoId}"
@@ -158,8 +160,12 @@ $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Container Repo Realization" )
 ls -l ~${sysCharContainerBxoId}
 ${G_myName} ${extraInfo} -i selectedSiteBxoId
+${selectedSiteBxoId}
+${containersBase}
 ${G_myName} ${extraInfo} -i sysCharContainerBxoId ${containerBase}
+${G_myName} ${extraInfo} -i sysCharContainerBxoId ${containersBase}/assign/Virt/Auto/Generic/deb10
 ${G_myName} ${extraInfo} -i sysCharContainerRealize ${containerBase}
+${G_myName} ${extraInfo} -i sysCharContainerRealize ${containersBase}/assign/Virt/Auto/Generic/deb10
 _EOF_
 
   cat  << _EOF_
@@ -206,7 +212,7 @@ _EOF_
        ANT_raw "${sysCharContainerBxoId} account exists, already realized -- provisioning skipped"
    else
        ANT_raw "${sysCharContainerBxoId} will be realized"       
-       lpDo echo bxmeProvision.sh -h -v -n showRun -p privacy="priv" -p kind="materialization" -p type="sysChar" -p parent="${selectedSiteBxoId}" -p name="${containerId}" -i startToPrivRealize       
+       lpDo bxmeProvision.sh -h -v -n showRun -p privacy="priv" -p kind="materialization" -p type="sysChar" -p parent="${selectedSiteBxoId}" -p name="${containerId}" -i startToPrivRealize       
    fi
 
    bxoId="${sysCharContainerBxoId}"

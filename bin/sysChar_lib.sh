@@ -83,7 +83,7 @@ _EOF_
   
    local containerAssignBase=${bxoHome}/siteContainersRepo/assign
 
-   containerAssign_containerId=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} containerId )
+   containerAssign_containerId=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} containerId )
    containerAssign_boxId=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} boxId )   
    containerAssign_abode=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} abode )
    containerAssign_function=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} function )
@@ -128,7 +128,10 @@ _EOF_
    local sysCharBase=${bxoHome}/sysChar
 
    sysChar_privA_if=$( fileParamManage.py -i fileParamRead  ${sysCharBase}/netInterface.fps privA )
+
    sysChar_vmSpec_baseBox=$( fileParamManage.py -i fileParamRead  ${sysCharBase}/vmSpec.fps baseBox )
+   sysChar_vmSpec_sizing=$( fileParamManage.py -i fileParamRead  ${sysCharBase}/vmSpec.fps sizing )   
+   
 }
 
 

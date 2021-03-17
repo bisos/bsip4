@@ -163,7 +163,7 @@ _EOF_
 
    local models=("Host" "Pure" "Virt")
    local abodes=("Mobile" "Auto" "Perim" "Internet" "Shield")
-   local functions=("LinuxU" "AndroidU" "Server" "Devel")   
+   local functions=("LinuxU" "AndroidU" "Server" "Devel" "Generic")   
 
    for eachModel in ${models[@]} ;  do
        for eachAbode in ${abodes[@]} ; do
@@ -254,6 +254,9 @@ _EOF_
 	   ;;
        "D")
 	   result="Devel"
+	   ;;
+       "G")
+	   result="Generic"
 	   ;;
        *)
 	   EH_problem "Bad Usage -- functionInitial=${functionInitial}"

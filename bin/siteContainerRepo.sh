@@ -95,6 +95,7 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
+    local containersBase=$( vis_containersBaseObtain )
     local containerBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )    
 
     visLibExamplesOutput ${G_myName}
@@ -104,6 +105,8 @@ $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Container Repo Realization" )
 ${G_myName} -i containersBaseObtain
 ${G_myName} ${extraInfo} -i containerRepoUpdate ${containerBase}
+$( examplesSeperatorChapter "Generic Container Repo Realization" )
+${G_myName} ${extraInfo} -i containerRepoUpdate ${containersBase}/assign/Virt/Auto/Generic/deb10
 _EOF_
 }
 

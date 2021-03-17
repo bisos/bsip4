@@ -70,6 +70,9 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
+# ./platformBases_lib.sh
+. ${opBinBase}/platformBases_lib.sh
+
 . ${opBinBase}/bxo_lib.sh
 
 . ${opBinBase}/bxeDesc_lib.sh
@@ -89,6 +92,11 @@ _CommentEnd_
 . ${opBinBase}/bxioCommon_lib.sh
 
 . ${opBinBase}/bisosCurrents_lib.sh
+
+. ${opBinBase}/site_lib.sh
+
+. ${opBinBase}/sysChar_lib.sh
+
 
 # PRE parameters
 
@@ -124,8 +132,8 @@ function vis_examples {
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
     #oneBxoId="prs-bisos"
-    #oneBxoId="${currentBxoId}"
-    oneBxoId="pic_dnsServer"    
+    oneBxoId="${currentBxoId}"
+    #oneBxoId="pic_dnsServer"    
     oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )    
     
     visLibExamplesOutput ${G_myName} 
@@ -133,6 +141,7 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
+bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VAG-deb10-
 $( examplesSeperatorChapter "Specialized Actions" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_path      # on host
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_create    # on host - vag-ssh
@@ -164,7 +173,7 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
     EH_assert [ ! -z "${bxoId}" ]
 
-    EH_assert  vis_userAcctExists "${bxoId}"
+    EH_assert  vis_bxoAcctVerify "${bxoId}"
 
     lpDo FN_dirCreatePathIfNotThere ${bxoHome}/var/vagrantBase
 
@@ -192,7 +201,7 @@ _EOF_
 
     lpReturn
 
-    EH_assert  vis_userAcctExists "${bxoId}"
+    EH_assert  vis_bxoAcctVerify "${bxoId}"
 
     local virtType=$( fileParamManage.py  -i fileParamRead  ${bxoHome}/sysSpec/virtualization.fps virtType )
     local baseBoxVagrantFile=""    
@@ -251,7 +260,7 @@ _EOF_
     EH_assert [[ $# -lt 2 ]]    
     EH_assert [ ! -z "${bxoId}" ]
 
-    EH_assert  vis_userAcctExists "${bxoId}"
+    EH_assert  vis_bxoAcctVerify "${bxoId}"
 
     local virtType=$( fileParamManage.py  -i fileParamRead  ${bxoHome}/sysSpec/virtualization.fps virtType )
 
@@ -279,7 +288,7 @@ _EOF_
     EH_assert [[ $# -lt 2 ]]    
     EH_assert [ ! -z "${bxoId}" ]
 
-    EH_assert  vis_userAcctExists "${bxoId}"
+    EH_assert  vis_bxoAcctVerify "${bxoId}"
 
     local dirsPart=$( FN_dirsPart $(vis_vagrantFile_path) )
     EH_assert [ ! -z "${dirsPart}" ]
@@ -321,7 +330,7 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
     EH_assert [ ! -z "${bxoId}" ]
 
-    EH_assert  vis_userAcctExists "${bxoId}"
+    EH_assert  vis_bxoAcctVerify "${bxoId}"
 
     lpDo describeF
     
@@ -340,7 +349,7 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
     EH_assert [ ! -z "${bxoId}" ]
 
-    EH_assert  vis_userAcctExists "${bxoId}"
+    EH_assert  vis_bxoAcctVerify "${bxoId}"
 
     lpDo echo ${thisDescribeF}
     
@@ -397,7 +406,7 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
     EH_assert [ ! -z "${bxoId}" ]
 
-    EH_assert  vis_userAcctExists "${bxoId}"
+    EH_assert  vis_bxoAcctVerify "${bxoId}"
 
     lpDo printf ${thisDescribeF}
     
@@ -411,25 +420,29 @@ Output a vagrantfile using the sysChar BxO.
 _EOF_
 		       }
     local thisFunc=${G_thisFunc}
-    EH_assert [[ $# -lt 2 ]]
-    EH_assert [ ! -z "${bxoId}" ]
+    # EH_assert [[ $# -lt 2 ]]  # if unused delete
 
-    EH_assert  vis_userAcctExists "${bxoId}"
+    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert vis_bxoAcctVerify "${bxoId}"
+
+    lpDo vis_containerAssignRead
+    lpDo vis_containerStableRead    
+    lpDo vis_sysCharRead
 
     local dateTag=$( date +%Y%m%d%H%M%S )
 
-    local containerBxoRef=$( fileParamManage.py -v 30 -i fileParamRead  ${bxoHome}/containerBxO/bxoRef.fps bxoId )
+    #local containerBxoRef=$( fileParamManage.py -v 30 -i fileParamRead  ${bxoHome}/containerBxO/bxoRef.fps bxoId )
 
-    local baseBox=$( fileParamManage.py -v 30 -i fileParamRead  ${bxoHome}/sysSpec/vmSpec.fps baseBox )
-    local sizing=$( fileParamManage.py -v 30 -i fileParamRead  ${bxoHome}/sysSpec/vmSpec.fps sizing )        
+    local baseBox=$sysChar_vmSpec_baseBox
+    local sizing=$sysChar_vmSpec_sizing
 
-    EH_assert  vis_userAcctExists "${containerBxoRef}"
+    #EH_assert  vis_bxoAcctVerify "${containerBxoRef}"
 
     lpDo setVmParamsBasedOnSizing ${sizing}
 
-    local containerHome=$( FN_absolutePathGet ~${containerBxoRef} )
+    #local containerHome=$( FN_absolutePathGet ~${containerBxoRef} )
 
-    local containerName=$( fileParamManage.py -v 30 -i fileParamRead  ${containerHome}/containerSpec/hostname.fps name )
+    local containerName=${containerAssign_containerId}
 
     local defaultInterface=$( ip -4 route ls | grep default | grep -Po '(?<=dev )(\S+)' )
 
@@ -440,16 +453,16 @@ _EOF_
 # Vagrantfile for ${bxoId} -- 
 # Generated with ${G_myName}:${thisFunc} on $(hostname) at ${dateTag} -- Do Not Hand Edit
 # 
-# ${bxoHome}/containerBxO/bxoRef.fps/bxoId = ${containerBxoRef}
+# ${bxoHome}/containerBxO/bxoRef.fps/bxoId = NOTYET-containerBxoRef
 # ${bxoHome}/sysSpec/vmSpec.fps/baseBox/value = ${baseBox}
 # ${bxoHome}/sysSpec/vmSpec.fps/sizing/value = ${sizing}
-# ${containerHome}/containerSpec/hostname.fps/name = ${containerName}
+# NOTYET-containerHome/containerSpec/hostname.fps/name = ${containerName}
 # 
 
 # The "2" in Vagrant.configure is for configuration version. Don't change it.
 Vagrant.configure("2") do |config|
-  config.vm.define "${containerBxoRef}" do |guest|
-    guest.vm.box = "${baseBox}"
+  config.vm.define "${containerName}"NOTYET do |guest|
+    guest.vm.box = "${baseBox}"NOTYET
     guest.vm.hostname = "${containerName}"
     guest.vm.network :public_network, :dev => "${defaultInterface}", :mode => 'bridge', auto_config: false
 
@@ -482,7 +495,7 @@ _EOF_
     EH_assert [[ $# -lt 2 ]]
     EH_assert [ ! -z "${bxoId}" ]
 
-    EH_assert  vis_userAcctExists "${bxoId}"
+    EH_assert  vis_bxoAcctVerify "${bxoId}"
 
     local shellProvisioning=""
 
