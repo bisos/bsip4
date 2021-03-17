@@ -92,6 +92,11 @@ _CommentEnd_
 
 . ${opBinBase}/bisosCurrents_lib.sh
 
+. ${opBinBase}/site_lib.sh
+
+. ${opBinBase}/sysChar_lib.sh
+
+
 # PRE parameters
 
 typeset -t bxoId=""
@@ -176,47 +181,9 @@ $( repoBaseCreateAndPushExamples deploymentRecords "Deployment Records Repo" )
 $( repoBaseCreateAndPushExamples panel "BxO Panel Repo" )
 $( examplesSeperatorChapter "Bases Create" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i baseCreate_var
+$( examplesSeperatorChapter "Overview Report And Summary" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i sysCharReport
 _EOF_
-}
-
-function vis_selectedSiteBxoId {
-   G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** In stdout, return the bxoId of selected sited based for current user (usgHome).
-** TODO This should go into a library.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-    
-    usgHome=$( FN_absolutePathGet ~ )
-    # ~/bisos/sites/selected/siteBpos/containers.bpoFp/bpoId
-    local selectedSitePath="${usgHome}/bisos/sites/selected"
-    
-    local selectedSiteBxoId="$( FN_nonDirsPart $( readlink -f ${selectedSitePath} ) )"
-
-    if ! vis_bxoAcctVerify "${selectedSiteBxoId}" ; then
-	EH_problem "Missing selectedSiteBxoId"
-	lpReturn 101
-    fi
-
-    echo "${selectedSiteBxoId}"
-
-    lpReturn
-}	
-
-function vis_sysCharContainerBxoId {
-   G_funcEntry
-   function describeF {  G_funcEntryShow; cat  << _EOF_
-** returns on stdout, bxoId of container corresponding to \$1 as a containerPath.
-*** Typical usage is \$=container base of this system obtained from siteContainerAssign.sh -i forThisSysFindContainerBase
-_EOF_
-		      }
-   EH_assert [[ $# -eq 1 ]]
-   local containerAssignBase=$1
-   local containerId=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} containerId )
-   EH_assert [ ! -z "${containerId}" ]
-
-   echo pmp_${containerId}
 }
 
 

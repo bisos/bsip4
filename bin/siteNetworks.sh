@@ -180,7 +180,8 @@ _EOF_
    local netDefinitions=${networksBase}/netDefinitions.fv
 
    #echo ${netDefinitions}
-   
+
+   # Use readDeep instead
    find ${netDefinitions} -print | grep value | xargs egrep ^.
 }
 

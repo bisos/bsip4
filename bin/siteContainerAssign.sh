@@ -76,6 +76,8 @@ _CommentEnd_
 
 . ${opBinBase}/bisosCurrents_lib.sh
 
+. ${opBinBase}/site_lib.sh
+
 # PRE parameters
 typeset -t model=""     # one of [HPV]
 typeset -t abode=""     # one of [MAPIS]
@@ -147,46 +149,6 @@ _EOF_
 noArgsHook() {
   vis_examples
 }
-
-function vis_containersAssignBaseObtain {
-    containersAssignBaseObtain
-}
-
-function containersAssignBaseObtain {
-   G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-    
-    usgHome=$( FN_absolutePathGet ~ )
-    # ~/bisos/sites/selected/siteBpos/containers.bpoFp/bpoId
-    local selectedContainersPath="${usgHome}/bisos/sites/selected/siteBpos/containers.bpoFp/bpoId"
-    
-    local containersBxoId=""
-
-    if [ -d "${selectedContainersPath}" ] ; then
-	containersBxoId=$( fileParamManage.py -i fileParamReadPath ${selectedContainersPath} )
-	if [ -z "${containersBxoId}" ] ; then
-	    EH_problem "Missing containersBxoId"
-	    lpReturn 101
-	fi
-	if ! vis_bxoAcctVerify "${containersBxoId}" ; then
-	    EH_problem "Missing containersBxoId"
-	    lpReturn 101
-	fi
-     else
-	EH_problem "Missing ${selectedContainersPath}"
-	lpReturn 101
-    fi
-
-    local containersBase=$( FN_absolutePathGet ~${containersBxoId} )/assign
-    EH_assert [ -d "${containersBase}" ]
-
-    echo "${containersBase}"
-
-    lpReturn
-}	
 
 
 function vis_modelAbodeFunctionBaseDirsCreate {
