@@ -63,8 +63,8 @@ _EOF_
 
     fileParamManage.py -i fileParamDictReadDeep ${bxoHome}/siteContainersRepo
 
-    fileParamManage.py -i fileParamDictReadDeep ${bxoHome}/siteContainersRepo/stable/net/networks
-    fileParamManage.py -i fileParamDictReadDeep ${bxoHome}/siteContainersRepo/stable/net/routes        
+    fileParamManage.py -i fileParamDictReadDeep ${bxoHome}/siteContainersRepo/steady/net/networks
+    fileParamManage.py -i fileParamDictReadDeep ${bxoHome}/siteContainersRepo/steady/net/routes        
     
     lpReturn
 }	
@@ -73,6 +73,8 @@ _EOF_
 function vis_containerAssignRead {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
+bxoId is the sysChar. From which the link to assign is followed.
+When boxId is "virt", virtSpec.fps become effective.
 _EOF_
 		      }
    EH_assert [[ $# -eq 0 ]]
@@ -91,9 +93,11 @@ _EOF_
 }
 
 
-function vis_containerStableRead {
+function vis_containerSteadyRead {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
+bxoId is the sysChar. From which the link to the steady dir of container repo is followed.
+From there links to networks and routes are also followed.
 _EOF_
 		      }
    EH_assert [[ $# -eq 0 ]]
@@ -102,21 +106,23 @@ _EOF_
    EH_assert vis_bxoAcctVerify "${bxoId}"
    bxoHome=$( FN_absolutePathGet ~${bxoId} )
   
-   local containerStableBase=${bxoHome}/siteContainersRepo/stable
+   local containerSteadyBase=${bxoHome}/siteContainersRepo/steady
 
-   containerStable_privA_addr=$( fileParamManage.py -i fileParamRead  ${containerStableBase}/net/ipv4/privA.fps addr )
-   containerStable_privA_gateway=$( fileParamManage.py -i fileParamRead  ${containerStableBase}/net/ipv4/privA.fps gateway )
+   containerSteady_privA_addr=$( fileParamManage.py -i fileParamRead  ${containerSteadyBase}/net/ipv4/privA.fps addr )
+   containerSteady_privA_gateway=$( fileParamManage.py -i fileParamRead  ${containerSteadyBase}/net/ipv4/privA.fps gateway )
 
-   containerStable_privA_netmask=$( fileParamManage.py -i fileParamRead  ${containerStableBase}/net/networks/privA/net.fps netmask )   
+   containerSteady_privA_netmask=$( fileParamManage.py -i fileParamRead  ${containerSteadyBase}/net/networks/privA/net.fps netmask )   
 
-   containerStable_privA_pubA_router=$( fileParamManage.py -i fileParamRead  ${containerStableBase}/net/routes/privA-pubA.fps router )   
-   containerStable_privA_pubA_upCommand=$( fileParamManage.py -i fileParamRead  ${containerStableBase}/net/routes/privA-pubA.fps upCommand )
-   containerStable_privA_pubA_downCommand=$( fileParamManage.py -i fileParamRead  ${containerStableBase}/net/routes/privA-pubA.fps downCommand )   
+   containerSteady_privA_pubA_router=$( fileParamManage.py -i fileParamRead  ${containerSteadyBase}/net/routes/privA-pubA.fps router )   
+   containerSteady_privA_pubA_upCommand=$( fileParamManage.py -i fileParamRead  ${containerSteadyBase}/net/routes/privA-pubA.fps upCommand )
+   containerSteady_privA_pubA_downCommand=$( fileParamManage.py -i fileParamRead  ${containerSteadyBase}/net/routes/privA-pubA.fps downCommand )   
 }
 
 function vis_sysCharRead {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
+bxoId is the sysChar.
+sysInfo.fps of sysChar overwrites sysInfo.fps of siteContainersRepo.
 _EOF_
 		      }
    EH_assert [[ $# -eq 0 ]]
@@ -129,9 +135,12 @@ _EOF_
 
    sysChar_privA_if=$( fileParamManage.py -i fileParamRead  ${sysCharBase}/netInterface.fps privA )
 
-   sysChar_vmSpec_baseBox=$( fileParamManage.py -i fileParamRead  ${sysCharBase}/vmSpec.fps baseBox )
-   sysChar_vmSpec_sizing=$( fileParamManage.py -i fileParamRead  ${sysCharBase}/vmSpec.fps sizing )   
-   
+   sysChar_virtSpec_baseBox=$( fileParamManage.py -i fileParamRead  ${sysCharBase}/virtSpec.fps baseBox )
+   sysChar_virtSpec_sizing=$( fileParamManage.py -i fileParamRead  ${sysCharBase}/virtSpec.fps sizing )
+   sysChar_virtSpec_virtType=$( fileParamManage.py -i fileParamRead  ${sysCharBase}/virtSpec.fps virtType )
+
+   sysChar_sysInfo_distro=$( fileParamManage.py -i fileParamRead  ${sysCharBase}/sysChar.fps distro )
+   sysChar_sysInfo_distroType=$( fileParamManage.py -i fileParamRead  ${sysCharBase}/sysChar.fps distroType )      
 }
 
 

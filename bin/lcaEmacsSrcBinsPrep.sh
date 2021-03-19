@@ -717,6 +717,26 @@ _EOF_
 	opDo apt-get -y install  libm17n-dev
 	opDo apt-get -y install  libharfbuzz-dev     # shaping for farsi/arabic
 
+    elif [ "${opRunDistGeneration}" == "10" ] ; then
+	#
+
+	opDo apt-get -y install  libjpeg-dev
+	opDo apt-get -y install  libtiff-dev
+	opDo apt-get -y install  libncurses5-dev
+	opDo apt-get -y install  libgif-dev
+	opDo apt-get -y install  libpng-dev
+	opDo apt-get -y install  librsvg2-dev
+	opDo apt-get -y install  libotf-dev
+	
+	opDo apt-get -y install  libgnutls28-dev # NOTYET double check on need for this
+
+	opDo apt-get -y install  libwebkit2gtk-4.0-dev
+	opDo apt-get -y install  libwebkit2gtk-4.0-37-gtk2  # NOTYET, is this needed
+
+	opDo apt-get -y install  libm17n-dev
+	opDo apt-get -y install  libharfbuzz-dev     # shaping for farsi/arabic
+
+	
     elif [ "${opRunDistGeneration}" == "1804" ] ; then
 	#
 

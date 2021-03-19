@@ -143,6 +143,7 @@ bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VAG-deb10-
 $( examplesSeperatorChapter "Specialized Actions" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantBaseBoxFromSysChar
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_path      # on host
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_create    # on host - vag-ssh
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_create testNetSet   # on host - vag-ssh
@@ -152,6 +153,7 @@ $( examplesSeperatorChapter "Vagrantfile Stdout and Creation " )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_bottomPart
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_bottomPart testNetSet
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_stdout    # on host
+${G_myName} -p bxoId="${oneBxoId}" -i vagrantFile_stdout    # on host
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_stdout testNetSet
 $( examplesSeperatorChapter "Post Vagrant Virsh Activities" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vmCustomize           # using virsh sets up guest ip addrs
@@ -309,7 +311,7 @@ _EOF_
 
     lpDo cd ${thisDir}
 
-    lpDo eval vis_vagrantFile_stdout $@ \> Vagrantfile
+    lpDo eval vis_vagrantFile_stdout ${nextNu} $@ \> Vagrantfile
 
     lpDo pwd
 
@@ -362,8 +364,21 @@ vmParamCpus=2
 
 
 function setVmParamsBasedOnSizing {
-    EH_assert [[ $# -eq 1 ]]
-    local vmSizing=$1
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+From a given sysChar, based on  containerDistro and containerDistroType determine vagrantBaseBox.
+_EOF_
+		       }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert vis_bxoAcctVerify "${bxoId}"
+
+    lpDo vis_containerAssignRead
+    lpDo vis_containerSteadyRead    
+    lpDo vis_sysCharRead
+    
+    local vmSizing="${sysChar_virtSpec_sizing}"
 
     if [ "${vmSizing}" == "minimal" ] ; then
 	vmParamRam=512
@@ -411,7 +426,123 @@ _EOF_
     lpDo printf ${thisDescribeF}
     
     lpReturn
-}	
+}
+
+function vis_vagrantBaseBoxFromSysChar {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+From a given sysChar, based on  containerDistro and containerDistroType determine vagrantBaseBox.
+_EOF_
+		       }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert vis_bxoAcctVerify "${bxoId}"
+
+    lpDo vis_containerAssignRead
+    lpDo vis_containerSteadyRead    
+    lpDo vis_sysCharRead
+
+    if [ ! -z "${sysChar_virtSpec_baseBox}" ] ; then
+	lpDo echo "${sysChar_virtSpec_baseBox}"
+	lpReturn
+    fi
+
+    local vagrantBaseBox=""
+    
+    case "${sysChar_sysInfo_distro}" in
+	"deb10")
+            vagrantBaseBox="generic/debian10"
+            ;;
+	"deb11")
+            vagrantBaseBox="debian/testing64"
+            ;;
+	"ub2004")
+	    vagrantBaseBox="peru/ubuntu-20.04-server-amd64"
+	    if [ "${sysChar_sysInfo_distro}" == "server" ] ; then
+		vagrantBaseBox="peru/ubuntu-20.04-server-amd64"
+	    elif [ "${sysChar_sysInfo_distro}" == "desktop" ] ; then
+		vagrantBaseBox="peru/ubuntu-20.04-server-amd64"
+	    else
+		opDoNothing
+	    fi
+            ;;
+	"default")
+	    vagrantBaseBox="generic/debian10"
+	    ;;
+	* )
+	    EH_problem "Unsupported sysChar_sysInfo_distro=${sysChar_sysInfo_distro}"
+	    vagrantBaseBox=""
+	    ;;
+    esac
+    echo ${vagrantBaseBox}
+}
+
+
+function vis_vagrantServerToDesktop {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+From a given sysChar, based on  containerDistro and containerDistroType determine vagrantBaseBox.
+_EOF_
+		       }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert vis_bxoAcctVerify "${bxoId}"
+
+    lpDo vis_containerAssignRead
+    lpDo vis_containerSteadyRead    
+    lpDo vis_sysCharRead
+
+    local containerBaseBox=$( vis_vagrantBaseBoxFromSysChar )
+
+    #if [ "${sysChar_sysInfo_distro}" != "desktop" ] ; then
+    if false ; then
+	cat  << _OUTER_EOF_
+	     cat  << _EOF_
+ ######### PHASE 0: Bx Level Distro (serverToDesktop)
+_EOF_
+	     echo "sysChar_sysInfo_distro is not 'desktop'"
+_OUTER_EOF_
+
+    fi
+
+    
+    case "${containerBaseBox}" in
+	"generic/debian10"|"debian/testing64")
+	    # From https://linuxhint.com/install_gnome_debian_10_minimal_server/
+	    # sudo tasksel install desktop gnome-desktop
+	    # sudo tasksel install laptop
+	    cat  << _OUTER_EOF_
+       cat  << _EOF_
+ ######### PHASE 0: Bx Level Distro (serverToDesktop)
+_EOF_
+	    
+	sudo apt-get update	 
+        sudo apt-get -y install desktop gnome-desktop
+	sudo apt-get -y install laptop
+        sudo systemctl set-default graphical.target	
+
+_OUTER_EOF_
+            ;;
+	"peru/ubuntu-20.04-server-amd64")
+	    cat  << _OUTER_EOF_
+	     cat  << _EOF_
+ ######### PHASE 0: Bx Level Distro (serverToDesktop)
+_EOF_
+	 
+        sudo apt-get update
+        sudo apt-get -y install ubuntu-desktop        
+        sudo service gdm3 start
+_OUTER_EOF_
+            ;;
+	* )
+	    EH_problem "Unsupported containerBaseBox=${containerBaseBox}"
+	    ;;
+    esac
+    lpReturn
+}
+
 
 function vis_vagrantFile_stdout {
     G_funcEntry
@@ -420,29 +551,39 @@ Output a vagrantfile using the sysChar BxO.
 _EOF_
 		       }
     local thisFunc=${G_thisFunc}
-    # EH_assert [[ $# -lt 2 ]]  # if unused delete
+    EH_assert [[ $# -lt 3 ]]
 
     EH_assert [ ! -z "${bxoId}" ]
     EH_assert vis_bxoAcctVerify "${bxoId}"
 
     lpDo vis_containerAssignRead
-    lpDo vis_containerStableRead    
+    lpDo vis_containerSteadyRead    
     lpDo vis_sysCharRead
+
+    local vmNameQualifier=""
+    
+    if [ $# -eq 0 ] ; then
+	vmNameQualifier=""
+    else
+	vmNameQualifier="$1"
+	shift
+    fi
 
     local dateTag=$( date +%Y%m%d%H%M%S )
 
     #local containerBxoRef=$( fileParamManage.py -v 30 -i fileParamRead  ${bxoHome}/containerBxO/bxoRef.fps bxoId )
 
-    local baseBox=$sysChar_vmSpec_baseBox
-    local sizing=$sysChar_vmSpec_sizing
+    local sizing=$sysChar_virtSpec_sizing
 
     #EH_assert  vis_bxoAcctVerify "${containerBxoRef}"
 
-    lpDo setVmParamsBasedOnSizing ${sizing}
+    lpDo setVmParamsBasedOnSizing # ${sizing}
 
     #local containerHome=$( FN_absolutePathGet ~${containerBxoRef} )
 
-    local containerName=${containerAssign_containerId}
+    local containerBaseBox=$( vis_vagrantBaseBoxFromSysChar )
+
+    local containerName=${containerAssign_containerId}${vmNameQualifier}
 
     local defaultInterface=$( ip -4 route ls | grep default | grep -Po '(?<=dev )(\S+)' )
 
@@ -453,16 +594,13 @@ _EOF_
 # Vagrantfile for ${bxoId} -- 
 # Generated with ${G_myName}:${thisFunc} on $(hostname) at ${dateTag} -- Do Not Hand Edit
 # 
-# ${bxoHome}/containerBxO/bxoRef.fps/bxoId = NOTYET-containerBxoRef
-# ${bxoHome}/sysSpec/vmSpec.fps/baseBox/value = ${baseBox}
-# ${bxoHome}/sysSpec/vmSpec.fps/sizing/value = ${sizing}
-# NOTYET-containerHome/containerSpec/hostname.fps/name = ${containerName}
+# bxoHome=${bxoHome}  -- bxoId=${bxoId}
 # 
 
 # The "2" in Vagrant.configure is for configuration version. Don't change it.
 Vagrant.configure("2") do |config|
-  config.vm.define "${containerName}"NOTYET do |guest|
-    guest.vm.box = "${baseBox}"NOTYET
+  config.vm.define "${containerName}" do |guest|
+    guest.vm.box = "${containerBaseBox}"
     guest.vm.hostname = "${containerName}"
     guest.vm.network :public_network, :dev => "${defaultInterface}", :mode => 'bridge', auto_config: false
 
@@ -510,14 +648,9 @@ _EOF_
 
     ## SHELL PROVISIONING
     guest.vm.provision "shell", inline: <<-_EOF_MainRootShell_
-      cat  << _EOF_
- ######### PHASE 0: Bx Level Distro (serverToDesktop)
-_EOF_
-        set -x
+       set -x
 
-        sudo apt-get update
-        sudo apt-get -y install ubuntu-desktop        
-        sudo service gdm3 start
+$( vis_vagrantServerToDesktop )	
 
       cat  << _EOF_
  ######### PAHSE 1: Updating And Installing Distro Pkgs 
