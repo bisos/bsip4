@@ -40,9 +40,27 @@ itemOrderedList=(
     "vagrant"
     "vagrantPlugins"
     # "vagrantDebUpstream"
+    "packer_addRepo" 
+    "packer" 
+
 )
 
 # }}}
+
+
+_CommentBegin_
+*      ======[[elisp:(org-cycle)][Fold]]====== Module Specific Additions -- examplesHook
+_CommentEnd_
+
+
+function examplesHookPost {
+  cat  << _EOF_
+----- ADDITIONS -------
+${G_myName} -i moduleDescription
+${G_myName} ${extraInfo} -i repositoryAdd
+_EOF_
+}
+
 
 ####+BEGIN: bx:dblock:lsip:binsprep:apt :module "vagrant"
 _CommentBegin_
@@ -86,6 +104,43 @@ binsPrep_vagrantPlugins_DEFAULT_DEFAULT () {
 	lpDo sudo vagrant plugin install vagrant-disksize
 
 	lpDo vagrant plugin list
+    }
+}
+
+
+####+BEGIN: bx:dblock:lsip:binsprep:apt :module "packer"
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || Apt-Pkg       :: packer [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+item_packer () { distFamilyGenerationHookRun binsPrep_packer; }
+
+binsPrep_packer_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "packer"; }
+
+####+END:
+
+
+_CommentBegin_
+*      ======[[elisp:(org-cycle)][Fold]]====== Apt-Pkg: packer_addRepo
+_CommentEnd_
+
+vis_repositoryAdd () {
+    opDo eval "curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -"
+    opDo sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+    opDo sudo apt-get update
+}
+
+
+item_packer_addRepo () {
+  distFamilyGenerationHookRun binsPrep_packer_addRepo
+}
+
+binsPrep_packer_addRepo_DEFAULT_DEFAULT () {
+    mmaThisPkgName="packer_addRepo"
+    mmaPkgDebianName="${mmaThisPkgName}"
+    mmaPkgDebianMethod="custom"  #  or "apt" no need for customInstallScript but with binsPrep_installPostHook
+
+    function customInstallScript {
+	opDo vis_repositoryAdd
     }
 }
 

@@ -90,7 +90,11 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Chapter Title" )
 $( examplesSeperatorSection "Section Title" )
-${G_myName} ${extraInfo} -i doTheWork
+${G_myName} ${extraInfo} -i fullUpdate
+${G_myName} ${extraInfo} -i bentoBoxesPrep
+${G_myName} ${extraInfo} -i bento_deb10_build
+${G_myName} ${extraInfo} -i bento_deb11_build
+${G_myName} ${extraInfo} -i bento_ub2004_build
 _EOF_
 }
 
@@ -102,19 +106,83 @@ _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
 _CommentEnd_
 
-
-function vis_doTheWork {
+function vis_fullUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo vis_failExample
-    EH_retOnFail
+    lpDo vis_bentoBoxesPrep
+
+    lpDo vis_bento_deb10_build
+    lpDo vis_bento_ub2004_build
+    
+    lpReturn
+}
+
+
+
+function vis_bentoBoxesPrep {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo mkdir /bisos/var/vagrant
+
+    inBaseDirDo /bisos/var/vagrant git clone https://github.com/chef/bento
 
     lpReturn
 }
+
+function vis_bento_deb10_build {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    inBaseDirDo /bisos/var/vagrant/bento/packer_templates/debian packer build -only qemu -var "headless=true" debian-10.8-amd64.json
+
+    lpDo vagrant box add /bisos/var/vagrant/bento/builds/debian-10.8.libvirt.box --name "bento/debian-10.8"
+
+    lpReturn
+}
+
+
+function vis_bento_deb11_build {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    # /bisos/var/vagrant/bento/packer_templates/debian/debian-11.0-amd64.json
+    inBaseDirDo /bisos/var/vagrant/bento/packer_templates/debian packer build -only qemu -var "headless=true" debian-11.0-amd64.json
+
+    lpDo vagrant box add /bisos/var/vagrant/bento/builds/debian-11.0.libvirt.box --name "bento/debian-11.0"
+
+    lpReturn
+}
+
+
+function vis_bento_ub2004_build {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    inBaseDirDo /bisos/var/vagrant/bento/packer_templates/ubuntu packer build -only qemu -var "headless=true" ubuntu-20.04-amd64.json
+
+    lpDo vagrant box add /bisos/var/vagrant/bento/builds/ubuntu-20.04.libvirt.box --name "bento/ubuntu-20.04"
+
+    lpReturn
+}
+
+
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*

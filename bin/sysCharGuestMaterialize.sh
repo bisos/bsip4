@@ -509,18 +509,19 @@ _OUTER_EOF_
 
     
     case "${containerBaseBox}" in
-	"generic/debian10"|"debian/testing64")
+	"generic/debian10"|"debian/testing64"|"bento/debian-10.8"|"bento/debian-11.0")
 	    # From https://linuxhint.com/install_gnome_debian_10_minimal_server/
-	    # sudo tasksel install desktop gnome-desktop
-	    # sudo tasksel install laptop
 	    cat  << _OUTER_EOF_
        cat  << _EOF_
  ######### PHASE 0: Bx Level Distro (serverToDesktop)
 _EOF_
 	    
-	sudo apt-get update	 
-        sudo apt-get -y install desktop gnome-desktop
-	sudo apt-get -y install laptop
+	echo "Be Patient -- tasksel is silent and install can be loooong"    
+	sudo apt-get update
+        sudo apt-get -y install --reinstall debconf
+        sudo apt-get -y install tasksel
+        sudo tasksel install desktop gnome-desktop
+	sudo tasksel install laptop
         sudo systemctl set-default graphical.target	
 
 _OUTER_EOF_
@@ -603,6 +604,7 @@ Vagrant.configure("2") do |config|
     guest.vm.box = "${containerBaseBox}"
     guest.vm.hostname = "${containerName}"
     guest.vm.network :public_network, :dev => "${defaultInterface}", :mode => 'bridge', auto_config: false
+    guest.vm.synced_folder '.', '/vagrant', disabled: true
 
     config.vm.provider :libvirt do |libvirt|
       libvirt.driver = "kvm"
