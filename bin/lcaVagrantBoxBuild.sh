@@ -64,6 +64,17 @@ _CommentEnd_
 . ${opBinBase}/lpReRunAs.libSh
 
 
+. ${opBinBase}/platformBases_lib.sh
+
+. ${opBinBase}/unisosAccounts_lib.sh
+. ${opBinBase}/bisosGroupAccount_lib.sh
+. ${opBinBase}/bisosAccounts_lib.sh
+
+. ${opBinBase}/bxioCommon_lib.sh
+
+. ${opBinBase}/bisosCurrents_lib.sh
+
+
 # PRE parameters
 
 baseDir=""
@@ -88,13 +99,31 @@ function vis_examples {
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
-$( examplesSeperatorChapter "Chapter Title" )
-$( examplesSeperatorSection "Section Title" )
-${G_myName} ${extraInfo} -i fullUpdate
-${G_myName} ${extraInfo} -i bentoBoxesPrep
+$( examplesSeperatorChapter "Bento Boxes" )
+${G_myName} ${extraInfo} -i bento_fullUpdate
+$( examplesSeperatorSection "Debian and Ubuntu Bento Boxes" )
+${G_myName} ${extraInfo} -i bento_boxesPrep
 ${G_myName} ${extraInfo} -i bento_deb10_build
 ${G_myName} ${extraInfo} -i bento_deb11_build
 ${G_myName} ${extraInfo} -i bento_ub2004_build
+$( examplesSeperatorChapter "ByStar Vagrant Distro Base Boxes" )
+${G_myName} -i bisos_packerBoxesBasePath
+${G_myName} ${extraInfo} -i bvdbb_fullUpdate
+$( examplesSeperatorSection "Debian and Ubuntu ByStar Vagrant Distro Base Boxes" )
+${G_myName} ${extraInfo} -i bvdbb_boxesPrep
+${G_myName} ${extraInfo} -i bvdbb_deb10_serverBuild
+${G_myName} ${extraInfo} -i bvdbb_deb10_desktopBuild
+${G_myName} ${extraInfo} -i bvdbb_deb11_serverBuild
+${G_myName} ${extraInfo} -i bvdbb_deb11_desktopBuild
+${G_myName} ${extraInfo} -i bvdbb_ub2004_serverBuild
+${G_myName} ${extraInfo} -i bvdbb_ub2004_desktopBuild
+$( examplesSeperatorChapter "BISOS Vagrant Base Boxes" )
+${G_myName} ${extraInfo} -i bisos_fullUpdate
+$( examplesSeperatorSection "Debian and Ubuntu BISOS Container Vagrant  Base Boxes" )
+${G_myName} ${extraInfo} -i bisos_boxesPrep
+${G_myName} ${extraInfo} -i bisos_deb10_build
+${G_myName} ${extraInfo} -i bisos_deb11_build
+${G_myName} ${extraInfo} -i bisos_ub2004_build
 _EOF_
 }
 
@@ -106,16 +135,17 @@ _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
 _CommentEnd_
 
-function vis_fullUpdate {
+function vis_bento_fullUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo vis_bentoBoxesPrep
+    lpDo vis_bento_boxesPrep
 
     lpDo vis_bento_deb10_build
+    lpDo vis_bento_deb11_build    
     lpDo vis_bento_ub2004_build
     
     lpReturn
@@ -123,7 +153,7 @@ _EOF_
 
 
 
-function vis_bentoBoxesPrep {
+function vis_bento_boxesPrep {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -159,10 +189,10 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    # /bisos/var/vagrant/bento/packer_templates/debian/debian-11.0-amd64.json
-    inBaseDirDo /bisos/var/vagrant/bento/packer_templates/debian packer build -only qemu -var "headless=true" debian-11.0-amd64.json
+    # /bisos/var/vagrant/bento/packer_templates/debian/debian-11.pre-amd64.json
+    inBaseDirDo /bisos/var/vagrant/bento/packer_templates/debian packer build -only qemu -var "headless=true" debian-11.pre-amd64.json
 
-    lpDo vagrant box add /bisos/var/vagrant/bento/builds/debian-11.0.libvirt.box --name "bento/debian-11.0"
+    lpDo vagrant box add /bisos/var/vagrant/bento/builds/debian-11.pre.libvirt.box --name "bento/debian-11.pre"
 
     lpReturn
 }
@@ -178,6 +208,239 @@ _EOF_
     inBaseDirDo /bisos/var/vagrant/bento/packer_templates/ubuntu packer build -only qemu -var "headless=true" ubuntu-20.04-amd64.json
 
     lpDo vagrant box add /bisos/var/vagrant/bento/builds/ubuntu-20.04.libvirt.box --name "bento/ubuntu-20.04"
+
+    lpReturn
+}
+
+function vis_bisos_packerBoxesBasePath {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local vagrantBaseBoxes_bxoId=aip_vagrantBaseBoxes
+    EH_assert vis_bxoAcctVerify "${vagrantBaseBoxes_bxoId}"
+    
+    local vagrantBaseBoxes_bxoHome=$( FN_absolutePathGet ~${vagrantBaseBoxes_bxoId} )
+    local bisos_packerBoxesBase=${vagrantBaseBoxes_bxoHome}/vagrants/packerBaseBoxes
+
+    EH_assert [ -d "${bisos_packerBoxesBase}" ]
+
+    echo "${bisos_packerBoxesBase}"
+    
+    lpReturn
+}
+
+
+function vis_bvdbb_fullUpdate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo vis_bvdbb_boxesPrep
+
+    lpDo vis_bvdbb_deb10_build
+    lpDo vis_bvdbb_deb11_build    
+    lpDo vis_bvdbb_ub2004_build
+    
+    lpReturn
+}
+
+
+
+function vis_bvdbb_boxesPrep {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpReturn
+}
+
+function vis_bvdbb_deb10_serverBuild {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local bisosPackerBoxesPath=$( vis_bisos_packerBoxesBasePath )
+
+    # /bxo/r3/iso/aip_vagrantBaseBoxes/vagrants/packerBaseBoxes/debian/mini
+    inBaseDirDo ${bisosPackerBoxesPath}/debian/mini packer build -only qemu -var "headless=true" debian-10.8-amd64.json
+
+    lpDo vagrant box add ${bisosPackerBoxesPath}/builds/debian-10.8.libvirt.box --name "bxDistro/debian-10.8/mini"
+
+    lpReturn
+}
+
+
+function vis_bvdbb_deb11_serverBuild {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local bisosPackerBoxesPath=$( vis_bisos_packerBoxesBasePath )
+
+    # /bxo/r3/iso/aip_vagrantBaseBoxes/vagrants/packerBaseBoxes/debian/mini/debian-11.pre-amd64.json
+    inBaseDirDo ${bisosPackerBoxesPath}/debian/mini packer build -only qemu -var "headless=true" debian-11.pre-amd64.json
+
+    lpDo vagrant box add ${bisosPackerBoxesPath}/builds/debian-11.pre.libvirt.box --name "bxDistro/debian-11.pre/mini"
+
+    lpReturn
+}
+
+
+function vis_bvdbb_ub2004_serverBuild {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    # inBaseDirDo /bvdbb/var/vagrant/bvdbb/packer_templates/ubuntu packer build -only qemu -var "headless=true" ubuntu-20.04-amd64.json
+
+    # lpDo vagrant box add /bvdbb/var/vagrant/bvdbb/builds/ubuntu-20.04.libvirt.box --name "bvdbb/ubuntu-20.04"
+
+    lpReturn
+}
+
+
+
+function vis_bvdbb_deb10_desktopBuild {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local bisosPackerBoxesPath=$( vis_bisos_packerBoxesBasePath )
+
+    # /bxo/r3/iso/aip_vagrantBaseBoxes/vagrants/packerBaseBoxes/debian/desktop
+    inBaseDirDo ${bisosPackerBoxesPath}/debian/desktop packer build -only qemu -var "headless=true" debian-10.8-amd64.json
+
+    lpDo vagrant box add ${bisosPackerBoxesPath}/builds/debian-10.8-desktop.libvirt.box --name "bxDistro/debian-10.8/desktop"
+
+    lpReturn
+}
+
+
+function vis_bvdbb_deb11_desktopBuild {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local bisosPackerBoxesPath=$( vis_bisos_packerBoxesBasePath )
+
+    # /bxo/r3/iso/aip_vagrantBaseBoxes/vagrants/packerBaseBoxes/debian/desktop/debian-11.pre-amd64.json
+    inBaseDirDo ${bisosPackerBoxesPath}/debian/desktop packer build -only qemu -var "headless=true" debian-11.pre-amd64.json
+
+    lpDo vagrant box add ${bisosPackerBoxesPath}/builds/debian-11.pre-desktop.libvirt.box --name "bxDistro/debian-11.pre/desktop"
+
+    lpReturn
+}
+
+
+function vis_bvdbb_ub2004_desktopBuild {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    # inBaseDirDo /bvdbb/var/vagrant/bvdbb/packer_templates/ubuntu packer build -only qemu -var "headless=true" ubuntu-20.04-amd64.json
+
+    # lpDo vagrant box add /bvdbb/var/vagrant/bvdbb/builds/ubuntu-20.04.libvirt.box --name "bvdbb/ubuntu-20.04"
+
+    lpReturn
+}
+
+
+#######################
+
+function vis_bisos_fullUpdate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo vis_bisos_boxesPrep
+
+    lpDo vis_bisos_deb10_build
+    lpDo vis_bisos_deb11_build    
+    lpDo vis_bisos_ub2004_build
+    
+    lpReturn
+}
+
+
+
+function vis_bisos_boxesPrep {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpReturn
+}
+
+function vis_bisos_deb10_build {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local bisosPackerBoxesPath=$( vis_bisos_packerBoxesBasePath )
+
+    # /bxo/r3/iso/aip_vagrantBaseBoxes/vagrants/packerBaseBoxes/debian/bxcntnr
+    inBaseDirDo ${bisosPackerBoxesPath}/debian/bxcntnr packer build -only qemu -var "headless=true" debian-10.8-amd64.json
+
+    lpDo vagrant box add ${bisosPackerBoxesPath}/builds/debian-10.8-bxcntnr.libvirt.box --name "bisos/debian-10.8/bxcntnr"
+    
+    lpReturn
+}
+
+
+function vis_bisos_deb11_build {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+
+    local bisosPackerBoxesPath=$( vis_bisos_packerBoxesBasePath )
+
+    # /bxo/r3/iso/aip_vagrantBaseBoxes/vagrants/packerBaseBoxes/debian/bxcntnr/debian-11.pre-amd64.json
+    inBaseDirDo ${bisosPackerBoxesPath}/debian/bxcntnr packer build -only qemu -var "headless=true" debian-11.pre-amd64.json
+
+    lpDo vagrant box add ${bisosPackerBoxesPath}/builds/debian-11.pre-bxcntnr.libvirt.box --name "bisos/debian-11.pre/bxcntnr"
+
+    lpReturn
+}
+
+
+function vis_bisos_ub2004_build {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    inBaseDirDo /bisos/var/vagrant/bisos/packer_templates/ubuntu packer build -only qemu -var "headless=true" ubuntu-20.04-amd64.json
+
+    lpDo vagrant box add /bisos/var/vagrant/bisos/builds/ubuntu-20.04.libvirt.box --name "bisos/ubuntu-20.04"
 
     lpReturn
 }

@@ -298,7 +298,7 @@ _EOF_
     local thisDir=""
 
     opDoExit cd ${dirsPart}    
-    local vmsDirsList=$( ls | grep -v Vagrantfile | grep -v bxo | grep -v history | sort )
+    local vmsDirsList=$( ls | grep -v Vagrantfile | grep -v bxo | grep -v history | sort -n )
 
     echo ${vmsDirsList}
     for thisDir in ${vmsDirsList} ; do
@@ -479,7 +479,7 @@ _EOF_
 }
 
 
-function vis_vagrantServerToDesktop {
+function vis_vagStdout_bisosProvision {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 From a given sysChar, based on  containerDistro and containerDistroType determine vagrantBaseBox.
@@ -496,40 +496,121 @@ _EOF_
 
     local containerBaseBox=$( vis_vagrantBaseBoxFromSysChar )
 
-    #if [ "${sysChar_sysInfo_distro}" != "desktop" ] ; then
-    if false ; then
-	cat  << _OUTER_EOF_
-	     cat  << _EOF_
- ######### PHASE 0: Bx Level Distro (serverToDesktop)
+    case "${containerBaseBox}" in
+
+	"bisos/ubuntu-2004/bxcntnr")
+	    opDoNothing
+	    ;&   #fallthru
+	"bisos/debian-11.pre/bxcntnr")
+	    opDoNothing
+	    ;&   #fallthru
+	"bisos/debian-10.8/bxcntnr")
+	    cat  << _OUTER_EOF_
+	     cat   << _EOF_
+######### PHASE 1: BISOS Provisioning -- baseBox=${containerBaseBox}
 _EOF_
-	     echo "sysChar_sysInfo_distro is not 'desktop'"
+	     echo "containerBaseBox=${containerBaseBox} -- Vagrant Skipped BISOS Provisioning."
 _OUTER_EOF_
+	    ;;
 
-    fi
+	"bxDistro/ubuntu-2004/desktop")
+	    opDoNothing
+	    ;&   #fallthru
+	"bxDistro/debian-11.pre/desktop")
+	    opDoNothing
+	    ;&   #fallthru
+	"bxDistro/debian-10.8/desktop")
+	    opDoNothing
+	    ;&   #fallthru
+	"bento/debian-10.8"|"bento/debian-11.pre")
+	    opDoNothing
+	    ;&   #fallthru
+	"bxDistro/debian-10.8/mini"|"bxDistro/debian-11.pre/mini"|"bxDistro/debian-11.pre/mini")
+	    opDoNothing
+	    ;&   #fallthru
+	"bento/ubuntu-20.04")
+	    opDoNothing
+	    ;&
+	"bxDistro/ubuntu-20.04/mini")
+	cat  << _OUTER_EOF_
+      cat  << _EOF_
+######### PHASE 1: BISOS Provisioning -- baseBox=${containerBaseBox}
+_EOF_
 
+        sudo apt-get -y install python3-pip
+        sudo pip3 install --upgrade bisos.provision  
+        /usr/local/bin/provisionBisos.sh -h -v -n showRun -i sysBasePlatform
+_OUTER_EOF_
+            ;;
+	
+	* )
+	    EH_problem "Unsupported containerBaseBox=${containerBaseBox}"
+	    ;;
+    esac
+    lpReturn
+}
+
+
+function vis_vagStdout_serverToDesktop {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+From a given sysChar, based on  containerDistro and containerDistroType determine vagrantBaseBox.
+_EOF_
+		       }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert vis_bxoAcctVerify "${bxoId}"
+
+    lpDo vis_containerAssignRead
+    lpDo vis_containerSteadyRead    
+    lpDo vis_sysCharRead
+
+    local containerBaseBox=$( vis_vagrantBaseBoxFromSysChar )
     
     case "${containerBaseBox}" in
-	"generic/debian10"|"debian/testing64"|"bento/debian-10.8"|"bento/debian-11.0")
+
+	"bxDistro/ubuntu-2004/desktop"|"bisos/ubuntu-2004/bxcntnr")
+	    opDoNothing
+	    ;&   #fallthru
+	"bxDistro/debian-11.pre/desktop"|"bisos/debian-11.pre/bxcntnr")
+	    opDoNothing
+	    ;&   #fallthru
+	"bxDistro/debian-10.8/desktop"|"bisos/debian-10.8/bxcntnr")
+	    cat  << _OUTER_EOF_
+	     cat   << _EOF_
+ ######### PHASE 0: Bx Level Distro (serverToDesktop) -- baseBox=${containerBaseBox}
+_EOF_
+	     echo "containerBaseBox=${containerBaseBox} -- Vagrant Skipped desktop addition."
+_OUTER_EOF_
+	    ;;
+	
+	"bento/debian-10.8"|"bento/debian-11.pre")
+	    opDoNothing
+	    ;&   #fallthru
+	"bxDistro/debian-10.8/mini"|"bxDistro/debian-11.pre/mini"|"bxDistro/debian-11.pre/mini")
 	    # From https://linuxhint.com/install_gnome_debian_10_minimal_server/
 	    cat  << _OUTER_EOF_
        cat  << _EOF_
- ######### PHASE 0: Bx Level Distro (serverToDesktop)
+ ######### PHASE 0: Bx Level Distro (serverToDesktop) -- baseBox=${containerBaseBox}
 _EOF_
 	    
-	echo "Be Patient -- tasksel is silent and install can be loooong"    
+	echo "Be Patient -- tasksel is silent and install can be loooong" 
 	sudo apt-get update
-        sudo apt-get -y install --reinstall debconf
-        sudo apt-get -y install tasksel
-        sudo tasksel install desktop gnome-desktop
-	sudo tasksel install laptop
-        sudo systemctl set-default graphical.target	
-
+	sudo apt-get -y install --reinstall debconf
+	sudo apt-get -y install task-gnome-desktop
+	sudo apt-get -y install task-laptop
+	sudo systemctl set-default graphical.target	
 _OUTER_EOF_
             ;;
-	"peru/ubuntu-20.04-server-amd64")
+
+	"bento/ubuntu-20.04")
+	    opDoNothing
+	    ;&
+	"bxDistro/ubuntu-20.04/mini")
 	    cat  << _OUTER_EOF_
 	     cat  << _EOF_
- ######### PHASE 0: Bx Level Distro (serverToDesktop)
+ ######### PHASE 0: Bx Level Distro (serverToDesktop) -- baseBox=${containerBaseBox}
 _EOF_
 	 
         sudo apt-get update
@@ -537,6 +618,7 @@ _EOF_
         sudo service gdm3 start
 _OUTER_EOF_
             ;;
+	
 	* )
 	    EH_problem "Unsupported containerBaseBox=${containerBaseBox}"
 	    ;;
@@ -652,15 +734,9 @@ _EOF_
     guest.vm.provision "shell", inline: <<-_EOF_MainRootShell_
        set -x
 
-$( vis_vagrantServerToDesktop )	
+$( vis_vagStdout_serverToDesktop )
 
-      cat  << _EOF_
- ######### PAHSE 1: Updating And Installing Distro Pkgs 
-_EOF_
-
-        sudo apt-get -y install python3-pip
-        sudo pip3 install --upgrade bisos.provision  
-        /usr/local/bin/provisionBisos.sh -h -v -n showRun -i sysBasePlatform
+$( vis_vagStdout_bisosProvision )	
 
       cat  << _EOF_
  ######### PHASE 2: Cleanup and Shutdown  -- Running As Root
