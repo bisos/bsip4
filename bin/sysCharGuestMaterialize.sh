@@ -249,7 +249,6 @@ _EOF_
 }	
 
 
-
 function vis_vagrantFile_create {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -525,7 +524,7 @@ _OUTER_EOF_
 	"bento/debian-10.8"|"bento/debian-11.pre")
 	    opDoNothing
 	    ;&   #fallthru
-	"bxDistro/debian-10.8/mini"|"bxDistro/debian-11.pre/mini"|"bxDistro/debian-11.pre/mini")
+	"bxDistro/debian-10.8/mini"|"bxDistro/debian-11.pre/mini")
 	    opDoNothing
 	    ;&   #fallthru
 	"bento/ubuntu-20.04")
@@ -588,7 +587,7 @@ _OUTER_EOF_
 	"bento/debian-10.8"|"bento/debian-11.pre")
 	    opDoNothing
 	    ;&   #fallthru
-	"bxDistro/debian-10.8/mini"|"bxDistro/debian-11.pre/mini"|"bxDistro/debian-11.pre/mini")
+	"bxDistro/debian-10.8/mini"|"bxDistro/debian-11.pre/mini")
 	    # From https://linuxhint.com/install_gnome_debian_10_minimal_server/
 	    cat  << _OUTER_EOF_
        cat  << _EOF_

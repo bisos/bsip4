@@ -124,6 +124,7 @@ ${G_myName} ${extraInfo} -i bisos_boxesPrep
 ${G_myName} ${extraInfo} -i bisos_deb10_build
 ${G_myName} ${extraInfo} -i bisos_deb11_build
 ${G_myName} ${extraInfo} -i bisos_ub2004_build
+# Cleanup find /bxo/iso/aip_vagrantBaseBoxes/vagrants/packerBaseBoxes -type d -print | grep packer_cache | grep -v '/port' | xargs rm -r
 _EOF_
 }
 
@@ -303,10 +304,13 @@ function vis_bvdbb_ub2004_serverBuild {
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
+    
+    local bisosPackerBoxesPath=$( vis_bisos_packerBoxesBasePath )
 
-    # inBaseDirDo /bvdbb/var/vagrant/bvdbb/packer_templates/ubuntu packer build -only qemu -var "headless=true" ubuntu-20.04-amd64.json
+    # /bxo/r3/iso/aip_vagrantBaseBoxes/vagrants/packerBaseBoxes/ubuntu/mini/ubuntu-20.04-amd64.json
+    inBaseDirDo ${bisosPackerBoxesPath}/ubuntu/mini packer build -only qemu -var "headless=true" ubuntu-20.04-amd64.json
 
-    # lpDo vagrant box add /bvdbb/var/vagrant/bvdbb/builds/ubuntu-20.04.libvirt.box --name "bvdbb/ubuntu-20.04"
+    lpDo vagrant box add ${bisosPackerBoxesPath}/builds/ubuntu-20.04.libvirt.box --name "bxDistro/ubuntu-20.04/mini"
 
     lpReturn
 }
@@ -356,9 +360,13 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    # inBaseDirDo /bvdbb/var/vagrant/bvdbb/packer_templates/ubuntu packer build -only qemu -var "headless=true" ubuntu-20.04-amd64.json
+    
+    local bisosPackerBoxesPath=$( vis_bisos_packerBoxesBasePath )
 
-    # lpDo vagrant box add /bvdbb/var/vagrant/bvdbb/builds/ubuntu-20.04.libvirt.box --name "bvdbb/ubuntu-20.04"
+    # /bxo/r3/iso/aip_vagrantBaseBoxes/vagrants/packerBaseBoxes/ubuntu/desktop/ubuntu-20.04-amd64.json
+    inBaseDirDo ${bisosPackerBoxesPath}/ubuntu/desktop packer build -only qemu -var "headless=true" ubuntu-20.04-amd64.json
+
+    lpDo vagrant box add ${bisosPackerBoxesPath}/builds/ubuntu-20.04-desktop.libvirt.box --name "bxDistro/ubuntu-20.04/desktop"
 
     lpReturn
 }
@@ -419,7 +427,6 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-
     local bisosPackerBoxesPath=$( vis_bisos_packerBoxesBasePath )
 
     # /bxo/r3/iso/aip_vagrantBaseBoxes/vagrants/packerBaseBoxes/debian/bxcntnr/debian-11.pre-amd64.json
@@ -438,9 +445,12 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    inBaseDirDo /bisos/var/vagrant/bisos/packer_templates/ubuntu packer build -only qemu -var "headless=true" ubuntu-20.04-amd64.json
+    local bisosPackerBoxesPath=$( vis_bisos_packerBoxesBasePath )
 
-    lpDo vagrant box add /bisos/var/vagrant/bisos/builds/ubuntu-20.04.libvirt.box --name "bisos/ubuntu-20.04"
+    # /bxo/r3/iso/aip_vagrantBaseBoxes/vagrants/packerBaseBoxes/ubuntu/bxcntnr/ubuntu-20.04-amd64.json
+    inBaseDirDo ${bisosPackerBoxesPath}/ubuntu/bxcntnr packer build -only qemu -var "headless=true" ubuntu-20.04-amd64.json
+
+    lpDo vagrant box add ${bisosPackerBoxesPath}/builds/ubuntu-20.04-bxcntnr.libvirt.box --name "bisos/ubuntu-20.04/bxcntnr"
 
     lpReturn
 }
