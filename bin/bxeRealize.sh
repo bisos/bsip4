@@ -175,6 +175,8 @@ ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i rbxeRepoCreateAndPush  #
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoCreateAndPush "rbxe" "${oneBxoHome}/rbxe" "priv"
 $( examplesSeperatorSection "Account And rbxe Repo Realization" )
 ${G_myName} ${extraInfo} -p bxeDesc="${oneBxeDesc}" -i acctRbxeRealize   # invokes all of the above
+${G_myName} ${extraInfo} -p bxeDesc="${oneBxeDesc}" -i acctRbxePrepare   # Creates local account, needs acctRbxeRealizeAfterPrepare later
+{G_myName} ${extraInfo} -p bxeDesc="${oneBxeDesc}" -i acctRbxeRealizeAfterPrepare # + acctRbxePrepare = acctRbxeRealize
 $( examplesSeperatorSection "Initial Repos Create And Push" )
 bxioCommon.sh
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i initialReposCreateAndPush  # aggregator for repoCreateAndPush
@@ -200,6 +202,49 @@ _EOF_
     lpDo vis_acctRbxeRealize
 
     lpDo vis_initialReposCreateAndPush
+    
+    lpReturn
+}
+
+function vis_acctRbxePrepare {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bxeDesc}" ]
+
+    lpDo vis_bxoAcctCreate    # creates ~bxoId
+
+    lpDo vis_rbxeSetup        # bxoBxeDescCopy + bxoCredentialsUpdate + bxoGitServerDescUpdate
+
+    # local cp_bxePrefix=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxePrefix )
+    # local cp_rdn=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} rdn )
+
+    # bxoId="${cp_bxePrefix}-${cp_rdn}"
+
+    bxoId="$( vis_bxoIdFromBxeDesc ${bxeDesc} )"
+
+    lpReturn
+}
+
+function vis_acctRbxeRealizeAfterPrepare {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bxeDesc}" ]
+
+    bxoId="$( vis_bxoIdFromBxeDesc ${bxeDesc} )"
+
+    lpDo vis_gitServerBxoAcctCreate
+
+    lpDo vis_gitServerBxoPubkeyUpload
+    
+    lpDo vis_sshConfigUpdate
+
+    lpDo vis_rbxeRepoCreateAndPush
     
     lpReturn
 }

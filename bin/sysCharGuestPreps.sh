@@ -70,6 +70,9 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
+# ./platformBases_lib.sh
+. ${opBinBase}/platformBases_lib.sh
+
 . ${opBinBase}/bxo_lib.sh
 
 . ${opBinBase}/bxeDesc_lib.sh
@@ -93,6 +96,7 @@ _CommentEnd_
 . ${opBinBase}/site_lib.sh
 
 . ${opBinBase}/sysChar_lib.sh
+
 
 # PRE parameters
 
@@ -127,64 +131,62 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
-    local containerBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
-    local sysCharContainerBxoId=$( sysCharRealize.sh -i sysCharContainerBxoId ${containerBase} )
-
-    oneBxoId="${sysCharContainerBxoId}"        
-    oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )
+    #oneBxoId="prs-bisos"
+    oneBxoId="${currentBxoId}"
+    #oneBxoId="pic_dnsServer"    
+    oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )    
     
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vmRun                 # on host
-$( examplesSeperatorChapter "Ssh Based Cusomizations -- Bx Based (not vagrant based)" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i postCustomize  # on host - bx-ssh
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i secureSeal     # on host - bx-ssh
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i recordDeployment      # inside of parent bxo
-$( examplesSeperatorChapter "Overview Report And Summary" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i sysCharReport
+bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VAG-deb10-
+$( examplesSeperatorChapter "Specialized Actions" )
+${G_myName} ${extraInfo} -i fullUpdate
+${G_myName} ${extraInfo} -i vagrantBaseBoxesBuild
+${G_myName} ${extraInfo} -i siteContainersAssignGenerics
 _EOF_
 }
 
-
-function vis_containerAssignRead {
-   G_funcEntry
-   function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-		      }
-   EH_assert [[ $# -eq 0 ]]
-   EH_assert [ ! -z "${bxoId}" ]
-
-   EH_assert vis_bxoAcctVerify "${bxoId}"
-   bxoHome=$( FN_absolutePathGet ~${bxoId} )
-  
-   local containerAssignBase=${bxoHome}/siteContainersRepo/assign
-
-   containerAssign_containerId=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} containerId )
-   containerAssign_boxId=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} boxId )   
-   containerAssign_abode=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} abode )
-   containerAssign_function=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} function )
-   containerAssign_model=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} model )         
-}
-
-function vis_recordDeployment {
+function vis_fullUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-Use the sysChar BxO to record that the VM was deployed.
 _EOF_
-		       }
-    local thisDescribeF=$(describeF)
+    }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
 
-    EH_assert  vis_userAcctExists "${bxoId}"
+    lpDo vis_vagrantBaseBoxesBuild
 
-    lpDo printf ${thisDescribeF}
+    lpDo vis_siteContainersAssignGenerics
     
     lpReturn
 }	
+
+function vis_vagrantBaseBoxesBuild {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo echo run lcaVagrantBoxRun.sh
+    
+    lpReturn
+}	
+
+function vis_siteContainersAssignGenerics {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo echo run siteContainerAssign.sh and siteContainerRepo.sh 
+    
+    lpReturn
+}	
+
 
 
 _CommentBegin_

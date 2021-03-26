@@ -73,6 +73,8 @@ _CommentEnd_
 
 . ${opBinBase}/site_lib.sh
 
+. ${opBinBase}/sysChar_lib.sh
+
 # PRE parameters
 typeset -t model=""     # one of {h,p,v}
 typeset -t abode=""  # one of {bpec,bpsc,bipc,bluc,bauc,bdc}
@@ -107,6 +109,7 @@ ${G_myName} -i containersBaseObtain
 ${G_myName} ${extraInfo} -i containerRepoUpdate ${containerBase}
 $( examplesSeperatorChapter "Generic Container Repo Realization" )
 ${G_myName} ${extraInfo} -i containerRepoUpdate ${containersBase}/assign/Virt/Auto/Generic/deb10
+${G_myName} ${extraInfo} -i containerRepoGenericsUpdate
 _EOF_
 }
 
@@ -115,7 +118,77 @@ noArgsHook() {
   vis_examples
 }
 
+function vis_containerRepoGenericsUpdate {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 0 ]]
+
+   local containersBase=$( containersBaseObtain )
+
+   #find ${containersBase} -type d -print | egrep '/Generic/.*[^/]$'
+   local genericBasesList=( $(find ${containersBase} -type d -print | egrep '/Generic/[a-z|0-9]*$') )
+
+   for each in ${genericBasesList[@]} ;  do
+       lpDo echo $each
+   done
+   
+   lpReturn
+}	
+
+
 function vis_containerRepoUpdate {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
+   local containerAssignBase=$1
+
+   local containersBase=$( containersBaseObtain )
+   
+   local containerId=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} containerId )
+
+   local repoBase="${containersBase}/${containerId}"
+
+   opDoRet mkdir -p ${repoBase}
+   lpDo FN_fileSymlinkUpdate ${containerAssignBase} ${repoBase}/assign
+
+   local abode=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} abode )
+   local function=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} function )
+   local model=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} model )         
+
+   local containerSteadyBase=${repoBase}/steady
+   lpDo mkdir -p ${containerSteadyBase}
+
+   case ${function} in
+       Generic)
+	   case ${abode} in
+	       Auto)
+		   steady_networkMode="auto"
+		   ;;
+	       *)
+		   doNothing
+		   ;;
+	   esac
+	   ;;
+       Server)
+	   lpDo echo fileParamManage.py -i fileParamWrite ${platformInfoBase} vmGuestLeastSize "medium"
+	   lpDo echo fileParamManage.py -i fileParamWrite ${platformInfoBase} networkMode "fixed"	   
+	   ;;
+
+       *)
+	   EH_problem "NOTYET -- unimplemented ${function}"
+   esac
+
+   vis_containerSteadyWrite "${containerSteadyBase}"
+
+   lpReturn
+}	
+
+
+function vis_containerRepoUpdate%% {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 With $1=containerId (eg HSS-1001), update the repo at bxoId base.
@@ -174,9 +247,6 @@ _EOF_
    lpDo mkdir -p ${netAttachmentsBase}/if1/routes
    lpDo mkdir -p ${netAttachmentsBase}/if1/routes/auto.fps
    lpDo mkdir -p ${netAttachmentsBase}/if1/routes/route1.fps
-
-
-   
    
    lpReturn
 }	

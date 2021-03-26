@@ -143,10 +143,8 @@ bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VAG-deb10-
 $( examplesSeperatorChapter "Specialized Actions" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantBaseBoxFromSysChar
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantBaseBoxFromSysChar   # which vagrantBaseBox will be used
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_path      # on host
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_create    # on host - vag-ssh
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_create testNetSet   # on host - vag-ssh
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_run       # on host - ends with image
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_run testNetSet      # on host - ends with image
 $( examplesSeperatorChapter "Vagrantfile Stdout and Creation " )
@@ -169,7 +167,7 @@ _EOF_
 function vis_vagrantFile_path {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-stdout path to Vagrantfile's base directory of the bxoHome.
+Return stdout path to Vagrantfile's base directory of the bxoHome.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -183,98 +181,6 @@ _EOF_
 
     echo ${bxoHome}/var/vagrantBase/Vagrantfile
     
-    lpReturn
-}	
-
-
-function vis_vagrantFile_create%% {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-Look in ~bxoId for sysSpec info (distro+ram+disk). 
-Based on that get the appropriate Vagrantfile.
-Genesis target being container.
-Network being NAT. 
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
-
-    echo OBSOLETED
-
-    lpReturn
-
-    EH_assert  vis_bxoAcctVerify "${bxoId}"
-
-    local virtType=$( fileParamManage.py  -i fileParamRead  ${bxoHome}/sysSpec/virtualization.fps virtType )
-    local baseBoxVagrantFile=""    
-
-    function baseBoxVagrantFileObtain {
-	G_funcEntry
-	function describeF {  G_funcEntryShow; cat  << _EOF_
-NOTYET	
-_EOF_
-			   }
-	
-	local baseBox=$( fileParamManage.py  -i fileParamRead  ${bxoHome}/sysSpec/vmSpec.fps baseBox )
-	local baseBoxTarget="NOTYET"
-
-	if [ "${baseBox}" == "medium" ] ; then
-	    baseBoxVagrantFile="~aip_vagrantBaseBoxes/vagrants/ubuntu/20.04/server/medium-nat/bxBase/kvm/1/Vagrantfile"
-	elif [ "${baseBox}" == "large" ] ; then
-	    baseBoxVagrantFile="NOTYET"
-	else
-	    EH_problem ""
-	fi
-	echo ${baseBoxVagrantFile}
-    }
-
-    if [ "${virtType}" == "default" ] ; then
-	baseBoxVagrantFile=$(baseBoxVagrantFileObtain)
-
-    elif [ "${virtType}" == "none" ] ; then
-	opDoNothing
-	lpReturn
-    else
-	EH_problem ""
-	lpReturn
-    fi
-
-    if [ ! -z "${baseBoxVagrantFile}" ] ; then
-	lpDo echo cp ${baseBoxVagrantFile} $(vis_vagrantFile_path)
-    else
-	EH_problem ""
-    fi
-					      
-    lpReturn
-}	
-
-
-function vis_vagrantFile_create {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-Look in ~bxoId for sysSpec info (distro+ram+disk). 
-Based on that get the appropriate Vagrantfile.
-Genesis target being container.
-Network being NAT. 
-_EOF_
-    }
-    EH_assert [[ $# -lt 2 ]]    
-    EH_assert [ ! -z "${bxoId}" ]
-
-    EH_assert  vis_bxoAcctVerify "${bxoId}"
-
-    local virtType=$( fileParamManage.py  -i fileParamRead  ${bxoHome}/sysSpec/virtualization.fps virtType )
-
-    if [ "${virtType}" == "none" ] ; then
-	lpReturn
-    fi
-
-    local vagrantFile_path=$(vis_vagrantFile_path)
-
-    lpDo eval vis_vagrantFile_stdout $@ \> ${vagrantFile_path}
-
-    lpDo ls -l ${vagrantFile_path}
-					      
     lpReturn
 }	
 
@@ -481,7 +387,9 @@ _EOF_
 function vis_vagStdout_bisosProvision {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-From a given sysChar, based on  containerDistro and containerDistroType determine vagrantBaseBox.
+** Based on vagrantBaseBox put on stdout needed provioning facilities to produce a container.
+*** If the vagrantBaseBox is a distro/bxcntnr, just update relevant git repos.
+*** If the vagrantBaseBox is a distro/mini or a distro/desktop, order provisioning steps.
 _EOF_
 		       }
     EH_assert [[ $# -eq 0 ]]
@@ -553,7 +461,9 @@ _OUTER_EOF_
 function vis_vagStdout_serverToDesktop {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-From a given sysChar, based on  containerDistro and containerDistroType determine vagrantBaseBox.
+** Based on vagrantBaseBox put on stdout needed instructions for creating the desktop distro
+*** If the vagrantBaseBox is a distro/bxcntnr, or distro/bxcntnr do nothing.
+*** If the vagrantBaseBox is a distro/mini order desktop installation steps.
 _EOF_
 		       }
     EH_assert [[ $# -eq 0 ]]
@@ -629,7 +539,8 @@ _OUTER_EOF_
 function vis_vagrantFile_stdout {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-Output a vagrantfile using the sysChar BxO.
+** Output a vagrantfile using the sysChar BxO.
+** \$1 could be a digit (vmNameQualifier) that identifies an instance.
 _EOF_
 		       }
     local thisFunc=${G_thisFunc}
@@ -778,6 +689,103 @@ _OUTER_EOF_
 
     ${shellProvisioning}
 }
+
+
+
+############ JUNK YARD ############
+
+
+function vis_vagrantFile_create%%%% {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Look in ~bxoId for sysSpec info (distro+ram+disk). 
+Based on that get the appropriate Vagrantfile.
+Genesis target being container.
+Network being NAT. 
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bxoId}" ]
+
+    echo OBSOLETED
+
+    lpReturn
+
+    EH_assert  vis_bxoAcctVerify "${bxoId}"
+
+    local virtType=$( fileParamManage.py  -i fileParamRead  ${bxoHome}/sysSpec/virtualization.fps virtType )
+    local baseBoxVagrantFile=""    
+
+    function baseBoxVagrantFileObtain {
+	G_funcEntry
+	function describeF {  G_funcEntryShow; cat  << _EOF_
+NOTYET	
+_EOF_
+			   }
+	
+	local baseBox=$( fileParamManage.py  -i fileParamRead  ${bxoHome}/sysSpec/vmSpec.fps baseBox )
+	local baseBoxTarget="NOTYET"
+
+	if [ "${baseBox}" == "medium" ] ; then
+	    baseBoxVagrantFile="~aip_vagrantBaseBoxes/vagrants/ubuntu/20.04/server/medium-nat/bxBase/kvm/1/Vagrantfile"
+	elif [ "${baseBox}" == "large" ] ; then
+	    baseBoxVagrantFile="NOTYET"
+	else
+	    EH_problem ""
+	fi
+	echo ${baseBoxVagrantFile}
+    }
+
+    if [ "${virtType}" == "default" ] ; then
+	baseBoxVagrantFile=$(baseBoxVagrantFileObtain)
+
+    elif [ "${virtType}" == "none" ] ; then
+	opDoNothing
+	lpReturn
+    else
+	EH_problem ""
+	lpReturn
+    fi
+
+    if [ ! -z "${baseBoxVagrantFile}" ] ; then
+	lpDo echo cp ${baseBoxVagrantFile} $(vis_vagrantFile_path)
+    else
+	EH_problem ""
+    fi
+					      
+    lpReturn
+}	
+
+
+function vis_vagrantFile_create%% {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Look in ~bxoId for sysSpec info (distro+ram+disk). 
+Based on that get the appropriate Vagrantfile.
+Genesis target being container.
+Network being NAT. 
+_EOF_
+    }
+    EH_assert [[ $# -lt 2 ]]    
+    EH_assert [ ! -z "${bxoId}" ]
+
+    EH_assert  vis_bxoAcctVerify "${bxoId}"
+
+    local virtType=$( fileParamManage.py  -i fileParamRead  ${bxoHome}/sysSpec/virtualization.fps virtType )
+
+    if [ "${virtType}" == "none" ] ; then
+	lpReturn
+    fi
+
+    local vagrantFile_path=$(vis_vagrantFile_path)
+
+    lpDo eval vis_vagrantFile_stdout $@ \> ${vagrantFile_path}
+
+    lpDo ls -l ${vagrantFile_path}
+					      
+    lpReturn
+}	
+
 
 
 

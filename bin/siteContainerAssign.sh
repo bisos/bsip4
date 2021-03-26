@@ -78,6 +78,8 @@ _CommentEnd_
 
 . ${opBinBase}/site_lib.sh
 
+. ${opBinBase}/sysChar_lib.sh
+
 # PRE parameters
 typeset -t model=""     # one of [HPV]
 typeset -t abode=""     # one of [MAPIS]
@@ -127,21 +129,26 @@ ${G_myName} ${extraInfo} -i withMachineIdFindContainerBase "$( vis_thisMachineId
 $( examplesSeperatorChapter "BoxOrMachineId To ContainerId Mapping" )
 ${G_myName} ${extraInfo} -i withBoxOrMachineIdFindContainerBase "$( vis_thisMachineId )"
 ${G_myName} ${extraInfo} -i forThisSysFindContainerBase
-$( examplesSeperatorChapter "Container Box Assignment -- Primary Commans" )
+$( examplesSeperatorChapter "SET -- Container Box Assignment -- Primary Commans" )
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerBoxAssign  # PRIMARY COMMAND
-$( examplesSeperatorChapter "Container Assignments" )
-${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerNuGetNext
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerUpdate_atNu "${containerNu}"
+$( examplesSeperatorChapter "GET -- Container Nu" )
+${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerNuGetNext
 $( examplesSeperatorChapter "Assigned Containers Report" )
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerReport_atNu "${containerNu}"
 ${G_myName} -i containerReport_atBase "${containerBase}"
-$( examplesSeperatorChapter "General Assignment Facilities" )
+$( examplesSeperatorChapter "GET -- General Assignment Facilities" )
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerId "${containerNu}"
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i assignedContainerBase "${containerNu}"
 ${G_myName} ${extraInfo} -i withContainerIdGetBase "HSS-1001"
 ${G_myName} ${extraInfo} -i withInitialGetModel "H"     # one of: [HPV]
 ${G_myName} ${extraInfo} -i withInitialGetAbode "S"     # one of: [AMPSI]
 ${G_myName} ${extraInfo} -i withInitialGetFunction "S"  # one of: [LASD]
+$( examplesSeperatorChapter "Container Assignment List Examples" )
+${G_myName} ${extraInfo} -i modelAbodeFunction_listExamples containerBoxAssign
+${G_myName} ${extraInfo} -p model=Virt -i modelAbodeFunction_listExamples containerBoxAssign
+${G_myName} ${extraInfo} -i modelAbodeFunction_listExamples containerNuGetNext
+${G_myName} ${extraInfo} -i assignGenerics
 _EOF_
 }
 
@@ -150,6 +157,10 @@ noArgsHook() {
   vis_examples
 }
 
+models=("Host" "Pure" "Virt")
+abodes=("Mobile" "Auto" "Perim" "Internet" "Shield")
+functions=("LinuxU" "AndroidU" "Server" "Devel" "Generic")
+distros=("deb10" "deb11" "ub2004")
 
 function vis_modelAbodeFunctionBaseDirsCreate {
    G_funcEntry
@@ -161,10 +172,6 @@ _EOF_
    local containersBase=$( containersAssignBaseObtain )
    EH_assert [ ! -z "${containersBase}" ] 
 
-   local models=("Host" "Pure" "Virt")
-   local abodes=("Mobile" "Auto" "Perim" "Internet" "Shield")
-   local functions=("LinuxU" "AndroidU" "Server" "Devel" "Generic")   
-
    for eachModel in ${models[@]} ;  do
        for eachAbode in ${abodes[@]} ; do
 	   for eachFunction in ${functions[@]} ; do
@@ -172,6 +179,125 @@ _EOF_
 	   done
        done
    done
+
+   lpReturn
+}
+
+
+function vis_assignGenerics {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 0 ]]
+
+   local command=containerBoxAssign
+
+   model=Virt
+   abode=Auto
+   function=Generic
+
+   function outLine {
+       EH_assert [[ $# -eq 3 ]]
+       local thisModel=$1
+       local thisAbode=$2
+       local thisFunction=$3
+       for eachDistro in ${distros[@]} ; do
+	   cat  << _EOF_
+${G_myName} -p model=${thisModel} -p abode=${thisAbode} -p function=${thisFunction} -i ${command} ${eachDistro}
+_EOF_
+       done
+   }
+   
+   function functionsList {
+       EH_assert [[ $# -eq 2 ]]
+       local thisModel=$1
+       local thisAbode=$2       
+       if [ ! -z ${function} ] ; then
+	   outLine ${thisModel} ${thisAbode} ${function}
+       else
+	   for eachFunction in ${functions[@]} ; do
+	       outLine ${thisModel} ${thisAbode} ${eachFunction}
+	   done
+       fi
+   }
+
+   function abodesFunctionsList {
+       EH_assert [[ $# -eq 1 ]]
+       local thisModel=$1
+       if [ ! -z ${abode} ] ; then
+	   functionsList ${thisModel} ${abode}
+       else
+	   for eachAbode in ${abodes[@]} ; do
+	       functionsList  ${thisModel} ${eachAbode}
+	   done
+       fi
+   }
+
+   if [ ! -z ${model} ] ; then
+       abodesFunctionsList ${model}
+   else
+       for eachModel in ${models[@]} ;  do
+	   abodesFunctionsList ${eachModel}  
+       done
+   fi
+
+   lpReturn
+}
+
+
+
+function vis_modelAbodeFunction_listExamples {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
+
+   local command=$1
+
+   function outLine {
+       EH_assert [[ $# -eq 3 ]]
+       local thisModel=$1
+       local thisAbode=$2
+       local thisFunction=$3
+       cat  << _EOF_
+${G_myName} -p model=${thisModel} -p abode=${thisAbode} -p function=${thisFunction} -i ${command}
+_EOF_
+   }
+   
+   function functionsList {
+       EH_assert [[ $# -eq 2 ]]
+       local thisModel=$1
+       local thisAbode=$2       
+       if [ ! -z ${function} ] ; then
+	   outLine ${thisModel} ${thisAbode} ${function}
+       else
+	   for eachFunction in ${functions[@]} ; do
+	       outLine ${thisModel} ${thisAbode} ${eachFunction}
+	   done
+       fi
+   }
+
+   function abodesFunctionsList {
+       EH_assert [[ $# -eq 1 ]]
+       local thisModel=$1
+       if [ ! -z ${abode} ] ; then
+	   functionsList ${thisModel} ${abode}
+       else
+	   for eachAbode in ${abodes[@]} ; do
+	       functionsList  ${thisModel} ${eachAbode}
+	   done
+       fi
+   }
+
+   if [ ! -z ${model} ] ; then
+       abodesFunctionsList ${model}
+   else
+       for eachModel in ${models[@]} ;  do
+	   abodesFunctionsList ${eachModel}  
+       done
+   fi
 
    lpReturn
 }
@@ -342,6 +468,62 @@ Return on stdout, a containerId  such as HSS-1001.
 - Then after vis_containerUpdate_atNu, return containerId
 _EOF_
 		      }
+   EH_assert [[ $# -lt 2 ]]
+
+   EH_assert [ ! -z "${model}" ]   
+   EH_assert [ ! -z "${abode}" ]
+   EH_assert [ ! -z "${function}" ]
+
+   if [ $# -eq 0 ] ; then
+       vis_containerBoxAssignNumbered
+   else
+       vis_containerAssignGeneric "$1"
+   fi
+}	
+
+
+function vis_containerAssignGeneric {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+For the subject physical sys (thisBoxNu) identified by system-uuid, assign a container.
+Return on stdout, a containerId  such as HSS-1001.
+- Determine box or machine
+- When there are no exisiting entities matching system-uuid, assign a box (thisBoxAdd)
+- If an assigned container exists which coresponds to thisBox, then use that
+- If one does not exist, assign one (with vis_containerNuGetNext)
+- Then after vis_containerUpdate_atNu, return containerId
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
+
+   EH_assert [ ! -z "${model}" ]   
+   EH_assert [ ! -z "${abode}" ]
+   EH_assert [ ! -z "${function}" ]
+
+   local containerNu="$1"
+
+   lpDo vis_containerUpdate_atNu "${containerNu}"
+
+   local containerBase=$( vis_assignedContainerBase "${containerNu}" )
+
+   lpDo fileParamManage.py -i fileParamRead  ${containerBase} containerId
+
+   lpReturn
+}	
+
+
+function vis_containerBoxAssignNumbered {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+For the subject physical sys (thisBoxNu) identified by system-uuid, assign a container.
+Return on stdout, a containerId  such as HSS-1001.
+- Determine box or machine
+- When there are no exisiting entities matching system-uuid, assign a box (thisBoxAdd)
+- If an assigned container exists which coresponds to thisBox, then use that
+- If one does not exist, assign one (with vis_containerNuGetNext)
+- Then after vis_containerUpdate_atNu, return containerId
+_EOF_
+		      }
    EH_assert [[ $# -eq 0 ]]
 
    EH_assert [ ! -z "${model}" ]   
@@ -377,6 +559,8 @@ _EOF_
 
    lpReturn
 }	
+
+
 
 function vis_containerNuGetNext {
    G_funcEntry
@@ -634,15 +818,19 @@ _EOF_
    fi
    EH_assert [ -d "${containerBase}" ]
 
-   local boxId=$( siteBoxAssign.sh -i thisBoxFindId )
-   local stored_boxId=$( fileParamManage.py -i fileParamRead  ${containerBase} boxId )
-
-   if [ -z "${stored_boxId}" ] ; then
-       lpDo fileParamManage.py -i fileParamWrite ${containerBase} boxId "${boxId}"
+   if [ "${model}" == "Virt" ] ; then
+       lpDo fileParamManage.py -i fileParamWrite ${containerBase} boxId "virt"
    else
-       if [ "${boxId}" != "${stored_boxId}" ] ; then
-	   EH_problem "Expected ${boxId} -- got ${stored_boxId}"
-	   lpReturn 101
+       local boxId=$( siteBoxAssign.sh -i thisBoxFindId )
+       local stored_boxId=$( fileParamManage.py -i fileParamRead  ${containerBase} boxId )
+
+       if [ -z "${stored_boxId}" ] ; then
+	   lpDo fileParamManage.py -i fileParamWrite ${containerBase} boxId "${boxId}"
+       else
+	   if [ "${boxId}" != "${stored_boxId}" ] ; then
+	       EH_problem "Expected ${boxId} -- got ${stored_boxId}"
+	       lpReturn 101
+	   fi
        fi
    fi
 

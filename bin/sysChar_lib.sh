@@ -41,6 +41,8 @@ _CommentBegin_
 _CommentEnd_
 
 # PRE parameters
+typeset -t privA_addr=""
+
 
 _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
@@ -92,7 +94,6 @@ _EOF_
    containerAssign_model=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} model )         
 }
 
-
 function vis_containerSteadyRead {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -117,6 +118,27 @@ _EOF_
    containerSteady_privA_pubA_upCommand=$( fileParamManage.py -i fileParamRead  ${containerSteadyBase}/net/routes/privA-pubA.fps upCommand )
    containerSteady_privA_pubA_downCommand=$( fileParamManage.py -i fileParamRead  ${containerSteadyBase}/net/routes/privA-pubA.fps downCommand )   
 }
+
+function vis_containerSteadyWrite {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
+
+   # typically something like: /bxo/r3/iso/pmc_clusterNeda-containers/VAG-deb10-/steady/
+   local containerSteadyBase="$1"
+   EH_assert [ -d "${containerSteadyBase}" ]
+
+   if [ ! -z "${steady_networkMode}" ] ; then
+       lpDo fileParamManage.py -v 20 -i fileParamWrite ${containerSteadyBase}/net networkMode.fp "${steady_networkMode}"
+   fi
+   
+   if [ ! -z "${privA_addr}" ] ; then
+       fileParamManage.py -i fileParamWrite ${containerSteadyBase}/net/ipv4/privA.fps addr "${privA_addr}"
+   fi
+}
+
 
 function vis_sysCharRead {
    G_funcEntry
@@ -143,6 +165,49 @@ _EOF_
    sysChar_sysInfo_distroType=$( fileParamManage.py -i fileParamRead  ${sysCharBase}/sysChar.fps distroType )      
 }
 
+
+function vis_sysCharWrite {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+bxoId is the sysChar.
+sysInfo.fps of sysChar overwrites sysInfo.fps of siteContainersRepo.
+_EOF_
+		      }
+   EH_assert [[ $# -eq 0 ]]
+   EH_assert [ ! -z "${bxoId}" ]
+
+   EH_assert vis_bxoAcctVerify "${bxoId}"
+   bxoHome=$( FN_absolutePathGet ~${bxoId} )
+  
+   local sysCharBase=${bxoHome}/sysChar
+
+   sysChar_privA_if=$( fileParamManage.py -i fileParamRead  ${sysCharBase}/netInterface.fps privA )
+
+   sysChar_virtSpec_baseBox=$( fileParamManage.py -i fileParamRead  ${sysCharBase}/virtSpec.fps baseBox )
+   sysChar_virtSpec_sizing=$( fileParamManage.py -i fileParamRead  ${sysCharBase}/virtSpec.fps sizing )
+   sysChar_virtSpec_virtType=$( fileParamManage.py -i fileParamRead  ${sysCharBase}/virtSpec.fps virtType )
+
+   sysChar_sysInfo_distro=$( fileParamManage.py -i fileParamRead  ${sysCharBase}/sysChar.fps distro )
+   sysChar_sysInfo_distroType=$( fileParamManage.py -i fileParamRead  ${sysCharBase}/sysChar.fps distroType )      
+}
+
+
+function vis_recordDeployment {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Use the sysChar BxO to record that the VM was deployed.
+_EOF_
+		       }
+    local thisDescribeF=$(describeF)
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bxoId}" ]
+
+    EH_assert  vis_userAcctExists "${bxoId}"
+
+    lpDo printf ${thisDescribeF}
+    
+    lpReturn
+}	
 
 
 _CommentBegin_

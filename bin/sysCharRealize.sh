@@ -157,11 +157,15 @@ _EOF_
 
     cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
-$( examplesSeperatorChapter "Container Repo Realization" )
-ls -l ~${sysCharContainerBxoId}
+$( examplesSeperatorChapter "Site Container Bases" )
+ls -l ~${sysCharContainerBxoId}    # This Container (Host)
 ${G_myName} ${extraInfo} -i selectedSiteBxoId
-${selectedSiteBxoId}
-${containersBase}
+${selectedSiteBxoId}               # Selected Site bxoId
+${containersBase}                  # Selected Site Containers Base
+$( examplesSeperatorChapter "Container Assignment" )
+siteContainerAssign.sh   # Prerequisite for sysCharRealize.sh
+siteContainerRepo.sh     # Prerequisite for sysCharRealize.sh
+$( examplesSeperatorChapter "Container Repo Realization" )
 ${G_myName} ${extraInfo} -i sysCharContainerBxoId ${containerBase}
 ${G_myName} ${extraInfo} -i sysCharContainerBxoId ${containersBase}/assign/Virt/Auto/Generic/deb10
 ${G_myName} ${extraInfo} -i sysCharContainerRealize ${containerBase}
