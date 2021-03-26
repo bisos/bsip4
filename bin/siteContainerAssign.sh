@@ -115,9 +115,11 @@ function vis_examples {
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Containers Bases Information" )
+${G_myName} ${extraInfo} -i containersBaseObtain
 ${G_myName} ${extraInfo} -i containersAssignBaseObtain
 ls -ld ${containersBase}/*
 find ${containersBase} -print
+${G_myName} -i containersGenericsAssignList
 $( examplesSeperatorChapter "Containers Bases Initializations" )
 ${G_myName} ${extraInfo} -i modelAbodeFunctionBaseDirsCreate    # INITIALIZATION -- create basis for nu assignments
 $( examplesSeperatorChapter "BoxId To ContainerId Mapping" )
@@ -393,6 +395,7 @@ _EOF_
 function vis_withContainerIdGetBase {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
+ContainerId is VAG-xxx
 _EOF_
 		      }
    EH_assert [[ $# -eq 1 ]]
@@ -777,6 +780,8 @@ function vis_containerId {
    function describeF {  G_funcEntryShow; cat  << _EOF_
 containerId is sequence of 3 initial letters of model, abode and function.
 word="Host"; firstLetter=${word:0:1} -- "H"
+For function==Generic, containerNu is not a number. So, we add a dash
+at the end.
 _EOF_
 		      }
    EH_assert [[ $# -eq 1 ]]
@@ -784,7 +789,11 @@ _EOF_
 
    EH_assert [ ! -z "${model}" ]
    EH_assert [ ! -z "${abode}" ]
-   EH_assert [ ! -z "${function}" ]    
+   EH_assert [ ! -z "${function}" ]
+
+   if ! isnum ${containerNu} ; then
+       containerNu="${containerNu}-"
+   fi
 
    echo "${model:0:1}${abode:0:1}${function:0:1}-${containerNu}"
 }

@@ -172,6 +172,24 @@ _EOF_
     lpReturn
 }	
 
+function vis_containersGenericsAssignList {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 0 ]]
+
+   local containersBase=$( containersBaseObtain )
+
+   #find ${containersBase} -type d -print | egrep '/Generic/.*[^/]$'
+   local genericBasesList=( $(find ${containersBase} -type d -print | egrep '/Generic/[a-z|0-9]*$') )
+
+   for each in ${genericBasesList[@]} ;  do
+       echo $each
+   done
+   
+   lpReturn
+}	
 
 
 _CommentBegin_

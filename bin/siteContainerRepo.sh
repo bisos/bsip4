@@ -104,12 +104,18 @@ function vis_examples {
     # ${doLibExamples} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
+$( examplesSeperatorChapter "Containers Bases Information" )
+${G_myName} ${extraInfo} -i containersBaseObtain
+${G_myName} ${extraInfo} -i containersAssignBaseObtain
+ls -ld ${containersBase}/*
+find ${containersBase} -print
+${G_myName} -i containersGenericsAssignList
 $( examplesSeperatorChapter "Container Repo Realization" )
-${G_myName} -i containersBaseObtain
 ${G_myName} ${extraInfo} -i containerRepoUpdate ${containerBase}
 $( examplesSeperatorChapter "Generic Container Repo Realization" )
 ${G_myName} ${extraInfo} -i containerRepoUpdate ${containersBase}/assign/Virt/Auto/Generic/deb10
-${G_myName} ${extraInfo} -i containerRepoGenericsUpdate
+${G_myName} ${extraInfo} -i containerRepoGenericsUpdateExamples baseCreate # bxoRepoScope=baseCreate|repoCreate|complete
+${G_myName} ${extraInfo} -i containerRepoGenericsUpdate baseCreate  # bxoRepoScope=baseCreate|repoCreate|complete
 _EOF_
 }
 
@@ -118,33 +124,66 @@ noArgsHook() {
   vis_examples
 }
 
-function vis_containerRepoGenericsUpdate {
+function vis_containerRepoGenericsUpdateExamples {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
 		      }
-   EH_assert [[ $# -eq 0 ]]
+   EH_assert [[ $# -eq 1 ]]
+   local bxoRepoScope=$1
+   EH_assert bxoRepoScopeIsValid "${bxoRepoScope}"
 
-   local containersBase=$( containersBaseObtain )
+   local genericBasesList=( $( vis_containersGenericsAssignList ) )
 
-   #find ${containersBase} -type d -print | egrep '/Generic/.*[^/]$'
-   local genericBasesList=( $(find ${containersBase} -type d -print | egrep '/Generic/[a-z|0-9]*$') )
-
+   local extraInfo="-h -v -n showRun"
+   
    for each in ${genericBasesList[@]} ;  do
-       lpDo echo $each
+       cat  << _EOF_
+${G_myName} ${extraInfo} -i containerRepoUpdate "${bxoRepoScope}" ${each}
+_EOF_
    done
    
    lpReturn
 }	
 
 
-function vis_containerRepoUpdate {
+function vis_containerRepoGenericsUpdate {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
 		      }
    EH_assert [[ $# -eq 1 ]]
-   local containerAssignBase=$1
+   local bxoRepoScope=$1
+   EH_assert bxoRepoScopeIsValid "${bxoRepoScope}"
+
+   local genericBasesList=( $( vis_containersGenericsAssignList ) )
+
+   for each in ${genericBasesList[@]} ;  do
+       lpDo vis_containerRepoUpdate baseCreate ${each}
+   done
+   
+   lpReturn
+}	
+
+
+
+function vis_containerRepoUpdate {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+** \$1 is bxoRepoScope -- \$2 is path to containerAssignBase
+*** Based on containerId, a repoBase is created.
+*** repoBase/assign sym links to containerAssignBase
+*** Based on model+abode+function repoBase/steady is populated.
+_EOF_
+		      }
+   EH_assert [[ $# -eq 2 ]]
+
+   local bxoRepoScope=$1
+   local containerAssignBase=$2
+   local retVal=0
+
+   EH_assert bxoRepoScopeIsValid "${bxoRepoScope}"
+   EH_assert [ -d ${containerAssignBase} ]
 
    local containersBase=$( containersBaseObtain )
    
@@ -152,12 +191,16 @@ _EOF_
 
    local repoBase="${containersBase}/${containerId}"
 
-   opDoRet mkdir -p ${repoBase}
+   lpDo vis_withBxoRepoScope_createBaseDirOrCreateRepo "${bxoRepoScope}" "${repoBase}"
+   retVal=$?
+   if [ ${retVal} == 1 ] ; then lpReturn 0; fi;   # repo was created. We are done.
+   EH_assert [ -d "${repoBase}" ]
+   
    lpDo FN_fileSymlinkUpdate ${containerAssignBase} ${repoBase}/assign
 
+   local model=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} model )            
    local abode=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} abode )
    local function=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} function )
-   local model=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} model )         
 
    local containerSteadyBase=${repoBase}/steady
    lpDo mkdir -p ${containerSteadyBase}
@@ -183,6 +226,8 @@ _EOF_
    esac
 
    vis_containerSteadyWrite "${containerSteadyBase}"
+
+   lpDo vis_repoCreateAndPushBasedOnPathWhenComplete "${bxoRepoScope}" ${repoBase}
 
    lpReturn
 }	

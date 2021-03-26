@@ -186,6 +186,72 @@ _EOF_
     lpReturn
 }
 
+function bxoRepoScopeIsValid {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+** \$1 is one of:
+- baseCreate  -- Just create the base dir. Do not create the repo
+- repoCreate  -- Assumes baseCreate has previously been invoked
+- complete    -- baseCreate+repoCreate
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
+   local bxoRepoScope=$1
+   case ${bxoRepoScope} in
+       baseCreate|repoCreate|complete)
+           return 0
+           ;;
+       *)
+	   return 1
+	   ;;
+   esac
+}
+
+function vis_withBxoRepoScope_createBaseDirOrCreateRepo {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 2 ]]
+    
+    local bxoRepoScope=$1
+    local repoBase=$2
+
+    if [ -d "${repoBase}" ] ; then
+       if [ "${bxoRepoScope}" == "repoCreate" ] ; then
+	   lpDo vis_repoCreateAndPushBasedOnPath ${repoBase}
+	   lpReturn 1
+       fi
+       ANT_raw "repoBase=${repoBase} is in place, updating"
+   else
+       if [ "${bxoRepoScope}" == "repoCreate" ] ; then
+	   EH_problem "Base does not exist but repoCreate was specified."
+	   lpReturn 101
+       fi
+       ANT_raw "repoBase=${repoBase} missing, creating"
+       lpDo mkdir -p ${repoBase}
+   fi
+    lpReturn 0
+}
+
+
+
+function vis_repoCreateAndPushBasedOnPathWhenComplete {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 2 ]]
+    
+    local bxoRepoScope=$1
+    local repoBase=$2
+
+    if [ "${bxoRepoScope}" == "complete" ] ; then
+	lpDo vis_repoCreateAndPushBasedOnPath ${repoBase}
+    fi
+}
+    
+
 function vis_repoCreateAndPushBasedOnPath {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
