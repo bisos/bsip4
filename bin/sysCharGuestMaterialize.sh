@@ -369,7 +369,7 @@ _EOF_
 	    elif [ "${sysChar_sysInfo_distro}" == "desktop" ] ; then
 		vagrantBaseBox="peru/ubuntu-20.04-server-amd64"
 	    else
-		opDoNothing
+		doNothing
 	    fi
             ;;
 	"default")
@@ -406,10 +406,10 @@ _EOF_
     case "${containerBaseBox}" in
 
 	"bisos/ubuntu-2004/bxcntnr")
-	    opDoNothing
+	    doNothing
 	    ;&   #fallthru
 	"bisos/debian-11.pre/bxcntnr")
-	    opDoNothing
+	    doNothing
 	    ;&   #fallthru
 	"bisos/debian-10.8/bxcntnr")
 	    cat  << _OUTER_EOF_
@@ -421,22 +421,22 @@ _OUTER_EOF_
 	    ;;
 
 	"bxDistro/ubuntu-2004/desktop")
-	    opDoNothing
+	    doNothing
 	    ;&   #fallthru
 	"bxDistro/debian-11.pre/desktop")
-	    opDoNothing
+	    doNothing
 	    ;&   #fallthru
 	"bxDistro/debian-10.8/desktop")
-	    opDoNothing
+	    doNothing
 	    ;&   #fallthru
 	"bento/debian-10.8"|"bento/debian-11.pre")
-	    opDoNothing
+	    doNothing
 	    ;&   #fallthru
 	"bxDistro/debian-10.8/mini"|"bxDistro/debian-11.pre/mini")
-	    opDoNothing
+	    doNothing
 	    ;&   #fallthru
 	"bento/ubuntu-20.04")
-	    opDoNothing
+	    doNothing
 	    ;&
 	"bxDistro/ubuntu-20.04/mini")
 	cat  << _OUTER_EOF_
@@ -480,10 +480,10 @@ _EOF_
     case "${containerBaseBox}" in
 
 	"bxDistro/ubuntu-2004/desktop"|"bisos/ubuntu-2004/bxcntnr")
-	    opDoNothing
+	    doNothing
 	    ;&   #fallthru
 	"bxDistro/debian-11.pre/desktop"|"bisos/debian-11.pre/bxcntnr")
-	    opDoNothing
+	    doNothing
 	    ;&   #fallthru
 	"bxDistro/debian-10.8/desktop"|"bisos/debian-10.8/bxcntnr")
 	    cat  << _OUTER_EOF_
@@ -495,7 +495,7 @@ _OUTER_EOF_
 	    ;;
 	
 	"bento/debian-10.8"|"bento/debian-11.pre")
-	    opDoNothing
+	    doNothing
 	    ;&   #fallthru
 	"bxDistro/debian-10.8/mini"|"bxDistro/debian-11.pre/mini")
 	    # From https://linuxhint.com/install_gnome_debian_10_minimal_server/
@@ -514,7 +514,7 @@ _OUTER_EOF_
             ;;
 
 	"bento/ubuntu-20.04")
-	    opDoNothing
+	    doNothing
 	    ;&
 	"bxDistro/ubuntu-20.04/mini")
 	    cat  << _OUTER_EOF_
@@ -740,7 +740,7 @@ _EOF_
 	baseBoxVagrantFile=$(baseBoxVagrantFileObtain)
 
     elif [ "${virtType}" == "none" ] ; then
-	opDoNothing
+	doNothing
 	lpReturn
     else
 	EH_problem ""

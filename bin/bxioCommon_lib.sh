@@ -63,6 +63,37 @@ ${G_myName} ${extraInfo} -p bxoPath="." -i repoBasePush panel
 _EOF_
 }
 
+function vis_kindTypeRealizeRepoBases {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+    local bxoRealizationScope=$1   
+    EH_assert bxoRealizationScopeIsValid "${bxoRealizationScope}"
+    
+    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert vis_bxoAcctVerify "${bxoId}"
+
+    case ${bxoRealizationScope} in
+	full)
+	    lpDo vis_kindTypeRealizeRepoBasesCreate
+	    lpDo vis_kindTypeRealizeRepoBasesPush	    
+	    ;;
+	basePrep)
+	    lpDo vis_kindTypeRealizeRepoBasesCreate
+	    ;;
+	realize)
+	    lpDo vis_kindTypeRealizeRepoBasesPush
+            ;;
+	*)
+	    EH_problem "Bad Usage"
+	    ;;
+    esac
+
+    lpReturn
+}
+
 
 function vis_kindTypeRealizeRepoBasesCreate {
    G_funcEntry
@@ -73,8 +104,6 @@ _EOF_
     EH_assert [ ! -z "${bxoId}" ]
 
     EH_assert  vis_userAcctExists "${bxoId}"
-
-    local each
 
     for each in $(vis_repoBasesList) ; do
 	lpDo vis_repoBaseCreate_${each}
@@ -93,8 +122,6 @@ _EOF_
     EH_assert [ ! -z "${bxoId}" ]
 
     EH_assert  vis_userAcctExists "${bxoId}"
-
-    local each
 
     for each in $(vis_repoBasesList) ; do
 	inBaseDirDo ${bxoHome} vis_repoCreateAndPushBasedOnPath ${each}

@@ -131,15 +131,17 @@ function vis_examples {
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
     local containerBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
-    local sysCharContainerBxoId=$( vis_sysCharContainerBxoId ${containerBase} )
+    local sysCharContainerBxoId=$( vis_sysCharContainerBxoIdName ${containerBase} )
     local selectedSiteBxoId=$( vis_selectedSiteBxoId )
     local containersBase=$( vis_containersBaseObtain )
     
     #oneBxoId="prs-bisos"
-    #oneBxoId="${currentBxoId}"
+    oneBxoId="${currentBxoId}"
     #oneBxoId="pic_dnsServer"
-    oneBxoId="${sysCharContainerBxoId}"        
+    #oneBxoId="${sysCharContainerBxoId}"        
     oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )
+
+    oneBxoRepoScope="basePrep"
     
 
     function repoBaseCreateAndPushExamples {
@@ -165,11 +167,14 @@ ${containersBase}                  # Selected Site Containers Base
 $( examplesSeperatorChapter "Container Assignment" )
 siteContainerAssign.sh   # Prerequisite for sysCharRealize.sh
 siteContainerRepo.sh     # Prerequisite for sysCharRealize.sh
-$( examplesSeperatorChapter "Container Repo Realization" )
+$( examplesSeperatorChapter "SysChar Container Realization" )
 ${G_myName} ${extraInfo} -i sysCharContainerBxoId ${containerBase}
 ${G_myName} ${extraInfo} -i sysCharContainerBxoId ${containersBase}/assign/Virt/Auto/Generic/deb10
-${G_myName} ${extraInfo} -i sysCharContainerRealize ${containerBase}
-${G_myName} ${extraInfo} -i sysCharContainerRealize ${containersBase}/assign/Virt/Auto/Generic/deb10
+${G_myName} ${extraInfo} -i sysCharContainerRealize ${oneBxoRepoScope} ${containerBase}
+${G_myName} ${extraInfo} -i sysCharContainerRealize ${oneBxoRepoScope} ${containersBase}/assign/Virt/Auto/Generic/deb10
+$( examplesSeperatorChapter "Generic SysChar Container Realization" )
+siteContainerRepo.sh -i containersGenericsAssignList
+${G_myName} ${extraInfo} -i sysCharContainersGenericsRealizeExamples basePrep # bxoRepoScope=basePrep|realize|full
 _EOF_
 
   cat  << _EOF_
@@ -177,18 +182,15 @@ $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
 $( examplesSeperatorChapter "Provisioning: Initial BxE Realize -- Full Actions" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i fullCreateAndPush
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i fullCreateAndPush # NOTYET, perhaps kindTypeRealizeRepoBases 
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i kindTypeRealizeRepoBasesCreate
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i kindTypeRealizeRepoBasesPush
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i basesFullCreate
 $( examplesSeperatorChapter "Specific Initial Repo Realizition" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBasesList
+$( repoBaseCreateAndPushExamples sysChar "sysChar Repo (System Character)" )
 $( repoBaseCreateAndPushExamples svcsSpec "svcsSpec Repo (Services Specifications)" )
-$( repoBaseCreateAndPushExamples sysSpec "sysSpec Repo (System Specifications)" )
-$( repoBaseCreateAndPushExamples sysSpec "sysChar Repo (System Character)" )
-$( repoBaseCreateAndPushExamples containerBxO "Container BxO Repo" )
 $( repoBaseCreateAndPushExamples deploymentRecords "Deployment Records Repo" )
-$( repoBaseCreateAndPushExamples panel "BxO Panel Repo" )
 $( examplesSeperatorChapter "Bases Create" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i baseCreate_var
 $( examplesSeperatorChapter "Overview Report And Summary" )
@@ -197,18 +199,50 @@ _EOF_
 }
 
 
+
+function vis_sysCharContainersGenericsRealizeExamples {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
+   local bxoRealizationScope=$1   
+   EH_assert bxoRealizationScopeIsValid "${bxoRealizationScope}"
+
+   local genericBasesList=( $( vis_containersGenericsAssignList ) )
+
+   local extraInfo="-h -v -n showRun"
+   
+   for each in ${genericBasesList[@]} ;  do
+       cat  << _EOF_
+${G_myName} ${extraInfo} -i sysCharContainerRealize ${bxoRealizationScope} ${each}
+_EOF_
+   done
+   
+   lpReturn
+}	
+
+
 function vis_sysCharContainerRealize {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
+** \$1 is bxoRepoScope -- \$2 is path to containerAssignBase   
 ** With $1=containerBase, realize the sysCharContainerBxoId.
 *** Typical usage is \$=container base of this system obtained from siteContainerAssign.sh -i forThisSysFindContainerBase
 _EOF_
 		      }
-   EH_assert [[ $# -eq 1 ]]
-   local containerAssignBase=$1  # global variable
+   EH_assert [[ $# -eq 2 ]]
 
-   local sysCharContainerBxoId=$( vis_sysCharContainerBxoId "${containerAssignBase}" )
+   local bxoRealizationScope=$1   
+   local containerAssignBase=$2  # global variable
+
+   EH_assert bxoRealizationScopeIsValid "${bxoRealizationScope}"
+   EH_assert [ -d ${containerAssignBase} ]
+
+   # sysCharContainerBxoId is just a bxoId derived from containerId assignment. It may or may not exist
+   local sysCharContainerBxoId=$( vis_sysCharContainerBxoIdName "${containerAssignBase}" )
    EH_assert [ ! -z "${sysCharContainerBxoId}" ]
+   
    local selectedSiteBxoId=$( vis_selectedSiteBxoId )   # used as parent for provisioning of sysCharContainerBxoId
    local containerId=$( fileParamManage.py -i fileParamRead  "${containerAssignBase}" containerId )  # used as name for provisioning
 
@@ -216,16 +250,17 @@ _EOF_
        ANT_raw "${sysCharContainerBxoId} account exists, already realized -- provisioning skipped"
    else
        ANT_raw "${sysCharContainerBxoId} will be realized"       
-       lpDo bxmeProvision.sh -h -v -n showRun -p privacy="priv" -p kind="materialization" -p type="sysChar" -p parent="${selectedSiteBxoId}" -p name="${containerId}" -i startToPrivRealize       
+       #lpDo bxmeProvision.sh -h -v -n showRun -p privacy="priv" -p kind="materialization" -p type="sysChar" -p parent="${selectedSiteBxoId}" -p name="${containerId}" -i startToPrivRealize
+       lpDo bxmeProvision.sh -h -v -n showRun -p privacy="priv" -p kind="materialization" -p type="sysChar" -p parent="${selectedSiteBxoId}" -p name="${containerId}" -i startToPrivRealize ${bxoRealizationScope}
    fi
 
    bxoId="${sysCharContainerBxoId}"
    EH_assert vis_bxoAcctVerify "${bxoId}"
    bxoHome=$( FN_absolutePathGet ~${bxoId} )
 
-   vis_kindTypeRealizeRepoBasesCreate
+   vis_kindTypeRealizeRepoBases ${bxoRealizationScope}
 
-   vis_basesFullCreate
+   vis_basesFullCreate # Creates symlinks in ~bxo
 }
 
 function vis_repoBasesList {
@@ -256,12 +291,13 @@ _EOF_
 function vis_baseCreate_var {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+Create /bisos/var/bxoId/${bxoId} and symlink to it.
 _EOF_
 		       }
     EH_assert [[ $# -eq 0 ]]
     EH_assert [ ! -z "${bxoId}" ]
 
-    EH_assert  vis_bxoAcctVerify "${bxoId}"
+    EH_assert vis_bxoAcctVerify "${bxoId}"
 
     local baseName=${FUNCNAME##vis_baseCreate_}
     local basePath="${bxoHome}/${baseName}"
@@ -280,12 +316,13 @@ _EOF_
 function vis_baseCreate_siteContainersRepo {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+Symlink to site containers.
 _EOF_
 		       }
     EH_assert [[ $# -eq 0 ]]
     EH_assert [ ! -z "${bxoId}" ]
 
-    EH_assert  vis_bxoAcctVerify "${bxoId}"
+    EH_assert vis_bxoAcctVerify "${bxoId}"
 
     local baseName=${FUNCNAME##vis_baseCreate_}
     local basePath="${bxoHome}/${baseName}"
@@ -308,9 +345,7 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
     EH_assert [ ! -z "${bxoId}" ]
 
-    EH_assert  vis_userAcctExists "${bxoId}"
-
-    local each
+    EH_assert vis_bxoAcctVerify "${bxoId}"
 
     for each in $(vis_basesList) ; do
 	lpDo vis_baseCreate_${each}
@@ -384,7 +419,7 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
     EH_assert [ ! -z "${bxoId}" ]
 
-    EH_assert  vis_userAcctExists "${bxoId}"
+    EH_assert vis_bxoAcctVerify "${bxoId}"
 
     local repoName=${FUNCNAME##vis_repoBaseCreate_}
     local repoBase="${bxoHome}/${repoName}"
@@ -396,11 +431,7 @@ BxO Repo: ${repoBase}
 for now just a bin directory
 _EOF_
 
-    lpDo FN_dirCreatePathIfNotThere ${repoBase}/virtualization.fps
-    lpDo fileParamManage.py -i fileParamWrite ${repoBase}/virtualization.fps virtType default
-
-    lpDo FN_dirCreatePathIfNotThere ${repoBase}/vmSpec.fps
-    lpDo fileParamManage.py -i fileParamWrite ${repoBase}/vmSpec.fps baseBox medium
+    lpDo vis_sysCharWrite
 
     lpDo FN_dirCreatePathIfNotThere ${repoBase}/bin
     lpDo touch ${repoBase}/bin/materialize.sh
@@ -409,7 +440,6 @@ _EOF_
 
     lpReturn
 }	
-
 
 
 _CommentBegin_

@@ -147,35 +147,6 @@ _EOF_
 }
 
 
-function vis_kindTypeRealizeRepoBasesCreate {
-   G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
-
-    EH_assert  vis_userAcctExists "${bxoId}"    
-
-    lpReturn
-}
-
-
-function vis_kindTypeRealizeRepoBasesPush {
-   G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
-
-    EH_assert  vis_userAcctExists "${bxoId}"    
-
-    lpReturn
-}	
-
-
-
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*
 _CommentEnd_

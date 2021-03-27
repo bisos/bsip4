@@ -195,88 +195,80 @@ function vis_fullRealize {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
+		       }
+    EH_assert [[ $# -lt 2 ]]
+    
     EH_assert [ ! -z "${bxeDesc}" ]
 
-    lpDo vis_acctRbxeRealize
+    local bxoRealizationScope=$1   
+    
+    if [ $# -eq 0 ] ; then
+	bxoRealizationScope="full"
+    else
+	bxoRealizationScope=$1
+    fi
 
-    lpDo vis_initialReposCreateAndPush
+    lpDo vis_acctRbxeRealize ${bxoRealizationScope}
+    
+    lpDo vis_initialReposCreateAndPush ${bxoRealizationScope}
     
     lpReturn
 }
-
-function vis_acctRbxePrepare {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxeDesc}" ]
-
-    lpDo vis_bxoAcctCreate    # creates ~bxoId
-
-    lpDo vis_rbxeSetup        # bxoBxeDescCopy + bxoCredentialsUpdate + bxoGitServerDescUpdate
-
-    # local cp_bxePrefix=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxePrefix )
-    # local cp_rdn=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} rdn )
-
-    # bxoId="${cp_bxePrefix}-${cp_rdn}"
-
-    bxoId="$( vis_bxoIdFromBxeDesc ${bxeDesc} )"
-
-    lpReturn
-}
-
-function vis_acctRbxeRealizeAfterPrepare {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxeDesc}" ]
-
-    bxoId="$( vis_bxoIdFromBxeDesc ${bxeDesc} )"
-
-    lpDo vis_gitServerBxoAcctCreate
-
-    lpDo vis_gitServerBxoPubkeyUpload
-    
-    lpDo vis_sshConfigUpdate
-
-    lpDo vis_rbxeRepoCreateAndPush
-    
-    lpReturn
-}
-
-
 
 function vis_acctRbxeRealize {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
+		       }
+    EH_assert [[ $# -lt 2 ]]
+
     EH_assert [ ! -z "${bxeDesc}" ]
 
-    lpDo vis_bxoAcctCreate    # creates ~bxoId
+    local bxoRealizationScope=$1   
+    
+    if [ $# -eq 0 ] ; then
+	bxoRealizationScope="full"
+    else
+	bxoRealizationScope=$1
+    fi
+    
+    case ${bxoRealizationScope} in
+	basePrep|full)
+	    lpDo vis_bxoAcctCreate    # creates ~bxoId
 
-    lpDo vis_rbxeSetup        # bxoBxeDescCopy + bxoCredentialsUpdate + bxoGitServerDescUpdate
+	    lpDo vis_rbxeSetup        # bxoBxeDescCopy + bxoCredentialsUpdate + bxoGitServerDescUpdate
 
-    # local cp_bxePrefix=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxePrefix )
-    # local cp_rdn=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} rdn )
-
-    # bxoId="${cp_bxePrefix}-${cp_rdn}"
+	    # local cp_bxePrefix=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxePrefix )
+	    # local cp_rdn=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} rdn )
+	    # bxoId="${cp_bxePrefix}-${cp_rdn}"
+	    ;;
+	realize)
+	    doNothing
+            ;;
+	*)
+	    EH_problem "Bad Usage -- ${bxoRealizationScope}"
+	    ;;
+    esac
 
     bxoId="$( vis_bxoIdFromBxeDesc ${bxeDesc} )"
-
-    lpDo vis_gitServerBxoAcctCreate
-
-    lpDo vis_gitServerBxoPubkeyUpload
     
-    lpDo vis_sshConfigUpdate
+    case ${bxoRealizationScope} in
+	realize|full)
+	    lpDo vis_gitServerBxoAcctCreate
 
-    lpDo vis_rbxeRepoCreateAndPush
+	    lpDo vis_gitServerBxoPubkeyUpload
+    
+	    lpDo vis_sshConfigUpdate
+
+	    lpDo vis_rbxeRepoCreateAndPush
+	    ;;
+	basePrep)
+	    doNothing
+	    ;;
+	*)
+	    EH_problem "Bad Usage -- ${bxoRealizationScope}"
+	    ;;
+    esac
     
     lpReturn
 }
@@ -574,13 +566,34 @@ function vis_initialCommonReposCreateAndPush {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
+		       }
+    EH_assert [[ $# -lt 2 ]]
+
     EH_assert [ ! -z "${bxoId}" ]
-
-    lpDo bxioCommon.sh ${G_commandOptions} -p bxoId="${bxoId}" -i assembleInitialBxoCommonRepoBases
-
-    lpDo bxioCommon.sh ${G_commandOptions} -p bxoId="${bxoId}" -i pushInitialBxoCommonRepoBases
+    
+    local bxoRealizationScope=$1   
+    
+    if [ $# -eq 0 ] ; then
+	bxoRealizationScope="full"
+    else
+	bxoRealizationScope=$1
+    fi
+    
+    case ${bxoRealizationScope} in
+	full)
+	    lpDo bxioCommon.sh ${G_commandOptions} -p bxoId="${bxoId}" -i assembleInitialBxoCommonRepoBases
+	    lpDo bxioCommon.sh ${G_commandOptions} -p bxoId="${bxoId}" -i pushInitialBxoCommonRepoBases
+	    ;;
+	basePrep)
+	    lpDo bxioCommon.sh ${G_commandOptions} -p bxoId="${bxoId}" -i assembleInitialBxoCommonRepoBases	    
+	    ;;
+	realize)
+	    lpDo bxioCommon.sh ${G_commandOptions} -p bxoId="${bxoId}" -i pushInitialBxoCommonRepoBases	    
+            ;;
+	*)
+	    EH_problem "Bad Usage"
+	    ;;
+    esac
     
     lpReturn
 }

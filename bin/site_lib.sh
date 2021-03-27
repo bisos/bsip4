@@ -73,12 +73,12 @@ _EOF_
 }	
 
 
-function vis_sysCharContainerBxoId {
+function vis_sysCharContainerBxoIdName {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 ** returns on stdout, bxoId of container corresponding to \$1 as a containerPath.
 *** Typical usage is \$1=container base of this system obtained from siteContainerAssign.sh -i forThisSysFindContainerBase
-*** The sysCharContainerBxoId is just a bxoId derived from containerId assignment. 
+*** The sysCharContainerBxoId is just a bxoId derived from containerId assignment. It may or may not exist
 *** The sysCharContainerBxoId may or may not have been realized or activated.
 _EOF_
 		      }

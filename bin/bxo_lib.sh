@@ -186,19 +186,19 @@ _EOF_
     lpReturn
 }
 
-function bxoRepoScopeIsValid {
+function bxoRealizationScopeIsValid {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 ** \$1 is one of:
-- baseCreate  -- Just create the base dir. Do not create the repo
-- repoCreate  -- Assumes baseCreate has previously been invoked
-- complete    -- baseCreate+repoCreate
+- basePrep    -- Just create the base dir. Do not create the git account or the repo
+- realize     -- Create the git account or the repo. Assumes basePrep has previously been invoked. 
+- full        -- basePrep+realize
 _EOF_
 		      }
    EH_assert [[ $# -eq 1 ]]
-   local bxoRepoScope=$1
-   case ${bxoRepoScope} in
-       baseCreate|repoCreate|complete)
+   local bxoRealizationScope=$1
+   case ${bxoRealizationScope} in
+       basePrep|realize|full)
            return 0
            ;;
        *)
@@ -234,8 +234,6 @@ _EOF_
     lpReturn 0
 }
 
-
-
 function vis_repoCreateAndPushBasedOnPathWhenComplete {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -250,7 +248,6 @@ _EOF_
 	lpDo vis_repoCreateAndPushBasedOnPath ${repoBase}
     fi
 }
-    
 
 function vis_repoCreateAndPushBasedOnPath {
     G_funcEntry

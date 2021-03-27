@@ -829,15 +829,23 @@ function vis_startToPrivRealize {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
+		       }
+    EH_assert [[ $# -lt 2 ]]
+
+    local bxoRealizationScope=$1   
+    
+    if [ $# -eq 0 ] ; then
+	bxoRealizationScope="full"
+    else
+	bxoRealizationScope=$1
+    fi
 
     #local bxeDescRegFile=$( vis_startToPrivReg 2> /dev/null )
     local bxeDescRegFile=$( vis_startToPrivReg )
     
     local bxeDescFile=$( bxeDescManage.sh ${G_commandOptions} -p bxeDesc="${bxeDescRegFile}" -i bxeDescStash )
 
-    lpDo bxeRealize.sh ${G_commandOptions} -p bxeDesc="${bxeDescFile}" -i fullRealize
+    lpDo bxeRealize.sh ${G_commandOptions} -p bxeDesc="${bxeDescFile}" -i fullRealize "${bxoRealizationScope}"
 }
 
 

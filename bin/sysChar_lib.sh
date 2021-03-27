@@ -49,6 +49,62 @@ _CommentBegin_
 _CommentEnd_
 
 
+function fromContainerIdGetDistro {
+     G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+For example from VAG-deb10- get deb10
+_EOF_
+		       }
+    EH_assert [[ $# -eq 1 ]]    
+    local containerId=$1
+    echo ${containerId} |  sed -e 's:...-\(.*\)-:\1:'    
+}
+
+function withDistroGetVagBaseBox {
+     G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		       }
+    EH_assert [[ $# -eq 3 ]]    
+    local distro=$1
+    local distroType=$2
+    local vagBaseBoxType=$3
+
+    local baseBoxName=""
+    local baseBoxDistro=""
+
+    case ${distro} in
+	deb10)
+	    baseBoxDistro=debian-10.8
+	    ;;
+	deb11|default)
+	    baseBoxDistro=debian-11.pre
+	    ;;
+	ub2004)
+	    baseBoxDistro=ubuntu-20.04
+	    ;;
+	*)
+	    EH_problem "Bad Usage -- ${distro}"
+	    ;;
+    esac
+
+    case ${vagBaseBoxType} in
+	bxcntnr)
+	    baseBoxName=bisos
+	    ;;
+	desktop|mini)
+	    baseBoxName=bxDistro
+	    ;;
+	*)
+	    EH_problem "Bad Usage -- ${vagBaseBoxType}"
+	    ;;
+    esac
+
+    echo ${baseBoxName}/${baseBoxDistro}/${vagBaseBoxType}
+}
+
+
+
 function vis_sysCharReport {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -167,28 +223,77 @@ _EOF_
 
 
 function vis_sysCharWrite {
-   G_funcEntry
-   function describeF {  G_funcEntryShow; cat  << _EOF_
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
 bxoId is the sysChar.
 sysInfo.fps of sysChar overwrites sysInfo.fps of siteContainersRepo.
 _EOF_
 		      }
-   EH_assert [[ $# -eq 0 ]]
-   EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bxoId}" ]
 
-   EH_assert vis_bxoAcctVerify "${bxoId}"
-   bxoHome=$( FN_absolutePathGet ~${bxoId} )
-  
-   local sysCharBase=${bxoHome}/sysChar
+    EH_assert vis_bxoAcctVerify "${bxoId}"
+    bxoHome=$( FN_absolutePathGet ~${bxoId} )
 
-   sysChar_privA_if=$( fileParamManage.py -i fileParamRead  ${sysCharBase}/netInterface.fps privA )
+    local repoName="sysChar"
+    local repoBase="${bxoHome}/${repoName}"
 
-   sysChar_virtSpec_baseBox=$( fileParamManage.py -i fileParamRead  ${sysCharBase}/virtSpec.fps baseBox )
-   sysChar_virtSpec_sizing=$( fileParamManage.py -i fileParamRead  ${sysCharBase}/virtSpec.fps sizing )
-   sysChar_virtSpec_virtType=$( fileParamManage.py -i fileParamRead  ${sysCharBase}/virtSpec.fps virtType )
+    local siteContainersRepo="${bxoHome}/siteContainersRepo"
+    local containerAssignBase="${siteContainersRepo}/assign"
 
-   sysChar_sysInfo_distro=$( fileParamManage.py -i fileParamRead  ${sysCharBase}/sysChar.fps distro )
-   sysChar_sysInfo_distroType=$( fileParamManage.py -i fileParamRead  ${sysCharBase}/sysChar.fps distroType )      
+    local model=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} model )
+    local abode=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} abode )
+    local function=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} function )
+    local containerId=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} containerId )    
+
+    local sysInfoFps=${repoBase}/sysInfo.fps
+    lpDo FN_dirCreatePathIfNotThere ${sysInfoFps}
+
+    local virtSpecFps=${repoBase}/virtSpec.fps
+    lpDo FN_dirCreatePathIfNotThere ${virtSpecFps}
+    
+    local distro="default"          # Sys
+    local distroType="desktop"      # Sys
+    local vagBaseBoxType="bxcntnr"  # Virt
+    local vagBaseBox=""             # Virt
+
+    case ${function} in
+	Generic)
+	    distro=$( fromContainerIdGetDistro ${containerId} )
+	    distroType="desktop"
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysInfoFps} distro ${distro}
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysInfoFps} distroType ${distroType}
+	    ;;
+	Server)
+	    doNothing
+	    ;;
+
+	*)
+	    EH_problem "NOTYET -- unimplemented ${function}"
+	    ;;
+    esac
+
+    case ${abode} in
+	Auto)
+	    doNothing
+	    ;;
+	*)
+	    doNothing
+	    ;;
+    esac
+
+    case ${model} in
+	Virt)
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${virtSpecFps} vagBaseBoxType ${vagBaseBoxType}
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${virtSpecFps} virtType default
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${virtSpecFps} sizing medium
+  	    vagBaseBox=$( withDistroGetVagBaseBox ${distro} ${distroType} ${vagBaseBoxType} )
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${virtSpecFps} vagBaseBox ${vagBaseBox}
+	    ;;
+	*)
+	    doNothing
+	    ;;
+    esac
 }
 
 
@@ -202,7 +307,7 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
     EH_assert [ ! -z "${bxoId}" ]
 
-    EH_assert  vis_userAcctExists "${bxoId}"
+    EH_assert vis_bxoAcctVerify "${bxoId}"
 
     lpDo printf ${thisDescribeF}
     

@@ -1095,7 +1095,7 @@ function docsListBuildLines {
 	  ANT_raw "${G_myName} ${extraInfo} -i build  ${thisOne}"
 	  ;;
       "fm5")
-	  opDoNothing
+	  doNothing
 	  ;;
       *)
 	 return 1

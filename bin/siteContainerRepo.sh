@@ -114,8 +114,8 @@ $( examplesSeperatorChapter "Container Repo Realization" )
 ${G_myName} ${extraInfo} -i containerRepoUpdate ${containerBase}
 $( examplesSeperatorChapter "Generic Container Repo Realization" )
 ${G_myName} ${extraInfo} -i containerRepoUpdate ${containersBase}/assign/Virt/Auto/Generic/deb10
-${G_myName} ${extraInfo} -i containerRepoGenericsUpdateExamples baseCreate # bxoRepoScope=baseCreate|repoCreate|complete
-${G_myName} ${extraInfo} -i containerRepoGenericsUpdate baseCreate  # bxoRepoScope=baseCreate|repoCreate|complete
+${G_myName} ${extraInfo} -i containerRepoGenericsUpdateExamples basePrep # bxoRealizationScope=basePrep|realize|full
+${G_myName} ${extraInfo} -i containerRepoGenericsUpdate basePrep  # bxoRealizationScope=basePrep|realize|full
 _EOF_
 }
 
@@ -130,8 +130,8 @@ function vis_containerRepoGenericsUpdateExamples {
 _EOF_
 		      }
    EH_assert [[ $# -eq 1 ]]
-   local bxoRepoScope=$1
-   EH_assert bxoRepoScopeIsValid "${bxoRepoScope}"
+   local bxoRealizationScope=$1
+   EH_assert bxoRealizationScopeIsValid "${bxoRealizationScope}"
 
    local genericBasesList=( $( vis_containersGenericsAssignList ) )
 
@@ -139,7 +139,7 @@ _EOF_
    
    for each in ${genericBasesList[@]} ;  do
        cat  << _EOF_
-${G_myName} ${extraInfo} -i containerRepoUpdate "${bxoRepoScope}" ${each}
+${G_myName} ${extraInfo} -i containerRepoUpdate ${bxoRealizationScope} ${each}
 _EOF_
    done
    
@@ -153,13 +153,13 @@ function vis_containerRepoGenericsUpdate {
 _EOF_
 		      }
    EH_assert [[ $# -eq 1 ]]
-   local bxoRepoScope=$1
-   EH_assert bxoRepoScopeIsValid "${bxoRepoScope}"
+   local bxoRealizationScope=$1
+   EH_assert bxoRealizationScopeIsValid "${bxoRealizationScope}"
 
    local genericBasesList=( $( vis_containersGenericsAssignList ) )
 
    for each in ${genericBasesList[@]} ;  do
-       lpDo vis_containerRepoUpdate baseCreate ${each}
+       lpDo vis_containerRepoUpdate basePrep ${each}
    done
    
    lpReturn
@@ -170,7 +170,7 @@ _EOF_
 function vis_containerRepoUpdate {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
-** \$1 is bxoRepoScope -- \$2 is path to containerAssignBase
+** \$1 is bxoRealizationScope -- \$2 is path to containerAssignBase
 *** Based on containerId, a repoBase is created.
 *** repoBase/assign sym links to containerAssignBase
 *** Based on model+abode+function repoBase/steady is populated.
@@ -178,11 +178,11 @@ _EOF_
 		      }
    EH_assert [[ $# -eq 2 ]]
 
-   local bxoRepoScope=$1
+   local bxoRealizationScope=$1
    local containerAssignBase=$2
    local retVal=0
 
-   EH_assert bxoRepoScopeIsValid "${bxoRepoScope}"
+   EH_assert bxoRealizationScopeIsValid "${bxoRealizationScope}"
    EH_assert [ -d ${containerAssignBase} ]
 
    local containersBase=$( containersBaseObtain )
@@ -191,7 +191,7 @@ _EOF_
 
    local repoBase="${containersBase}/${containerId}"
 
-   lpDo vis_withBxoRepoScope_createBaseDirOrCreateRepo "${bxoRepoScope}" "${repoBase}"
+   lpDo vis_withBxoRepoScope_createBaseDirOrCreateRepo "${bxoRealizationScope}" "${repoBase}"
    retVal=$?
    if [ ${retVal} == 1 ] ; then lpReturn 0; fi;   # repo was created. We are done.
    EH_assert [ -d "${repoBase}" ]
@@ -227,7 +227,7 @@ _EOF_
 
    vis_containerSteadyWrite "${containerSteadyBase}"
 
-   lpDo vis_repoCreateAndPushBasedOnPathWhenComplete "${bxoRepoScope}" ${repoBase}
+   lpDo vis_repoCreateAndPushBasedOnPathWhenComplete "${bxoRealizationScope}" ${repoBase}
 
    lpReturn
 }	
