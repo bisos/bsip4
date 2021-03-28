@@ -197,28 +197,34 @@ _EOF_
 
 
 function vis_sysCharRead {
-   G_funcEntry
-   function describeF {  G_funcEntryShow; cat  << _EOF_
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
 bxoId is the sysChar.
 sysInfo.fps of sysChar overwrites sysInfo.fps of siteContainersRepo.
 _EOF_
 		      }
-   EH_assert [[ $# -eq 0 ]]
-   EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bxoId}" ]
 
-   EH_assert vis_bxoAcctVerify "${bxoId}"
-   bxoHome=$( FN_absolutePathGet ~${bxoId} )
+    EH_assert vis_bxoAcctVerify "${bxoId}"
+    bxoHome=$( FN_absolutePathGet ~${bxoId} )
   
-   local sysCharBase=${bxoHome}/sysChar
+    local sysCharBase=${bxoHome}/sysChar
+    local repoName="sysChar"
+    local repoBase="${bxoHome}/${repoName}"
 
-   sysChar_privA_if=$( fileParamManage.py -i fileParamRead  ${sysCharBase}/netInterface.fps privA )
+    local sysInfoFps=${repoBase}/sysInfo.fps
+    local virtSpecFps=${repoBase}/virtSpec.fps
 
-   sysChar_virtSpec_baseBox=$( fileParamManage.py -i fileParamRead  ${sysCharBase}/virtSpec.fps baseBox )
-   sysChar_virtSpec_sizing=$( fileParamManage.py -i fileParamRead  ${sysCharBase}/virtSpec.fps sizing )
-   sysChar_virtSpec_virtType=$( fileParamManage.py -i fileParamRead  ${sysCharBase}/virtSpec.fps virtType )
+    sysChar_sysInfo_distro=$( fileParamManage.py -v 30 -i fileParamRead ${sysInfoFps} distro )
+    sysChar_sysInfo_distroType=$( fileParamManage.py -v 30 -i fileParamRead ${sysInfoFps} distroType )      
+    
+    sysChar_virtSpec_vagBaseBoxType=$( fileParamManage.py -i fileParamRead ${virtSpecFps} vagBaseBoxType )
+    sysChar_virtSpec_virtType=$( fileParamManage.py -i fileParamRead ${virtSpecFps} virtType )
+    sysChar_virtSpec_sizing=$( fileParamManage.py -i fileParamRead ${virtSpecFps} sizing )
+    sysChar_virtSpec_vagBaseBox=$( fileParamManage.py -i fileParamRead ${virtSpecFps} vagBaseBox )    
 
-   sysChar_sysInfo_distro=$( fileParamManage.py -i fileParamRead  ${sysCharBase}/sysChar.fps distro )
-   sysChar_sysInfo_distroType=$( fileParamManage.py -i fileParamRead  ${sysCharBase}/sysChar.fps distroType )      
+    sysChar_privA_if=$( fileParamManage.py -i fileParamRead  ${sysCharBase}/netInterface.fps privA )
 }
 
 

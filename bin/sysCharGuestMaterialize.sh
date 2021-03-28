@@ -348,38 +348,13 @@ _EOF_
     lpDo vis_containerSteadyRead    
     lpDo vis_sysCharRead
 
-    if [ ! -z "${sysChar_virtSpec_baseBox}" ] ; then
-	lpDo echo "${sysChar_virtSpec_baseBox}"
+    if [ ! -z "${sysChar_virtSpec_vagBaseBox}" ] ; then
+	lpDo echo "${sysChar_virtSpec_vagBaseBox}"
 	lpReturn
     fi
 
-    local vagrantBaseBox=""
+    local vagrantBaseBox=$( withDistroGetVagBaseBox "${sysChar_sysInfo_distro}" "${sysChar_sysInfo_distroType}" "bxcntnr" )
     
-    case "${sysChar_sysInfo_distro}" in
-	"deb10")
-            vagrantBaseBox="generic/debian10"
-            ;;
-	"deb11")
-            vagrantBaseBox="debian/testing64"
-            ;;
-	"ub2004")
-	    vagrantBaseBox="peru/ubuntu-20.04-server-amd64"
-	    if [ "${sysChar_sysInfo_distro}" == "server" ] ; then
-		vagrantBaseBox="peru/ubuntu-20.04-server-amd64"
-	    elif [ "${sysChar_sysInfo_distro}" == "desktop" ] ; then
-		vagrantBaseBox="peru/ubuntu-20.04-server-amd64"
-	    else
-		doNothing
-	    fi
-            ;;
-	"default")
-	    vagrantBaseBox="generic/debian10"
-	    ;;
-	* )
-	    EH_problem "Unsupported sysChar_sysInfo_distro=${sysChar_sysInfo_distro}"
-	    vagrantBaseBox=""
-	    ;;
-    esac
     echo ${vagrantBaseBox}
 }
 
