@@ -144,7 +144,7 @@ bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VAG-deb10-
 $( examplesSeperatorChapter "Specialized Actions" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantBaseBoxFromSysChar   # which vagrantBaseBox will be used
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_path      # on host
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantBase_last     # on host
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_run       # on host - ends with image
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_run testNetSet      # on host - ends with image
 $( examplesSeperatorChapter "Vagrantfile Stdout and Creation " )
@@ -160,11 +160,49 @@ $( examplesSeperatorChapter "Ssh Based Cusomizations -- Bx Based (not vagrant ba
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i postCustomize  # on host - bx-ssh
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i secureSeal     # on host - bx-ssh
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i recordDeployment      # inside of parent bxo
+$( examplesSeperatorChapter "Generic Container Materialization" )
+${G_myName} -i containerGenericMaterialize examples
+${G_myName} ${extraInfo} -i containerGenericMaterialize doIt
 _EOF_
 }
 
+function vis_containerGenericMaterialize {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
 
-function vis_vagrantFile_path {
+   local examplesOrDoIt=$1
+
+   local genericBasesList=( $( vis_containersGenericsAssignList ) )
+
+   local extraInfo="-h -v -n showRun"
+   
+   for each in ${genericBasesList[@]} ;  do
+       local sysCharContainerBxoId=$( vis_sysCharContainerBxoIdName "${each}" )
+       EH_assert [ ! -z "${sysCharContainerBxoId}" ]
+
+       EH_assert vis_bxoAcctVerify "${sysCharContainerBxoId}"
+
+       if [ "${examplesOrDoIt}" == "examples" ] ; then
+	   cat  << _EOF_
+${G_myName} ${extraInfo} -p bxoId="${sysCharContainerBxoId}" -i vagrantFile_run
+$( ${G_myName} -p bxoId="${sysCharContainerBxoId}" -i vagrantBase_last )
+_EOF_
+       elif [ "${examplesOrDoIt}" == "doIt" ] ; then
+	   bxoId="${sysCharContainerBxoId}"
+	   lpDo vis_vagrantFile_run
+       else
+	   EH_problem "Bad Usage -- ${examplesOrDoIt}"
+       fi
+   done
+   
+   lpReturn
+}	
+
+
+function vis_vagrantBaseObtain {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Return stdout path to Vagrantfile's base directory of the bxoHome.
@@ -177,9 +215,39 @@ _EOF_
 
     lpDo FN_dirCreatePathIfNotThere ${bxoHome}/var/vagrantBase
 
-    opDoRet touch ${bxoHome}/var/vagrantBase/Vagrantfile
+    echo ${bxoHome}/var/vagrantBase
+    
+    lpReturn
+}	
 
-    echo ${bxoHome}/var/vagrantBase/Vagrantfile
+
+function vis_vagrantBase_last {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Based on the Vagrantfile, create a VM image.
+NAT + genesis target.
+_EOF_
+    }
+    EH_assert [[ $# -lt 2 ]]    
+    EH_assert [ ! -z "${bxoId}" ]
+
+    EH_assert  vis_bxoAcctVerify "${bxoId}"
+
+    local dirsPart=$( vis_vagrantBaseObtain )
+    EH_assert [ ! -z "${dirsPart}" ]
+    
+    local thisDir=""
+
+    opDoExit cd ${dirsPart}    
+    local vmsDirsList=$( ls | grep -v Vagrantfile | grep -v bxo | grep -v history | sort -n )
+
+    for thisDir in ${vmsDirsList} ; do
+	doNothing
+    done
+
+    if [ ! -z "${thisDir}" ] ; then
+	echo $(pwd)/${thisDir}
+    fi
     
     lpReturn
 }	
@@ -197,7 +265,7 @@ _EOF_
 
     EH_assert  vis_bxoAcctVerify "${bxoId}"
 
-    local dirsPart=$( FN_dirsPart $(vis_vagrantFile_path) )
+    local dirsPart=$( vis_vagrantBaseObtain )
     EH_assert [ ! -z "${dirsPart}" ]
     
     local thisDir=""
@@ -205,9 +273,10 @@ _EOF_
     opDoExit cd ${dirsPart}    
     local vmsDirsList=$( ls | grep -v Vagrantfile | grep -v bxo | grep -v history | sort -n )
 
-    echo ${vmsDirsList}
+    # echo ${vmsDirsList}
     for thisDir in ${vmsDirsList} ; do
-	echo $(pwd)/${thisDir}
+	# echo $(pwd)/${thisDir}
+	doNothing
     done
 
     nextNu=$( expr ${thisDir} +  1 )
@@ -380,7 +449,7 @@ _EOF_
 
     case "${containerBaseBox}" in
 
-	"bisos/ubuntu-2004/bxcntnr")
+	"bisos/ubuntu-20.04/bxcntnr")
 	    doNothing
 	    ;&   #fallthru
 	"bisos/debian-11.pre/bxcntnr")
@@ -395,7 +464,7 @@ _EOF_
 _OUTER_EOF_
 	    ;;
 
-	"bxDistro/ubuntu-2004/desktop")
+	"bxDistro/ubuntu-20.04/desktop")
 	    doNothing
 	    ;&   #fallthru
 	"bxDistro/debian-11.pre/desktop")
@@ -454,7 +523,7 @@ _EOF_
     
     case "${containerBaseBox}" in
 
-	"bxDistro/ubuntu-2004/desktop"|"bisos/ubuntu-2004/bxcntnr")
+	"bxDistro/ubuntu-20.04/desktop"|"bisos/ubuntu-20.04/bxcntnr")
 	    doNothing
 	    ;&   #fallthru
 	"bxDistro/debian-11.pre/desktop"|"bisos/debian-11.pre/bxcntnr")
@@ -552,6 +621,7 @@ _EOF_
     local containerBaseBox=$( vis_vagrantBaseBoxFromSysChar )
 
     local containerName=${containerAssign_containerId}${vmNameQualifier}
+    local hostname=$( echo ${containerName} | sed -e 's:_:-:g' )
 
     local defaultInterface=$( ip -4 route ls | grep default | grep -Po '(?<=dev )(\S+)' )
 
@@ -569,7 +639,7 @@ _EOF_
 Vagrant.configure("2") do |config|
   config.vm.define "${containerName}" do |guest|
     guest.vm.box = "${containerBaseBox}"
-    guest.vm.hostname = "${containerName}"
+    guest.vm.hostname = "${hostname}"
     guest.vm.network :public_network, :dev => "${defaultInterface}", :mode => 'bridge', auto_config: false
     guest.vm.synced_folder '.', '/vagrant', disabled: true
 
@@ -664,103 +734,6 @@ _OUTER_EOF_
 
     ${shellProvisioning}
 }
-
-
-
-############ JUNK YARD ############
-
-
-function vis_vagrantFile_create%%%% {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-Look in ~bxoId for sysSpec info (distro+ram+disk). 
-Based on that get the appropriate Vagrantfile.
-Genesis target being container.
-Network being NAT. 
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
-
-    echo OBSOLETED
-
-    lpReturn
-
-    EH_assert  vis_bxoAcctVerify "${bxoId}"
-
-    local virtType=$( fileParamManage.py  -i fileParamRead  ${bxoHome}/sysSpec/virtualization.fps virtType )
-    local baseBoxVagrantFile=""    
-
-    function baseBoxVagrantFileObtain {
-	G_funcEntry
-	function describeF {  G_funcEntryShow; cat  << _EOF_
-NOTYET	
-_EOF_
-			   }
-	
-	local baseBox=$( fileParamManage.py  -i fileParamRead  ${bxoHome}/sysSpec/vmSpec.fps baseBox )
-	local baseBoxTarget="NOTYET"
-
-	if [ "${baseBox}" == "medium" ] ; then
-	    baseBoxVagrantFile="~aip_vagrantBaseBoxes/vagrants/ubuntu/20.04/server/medium-nat/bxBase/kvm/1/Vagrantfile"
-	elif [ "${baseBox}" == "large" ] ; then
-	    baseBoxVagrantFile="NOTYET"
-	else
-	    EH_problem ""
-	fi
-	echo ${baseBoxVagrantFile}
-    }
-
-    if [ "${virtType}" == "default" ] ; then
-	baseBoxVagrantFile=$(baseBoxVagrantFileObtain)
-
-    elif [ "${virtType}" == "none" ] ; then
-	doNothing
-	lpReturn
-    else
-	EH_problem ""
-	lpReturn
-    fi
-
-    if [ ! -z "${baseBoxVagrantFile}" ] ; then
-	lpDo echo cp ${baseBoxVagrantFile} $(vis_vagrantFile_path)
-    else
-	EH_problem ""
-    fi
-					      
-    lpReturn
-}	
-
-
-function vis_vagrantFile_create%% {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-Look in ~bxoId for sysSpec info (distro+ram+disk). 
-Based on that get the appropriate Vagrantfile.
-Genesis target being container.
-Network being NAT. 
-_EOF_
-    }
-    EH_assert [[ $# -lt 2 ]]    
-    EH_assert [ ! -z "${bxoId}" ]
-
-    EH_assert  vis_bxoAcctVerify "${bxoId}"
-
-    local virtType=$( fileParamManage.py  -i fileParamRead  ${bxoHome}/sysSpec/virtualization.fps virtType )
-
-    if [ "${virtType}" == "none" ] ; then
-	lpReturn
-    fi
-
-    local vagrantFile_path=$(vis_vagrantFile_path)
-
-    lpDo eval vis_vagrantFile_stdout $@ \> ${vagrantFile_path}
-
-    lpDo ls -l ${vagrantFile_path}
-					      
-    lpReturn
-}	
-
 
 
 

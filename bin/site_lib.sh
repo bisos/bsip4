@@ -182,7 +182,7 @@ _EOF_
    local containersBase=$( containersBaseObtain )
 
    #find ${containersBase} -type d -print | egrep '/Generic/.*[^/]$'
-   local genericBasesList=( $(find ${containersBase} -type d -print | egrep '/Generic/[a-z|0-9]*$') )
+   local genericBasesList=( $(find ${containersBase} -type d -print | egrep '/Generic/[a-z|0-9|_]*$') )
 
    for each in ${genericBasesList[@]} ;  do
        echo $each

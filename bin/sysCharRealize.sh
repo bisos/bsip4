@@ -174,7 +174,10 @@ ${G_myName} ${extraInfo} -i sysCharContainerRealize ${oneBxoRepoScope} ${contain
 ${G_myName} ${extraInfo} -i sysCharContainerRealize ${oneBxoRepoScope} ${containersBase}/assign/Virt/Auto/Generic/deb10
 $( examplesSeperatorChapter "Generic SysChar Container Realization" )
 siteContainerRepo.sh -i containersGenericsAssignList
-${G_myName} ${extraInfo} -i sysCharContainersGenericsRealizeExamples basePrep # bxoRepoScope=basePrep|realize|full
+${G_myName} ${extraInfo} -i sysCharContainersGenericsRealize examples basePrep
+${G_myName} ${extraInfo} -i sysCharContainersGenericsRealize examples realize
+${G_myName} ${extraInfo} -i sysCharContainersGenericsRealize examples full
+${G_myName} ${extraInfo} -i sysCharContainersGenericsRealize doIt full # bxoRepoScope=basePrep|realize|full
 _EOF_
 
   cat  << _EOF_
@@ -200,13 +203,14 @@ _EOF_
 
 
 
-function vis_sysCharContainersGenericsRealizeExamples {
+function vis_sysCharContainersGenericsRealize {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
 		      }
-   EH_assert [[ $# -eq 1 ]]
-   local bxoRealizationScope=$1   
+   EH_assert [[ $# -eq 2 ]]
+   local examplesOrDoIt=$1
+   local bxoRealizationScope=$2   
    EH_assert bxoRealizationScopeIsValid "${bxoRealizationScope}"
 
    local genericBasesList=( $( vis_containersGenericsAssignList ) )
@@ -214,9 +218,15 @@ _EOF_
    local extraInfo="-h -v -n showRun"
    
    for each in ${genericBasesList[@]} ;  do
-       cat  << _EOF_
+       if [ "${examplesOrDoIt}" == "examples" ] ; then
+	   cat  << _EOF_
 ${G_myName} ${extraInfo} -i sysCharContainerRealize ${bxoRealizationScope} ${each}
 _EOF_
+       elif [ "${examplesOrDoIt}" == "doIt" ] ; then
+	   lpDo vis_sysCharContainerRealize ${bxoRealizationScope} ${each}
+       else
+	   EH_problem "Bad Usage -- ${examplesOrDoIt}"
+       fi
    done
    
    lpReturn
@@ -258,9 +268,10 @@ _EOF_
    EH_assert vis_bxoAcctVerify "${bxoId}"
    bxoHome=$( FN_absolutePathGet ~${bxoId} )
 
-   vis_kindTypeRealizeRepoBases ${bxoRealizationScope}
+   # vis_basesFullCreate needs to run before vis_kindTypeRealizeRepoBases
+   vis_basesFullCreate # Creates symlinks in ~bxo   
 
-   vis_basesFullCreate # Creates symlinks in ~bxo
+   vis_kindTypeRealizeRepoBases ${bxoRealizationScope}
 }
 
 function vis_repoBasesList {
@@ -431,6 +442,7 @@ BxO Repo: ${repoBase}
 for now just a bin directory
 _EOF_
 
+    # vis_sysCharWrite is in ./sysChar_lib.sh 
     lpDo vis_sysCharWrite
 
     lpDo FN_dirCreatePathIfNotThere ${repoBase}/bin

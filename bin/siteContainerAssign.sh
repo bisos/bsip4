@@ -147,10 +147,13 @@ ${G_myName} ${extraInfo} -i withInitialGetModel "H"     # one of: [HPV]
 ${G_myName} ${extraInfo} -i withInitialGetAbode "S"     # one of: [AMPSI]
 ${G_myName} ${extraInfo} -i withInitialGetFunction "S"  # one of: [LASD]
 $( examplesSeperatorChapter "Container Assignment List Examples" )
-${G_myName} ${extraInfo} -i modelAbodeFunction_listExamples containerBoxAssign
+${G_myName} ${extraInfo} -i modelAbodeFunction_listExamples containerBoxAssign   # Examples for all container models
 ${G_myName} ${extraInfo} -p model=Virt -i modelAbodeFunction_listExamples containerBoxAssign
-${G_myName} ${extraInfo} -i modelAbodeFunction_listExamples containerNuGetNext
-${G_myName} ${extraInfo} -i assignGenerics
+${G_myName} ${extraInfo} -i modelAbodeFunction_listExamples containerNuGetNext  # Examples for all container models
+${G_myName} -i assignGenerics_auto examples
+${G_myName} ${extraInfo} -i assignGenerics_auto doIt
+${G_myName} -i assignGenerics_box examples
+${G_myName} ${extraInfo} -i assignGenerics_box doIt
 _EOF_
 }
 
@@ -186,12 +189,14 @@ _EOF_
 }
 
 
-function vis_assignGenerics {
+function vis_assignGenerics_auto {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
 		      }
-   EH_assert [[ $# -eq 0 ]]
+   EH_assert [[ $# -eq 1 ]]
+
+   local examplesOrDoIt=$1
 
    local command=containerBoxAssign
 
@@ -205,9 +210,17 @@ _EOF_
        local thisAbode=$2
        local thisFunction=$3
        for eachDistro in ${distros[@]} ; do
-	   cat  << _EOF_
+	   if [ "${examplesOrDoIt}" == "examples" ] ; then
+	       cat  << _EOF_
 ${G_myName} -p model=${thisModel} -p abode=${thisAbode} -p function=${thisFunction} -i ${command} ${eachDistro}
+${G_myName} -p model=${thisModel} -p abode=${thisAbode} -p function=${thisFunction} -i ${command} bx_${eachDistro}
 _EOF_
+	   elif [ "${examplesOrDoIt}" == "doIt" ] ; then
+	       lpDo vis_${command} ${eachDistro}
+	       lpDo vis_${command} bx_${eachDistro}
+	   else
+	       EH_problem "Bad Usage -- ${examplesOrDoIt}"
+	   fi
        done
    }
    
@@ -247,6 +260,83 @@ _EOF_
    lpReturn
 }
 
+
+function vis_assignGenerics_box {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+    EH_assert [[ $# -eq 1 ]]
+
+    local examplesOrDoIt=$1
+
+    local command=containerBoxAssign
+
+    local containerBase=$( vis_forThisSysFindContainerBase )
+    EH_assert [ ! -z "${containerBase}" ]
+
+    vis_containerAssignRead "${containerBase}"
+    EH_assert [ ! -z "${containerAssign_abode}" ]
+
+    model=Virt
+    abode=${containerAssign_abode}
+    function=Generic
+
+   function outLine {
+       EH_assert [[ $# -eq 3 ]]
+       local thisModel=$1
+       local thisAbode=$2
+       local thisFunction=$3
+       for eachDistro in ${distros[@]} ; do
+	   if [ "${examplesOrDoIt}" == "examples" ] ; then
+	       cat  << _EOF_
+${G_myName} -p model=${thisModel} -p abode=${thisAbode} -p function=${thisFunction} -i ${command} ${eachDistro}
+${G_myName} -p model=${thisModel} -p abode=${thisAbode} -p function=${thisFunction} -i ${command} bx_${eachDistro}
+_EOF_
+	   elif [ "${examplesOrDoIt}" == "doIt" ] ; then
+	       lpDo vis_${command} ${eachDistro}
+	       lpDo vis_${command} bx_${eachDistro}
+	   else
+	       EH_problem "Bad Usage -- ${examplesOrDoIt}"
+	   fi
+       done
+   }
+   
+   function functionsList {
+       EH_assert [[ $# -eq 2 ]]
+       local thisModel=$1
+       local thisAbode=$2       
+       if [ ! -z ${function} ] ; then
+	   outLine ${thisModel} ${thisAbode} ${function}
+       else
+	   for eachFunction in ${functions[@]} ; do
+	       outLine ${thisModel} ${thisAbode} ${eachFunction}
+	   done
+       fi
+   }
+
+   function abodesFunctionsList {
+       EH_assert [[ $# -eq 1 ]]
+       local thisModel=$1
+       if [ ! -z ${abode} ] ; then
+	   functionsList ${thisModel} ${abode}
+       else
+	   for eachAbode in ${abodes[@]} ; do
+	       functionsList  ${thisModel} ${eachAbode}
+	   done
+       fi
+   }
+
+   if [ ! -z ${model} ] ; then
+       abodesFunctionsList ${model}
+   else
+       for eachModel in ${models[@]} ;  do
+	   abodesFunctionsList ${eachModel}  
+       done
+   fi
+
+   lpReturn
+}
 
 
 function vis_modelAbodeFunction_listExamples {
@@ -503,11 +593,11 @@ _EOF_
    EH_assert [ ! -z "${abode}" ]
    EH_assert [ ! -z "${function}" ]
 
-   local containerNu="$1"
+   local containerGenericTag="$1"
 
-   lpDo vis_containerUpdate_atNu "${containerNu}"
+   lpDo vis_containerUpdate_atNu "${containerGenericTag}"
 
-   local containerBase=$( vis_assignedContainerBase "${containerNu}" )
+   local containerBase=$( vis_assignedContainerBase "${containerGenericTag}" )
 
    lpDo fileParamManage.py -i fileParamRead  ${containerBase} containerId
 
@@ -792,7 +882,9 @@ _EOF_
    EH_assert [ ! -z "${function}" ]
 
    if ! isnum ${containerNu} ; then
-       containerNu="${containerNu}-"
+       # ${containerNu}- does not work with gitlab -- repos ending with a - fail.
+       # so, we use ${containerNu}_
+       containerNu="${containerNu}_"
    fi
 
    echo "${model:0:1}${abode:0:1}${function:0:1}-${containerNu}"

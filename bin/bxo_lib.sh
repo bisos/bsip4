@@ -207,44 +207,65 @@ _EOF_
    esac
 }
 
-function vis_withBxoRepoScope_createBaseDirOrCreateRepo {
+function vis_with_bxoRealizationScope_createBaseDirOrCreateRepo {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
     EH_assert [[ $# -eq 2 ]]
     
-    local bxoRepoScope=$1
+    local bxoRealizationScope=$1
     local repoBase=$2
 
     if [ -d "${repoBase}" ] ; then
-       if [ "${bxoRepoScope}" == "repoCreate" ] ; then
-	   lpDo vis_repoCreateAndPushBasedOnPath ${repoBase}
-	   lpReturn 1
-       fi
-       ANT_raw "repoBase=${repoBase} is in place, updating"
-   else
-       if [ "${bxoRepoScope}" == "repoCreate" ] ; then
-	   EH_problem "Base does not exist but repoCreate was specified."
-	   lpReturn 101
-       fi
-       ANT_raw "repoBase=${repoBase} missing, creating"
-       lpDo mkdir -p ${repoBase}
-   fi
+	case ${bxoRealizationScope} in
+	    realize)
+		lpDo vis_repoCreateAndPushBasedOnPath ${repoBase}
+		lpReturn 1
+		;;
+	    full)
+		ANT_raw "With bxoRealizationScope=${bxoRealizationScope} did not expect ${repoBase}"
+		lpDo vis_repoCreateAndPushBasedOnPath ${repoBase}
+		lpReturn 1
+		;;
+	    basePrep)
+		ANT_raw "repoBase=${repoBase} is in place, updating"
+		;;
+	    *)
+		EH_problem "Bad Usage -- ${bxoRealizationScope}"
+		return 101
+		;;
+	esac
+    else
+	case ${bxoRealizationScope} in
+	    realize)
+		EH_problem "Base does not exist but realize was specified."
+		lpReturn 101
+		;;
+	    basePrep|full)
+		ANT_raw "repoBase=${repoBase} missing, creating"
+		lpDo mkdir -p ${repoBase}
+		;;
+	    *)
+		EH_problem "Bad Usage -- ${bxoRealizationScope}"
+		return 101
+		;;
+	esac
+    fi
     lpReturn 0
 }
 
-function vis_repoCreateAndPushBasedOnPathWhenComplete {
+function vis_repoCreateAndPushBasedOnPathBasedOn_bxoRealizationScope {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
     EH_assert [[ $# -eq 2 ]]
     
-    local bxoRepoScope=$1
+    local bxoRealizationScope=$1
     local repoBase=$2
 
-    if [ "${bxoRepoScope}" == "complete" ] ; then
+    if [ "${bxoRealizationScope}" == "full" ] ; then
 	lpDo vis_repoCreateAndPushBasedOnPath ${repoBase}
     fi
 }

@@ -49,7 +49,7 @@ _CommentBegin_
 _CommentEnd_
 
 
-function fromContainerIdGetDistro {
+function fromGenericContainerIdGetDistro {
      G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 For example from VAG-deb10- get deb10
@@ -57,18 +57,68 @@ _EOF_
 		       }
     EH_assert [[ $# -eq 1 ]]    
     local containerId=$1
-    echo ${containerId} |  sed -e 's:...-\(.*\)-:\1:'    
+    echo ${containerId} | sed -e 's:...-\(.*\)_:\1:' | sed -e 's:.*\(bx_\)\(.*\):\2:'
 }
+
+function fromGenericContainerIdGetBaseBoxIndicator {
+     G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+For example from VAG-bx_deb10- get bx
+_EOF_
+		       }
+    EH_assert [[ $# -eq 1 ]]    
+    local containerId=$1
+    local baseBoxIndicator=$( echo ${containerId} | sed -e 's:...-\(bx\)_.*_:\1:' )
+
+    if [ "${baseBoxIndicator}" == "bx" ] ; then
+	echo "bxcntnr"
+    elif [ "${baseBoxIndicator}" == "${containerId}" ] ; then
+	echo "desktop"
+    else
+	EH_problem "Bad Usage -- ${baseBoxIndicator}"
+	echo ""
+	lpReturn 101
+    fi
+    lpReturn 0
+}
+
+
+function withFunctionAndContainerIdGetVagBoxType {
+     G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		       }
+    EH_assert [[ $# -eq 2 ]]    
+    local function=$1
+    local containerId=$2
+
+    # local vagBaseBoxType="desktop"
+    local vagBaseBoxType="bxcntnr"    
+    if [ "${function}" == "Generic" ] ; then
+	vagBaseBoxType=$( fromGenericContainerIdGetBaseBoxIndicator ${containerId} )
+	EH_assert [ ! -z ${vagBaseBoxType} ]
+    fi
+
+    echo ${vagBaseBoxType}
+}
+
 
 function withDistroGetVagBaseBox {
      G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
 		       }
-    EH_assert [[ $# -eq 3 ]]    
-    local distro=$1
-    local distroType=$2
-    local vagBaseBoxType=$3
+    EH_assert [[ $# -eq 4 ]]    
+    local function=$1
+    local distro=$2   
+    local distroType=$3
+    local containerId=$4
+
+    local vagBaseBoxType="desktop"
+    if [ "${function}" == "Generic" ] ; then
+	vagBaseBoxType=$( fromGenericContainerIdGetBaseBoxIndicator ${containerId} )
+	EH_assert [ ! -z ${vagBaseBoxType} ]
+    fi
 
     local baseBoxName=""
     local baseBoxDistro=""
@@ -103,8 +153,6 @@ _EOF_
     echo ${baseBoxName}/${baseBoxDistro}/${vagBaseBoxType}
 }
 
-
-
 function vis_sysCharReport {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -129,25 +177,37 @@ _EOF_
 
 
 function vis_containerAssignRead {
-   G_funcEntry
-   function describeF {  G_funcEntryShow; cat  << _EOF_
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
 bxoId is the sysChar. From which the link to assign is followed.
 When boxId is "virt", virtSpec.fps become effective.
 _EOF_
 		      }
-   EH_assert [[ $# -eq 0 ]]
-   EH_assert [ ! -z "${bxoId}" ]
 
-   EH_assert vis_bxoAcctVerify "${bxoId}"
-   bxoHome=$( FN_absolutePathGet ~${bxoId} )
+    EH_assert [[ $# -lt 2 ]]
+    
+    local containerAssignBase=""
+    
+    if [ $# -eq 0 ] ; then
+	EH_assert [ ! -z "${bxoId}" ]
+
+	EH_assert vis_bxoAcctVerify "${bxoId}"
+	bxoHome=$( FN_absolutePathGet ~${bxoId} )
   
-   local containerAssignBase=${bxoHome}/siteContainersRepo/assign
-
-   containerAssign_containerId=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} containerId )
-   containerAssign_boxId=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} boxId )   
-   containerAssign_abode=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} abode )
-   containerAssign_function=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} function )
-   containerAssign_model=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} model )         
+	containerAssignBase=${bxoHome}/siteContainersRepo/assign
+    elif [ $# -eq 1 ] ; then
+	containerAssignBase=$1
+    else
+	EH_oops ""
+	lpReturn
+    fi
+ 
+ 
+    containerAssign_containerId=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} containerId )
+    containerAssign_boxId=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} boxId )   
+    containerAssign_abode=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} abode )
+    containerAssign_function=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} function )
+    containerAssign_model=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} model )         
 }
 
 function vis_containerSteadyRead {
@@ -190,8 +250,8 @@ _EOF_
        lpDo fileParamManage.py -v 20 -i fileParamWrite ${containerSteadyBase}/net networkMode.fp "${steady_networkMode}"
    fi
    
-   if [ ! -z "${privA_addr}" ] ; then
-       fileParamManage.py -i fileParamWrite ${containerSteadyBase}/net/ipv4/privA.fps addr "${privA_addr}"
+   if [ ! -z "${steady_privA_addr}" ] ; then
+       fileParamManage.py -i fileParamWrite ${containerSteadyBase}/net/ipv4/privA.fps addr "${steady_privA_addr}"
    fi
 }
 
@@ -260,12 +320,12 @@ _EOF_
     
     local distro="default"          # Sys
     local distroType="desktop"      # Sys
-    local vagBaseBoxType="bxcntnr"  # Virt
+    local vagBaseBoxType=""         # Virt
     local vagBaseBox=""             # Virt
 
     case ${function} in
 	Generic)
-	    distro=$( fromContainerIdGetDistro ${containerId} )
+	    distro=$( fromGenericContainerIdGetDistro ${containerId} )
 	    distroType="desktop"
 	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysInfoFps} distro ${distro}
 	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysInfoFps} distroType ${distroType}
@@ -290,10 +350,12 @@ _EOF_
 
     case ${model} in
 	Virt)
+	    vagBaseBoxType=$( withFunctionAndContainerIdGetVagBoxType ${function} ${containerId} )
 	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${virtSpecFps} vagBaseBoxType ${vagBaseBoxType}
 	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${virtSpecFps} virtType default
 	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${virtSpecFps} sizing medium
-  	    vagBaseBox=$( withDistroGetVagBaseBox ${distro} ${distroType} ${vagBaseBoxType} )
+  	    #vagBaseBox=$( withDistroGetVagBaseBox ${distro} ${distroType} ${vagBaseBoxType} )
+	    vagBaseBox=$( withDistroGetVagBaseBox ${function} ${distro} ${distroType} ${containerId} )	    
 	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${virtSpecFps} vagBaseBox ${vagBaseBox}
 	    ;;
 	*)

@@ -182,7 +182,9 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo echo run siteContainerAssign.sh and siteContainerRepo.sh 
+    lpDo siteContainerAssign.sh -h -v -n showRun -i assignGenerics doIt
+
+    lpDo siteContainerRepo.sh -h -v -n showRun -i containerRepoGenericsUpdate full    
     
     lpReturn
 }	
