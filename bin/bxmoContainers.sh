@@ -171,7 +171,7 @@ _EOF_
 
     cat  << _EOF_
 panel
-containerSpec
+assign
 _EOF_
 
     lpReturn
@@ -204,7 +204,34 @@ _EOF_
     lpReturn
 }	
 
-function vis_repoBaseCreate_containerSpec {
+function vis_repoBaseCreate_assign {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		       }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bxoId}" ]
+
+    EH_assert  vis_userAcctExists "${bxoId}"
+
+    local repoName=${FUNCNAME##vis_repoBaseCreate_}
+    local repoBase="${bxoHome}/${repoName}"
+
+    lpDo FN_dirCreatePathIfNotThere "${repoBase}"
+
+    lpDo eval cat  << _EOF_  \> "${repoBase}/README.org"
+BxO Repo: ${repoBase} 
+Base for file params
+_EOF_
+
+    lpDo siteContainerAssign.sh -h -v -n showRun -i modelAbodeFunctionBaseDirsCreate
+    
+    lpDo bx-gitRepos -h -v -n showRun -i baseUpdateDotIgnore "${repoBase}"
+
+    lpReturn
+}	
+
+function vis_repoBaseCreate_containerSpec%% {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -268,7 +295,6 @@ _EOF_
 
     lpReturn
 }	
-
 
 
 _CommentBegin_

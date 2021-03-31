@@ -428,6 +428,76 @@ _EOF_
 }
 
 
+
+function vis_vagStdout_netInterfaces {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Based on Abode and Host Network Interface put on stdout needed guest.vm.network info.
+_EOF_
+		       }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert vis_bxoAcctVerify "${bxoId}"
+
+    #lpDo vis_containerAssignRead
+    #lpDo vis_containerSteadyRead    
+    #lpDo vis_sysCharRead
+
+    local containerBase=$( vis_forThisSysFindContainerBase )
+    EH_assert [ ! -z "${containerBase}" ]
+
+    vis_containerAssignRead "${containerBase}"
+    EH_assert [ ! -z "${containerAssign_containerId}" ]
+
+    local hostContainerId="${containerAssign_containerId}"
+
+    lpDo vis_containerAssignRead
+    EH_assert [ ! -z "${containerAssign_abode}" ]
+
+    
+    function privA_update {
+	EH_assert [[ $# -eq 0 ]]
+    	     cat   << _EOF_
+    # privA interface on Host=${hostContainerId}	     
+    guest.vm.network :public_network, :dev => "enp0s31f6", :mode => 'bridge', auto_config: false
+_EOF_
+    }
+    
+    local applicableNetsList=()
+
+    case "${containerAssign_abode}" in
+	"Auto")
+	    applicableNetsList=()
+	    ;;
+	"Mobile")
+	    applicableNetsList=()
+	    ;;
+	"Perim")
+	    applicableNetsList=("perimA")
+	    ;;
+	"Shield")
+	    applicableNetsList=("privA")
+	    ;;
+	"Internet")
+	    applicableNetsList=("pubA" "pubB" "perimA")
+	    ;;
+	*)
+	    EH_problem "Bad Usage -- abodeInitial=${abodeInitial}"
+    esac
+
+    local eachNet
+    for eachNet in ${applicableNetsList[@]} ; do
+	lpDo ${eachNet}_update
+    done
+    
+    lpReturn
+}
+
+
+
+
+
 function vis_vagStdout_bisosProvision {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -640,7 +710,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "${containerName}" do |guest|
     guest.vm.box = "${containerBaseBox}"
     guest.vm.hostname = "${hostname}"
-    guest.vm.network :public_network, :dev => "${defaultInterface}", :mode => 'bridge', auto_config: false
+$( vis_vagStdout_netInterfaces )
     guest.vm.synced_folder '.', '/vagrant', disabled: true
 
     config.vm.provider :libvirt do |libvirt|
