@@ -131,9 +131,11 @@ function vis_examples {
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
     local containerBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
-    local sysCharContainerBxoId=$( sysCharRealize.sh -i sysCharContainerBxoId ${containerBase} )
+    
+    # local sysCharContainerBxoId=$( sysCharRealize.sh -i sysCharContainerBxoId ${containerBase} )
+    # oneBxoId="${sysCharContainerBxoId}"
 
-    oneBxoId="${sysCharContainerBxoId}"        
+    oneBxoId="${currentBxoId}"
     oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )
     
     visLibExamplesOutput ${G_myName} 

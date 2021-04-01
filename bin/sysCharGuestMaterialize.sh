@@ -428,50 +428,24 @@ _EOF_
 }
 
 
-
-function vis_vagStdout_netInterfaces {
+function withAbodeGetApplicableNetsList {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Based on Abode and Host Network Interface put on stdout needed guest.vm.network info.
+** Based on Abode get applicableNetsList
 _EOF_
 		       }
-    EH_assert [[ $# -eq 0 ]]
+    EH_assert [[ $# -eq 1 ]]
 
-    EH_assert [ ! -z "${bxoId}" ]
-    EH_assert vis_bxoAcctVerify "${bxoId}"
-
-    #lpDo vis_containerAssignRead
-    #lpDo vis_containerSteadyRead    
-    #lpDo vis_sysCharRead
-
-    local containerBase=$( vis_forThisSysFindContainerBase )
-    EH_assert [ ! -z "${containerBase}" ]
-
-    vis_containerAssignRead "${containerBase}"
-    EH_assert [ ! -z "${containerAssign_containerId}" ]
-
-    local hostContainerId="${containerAssign_containerId}"
-
-    lpDo vis_containerAssignRead
-    EH_assert [ ! -z "${containerAssign_abode}" ]
-
+    local abode=$1
     
-    function privA_update {
-	EH_assert [[ $# -eq 0 ]]
-    	     cat   << _EOF_
-    # privA interface on Host=${hostContainerId}	     
-    guest.vm.network :public_network, :dev => "enp0s31f6", :mode => 'bridge', auto_config: false
-_EOF_
-    }
-    
-    local applicableNetsList=()
+    applicableNetsList=()   # global variable
 
     case "${containerAssign_abode}" in
 	"Auto")
-	    applicableNetsList=()
+	    applicableNetsList=("nat")
 	    ;;
 	"Mobile")
-	    applicableNetsList=()
+	    applicableNetsList=("nat")
 	    ;;
 	"Perim")
 	    applicableNetsList=("perimA")
@@ -485,8 +459,76 @@ _EOF_
 	*)
 	    EH_problem "Bad Usage -- abodeInitial=${abodeInitial}"
     esac
+}
 
-    local eachNet
+
+function vis_getIpAddr_privA {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** If generic, one way, if not anotherway
+_EOF_
+		       }
+    EH_assert [[ $# -eq 0 ]]
+
+    echo 192.168.0.121
+    }
+
+function vis_vagStdout_netInterfaces {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Based on Abode and Host Network Interface put on stdout needed guest.vm.network info.
+_EOF_
+		       }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert vis_bxoAcctVerify "${bxoId}"
+
+    #lpDo vis_containerSteadyRead    
+
+    local containerBase=$( vis_forThisSysFindContainerBase )
+    EH_assert [ ! -z "${containerBase}" ]
+
+    vis_containerAssignRead "${containerBase}"
+    EH_assert [ ! -z "${containerAssign_containerId}" ]
+
+    local hostContainerId="${containerAssign_containerId}"
+    
+    lpDo vis_containerAssignRead
+    EH_assert [ ! -z "${containerAssign_abode}" ]
+
+    
+    function privA_update {
+	EH_assert [[ $# -eq 0 ]]
+
+	local hostBxoId=$( withContainerIdGetBxoId ${hostContainerId} )
+	EH_assert vis_bxoAcctVerify "${hostBxoId}"
+	
+	lpDo vis_sysCharRead ${hostBxoId}
+	EH_assert [ ! -z "${sysChar_boxSpec_netIfs_privA}" ]
+
+    	     cat   << _EOF_
+    # privA interface on hostBxoId=${hostBxoId}	     
+    guest.vm.network :public_network, :dev => "${sysChar_boxSpec_netIfs_privA}", :mode => 'bridge', auto_config: false
+_EOF_
+    }
+
+    function nat_update {
+	EH_assert [[ $# -eq 0 ]]
+
+	local hostBxoId=$( withContainerIdGetBxoId ${hostContainerId} )
+	EH_assert vis_bxoAcctVerify "${hostBxoId}"
+	
+	lpDo vis_sysCharRead ${hostBxoId}
+	EH_assert [ ! -z "${sysChar_boxSpec_netIfs_privA}" ]
+
+    	     cat   << _EOF_
+    # NAT on hostBxoId=${hostBxoId} -- No additional network interface is being configured.
+_EOF_
+    }
+
+    lpDo withAbodeGetApplicableNetsList "${containerAssign_abode}"
+
     for eachNet in ${applicableNetsList[@]} ; do
 	lpDo ${eachNet}_update
     done
@@ -495,7 +537,125 @@ _EOF_
 }
 
 
+function vis_vagStdout_bisosSetIdAndDeploy {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Based on XX put on stdout needed provioning facilities to produce a container.
+*** 
+_EOF_
+		       }
+    EH_assert [[ $# -eq 0 ]]
 
+    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert vis_bxoAcctVerify "${bxoId}"
+
+    #lpDo vis_containerAssignRead
+    #lpDo vis_containerSteadyRead
+
+    lpDo vis_sysCharRead
+    
+    
+    function nat_setIdAndDeploy {
+    EH_assert [[ $# -eq 0 ]]
+    cat  << _OUTER_EOF_
+	     cat   << _EOF_
+######### PHASE 2: BISOS Set Identity And Deploy -- NOTYET IpAddr setting
+_EOF_
+	echo "Vagrant Skipped BISOS Identity Provisioning."
+_OUTER_EOF_
+    }
+
+    function privA_setIdAndDeploy {
+	EH_assert [[ $# -eq 0 ]]
+
+	cat  << _OUTER_EOF_
+	     cat   << _EOF_
+######### PHASE 2: BISOS Identity Set -- With IpAddrs settings
+_EOF_
+	/bisos/core/bsip/bin/sysCharDeploy.sh -p bxoId="${bxoId}" -p privA="$( vis_getIpAddr_privA )" -i inFullAfterSysBasePlatform
+_OUTER_EOF_
+    }
+
+    lpDo withAbodeGetApplicableNetsList "${containerAssign_abode}"
+
+    for eachNet in ${applicableNetsList[@]} ; do
+	lpDo ${eachNet}_setIdAndDeploy
+    done
+
+    lpReturn
+    
+    case ${function} in
+	Generic)
+	    distro=$( fromGenericContainerIdGetDistro ${containerId} )
+	    distroType="desktop"
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysInfoFps} distro ${distro}
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysInfoFps} distroType ${distroType}
+	    ;;
+	Server)
+	    doNothing
+	    ;;
+
+	*)
+	    EH_problem "NOTYET -- unimplemented ${function}"
+	    ;;
+    esac
+
+
+    local containerBaseBox=$( vis_vagrantBaseBoxFromSysChar )
+
+    case "${containerBaseBox}" in
+
+	"bisos/ubuntu-20.04/bxcntnr")
+	    doNothing
+	    ;&   #fallthru
+	"bisos/debian-11.pre/bxcntnr")
+	    doNothing
+	    ;&   #fallthru
+	"bisos/debian-10.8/bxcntnr")
+	    cat  << _OUTER_EOF_
+	     cat   << _EOF_
+######### PHASE 1: BISOS Provisioning -- baseBox=${containerBaseBox}
+_EOF_
+	     echo "containerBaseBox=${containerBaseBox} -- Vagrant Skipped BISOS Provisioning."
+_OUTER_EOF_
+	    ;;
+
+	"bxDistro/ubuntu-20.04/desktop")
+	    doNothing
+	    ;&   #fallthru
+	"bxDistro/debian-11.pre/desktop")
+	    doNothing
+	    ;&   #fallthru
+	"bxDistro/debian-10.8/desktop")
+	    doNothing
+	    ;&   #fallthru
+	"bento/debian-10.8"|"bento/debian-11.pre")
+	    doNothing
+	    ;&   #fallthru
+	"bxDistro/debian-10.8/mini"|"bxDistro/debian-11.pre/mini")
+	    doNothing
+	    ;&   #fallthru
+	"bento/ubuntu-20.04")
+	    doNothing
+	    ;&
+	"bxDistro/ubuntu-20.04/mini")
+	cat  << _OUTER_EOF_
+      cat  << _EOF_
+######### PHASE 1: BISOS Provisioning -- baseBox=${containerBaseBox}
+_EOF_
+
+        sudo apt-get -y install python3-pip
+        sudo pip3 install --upgrade bisos.provision  
+        /usr/local/bin/provisionBisos.sh -h -v -n showRun -i sysBasePlatform
+_OUTER_EOF_
+            ;;
+	
+	* )
+	    EH_problem "Unsupported containerBaseBox=${containerBaseBox}"
+	    ;;
+    esac
+    lpReturn
+}
 
 
 function vis_vagStdout_bisosProvision {
@@ -761,10 +921,12 @@ _EOF_
 
 $( vis_vagStdout_serverToDesktop )
 
-$( vis_vagStdout_bisosProvision )	
+$( vis_vagStdout_bisosProvision )
+
+$( vis_vagStdout_bisosSetIdAndDeploy )	
 
       cat  << _EOF_
- ######### PHASE 2: Cleanup and Shutdown  -- Running As Root
+ ######### PHASE 3: Cleanup and Shutdown  -- Running As Root
 _EOF_
       
       shutdown now

@@ -354,8 +354,7 @@ _EOF_
 	EH_oops ""
 	lpReturn
     fi
- 
- 
+  
     containerAssign_containerId=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} containerId )
     containerAssign_boxId=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} boxId )   
     containerAssign_abode=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} abode )
@@ -415,12 +414,20 @@ function vis_sysCharRead {
 bxoId is the sysChar.
 sysInfo.fps of sysChar overwrites sysInfo.fps of siteContainersRepo.
 _EOF_
-		      }
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
+		       }
 
-    EH_assert vis_bxoAcctVerify "${bxoId}"
-    bxoHome=$( FN_absolutePathGet ~${bxoId} )
+    EH_assert [[ $# -lt 2 ]]
+
+    local thisBxoId="${bxoId}"
+    
+    if [ $# -eq 1 ] ; then
+	thisBxoId=$1
+    fi
+
+    EH_assert [ ! -z "${thisBxoId}" ]
+
+    EH_assert vis_bxoAcctVerify "${thisBxoId}"
+    bxoHome=$( FN_absolutePathGet ~${thisBxoId} )
   
     local sysCharBase=${bxoHome}/sysChar
     local repoName="sysChar"
@@ -428,16 +435,28 @@ _EOF_
 
     local sysInfoFps=${repoBase}/sysInfo.fps
     local virtSpecFps=${repoBase}/virtSpec.fps
+    local boxSpecFps=${repoBase}/boxSpec.fps    
 
     sysChar_sysInfo_distro=$( fileParamManage.py -v 30 -i fileParamRead ${sysInfoFps} distro )
     sysChar_sysInfo_distroType=$( fileParamManage.py -v 30 -i fileParamRead ${sysInfoFps} distroType )      
-    
-    sysChar_virtSpec_vagBaseBoxType=$( fileParamManage.py -i fileParamRead ${virtSpecFps} vagBaseBoxType )
-    sysChar_virtSpec_virtType=$( fileParamManage.py -i fileParamRead ${virtSpecFps} virtType )
-    sysChar_virtSpec_sizing=$( fileParamManage.py -i fileParamRead ${virtSpecFps} sizing )
-    sysChar_virtSpec_vagBaseBox=$( fileParamManage.py -i fileParamRead ${virtSpecFps} vagBaseBox )    
 
-    sysChar_privA_if=$( fileParamManage.py -i fileParamRead  ${sysCharBase}/netInterface.fps privA )
+    if [ -d "${virtSpecFps}" ] ; then
+	sysChar_virtSpec_vagBaseBoxType=$( fileParamManage.py -i fileParamRead ${virtSpecFps} vagBaseBoxType )
+	sysChar_virtSpec_virtType=$( fileParamManage.py -i fileParamRead ${virtSpecFps} virtType )
+	sysChar_virtSpec_sizing=$( fileParamManage.py -i fileParamRead ${virtSpecFps} sizing )
+	sysChar_virtSpec_vagBaseBox=$( fileParamManage.py -i fileParamRead ${virtSpecFps} vagBaseBox )    
+    else
+	sysChar_virtSpec_vagBaseBoxType=""
+	sysChar_virtSpec_virtType=""
+	sysChar_virtSpec_sizing=""
+	sysChar_virtSpec_vagBaseBox=""
+    fi
+
+    if [ -d "${boxSpecFps}" ] ; then
+	sysChar_boxSpec_netIfs_privA=$( fileParamManage.py -i fileParamRead ${boxSpecFps}/netIfs privA )
+    else
+	sysChar_boxSpec_netIfs_privA=""
+    fi
 }
 
 

@@ -90,6 +90,18 @@ _EOF_
    echo pmp_${containerId}
 }
 
+function withContainerIdGetBxoId {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+** returns on stdout, bxoId of container corresponding to \$1 as containerId
+*** The sysCharContainerBxoId may or may not have been realized or activated.
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
+   local containerId=$1
+
+   echo pmp_${containerId}
+}
 
 function vis_containersBaseObtain {
     containersBaseObtain
