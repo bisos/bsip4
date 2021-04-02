@@ -179,7 +179,7 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if [ -z "${registrar}" ] ; then
-	registrar="192.168.0.32"
+	registrar="192.168.0.151"
     fi
     if [ -z "${id}" ] ; then
 	id="bystar"
