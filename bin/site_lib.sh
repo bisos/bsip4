@@ -50,7 +50,7 @@ _CommentEnd_
 function vis_selectedSiteBxoId {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** With stdout, return the bxoId of selected sited based for current user (usgHome).
+** With stdout, return the bxoId of selected site based for current user (usgHome).
 ** TODO This should go into a library.
 _EOF_
     }

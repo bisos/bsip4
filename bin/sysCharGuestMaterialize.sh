@@ -554,7 +554,6 @@ _EOF_
 
     lpDo vis_sysCharRead
     
-    
     function nat_setIdAndDeploy {
     EH_assert [[ $# -eq 0 ]]
     cat  << _OUTER_EOF_
@@ -572,7 +571,11 @@ _OUTER_EOF_
 	     cat   << _EOF_
 ######### PHASE 2: BISOS Identity Set -- With IpAddrs settings
 _EOF_
-	/bisos/core/bsip/bin/sysCharDeploy.sh -p bxoId="${bxoId}" -p privA="$( vis_getIpAddr_privA )" -i inFullAfterSysBasePlatform
+	/bisos/core/bsip/bin/sysCharDeploy.sh -p bxoId="${bxoId}" -i capture_sysBxo
+	/bisos/core/bsip/bin/sysCharDeploy.sh -p privA="$( vis_getIpAddr_privA )" -i capture_ipAddrs
+	/bisos/core/bsip/bin/sysCharDeploy.sh -p bxoId="${bxoId}" -i capture_siteBxo
+        # /bisos/core/bsip/bin/sysCharDeploy.sh -p privGit=anon -p pubGit=anon -p devMode=someTag -i capture_accessMode
+	/bisos/core/bsip/bin/sysCharDeploy.sh -p bxoId="${bxoId}" -i inFullAfterSysBasePlatform
 _OUTER_EOF_
     }
 
@@ -583,87 +586,15 @@ _OUTER_EOF_
     done
 
     lpReturn
-    
-    case ${function} in
-	Generic)
-	    distro=$( fromGenericContainerIdGetDistro ${containerId} )
-	    distroType="desktop"
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysInfoFps} distro ${distro}
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysInfoFps} distroType ${distroType}
-	    ;;
-	Server)
-	    doNothing
-	    ;;
-
-	*)
-	    EH_problem "NOTYET -- unimplemented ${function}"
-	    ;;
-    esac
-
-
-    local containerBaseBox=$( vis_vagrantBaseBoxFromSysChar )
-
-    case "${containerBaseBox}" in
-
-	"bisos/ubuntu-20.04/bxcntnr")
-	    doNothing
-	    ;&   #fallthru
-	"bisos/debian-11.pre/bxcntnr")
-	    doNothing
-	    ;&   #fallthru
-	"bisos/debian-10.8/bxcntnr")
-	    cat  << _OUTER_EOF_
-	     cat   << _EOF_
-######### PHASE 1: BISOS Provisioning -- baseBox=${containerBaseBox}
-_EOF_
-	     echo "containerBaseBox=${containerBaseBox} -- Vagrant Skipped BISOS Provisioning."
-_OUTER_EOF_
-	    ;;
-
-	"bxDistro/ubuntu-20.04/desktop")
-	    doNothing
-	    ;&   #fallthru
-	"bxDistro/debian-11.pre/desktop")
-	    doNothing
-	    ;&   #fallthru
-	"bxDistro/debian-10.8/desktop")
-	    doNothing
-	    ;&   #fallthru
-	"bento/debian-10.8"|"bento/debian-11.pre")
-	    doNothing
-	    ;&   #fallthru
-	"bxDistro/debian-10.8/mini"|"bxDistro/debian-11.pre/mini")
-	    doNothing
-	    ;&   #fallthru
-	"bento/ubuntu-20.04")
-	    doNothing
-	    ;&
-	"bxDistro/ubuntu-20.04/mini")
-	cat  << _OUTER_EOF_
-      cat  << _EOF_
-######### PHASE 1: BISOS Provisioning -- baseBox=${containerBaseBox}
-_EOF_
-
-        sudo apt-get -y install python3-pip
-        sudo pip3 install --upgrade bisos.provision  
-        /usr/local/bin/provisionBisos.sh -h -v -n showRun -i sysBasePlatform
-_OUTER_EOF_
-            ;;
-	
-	* )
-	    EH_problem "Unsupported containerBaseBox=${containerBaseBox}"
-	    ;;
-    esac
-    lpReturn
 }
 
 
 function vis_vagStdout_bisosProvision {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Based on vagrantBaseBox put on stdout needed provioning facilities to produce a container.
-*** If the vagrantBaseBox is a distro/bxcntnr, just update relevant git repos.
-*** If the vagrantBaseBox is a distro/mini or a distro/desktop, order provisioning steps.
+** Based on vagrantBaseBoxFromSysChar put on stdout needed provioning facilities to produce a container.
+*** If containerBaseBox is a distro/bxcntnr, doNothing -- NOTYET should update relevant git repos.
+*** If containerBaseBox is a distro/mini or a distro/desktop, order provisioning steps.
 _EOF_
 		       }
     EH_assert [[ $# -eq 0 ]]
@@ -735,9 +666,9 @@ _OUTER_EOF_
 function vis_vagStdout_serverToDesktop {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Based on vagrantBaseBox put on stdout needed instructions for creating the desktop distro
-*** If the vagrantBaseBox is a distro/bxcntnr, or distro/bxcntnr do nothing.
-*** If the vagrantBaseBox is a distro/mini order desktop installation steps.
+** Based on vagrantBaseBoxFromSysChar put on stdout needed instructions for creating the desktop distro
+*** If containerBaseBox is a distro/bxcntnr, or distro/bxcntnr doNothing.
+*** If containerBaseBox is a distro/mini order desktop installation steps -- based on distro.
 _EOF_
 		       }
     EH_assert [[ $# -eq 0 ]]
@@ -814,7 +745,8 @@ function vis_vagrantFile_stdout {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Output a vagrantfile using the sysChar BxO.
-** \$1 could be a digit (vmNameQualifier) that identifies an instance.
+*** \$1 (vmNameQualifier) [Optional] could be a digit (vmNameQualifier) that identifies an instance.
+*** \$2 (callable) [Optional] passed to vagrantFile_bottomPart.
 _EOF_
 		       }
     local thisFunc=${G_thisFunc}
@@ -895,7 +827,8 @@ _EOF_
 function vis_vagrantFile_bottomPart {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-Output a vagrantfile using the sysChar BxO.
+** Output a vagrantfile using the sysChar BxO.
+*** \$1 (callable) [Optional] would produce bottom part instead of default.
 _EOF_
 		       }
     local thisFunc=${G_thisFunc}
