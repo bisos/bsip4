@@ -97,7 +97,8 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Blee Panel Proc" )
 $( examplesSeperatorSection "This Node/Leaf Processors" )
-${G_myName} ${extraInfo} -i fullUpdate
+${G_myName} ${extraInfo} -i fullUpdate recurse  # ftoProc.sh dblockUpdates + recursive renew
+${G_myName} ${extraInfo} -i fullUpdate here # same as -i renew
 ${G_myName} ${extraInfo} -i refresh     # reruns startOrgPanel.sh and dblockUpdates fullUsagePanel-en.org
 ${G_myName} ${extraInfo} -i renew       # dblockUpdates fullUsagePanel-en.org ftpProc.sh bleePanelProc.sh
 ${G_myName} ${extraInfo} -i dblockBlankPanels   # dblockBlank fullUsagePanel-en.org
@@ -174,11 +175,28 @@ function vis_fullUpdate {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
-    EH_assert [[ $# -eq 0 ]]
+    EH_assert [[ $# -lt 2 ]]
 
-    opDo echo NOTYET bx-dblock -i dblockUpdateFile ${each}
+    local extent=""
 
-    EH_retOnFail
+    if [ $# -eq 0 ] ; then
+	extent="recurse"
+    else
+	extent="$1"
+    fi
+
+    case ${extent} in
+	recurse)
+	    lpDo eval find . -type f -print \| egrep 'ftoProc.sh$' \| xargs bx-dblock -h -v -n showRun -i dblockUpdateFiles
+	    lpDo ftoProc.sh -v -n showRun -i ftoWalkRunCmnd bleePanelProc.sh -h -v -n showRun -i renew
+	    ;;
+	here)
+	    lpDo vis_renew
+	    ;;
+	*)
+	    EH_problem "BAD Usage: extent=${extent} -- Valid values: here|recurse"
+	    ;;
+    esac
 
     lpReturn
 }

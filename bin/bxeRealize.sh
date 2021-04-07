@@ -200,7 +200,7 @@ _EOF_
     
     EH_assert [ ! -z "${bxeDesc}" ]
 
-    local bxoRealizationScope=$1   
+    local bxoRealizationScope=""  
     
     if [ $# -eq 0 ] ; then
 	bxoRealizationScope="full"
@@ -224,7 +224,7 @@ _EOF_
 
     EH_assert [ ! -z "${bxeDesc}" ]
 
-    local bxoRealizationScope=$1   
+    local bxoRealizationScope=""  
     
     if [ $# -eq 0 ] ; then
 	bxoRealizationScope="full"
@@ -551,13 +551,22 @@ function vis_initialReposCreateAndPush {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
+		       }
+    EH_assert [[ $# -lt 2 ]]
+    
     EH_assert [[ ! -z "${bxoId}" ]]
 
-    lpDo vis_initialCommonReposCreateAndPush
+    local bxoRealizationScope=""  
+    
+    if [ $# -eq 0 ] ; then
+	bxoRealizationScope="full"
+    else
+	bxoRealizationScope=$1
+    fi
 
-    lpDo vis_initialSpecificReposCreateAndPush
+    lpDo vis_initialCommonReposCreateAndPush ${bxoRealizationScope}
+
+    lpDo vis_initialSpecificReposCreateAndPush ${bxoRealizationScope}
     
     lpReturn
 }
@@ -604,9 +613,18 @@ function vis_initialSpecificReposCreateAndPush {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 At this point we have kind and type available. So we invoke kindType.sh -i initRealize.sh
 _EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
+		       }
+    EH_assert [[ $# -lt 2 ]]
+
     EH_assert [ ! -z "${bxoId}" ]
+
+    local bxoRealizationScope=""  
+    
+    if [ $# -eq 0 ] ; then
+	bxoRealizationScope="full"
+    else
+	bxoRealizationScope=$1
+    fi
 
     local scriptName=$( vis_bxoKindTypeFacility )
 

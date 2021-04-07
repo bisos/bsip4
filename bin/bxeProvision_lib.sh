@@ -832,7 +832,7 @@ _EOF_
 		       }
     EH_assert [[ $# -lt 2 ]]
 
-    local bxoRealizationScope=$1   
+    local bxoRealizationScope=""  
     
     if [ $# -eq 0 ] ; then
 	bxoRealizationScope="full"
