@@ -75,7 +75,7 @@ _EOF_
 function vis_activate_siteBxoPlus {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Create the specified bxoId 
+** Activate the specified bxoId 
 _EOF_
     }
     EH_assert [[ $# -eq 1 ]]
@@ -91,8 +91,34 @@ _EOF_
     EH_assert vis_bxoAcctVerify "${siteBxoId}"
     bxoHome=$( FN_absolutePathGet ~${siteBxoId} )
 
-    
-    #
+    local boxesBxoId=$( vis_fromSiteBxoIdGet_boxesBxoId "${siteBxoId}")
+    EH_assert [ ! -z "${boxesBxoId}" ]
+    if vis_bxoAcctVerify "${boxesBxoId}" ; then
+	ANT_cooked "WARNING: Did not expect ${boxesBxoId} to exist -- Activation skipped"
+    else
+	lpDo bxoManage.sh -p bxoId="${boxesBxoId}" -i fullConstruct
+    fi
+
+    local containersBxoId=$( vis_fromSiteBxoIdGet_containersBxoId "${siteBxoId}")
+    EH_assert [ ! -z "${containersBxoId}" ]
+    if vis_bxoAcctVerify "${containersBxoId}" ; then
+	ANT_cooked "WARNING: Did not expect ${containersBxoId} to exist -- Activation skipped"
+    else
+	lpDo bxoManage.sh -p bxoId="${containersBxoId}" -i fullConstruct
+    fi
+
+    local networksBxoId=$( vis_fromSiteBxoIdGet_networksBxoId "${siteBxoId}")
+    EH_assert [ ! -z "${networksBxoId}" ]
+    if vis_bxoAcctVerify "${networksBxoId}" ; then
+	ANT_cooked "WARNING: Did not expect ${networksBxoId} to exist -- Activation skipped"
+    else
+	lpDo bxoManage.sh -p bxoId="${networksBxoId}" -i fullConstruct
+    fi
+
+    local domainsBxoId=$( vis_fromSiteBxoIdGet_domainsBxoId "${siteBxoId}")
+    # process domainsBxoId -- NOTYET
+
+    lpReturn
 }
 
 function vis_fromSiteBxoIdGet_boxesBxoId {
@@ -126,10 +152,10 @@ _EOF_
     EH_assert vis_bxoAcctVerify "${siteBxoId}"
     siteBxoHome=$( FN_absolutePathGet ~${siteBxoId} )
 
-    local boxesBxoId=$( fileParamManage.py -i fileParamRead  ${siteBxoHome}/siteBpos/boxes.bpoFp bpoId )
-    EH_assert [ ! -z "${boxesBxoId}" ]
+    local containersBxoId=$( fileParamManage.py -i fileParamRead  ${siteBxoHome}/siteBpos/containers.bpoFp bpoId )
+    EH_assert [ ! -z "${containersBxoId}" ]
 
-    echo ${boxesBxoId}
+    echo ${containersBxoId}
 }
 
 
@@ -145,10 +171,10 @@ _EOF_
     EH_assert vis_bxoAcctVerify "${siteBxoId}"
     siteBxoHome=$( FN_absolutePathGet ~${siteBxoId} )
 
-    local boxesBxoId=$( fileParamManage.py -i fileParamRead  ${siteBxoHome}/siteBpos/boxes.bpoFp bpoId )
-    EH_assert [ ! -z "${boxesBxoId}" ]
+    local domainsBxoId=NOTYET # $( fileParamManage.py -i fileParamRead  ${siteBxoHome}/siteBpos/boxes.bpoFp bpoId )
+    EH_assert [ ! -z "${domainsBxoId}" ]
 
-    echo ${boxesBxoId}
+    echo "" # ${domainsBxoId}
 }
 
 
@@ -164,10 +190,10 @@ _EOF_
     EH_assert vis_bxoAcctVerify "${siteBxoId}"
     siteBxoHome=$( FN_absolutePathGet ~${siteBxoId} )
 
-    local boxesBxoId=$( fileParamManage.py -i fileParamRead  ${siteBxoHome}/siteBpos/boxes.bpoFp bpoId )
-    EH_assert [ ! -z "${boxesBxoId}" ]
+    local networkBxoId=$( fileParamManage.py -i fileParamRead  ${siteBxoHome}/siteBpos networks.bpoFp )
+    EH_assert [ ! -z "${networkBxoId}" ]
 
-    echo ${boxesBxoId}
+    echo ${networkBxoId}
 }
 
 
