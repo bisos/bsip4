@@ -138,6 +138,9 @@ function vis_examples {
     
     oneBxoId="${currentBxoId}"
     oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )
+
+    local siteBxoId=$( sysCharRealize.sh -i selectedSiteBxoId )
+    
     
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
@@ -149,9 +152,10 @@ ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i postCustomize  # on host - bx
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i secureSeal     # on host - bx-ssh
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i recordDeployment      # inside of parent bxo
 $( examplesSeperatorChapter "FULL SYSTEM Deployment" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i activateSysBxo
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i activate_sysBxo
+${G_myName} ${extraInfo} -i activate_siteBxoPlus ${siteBxoId}
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -p privA=192.168.0.121 -i capture_identity
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i capture_siteBxo  # notyet, where is the siteBxo
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i capture_siteBxo ${siteBxoId}
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -p privGit=anon -p pubGit=anon -p devMode=someTag -i capture_accessMode
 $( examplesSeperatorChapter "FULL SYSTEM Deployment" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i inFullAfterSysBasePlatform
@@ -163,7 +167,7 @@ _EOF_
 }
 
 
-function vis_activateSysBxo {    
+function vis_activate_sysBxo {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Create the specified bxoId 

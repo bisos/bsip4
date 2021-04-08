@@ -50,8 +50,7 @@ _CommentEnd_
 function vis_selectedSiteBxoId {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** With stdout, return the bxoId of selected site based for current user (usgHome).
-** TODO This should go into a library.
+** With stdout return: bxoId of selected site based for current user (usgHome).
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -73,10 +72,109 @@ _EOF_
 }	
 
 
+function vis_activate_siteBxoPlus {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Create the specified bxoId 
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local siteBxoId=$1
+
+    if vis_bxoAcctVerify "${siteBxoId}" ; then
+	ANT_cooked "WARNING: Did not expect ${siteBxoId} to exist -- Activation skipped"
+    else
+	lpDo bxoManage.sh -p bxoId="${siteBxoId}" -i fullConstruct
+    fi
+
+    EH_assert vis_bxoAcctVerify "${siteBxoId}"
+    bxoHome=$( FN_absolutePathGet ~${siteBxoId} )
+
+    
+    #
+}
+
+function vis_fromSiteBxoIdGet_boxesBxoId {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** returns on stdout: 
+_EOF_
+		      }
+    EH_assert [[ $# -eq 1 ]]
+    local siteBxoId=$1
+
+    EH_assert vis_bxoAcctVerify "${siteBxoId}"
+    siteBxoHome=$( FN_absolutePathGet ~${siteBxoId} )
+
+    local boxesBxoId=$( fileParamManage.py -i fileParamRead  ${siteBxoHome}/siteBpos/boxes.bpoFp bpoId )
+    EH_assert [ ! -z "${boxesBxoId}" ]
+
+    echo ${boxesBxoId}
+}
+
+
+function vis_fromSiteBxoIdGet_containersBxoId {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** returns on stdout: 
+_EOF_
+		      }
+    EH_assert [[ $# -eq 1 ]]
+    local siteBxoId=$1
+
+    EH_assert vis_bxoAcctVerify "${siteBxoId}"
+    siteBxoHome=$( FN_absolutePathGet ~${siteBxoId} )
+
+    local boxesBxoId=$( fileParamManage.py -i fileParamRead  ${siteBxoHome}/siteBpos/boxes.bpoFp bpoId )
+    EH_assert [ ! -z "${boxesBxoId}" ]
+
+    echo ${boxesBxoId}
+}
+
+
+function vis_fromSiteBxoIdGet_domainsBxoId {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** returns on stdout: 
+_EOF_
+		      }
+    EH_assert [[ $# -eq 1 ]]
+    local siteBxoId=$1
+
+    EH_assert vis_bxoAcctVerify "${siteBxoId}"
+    siteBxoHome=$( FN_absolutePathGet ~${siteBxoId} )
+
+    local boxesBxoId=$( fileParamManage.py -i fileParamRead  ${siteBxoHome}/siteBpos/boxes.bpoFp bpoId )
+    EH_assert [ ! -z "${boxesBxoId}" ]
+
+    echo ${boxesBxoId}
+}
+
+
+function vis_fromSiteBxoIdGet_networksBxoId {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** returns on stdout: 
+_EOF_
+		      }
+    EH_assert [[ $# -eq 1 ]]
+    local siteBxoId=$1
+
+    EH_assert vis_bxoAcctVerify "${siteBxoId}"
+    siteBxoHome=$( FN_absolutePathGet ~${siteBxoId} )
+
+    local boxesBxoId=$( fileParamManage.py -i fileParamRead  ${siteBxoHome}/siteBpos/boxes.bpoFp bpoId )
+    EH_assert [ ! -z "${boxesBxoId}" ]
+
+    echo ${boxesBxoId}
+}
+
+
 function vis_sysCharContainerBxoIdName {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
-** returns on stdout, bxoId of container corresponding to \$1 as a containerPath.
+** returns on stdout: bxoId of container corresponding to \$1 as a containerPath.
 *** Typical usage is \$1=container base of this system obtained from siteContainerAssign.sh -i forThisSysFindContainerBase
 *** The sysCharContainerBxoId is just a bxoId derived from containerId assignment. It may or may not exist
 *** The sysCharContainerBxoId may or may not have been realized or activated.
