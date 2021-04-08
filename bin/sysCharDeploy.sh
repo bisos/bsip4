@@ -149,10 +149,10 @@ ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i postCustomize  # on host - bx
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i secureSeal     # on host - bx-ssh
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i recordDeployment      # inside of parent bxo
 $( examplesSeperatorChapter "FULL SYSTEM Deployment" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i capture_sysBxo
-${G_myName} ${extraInfo} -p privA=192.168.0.121 -i capture_ipAddrs
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i capture_siteBxo
-${G_myName} ${extraInfo} -p privGit=anon -p pubGit=anon -p devMode=someTag -i capture_accessMode
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i activateSysBxo
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -p privA=192.168.0.121 -i capture_identity
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i capture_siteBxo  # notyet, where is the siteBxo
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -p privGit=anon -p pubGit=anon -p devMode=someTag -i capture_accessMode
 $( examplesSeperatorChapter "FULL SYSTEM Deployment" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i inFullAfterSysBasePlatform
 $( examplesSeperatorSection "Update" )
@@ -163,7 +163,7 @@ _EOF_
 }
 
 
-function vis_capture_sysBxo {    
+function vis_activateSysBxo {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Create the specified bxoId 
@@ -174,9 +174,9 @@ _EOF_
     EH_assert [ ! -z "${bxoId}" ]
 
     if vis_bxoAcctVerify "${bxoId}" ; then
-	EH_problem "Did not expect ${bxoId} to exist -- Activation skipped"
+	ANT_cooked "WARNING: Did not expect ${bxoId} to exist -- Activation skipped"
     else
-	echo dont exist -- Activate it.
+	lpDo bxoManage.sh -p bxoId="${bxoId}" -i fullConstruct
     fi
 
     EH_assert vis_bxoAcctVerify "${bxoId}"
@@ -185,14 +185,26 @@ _EOF_
     local sysCharDeployInfoBase="${bxoHome}/var/sysCharDeployInfo"
 
     lpDo FN_dirCreatePathIfNotThere ${sysCharDeployInfoBase}
-    
-    if [ ! -z "${privA}" ] ; then
-	lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} ipAddr_privA "${privA}"
-    elif [ ! -z "${pubA}" ] ; then
-	lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} ipAddr_pubA "${pubA}"
-    else
-	doNothing
-    fi
+}
+
+
+
+function vis_capture_siteBxo {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local siteBxoId=$1
+
+    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert vis_bxoAcctVerify "${bxoId}"
+    bxoHome=$( FN_absolutePathGet ~${bxoId} )
+
+    local sysCharDeployInfoBase="${bxoHome}/var/sysCharDeployInfo"
+
+    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} siteBxoId "${siteBxoId}"
 }
 
 
@@ -204,13 +216,6 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     EH_assert [ ! -z "${bxoId}" ]
-
-    if vis_bxoAcctVerify "${bxoId}" ; then
-	EH_problem "Did not expect ${bxoId} to exist -- Activation skipped"
-    else
-	echo dont exist -- Activate it.
-    fi
-
     EH_assert vis_bxoAcctVerify "${bxoId}"
     bxoHome=$( FN_absolutePathGet ~${bxoId} )
 
@@ -227,38 +232,6 @@ _EOF_
     fi
 }
 
-
-
-function vis_capture_siteBxo {    
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    EH_assert [ ! -z "${bxoId}" ]
-
-    if vis_bxoAcctVerify "${bxoId}" ; then
-	EH_problem "Did not expect ${bxoId} to exist -- Activation skipped"
-    else
-	echo dont exist -- Activate it.
-    fi
-
-    EH_assert vis_bxoAcctVerify "${bxoId}"
-    bxoHome=$( FN_absolutePathGet ~${bxoId} )
-
-    local sysCharDeployInfoBase="${bxoHome}/var/sysCharDeployInfo"
-
-    lpDo FN_dirCreatePathIfNotThere ${sysCharDeployInfoBase}
-    
-    if [ ! -z "${privA}" ] ; then
-	lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} ipAddr_privA "${privA}"
-    elif [ ! -z "${pubA}" ] ; then
-	lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} ipAddr_pubA "${pubA}"
-    else
-	doNothing
-    fi
-}
 
 
 function vis_capture_accessMode {    
@@ -269,26 +242,19 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     EH_assert [ ! -z "${bxoId}" ]
-
-    if vis_bxoAcctVerify "${bxoId}" ; then
-	EH_problem "Did not expect ${bxoId} to exist -- Activation skipped"
-    else
-	echo dont exist -- Activate it.
-    fi
-
     EH_assert vis_bxoAcctVerify "${bxoId}"
     bxoHome=$( FN_absolutePathGet ~${bxoId} )
 
     local sysCharDeployInfoBase="${bxoHome}/var/sysCharDeployInfo"
 
-    lpDo FN_dirCreatePathIfNotThere ${sysCharDeployInfoBase}
-    
-    if [ ! -z "${privA}" ] ; then
-	lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} ipAddr_privA "${privA}"
-    elif [ ! -z "${pubA}" ] ; then
-	lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} ipAddr_pubA "${pubA}"
-    else
-	doNothing
+    if [ ! -z "${privGit}" ] ; then
+	lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} privGit "${privGit}"
+    fi
+    if [ ! -z "${pubGit}" ] ; then
+	lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} pubGit "${pubGit}"
+    fi
+    if [ ! -z "${devMode}" ] ; then
+	lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} devMode "${devMode}"
     fi
 }
 
@@ -296,48 +262,34 @@ _EOF_
 function vis_inFullAfterSysBasePlatform {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+Activate essential site BxOs. Activate bxoId.
+Set identity. Set Mode (dev vs prod). deploy svcs.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
     EH_assert [ ! -z "${bxoId}" ]
-
-    if vis_bxoAcctVerify "${bxoId}" ; then
-	EH_problem "Did not expect ${bxoId} to exist -- Activation skipped"
-    else
-	echo dont exist -- Activate it.
-    fi
-
     EH_assert vis_bxoAcctVerify "${bxoId}"
     bxoHome=$( FN_absolutePathGet ~${bxoId} )
 
     local sysCharDeployInfoBase="${bxoHome}/var/sysCharDeployInfo"
 
-    lpDo FN_dirCreatePathIfNotThere ${sysCharDeployInfoBase}
-    
-    if [ ! -z "${privA}" ] ; then
-	lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} ipAddr_privA "${privA}"
-    elif [ ! -z "${pubA}" ] ; then
-	lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} ipAddr_pubA "${pubA}"
-    else
-	doNothing
-    fi
-    
-    ANT_raw "About To Deploy:"    
+    local siteBoxId=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} siteBxoId )
+    local ipAddr_privA=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} ipAddr_privA )
+    local ipAddr_pubA=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} ipAddr_pubA )
+    local privGitMode=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} privGit )
+    local pubGitMode=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} pubGitMode )
+    local devMode=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} devMode )                
 
-    cat  << _EOF_
-Activate essential site BxOs. Activate bxoId.
-Set identity. Set Mode (dev vs prod). deploy svcs.
-_EOF_
-
+    local extraInfo="-h -v -n showRun"
     
-    # # ---- IDENTITY
-    # opDoComplain echo vis_motdSet
-    # opDoComplain echo vis_nodename
+    # ---- IDENTITY
+    lpDo sysCharIdentity.sh ${extraInfo} -p bxoId="${bxoId}" -i motdSet
+    lpDo sysCharIdentity.sh ${extraInfo} -p bxoId="${bxoId}" -i nodename
   
-    # #NETWORK
-    # opDoComplain echo vis_netL3Interface
-    # opDoComplain echo vis_netEtcHosts
+    #NETWORK
+    lpDo sysCharIdentity.sh ${extraInfo} -p bxoId="${bxoId}" -i netL3Interface
+    lpDo sysCharIdentity.sh ${extraInfo} -p bxoId="${bxoId}" -i netEtcHosts
 
     lpReturn
 }

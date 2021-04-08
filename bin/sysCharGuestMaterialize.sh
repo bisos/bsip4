@@ -553,6 +553,14 @@ _EOF_
     #lpDo vis_containerSteadyRead
 
     lpDo vis_sysCharRead
+
+    local siteBxoId=$( sysCharRealize.sh -i selectedSiteBxoId )
+
+    local siteGitServerInfoBaseDir=$( bisosSiteGitServer.sh -i gitServerInfoBaseDir )
+    
+    local site_gitServerName=$( fileParamManage.py -i fileParamRead ${siteGitServerInfoBaseDir} gitServerName )
+    local site_gitServerUrl=$( fileParamManage.py -i fileParamRead ${siteGitServerInfoBaseDir} gitServerUrl )    
+    local site_gitServerPrivToken=$( fileParamManage.py -i fileParamRead ${siteGitServerInfoBaseDir} gitServerPrivToken )
     
     function nat_setIdAndDeploy {
     EH_assert [[ $# -eq 0 ]]
@@ -571,10 +579,11 @@ _OUTER_EOF_
 	     cat   << _EOF_
 ######### PHASE 2: BISOS Identity Set -- With IpAddrs settings
 _EOF_
-	/bisos/core/bsip/bin/sysCharDeploy.sh -p bxoId="${bxoId}" -i capture_sysBxo
-	/bisos/core/bsip/bin/sysCharDeploy.sh -p privA="$( vis_getIpAddr_privA )" -i capture_ipAddrs
-	/bisos/core/bsip/bin/sysCharDeploy.sh -p bxoId="${bxoId}" -i capture_siteBxo
-        # /bisos/core/bsip/bin/sysCharDeploy.sh -p privGit=anon -p pubGit=anon -p devMode=someTag -i capture_accessMode
+	/bisos/core/bsip/bin/bisosSiteGitServer.sh -h -v -n showRun -p gitServerName=${site_gitServerName} -p gitServerUrl=${site_gitServerUrl} -p gitServerPrivToken=${site_gitServerPrivToken} -i gitServerInfoSet
+	/bisos/core/bsip/bin/sysCharDeploy.sh -p bxoId="${bxoId}" -i activateSysBxo
+	/bisos/core/bsip/bin/sysCharDeploy.sh -p bxoId="${bxoId}" -i capture_siteBxo ${siteBxoId}
+	/bisos/core/bsip/bin/sysCharDeploy.sh -p bxoId="${bxoId}" -p privA="$( vis_getIpAddr_privA )" -i capture_identity
+        /bisos/core/bsip/bin/sysCharDeploy.sh -p bxoId="${bxoId}" -p privGit=anon -p pubGit=anon -p devMode=someTag -i capture_accessMode
 	/bisos/core/bsip/bin/sysCharDeploy.sh -p bxoId="${bxoId}" -i inFullAfterSysBasePlatform
 _OUTER_EOF_
     }
