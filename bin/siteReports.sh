@@ -103,7 +103,7 @@ function vis_examples {
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
     local containersBase=$( containersAssignBaseObtain )
-    EH_assert [ ! -z "${containersBase}" ]
+    # EH_assert [ ! -z "${containersBase}" ]
 
     local boxId=$( siteBoxAssign.sh -i thisBoxFindId )
     #local containerBase=$( vis_withBoxIdFindContainerBase "${boxId}" )

@@ -272,7 +272,7 @@ _EOF_
     }
     EH_assert [[ $# -lt 2 ]]
     EH_assert [ ! -z "${bxoId}" ]
-    EH_assert [ ! -z "${privacy}" ]
+    # EH_assert [ ! -z "${privacy}" ]
 
     if vis_userAcctExists "${bxoId}" ; then
 	ANT_raw "${bxoId} account already exists."
