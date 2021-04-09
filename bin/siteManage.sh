@@ -136,6 +136,8 @@ ${G_myName} ${extraInfo} -i siteUsgBase
 ${G_myName} ${extraInfo} -i siteUsgBase $( FN_absolutePathGet ~bystar )
 ${G_myName} ${extraInfo} -i siteUsgAdd ${oneBxoId}
 ${G_myName} ${extraInfo} -i siteUsgSelect ${oneBxoId}
+$( examplesSeperatorChapter "Misc -- Site Library Commands" )
+${G_myName} ${extraInfo} -i containersAssignBaseObtain
 _EOF_
 }
 
