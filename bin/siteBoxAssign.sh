@@ -141,7 +141,10 @@ _EOF_
     usgHome=$( FN_absolutePathGet ~ )
     # ~/bisos/sites/selected/siteBpos/boxes.bpoFp/bpoId
     #local selectedPpBoxesPath="${usgHome}/bisos/sites/selected/siteBpos.fv/ppBoxes"
-    local selectedPpBoxesPath="${usgHome}/bisos/sites/selected/siteBpos/boxes.bpoFp/bpoId"    
+    #local selectedPpBoxesPath="${usgHome}/bisos/sites/selected/siteBpos/boxes.bpoFp/bpoId"
+
+    local selectedSiteBxoId=$( vis_selectedSiteBxoId )
+    local selectedPpBoxesPath="$( FN_absolutePathGet ~${selectedSiteBxoId} )/siteBpos/boxes.bpoFp/bpoId"    
     
     local ppBoxesBxoId=""
 
