@@ -63,6 +63,23 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
+
+# ./platformBases_lib.sh
+. ${opBinBase}/platformBases_lib.sh
+
+
+. ${opBinBase}/bxo_lib.sh
+
+# ./lcnFileParams.libSh
+. ${opBinBase}/lcnFileParams.libSh
+
+# ./bystarInfoBase.libSh
+#. ${opBinBase}/bystarInfoBase.libSh
+
+. ${opBinBase}/unisosAccounts_lib.sh
+. ${opBinBase}/bisosGroupAccount_lib.sh
+. ${opBinBase}/bisosAccounts_lib.sh
+
 . ${opBinBase}/bisosCurrents_lib.sh
 
 # . ${opBinBase}/bystarCentralAcct.libSh
@@ -88,7 +105,8 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
-    oneBystarUid=${currentBystarUid}
+    # oneBystarUid=${currentBystarUid}
+    oneBystarUid=${currentBxoId}
 
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_

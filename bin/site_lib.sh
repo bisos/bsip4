@@ -46,6 +46,89 @@ _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
 _CommentEnd_
 
+function vis_siteBisosBase {
+    # /bisos/var/sites/selected
+    echo /bisos/var/sites
+}
+
+function vis_siteBisosAdd {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** 
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+    local siteBxoId=$1
+    
+    local siteBisosBase=$( vis_siteBisosBase )
+    local siteBxoIdHome=$( FN_absolutePathGet ~${siteBxoId} )
+
+    lpDo FN_fileSymlinkUpdate ${siteBxoIdHome} ${siteBisosBase}/${siteBxoId}
+}
+
+function vis_siteBisosSelect {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** 
+_EOF_
+    }
+    local siteBxoId=$1
+    
+    local siteBisosBase=$( vis_siteBisosBase )
+    local siteBxoIdHome=$( FN_absolutePathGet ~${siteBxoId} )
+
+    lpDo FN_fileSymlinkUpdate ${siteBxoIdHome} ${siteBisosBase}/selected
+}
+
+function vis_siteUsgBase {
+    G_funcEntry; function describeF {  G_funcEntryShow;
+				       cat  << _docStringEnd_
+** Defaults to ~/bisos/sites
+_docStringEnd_
+				    }
+
+    EH_assert [[ $# -lt 2 ]]
+    local usgHome=""
+    
+    if [ $# -eq 0 ] ; then
+	usgHome=$( FN_absolutePathGet ~ )
+    else
+	usgHome="$1"
+    fi
+     
+    echo ${usgHome}/bisos/sites
+}
+
+
+function vis_siteUsgAdd {
+    G_funcEntry; function describeF {  G_funcEntryShow; cat  << _EOF_
+** Activate the specified bxoId 
+_EOF_
+				    }
+    EH_assert [[ $# -eq 1 ]]
+    local siteBxoId=$1
+    
+    local siteUsgBase=$( vis_siteUsgBase )
+    local siteBxoIdHome=$( FN_absolutePathGet ~${siteBxoId} )
+
+    lpDo FN_fileSymlinkUpdate ${siteBxoIdHome} ${siteUsgBase}/${siteBxoId}
+}
+
+function vis_siteUsgSelect {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Activate the specified bxoId 
+_EOF_
+		       }
+    EH_assert [[ $# -eq 1 ]]
+    local siteBxoId=$1
+    
+    local siteUsgBase=$( vis_siteUsgBase )
+    local siteBxoIdHome=$( FN_absolutePathGet ~${siteBxoId} )
+
+    lpDo FN_fileSymlinkUpdate ${siteBxoIdHome} ${siteUsgBase}/selected
+}
+
 
 function vis_selectedSiteBxoId {
    G_funcEntry
@@ -57,7 +140,15 @@ _EOF_
     
     usgHome=$( FN_absolutePathGet ~ )
     # ~/bisos/sites/selected/siteBpos/containers.bpoFp/bpoId
-    local selectedSitePath="${usgHome}/bisos/sites/selected"
+    local selectedSitePath="$( vis_siteUsgBase ${usgHome} )/selected"
+
+    if [ ! -e "${selectedSitePath}" ] ; then
+	selectedSitePath="$( vis_siteBisosBase )/selected"
+	if [ ! -e "${selectedSitePath}" ] ; then
+	    EH_problem "Missing selectedSitePath=${selectedSitePath}"
+	    lpReturn 101
+	fi
+    fi
     
     local selectedSiteBxoId="$( FN_nonDirsPart $( readlink -f ${selectedSitePath} ) )"
 

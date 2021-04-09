@@ -121,11 +121,21 @@ bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
 $( examplesSeperatorChapter "Site Library Commands" )
 ${G_myName} ${extraInfo} -i selectedSiteBxoId    # based on ~ -- ${usgHome}/bisos/sites/selected
-${G_myName} -i activate_siteBxoPlus ${oneBxoId}
+${G_myName} ${extraInfo} -i activate_siteBxoPlus ${oneBxoId}
 ${G_myName} -i fromSiteBxoIdGet_boxesBxoId ${oneBxoId}
 ${G_myName} -i fromSiteBxoIdGet_containersBxoId ${oneBxoId}
 ${G_myName} -i fromSiteBxoIdGet_networksBxoId ${oneBxoId}
 ${G_myName} -i fromSiteBxoIdGet_domainsBxoId ${oneBxoId}   # NOTYET -- has not been implemented
+$( examplesSeperatorChapter "siteBisosBase -- Site Library Commands" )
+${G_myName} ${extraInfo} -i siteBisosBase
+${G_myName} ${extraInfo} -i siteBisosAdd ${oneBxoId}
+${G_myName} ${extraInfo} -i siteBisosAdd pis_defaultSite
+${G_myName} ${extraInfo} -i siteBisosSelect ${oneBxoId}
+$( examplesSeperatorChapter "siteUsgBase -- Site Library Commands" )
+${G_myName} ${extraInfo} -i siteUsgBase
+${G_myName} ${extraInfo} -i siteUsgBase $( FN_absolutePathGet ~bystar )
+${G_myName} ${extraInfo} -i siteUsgAdd ${oneBxoId}
+${G_myName} ${extraInfo} -i siteUsgSelect ${oneBxoId}
 _EOF_
 }
 
