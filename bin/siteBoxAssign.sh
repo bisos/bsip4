@@ -76,6 +76,10 @@ _CommentEnd_
 
 . ${opBinBase}/bisosCurrents_lib.sh
 
+. ${opBinBase}/site_lib.sh
+
+. ${opBinBase}/sysChar_lib.sh
+
 # PRE parameters
 typeset -t siteName="MANDATORY"
 
