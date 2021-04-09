@@ -95,6 +95,8 @@ _docStringEnd_
     else
 	usgHome="$1"
     fi
+
+    lpDo FN_dirCreatePathIfNotThere ${usgHome}/bisos/sites
      
     echo ${usgHome}/bisos/sites
 }
