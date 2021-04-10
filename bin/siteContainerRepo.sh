@@ -111,7 +111,9 @@ ls -ld ${containersBase}/*
 find ${containersBase} -print
 ${G_myName} -i containersGenericsAssignList
 $( examplesSeperatorChapter "Container Repo Realization" )
-${G_myName} ${extraInfo} -i containerRepoUpdate ${containerBase}
+${G_myName} ${extraInfo} -i containerRepoUpdate basePrep ${containerBase}
+${G_myName} ${extraInfo} -i containerRepoUpdate realize ${containerBase}
+${G_myName} ${extraInfo} -i containerRepoUpdate full ${containerBase}
 $( examplesSeperatorChapter "Generic Container Repo Realization" )
 ${G_myName} ${extraInfo} -i containerRepoUpdate ${containersBase}/assign/Virt/Auto/Generic/deb10
 ${G_myName} ${extraInfo} -i containerRepoGenericsUpdate examples basePrep # bxoRealizationScope=basePrep|realize|full
@@ -195,6 +197,10 @@ _EOF_
    local containerSteadyBase=${repoBase}/steady
    lpDo mkdir -p ${containerSteadyBase}
 
+   steady_networkMode=""
+   steady_networkMode=""
+   steady_privA_addr=""
+   
    case ${function} in
        Generic)
 	   case ${abode} in
@@ -211,10 +217,19 @@ _EOF_
 	   esac
 	   ;;
        Server)
-	   lpDo echo fileParamManage.py -i fileParamWrite ${platformInfoBase} vmGuestLeastSize "medium"
-	   lpDo echo fileParamManage.py -i fileParamWrite ${platformInfoBase} networkMode "fixed"	   
+	   case ${abode} in
+	       Auto)
+		   steady_networkMode="auto"
+		   ;;
+	       Shield)
+		   steady_networkMode="static"
+		   steady_privA_addr="assign"
+		   ;;
+	       *)
+		   doNothing
+		   ;;
+	   esac
 	   ;;
-
        *)
 	   EH_problem "NOTYET -- unimplemented ${function}"
    esac

@@ -61,7 +61,6 @@ _CommentEnd_
 # ./platformBases_lib.sh
 . ${opBinBase}/platformBases_lib.sh
 
-
 . ${opBinBase}/bxo_lib.sh
 
 # ./lcnFileParams.libSh
@@ -76,6 +75,8 @@ _CommentEnd_
 
 . ${opBinBase}/bisosCurrents_lib.sh
 
+. ${opBinBase}/siteNetworks_lib.sh
+
 
 setBasicItemsFiles opMachineItems
 
@@ -84,44 +85,6 @@ typeset -t opSiteName="nedaPlus"
 
 # PRE parameters
 typeset -t siteName="MANDATORY"
-
-
-function networksBaseObtain {
-   G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-    
-    usgHome=$( FN_absolutePathGet ~ )
-    # ~/bisos/sites/selected/siteBpos.fv/networks
-    local selectedNetworksPath="${usgHome}/bisos/sites/selected/siteBpos.fv/networks"
-    
-    local networksBxoId=""
-
-    if [ -d "${selectedNetworksPath}" ] ; then
-	networksBxoId=$( fileParamManage.py -i fileParamReadPath ${selectedNetworksPath} )
-	if [ -z "${networksBxoId}" ] ; then
-	    EH_problem "Missing networksBxoId"
-	    lpReturn 101
-	fi
-	if ! vis_bxoAcctVerify "${networksBxoId}" ; then
-	    EH_problem "Missing networksBxoId"
-	    lpReturn 101
-	fi
-     else
-	EH_problem "Missing ${selectedNetworksPath}"
-	lpReturn 101
-    fi
-
-    # 
-    local networksBase=$( FN_absolutePathGet ~${networksBxoId} )/networks
-    EH_assert [ -d "${networksBase}" ]
-
-    echo "${networksBase}"
-
-    lpReturn
-}	
 
 
 function G_postParamHook {
@@ -152,11 +115,24 @@ ls -ld ${networksBase}/*
 $( examplesSeperatorChapter "This Network Actions" )
 ${G_myName} -i netsReport
 $( examplesSeperatorChapter "This Network Actions" )
-${G_myName} -i netAddr pubNetA
-${G_myName} -i netAddr privNetA
+${G_myName} -i netAddr pubA
+${G_myName} -i netAddr pubB
+${G_myName} -i netAddr privA
+${G_myName} -i netAddr perimA
 $( examplesSeperatorChapter "This Network Actions" )
-${G_myName} -i netmask pubNetA
-${G_myName} -i netAddr privNetA
+${G_myName} -i netmask pubA
+${G_myName} -i netmask pubB
+${G_myName} -i netmask privA
+${G_myName} -i netmask perimA
+$( examplesSeperatorChapter "This Network Actions" )
+${G_myName} -i routerDefault pubA
+${G_myName} -i routerDefault pubB
+${G_myName} -i routerDefault privA
+${G_myName} -i routerDefault perimA
+$( examplesSeperatorChapter "This Network Actions" )
+${G_myName} -i routerSiteFpsPath privA pubA
+$( examplesSeperatorChapter "This Network Actions" )
+${G_myName} -i netSiteFpsPath privA
 _EOF_
 }
 
@@ -164,66 +140,3 @@ _EOF_
 noArgsHook() {
   vis_examples
 }
-
-function vis_netsReport {
-   G_funcEntry
-   function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-		      }
-   
-   EH_assert [[ $# -eq 0 ]]
-
-   local networksBase=$( networksBaseObtain )
-
-   EH_assert [ ! -z "${networksBase}" ]
-
-   local netDefinitions=${networksBase}/netDefinitions.fv
-
-   #echo ${netDefinitions}
-
-   # Use readDeep instead
-   find ${netDefinitions} -print | grep value | xargs egrep ^.
-}
-
-function vis_netAddr {
-   G_funcEntry
-   function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-		      }
-   
-   EH_assert [[ $# -eq 1 ]]
-
-   local netName="$1"
-
-   local networksBase=$( networksBaseObtain )
-
-   EH_assert [ ! -z "${networksBase}" ]
-
-   local netBase=${networksBase}/netDefinitions.fv/${netName}
-
-   local netAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} netAddr )
-
-   echo ${netAddr}
-}
-
-function vis_netmask {
-   G_funcEntry
-   function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-		      }
-   
-   EH_assert [[ $# -eq 1 ]]
-
-   local netName="$1"
-
-   local networksBase=$( networksBaseObtain )
-
-   EH_assert [ ! -z "${networksBase}" ]
-
-   local netBase=${networksBase}/netDefinitions.fv/${netName}
-
-   local netAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} netmask )
-
-   echo ${netAddr}
-}
-

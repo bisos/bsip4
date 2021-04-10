@@ -380,7 +380,7 @@ _EOF_
    containerSteady_privA_addr=$( fileParamManage.py -i fileParamRead  ${containerSteadyBase}/net/ipv4/privA.fps addr )
    containerSteady_privA_gateway=$( fileParamManage.py -i fileParamRead  ${containerSteadyBase}/net/ipv4/privA.fps gateway )
 
-   containerSteady_privA_netmask=$( fileParamManage.py -i fileParamRead  ${containerSteadyBase}/net/networks/privA/net.fps netmask )   
+   containerSteady_privA_netmask=$( fileParamManage.py -i fileParamRead  ${containerSteadyBase}/net/ipv4/privA.fps netmask )   
 
    containerSteady_privA_pubA_router=$( fileParamManage.py -i fileParamRead  ${containerSteadyBase}/net/routes/privA-pubA.fps router )   
    containerSteady_privA_pubA_upCommand=$( fileParamManage.py -i fileParamRead  ${containerSteadyBase}/net/routes/privA-pubA.fps upCommand )
@@ -393,9 +393,9 @@ function vis_containerSteadyWrite {
 _EOF_
 		      }
    EH_assert [[ $# -eq 1 ]]
-
-   # typically something like: /bxo/r3/iso/pmc_siteName-containers/VAG-deb10_/steady/
    local containerSteadyBase="$1"
+   # typically something like: /bxo/r3/iso/pmc_siteName-containers/VAG-deb10_/steady/
+
    EH_assert [ -d "${containerSteadyBase}" ]
 
    if [ ! -z "${steady_networkMode}" ] ; then
@@ -403,8 +403,58 @@ _EOF_
    fi
    
    if [ ! -z "${steady_privA_addr}" ] ; then
-       fileParamManage.py -i fileParamWrite ${containerSteadyBase}/net/ipv4/privA.fps addr "${steady_privA_addr}"
+       lpDo fileParamManage.py -i fileParamWrite ${containerSteadyBase}/net/ipv4/privA.fps addr "${steady_privA_addr}"
+
+       local netSiteFpsPath=$( vis_netSiteFpsPath privA )
+       lpDo FN_fileSymlinkUpdate "${netSiteFpsPath}"  ${containerSteadyBase}/net/ipv4/privA.fps/net.fps
+
+       local routerSiteFpsPath=$( vis_netSiteFpsPath privA pubA)
+       lpDo FN_fileSymlinkUpdate "${routeSiteFpsPath}"  ${containerSteadyBase}/net/ipv4/privA.fps/net.fps
    fi
+}
+
+
+function vis_sysChar_netIfsRead {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+bxoId is the sysChar.
+_EOF_
+		       }
+
+    EH_assert [[ $# -lt 2 ]]
+
+    local thisBxoId="${bxoId}"
+    
+    if [ $# -eq 1 ] ; then
+	thisBxoId=$1
+    fi
+
+    EH_assert [ ! -z "${thisBxoId}" ]
+
+    EH_assert vis_bxoAcctVerify "${thisBxoId}"
+    bxoHome=$( FN_absolutePathGet ~${thisBxoId} )
+  
+    local sysCharBase=${bxoHome}/sysChar
+    local repoName="sysChar"
+    local repoBase="${bxoHome}/${repoName}"
+
+    local sysInfoFps=${repoBase}/sysInfo.fps
+    local virtSpecFps=${repoBase}/virtSpec.fps
+    local boxSpecFps=${repoBase}/boxSpec.fps    
+
+    sysChar_netIfs_privA="" # Global Var
+    
+    if [ -d "${virtSpecFps}" ] ; then
+	sysChar_netIfs_privA="ethB"
+    fi
+
+    if [ -d "${boxSpecFps}" ] ; then
+	sysChar_netIfs_privA=$( fileParamManage.py -i fileParamRead ${boxSpecFps}/netIfs privA )
+    fi
+
+    if [ -z "${sysChar_netIfs_privA}" ] ; then
+	EH_problem "Missing sysChar_netIfs_privA"
+    fi
 }
 
 
