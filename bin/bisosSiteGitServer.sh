@@ -69,7 +69,7 @@ gitServerUrl=""
 gitServerPrivToken=""
 
 # Global Vars
-selectedSite="/bisos/var/sites/selected/sys/config"
+selectedSite="/bisos/var/sites/selected"
 
 
 function G_postParamHook {
