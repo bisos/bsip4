@@ -16,9 +16,7 @@ _CommentBegin_
 ####+END:
 _CommentEnd_
 
-
-
-function networksBaseObtain {
+function vis_siteNetworksBxoIdHome {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -47,15 +45,31 @@ _EOF_
     fi
 
     # 
-    local networksBase=$( FN_absolutePathGet ~${networksBxoId} )/networks
+    local networksBxoIdHome=$( FN_absolutePathGet ~${networksBxoId} )
+    EH_assert [ -d "${networksBxoIdHome}" ]
+
+    echo "${networksBxoIdHome}"
+
+    lpReturn
+}	
+
+function networksBaseObtain {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local networksBxoIdHome=$( vis_siteNetworksBxoIdHome )
+    EH_assert [ -d "${networksBxoIdHome}" ]
+
+    local networksBase="${networksBxoIdHome}/networks"
     EH_assert [ -d "${networksBase}" ]
 
     echo "${networksBase}"
 
     lpReturn
 }	
-
-
 
 function vis_netsReport {
    G_funcEntry
@@ -154,6 +168,46 @@ _EOF_
    echo ${netsBase}
 }
 
+function vis_routerSiteFpsPath {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 2 ]]
+
+   local srcNetName="$1"
+   local destNetName="$2"   
+
+   local siteNetworksBxoIdHome=$( vis_siteNetworksBxoIdHome )
+   EH_assert [ -d "${siteNetworksBxoIdHome}" ]
+
+   local routerSiteFpsPath=${siteNetworksBxoIdHome}/routes/${srcNetName}-${destNetName}.fps
+   EH_assert [ -d "${routerSiteFpsPath}" ]
+
+   echo ${routerSiteFpsPath}
+}
+
+
+function vis_containerIpAddrObtain_privA {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** If generic, one way, if not anotherway
+_EOF_
+		       }
+    EH_assert [[ $# -eq 2 ]]
+
+    local containerBxoId=$1
+    local addrType=$2    # generic/assign/auto
+
+    #local containerBxoId=$( withContainerIdGetBxoId ${containerId} )
+
+    EH_assert vis_bxoAcctVerify "${containerBxoId}"
+
+    containerBxoIdHome=$( FN_absolutePathGet ~${containerBxoId} )
+    local ipAddr_privA=$( fileParamManage.py -v 30 -i fileParamRead  ${containerBxoIdHome}/var/sysCharDeployInfo ipAddr_privA )
+
+    echo ${ipAddr_privA}
+}
 
 
 _CommentBegin_

@@ -471,7 +471,7 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     echo 192.168.0.121
-    }
+}
 
 function vis_vagStdout_netInterfaces {
     G_funcEntry

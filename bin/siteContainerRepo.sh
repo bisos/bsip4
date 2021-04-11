@@ -75,6 +75,8 @@ _CommentEnd_
 
 . ${opBinBase}/sysChar_lib.sh
 
+. ${opBinBase}/siteNetworks_lib.sh
+
 # PRE parameters
 typeset -t model=""     # one of {h,p,v}
 typeset -t abode=""  # one of {bpec,bpsc,bipc,bluc,bauc,bdc}
@@ -110,11 +112,11 @@ ${G_myName} ${extraInfo} -i containersAssignBaseObtain
 ls -ld ${containersBase}/*
 find ${containersBase} -print
 ${G_myName} -i containersGenericsAssignList
-$( examplesSeperatorChapter "Container Repo Realization" )
+$( examplesSeperatorChapter "Container Repo Realization -- Updates steady" )
 ${G_myName} ${extraInfo} -i containerRepoUpdate basePrep ${containerBase}
 ${G_myName} ${extraInfo} -i containerRepoUpdate realize ${containerBase}
 ${G_myName} ${extraInfo} -i containerRepoUpdate full ${containerBase}
-$( examplesSeperatorChapter "Generic Container Repo Realization" )
+$( examplesSeperatorChapter "Generic Container Repo Realization -- Applies To All Generics" )
 ${G_myName} ${extraInfo} -i containerRepoUpdate ${containersBase}/assign/Virt/Auto/Generic/deb10
 ${G_myName} ${extraInfo} -i containerRepoGenericsUpdate examples basePrep # bxoRealizationScope=basePrep|realize|full
 ${G_myName} ${extraInfo} -i containerRepoGenericsUpdate examples realize # bxoRealizationScope=basePrep|realize|full
@@ -197,19 +199,18 @@ _EOF_
    local containerSteadyBase=${repoBase}/steady
    lpDo mkdir -p ${containerSteadyBase}
 
-   steady_networkMode=""
-   steady_networkMode=""
-   steady_privA_addr=""
+   containerSteady_networkMode=""
+   containerSteady_privA_addr=""
    
    case ${function} in
        Generic)
 	   case ${abode} in
 	       Auto)
-		   steady_networkMode="auto"
+		   containerSteady_networkMode="auto"
 		   ;;
 	       Shield)
-		   steady_networkMode="static"
-		   steady_privA_addr="generic"
+		   containerSteady_networkMode="static"
+		   containerSteady_privA_addr="generic"
 		   ;;
 	       *)
 		   doNothing
@@ -219,11 +220,11 @@ _EOF_
        Server)
 	   case ${abode} in
 	       Auto)
-		   steady_networkMode="auto"
+		   containerSteady_networkMode="auto"
 		   ;;
 	       Shield)
-		   steady_networkMode="static"
-		   steady_privA_addr="assign"
+		   containerSteady_networkMode="static"
+		   containerSteady_privA_addr="assign"
 		   ;;
 	       *)
 		   doNothing
@@ -234,7 +235,7 @@ _EOF_
 	   EH_problem "NOTYET -- unimplemented ${function}"
    esac
 
-   vis_containerSteadyWrite "${containerSteadyBase}"
+   lpDo vis_containerSteadyWrite "${containerSteadyBase}"
 
    lpDo vis_repoCreateAndPushBasedOnPathBasedOn_bxoRealizationScope "${bxoRealizationScope}" ${repoBase}
 

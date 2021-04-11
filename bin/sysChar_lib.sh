@@ -377,14 +377,18 @@ _EOF_
   
    local containerSteadyBase=${bxoHome}/siteContainersRepo/steady
 
+   containerSteady_networkMode=$( fileParamManage.py -i fileParamRead  ${containerSteadyBase}/net networkMode.fp )
+
    containerSteady_privA_addr=$( fileParamManage.py -i fileParamRead  ${containerSteadyBase}/net/ipv4/privA.fps addr )
-   containerSteady_privA_gateway=$( fileParamManage.py -i fileParamRead  ${containerSteadyBase}/net/ipv4/privA.fps gateway )
 
-   containerSteady_privA_netmask=$( fileParamManage.py -i fileParamRead  ${containerSteadyBase}/net/ipv4/privA.fps netmask )   
+   
+   containerSteady_privA_gateway=$( fileParamManage.py -i fileParamRead  ${containerSteadyBase}/net/ipv4/privA.fps/net.fps routerDefault )
 
-   containerSteady_privA_pubA_router=$( fileParamManage.py -i fileParamRead  ${containerSteadyBase}/net/routes/privA-pubA.fps router )   
-   containerSteady_privA_pubA_upCommand=$( fileParamManage.py -i fileParamRead  ${containerSteadyBase}/net/routes/privA-pubA.fps upCommand )
-   containerSteady_privA_pubA_downCommand=$( fileParamManage.py -i fileParamRead  ${containerSteadyBase}/net/routes/privA-pubA.fps downCommand )   
+   containerSteady_privA_netmask=$( fileParamManage.py -i fileParamRead  ${containerSteadyBase}/net/ipv4/privA.fps/net.fps netmask )   
+
+   containerSteady_privA_pubA_router=$( fileParamManage.py -i fileParamRead  ${containerSteadyBase}/net/ipv4/privA.fps/router-pubA.fps router )   
+   containerSteady_privA_pubA_upCommand=$( fileParamManage.py -i fileParamRead  ${containerSteadyBase}/net/ipv4/privA.fps/router-pubA.fps upCommand )
+   containerSteady_privA_pubA_downCommand=$( fileParamManage.py -i fileParamRead  ${containerSteadyBase}/net/ipv4/privA.fps/router-pubA.fps downCommand )   
 }
 
 function vis_containerSteadyWrite {
@@ -398,18 +402,18 @@ _EOF_
 
    EH_assert [ -d "${containerSteadyBase}" ]
 
-   if [ ! -z "${steady_networkMode}" ] ; then
-       lpDo fileParamManage.py -v 20 -i fileParamWrite ${containerSteadyBase}/net networkMode.fp "${steady_networkMode}"
+   if [ ! -z "${containerSteady_networkMode}" ] ; then
+       lpDo fileParamManage.py -v 20 -i fileParamWrite ${containerSteadyBase}/net networkMode.fp "${containerSteady_networkMode}"
    fi
    
-   if [ ! -z "${steady_privA_addr}" ] ; then
-       lpDo fileParamManage.py -i fileParamWrite ${containerSteadyBase}/net/ipv4/privA.fps addr "${steady_privA_addr}"
+   if [ ! -z "${containerSteady_privA_addr}" ] ; then
+       lpDo fileParamManage.py -i fileParamWrite ${containerSteadyBase}/net/ipv4/privA.fps addr "${containerSteady_privA_addr}"
 
        local netSiteFpsPath=$( vis_netSiteFpsPath privA )
        lpDo FN_fileSymlinkUpdate "${netSiteFpsPath}"  ${containerSteadyBase}/net/ipv4/privA.fps/net.fps
 
-       local routerSiteFpsPath=$( vis_netSiteFpsPath privA pubA)
-       lpDo FN_fileSymlinkUpdate "${routeSiteFpsPath}"  ${containerSteadyBase}/net/ipv4/privA.fps/net.fps
+       local routerSiteFpsPath=$( vis_routerSiteFpsPath privA pubA)
+       lpDo FN_fileSymlinkUpdate "${routerSiteFpsPath}"  ${containerSteadyBase}/net/ipv4/privA.fps/router-pubA.fps
    fi
 }
 
@@ -445,7 +449,7 @@ _EOF_
     sysChar_netIfs_privA="" # Global Var
     
     if [ -d "${virtSpecFps}" ] ; then
-	sysChar_netIfs_privA="ethB"
+	sysChar_netIfs_privA="eth1"
     fi
 
     if [ -d "${boxSpecFps}" ] ; then

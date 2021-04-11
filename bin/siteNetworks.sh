@@ -75,6 +75,10 @@ _CommentEnd_
 
 . ${opBinBase}/bisosCurrents_lib.sh
 
+. ${opBinBase}/site_lib.sh
+
+. ${opBinBase}/sysChar_lib.sh
+
 . ${opBinBase}/siteNetworks_lib.sh
 
 
@@ -104,14 +108,17 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
-    local networksBase=$( networksBaseObtain )
+    #local networksBase=$( networksBaseObtain )
+    local siteNetworksBxoIdHome=$( vis_siteNetworksBxoIdHome )
 
     visLibExamplesOutput ${G_myName}
     # ${doLibExamples} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Site And BxO Information" )
-ls -ld ${networksBase}/*
+${G_myName} -i siteNetworksBxoIdHome  # ${siteNetworksBxoIdHome}
+ls -ld ${siteNetworksBxoIdHome}/networks/*
+find ${siteNetworksBxoIdHome}/routes -print
 $( examplesSeperatorChapter "This Network Actions" )
 ${G_myName} -i netsReport
 $( examplesSeperatorChapter "This Network Actions" )
@@ -133,6 +140,8 @@ $( examplesSeperatorChapter "This Network Actions" )
 ${G_myName} -i routerSiteFpsPath privA pubA
 $( examplesSeperatorChapter "This Network Actions" )
 ${G_myName} -i netSiteFpsPath privA
+$( examplesSeperatorChapter "Obtain IP Addrs" )
+${G_myName} -i containerIpAddrObtain_privA VSG-ub2004_ generic
 _EOF_
 }
 
