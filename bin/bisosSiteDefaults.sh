@@ -113,9 +113,9 @@ bisosCurrentsManage.sh ${extraInfo} -i currentsGetThenShow
 $( examplesSeperatorChapter "Set" )
 ${G_myName} ${extraInfo} -i setParam currentBxoUname ${currentBxoUname}
 ${G_myName} ${extraInfo} -i validateParam currentBxoUname ${currentBxoUname}
-${G_myName} ${extraInfo} -i setParam cur_gitServerName 192.168.0.56
-${G_myName} ${extraInfo} -i setParam cur_gitServerUrl http://192.168.0.56
-${G_myName} ${extraInfo} -i setParam cur_gitServerPrivToken qji9-_YqoqzZ4Rymk_qG
+${G_myName} ${extraInfo} -i setParam cur_gitServerName 192.168.0.56  # NOTYET should become fileparamread
+${G_myName} ${extraInfo} -i setParam cur_gitServerUrl http://192.168.0.56 # NOTYET should become fileparamread
+${G_myName} ${extraInfo} -i setParam cur_gitServerPrivToken qji9-_YqoqzZ4Rymk_qG  # NOTYET should become fileparamread
 ${G_myName} ${extraInfo} -i setParam currentBxoId ${currentBxoId}
 ${G_myName} ${extraInfo} -i setParam currentBxoAutonomousUname ${currentBxoAutonomousUname}
 ${G_myName} ${extraInfo} -i setParam currentBxoUeUname ${currentBxoUeUname}
@@ -148,9 +148,9 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo curSetParam cur_gitServerName 192.168.0.56
-    lpDo curSetParam cur_gitServerUrl http://192.168.0.56
-    lpDo curSetParam cur_gitServerPrivToken qji9-_YqoqzZ4Rymk_qG
+    lpDo curSetParam cur_gitServerName 192.168.0.56 # NOTYET should become fileparamread
+    lpDo curSetParam cur_gitServerUrl http://192.168.0.56 # NOTYET should become fileparamread
+    lpDo curSetParam cur_gitServerPrivToken qji9-_YqoqzZ4Rymk_qG # NOTYET should become fileparamread
 }
 
 _CommentBegin_

@@ -80,7 +80,9 @@ _EOF_
 	"facter"
 	"build_essential"
 	"dkms"
-	"linux_headers_generic" 	
+	"linux_headers_generic"
+ 	"net_tools"
+	"sshpass"
     )
 
     itemOptionalOrderedList=()
@@ -159,6 +161,26 @@ _CommentEnd_
 item_linux_headers_generic () { distFamilyGenerationHookRun binsPrep_linux_headers_generic; }
 
 binsPrep_linux_headers_generic_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "linux-headers-generic"; }
+
+####+END:
+
+####+BEGIN: bx:dblock:lsip:binsprep:apt :module "net-tools"
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || Apt-Pkg       :: net-tools [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+item_net_tools () { distFamilyGenerationHookRun binsPrep_net_tools; }
+
+binsPrep_net_tools_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "net-tools"; }
+
+####+END:
+
+####+BEGIN: bx:dblock:lsip:binsprep:apt :module "sshpass"
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || Apt-Pkg       :: sshpass [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+item_sshpass () { distFamilyGenerationHookRun binsPrep_sshpass; }
+
+binsPrep_sshpass_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "sshpass"; }
 
 ####+END:
 

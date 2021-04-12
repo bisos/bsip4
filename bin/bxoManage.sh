@@ -139,7 +139,7 @@ usgBxoSshManage.sh
 usgBxoSshManage.sh ${extraInfo}  -p bxoId="${oneBxoId}"  -i usgBxoFullDelete
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i fullRemove $(vis_bxoConstructBaseDir_obtain priv)/${oneBxoId}/home # noAcct
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i fullRemove # Delete Acct and remove ${oneBxoHome}
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i fullDelete # FullRemove + bxoGitServerFullDelete
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i fullDelete # _ALERT_ FullRemove + bxoGitServerFullDelete
 $( examplesSeperatorChapter "Delete A BxO At privGitServer" )
 bxoGitlab.py
 bxoGitlab.py -v 20 --bxoId="${oneBxoId}" -i reposDelete repoName1

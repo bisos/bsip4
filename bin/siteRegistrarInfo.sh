@@ -62,6 +62,7 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
+. ${opBinBase}/siteRegistrar_lib.sh
 
 # PRE parameters
 
@@ -78,7 +79,8 @@ _CommentEnd_
 
 
 function vis_examples {
-    typeset extraInfo="-h -v -n showRun"
+    #typeset extraInfo="-h -v -n showRun"
+    typeset extraInfo=""    
     #typeset extraInfo=""
     typeset runInfo="-p ri=lsipusr:passive"
 
@@ -87,9 +89,10 @@ function vis_examples {
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
-$( examplesSeperatorChapter "Chapter Title" )
-$( examplesSeperatorSection "Section Title" )
-${G_myName} ${extraInfo} -i doTheWork
+$( examplesSeperatorChapter "Site Registrar Info" )
+${G_myName} ${extraInfo} -i registrarHostName
+${G_myName} ${extraInfo} -i registrarUserName
+${G_myName} ${extraInfo} -i registrarUserPassword
 _EOF_
 }
 
@@ -102,18 +105,6 @@ _CommentBegin_
 _CommentEnd_
 
 
-function vis_doTheWork {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    lpDo vis_failExample
-    EH_retOnFail
-
-    lpReturn
-}
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*

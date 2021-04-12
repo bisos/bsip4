@@ -97,10 +97,16 @@ _CommentEnd_
 
 . ${opBinBase}/sysChar_lib.sh
 
+. ${opBinBase}/siteRegistrar_lib.sh
+
+
 # PRE parameters
 
 typeset -t bxoId=""
 typeset -t privA=""
+typeset -t registrar=""
+typeset -t id=""
+typeset -t password=""
 
 
 function G_postParamHook {
@@ -140,7 +146,10 @@ function vis_examples {
     oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )
 
     local siteBxoId=$( sysCharRealize.sh -i selectedSiteBxoId )
-    
+
+    local registrar=$( vis_registrarHostName )
+    local id=$( vis_registrarUserName )
+    local password=$( vis_registrarUserPassword )        
     
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
@@ -152,18 +161,32 @@ ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i postCustomize  # on host - bx
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i secureSeal     # on host - bx-ssh
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i recordDeployment      # inside of parent bxo
 $( examplesSeperatorChapter "FULL SYSTEM Deployment" )
+${G_myName} ${extraInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -i bisosSiteSetup
+${G_myName} ${extraInfo} -i bisosSiteSetup
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i activate_sysBxo
-${G_myName} ${extraInfo} -i activate_siteBxoPlus ${siteBxoId}
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -p privA=192.168.0.121 -i capture_identity
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i capture_siteBxo ${siteBxoId}
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -p privA=192.168.0.121 -i capture_identity
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -p privGit=anon -p pubGit=anon -p devMode=someTag -i capture_accessMode
 $( examplesSeperatorChapter "FULL SYSTEM Deployment" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i inFullAfterSysBasePlatform
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i deployWithSysCharDeployInfo
 $( examplesSeperatorSection "Update" )
+${G_myName} ${extraInfo} -i activate_siteBxoPlus ${siteBxoId}
 ${G_myName} ${extraInfo} -i identityUpdate
 $( examplesSeperatorChapter "Overview Report And Summary" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i sysCharReport
 _EOF_
+}
+
+
+function vis_bisosSiteSetup {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** 
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo bisosSiteSetup.sh -p registrar="${registrar}" -p id="${id}" -p password="${password}" -i fullUpdate
 }
 
 

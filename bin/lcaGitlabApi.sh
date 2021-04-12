@@ -152,6 +152,8 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
+    ## 192.168.0.56 # NOTYET should become fileparamread
+
     cat  << _EOF_
 [global]
 default = bisosAdmin
@@ -165,7 +167,7 @@ api_version = 4
 timeout = 10
 
 [bisos]
-url = http://http://192.168.0.56
+url = http://192.168.0.56
 private_token = aW9rVKoXZhyNqTRKs5PT
 timeout = 10
 

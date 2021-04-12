@@ -97,6 +97,8 @@ _CommentEnd_
 
 . ${opBinBase}/sysChar_lib.sh
 
+. ${opBinBase}/siteRegistrar_lib.sh
+
 
 # PRE parameters
 
@@ -575,16 +577,22 @@ _OUTER_EOF_
     function privA_setIdAndDeploy {
 	EH_assert [[ $# -eq 0 ]]
 
+	local registrar=$( vis_registrarHostName )
+	local id=$( vis_registrarUserName )
+	local password=$( vis_registrarUserPassword )        
+	
+	#/bisos/core/bsip/bin/bisosSiteGitServer.sh -h -v -n showRun -p gitServerName=${site_gitServerName} -p gitServerUrl=${site_gitServerUrl} -p gitServerPrivToken=${site_gitServerPrivToken} -i gitServerInfoSet
+	
 	cat  << _OUTER_EOF_
 	     cat   << _EOF_
 ######### PHASE 2: BISOS Identity Set -- With IpAddrs settings
 _EOF_
-	/bisos/core/bsip/bin/bisosSiteGitServer.sh -h -v -n showRun -p gitServerName=${site_gitServerName} -p gitServerUrl=${site_gitServerUrl} -p gitServerPrivToken=${site_gitServerPrivToken} -i gitServerInfoSet
-	/bisos/core/bsip/bin/sysCharDeploy.sh -p bxoId="${bxoId}" -i activateSysBxo
+	/bisos/core/bsip/bin/sysCharDeploy.sh -p registrar="${registrar}" -p id="${id}" -p password="${password}" -i bisosSiteSetup
+	/bisos/core/bsip/bin/sysCharDeploy.sh -p bxoId="${bxoId}" -i activate_sysBxo
 	/bisos/core/bsip/bin/sysCharDeploy.sh -p bxoId="${bxoId}" -i capture_siteBxo ${siteBxoId}
 	/bisos/core/bsip/bin/sysCharDeploy.sh -p bxoId="${bxoId}" -p privA="$( vis_getIpAddr_privA )" -i capture_identity
         /bisos/core/bsip/bin/sysCharDeploy.sh -p bxoId="${bxoId}" -p privGit=anon -p pubGit=anon -p devMode=someTag -i capture_accessMode
-	/bisos/core/bsip/bin/sysCharDeploy.sh -p bxoId="${bxoId}" -i inFullAfterSysBasePlatform
+	/bisos/core/bsip/bin/sysCharDeploy.sh -p bxoId="${bxoId}" -i deployWithSysCharDeployInfo
 _OUTER_EOF_
     }
 

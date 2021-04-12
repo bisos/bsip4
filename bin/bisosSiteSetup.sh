@@ -78,7 +78,7 @@ _CommentEnd_
 # PRE parameters
 typeset -t registrar=""
 typeset -t id=""
-typeset -t passwdFile=""
+typeset -t password=""
 
 
 function G_postParamHook {
@@ -102,13 +102,12 @@ function vis_examples {
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
-$( examplesSeperatorChapter "Python Overlap -- Needs To Be Merged" )
-bx-currentsManage.py
 $( examplesSeperatorChapter "Full Operations" )
 ${G_myName} ${extraInfo} -i fullUpdate
+${G_myName} ${extraInfo} -p registrar=TBD -p id=TBD -p password=TBD -i fullUpdate
 $( examplesSeperatorChapter "Temporary Site" )
-echo intra > /tmp/bisosPasswdFile
 ${G_myName} ${extraInfo} -i obtainTmpSite
+${G_myName} ${extraInfo} -p registrar=TBD -p id=TBD -p password=TBD -i obtainTmpSite
 _EOF_
 }
 
@@ -179,19 +178,24 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if [ -z "${registrar}" ] ; then
-	registrar="192.168.0.151"
+	registrar=$( siteRegistrarInfo.sh  -i registrarHostName )
     fi
     if [ -z "${id}" ] ; then
-	id="bystar"
+	id=$( siteRegistrarInfo.sh  -i registrarUserName )
     fi
-    if [ -z "${passwdFile}" ] ; then
-	passwdFile="/tmp/bisosPasswdFile"
-	if [ ! -f "${passwdFile}" ] ; then
-	    EH_problem "Missing passwdFile"
-	    lpReturn 101
-	fi
+    if [ -z "${password}" ] ; then
+	password=$( siteRegistrarInfo.sh  -i registrarUserPassword )
     fi
 
+    local passwdFile="/tmp/bisosPasswdFile"
+
+    echo ${password} > "${passwdFile}"
+    
+    if [ ! -f "${passwdFile}" ] ; then
+	EH_problem "Missing passwdFile"
+	lpReturn 101
+    fi
+    
     lpDo FN_dirCreatePathIfNotThere ${HOME}/tmp
 
     if [ -d "${HOME}/tmp/tmp-site" ] ; then
@@ -202,6 +206,8 @@ _EOF_
     local siteBootstrapDir="/bxo/r3/iso/pis_defaultSite/bootstrap"
     
     lpDo sshpass -f "${passwdFile}" scp -o StrictHostKeyChecking=no -r ${id}@${registrar}:${siteBootstrapDir} ${HOME}/tmp/tmp-site
+
+    lpDo rm "${passwdFile}"
 
     lpReturn
 }
