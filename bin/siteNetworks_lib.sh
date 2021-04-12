@@ -139,7 +139,6 @@ _EOF_
    local netName="$1"
 
    local networksBase=$( networksBaseObtain )
-
    EH_assert [ ! -z "${networksBase}" ]
 
    local netBase=${networksBase}/${netName}/net.fps  
@@ -207,6 +206,54 @@ _EOF_
     local ipAddr_privA=$( fileParamManage.py -v 30 -i fileParamRead  ${containerBxoIdHome}/var/sysCharDeployInfo ipAddr_privA )
 
     echo ${ipAddr_privA}
+}
+
+
+function vis_assignNextAddr {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** If generic, one way, if not anotherway
+_EOF_
+		       }
+    EH_assert [[ $# -eq 2 ]]
+
+    local netName=$1
+    local addrType=$2    # generic/assign/auto
+
+    local networksBase=$( networksBaseObtain )
+    EH_assert [ ! -z "${networksBase}" ]
+
+    local netBase=${networksBase}/${netName}/addrs/${addrType}
+    EH_assert [ -d "${netBase}" ]
+
+    local minAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} minAddr.fp )
+    local maxAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} maxAddr.fp )
+
+    local assignedBase="${netBase}/assigned"
+
+    local nextAddr=""
+    
+    local assignmentCandidate=""
+    local i=0
+    for (( i=${minAddr}; i<=${maxAddr}; i++ )) ; do
+	assignmentCandidate=${assignedBase}/$i
+	if [ -d "${assignmentCandidate}" ] ; then
+	    doNothing
+	else
+	    lpDo mkdir -p "${assignmentCandidate}"
+	    nextAddr="192.168.0.$i"
+	    break
+	fi
+    done
+
+    if (( i > ${maxAddr} )) ; then
+	EH_problem "All available Addrs Have Already Been Assigned"
+	nextAddr=""
+    fi
+
+    echo ${nextAddr}
+    
+    lpReturn
 }
 
 

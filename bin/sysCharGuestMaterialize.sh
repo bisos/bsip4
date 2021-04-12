@@ -97,6 +97,8 @@ _CommentEnd_
 
 . ${opBinBase}/sysChar_lib.sh
 
+. ${opBinBase}/siteNetworks_lib.sh
+
 . ${opBinBase}/siteRegistrar_lib.sh
 
 
@@ -472,7 +474,7 @@ _EOF_
 		       }
     EH_assert [[ $# -eq 0 ]]
 
-    echo 192.168.0.121
+    vis_assignNextAddr privA generic
 }
 
 function vis_vagStdout_netInterfaces {

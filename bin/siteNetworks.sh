@@ -142,6 +142,9 @@ $( examplesSeperatorChapter "This Network Actions" )
 ${G_myName} -i netSiteFpsPath privA
 $( examplesSeperatorChapter "Obtain IP Addrs" )
 ${G_myName} -i containerIpAddrObtain_privA VSG-ub2004_ generic
+$( examplesSeperatorChapter "Assign IP Addrs" )
+${G_myName} ${extraInfo} -i assignNextAddr privA generic
+${G_myName} ${extraInfo} -i releaseAddr privA generic 121
 _EOF_
 }
 
@@ -149,3 +152,4 @@ _EOF_
 noArgsHook() {
   vis_examples
 }
+
