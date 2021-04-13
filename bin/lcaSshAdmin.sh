@@ -130,6 +130,7 @@ ${G_myName} ${extraInfo} -p localUser=${oneLocalUser} -f -i userKeyUpdate
 ${G_myName} ${extraInfo} -p localUser=${oneLocalUser} -p remoteUser=${oneRemoteUser} -p remoteHost=${oneRemoteHost}  -i authorizedKeysUpdate
 --- AUTHORZED KEYS MANIPULATORS ---
 ${G_myName} -p localUser=${oneLocalUser} -p remoteUser=${oneRemoteUser} -p remoteHost=${oneRemoteHost}  -i logNameIsInAuthKeysFile
+${G_myName} -i knownHostsAddSystem bystar 192.168.0.2        
 --- ACCESS CONTROL ---
 ${G_myName}  -i denyUsersShow
 ${G_myName}  -i denyUsersAdd userid
@@ -544,6 +545,38 @@ function vis_showLog {
   fi
 
 }
+
+function vis_knownHostsAddSystem {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** When \${system}=\$2 has been added to knownHosts, the initial initeractive prompt can be avoided.
+_EOF_
+    }
+    EH_assert [[ $# -eq 2 ]]
+
+    local knownHostsUserName=$1
+    local system=$2
+
+    local userHome=$( FN_absolutePathGet ~${knownHostsUserName} )
+    local knownHostsFile=${userHome}/.ssh/known_hosts
+    local gotVal=0
+
+    lpDo ssh-keygen -F ${system}
+    gotVal=$?
+
+    if [ "${gotVal}" == 0 ] ; then
+	ANT_raw "system=${system} already in ${knownHostsFile}"
+    else
+	ANT_raw "system=${system} is being added to ${knownHostsFile}"
+	
+	# -H=hash -t=type
+	lpDo eval ssh-keyscan -H -t ecdsa-sha2-nistp256 "${system}" \>\> ${knownHostsFile}
+    fi
+    
+    lpReturn
+}
+
+
 
 function vis_sshUserVerify {
 

@@ -108,6 +108,9 @@ ${G_myName} ${extraInfo} -p registrar=TBD -p id=TBD -p password=TBD -i fullUpdat
 $( examplesSeperatorChapter "Temporary Site" )
 ${G_myName} ${extraInfo} -i obtainTmpSite
 ${G_myName} ${extraInfo} -p registrar=TBD -p id=TBD -p password=TBD -i obtainTmpSite
+$( examplesSeperatorChapter "Initial Known Hosts Setup" )
+${G_myName} ${extraInfo} -i knownHostsAddSiteGitServer  # Runs after obtainTmpSite
+${G_myName} ${extraInfo} -p id=bystar -i knownHostsAddSiteGitServer
 _EOF_
 }
 
@@ -132,7 +135,7 @@ _EOF_
 
     typeset extraInfo="-h -v -n showRun"    
 
-    lpDo vis_obtainTmpSite
+    lpDo vis_obtainTmpSite    # registrar, id, password are icm params
 
     if [ ! -d "${HOME}/tmp/tmp-site" ] ; then
 	EH_problem "Missing ${HOME}/tmp/tmp-site"
@@ -162,9 +165,11 @@ _EOF_
 
     lpDo rm -r -f ${HOME}/tmp/tmp-site
 
+    lpDo vis_knownHostsAddSiteGitServer
+
     lpDo /bisos/var/sites/selected/sys/bin/siteBisosGitServer.sh ${extraInfo} -i initialize
 
-    lpDo /bisos/var/sites/selected/sys/bin/siteBisosDefaults.sh ${extraInfo} -i initialize    
+    lpDo /bisos/var/sites/selected/sys/bin/siteBisosDefaults.sh ${extraInfo} -i initialize
     
     lpReturn
 }
@@ -211,6 +216,27 @@ _EOF_
 
     lpReturn
 }
+
+
+function vis_knownHostsAddSiteGitServer {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    if [ -z "${id}" ] ; then
+	id=$( siteRegistrarInfo.sh  -i registrarUserName )
+    fi
+    local siteGitServerInfoBaseDir=$( bisosSiteGitServer.sh -i gitServerInfoBaseDir )
+    
+    local site_gitServerName=$( fileParamManage.py -i fileParamRead ${siteGitServerInfoBaseDir} gitServerName )
+
+    lpDo lcaSshAdmin.sh -i knownHostsAddSystem "${id}" "${site_gitServerName}"
+    
+    lpReturn
+}
+
 
 
 _CommentBegin_
