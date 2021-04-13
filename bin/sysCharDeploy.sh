@@ -288,7 +288,7 @@ _EOF_
 }
 
 
-function vis_inFullAfterSysBasePlatform {    
+function vis_deployWithSysCharDeployInfo {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Activate essential site BxOs. Activate bxoId.
