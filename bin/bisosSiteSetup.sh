@@ -148,6 +148,8 @@ _EOF_
     
     lpDo FN_fileSymlinkUpdate ${HOME}/tmp/tmp-site /bisos/var/sites/selected
 
+    lpDo vis_knownHostsAddSiteGitServer  # Needs to happen before any git clones
+    
     inBaseDirDo /bisos/var/sites/selected/sys/bin siteBisosSetup.sh -h -v -n showRun -i fullUpdate
 
     # Activate "bisos" Real-System BxO
@@ -168,8 +170,6 @@ _EOF_
     lpDo cd ${curDir}
     
     lpDo rm -r -f ${HOME}/tmp/tmp-site
-
-    lpDo vis_knownHostsAddSiteGitServer
 
     lpDo /bisos/var/sites/selected/sys/bin/siteBisosGitServer.sh ${extraInfo} -i initialize
 
