@@ -137,6 +137,8 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
+    bisosCurrentsGet
+
     local containerBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
     
     #local sysCharContainerBxoId=$( sysCharRealize.sh -i sysCharContainerBxoId ${containerBase} )
@@ -163,8 +165,9 @@ ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i recordDeployment      # insid
 $( examplesSeperatorChapter "FULL SYSTEM Deployment" )
 ${G_myName} ${extraInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -i bisosSiteSetup
 ${G_myName} ${extraInfo} -i bisosSiteSetup
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i activate_siteBxoPlus
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i activate_sysBxo
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i capture_siteBxo ${siteBxoId}
+# ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i capture_siteBxo ${siteBxoId}
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -p privA=192.168.0.121 -i capture_identity
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -p privGit=anon -p pubGit=anon -p devMode=someTag -i capture_accessMode
 $( examplesSeperatorChapter "FULL SYSTEM Deployment" )
@@ -186,10 +189,33 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo bisosCurrentsManage.sh
+    lpDo bisosCurrentsManage.sh -i fullUpdate
 
     lpDo bisosSiteSetup.sh -p registrar="${registrar}" -p id="${id}" -p password="${password}" -i fullUpdate
 }
+
+
+function vis_activate_siteBxoPlus {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Create the specified bxoId 
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local siteBxoId="$1"
+
+    lpDo vis_activate_siteBxoPlus "${siteBxoId}"
+
+    # BISOS Selected Site 
+    lpDo siteManage.sh -h -v -n showRun -i siteBisosAdd ${siteBxoId}
+    lpDo siteManage.sh -h -v -n showRun -i siteBisosSelect ${siteBxoId}
+
+    # USG Selected Site
+    lpDo siteManage.sh -h -v -n showRun -i siteUsgAdd ${siteBxoId}
+    lpDo siteManage.sh -h -v -n showRun -i siteUsgSite ${siteBxoId}    
+}
+
 
 
 function vis_activate_sysBxo {    
@@ -218,7 +244,7 @@ _EOF_
 
 
 
-function vis_capture_siteBxo {    
+function vis_capture_siteBxo%% {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -303,12 +329,13 @@ _EOF_
 
     local sysCharDeployInfoBase="${bxoHome}/var/sysCharDeployInfo"
 
-    local siteBoxId=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} siteBxoId )
+    # local siteBoxId=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} siteBxoId )
+    
     local ipAddr_privA=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} ipAddr_privA )
     local ipAddr_pubA=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} ipAddr_pubA )
     local privGitMode=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} privGit )
     local pubGitMode=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} pubGitMode )
-    local devMode=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} devMode )                
+    local devMode=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} devMode )
 
     local extraInfo="-h -v -n showRun"
     
