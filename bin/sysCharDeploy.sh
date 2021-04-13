@@ -213,7 +213,7 @@ _EOF_
 
     # USG Selected Site
     lpDo siteManage.sh -h -v -n showRun -i siteUsgAdd ${siteBxoId}
-    lpDo siteManage.sh -h -v -n showRun -i siteUsgSite ${siteBxoId}    
+    lpDo siteManage.sh -h -v -n showRun -i siteUsgSelect ${siteBxoId}    
 }
 
 
@@ -236,6 +236,8 @@ _EOF_
 
     EH_assert vis_bxoAcctVerify "${bxoId}"
     bxoHome=$( FN_absolutePathGet ~${bxoId} )
+
+    lpDo sysCharRealize.sh -h -v -n showRun -p bxoId="pmp_VSG-ub2004_" -i basesFullCreate
 
     local sysCharDeployInfoBase="${bxoHome}/var/sysCharDeployInfo"
 
