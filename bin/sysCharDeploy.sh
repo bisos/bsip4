@@ -116,7 +116,7 @@ function G_postParamHook {
      	bxoHome=$( FN_absolutePathGet ~${bxoId} )
     fi
     
-    bisosCurrentsGet
+    # bisosCurrentsGet
 }
 
 
@@ -185,6 +185,8 @@ function vis_bisosSiteSetup {
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
+
+    lpDo bisosCurrentsManage.sh
 
     lpDo bisosSiteSetup.sh -p registrar="${registrar}" -p id="${id}" -p password="${password}" -i fullUpdate
 }
