@@ -189,9 +189,9 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo bisosCurrentsManage.sh -i fullUpdate
+    lpDo bisosCurrentsManage.sh ${G_commandOptions} -i fullUpdate
 
-    lpDo bisosSiteSetup.sh -p registrar="${registrar}" -p id="${id}" -p password="${password}" -i fullUpdate
+    lpDo bisosSiteSetup.sh ${G_commandOptions} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -i fullUpdate
 }
 
 

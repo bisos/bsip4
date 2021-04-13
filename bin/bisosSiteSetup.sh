@@ -133,7 +133,9 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    typeset extraInfo="-h -v -n showRun"    
+    typeset extraInfo="-h -v -n showRun"  #   ${G_commandOptions}
+
+    local curDir=$( pwd )
 
     lpDo vis_obtainTmpSite    # registrar, id, password are icm params
 
@@ -163,6 +165,8 @@ _EOF_
 
     lpDo FN_fileSymlinkUpdate $(FN_absolutePathGet ~pis_defaultSite) /bisos/var/sites/selected
 
+    lpDo cd ${curDir}
+    
     lpDo rm -r -f ${HOME}/tmp/tmp-site
 
     lpDo vis_knownHostsAddSiteGitServer
@@ -183,13 +187,13 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if [ -z "${registrar}" ] ; then
-	registrar=$( siteRegistrarInfo.sh  -i registrarHostName )
+	registrar=$( siteRegistrarInfo.sh -i registrarHostName )
     fi
     if [ -z "${id}" ] ; then
-	id=$( siteRegistrarInfo.sh  -i registrarUserName )
+	id=$( siteRegistrarInfo.sh -i registrarUserName )
     fi
     if [ -z "${password}" ] ; then
-	password=$( siteRegistrarInfo.sh  -i registrarUserPassword )
+	password=$( siteRegistrarInfo.sh -i registrarUserPassword )
     fi
 
     local passwdFile="/tmp/bisosPasswdFile"
@@ -226,13 +230,13 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if [ -z "${id}" ] ; then
-	id=$( siteRegistrarInfo.sh  -i registrarUserName )
+	id=$( siteRegistrarInfo.sh -i registrarUserName )
     fi
     local siteGitServerInfoBaseDir=$( bisosSiteGitServer.sh -i gitServerInfoBaseDir )
     
     local site_gitServerName=$( fileParamManage.py -i fileParamRead ${siteGitServerInfoBaseDir} gitServerName )
 
-    lpDo lcaSshAdmin.sh -i knownHostsAddSystem "${id}" "${site_gitServerName}"
+    lpDo lcaSshAdmin.sh ${G_commandOptions} -i knownHostsAddSystem "${id}" "${site_gitServerName}"
     
     lpReturn
 }

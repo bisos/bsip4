@@ -200,6 +200,7 @@ _EOF_
     opDo FN_FileCreateIfNotThere ${bisosCurrentsFileName}
     opDo vis_currentsGetThenShow > ${bisosCurrentsFileName}
     opDo chown bisos:bisos ${bisosCurrentsFileName}
+    opDo chmod g+w ${bisosCurrentsFileName}    
     opDo ls -l ${bisosCurrentsFileName}
 }
 
