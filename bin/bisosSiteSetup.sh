@@ -148,7 +148,7 @@ _EOF_
     
     lpDo FN_fileSymlinkUpdate ${HOME}/tmp/tmp-site /bisos/var/sites/selected
 
-    lpDo vis_knownHostsAddSiteGitServer  # Needs to happen before any git clones
+    lpDo vis_knownHostsAddSiteGitServer  # Needs to happen before any git clones and after var/sites/selected
     
     inBaseDirDo /bisos/var/sites/selected/sys/bin siteBisosSetup.sh -h -v -n showRun -i fullUpdate
 
@@ -169,7 +169,7 @@ _EOF_
 
     lpDo cd ${curDir}
     
-    lpDo rm -r -f ${HOME}/tmp/tmp-site
+    # lpDo rm -r -f ${HOME}/tmp/tmp-site
 
     lpDo /bisos/var/sites/selected/sys/bin/siteBisosGitServer.sh ${extraInfo} -i initialize
 
@@ -212,7 +212,8 @@ _EOF_
 	lpReturn 101
     fi
 
-    local siteBootstrapDir="/bxo/r3/iso/pis_defaultSite/bootstrap"
+    #local siteBootstrapDir="/bxo/r3/iso/pis_defaultSite/bootstrap"  # OBSOLETED
+    local siteBootstrapDir="/bxo/r3/iso/pis_defaultSite"
     
     lpDo sshpass -f "${passwdFile}" scp -o StrictHostKeyChecking=no -r ${id}@${registrar}:${siteBootstrapDir} ${HOME}/tmp/tmp-site
 
@@ -233,8 +234,11 @@ _EOF_
 	id=$( siteRegistrarInfo.sh -i registrarUserName )
     fi
     local siteGitServerInfoBaseDir=$( bisosSiteGitServer.sh -i gitServerInfoBaseDir )
+
+    echo NOTYET fileParamManage.py -i fileParamRead ${siteGitServerInfoBaseDir} gitServerName
     
     local site_gitServerName=$( fileParamManage.py -i fileParamRead ${siteGitServerInfoBaseDir} gitServerName )
+    EH-assert [ ! -z "${site_gitServerName}" ]
 
     lpDo lcaSshAdmin.sh ${G_commandOptions} -i knownHostsAddSystem "${id}" "${site_gitServerName}"
     
