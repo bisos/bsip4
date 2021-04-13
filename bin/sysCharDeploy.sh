@@ -165,7 +165,7 @@ ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i recordDeployment      # insid
 $( examplesSeperatorChapter "FULL SYSTEM Deployment" )
 ${G_myName} ${extraInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -i bisosSiteSetup
 ${G_myName} ${extraInfo} -i bisosSiteSetup
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i activate_siteBxoPlus
+${G_myName} ${extraInfo} -i activate_siteBxoPlusAndSelect "${oneBxoId}"
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i activate_sysBxo
 # ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i capture_siteBxo ${siteBxoId}
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -p privA=192.168.0.121 -i capture_identity
@@ -195,7 +195,7 @@ _EOF_
 }
 
 
-function vis_activate_siteBxoPlus {    
+function vis_activate_siteBxoPlusAndSelect {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Create the specified bxoId 
