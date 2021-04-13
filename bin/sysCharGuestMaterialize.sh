@@ -589,12 +589,12 @@ _OUTER_EOF_
 	     cat   << _EOF_
 ######### PHASE 2: BISOS Identity Set -- With IpAddrs settings
 _EOF_
-	/bisos/core/bsip/bin/sysCharDeploy.sh -h -v -n showRun -p registrar="${registrar}" -p id="${id}" -p password="${password}" -i bisosSiteSetup
-	/bisos/core/bsip/bin/sysCharDeploy.sh -h -v -n showRun -i activate_siteBxoPlusAndSelect "${siteBxoId}"
-	/bisos/core/bsip/bin/sysCharDeploy.sh -h -v -n showRun -p bxoId="${bxoId}" -i activate_sysBxo
-	/bisos/core/bsip/bin/sysCharDeploy.sh -h -v -n showRun -p bxoId="${bxoId}" -p privA="$( vis_getIpAddr_privA )" -i capture_identity
-        /bisos/core/bsip/bin/sysCharDeploy.sh -h -v -n showRun -p bxoId="${bxoId}" -p privGit=anon -p pubGit=anon -p devMode=someTag -i capture_accessMode
-	/bisos/core/bsip/bin/sysCharDeploy.sh -h -v -n showRun -p bxoId="${bxoId}" -i deployWithSysCharDeployInfo
+	sudo -u bystar /bisos/core/bsip/bin/sysCharDeploy.sh -h -v -n showRun -p registrar="${registrar}" -p id="${id}" -p password="${password}" -i bisosSiteSetup
+	sudo -u bystar /bisos/core/bsip/bin/sysCharDeploy.sh -h -v -n showRun -i activate_siteBxoPlusAndSelect "${siteBxoId}"
+	sudo -u bystar /bisos/core/bsip/bin/sysCharDeploy.sh -h -v -n showRun -p bxoId="${bxoId}" -i activate_sysBxo
+	sudo -u bystar /bisos/core/bsip/bin/sysCharDeploy.sh -h -v -n showRun -p bxoId="${bxoId}" -p privA="$( vis_getIpAddr_privA )" -i capture_identity
+        sudo -u bystar /bisos/core/bsip/bin/sysCharDeploy.sh -h -v -n showRun -p bxoId="${bxoId}" -p privGit=anon -p pubGit=anon -p devMode=someTag -i capture_accessMode
+	sudo -u bystar /bisos/core/bsip/bin/sysCharDeploy.sh -h -v -n showRun -p bxoId="${bxoId}" -i deployWithSysCharDeployInfo
 _OUTER_EOF_
     }
 
