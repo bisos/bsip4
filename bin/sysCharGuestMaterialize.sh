@@ -609,6 +609,34 @@ _OUTER_EOF_
 }
 
 
+function vis_vagStdout_platformBinsRun {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** 
+*** NOTYET, pre and post hooks
+_EOF_
+		       }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert vis_bxoAcctVerify "${bxoId}"
+    
+    function platformBinsRun {
+    EH_assert [[ $# -eq 0 ]]
+    cat  << _OUTER_EOF_
+	     cat   << _EOF_
+######### PHASE 3: Run Pre and platformBinsRun and Post
+_EOF_
+	echo "NOTYET."
+_OUTER_EOF_
+    }
+
+    platformBinsRun
+    
+    lpReturn
+}
+
+
 function vis_vagStdout_bisosProvision {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -878,8 +906,10 @@ $( vis_vagStdout_bisosProvision )
 
 $( vis_vagStdout_bisosSetIdAndDeploy )	
 
+$( vis_vagStdout_platformBinsRun )	
+
       cat  << _EOF_
- ######### PHASE 3: Cleanup and Shutdown  -- Running As Root
+ ######### PHASE 4: Cleanup and Shutdown  -- Running As Root
 _EOF_
       
       shutdown now
