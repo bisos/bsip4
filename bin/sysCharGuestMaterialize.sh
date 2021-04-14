@@ -589,6 +589,7 @@ _OUTER_EOF_
 	     cat   << _EOF_
 ######### PHASE 2: BISOS Identity Set -- With IpAddrs settings
 _EOF_
+	sudo ifconfig eth1 down  # Needed for deb11
 	sudo -u bystar /bisos/core/bsip/bin/sysCharDeploy.sh -h -v -n showRun -p registrar="${registrar}" -p id="${id}" -p password="${password}" -i bisosSiteSetup
 	sudo -u bystar /bisos/core/bsip/bin/sysCharDeploy.sh -h -v -n showRun -i activate_siteBxoPlusAndSelect "${siteBxoId}"
 	sudo -u bystar /bisos/core/bsip/bin/sysCharDeploy.sh -h -v -n showRun -p bxoId="${bxoId}" -i activate_sysBxo

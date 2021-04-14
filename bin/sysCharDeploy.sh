@@ -237,7 +237,7 @@ _EOF_
     EH_assert vis_bxoAcctVerify "${bxoId}"
     bxoHome=$( FN_absolutePathGet ~${bxoId} )
 
-    lpDo sysCharRealize.sh -h -v -n showRun -p bxoId="pmp_VSG-ub2004_" -i basesFullCreate
+    lpDo sysCharRealize.sh -h -v -n showRun -p bxoId="${bxoId}" -i basesFullCreate
 
     local sysCharDeployInfoBase="${bxoHome}/var/sysCharDeployInfo"
 
