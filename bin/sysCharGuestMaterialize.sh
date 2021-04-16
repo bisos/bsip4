@@ -595,6 +595,7 @@ _EOF_
 	sudo -u bystar /bisos/core/bsip/bin/sysCharDeploy.sh -h -v -n showRun -p bxoId="${bxoId}" -i activate_sysBxo
 	sudo -u bystar /bisos/core/bsip/bin/sysCharDeploy.sh -h -v -n showRun -p bxoId="${bxoId}" -p privA="$( vis_getIpAddr_privA )" -i capture_identity
         sudo -u bystar /bisos/core/bsip/bin/sysCharDeploy.sh -h -v -n showRun -p bxoId="${bxoId}" -p privGit=anon -p pubGit=anon -p devMode=someTag -i capture_accessMode
+        sudo -u bystar /bisos/core/bsip/bin/sysCharDeploy.sh -h -v -n showRun -p bxoId="${bxoId}" -p hostId=NOTYET -i capture_deployInfo
 	sudo -u bystar /bisos/core/bsip/bin/sysCharDeploy.sh -h -v -n showRun -p bxoId="${bxoId}" -i deployWithSysCharDeployInfo
 _OUTER_EOF_
     }
