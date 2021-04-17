@@ -43,6 +43,7 @@ function vis_bisosAcct_bisosName { echo bisos; }
 function vis_bisosAcct_bisosUid { echo 2000; }
 function vis_bisosAcct_bisosGid { vis_bisosGroup_bisosGid; }
 function vis_bisosAcct_bisosHome { echo "/bisos/groupAcct"; }
+function vis_bisosAcct_bisosUmask { echo 0002; }  # on ubuntu default is 0002 and on debian it is 0022
 
 function vis_bisosGroupExamples {
     typeset extraInfo="-h -v -n showRun"
@@ -224,6 +225,11 @@ _EOF_
    else
        opDo vis_bisosGroupAcctAdd
    fi
+
+   #
+   # NOTYET, we should explicitly create the home directory and
+   # setup umask in .profile
+   #
 
    opDo vis_sudoersAddLine "${acctName}" ALL NOPASSWD
 
