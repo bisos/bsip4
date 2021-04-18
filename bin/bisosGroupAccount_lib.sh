@@ -230,6 +230,8 @@ _EOF_
    # NOTYET, we should explicitly create the home directory and
    # setup umask in .profile
    #
+   # NOTYET, unrelated -- the deb cdrom line should be removed for deb 10/11 but not ubuntu
+   #
 
    opDo vis_sudoersAddLine "${acctName}" ALL NOPASSWD
 
