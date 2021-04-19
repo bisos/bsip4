@@ -125,6 +125,25 @@ ${G_myName} ${extraInfo} -i bxoIdsList
 _EOF_
 }
 
+
+function vis_acct_internalProvisionExamples {
+    typeset extraInfo="-h -v -n showRun"
+    #typeset extraInfo=""
+    typeset runInfo="-p ri=lsipusr:passive"
+
+    typeset examplesInfo="${extraInfo} ${runInfo}"
+
+  cat  << _EOF_
+$( examplesSeperatorChapter "acct_ Internal Provisioning Examples" )
+${G_myName} ${extraInfo} -i acct_createHome bisos
+${G_myName} ${extraInfo} -i acct_umaskDotProfileEnsure bisos 0002
+${G_myName} ${extraInfo} -i acct_umaskDotProfileEnsure bystar 0002
+_EOF_
+}
+
+
+
+
 function vis_bisosAcctsProvisionSetup {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -360,37 +379,6 @@ _EOF_
     
 }
 
-
-
-function vis_acct_createHome {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-Create home dir for specified acct -- acctHome is taken from passwd entry.
-_EOF_
-    }
-    EH_assert [[ $# -eq 1 ]]
-
-    local acctName="$1"
-
-    local getentStr=$( getent passwd ${acctName} )
-    
-    if [ -z "${getentStr}" ] ; then
-	EH_problem "Missing acct -- ${acctName}"
-	lpReturn 101
-    fi
-    
-    local getentAcctUid=$( echo ${getentStr} | cut -d : -f 3 )
-    local getentAcctGid=$( echo ${getentStr} | cut -d : -f 4 )
-    local getentAcctHome=$( echo ${getentStr} | cut -d : -f 6 )    
-
-    lpDo sudo mkdir "${getentAcctHome}"
-    lpDo sudo chown ${getentAcctUid}:${getentAcctGid} "${getentAcctHome}"
-
-    # NOTYET, Perhaps we need a feature to tighten this 
-    lpDo sudo chmod g+w "${getentAcctHome}"
-
-    lpReturn
-}
 
 
 function vis_usgAcct_supplementaryGroupsUpdate {

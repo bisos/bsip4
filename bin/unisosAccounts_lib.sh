@@ -648,6 +648,92 @@ _EOF_
 }
 
 
+function vis_acct_createHome {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Create home dir for specified acct -- acctHome is taken from passwd entry.
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local acctName="$1"
+
+    local getentStr=$( getent passwd ${acctName} )
+    
+    if [ -z "${getentStr}" ] ; then
+	EH_problem "Missing acct -- ${acctName}"
+	lpReturn 101
+    fi
+    
+    local getentAcctUid=$( echo ${getentStr} | cut -d : -f 3 )
+    local getentAcctGid=$( echo ${getentStr} | cut -d : -f 4 )
+    local getentAcctHome=$( echo ${getentStr} | cut -d : -f 6 )    
+
+    lpDo sudo mkdir "${getentAcctHome}"
+    lpDo sudo chown ${getentAcctUid}:${getentAcctGid} "${getentAcctHome}"
+
+    # NOTYET, Perhaps we need a feature to tighten this 
+    lpDo sudo chmod g+w "${getentAcctHome}"
+
+    lpReturn
+}
+
+
+function vis_acct_umaskDotProfileEnsure {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Ensure that for umask is properly set in ~\${acctName}/.profile. Create .profile if needed.
+_EOF_
+    }
+    EH_assert [[ $# -eq 2 ]]
+
+    local acctName="$1"
+    local umaskValue="$2"
+
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;        
+
+    local getentStr=$( getent passwd ${acctName} )
+    
+    if [ -z "${getentStr}" ] ; then
+	EH_problem "Missing acct -- ${acctName}"
+	lpReturn 101
+    fi
+
+    local getentAcctUid=$( echo ${getentStr} | cut -d : -f 3 )
+    local getentAcctGid=$( echo ${getentStr} | cut -d : -f 4 )
+    local getentAcctHome=$( echo ${getentStr} | cut -d : -f 6 )    
+
+    EH_assert [ -d "${getentAcctHome}" ]
+
+    local dotProfilePath="${getentAcctHome}/.profile"
+
+    local effectiveUmask=$(umask)
+    local filePermsOfUmaskValue=$( umask -S ${umaskValue} | sed -e s/x//g -e s/=/+/g )
+    
+    umask ${effectiveUmask}
+
+    if [ ! -e "${dotProfilePath}" ] ; then
+	lpDo eval cat  << _EOF_  \> "${dotProfilePath}"
+#
+umask ${umaskValue}
+_EOF_
+	lpDo chown ${getentAcctUid}:${getentAcctGid} "${dotProfilePath}"
+	lpDo chmod ${filePermsOfUmaskValue} "${dotProfilePath}"
+    else
+	if grep "umask ${umaskValue}" "${dotProfilePath}" ; then
+	    ANT_raw "umask is already properly set"
+	else
+	    lpDo eval cat  << _EOF_  \>\> "${dotProfilePath}"
+#
+umask ${umaskValue}
+_EOF_
+	fi
+    fi
+
+    lpReturn
+}
+
+
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*
 _CommentEnd_

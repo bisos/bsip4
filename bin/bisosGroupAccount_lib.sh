@@ -226,12 +226,9 @@ _EOF_
        opDo vis_bisosGroupAcctAdd
    fi
 
-   #
-   # NOTYET, we should explicitly create the home directory and
-   # setup umask in .profile
-   #
-   # NOTYET, unrelated -- the deb cdrom line should be removed for deb 10/11 but not ubuntu
-   #
+   lpDo vis_acct_createHome "${acctName}"   #  is in ./unisosAccounts_lib.sh
+
+   lpDo vis_acct_umaskDotProfileEnsure "${acctName}" 0002  #  is in ./unisosAccounts_lib.sh
 
    opDo vis_sudoersAddLine "${acctName}" ALL NOPASSWD
 
