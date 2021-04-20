@@ -120,7 +120,7 @@ function vis_ftoProcExamples {
 
     cat  << _EOF_
 $( examplesSeperatorChapter "Initial Base Update" )
-find . -type f -print | egrep 'ftoProc.sh$' | xargs bx-dblock -h -v -n showRun -i dblockUpdateFiles
+find . -type f -print | egrep 'ftoProc.sh$' | xargs bx-dblock -h -v -n showRun -i dblockUpdateFiles   # PRIMARY
 ftoProc.sh ${extraInfo} -i ftoWalkRunCmnd startOrgPanel.sh -h -v -n showRun -i bleePanelBaseUpdate .
 $( examplesSeperatorChapter "Initial Under Files Update" )
 ftoProc.sh -v -n showRun -i updateUnderFilesTo  /libre/ByStar/InitialTemplates/update/fto/start/commonProc/anyFtoItem/ftoProcNode.sh ftoProc.sh
@@ -129,7 +129,7 @@ $( examplesSeperatorChapter "ftoWalks of ${G_myName}" )
 ftoProc.sh
 ftoProc.sh -v -n showRun -i ftoWalkRunCmnd ${G_myName} ${extraInfo} -i fullUpdate
 ftoProc.sh -v -n showRun -i ftoWalkRunCmnd ${G_myName} ${extraInfo} -i refresh
-ftoProc.sh -v -n showRun -i ftoWalkRunCmnd ${G_myName} ${extraInfo} -i renew
+ftoProc.sh -v -n showRun -i ftoWalkRunCmnd ${G_myName} ${extraInfo} -i renew   # PRIMARY
 ftoProc.sh -v -n showRun -i ftoWalkRunCmnd ${G_myName} ${extraInfo} -i clean
 ftoProc.sh -v -n showRun -i ftoWalkRunCmnd ${G_myName} ${extraInfo} -i bleeFilterCommonActions
 _EOF_

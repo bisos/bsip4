@@ -111,13 +111,15 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Site And BxO Information" )
 ls -ld ${ppBoxesBase}/*
-$( examplesSeperatorChapter "This Box Actions" )
-${G_myName} -i thisBoxNuFindNu
+$( examplesSeperatorChapter "This Box Addition Actions" )
+${G_myName} ${extraInfo} -i thisBoxAdd   # =Primary Usage=
+${G_myName} ${extraInfo} -i thisBoxNuUpdateAt "$(vis_thisBoxFindNu)"
+${G_myName} ${extraInfo} -i thisBoxNuGitUpdateAt "$(vis_thisBoxFindNu)"  # NOTYET
+$( examplesSeperatorChapter "This Box Information" )
+${G_myName} -i thisBoxFindNu
 ${G_myName} ${extraInfo} -i thisBoxFindNu
 ${G_myName} ${extraInfo} -i thisBoxFindId
 ${G_myName} ${extraInfo} -i thisBoxFindBase
-${G_myName} ${extraInfo} -i thisBoxAdd   # =Primary Usage=
-${G_myName} ${extraInfo} -i thisBoxNuUpdateAt "$(vis_thisBoxFindNu)"
 $( examplesSeperatorChapter "Uniue Box Id" )
 ${G_myName} ${extraInfo} -i thisBoxUUID
 ${G_myName} ${extraInfo} -i givenUniqueBoxIdFindBoxNuBase "$(vis_thisBoxUUID)"
