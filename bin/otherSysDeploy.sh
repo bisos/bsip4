@@ -191,43 +191,13 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
+    EH_assert [ ! -z "${remoteName}" ]
     EH_assert [ ! -z "${bxoId}" ]
 
-    if vis_bxoAcctVerify "${bxoId}" ; then
-	ANT_cooked "WARNING: Did not expect ${bxoId} to exist -- Activation skipped"
-    else
-	lpDo bxoManage.sh -p bxoId="${bxoId}" -i fullConstruct
-    fi
-
-    EH_assert vis_bxoAcctVerify "${bxoId}"
-    bxoHome=$( FN_absolutePathGet ~${bxoId} )
-
-    lpDo sysCharRealize.sh -h -v -n showRun -p bxoId="${bxoId}" -i basesFullCreate
-
-    local sysCharDeployInfoBase="${bxoHome}/var/sysCharDeployInfo"
-
-    lpDo FN_dirCreatePathIfNotThere ${sysCharDeployInfoBase}
+    lpDo sshpass -p intra ssh bystar@"${remoteName}" sysCharDeploy.sh echo notyet bash command comes here
+    
 }
 
-
-
-function vis_capture_siteBxo%% {    
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 1 ]]
-
-    local siteBxoId=$1
-
-    EH_assert [ ! -z "${bxoId}" ]
-    EH_assert vis_bxoAcctVerify "${bxoId}"
-    bxoHome=$( FN_absolutePathGet ~${bxoId} )
-
-    local sysCharDeployInfoBase="${bxoHome}/var/sysCharDeployInfo"
-
-    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} siteBxoId "${siteBxoId}"
-}
 
 
 function vis_capture_identity {    

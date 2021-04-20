@@ -74,6 +74,12 @@ _CommentEnd_
 
 . ${opBinBase}/bisosCurrents_lib.sh
 
+. ${opBinBase}/site_lib.sh
+
+. ${opBinBase}/sysChar_lib.sh
+
+. ${opBinBase}/siteRegistrar_lib.sh
+
 
 # PRE parameters
 typeset -t registrar=""
@@ -102,6 +108,10 @@ function vis_examples {
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
+$( examplesSeperatorChapter "FULL SYSTEM Deployment" )
+${G_myName} ${extraInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -i bisosSiteSetup
+${G_myName} ${extraInfo} -i bisosSiteSetup
+${G_myName} ${extraInfo} -i activate_siteBxoPlusAndSelect "${oneBxoId}"
 $( examplesSeperatorChapter "Full Operations" )
 ${G_myName} ${extraInfo} -i fullUpdate
 ${G_myName} ${extraInfo} -p registrar=TBD -p id=TBD -p password=TBD -i fullUpdate
@@ -177,6 +187,43 @@ _EOF_
     
     lpReturn
 }
+
+
+function vis_bisosSiteSetup {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** 
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo bisosCurrentsManage.sh ${G_commandOptions} -i fullUpdate
+
+    lpDo bisosSiteSetup.sh ${G_commandOptions} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -i fullUpdate
+}
+
+
+function vis_activate_siteBxoPlusAndSelect {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Create the specified bxoId 
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local siteBxoId="$1"
+
+    lpDo vis_activate_siteBxoPlus "${siteBxoId}"
+
+    # BISOS Selected Site 
+    lpDo siteManage.sh -h -v -n showRun -i siteBisosAdd ${siteBxoId}
+    lpDo siteManage.sh -h -v -n showRun -i siteBisosSelect ${siteBxoId}
+
+    # USG Selected Site
+    lpDo siteManage.sh -h -v -n showRun -i siteUsgAdd ${siteBxoId}
+    lpDo siteManage.sh -h -v -n showRun -i siteUsgSelect ${siteBxoId}    
+}
+
 
 
 function vis_obtainTmpSite {
