@@ -108,13 +108,13 @@ function vis_examples {
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
-$( examplesSeperatorChapter "FULL SYSTEM Deployment" )
-${G_myName} ${extraInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -i bisosSiteSetup
-${G_myName} ${extraInfo} -i bisosSiteSetup
+$( examplesSeperatorChapter "FULL Site Deployment" )
+${G_myName} ${extraInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -i fullUpdate  # currents + siteFullUpdate
+${G_myName} ${extraInfo} -i fullUpdate   # currents + siteFullUpdate
 ${G_myName} ${extraInfo} -i activate_siteBxoPlusAndSelect "${oneBxoId}"
 $( examplesSeperatorChapter "Full Operations" )
-${G_myName} ${extraInfo} -i fullUpdate
-${G_myName} ${extraInfo} -p registrar=TBD -p id=TBD -p password=TBD -i fullUpdate
+${G_myName} ${extraInfo} -i siteFullUpdate
+${G_myName} ${extraInfo} -p registrar=TBD -p id=TBD -p password=TBD -i siteFullUpdate
 $( examplesSeperatorChapter "Temporary Site" )
 ${G_myName} ${extraInfo} -i obtainTmpSite
 ${G_myName} ${extraInfo} -p registrar=TBD -p id=TBD -p password=TBD -i obtainTmpSite
@@ -129,7 +129,21 @@ noArgsHook() {
 }
 
 
-function vis_fullUpdate {
+function vis_fullUpdate {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** 
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo bisosCurrentsManage.sh ${G_commandOptions} -i fullUpdate
+
+    lpDo bisosSiteSetup.sh ${G_commandOptions} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -i siteFullUpdate
+}
+
+
+function vis_siteFullUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 First ${HOME}/tmp/tmp-site/bin is obtained.
@@ -188,19 +202,6 @@ _EOF_
     lpReturn
 }
 
-
-function vis_bisosSiteSetup {    
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** 
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    lpDo bisosCurrentsManage.sh ${G_commandOptions} -i fullUpdate
-
-    lpDo bisosSiteSetup.sh ${G_commandOptions} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -i fullUpdate
-}
 
 
 function vis_activate_siteBxoPlusAndSelect {    

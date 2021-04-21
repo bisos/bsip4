@@ -1,10 +1,10 @@
 #!/bin/bash
 
 ####+BEGIN: bx:bsip:bash/libLoadOnce :libName "auto"
-if [ -z "${bxeProvision_lib:-}" ] ; then
-    bxoLib="LOADED" ; TM_trace 7 "bxeProvision_lib :: Loading Library -- /bisos/bsip/bin/bxeProvision_lib.sh"
+if [ -z "${siteNetworks_lib:-}" ] ; then
+    siteNetworks_lib="LOADED" ; TM_trace 7 "siteNetworks_lib :: Loading Library -- /bisos/bsip/bin/siteNetworks_lib.sh"
 else
-    TM_trace 7 "bxeProvision_lib :: Prviously Loaded -- Skipping /bisos/bsip/bin/bxeProvision_lib.sh" ; return
+    TM_trace 7 "siteNetworks_lib :: Prviously Loaded -- Skipping /bisos/bsip/bin/siteNetworks_lib.sh" ; return
 fi
 ####+END:
 

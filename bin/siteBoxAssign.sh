@@ -112,6 +112,8 @@ $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Site And BxO Information" )
 ls -ld ${ppBoxesBase}/*
 $( examplesSeperatorChapter "This Box Addition Actions" )
+${G_myName} ${extraInfo} -i thisBoxAddAndPush   # =Primary Usage=
+${G_myName} ${extraInfo} -i thisBoxPush
 ${G_myName} ${extraInfo} -i thisBoxAdd   # =Primary Usage=
 ${G_myName} ${extraInfo} -i thisBoxNuUpdateAt "$(vis_thisBoxFindNu)"
 ${G_myName} ${extraInfo} -i thisBoxNuGitUpdateAt "$(vis_thisBoxFindNu)"  # NOTYET
@@ -385,4 +387,31 @@ _EOF_
        ANT_raw "This Box Already Exists As ${boxNuBase} -- Creation/Update Skipped"
    fi
    echo ${nextBoxNu}
+}
+
+
+function vis_thisBoxPush {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+
+   EH_assert [[ $# -eq 0 ]]
+
+   local ppBoxesBase=$( ppBoxesBaseObtain )
+
+   EH_assert [ ! -z "${ppBoxesBase}" ]
+
+   lpDo eval echo ${ppBoxesBase} \| bx-gitRepos -i addCommitPush modifieds
+}
+
+function vis_thisBoxAddAndPush {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 0 ]]
+
+   lpDo vis_thisBoxAdd
+   lpDo vis_thisBoxPush   
 }

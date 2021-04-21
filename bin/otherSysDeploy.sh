@@ -151,140 +151,148 @@ function vis_examples {
 
     local registrar=$( vis_registrarHostName )
     local id=$( vis_registrarUserName )
-    local password=$( vis_registrarUserPassword )        
+    local password=$( vis_registrarUserPassword )
+
+    local oneOtherName="192.168.0.38"
     
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
-$( examplesSeperatorChapter "Ssh Based Cusomizations -- Bx Based (not vagrant based)" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i postCustomize  # on host - bx-ssh
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i secureSeal     # on host - bx-ssh
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i recordDeployment      # inside of parent bxo
-$( examplesSeperatorChapter "FULL SYSTEM Deployment" )
-${G_myName} ${extraInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -i bisosSiteSetup
-${G_myName} ${extraInfo} -i bisosSiteSetup
-${G_myName} ${extraInfo} -i activate_siteBxoPlusAndSelect "${oneBxoId}"
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i activate_sysBxo
-# ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i capture_siteBxo ${siteBxoId}
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -p privA=192.168.0.121 -i capture_identity
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -p privGit=anon -p pubGit=anon -p devMode=someTag -i capture_accessMode
-$( examplesSeperatorChapter "FULL SYSTEM Deployment" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i deployWithSysCharDeployInfo
-$( examplesSeperatorSection "Update" )
-${G_myName} ${extraInfo} -i activate_siteBxoPlus ${siteBxoId}
-${G_myName} ${extraInfo} -i identityUpdate
-$( examplesSeperatorChapter "Overview Report And Summary" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i sysCharReport
+$( examplesSeperatorChapter "Distro Actions -- Ssh In Other" )
+${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i distro_aptSourcesPrep
+${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i distro_provisionBisos_sysBasePlatform
+$( examplesSeperatorChapter "bisosBasePlatform Actions -- Ssh In Other" )
+${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i bisosBasePlatform_siteSetup
+$( examplesSeperatorChapter "siteBasePlatform Actions -- Ssh In Other" )
+${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i siteBasePlatform_newBoxAssign
+${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i siteBasePlatform_deployBox
+${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i siteBasePlatform_deployWithSysChar
+$( examplesSeperatorChapter "sysCharedPlatform Actions -- Ssh In Other" )
+${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i sysCharedPlatform_actuateServices
+${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i sysCharedPlatform_sealActuatedServices
 _EOF_
 }
 
 
 
-
-function vis_activate_sysBxo {    
+function vis_distro_aptSourcesPrep {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Create the specified bxoId 
+** NOTYET, different for debian and ubuntu
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert [ ! -z "${remoteName}" ]
-    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${otherName}" ]
 
-    lpDo sshpass -p intra ssh bystar@"${remoteName}" sysCharDeploy.sh echo notyet bash command comes here
-    
+    lpDo sshpass -p intra ssh intra@"${otherName}" sudo cp -p /etc/apt/sources.list /etc/apt/sources.list.orig
+    lpDo sshpass -p intra ssh intra@"${otherName}" grep -v '^deb cdrom:' /etc/apt/sources.list \> /tmp/sources.list
+    lpDo sshpass -p intra ssh intra@"${otherName}" sudo mv /tmp/sources.list /etc/apt/sources.list
+    lpDo sshpass -p intra ssh intra@"${otherName}" sudo apt-get update
+}
+
+function vis_distro_provisionBisos_sysBasePlatform {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Applies identically to all distros.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert [ ! -z "${otherName}" ]
+
+    lpDo sshpass -p intra ssh intra@"${otherName}" sudo apt-get install -y python3-pip
+    lpDo sshpass -p intra ssh intra@"${otherName}" sudo pip3 install --upgrade bisos.provision
+    lpDo sshpass -p intra ssh intra@"${otherName}" sudo provisionBisos.sh -h -v -n showRun -i sysBasePlatform
 }
 
 
-
-function vis_capture_identity {    
+function vis_bisosBasePlatform_siteSetup {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+** 
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
+    EH_assert [ ! -z "${otherName}" ]
     EH_assert [ ! -z "${bxoId}" ]
-    EH_assert vis_bxoAcctVerify "${bxoId}"
-    bxoHome=$( FN_absolutePathGet ~${bxoId} )
 
-    local sysCharDeployInfoBase="${bxoHome}/var/sysCharDeployInfo"
+    lpDo sshpass -p intra ssh bystar@"${otherName}" bisosSiteSetup.sh NOTYET
+}
 
-    lpDo FN_dirCreatePathIfNotThere ${sysCharDeployInfoBase}
-    
-    if [ ! -z "${privA}" ] ; then
-	lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} ipAddr_privA "${privA}"
-    elif [ ! -z "${pubA}" ] ; then
-	lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} ipAddr_pubA "${pubA}"
-    else
-	doNothing
-    fi
+function vis_siteBasePlatform_newBoxAssign {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** 
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert [ ! -z "${otherName}" ]
+
+    lpDo sshpass -p intra ssh bystar@"${otherName}" bisosSiteSetup.sh NOTYET
+}
+
+function vis_siteBasePlatform_deployBox {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** 
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert [ ! -z "${otherName}" ]
+    EH_assert [ ! -z "${bxoId}" ]
+
+    lpDo sshpass -p intra ssh bystar@"${otherName}" bisosSiteSetup.sh NOTYET
 }
 
 
-
-function vis_capture_accessMode {    
+function vis_siteBasePlatform_deployWithSysChar {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+** 
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
+    EH_assert [ ! -z "${otherName}" ]
     EH_assert [ ! -z "${bxoId}" ]
-    EH_assert vis_bxoAcctVerify "${bxoId}"
-    bxoHome=$( FN_absolutePathGet ~${bxoId} )
 
-    local sysCharDeployInfoBase="${bxoHome}/var/sysCharDeployInfo"
-
-    if [ ! -z "${privGit}" ] ; then
-	lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} privGit "${privGit}"
-    fi
-    if [ ! -z "${pubGit}" ] ; then
-	lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} pubGit "${pubGit}"
-    fi
-    if [ ! -z "${devMode}" ] ; then
-	lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} devMode "${devMode}"
-    fi
+    lpDo sshpass -p intra ssh bystar@"${otherName}" bisosSiteSetup.sh NOTYET
 }
 
 
-function vis_deployWithSysCharDeployInfo {    
+function vis_sysCharedPlatform_actuateServices {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-Activate essential site BxOs. Activate bxoId.
-Set identity. Set Mode (dev vs prod). deploy svcs.
+** 
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
+    EH_assert [ ! -z "${otherName}" ]
     EH_assert [ ! -z "${bxoId}" ]
-    EH_assert vis_bxoAcctVerify "${bxoId}"
-    bxoHome=$( FN_absolutePathGet ~${bxoId} )
 
-    local sysCharDeployInfoBase="${bxoHome}/var/sysCharDeployInfo"
+    lpDo sshpass -p intra ssh bystar@"${otherName}" bisosSiteSetup.sh NOTYET
+}
 
-    # local siteBoxId=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} siteBxoId )
-    
-    local ipAddr_privA=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} ipAddr_privA )
-    local ipAddr_pubA=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} ipAddr_pubA )
-    local privGitMode=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} privGit )
-    local pubGitMode=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} pubGitMode )
-    local devMode=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} devMode )
 
-    local extraInfo="-h -v -n showRun"
-    
-    # ---- IDENTITY
-    lpDo sysCharIdentity.sh ${extraInfo} -p bxoId="${bxoId}" -i motdSet
-    lpDo sysCharIdentity.sh ${extraInfo} -p bxoId="${bxoId}" -i nodename
-  
-    #NETWORK
-    lpDo sysCharIdentity.sh ${extraInfo} -p bxoId="${bxoId}" -i netL3Interface
-    lpDo sysCharIdentity.sh ${extraInfo} -p bxoId="${bxoId}" -i netEtcHosts
+function vis_sysCharedPlatform_sealActuatedServices {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** 
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
 
-    lpReturn
+    EH_assert [ ! -z "${otherName}" ]
+    EH_assert [ ! -z "${bxoId}" ]
+
+    lpDo sshpass -p intra ssh bystar@"${otherName}" bisosSiteSetup.sh NOTYET
 }
 
 

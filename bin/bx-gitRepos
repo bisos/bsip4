@@ -496,7 +496,7 @@ _EOF_
     local here=$(pwd)
     local gitOutput=""
 
-    if gitStatusReport ; then
+    if gitStatusReport loc rem ; then
 	echo "Nothing to add-commit-push"
 	lpReturn
     fi
