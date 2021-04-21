@@ -113,8 +113,9 @@ $( examplesSeperatorChapter "Site And BxO Information" )
 ls -ld ${ppBoxesBase}/*
 $( examplesSeperatorChapter "This Box Addition Actions" )
 ${G_myName} ${extraInfo} -i thisBoxAddAndPush   # =Primary Usage=
-${G_myName} ${extraInfo} -i thisBoxPush
 ${G_myName} ${extraInfo} -i thisBoxAdd   # =Primary Usage=
+${G_myName} ${extraInfo} -i thisBoxPush
+${G_myName} ${extraInfo} -i boxesGitPull
 ${G_myName} ${extraInfo} -i thisBoxNuUpdateAt "$(vis_thisBoxFindNu)"
 ${G_myName} ${extraInfo} -i thisBoxNuGitUpdateAt "$(vis_thisBoxFindNu)"  # NOTYET
 $( examplesSeperatorChapter "This Box Information" )
@@ -414,4 +415,19 @@ _EOF_
 
    lpDo vis_thisBoxAdd
    lpDo vis_thisBoxPush   
+}
+
+function vis_boxesGitPull {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+
+   EH_assert [[ $# -eq 0 ]]
+
+   local ppBoxesBase=$( ppBoxesBaseObtain )
+
+   EH_assert [ ! -z "${ppBoxesBase}" ]
+
+   lpDo eval echo ${ppBoxesBase} \| bx-gitRepos -i gitRemPull
 }

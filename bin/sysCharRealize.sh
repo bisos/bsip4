@@ -168,10 +168,13 @@ $( examplesSeperatorChapter "Container Assignment" )
 siteContainerAssign.sh   # Prerequisite for sysCharRealize.sh
 siteContainerRepo.sh     # Prerequisite for sysCharRealize.sh
 $( examplesSeperatorChapter "SysChar Container Realization" )
-${G_myName} ${extraInfo} -i sysCharContainerBxoId ${containerBase}
-${G_myName} ${extraInfo} -i sysCharContainerBxoId ${containersBase}/assign/Virt/Auto/Generic/deb10
+${G_myName} ${extraInfo} -i sysCharContainerBxoId ${containerBase} # NOTYET,  missing vis_sysCharContainerBxoId
+${G_myName} ${extraInfo} -i sysCharContainerBxoId ${containersBase}/assign/Virt/Auto/Generic/deb10 # NOTYET,  missing vis_sysCharContainerBxoId
 ${G_myName} ${extraInfo} -i sysCharContainerRealize ${oneBxoRepoScope} ${containerBase}
 ${G_myName} ${extraInfo} -i sysCharContainerRealize ${oneBxoRepoScope} ${containersBase}/assign/Virt/Auto/Generic/deb10
+$( examplesSeperatorChapter "Site Assign SysChar Container Realization" )
+${G_myName} ${extraInfo} -i sysCharContainerBxoId ${containerBase}
+${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerBoxAssignAndSysCharRealize  # NOTYET -- PRIMARY COMMAND
 $( examplesSeperatorChapter "Generic SysChar Container Realization" )
 siteContainerRepo.sh -i containersGenericsAssignList
 ${G_myName} ${extraInfo} -i sysCharContainersGenericsRealize examples basePrep
