@@ -102,6 +102,11 @@ _CommentEnd_
 typeset -t bxoId=""
 typeset -t containerAssignBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
 
+typeset -t model=""     # one of [HPV]
+typeset -t abode=""     # one of [MAPIS]
+typeset -t function=""  # one of [LASD]
+
+
 function G_postParamHook {
     bxoIdPrepValidate    
 
@@ -168,13 +173,13 @@ $( examplesSeperatorChapter "Container Assignment" )
 siteContainerAssign.sh   # Prerequisite for sysCharRealize.sh
 siteContainerRepo.sh     # Prerequisite for sysCharRealize.sh
 $( examplesSeperatorChapter "SysChar Container Realization" )
-${G_myName} ${extraInfo} -i sysCharContainerBxoId ${containerBase} # NOTYET,  missing vis_sysCharContainerBxoId
-${G_myName} ${extraInfo} -i sysCharContainerBxoId ${containersBase}/assign/Virt/Auto/Generic/deb10 # NOTYET,  missing vis_sysCharContainerBxoId
 ${G_myName} ${extraInfo} -i sysCharContainerRealize ${oneBxoRepoScope} ${containerBase}
 ${G_myName} ${extraInfo} -i sysCharContainerRealize ${oneBxoRepoScope} ${containersBase}/assign/Virt/Auto/Generic/deb10
-$( examplesSeperatorChapter "Site Assign SysChar Container Realization" )
-${G_myName} ${extraInfo} -i sysCharContainerBxoId ${containerBase}
-${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerBoxAssignAndSysCharRealize  # NOTYET -- PRIMARY COMMAND
+$( examplesSeperatorChapter "Site Assign SysChar And Container Realization" )
+${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerBoxAssignAndSysCharRealize  # FULL ACTION -- PRIMARY COMMAND
+$( examplesSeperatorChapter "SysChar Container BxoIdName -- Info" )
+${G_myName} ${extraInfo} -i sysCharContainerBxoIdName ${containerBase}
+${G_myName} ${extraInfo} -i sysCharContainerBxoIdName ${containersBase}/assign/Virt/Auto/Generic/deb10
 $( examplesSeperatorChapter "Generic SysChar Container Realization" )
 siteContainerRepo.sh -i containersGenericsAssignList
 ${G_myName} ${extraInfo} -i sysCharContainersGenericsRealize examples basePrep
@@ -204,6 +209,24 @@ ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i sysCharReport
 _EOF_
 }
 
+
+function vis_containerBoxAssignAndSysCharRealize {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -lt 2 ]]
+
+   EH_assert [ ! -z "${model}" ]   
+   EH_assert [ ! -z "${abode}" ]
+   EH_assert [ ! -z "${function}" ]
+
+   lpDo siteContainerAssign.sh ${G_commandOptions} -i containerBoxAssign
+   local containerBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
+
+   lpDo siteContainerRepo.sh -h -v -n showRun -i containerRepoUpdate full ${containerBase}
+   lpDo vis_sysCharContainerRealize full ${containerBase}
+}	
 
 
 function vis_sysCharContainersGenericsRealize {

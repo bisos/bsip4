@@ -96,7 +96,10 @@ _docStringEnd_
 	usgHome="$1"
     fi
 
-    lpDo FN_dirCreatePathIfNotThere ${usgHome}/bisos/sites
+    if [ ! -d "${usgHome}/bisos/sites" ] ; then
+	# to avoid verbose messages and for efficiency
+	lpDo FN_dirCreatePathIfNotThere ${usgHome}/bisos/sites
+    fi
      
     echo ${usgHome}/bisos/sites
 }

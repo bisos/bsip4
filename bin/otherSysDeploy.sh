@@ -108,6 +108,10 @@ typeset -t registrar=""
 typeset -t id=""
 typeset -t password=""
 
+typeset -t model=""     # one of [HPV]
+typeset -t abode=""     # one of [MAPIS]
+typeset -t function=""  # one of [LASD]
+
 
 function G_postParamHook {
     bxoIdPrepValidate    
@@ -173,6 +177,7 @@ ${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i bisosBasePlatform_sit
 $( examplesSeperatorChapter "siteBasePlatform Actions -- Ssh In Other" )
 ${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i siteBasePlatform_fullUpdate
 ${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i siteBasePlatform_newBoxAssign
+${G_myName} ${extraInfo} -p otherName="${oneOtherName}"  -p model=Host -p abode=Shield -p function=Server -i siteBasePlatform_containerBoxAssignAndSysCharRealize
 ${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i siteBasePlatform_deployBox
 ${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i siteBasePlatform_deployWithSysChar
 $( examplesSeperatorChapter "sysCharedPlatform Actions -- Ssh In Other" )
@@ -323,6 +328,24 @@ _EOF_
     lpDo siteBoxAssign.sh -i boxesGitPull
 }
 
+function vis_siteBasePlatform_containerBoxAssignAndSysCharRealize {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** NOTYET
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert [ ! -z "${otherName}" ]
+
+    EH_assert [ ! -z "${model}" ]   
+    EH_assert [ ! -z "${abode}" ]
+    EH_assert [ ! -z "${function}" ]
+    
+    lpDo sshpass -p intra ssh bystar@"${otherName}" \
+	 echo $(which sysCharRealize.sh) -p model=${model} -p abode=${abode} -p function=${function} -i containerBoxAssignAndSysCharRealize
+}
+
 function vis_siteBasePlatform_deployBox {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -333,7 +356,7 @@ _EOF_
 
     EH_assert [ ! -z "${otherName}" ]
 
-    lpDo sshpass -p intra ssh bystar@"${otherName}" bisosSiteSetup.sh NOTYET
+    lpDo sshpass -p intra ssh bystar@"${otherName}" echo bisosSiteSetup.sh NOTYET
 }
 
 function vis_siteBasePlatform_deployWithSysChar {    
@@ -374,9 +397,8 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     EH_assert [ ! -z "${otherName}" ]
-    EH_assert [ ! -z "${bxoId}" ]
 
-    lpDo sshpass -p intra ssh bystar@"${otherName}" bisosSiteSetup.sh NOTYET
+    lpDo echo sshpass -p intra ssh bystar@"${otherName}" bisosSiteSetup.sh NOTYET
 }
 
 
@@ -389,9 +411,8 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     EH_assert [ ! -z "${otherName}" ]
-    EH_assert [ ! -z "${bxoId}" ]
 
-    lpDo sshpass -p intra ssh bystar@"${otherName}" bisosSiteSetup.sh NOTYET
+    lpDo echo sshpass -p intra ssh bystar@"${otherName}" bisosSiteSetup.sh NOTYET
 }
 
 
