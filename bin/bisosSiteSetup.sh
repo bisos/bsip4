@@ -105,13 +105,15 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
+    local siteBxoId=$( sysCharRealize.sh -i selectedSiteBxoId )    
+
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "FULL Site Deployment" )
 ${G_myName} ${extraInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -i fullUpdate  # currents + siteFullUpdate
 ${G_myName} ${extraInfo} -i fullUpdate   # currents + siteFullUpdate
-${G_myName} ${extraInfo} -i activate_siteBxoPlusAndSelect "${oneBxoId}"
+${G_myName} ${extraInfo} -i activate_siteBxoPlusAndSelect "${siteBxoId}"
 $( examplesSeperatorChapter "Full Operations" )
 ${G_myName} ${extraInfo} -i siteFullUpdate
 ${G_myName} ${extraInfo} -p registrar=TBD -p id=TBD -p password=TBD -i siteFullUpdate

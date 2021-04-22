@@ -306,6 +306,29 @@ _EOF_
 }
 
 
+function vis_containerBoxSysCharReport {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** For thisBox, report sysCharContainer
+*** It should be improved.
+_EOF_
+		       }
+    EH_assert [[ $# -eq 0 ]]
+
+    local containerBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
+    local sysCharContainerBxoId=$( vis_sysCharContainerBxoIdName ${containerBase} )
+    local selectedSiteBxoId=$( vis_selectedSiteBxoId )
+
+    bxoId=${sysCharContainerBxoId}
+    EH_assert vis_bxoAcctVerify "${bxoId}"
+    bxoHome=$( FN_absolutePathGet ~${bxoId} )
+
+    lpDo vis_sysCharReport
+    
+    lpReturn
+}	
+
+
 function vis_sysCharReport {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -318,12 +341,12 @@ _EOF_
 
     fileParamManage.py -i fileParamDictReadDeep ${bxoHome} | grep -v bxeTree | grep -v bxeDesc
     
-    fileParamManage.py -i fileParamDictReadDeep ${bxoHome}/siteContainersRepo/assign
+    lpDo fileParamManage.py -i fileParamDictReadDeep ${bxoHome}/siteContainersRepo/assign
 
-    fileParamManage.py -i fileParamDictReadDeep ${bxoHome}/siteContainersRepo
+    lpDo fileParamManage.py -i fileParamDictReadDeep ${bxoHome}/siteContainersRepo
 
-    fileParamManage.py -i fileParamDictReadDeep ${bxoHome}/siteContainersRepo/steady/net/networks
-    fileParamManage.py -i fileParamDictReadDeep ${bxoHome}/siteContainersRepo/steady/net/routes        
+    lpDo fileParamManage.py -i fileParamDictReadDeep ${bxoHome}/siteContainersRepo/steady/net/networks
+    lpDo fileParamManage.py -i fileParamDictReadDeep ${bxoHome}/siteContainersRepo/steady/net/routes        
     
     lpReturn
 }	

@@ -219,7 +219,10 @@ do
     esac
 done
 
-G_commandOptions="${G_checkCmndOption} ${G_runModeCmndOption} ${G_verboseCmndOption} ${G_humanCmndOption} ${G_forceModeCmndOption} ${G_paramCmndOption}"
+# Command Preferences
+G_commandPrefs="${G_checkCmndOption} ${G_runModeCmndOption} ${G_verboseCmndOption} ${G_humanCmndOption} ${G_forceModeCmndOption}"
+# 
+G_commandOptions="${G_commandPrefs} ${G_paramCmndOption}"
 #echo "G_commandOptions=${G_commandOptions}"
 
 typeset myOptind=$OPTIND

@@ -206,6 +206,7 @@ $( examplesSeperatorChapter "Bases Create" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i baseCreate_var
 $( examplesSeperatorChapter "Overview Report And Summary" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i sysCharReport
+${G_myName} ${extraInfo} -i containerBoxSysCharReport
 _EOF_
 }
 

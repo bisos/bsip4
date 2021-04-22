@@ -184,6 +184,9 @@ $( examplesSeperatorChapter "sysCharedPlatform Actions -- Ssh In Other" )
 ${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i sysCharedPlatform_fullUpdate
 ${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i sysCharedPlatform_actuateServices
 ${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i sysCharedPlatform_sealActuatedServices
+$( examplesSeperatorChapter "sysCharedPlatform Report -- Ssh In Other" )
+${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i sysCharedPlatform_containerBoxReport
+
 _EOF_
 }
 
@@ -229,7 +232,8 @@ _EOF_
 
     EH_assert [ ! -z "${otherName}" ]
 
-    lpDo sshpass -p intra ssh intra@"${otherName}" "echo intra | su - root -c 'echo intra ALL=\(ALL\) NOPASSWD: ALL >> /etc/sudoers'"
+    lpDo sshpass -p intra ssh intra@"${otherName}" \
+	 "echo intra | su - root -c 'echo intra ALL=\(ALL\) NOPASSWD: ALL >> /etc/sudoers'"
 }
 
 
@@ -243,10 +247,17 @@ _EOF_
 
     EH_assert [ ! -z "${otherName}" ]
 
-    lpDo sshpass -p intra ssh intra@"${otherName}" sudo cp -p /etc/apt/sources.list /etc/apt/sources.list.orig
-    lpDo sshpass -p intra ssh intra@"${otherName}" grep -v '^deb cdrom:' /etc/apt/sources.list \> /tmp/sources.list
-    lpDo sshpass -p intra ssh intra@"${otherName}" sudo mv /tmp/sources.list /etc/apt/sources.list
-    lpDo sshpass -p intra ssh intra@"${otherName}" sudo apt-get update
+    lpDo sshpass -p intra ssh intra@"${otherName}" \
+	 sudo cp -p /etc/apt/sources.list /etc/apt/sources.list.orig
+
+    lpDo sshpass -p intra ssh intra@"${otherName}" \
+	 grep -v '^deb cdrom:' /etc/apt/sources.list \> /tmp/sources.list
+
+    lpDo sshpass -p intra ssh intra@"${otherName}" \
+	 sudo mv /tmp/sources.list /etc/apt/sources.list
+
+    lpDo sshpass -p intra ssh intra@"${otherName}" \
+	 sudo apt-get update
 }
 
 function vis_distro_provisionBisos_sysBasePlatform {    
@@ -259,9 +270,14 @@ _EOF_
 
     EH_assert [ ! -z "${otherName}" ]
 
-    lpDo sshpass -p intra ssh intra@"${otherName}" sudo apt-get install -y python3-pip
-    lpDo sshpass -p intra ssh intra@"${otherName}" sudo pip3 install --upgrade bisos.provision
-    lpDo sshpass -p intra ssh intra@"${otherName}" sudo provisionBisos.sh -h -v -n showRun -i sysBasePlatform
+    lpDo sshpass -p intra ssh intra@"${otherName}" \
+	 sudo apt-get install -y python3-pip
+    
+    lpDo sshpass -p intra ssh intra@"${otherName}" \
+	 sudo pip3 install --upgrade bisos.provision
+    
+    lpDo sshpass -p intra ssh intra@"${otherName}" \
+	 sudo provisionBisos.sh ${G_commandPrefs} -i sysBasePlatform
 }
 
 
@@ -294,8 +310,14 @@ _EOF_
 
     local siteBxoId=$( sysCharRealize.sh -i selectedSiteBxoId )
 
-    lpDo echo sshpass -p intra ssh bystar@"${otherName}" $(which bisosSiteSetup.sh) -h -v -n showRun -p registrar="${registrar}" -p id="${id}" -p password="${password}" -i bisosSiteSetup
-    lpDo echo sshpass -p intra ssh bystar@"${otherName}" $(which bisosSiteSetup.sh) -h -v -n showRun -p -i activate_siteBxoPlusAndSelect "${siteBxoId}"
+    lpDo sshpass -p intra ssh bystar@"${otherName}" \
+	 $(which bisosSiteSetup.sh) ${G_commandPrefs} \
+	 -p registrar="${registrar}" -p id="${id}" -p password="${password}" \
+	 -i fullUpdate
+    
+    lpDo sshpass -p intra ssh bystar@"${otherName}" \
+	 $(which bisosSiteSetup.sh) ${G_commandPrefs} \
+	 -i activate_siteBxoPlusAndSelect "${siteBxoId}"
 }
 
 
@@ -343,7 +365,8 @@ _EOF_
     EH_assert [ ! -z "${function}" ]
     
     lpDo sshpass -p intra ssh bystar@"${otherName}" \
-	 echo $(which sysCharRealize.sh) -p model=${model} -p abode=${abode} -p function=${function} -i containerBoxAssignAndSysCharRealize
+	 $(which sysCharRealize.sh) ${G_commandPrefs} \
+	 -p model=${model} -p abode=${abode} -p function=${function} -i containerBoxAssignAndSysCharRealize
 }
 
 function vis_siteBasePlatform_deployBox {    
@@ -401,7 +424,6 @@ _EOF_
     lpDo echo sshpass -p intra ssh bystar@"${otherName}" bisosSiteSetup.sh NOTYET
 }
 
-
 function vis_sysCharedPlatform_sealActuatedServices {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -416,22 +438,21 @@ _EOF_
 }
 
 
-function vis_recordDeployment {
+function vis_sysCharedPlatform_containerBoxReport {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-Use the sysChar BxO to record that the VM was deployed.
+** 
 _EOF_
-		       }
-    local thisDescribeF=$(describeF)
+    }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
 
-    EH_assert vis_bxoAcctVerify "${bxoId}"
+    EH_assert [ ! -z "${otherName}" ]
 
-    lpDo printf ${thisDescribeF}
-    
-    lpReturn
-}	
+    lpDo sshpass -p intra ssh bystar@"${otherName}" \
+	 $(which sysCharRealize.sh) ${G_commandPrefs} \
+	 -i containerBoxSysCharReport
+}
+
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*
