@@ -225,22 +225,29 @@ function vis_distro_intraToSudoersAddition {
 ** Specific to debian. Allow for sudo-ing as intra.
 *** By policy, at distro installation, intra is used as acctName, acctNamePasswd and rootPasswd
 *** in the command below intra is used 4 times. acctName is used twice.
-*** TODO NOTYET, part of this line can become a function that we then run with sshpass.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
     EH_assert [ ! -z "${otherName}" ]
 
-    lpDo sshpass -p intra ssh intra@"${otherName}" \
-	 "echo intra | su - root -c 'echo intra ALL=\(ALL\) NOPASSWD: ALL >> /etc/sudoers'"
+    # redirection of stderr gets rid of the Password: prompt, which can throw emacs off
+    local intraLine=$( sshpass -p intra ssh intra@"${otherName}" "echo intra | su - root -c 'egrep ^intra /etc/sudoers'" 2> /dev/null )
+
+    if [ -z "${intraLine}" ] ; then
+	lpDo sshpass -p intra ssh intra@"${otherName}" \
+	     "echo intra | su - root -c 'echo intra ALL=\(ALL\) NOPASSWD: ALL >> /etc/sudoers'"
+    else
+	ANT_raw "intra is already in /etc/sudoers -- skipped"
+    fi
 }
 
 
 function vis_distro_aptSourcesPrep {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** NOTYET, different for debian and ubuntu
+** Setup apt/sources.list for initial use. Different for debian and ubuntu
+*** In a debian box, the deb cdrom: line needs to be removed.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
