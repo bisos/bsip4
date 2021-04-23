@@ -363,8 +363,8 @@ _EOF_
     local boxNu=$( sshpass -p intra ssh intra@"${otherName}" $(which siteBoxAssign.sh) -i thisBoxFindNu )
 
     if [ -z "${boxNu}" ] ; then
-	lpDo sshpass -p intra ssh bystar@"${otherName}" $(which siteBoxAssign.sh) -i thisBoxAddAndPush
-	lpDo siteBoxAssign.sh -i boxesGitPull
+	lpDo sshpass -p intra ssh bystar@"${otherName}" $(which siteBoxAssign.sh) ${G_commandPrefs} -i thisBoxAddAndPush
+	lpDo siteBoxAssign.sh ${G_commandPrefs} -i boxesGitPull
     else
 	ANT_raw "This box (${boxNu}) has already been registered -- addition skipped"
     fi
