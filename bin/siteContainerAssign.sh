@@ -132,7 +132,10 @@ $( examplesSeperatorChapter "BoxOrMachineId To ContainerId Mapping" )
 ${G_myName} ${extraInfo} -i withBoxOrMachineIdFindContainerBase "$( vis_thisMachineId )"
 ${G_myName} ${extraInfo} -i forThisSysFindContainerBase
 $( examplesSeperatorChapter "SET -- Container Box Assignment -- Primary Commans" )
+${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerBoxAssignAndPush  # PRIMARY COMMAND
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerBoxAssign  # PRIMARY COMMAND
+${G_myName} ${extraInfo} -i forThisSysContainerAssignBasePush
+${G_myName} ${extraInfo} -i containersAssignBasePull
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerUpdate_atNu "${containerNu}"
 $( examplesSeperatorChapter "GET -- Container Nu" )
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerNuGetNext
@@ -548,6 +551,58 @@ _EOF_
    
    echo "${containersBase}/${model}/${abode}/${function}"
 }
+
+function vis_containerBoxAssignAndPush {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -lt 2 ]]
+
+   EH_assert [ ! -z "${model}" ]   
+   EH_assert [ ! -z "${abode}" ]
+   EH_assert [ ! -z "${function}" ]
+
+   if [ $# -eq 0 ] ; then
+       vis_containerBoxAssignNumbered
+   else
+       vis_containerAssignGeneric "$1"
+   fi
+
+   lpDo vis_forThisSysContainerBasePush
+   
+}	
+
+function vis_forThisSysContainerAssignBasePush {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 0 ]]
+
+   local thisContainerBase=$( vis_forThisSysFindContainerBase )
+   
+   EH_assert [ ! -z "${thisContainerBase}" ]
+
+   lpDo eval echo ${thisContainerBase} \| bx-gitRepos -i addCommitPush modifieds
+}	
+
+
+function vis_containersAssignBasePull {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+
+   EH_assert [[ $# -eq 0 ]]
+
+   local containersAssignBase=$( containersAssignBaseObtain )
+
+   EH_assert [ ! -z "${containersAssignBase}" ]
+
+   lpDo eval echo ${containersAssignBase} \| bx-gitRepos -i gitRemPull
+}
+
 
 function vis_containerBoxAssign {
    G_funcEntry
