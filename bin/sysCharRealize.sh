@@ -176,7 +176,9 @@ $( examplesSeperatorChapter "SysChar Container Realization" )
 ${G_myName} ${extraInfo} -i sysCharContainerRealize ${oneBxoRepoScope} ${containerBase}
 ${G_myName} ${extraInfo} -i sysCharContainerRealize ${oneBxoRepoScope} ${containersBase}/assign/Virt/Auto/Generic/deb10
 $( examplesSeperatorChapter "Site Assign SysChar And Container Realization" )
-${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerBoxAssignAndSysCharRealize  # FULL ACTION -- PRIMARY COMMAND
+${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerBoxAssignAndRepo
+${G_myName} ${extraInfo} -i sysCharContainerBoxRealize
+${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerBoxAssignAndRepoAndSysCharRealize  # FULL ACTION -- PRIMARY COMMAND
 $( examplesSeperatorChapter "SysChar Container BxoIdName -- Info" )
 ${G_myName} ${extraInfo} -i sysCharContainerBxoIdName ${containerBase}
 ${G_myName} ${extraInfo} -i sysCharContainerBxoIdName ${containersBase}/assign/Virt/Auto/Generic/deb10
@@ -211,12 +213,47 @@ _EOF_
 }
 
 
-function vis_containerBoxAssignAndSysCharRealize {
+function vis_containerBoxAssignAndRepoAndSysCharRealize {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
 		      }
-   EH_assert [[ $# -lt 2 ]]
+   EH_assert [[ $# -eq 0 ]]
+
+   EH_assert [ ! -z "${model}" ]   
+   EH_assert [ ! -z "${abode}" ]
+   EH_assert [ ! -z "${function}" ]
+
+   lpDo vis_containerBoxAssignAndRepo
+
+   lpDo vis_sysCharContainerBoxRealize
+}	
+
+
+function vis_sysCharContainerBoxRealize {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 0 ]]
+
+   local containerAssignBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
+   EH_assert [ ! -z "${containerAssignBase}" ]
+   
+   local containerRepoBase=$( siteContainerRepo.sh -i containerRepoBase "${containerAssignBase}" )
+   EH_assert [ -d "${containerRepoBase}" ]
+			      
+   lpDo vis_sysCharContainerRealize full ${containerAssignBase}
+}	
+
+
+
+function vis_containerBoxAssignAndRepo {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 0 ]]
 
    EH_assert [ ! -z "${model}" ]   
    EH_assert [ ! -z "${abode}" ]
@@ -251,9 +288,8 @@ _EOF_
    fi
 
    EH_assert [ -d "${containerRepoBase}" ]
-			      
-   lpDo vis_sysCharContainerRealize full ${containerAssignBase}
 }	
+
 
 
 function vis_sysCharContainersGenericsRealize {

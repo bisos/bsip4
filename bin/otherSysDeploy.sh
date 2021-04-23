@@ -178,7 +178,8 @@ ${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i bisosBasePlatform_sit
 $( examplesSeperatorChapter "siteBasePlatform Actions -- Ssh In Other" )
 ${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i siteBasePlatform_fullUpdate
 ${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i siteBasePlatform_newBoxAssign
-${G_myName} ${extraInfo} -p otherName="${oneOtherName}"  -p model=Host -p abode=Shield -p function=Server -i siteBasePlatform_containerBoxAssignAndSysCharRealize
+${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -p model=Host -p abode=Shield -p function=Server -i siteBasePlatform_containerBoxAssignAndRepo
+${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i siteBasePlatform_sysCharContainerBoxRealize
 ${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i siteBasePlatform_deployBox
 ${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i siteBasePlatform_deployWithSysChar
 $( examplesSeperatorChapter "sysCharedPlatform Actions -- Ssh In Other" )
@@ -347,7 +348,8 @@ _EOF_
     EH_assert [ ! -z "${otherName}" ]
 
     lpDo vis_siteBasePlatform_newBoxAssign
-    lpDo vis_siteBasePlatform_containerBoxAssignAndSysCharRealize
+    lpDo vis_siteBasePlatform_containerBoxAssignAndRepo
+    lpDo vis_siteBasePlatform_sysCharContainerBoxRealize
 }
 
 
@@ -371,7 +373,7 @@ _EOF_
     fi
 }
 
-function vis_siteBasePlatform_containerBoxAssignAndSysCharRealize {    
+function vis_siteBasePlatform_containerBoxAssignAndRepo {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** NOTYET
@@ -387,8 +389,24 @@ _EOF_
     
     lpDo sshpass -p intra ssh bystar@"${otherName}" \
 	 $(which sysCharRealize.sh) ${G_commandPrefs} \
-	 -p model=${model} -p abode=${abode} -p function=${function} -i containerBoxAssignAndSysCharRealize
+	 -p model=${model} -p abode=${abode} -p function=${function} -i containerBoxAssignAndRepo
 }
+
+function vis_siteBasePlatform_sysCharContainerBoxRealize {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** NOTYET
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert [ ! -z "${otherName}" ]
+    
+    lpDo sshpass -p intra ssh bystar@"${otherName}" \
+	 $(which sysCharRealize.sh) ${G_commandPrefs} \
+	 -i sysCharContainerBoxRealize
+}
+
 
 function vis_siteBasePlatform_deployBox {    
     G_funcEntry
