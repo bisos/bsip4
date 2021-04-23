@@ -112,7 +112,10 @@ ${G_myName} ${extraInfo} -i containersAssignBaseObtain
 ls -ld ${containersBase}/*
 find ${containersBase} -print
 ${G_myName} -i containersGenericsAssignList
-$( examplesSeperatorChapter "Container Repo Realization -- Updates steady" )
+$( examplesSeperatorChapter "Container Repo Information" )
+${G_myName} ${extraInfo} -i containerRepoBase ${containerBase}  # returns path on stdout
+${G_myName} ${extraInfo} -i containerRepoBaseExistsP ${containerBase} # exists 0 or 1
+$( examplesSeperatorChapter "Container Repo Creation -- Updates steady" )
 ${G_myName} ${extraInfo} -i containerRepoUpdate basePrep ${containerBase}
 ${G_myName} ${extraInfo} -i containerRepoUpdate realize ${containerBase}
 ${G_myName} ${extraInfo} -i containerRepoUpdate full ${containerBase}
@@ -241,6 +244,51 @@ _EOF_
 
    lpReturn
 }	
+
+
+function vis_containerRepoBase {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+** \$1 is path to containerAssignBase
+*** Based on containerId FP of \$1=containerAssignBase, the repoBasePath is returned on stdout.
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
+
+   local containerAssignBase=$1
+
+   local containersBase=$( containersBaseObtain )
+   local containerId=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} containerId )
+
+   local repoBasePath="${containersBase}/${containerId}"
+
+   echo ${repoBasePath}
+
+   lpReturn
+}	
+
+function vis_containerRepoBaseExistsP {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+** \$1 is path to containerAssignBase
+*** if \$( vis_containerRepoBase ${containerAssignBase} ) exists, return 0.
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
+
+   local containerAssignBase=$1
+   local retVal=0
+   local repoBasePath=$( vis_containerRepoBase ${containerAssignBase} )
+
+   if [ -d "${repoBasePath}" ] ; then
+       lpReturn 0
+   else
+       lpReturn 1
+   fi
+
+   lpReturn
+}	
+
 
 
 function vis_containerRepoUpdate%% {

@@ -186,7 +186,6 @@ ${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i sysCharedPlatform_act
 ${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i sysCharedPlatform_sealActuatedServices
 $( examplesSeperatorChapter "sysCharedPlatform Report -- Ssh In Other" )
 ${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i sysCharedPlatform_containerBoxReport
-
 _EOF_
 }
 
@@ -254,11 +253,18 @@ _EOF_
 
     EH_assert [ ! -z "${otherName}" ]
 
-    lpDo sshpass -p intra ssh intra@"${otherName}" \
-	 sudo cp -p /etc/apt/sources.list /etc/apt/sources.list.orig
+    local lsOrig=$( sshpass -p intra ssh intra@"${otherName}" sudo ls /etc/apt/sources.list.orig 2> /dev/null )
 
+    if [ -z "${lsOrig}" ] ; then
+	lpDo sshpass -p intra ssh intra@"${otherName}" \
+	     sudo cp -p /etc/apt/sources.list /etc/apt/sources.list.orig
+    else
+	ANT_raw "/etc/apt/sources.list.orig exists -- copying skipped"
+    fi
+
+    # In "''" "" is consumed by lpDo
     lpDo sshpass -p intra ssh intra@"${otherName}" \
-	 grep -v '^deb cdrom:' /etc/apt/sources.list \> /tmp/sources.list
+	 grep -v "'^deb cdrom:'" /etc/apt/sources.list \> /tmp/sources.list
 
     lpDo sshpass -p intra ssh intra@"${otherName}" \
 	 sudo mv /tmp/sources.list /etc/apt/sources.list
@@ -291,7 +297,7 @@ _EOF_
 function vis_bisosBasePlatform_fullUpdate {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** NOTYET
+** Takes a bisosBasePlatform and transforms it to siteBasePlatform.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -304,7 +310,7 @@ _EOF_
 function vis_bisosBasePlatform_siteSetup {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** NOTYET
+** Preps the site (configs for gitlab server, etc) and activates the siteBxo.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -317,6 +323,7 @@ _EOF_
 
     local siteBxoId=$( sysCharRealize.sh -i selectedSiteBxoId )
 
+    # Preps Currents and Preps the site (configs for gitlab server, etc)
     lpDo sshpass -p intra ssh bystar@"${otherName}" \
 	 $(which bisosSiteSetup.sh) ${G_commandPrefs} \
 	 -p registrar="${registrar}" -p id="${id}" -p password="${password}" \
@@ -339,22 +346,28 @@ _EOF_
     EH_assert [ ! -z "${otherName}" ]
 
     lpDo vis_siteBasePlatform_newBoxAssign
-    lpDo vis_siteBasePlatform_deployBox    
+    lpDo vis_siteBasePlatform_containerBoxAssignAndSysCharRealize
 }
 
 
 function vis_siteBasePlatform_newBoxAssign {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** 
+** Add thisBox to site info base.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
     EH_assert [ ! -z "${otherName}" ]
 
-    lpDo sshpass -p intra ssh bystar@"${otherName}" $(which siteBoxAssign.sh) -i thisBoxAddAndPush
-    lpDo siteBoxAssign.sh -i boxesGitPull
+    local boxNu=$( sshpass -p intra ssh intra@"${otherName}" $(which siteBoxAssign.sh) -i thisBoxFindNu )
+
+    if [ -z "${boxNu}" ] ; then
+	lpDo sshpass -p intra ssh bystar@"${otherName}" $(which siteBoxAssign.sh) -i thisBoxAddAndPush
+	lpDo siteBoxAssign.sh -i boxesGitPull
+    else
+	ANT_raw "This box (${boxNu}) has already been registered -- addition skipped"
+    fi
 }
 
 function vis_siteBasePlatform_containerBoxAssignAndSysCharRealize {    

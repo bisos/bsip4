@@ -222,11 +222,37 @@ _EOF_
    EH_assert [ ! -z "${abode}" ]
    EH_assert [ ! -z "${function}" ]
 
-   lpDo siteContainerAssign.sh ${G_commandOptions} -i containerBoxAssign
-   local containerBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
+   local boxId=$( siteBoxAssign.sh -i thisBoxFindId )
 
-   lpDo siteContainerRepo.sh -h -v -n showRun -i containerRepoUpdate full ${containerBase}
-   lpDo vis_sysCharContainerRealize full ${containerBase}
+   if [ -z "${boxId}" ] ; then
+       EH_problem "Missing boxId -- Either not a box, or has not been assigned"
+       lpReturn 101
+   fi
+
+   local containerAssignBase=$( siteContainerAssign.sh -i withBoxIdFindContainerBase "${boxId}" )
+
+   if [ -z "${containerAssignBase}" ] ; then
+       lpDo siteContainerAssign.sh ${G_commandPrefs} -p model=${model} -p abode=${abode} -p function=${function} -i containerBoxAssign
+   else
+       ANT_raw "containerAssignBase=${containerAssignBase} has already been assigned -- skipped"
+   fi
+
+   # same as siteContainerAssign.sh -i withBoxIdFindContainerBase "${boxId}"
+   containerAssignBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
+   EH_assert [ ! -z "${containerAssignBase}" ]
+
+   local containerRepoBase=$( siteContainerRepo.sh -i containerRepoBase "${containerAssignBase}" )
+
+   if [ -d "${containerRepoBase}" ] ; then
+       ANT_raw "containerRepoBase=${containerRepoBase} already exists -- creation skipped"
+       #lpDo siteContainerRepo.sh -h -v -n showRun -i containerRepoUpdate basePrep ${containerAssignBase}
+   else
+       lpDo siteContainerRepo.sh -h -v -n showRun -i containerRepoUpdate full ${containerAssignBase}
+   fi
+
+   EH_assert [ -d "${containerRepoBase}" ]
+			      
+   lpDo vis_sysCharContainerRealize full ${containerAssignBase}
 }	
 
 
