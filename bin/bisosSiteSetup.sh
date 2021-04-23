@@ -68,6 +68,7 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
+. ${opBinBase}/platformBases_lib.sh
 . ${opBinBase}/unisosAccounts_lib.sh
 . ${opBinBase}/bisosGroupAccount_lib.sh
 . ${opBinBase}/bisosAccounts_lib.sh
@@ -288,7 +289,7 @@ _EOF_
     echo NOTYET fileParamManage.py -i fileParamRead ${siteGitServerInfoBaseDir} gitServerName
     
     local site_gitServerName=$( fileParamManage.py -i fileParamRead ${siteGitServerInfoBaseDir} gitServerName )
-    EH-assert [ ! -z "${site_gitServerName}" ]
+    EH_assert [ ! -z "${site_gitServerName}" ]
 
     lpDo lcaSshAdmin.sh ${G_commandOptions} -i knownHostsAddSystem "${id}" "${site_gitServerName}"
     

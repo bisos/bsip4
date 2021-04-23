@@ -157,7 +157,8 @@ function vis_examples {
     local id=$( vis_registrarUserName )
     local password=$( vis_registrarUserPassword )
 
-    local oneOtherName="192.168.0.38"
+    # local oneOtherName="192.168.0.38"
+    local oneOtherName="192.168.0.36"
     
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
