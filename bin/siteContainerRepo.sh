@@ -100,7 +100,9 @@ function vis_examples {
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
     local containersBase=$( vis_containersBaseObtain )
-    local containerBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )    
+    local containerBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
+
+    local containerRepoBase=$( vis_containerRepoBase ${containerBase} )
 
     visLibExamplesOutput ${G_myName}
     # ${doLibExamples} 
@@ -119,12 +121,16 @@ $( examplesSeperatorChapter "Container Repo Creation -- Updates steady" )
 ${G_myName} ${extraInfo} -i containerRepoUpdate basePrep ${containerBase}
 ${G_myName} ${extraInfo} -i containerRepoUpdate realize ${containerBase}
 ${G_myName} ${extraInfo} -i containerRepoUpdate full ${containerBase}
-$( examplesSeperatorChapter "Generic Container Repo Realization -- Applies To All Generics" )
+$( examplesSeperatorChapter "Generic Container Repo Creation -- Applies To All Generics" )
 ${G_myName} ${extraInfo} -i containerRepoUpdate ${containersBase}/assign/Virt/Auto/Generic/deb10
 ${G_myName} ${extraInfo} -i containerRepoGenericsUpdate examples basePrep # bxoRealizationScope=basePrep|realize|full
 ${G_myName} ${extraInfo} -i containerRepoGenericsUpdate examples realize # bxoRealizationScope=basePrep|realize|full
 ${G_myName} ${extraInfo} -i containerRepoGenericsUpdate examples full # bxoRealizationScope=basePrep|realize|full
 ${G_myName} ${extraInfo} -i containerRepoGenericsUpdate doIt full  # bxoRealizationScope=basePrep|realize|full
+$( examplesSeperatorChapter "Repos Clonining" )
+${G_myName} ${extraInfo} -i containerRepoClone ${containerBase}
+${G_myName} ${extraInfo} -i containerRepoNamedClone ${containerRepoBase}
+${G_myName} ${extraInfo} -i containerRepoNamedCloneAll
 _EOF_
 }
 
@@ -132,6 +138,82 @@ _EOF_
 noArgsHook() {
   vis_examples
 }
+
+
+function vis_containerRepoClone {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
+
+   local containerAssignBase=$1
+
+   local containerId=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} containerId )
+   EH_assert [ ! -z ${containerId} ]
+
+   lpDo vis_containerRepoNamedClone "${containerId}"
+   
+   lpReturn
+}	
+
+
+function vis_containerRepoNamedClone {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
+
+   local containerId=$1
+   EH_assert [ ! -z ${containerId} ]
+   
+   local containersBase=$( containersBaseObtain )
+   EH_assert [ ! -z ${containersBase} ]
+
+   local siteBxoId=$( vis_selectedSiteBxoId )
+   EH_assert [ ! -z ${siteBxoId} ]
+   
+   local containersBxoId=$( vis_fromSiteBxoIdGet_containersBxoId "${siteBxoId}")
+   EH_assert [ ! -z ${containersBxoId} ]
+   
+   local repoBasePath="${containersBase}/${containerId}"
+
+   if [ -d "${repoBasePath}" ] ; then
+       ANT_raw "${repoBasePath} exists -- cloning skipped"
+   else
+       lpDo git clone git@bxoPriv_${containersBxoId}:${containersBxoId}/${containerId}.git
+   fi
+}	
+
+
+function vis_containerRepoNamedCloneAll {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 0 ]]
+
+   local siteBxoId=$( vis_selectedSiteBxoId )
+   EH_assert [ ! -z ${siteBxoId} ]
+   
+   local containersBxoId=$( vis_fromSiteBxoIdGet_containersBxoId "${siteBxoId}")
+   EH_assert [ ! -z ${containersBxoId} ]
+
+   local reposList=$( bxoGitlab.py --bxoId="${containersBxoId}"  -i reposList )
+
+   local nonContainersRepos="assign panel sys bxeTree rbxe"
+
+   for each in ${reposList} ; do
+       if LIST_isIn "${each}" "${nonContainersRepos}" ; then
+	   ANT_raw  "${each} is a nonContainersRepos -- skipped"
+       else
+	   lpDo vis_containerRepoNamedClone ${each}
+       fi
+   done
+}	
+
+   
 
 function vis_containerRepoGenericsUpdate {
    G_funcEntry

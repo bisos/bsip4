@@ -403,7 +403,7 @@ _EOF_
 
    EH_assert [ ! -z "${ppBoxesBase}" ]
 
-   lpDo eval echo ${ppBoxesBase} \| bx-gitRepos -i addCommitPush modifieds
+   lpDo eval echo ${ppBoxesBase} \| bx-gitRepos -i addCommitPush all
 }
 
 function vis_thisBoxAddAndPush {

@@ -584,7 +584,7 @@ _EOF_
    
    EH_assert [ ! -z "${thisContainerBase}" ]
 
-   lpDo eval echo ${thisContainerBase} \| bx-gitRepos -i addCommitPush modifieds
+   lpDo eval echo ${thisContainerBase} \| bx-gitRepos -i addCommitPush all
 }	
 
 
