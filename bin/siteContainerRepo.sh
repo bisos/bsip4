@@ -77,6 +77,8 @@ _CommentEnd_
 
 . ${opBinBase}/siteNetworks_lib.sh
 
+. ${opBinBase}/container_lib.sh
+
 # PRE parameters
 typeset -t model=""     # one of {h,p,v}
 typeset -t abode=""  # one of {bpec,bpsc,bipc,bluc,bauc,bdc}
@@ -190,26 +192,15 @@ _EOF_
 function vis_containerRepoNamedCloneAll {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Clone all available repos.
 _EOF_
 		      }
    EH_assert [[ $# -eq 0 ]]
 
-   local siteBxoId=$( vis_selectedSiteBxoId )
-   EH_assert [ ! -z ${siteBxoId} ]
-   
-   local containersBxoId=$( vis_fromSiteBxoIdGet_containersBxoId "${siteBxoId}")
-   EH_assert [ ! -z ${containersBxoId} ]
+   local containerReposList=$( vis_containerReposList )
 
-   local reposList=$( bxoGitlab.py --bxoId="${containersBxoId}"  -i reposList )
-
-   local nonContainersRepos="assign panel sys bxeTree rbxe"
-
-   for each in ${reposList} ; do
-       if LIST_isIn "${each}" "${nonContainersRepos}" ; then
-	   ANT_raw  "${each} is a nonContainersRepos -- skipped"
-       else
-	   lpDo vis_containerRepoNamedClone ${each}
-       fi
+   for each in ${containerReposList} ; do
+       lpDo vis_containerRepoNamedClone ${each}
    done
 }	
 

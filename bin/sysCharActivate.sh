@@ -154,164 +154,26 @@ function vis_examples {
 	effectiveContainerBxoId="${selectedContainerBxoId}"
     fi
 
-    local siteBxoId=$( sysCharRealize.sh -i selectedSiteBxoId )
-
-    local registrar=$( vis_registrarHostName )
-    local id=$( vis_registrarUserName )
-    local password=$( vis_registrarUserPassword )        
-    
     visLibExamplesOutput ${G_myName} 
-  cat  << _EOF_
+    cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${effectiveContainerBxoId}"
-$( examplesSeperatorChapter "Ssh Based Cusomizations -- Bx Based (not vagrant based)" )
-${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i postCustomize  # on host - bx-ssh
-${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i secureSeal     # on host - bx-ssh
-${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i recordDeployment      # inside of parent bxo
-$( examplesSeperatorChapter "FULL SYSTEM Deployment" )
-${G_myName} ${extraInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -i bisosSiteSetup
-${G_myName} ${extraInfo} -i bisosSiteSetup
-${G_myName} ${extraInfo} -i activate_siteBxoPlusAndSelect "${effectiveContainerBxoId}"
-${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i activate_sysBxo
-# ${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i capture_siteBxo ${siteBxoId}
-${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -p privA=192.168.0.121 -i capture_identity
-${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -p privGit=anon -p pubGit=anon -p devMode=someTag -i capture_accessMode
-$( examplesSeperatorChapter "FULL SYSTEM Deployment" )
-${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i deployWithSysCharDeployInfo
-$( examplesSeperatorSection "Update" )
-${G_myName} ${extraInfo} -i activate_siteBxoPlus ${siteBxoId}
-${G_myName} ${extraInfo} -i identityUpdate
+$( examplesSeperatorChapter "SysChar Containers Info" )
+${G_myName} -i containerReposList  # listAvaiableSysChars
+$( examplesSeperatorChapter "SysChar Container Activate" )
+${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i activate_sysContainerBxo
+$( examplesSeperatorChapter "BISOS Container Add and Select Information" )
+${G_myName} ${extraInfo} -i bisosContainerBase
+${G_myName} ${extraInfo} -i selectedContainerBxoId
+$( examplesSeperatorChapter "BISOS Container Add and Select Actions" )
+${G_myName} ${extraInfo} -i bisosContainerAdd "${effectiveContainerBxoId}"
+${G_myName} ${extraInfo} -i bisosContainerSelect "${effectiveContainerBxoId}"
 $( examplesSeperatorChapter "Overview Report And Summary" )
-${G_myName} -p bxoId="${effectiveContainerBxoId}" -i sysCharReport
+${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i sysCharContainerReport
 _EOF_
 }
 
-
-
-function vis_capture_siteBxo%% {    
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 1 ]]
-
-    local siteBxoId=$1
-
-    EH_assert [ ! -z "${bxoId}" ]
-    EH_assert vis_bxoAcctVerify "${bxoId}"
-    bxoHome=$( FN_absolutePathGet ~${bxoId} )
-
-    local sysCharDeployInfoBase="${bxoHome}/var/sysCharDeployInfo"
-
-    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} siteBxoId "${siteBxoId}"
-}
-
-
-function vis_capture_identity {    
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    EH_assert [ ! -z "${bxoId}" ]
-    EH_assert vis_bxoAcctVerify "${bxoId}"
-    bxoHome=$( FN_absolutePathGet ~${bxoId} )
-
-    local sysCharDeployInfoBase="${bxoHome}/var/sysCharDeployInfo"
-
-    lpDo FN_dirCreatePathIfNotThere ${sysCharDeployInfoBase}
-    
-    if [ ! -z "${privA}" ] ; then
-	lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} ipAddr_privA "${privA}"
-    elif [ ! -z "${pubA}" ] ; then
-	lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} ipAddr_pubA "${pubA}"
-    else
-	doNothing
-    fi
-}
-
-
-
-function vis_capture_accessMode {    
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    EH_assert [ ! -z "${bxoId}" ]
-    EH_assert vis_bxoAcctVerify "${bxoId}"
-    bxoHome=$( FN_absolutePathGet ~${bxoId} )
-
-    local sysCharDeployInfoBase="${bxoHome}/var/sysCharDeployInfo"
-
-    if [ ! -z "${privGit}" ] ; then
-	lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} privGit "${privGit}"
-    fi
-    if [ ! -z "${pubGit}" ] ; then
-	lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} pubGit "${pubGit}"
-    fi
-    if [ ! -z "${devMode}" ] ; then
-	lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} devMode "${devMode}"
-    fi
-}
-
-
-function vis_deployWithSysCharDeployInfo {    
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-Activate essential site BxOs. Activate bxoId.
-Set identity. Set Mode (dev vs prod). deploy svcs.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    EH_assert [ ! -z "${bxoId}" ]
-    EH_assert vis_bxoAcctVerify "${bxoId}"
-    bxoHome=$( FN_absolutePathGet ~${bxoId} )
-
-    local sysCharDeployInfoBase="${bxoHome}/var/sysCharDeployInfo"
-
-    # local siteBoxId=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} siteBxoId )
-    
-    local ipAddr_privA=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} ipAddr_privA )
-    local ipAddr_pubA=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} ipAddr_pubA )
-    local privGitMode=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} privGit )
-    local pubGitMode=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} pubGitMode )
-    local devMode=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} devMode )
-
-    local extraInfo="-h -v -n showRun"
-    
-    # ---- IDENTITY
-    lpDo sysCharIdentity.sh ${extraInfo} -p bxoId="${bxoId}" -i motdSet
-    lpDo sysCharIdentity.sh ${extraInfo} -p bxoId="${bxoId}" -i nodename
-  
-    #NETWORK
-    lpDo sysCharIdentity.sh ${extraInfo} -p bxoId="${bxoId}" -i netL3Interface
-    lpDo sysCharIdentity.sh ${extraInfo} -p bxoId="${bxoId}" -i netEtcHosts
-
-    lpReturn
-}
-
-
-function vis_recordDeployment {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-Use the sysChar BxO to record that the VM was deployed.
-_EOF_
-		       }
-    local thisDescribeF=$(describeF)
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
-
-    EH_assert vis_bxoAcctVerify "${bxoId}"
-
-    lpDo printf ${thisDescribeF}
-    
-    lpReturn
-}	
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*
