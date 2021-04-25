@@ -309,7 +309,18 @@ _EOF_
 		   ;;
 	       Shield)
 		   containerSteady_networkMode="static"
-		   containerSteady_privA_addr="assign"
+		   case ${model} in
+		       Host|Pure)
+			   # Host or Pure = containerBox
+			   containerSteady_privA_addr=$( siteNetworks.sh -i assignBoxAddr privA $( siteBoxAssign.sh -i thisBoxFindNu ) )
+			   ;;
+		       Virt)
+			   containerSteady_privA_addr="assign" # NOTYET
+			   ;;
+		       *)
+			   EH_problem "Bad Usage -- invalid model=${model}"
+			   ;;
+		   esac
 		   ;;
 	       *)
 		   doNothing

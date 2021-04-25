@@ -111,6 +111,8 @@ function vis_examples {
     #local networksBase=$( networksBaseObtain )
     local siteNetworksBxoIdHome=$( vis_siteNetworksBxoIdHome )
 
+    local thisBoxNu=$( siteBoxAssign.sh -i thisBoxFindNu )
+
     visLibExamplesOutput ${G_myName}
     # ${doLibExamples} 
   cat  << _EOF_
@@ -145,6 +147,9 @@ ${G_myName} -i containerIpAddrObtain_privA VSG-ub2004_ generic
 $( examplesSeperatorChapter "Assign IP Addrs" )
 ${G_myName} ${extraInfo} -i assignNextAddr privA generic
 ${G_myName} ${extraInfo} -i releaseAddr privA generic 121
+$( examplesSeperatorChapter "Assign Box IP Addrs" )
+${G_myName} ${extraInfo} -i assignBoxAddr privA ${thisBoxNu}
+${G_myName} ${extraInfo} -i releaseBoxAddr privA ${thisBoxNu}
 _EOF_
 }
 
