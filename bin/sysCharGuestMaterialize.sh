@@ -509,11 +509,11 @@ _EOF_
 	EH_assert vis_bxoAcctVerify "${hostBxoId}"
 	
 	lpDo vis_sysCharRead ${hostBxoId}
-	EH_assert [ ! -z "${sysChar_boxSpec_netIfs_privA}" ]
+	EH_assert [ ! -z "${sysChar_containerSpec_netIfs_privA}" ]
 
     	     cat   << _EOF_
     # privA interface on hostBxoId=${hostBxoId}	     
-    guest.vm.network :public_network, :dev => "${sysChar_boxSpec_netIfs_privA}", :mode => 'bridge', auto_config: false
+    guest.vm.network :public_network, :dev => "${sysChar_containerSpec_netIfs_privA}", :mode => 'bridge', auto_config: false
 _EOF_
     }
 
@@ -524,7 +524,7 @@ _EOF_
 	EH_assert vis_bxoAcctVerify "${hostBxoId}"
 	
 	lpDo vis_sysCharRead ${hostBxoId}
-	EH_assert [ ! -z "${sysChar_boxSpec_netIfs_privA}" ]
+	EH_assert [ ! -z "${sysChar_containerSpec_netIfs_privA}" ]
 
     	     cat   << _EOF_
     # NAT on hostBxoId=${hostBxoId} -- No additional network interface is being configured.

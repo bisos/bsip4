@@ -467,7 +467,7 @@ _EOF_
 
     local sysInfoFps=${repoBase}/sysInfo.fps
     local virtSpecFps=${repoBase}/virtSpec.fps
-    local boxSpecFps=${repoBase}/boxSpec.fps    
+    local containerSpecFps=${repoBase}/containerSpec.fps    
 
     sysChar_netIfs_privA="" # Global Var
     
@@ -475,8 +475,8 @@ _EOF_
 	sysChar_netIfs_privA="eth1"
     fi
 
-    if [ -d "${boxSpecFps}" ] ; then
-	sysChar_netIfs_privA=$( fileParamManage.py -i fileParamRead ${boxSpecFps}/netIfs privA )
+    if [ -d "${containerSpecFps}" ] ; then
+	sysChar_netIfs_privA=$( fileParamManage.py -i fileParamRead ${containerSpecFps}/netIfs privA )
     fi
 
     if [ -z "${sysChar_netIfs_privA}" ] ; then
@@ -512,7 +512,7 @@ _EOF_
 
     local sysInfoFps=${repoBase}/sysInfo.fps
     local virtSpecFps=${repoBase}/virtSpec.fps
-    local boxSpecFps=${repoBase}/boxSpec.fps    
+    local containerSpecFps=${repoBase}/containerSpec.fps    
 
     sysChar_sysInfo_distro=$( fileParamManage.py -v 30 -i fileParamRead ${sysInfoFps} distro )
     sysChar_sysInfo_distroType=$( fileParamManage.py -v 30 -i fileParamRead ${sysInfoFps} distroType )      
@@ -529,10 +529,10 @@ _EOF_
 	sysChar_virtSpec_vagBaseBox=""
     fi
 
-    if [ -d "${boxSpecFps}" ] ; then
-	sysChar_boxSpec_netIfs_privA=$( fileParamManage.py -i fileParamRead ${boxSpecFps}/netIfs privA )
+    if [ -d "${containerSpecFps}" ] ; then
+	sysChar_containerSpec_netIfs_privA=$( fileParamManage.py -i fileParamRead ${containerSpecFps}/netIfs privA )
     else
-	sysChar_boxSpec_netIfs_privA=""
+	sysChar_containerSpec_netIfs_privA=""
     fi
 }
 
@@ -566,6 +566,9 @@ _EOF_
 
     local virtSpecFps=${repoBase}/virtSpec.fps
     lpDo FN_dirCreatePathIfNotThere ${virtSpecFps}
+
+    local containerSpecFps=${repoBase}/containerSpec.fps  
+    local containerSpecFps_netIfs=${containerSpecFps}/netIfs
     
     local distro="default"          # Sys
     local distroType="desktop"      # Sys
@@ -580,20 +583,13 @@ _EOF_
 	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysInfoFps} distroType ${distroType}
 	    ;;
 	Server)
-	    doNothing
+	    distro="deb11"  # NOTYET get it from facter or from /etc/issue
+	    distroType="desktop"
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysInfoFps} distro ${distro}
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysInfoFps} distroType ${distroType}
 	    ;;
-
 	*)
 	    EH_problem "NOTYET -- unimplemented ${function}"
-	    ;;
-    esac
-
-    case ${abode} in
-	Auto)
-	    doNothing
-	    ;;
-	*)
-	    doNothing
 	    ;;
     esac
 
@@ -607,8 +603,65 @@ _EOF_
 	    vagBaseBox=$( withDistroGetVagBaseBox ${function} ${distro} ${distroType} ${containerId} )	    
 	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${virtSpecFps} vagBaseBox ${vagBaseBox}
 	    ;;
+	Host|Pure)
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${virtSpecFps} virtType none
+	    ;;
 	*)
+	    EH_problem "Bad Usage model=${model}"
+	    ;;
+    esac
+
+    local interfaceOfNet=""
+    #
+    # NOTYET, ipAddrs are hard coded for now. Should be fixed.
+    # Perhaps in a bisosL3_lib.sh where privA, etc are mapped.
+    #
+    
+    case ${abode} in
+	Auto|Mobile)
 	    doNothing
+	    ;;
+	Perim)
+	    lpDo FN_dirCreatePathIfNotThere ${containerSpecFps_netIfs}
+	    interfaceOfNet=$( vis_givenNetGetInterface 10.x.x..0 24 )
+	    if [ -z "${interfaceOfNet}" ] ; then
+		if [ ${model} == "Virt" ] ; then
+		    interfaceOfNet=eth1
+		else
+		    interfaceOfNet=TBD
+		fi
+	    fi
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${containerSpecFps_netIfs} perimA "${interfaceOfNet}"
+	    ;;
+	
+	Internet)
+	    lpDo FN_dirCreatePathIfNotThere ${containerSpecFps_netIfs}
+	    interfaceOfNet=$( vis_givenNetGetInterface 198.62.92.0 24 )
+	    if [ -z "${interfaceOfNet}" ] ; then
+		if [ ${model} == "Virt" ] ; then
+		    interfaceOfNet=eth1
+		else
+		    interfaceOfNet=TBD
+		fi
+	    fi
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${containerSpecFps_netIfs} pubA "${interfaceOfNet}"
+	    ;;
+	    
+	Shield)
+	    lpDo FN_dirCreatePathIfNotThere ${containerSpecFps_netIfs}
+	    interfaceOfNet=$( vis_givenNetGetInterface 192.168.0.0 24 )
+	    if [ -z "${interfaceOfNet}" ] ; then
+		if [ ${model} == "Virt" ] ; then
+		    interfaceOfNet=eth1
+		else
+		    interfaceOfNet=TBD
+		fi
+	    fi
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${containerSpecFps_netIfs} privA "${interfaceOfNet}"
+	    ;;
+	
+	*)
+	    EH_problem "Bad Usage abode=${abode}"	    
 	    ;;
     esac
 }

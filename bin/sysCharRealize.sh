@@ -94,6 +94,7 @@ _CommentEnd_
 
 . ${opBinBase}/site_lib.sh
 
+. ${opBinBase}/l3_lib.sh
 . ${opBinBase}/sysChar_lib.sh
 
 
