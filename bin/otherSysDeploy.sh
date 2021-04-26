@@ -113,6 +113,8 @@ typeset -t abode=""     # one of [MAPIS]
 typeset -t function=""  # one of [LASD]
 
 
+sshCmnd="ssh -o StrictHostKeyChecking=no"
+
 function G_postParamHook {
     bxoIdPrepValidate    
 
@@ -158,7 +160,8 @@ function vis_examples {
     local password=$( vis_registrarUserPassword )
 
     # local oneOtherName="192.168.0.38"
-    local oneOtherName="192.168.0.36"
+    local oneOtherName="192.168.0.34"
+    # local oneOtherName="localhost"
     
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
@@ -234,10 +237,10 @@ _EOF_
     EH_assert [ ! -z "${otherName}" ]
 
     # redirection of stderr gets rid of the Password: prompt, which can throw emacs off
-    local intraLine=$( sshpass -p intra ssh intra@"${otherName}" "echo intra | su - root -c 'egrep ^intra /etc/sudoers'" 2> /dev/null )
+    local intraLine=$( sshpass -p intra ${sshCmnd} intra@"${otherName}" "echo intra | su - root -c 'egrep ^intra /etc/sudoers'" 2> /dev/null )
 
     if [ -z "${intraLine}" ] ; then
-	lpDo sshpass -p intra ssh intra@"${otherName}" \
+	lpDo sshpass -p intra ${sshCmnd} intra@"${otherName}" \
 	     "echo intra | su - root -c 'echo intra ALL=\(ALL\) NOPASSWD: ALL >> /etc/sudoers'"
     else
 	ANT_raw "intra is already in /etc/sudoers -- skipped"
@@ -256,23 +259,23 @@ _EOF_
 
     EH_assert [ ! -z "${otherName}" ]
 
-    local lsOrig=$( sshpass -p intra ssh intra@"${otherName}" sudo ls /etc/apt/sources.list.orig 2> /dev/null )
+    local lsOrig=$( sshpass -p intra ${sshCmnd} intra@"${otherName}" sudo ls /etc/apt/sources.list.orig 2> /dev/null )
 
     if [ -z "${lsOrig}" ] ; then
-	lpDo sshpass -p intra ssh intra@"${otherName}" \
+	lpDo sshpass -p intra ${sshCmnd} intra@"${otherName}" \
 	     sudo cp -p /etc/apt/sources.list /etc/apt/sources.list.orig
     else
 	ANT_raw "/etc/apt/sources.list.orig exists -- copying skipped"
     fi
 
     # In "''" "" is consumed by lpDo
-    lpDo sshpass -p intra ssh intra@"${otherName}" \
+    lpDo sshpass -p intra ${sshCmnd} intra@"${otherName}" \
 	 grep -v "'^deb cdrom:'" /etc/apt/sources.list \> /tmp/sources.list
 
-    lpDo sshpass -p intra ssh intra@"${otherName}" \
+    lpDo sshpass -p intra ${sshCmnd} intra@"${otherName}" \
 	 sudo mv /tmp/sources.list /etc/apt/sources.list
 
-    lpDo sshpass -p intra ssh intra@"${otherName}" \
+    lpDo sshpass -p intra ${sshCmnd} intra@"${otherName}" \
 	 sudo apt-get update
 }
 
@@ -286,13 +289,13 @@ _EOF_
 
     EH_assert [ ! -z "${otherName}" ]
 
-    lpDo sshpass -p intra ssh intra@"${otherName}" \
+    lpDo sshpass -p intra ${sshCmnd} intra@"${otherName}" \
 	 sudo apt-get install -y python3-pip
     
-    lpDo sshpass -p intra ssh intra@"${otherName}" \
+    lpDo sshpass -p intra ${sshCmnd} intra@"${otherName}" \
 	 sudo pip3 install --upgrade bisos.provision
     
-    lpDo sshpass -p intra ssh intra@"${otherName}" \
+    lpDo sshpass -p intra ${sshCmnd} intra@"${otherName}" \
 	 sudo provisionBisos.sh ${G_commandPrefs} -i sysBasePlatform
 }
 
@@ -327,12 +330,12 @@ _EOF_
     local siteBxoId=$( sysCharRealize.sh -i selectedSiteBxoId )
 
     # Preps Currents and Preps the site (configs for gitlab server, etc)
-    lpDo sshpass -p intra ssh bystar@"${otherName}" \
+    lpDo sshpass -p intra ${sshCmnd} bystar@"${otherName}" \
 	 $(which bisosSiteSetup.sh) ${G_commandPrefs} \
 	 -p registrar="${registrar}" -p id="${id}" -p password="${password}" \
 	 -i fullUpdate
     
-    lpDo sshpass -p intra ssh bystar@"${otherName}" \
+    lpDo sshpass -p intra ${sshCmnd} bystar@"${otherName}" \
 	 $(which bisosSiteSetup.sh) ${G_commandPrefs} \
 	 -i activate_siteBxoPlusAndSelect "${siteBxoId}"
 }
@@ -364,10 +367,10 @@ _EOF_
 
     EH_assert [ ! -z "${otherName}" ]
 
-    local boxNu=$( sshpass -p intra ssh intra@"${otherName}" $(which siteBoxAssign.sh) -i thisBoxFindNu )
+    local boxNu=$( sshpass -p intra ${sshCmnd} intra@"${otherName}" $(which siteBoxAssign.sh) -i thisBoxFindNu )
 
     if [ -z "${boxNu}" ] ; then
-	lpDo sshpass -p intra ssh bystar@"${otherName}" $(which siteBoxAssign.sh) ${G_commandPrefs} -i thisBoxAddAndPush
+	lpDo sshpass -p intra ${sshCmnd} bystar@"${otherName}" $(which siteBoxAssign.sh) ${G_commandPrefs} -i thisBoxAddAndPush
 	lpDo siteBoxAssign.sh ${G_commandPrefs} -i boxesGitPull
     else
 	ANT_raw "This box (${boxNu}) has already been registered -- addition skipped"
@@ -388,7 +391,7 @@ _EOF_
     EH_assert [ ! -z "${abode}" ]
     EH_assert [ ! -z "${function}" ]
     
-    lpDo sshpass -p intra ssh bystar@"${otherName}" \
+    lpDo sshpass -p intra ${sshCmnd} bystar@"${otherName}" \
 	 $(which sysCharRealize.sh) ${G_commandPrefs} \
 	 -p model=${model} -p abode=${abode} -p function=${function} -i containerBoxAssignAndRepo
 }
@@ -403,7 +406,7 @@ _EOF_
 
     EH_assert [ ! -z "${otherName}" ]
     
-    lpDo sshpass -p intra ssh bystar@"${otherName}" \
+    lpDo sshpass -p intra ${sshCmnd} bystar@"${otherName}" \
 	 $(which sysCharRealize.sh) ${G_commandPrefs} \
 	 -i sysCharContainerBoxRealize
 }
@@ -418,7 +421,7 @@ _EOF_
 
     EH_assert [ ! -z "${otherName}" ]
     
-    lpDo sshpass -p intra ssh bystar@"${otherName}" \
+    lpDo sshpass -p intra ${sshCmnd} bystar@"${otherName}" \
 	 $(which sysCharIdentity.sh) ${G_commandPrefs} \
 	 -i identityUpdate
 }
@@ -434,7 +437,7 @@ _EOF_
 
     EH_assert [ ! -z "${otherName}" ]
 
-    lpDo sshpass -p intra ssh bystar@"${otherName}" echo bisosSiteSetup.sh NOTYET
+    lpDo sshpass -p intra ${sshCmnd} bystar@"${otherName}" echo bisosSiteSetup.sh NOTYET
 }
 
 function vis_siteBasePlatform_deployWithSysChar {    
@@ -448,7 +451,7 @@ _EOF_
     EH_assert [ ! -z "${otherName}" ]
     EH_assert [ ! -z "${bxoId}" ]
 
-    lpDo sshpass -p intra ssh bystar@"${otherName}" bisosSiteSetup.sh NOTYET
+    lpDo sshpass -p intra ${sshCmnd} bystar@"${otherName}" bisosSiteSetup.sh NOTYET
 }
 
 function vis_sysCharedPlatform_fullUpdate {
@@ -476,7 +479,7 @@ _EOF_
 
     EH_assert [ ! -z "${otherName}" ]
 
-    lpDo echo sshpass -p intra ssh bystar@"${otherName}" bisosSiteSetup.sh NOTYET
+    lpDo echo sshpass -p intra ${sshCmnd} bystar@"${otherName}" bisosSiteSetup.sh NOTYET
 }
 
 function vis_sysCharedPlatform_sealActuatedServices {    
@@ -489,7 +492,7 @@ _EOF_
 
     EH_assert [ ! -z "${otherName}" ]
 
-    lpDo echo sshpass -p intra ssh bystar@"${otherName}" bisosSiteSetup.sh NOTYET
+    lpDo echo sshpass -p intra ${sshCmnd} bystar@"${otherName}" bisosSiteSetup.sh NOTYET
 }
 
 
@@ -503,7 +506,7 @@ _EOF_
 
     EH_assert [ ! -z "${otherName}" ]
 
-    lpDo sshpass -p intra ssh bystar@"${otherName}" \
+    lpDo sshpass -p intra ${sshCmnd} bystar@"${otherName}" \
 	 $(which sysCharRealize.sh) ${G_commandPrefs} \
 	 -i containerBoxSysCharReport
 }
