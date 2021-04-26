@@ -210,6 +210,7 @@ ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i baseCreate_var
 $( examplesSeperatorChapter "Overview Report And Summary" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i sysCharReport
 ${G_myName} ${extraInfo} -i containerBoxSysCharReport
+${G_myName} ${extraInfo} -i sysCharNetInterfaceSet privA eth0   # NOTYET, placeholder
 _EOF_
 }
 

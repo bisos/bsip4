@@ -163,6 +163,7 @@ $( examplesSeperatorChapter "SysChar Containers Info" )
 ${G_myName} -i containerReposList  # listAvaiableSysChars
 $( examplesSeperatorChapter "SysChar Container Activate" )
 ${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i activate_sysContainerBxo
+${G_myName} ${extraInfo} -i activate_containersAll # Activates each of containerReposList
 $( examplesSeperatorChapter "BISOS Container Add and Select Information" )
 ${G_myName} ${extraInfo} -i bisosContainerBase
 ${G_myName} ${extraInfo} -i selectedContainerBxoId

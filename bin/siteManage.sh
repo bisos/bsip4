@@ -138,6 +138,9 @@ ${G_myName} ${extraInfo} -i siteUsgAdd ${oneBxoId}
 ${G_myName} ${extraInfo} -i siteUsgSelect ${oneBxoId}
 $( examplesSeperatorChapter "Misc -- Site Library Commands" )
 ${G_myName} ${extraInfo} -i containersAssignBaseObtain
+$( examplesSeperatorSection "Misc -- Not Yet -- Place Holder" )
+siteContainerRepo.sh -i containerRepoNamedCloneAll
+sysCharActivate.sh -i activate_containersAll # Activates each of containerReposList
 _EOF_
 }
 
