@@ -171,6 +171,14 @@ ${G_myName} ${extraInfo} -i bxoIdObtainForPath .
 ${G_myName} -i reposListBasedOnPath .                # List Git Server's Repos
 ${G_myName} ${extraInfo} -i repoCreateAndPushBasedOnPath .
 ${G_myName} ${extraInfo} -i repoDeleteBasedOnPath .  # use -f to also remove dir
+$( examplesSeperatorChapter "BxO Pull Git Repos -- NOTYET -- Place Holder" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i reposPullAll
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i reposPullThese repoName
+${G_myName} ${extraInfo} -i repoPullBasedOnPath .
+$( examplesSeperatorChapter "BxO Push Git Repos -- NOTYET -- Place Holder" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i reposPushAll
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i reposPushThese repoName
+${G_myName} ${extraInfo} -i repoPushBasedOnPath .
 _EOF_
 }
 
