@@ -556,6 +556,76 @@ _EOF_
 }
 
 
+function vis_initialReposClone {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Get a list of repos for the specified bxoId.
+Then clone those repos at the specified base or bxoHome if not specified.
+_EOF_
+    }
+    EH_assert [[ $# -lt 2 ]]
+    EH_assert [[ ! -z "${bxoId}" ]]
+
+    if ! vis_userAcctExists "${bxoId}" ; then
+	ANT_raw "${bxoId} account is not valid."
+	lpReturn 101
+    fi
+    
+    local gitCloneDest=""
+
+    # At this point bxoId exists
+    bxoHome=$( FN_absolutePathGet ~${bxoId} )    
+    
+    if [ $# -eq 0 ] ; then
+	gitCloneDest=${bxoHome}
+    elif [ $# -eq 1 ] ; then
+	gitCloneDest=$1
+    else
+	EH_oops ""
+	lpReturn
+    fi
+    
+    local reposList=$( bxoGitlab.py -v 20 --bxoId="${bxoId}"  -i reposList )
+
+    local eachRepo=""
+    local gitServerUrl=""
+
+    opDo FN_dirCreatePathIfNotThere "${gitCloneDest}"  # NOTYET
+    
+    for eachRepo in ${reposList} ; do
+	gitServerUrl=git@bxoPriv_${bxoId}:${bxoId}/${eachRepo}.git
+	# NOTYET, 
+	
+	#
+	# NOTYET results into a add prompt -- needs something like below.
+	# ssh-keygen -F github.com || ssh-keyscan github.com >> ~/.ssh/known_hosts
+	lpDo git clone "${gitServerUrl}" "${gitCloneDest}/${eachRepo}"    	
+    done
+
+    lpReturn
+}
+
+
+
+function vis_reposDelete {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Based on -p bxoId and \$1=repoName, creates a repo in bxoId.
+_EOF_
+    }
+    EH_assert [[ $# -gt 0 ]]
+    local args=$@
+    EH_assert bxoIdAssert
+
+    EH_assert  vis_userAcctExists "${bxoId}"
+
+    lpDo bxoGitlab.py -v 20 --bxoId="${bxoId}" -i reposDelete ${args}
+    
+    lpReturn
+}	
+
+
+
 #
 # Left Over From OSMT -- To be sorted.
 #

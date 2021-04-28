@@ -163,22 +163,8 @@ ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i initialR
 $( examplesSeperatorSection "BxO Construct Full Update -- All Of The Above" )
 ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i fullConstruct $(vis_bxoConstructBaseDir_obtain priv)/${oneBxoId}/home # noAcct
 ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i fullConstruct # Creats Acct & clones in ${oneBxoHome}
-$( examplesSeperatorChapter "BxO Repos Create And Push And Pull" )
-$( examplesSeperatorSection "BxO Repo Create And Push" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoCreateAndPush "rbxe" "${oneBxoHome}/rbxe" "priv"
-$( examplesSeperatorChapter "BxO Path Based Actvities" )
-${G_myName} ${extraInfo} -i bxoIdObtainForPath .
-${G_myName} -i reposListBasedOnPath .                # List Git Server's Repos
-${G_myName} ${extraInfo} -i repoCreateAndPushBasedOnPath .
-${G_myName} ${extraInfo} -i repoDeleteBasedOnPath .  # use -f to also remove dir
-$( examplesSeperatorChapter "BxO Pull Git Repos -- NOTYET -- Place Holder" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i reposPullAll
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i reposPullThese repoName
-${G_myName} ${extraInfo} -i repoPullBasedOnPath .
-$( examplesSeperatorChapter "BxO Push Git Repos -- NOTYET -- Place Holder" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i reposPushAll
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i reposPushThese repoName
-${G_myName} ${extraInfo} -i repoPushBasedOnPath .
+$( examplesSeperatorChapter "Related -- See Also" )
+bxoReposManage.sh # BxO Repos Create And Push And Pull
 _EOF_
 }
 
@@ -218,56 +204,6 @@ _EOF_
     lpReturn
 }
 
-
-
-function vis_initialReposClone {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-Get a list of repos for the specified bxoId.
-Then clone those repos at the specified base or bxoHome if not specified.
-_EOF_
-    }
-    EH_assert [[ $# -lt 2 ]]
-    EH_assert [[ ! -z "${bxoId}" ]]
-
-    if ! vis_userAcctExists "${bxoId}" ; then
-	ANT_raw "${bxoId} account is not valid."
-	lpReturn 101
-    fi
-    
-    local gitCloneDest=""
-
-    # At this point bxoId exists
-    bxoHome=$( FN_absolutePathGet ~${bxoId} )    
-    
-    if [ $# -eq 0 ] ; then
-	gitCloneDest=${bxoHome}
-    elif [ $# -eq 1 ] ; then
-	gitCloneDest=$1
-    else
-	EH_oops ""
-	lpReturn
-    fi
-    
-    local reposList=$( bxoGitlab.py -v 20 --bxoId="${bxoId}"  -i reposList )
-
-    local eachRepo=""
-    local gitServerUrl=""
-
-    opDo FN_dirCreatePathIfNotThere "${gitCloneDest}"  # NOTYET
-    
-    for eachRepo in ${reposList} ; do
-	gitServerUrl=git@bxoPriv_${bxoId}:${bxoId}/${eachRepo}.git
-	# NOTYET, 
-	
-	#
-	# NOTYET results into a add prompt -- needs something like below.
-	# ssh-keygen -F github.com || ssh-keyscan github.com >> ~/.ssh/known_hosts
-	lpDo git clone "${gitServerUrl}" "${gitCloneDest}/${eachRepo}"    	
-    done
-
-    lpReturn
-}
 
 
 function vis_fullConstruct {
@@ -434,24 +370,6 @@ _EOF_
     
     lpReturn
 }
-
-
-function vis_reposDelete {
-   G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-Based on -p bxoId and \$1=repoName, creates a repo in bxoId.
-_EOF_
-    }
-    EH_assert [[ $# -gt 0 ]]
-    local args=$@
-    EH_assert bxoIdAssert
-
-    EH_assert  vis_userAcctExists "${bxoId}"
-
-    lpDo bxoGitlab.py -v 20 --bxoId="${bxoId}" -i reposDelete ${args}
-    
-    lpReturn
-}	
 
 
 
