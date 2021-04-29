@@ -155,8 +155,8 @@ bxoGitlab.py
 bxoGitlab.py -v 20 --bxoId="${oneBxoId}" -i reposList
 $( examplesSeperatorChapter "bxoIds List" )
 bxoAcctManage.sh
-${G_myName} ${extraInfo} -i usgAcctsList         # from /etc/passwd
-${G_myName} ${extraInfo} -i bxoAcctsList         # from /etc/passwd
+${G_myName} ${extraInfo} -i usgAcctsList         # Usage Accounts from /etc/passwd
+${G_myName} ${extraInfo} -i bxoAcctsList         # BxO Accounts from /etc/passwd
 ${G_myName} ${extraInfo} -i bxoIdsList           # bxoAcctsList | cut -d ":" -f 1
 ( examplesSeperatorChapter "OId Tree Info" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i ancestorsList  # NOTYET

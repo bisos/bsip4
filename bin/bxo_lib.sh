@@ -19,7 +19,7 @@ function bxoIdAssert {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Return 0 if bxoId has been specified or is determinable. Otherwise, non-zero.
-Side-effecft: bxoId may be set based on bxoPath
+Side-effecft: bxoId and bxoHome may be set based on bxoPath
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -335,7 +335,7 @@ _EOF_
     lpReturn
 }
 
-function vis_reposListBasedOnPath {
+function vis_basedOnPath_reposNameList {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -352,6 +352,129 @@ _EOF_
     
     lpReturn
 }
+
+
+function vis_basedOnPath_reposPathList {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local repoPath="$1"
+    local canonRepoPath=$( FN_absolutePathGet ${repoPath} )
+    local gitRemote=$( inBaseDirDo ${canonRepoPath} git remote 2> /dev/null )
+
+    bxoId=$( vis_bxoIdObtainForPath "${canonRepoPath}" )
+    local bxoHome=$( FN_absolutePathGet ~${bxoId} )
+    local reposList=$( bxoGitlab.py -v 30 --bxoId="${bxoId}" -i reposList )
+
+    for each in ${reposList} ; do
+	echo ${bxoHome}/${each}
+    done
+    
+    lpReturn
+}
+
+
+
+function vis_bxoReposNameList {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+
+    local inputsList="$@"
+    local thisFunc=${G_thisFunc}
+
+    function processEach {
+	EH_assert [[ $# -eq 1 ]]
+	local bxoId=$1
+	if ! vis_userAcctExists ${bxoId} ; then
+	    EH_problem "${bxoId} Account Does Not Exist -- ${thisFunc} Processing Skipped"
+	    lpReturn 101
+	fi
+
+	if [ "${G_verbose}_" == "verbose_" ] ; then
+	    ANT_raw "Listing Names Of Repos Of bxoId=${bxoId}"
+	fi
+	lpDo bxoGitlab.py -v 30 --bxoId="${bxoId}" -i reposList 	
+    }
+
+####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
+    if [ $# -gt 0 ] ; then
+	local each=""
+	for each in ${inputsList} ; do
+	    lpDo processEach ${each}
+	done
+    else
+	local eachLine=""
+	while read -r -t 1 eachLine ; do
+	    if [ ! -z "${eachLine}" ] ; then
+		local each=""
+		for each in ${eachLine} ; do
+		    lpDo processEach ${each}
+		done
+	    fi
+	done
+    fi
+
+####+END:
+    
+    lpReturn
+}
+
+
+function vis_bxoReposPathList {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+
+    local inputsList="$@"
+    local thisFunc=${G_thisFunc}
+
+    function processEach {
+	EH_assert [[ $# -eq 1 ]]
+	local bxoId=$1
+	if ! vis_userAcctExists ${bxoId} ; then
+	    EH_problem "${bxoId} Account Does Not Exist -- ${thisFunc} Processing Skipped"
+	    lpReturn 101
+	fi
+	local bxoHome=$( FN_absolutePathGet ~${bxoId} )
+	local reposList=$( bxoGitlab.py -v 30 --bxoId="${bxoId}" -i reposList )
+
+	if [ "${G_verbose}_" == "verbose_" ] ; then
+	    ANT_raw "Listing Path Of Repos Of bxoId=${bxoId}"
+	fi
+	for each in ${reposList} ; do
+	    echo ${bxoHome}/${each}
+	done
+    }
+
+####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
+    if [ $# -gt 0 ] ; then
+	local each=""
+	for each in ${inputsList} ; do
+	    lpDo processEach ${each}
+	done
+    else
+	local eachLine=""
+	while read -r -t 1 eachLine ; do
+	    if [ ! -z "${eachLine}" ] ; then
+		local each=""
+		for each in ${eachLine} ; do
+		    lpDo processEach ${each}
+		done
+	    fi
+	done
+    fi
+
+####+END:
+    
+    lpReturn
+}
+
 
 
 function vis_repoCreateAndPush {

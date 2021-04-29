@@ -139,24 +139,25 @@ $( examplesSeperatorSection "BxO Repo Create And Push" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoCreateAndPush "rbxe" "${oneBxoHome}/rbxe" "priv"
 $( examplesSeperatorChapter "BxO Path Based Actvities" )
 ${G_myName} ${extraInfo} -i bxoIdObtainForPath .
-${G_myName} -i reposListBasedOnPath .                # List Git Server's Repos
 ${G_myName} ${extraInfo} -i repoCreateAndPushBasedOnPath .
 ${G_myName} ${extraInfo} -i repoDeleteBasedOnPath .  # use -f to also remove dir
 $( examplesSeperatorChapter "BxO Pull Git Repos -- NOTYET -- Place Holder" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i reposPullAll
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i reposPullThese repoName
-${G_myName} ${extraInfo} -i reposListBasedOnPath . | bx-gitRepos -i gitRemPull
+${G_myName} -i basedOnPath_reposPathList . | bx-gitRepos -i gitRemPull
 $( examplesSeperatorChapter "BxO Push Git Repos -- NOTYET -- Place Holder" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i reposPushAll
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i reposPushThese repoName
 ${G_myName} ${extraInfo} -i repoPushBasedOnPath .
 $( examplesSeperatorChapter "BxO Repos Status" )
-bxoReposManage.sh -i reposListBasedOnPath . | ( cd /bxo/r3/iso/pip_mbPersonalProjs; bx-gitRepos -i status loc )  # NOTYET needs to run at bxoHome
-bxoReposManage.sh -i basedOnPath_reposPathList . | bx-gitRepos -i status loc )
-bxoReposManage.sh -i basedOnPath_reposNameList . | bx-gitRepos -i status loc )  # NOTYET needs to run at bxoHome 
+${G_myName} -i basedOnPath_reposNameList .
+${G_myName} -i basedOnPath_reposPathList . | bx-gitRepos -i status loc
+${G_myName} -i bxoReposNameList "${oneBxoId}"
+bxoAcctManage.sh -i bxoIdsList | ${G_myName} -v -i bxoReposNameList
+bxoAcctManage.sh -i bxoIdsList | ${G_myName} -v -i bxoReposPathList
+bxoAcctManage.sh -i bxoIdsList | ${G_myName} -i bxoReposPathList | bx-gitRepos -i status loc rem
 _EOF_
 }
-
 
 
 
