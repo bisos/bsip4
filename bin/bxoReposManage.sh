@@ -142,10 +142,12 @@ ${G_myName} ${extraInfo} -i bxoIdObtainForPath .
 ${G_myName} ${extraInfo} -i repoCreateAndPushBasedOnPath .
 ${G_myName} ${extraInfo} -i repoDeleteBasedOnPath .  # use -f to also remove dir
 $( examplesSeperatorChapter "BxO Pull Git Repos" )
+echo $(pwd) | bx-gitRepos -i gitRemPull
 ${G_myName} -i basedOnPath_reposPathList . | bx-gitRepos -i gitRemPull
 echo "${oneBxoId}" | ${G_myName} -i bxoReposPathList | bx-gitRepos -i gitRemPull
 bxoAcctManage.sh -i bxoIdsList | ${G_myName} -i bxoReposPathList | bx-gitRepos -i gitRemPull # ALL BxOs on This Container
 $( examplesSeperatorChapter "BxO Push Git Repos" )
+echo $(pwd) | bx-gitRepos -i addCommitPush all
 ${G_myName} -i basedOnPath_reposPathList . | bx-gitRepos -i addCommitPush modifieds
 ${G_myName} -i basedOnPath_reposPathList . | bx-gitRepos -i addCommitPush all
 echo "${oneBxoId}" | ${G_myName} -i bxoReposPathList | bx-gitRepos -i addCommitPush all
