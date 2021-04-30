@@ -112,6 +112,7 @@ typeset -t model=""     # one of [HPV]
 typeset -t abode=""     # one of [MAPIS]
 typeset -t function=""  # one of [LASD]
 
+typeset -t otherName=""
 
 sshCmnd="ssh -o StrictHostKeyChecking=no"
 
@@ -177,21 +178,36 @@ ${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i distro_aptSourcesPrep
 ${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i distro_provisionBisos_sysBasePlatform
 $( examplesSeperatorChapter "bisosBasePlatform Actions -- Ssh In Other" )
 ${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i bisosBasePlatform_fullUpdate
+${G_myName} ${extraInfo} -i bisosBasePlatform_fullUpdate  # Without otherName means Here
 ${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i bisosBasePlatform_siteSetup
+${G_myName} ${extraInfo} -i bisosBasePlatform_siteSetup
 $( examplesSeperatorChapter "siteBasePlatform Actions -- Ssh In Other" )
 ${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i siteBasePlatform_fullUpdate
+${G_myName} ${extraInfo} -i siteBasePlatform_fullUpdate
 ${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i siteBasePlatform_newBoxAssign
+${G_myName} ${extraInfo} -i siteBasePlatform_newBoxAssign
 ${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -p model=Host -p abode=Shield -p function=Server -i siteBasePlatform_containerBoxAssignAndRepo
+${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i siteBasePlatform_containerBoxAssignAndRepo
 ${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i siteBasePlatform_sysCharContainerBoxRealize
+${G_myName} ${extraInfo} -i siteBasePlatform_sysCharContainerBoxRealize
 ${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i siteBasePlatform_sysCharBoxIdentitySet
+${G_myName} ${extraInfo} -i siteBasePlatform_sysCharBoxIdentitySet
+${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i siteBasePlatform_sysCharBoxIdentitySet
+${G_myName} ${extraInfo} -i siteBasePlatform_sysCharBoxIdentitySet
 ${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i siteBasePlatform_deployBox
+${G_myName} ${extraInfo} -i siteBasePlatform_deployBox
 ${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i siteBasePlatform_deployWithSysChar
+${G_myName} ${extraInfo} -i siteBasePlatform_deployWithSysChar
 $( examplesSeperatorChapter "sysCharedPlatform Actions -- Ssh In Other" )
 ${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i sysCharedPlatform_fullUpdate
+${G_myName} ${extraInfo} -i sysCharedPlatform_fullUpdate
 ${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i sysCharedPlatform_actuateServices
+${G_myName} ${extraInfo} -i sysCharedPlatform_actuateServices
 ${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i sysCharedPlatform_sealActuatedServices
+${G_myName} ${extraInfo} -i sysCharedPlatform_sealActuatedServices
 $( examplesSeperatorChapter "sysCharedPlatform Report -- Ssh In Other" )
 ${G_myName} ${extraInfo} -p otherName="${oneOtherName}" -i sysCharedPlatform_containerBoxReport
+${G_myName} ${extraInfo} -i sysCharedPlatform_containerBoxReport
 _EOF_
 }
 
@@ -321,23 +337,25 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert [ ! -z "${otherName}" ]
-
     local registrar=$( vis_registrarHostName )
     local id=$( vis_registrarUserName )
     local password=$( vis_registrarUserPassword )
 
     local siteBxoId=$( sysCharRealize.sh -i selectedSiteBxoId )
 
-    # Preps Currents and Preps the site (configs for gitlab server, etc)
-    lpDo sshpass -p intra ${sshCmnd} bystar@"${otherName}" \
-	 $(which bisosSiteSetup.sh) ${G_commandPrefs} \
-	 -p registrar="${registrar}" -p id="${id}" -p password="${password}" \
-	 -i fullUpdate
+    if [ -z "${otherName}" ] ; then
+	EH_problem "Can Not Be Run Locally. Run it remotely and specify otherName"
+    else
+	# Preps Currents and Preps the site (configs for gitlab server, etc)
+	lpDo sshpass -p intra ${sshCmnd} bystar@"${otherName}" \
+	     $(which bisosSiteSetup.sh) ${G_commandPrefs} \
+	     -p registrar="${registrar}" -p id="${id}" -p password="${password}" \
+	     -i fullUpdate
     
-    lpDo sshpass -p intra ${sshCmnd} bystar@"${otherName}" \
-	 $(which bisosSiteSetup.sh) ${G_commandPrefs} \
-	 -i activate_siteBxoPlusAndSelect "${siteBxoId}"
+	lpDo sshpass -p intra ${sshCmnd} bystar@"${otherName}" \
+	     $(which bisosSiteSetup.sh) ${G_commandPrefs} \
+	     -i activate_siteBxoPlusAndSelect "${siteBxoId}"
+    fi
 }
 
 
@@ -365,15 +383,25 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert [ ! -z "${otherName}" ]
+    local boxNu=""
 
-    local boxNu=$( sshpass -p intra ${sshCmnd} intra@"${otherName}" $(which siteBoxAssign.sh) -i thisBoxFindNu )
+    if [ -z "${otherName}" ] ; then
+	boxNu=$( siteBoxAssign.sh -i thisBoxFindNu )
 
-    if [ -z "${boxNu}" ] ; then
-	lpDo sshpass -p intra ${sshCmnd} bystar@"${otherName}" $(which siteBoxAssign.sh) ${G_commandPrefs} -i thisBoxAddAndPush
-	lpDo siteBoxAssign.sh ${G_commandPrefs} -i boxesGitPull
+	if [ -z "${boxNu}" ] ; then
+	    lpDo siteBoxAssign.sh ${G_commandPrefs} -i thisBoxAddAndPush
+	else
+	    ANT_raw "This box (${boxNu}) has already been registered -- addition skipped"
+	fi
     else
-	ANT_raw "This box (${boxNu}) has already been registered -- addition skipped"
+	boxNu=$( sshpass -p intra ${sshCmnd} intra@"${otherName}" $(which siteBoxAssign.sh) -i thisBoxFindNu )
+
+	if [ -z "${boxNu}" ] ; then
+	    lpDo sshpass -p intra ${sshCmnd} bystar@"${otherName}" $(which siteBoxAssign.sh) ${G_commandPrefs} -i thisBoxAddAndPush
+	    lpDo siteBoxAssign.sh ${G_commandPrefs} -i boxesGitPull
+	else
+	    ANT_raw "This box (${boxNu}) has already been registered -- addition skipped"
+	fi
     fi
 }
 
@@ -385,15 +413,18 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert [ ! -z "${otherName}" ]
-
     EH_assert [ ! -z "${model}" ]   
     EH_assert [ ! -z "${abode}" ]
     EH_assert [ ! -z "${function}" ]
-    
-    lpDo sshpass -p intra ${sshCmnd} bystar@"${otherName}" \
-	 $(which sysCharRealize.sh) ${G_commandPrefs} \
-	 -p model=${model} -p abode=${abode} -p function=${function} -i containerBoxAssignAndRepo
+
+    if [ -z "${otherName}" ] ; then
+	lpDo sysCharRealize.sh ${G_commandPrefs} \
+	     -p model=${model} -p abode=${abode} -p function=${function} -i containerBoxAssignAndRepo
+    else
+	lpDo sshpass -p intra ${sshCmnd} bystar@"${otherName}" \
+	     $(which sysCharRealize.sh) ${G_commandPrefs} \
+	     -p model=${model} -p abode=${abode} -p function=${function} -i containerBoxAssignAndRepo
+    fi
 }
 
 function vis_siteBasePlatform_sysCharContainerBoxRealize {    
@@ -404,11 +435,14 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert [ ! -z "${otherName}" ]
-    
-    lpDo sshpass -p intra ${sshCmnd} bystar@"${otherName}" \
-	 $(which sysCharRealize.sh) ${G_commandPrefs} \
-	 -i sysCharContainerBoxRealize
+    if [ -z "${otherName}" ] ; then
+	lpDo sysCharRealize.sh ${G_commandPrefs} \
+	     -i sysCharContainerBoxRealize
+    else    
+	lpDo sshpass -p intra ${sshCmnd} bystar@"${otherName}" \
+	     $(which sysCharRealize.sh) ${G_commandPrefs} \
+	     -i sysCharContainerBoxRealize
+    fi
 }
 
 function vis_siteBasePlatform_sysCharBoxIdentitySet {    
@@ -419,11 +453,14 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert [ ! -z "${otherName}" ]
-    
-    lpDo sshpass -p intra ${sshCmnd} bystar@"${otherName}" \
-	 $(which sysCharIdentity.sh) ${G_commandPrefs} \
-	 -i identityUpdate
+    if [ -z "${otherName}" ] ; then
+	lpDo sysCharIdentity.sh ${G_commandPrefs} \
+	     -i identityUpdate
+    else
+	lpDo sshpass -p intra ${sshCmnd} bystar@"${otherName}" \
+	     $(which sysCharIdentity.sh) ${G_commandPrefs} \
+	     -i identityUpdate
+    fi
 }
 
 
@@ -435,9 +472,11 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert [ ! -z "${otherName}" ]
-
-    lpDo sshpass -p intra ${sshCmnd} bystar@"${otherName}" echo bisosSiteSetup.sh NOTYET
+    if [ -z "${otherName}" ] ; then
+	lpDo echo bisosSiteSetup.sh NOTYET
+    else
+	lpDo sshpass -p intra ${sshCmnd} bystar@"${otherName}" echo bisosSiteSetup.sh NOTYET
+    fi
 }
 
 function vis_siteBasePlatform_deployWithSysChar {    
@@ -448,10 +487,11 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert [ ! -z "${otherName}" ]
-    EH_assert [ ! -z "${bxoId}" ]
-
-    lpDo sshpass -p intra ${sshCmnd} bystar@"${otherName}" bisosSiteSetup.sh NOTYET
+    if [ -z "${otherName}" ] ; then
+	lpDo echo bisosSiteSetup.sh NOTYET
+    else
+	lpDo sshpass -p intra ${sshCmnd} bystar@"${otherName}" echo bisosSiteSetup.sh NOTYET
+    fi
 }
 
 function vis_sysCharedPlatform_fullUpdate {
@@ -461,8 +501,6 @@ function vis_sysCharedPlatform_fullUpdate {
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-
-    EH_assert [ ! -z "${otherName}" ]
 
     lpDo vis_sysCharedPlatform_actuateServices
     lpDo vis_sysCharedPlatform_sealActuatedServices    
@@ -477,9 +515,11 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert [ ! -z "${otherName}" ]
-
-    lpDo echo sshpass -p intra ${sshCmnd} bystar@"${otherName}" bisosSiteSetup.sh NOTYET
+    if [ -z "${otherName}" ] ; then
+	lpDo echo bisosSiteSetup.sh NOTYET
+    else
+	lpDo sshpass -p intra ${sshCmnd} bystar@"${otherName}" echo bisosSiteSetup.sh NOTYET
+    fi
 }
 
 function vis_sysCharedPlatform_sealActuatedServices {    
@@ -490,9 +530,11 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert [ ! -z "${otherName}" ]
-
-    lpDo echo sshpass -p intra ${sshCmnd} bystar@"${otherName}" bisosSiteSetup.sh NOTYET
+    if [ -z "${otherName}" ] ; then
+	lpDo echo bisosSiteSetup.sh NOTYET
+    else
+	lpDo sshpass -p intra ${sshCmnd} bystar@"${otherName}" echo bisosSiteSetup.sh NOTYET
+    fi
 }
 
 
@@ -504,11 +546,14 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert [ ! -z "${otherName}" ]
-
-    lpDo sshpass -p intra ${sshCmnd} bystar@"${otherName}" \
-	 $(which sysCharRealize.sh) ${G_commandPrefs} \
-	 -i containerBoxSysCharReport
+    if [ -z "${otherName}" ] ; then
+	lpDo sysCharRealize.sh ${G_commandPrefs} \
+	     -i containerBoxSysCharReport
+    else
+	lpDo sshpass -p intra ${sshCmnd} bystar@"${otherName}" \
+	     $(which sysCharRealize.sh) ${G_commandPrefs} \
+	     -i containerBoxSysCharReport
+    fi
 }
 
 

@@ -360,7 +360,8 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
     
-    uidMinSpec=1000000
+    #uidMinSpec=1000000
+    uidMinSpec=1000001
     uidMaxSpec=2000000
 
     vis_uidRangePasswdFile
