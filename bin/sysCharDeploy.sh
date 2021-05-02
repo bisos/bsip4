@@ -196,6 +196,7 @@ ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_s
 $( examplesSeperatorChapter "Target Box Developmenet Preps -- On Target Box" )
 ssh -X bystar@${oneTargetName}    # Then run emacs
 ${G_myName} ${extraInfo} -i sysDeveloperSetup   # NOTYET, locate existing work
+bleeVisit /bisos/panels/bisos-dev/howToBecomeDeveloper/fullUsagePanel-en.org
 $( examplesSeperatorChapter "siteBasePlatform Actions -- On Manager Or On Target Box" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_fullUpdate
 ${G_myName} ${extraInfo} -i siteBasePlatform_fullUpdate
