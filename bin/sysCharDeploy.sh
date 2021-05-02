@@ -211,8 +211,6 @@ ${G_myName} ${extraInfo} -i siteBasePlatform_sysCharContainerBoxRealize
 $( examplesSeperatorChapter "siteBasePlatform Actions -- On Manager Or On Target Box" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_sysCharBoxIdentitySet
 ${G_myName} ${extraInfo} -i siteBasePlatform_sysCharBoxIdentitySet
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_sysCharBoxIdentitySet
-${G_myName} ${extraInfo} -i siteBasePlatform_sysCharBoxIdentitySet
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_deployBox
 ${G_myName} ${extraInfo} -i siteBasePlatform_deployBox
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_deployWithSysChar
@@ -515,18 +513,32 @@ _EOF_
 function vis_siteBasePlatform_sysCharBoxIdentitySet {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** NOTYET
+** Duplicates code 
+*** Duplicates code in vis_deployWithSysCharDeployInfo
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
+    # determin bxoId for box
+
+    local containerBase=$( vis_forThisSysFindContainerBase )
+    EH_assert [ ! -z "${containerBase}" ]
+
+    vis_containerAssignRead "${containerBase}"
+    EH_assert [ ! -z "${containerAssign_containerId}" ]
+
+    local hostContainerId="${containerAssign_containerId}"
+    
+    bxoId=$( withContainerIdGetBxoId ${hostContainerId} )
+    EH_assert vis_bxoAcctVerify "${bxoId}"
+
     if [ -z "${targetName}" ] ; then
 	lpDo sysCharIdentity.sh ${G_commandPrefs} \
-	     -i identityUpdate
+	     -p bxoId="${bxoId}" -i identityUpdate
     else
 	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
 	     $(which sysCharIdentity.sh) ${G_commandPrefs} \
-	     -i identityUpdate
+	     -p bxoId="${bxoId}" -i identityUpdate
     fi
 }
 
