@@ -435,7 +435,7 @@ _EOF_
     EH_assert [[ $# -lt 4 ]]
     EH_assert [[ $# -gt 0 ]]
 
-    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;        
+    #if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;        
 
     local userName="Default BISOS"
     local userEmail="bystar@bisos.net"
