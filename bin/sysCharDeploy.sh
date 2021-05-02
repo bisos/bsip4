@@ -153,11 +153,13 @@ function vis_examples {
     if [ -z "${selectedContainerBxoId}" ] ; then
 
 	local containerAssignBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
-	EH_assert [ ! -z "${containerAssignBase}" ]
-   
-	local sysCharContainerBxoId=$( vis_sysCharContainerBxoIdName ${containerAssignBase} )
+	if [ -z "${containerAssignBase}" ] ; then
+	    effectiveContainerBxoId="${selectedContainerBxoId}"
+	else
+   	    local sysCharContainerBxoId=$( vis_sysCharContainerBxoIdName ${containerAssignBase} )
 
-	effectiveContainerBxoId="${sysCharContainerBxoId}"
+	    effectiveContainerBxoId="${sysCharContainerBxoId}"
+	fi
     else
 	effectiveContainerBxoId="${selectedContainerBxoId}"
     fi
