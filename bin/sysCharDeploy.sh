@@ -169,7 +169,7 @@ function vis_examples {
     local password=$( vis_registrarUserPassword )        
 
     # local oneTargetName="192.168.0.38"
-    local oneTargetName="192.168.0.34"
+    local oneTargetName="192.168.0.37"
     # local oneTargetName="localhost"
     
     visLibExamplesOutput ${G_myName} 
@@ -190,11 +190,15 @@ ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_aptSourcesPr
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_provisionBisos_sysBasePlatform
 $( examplesSeperatorChapter "bisosBasePlatform Actions -- On Manager -- Ssh In Other" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_fullUpdate
-${G_myName} ${extraInfo} -i bisosBasePlatform_fullUpdate  # Without targetName means Here
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_siteSetup
+$( examplesSeperatorChapter "Target Box Developmenet Preps -- On Target Box" )
+ssh -X bystar@${oneTargetName}    # Then run emacs
+${G_myName} ${extraInfo} -i sysDeveloperSetup   # NOTYET, locate existing work
 $( examplesSeperatorChapter "siteBasePlatform Actions -- On Manager Or On Target Box" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_fullUpdate
 ${G_myName} ${extraInfo} -i siteBasePlatform_fullUpdate
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_newBoxAscertain
+${G_myName} ${extraInfo} -i siteBasePlatform_newBoxAscertain
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_newBoxAssign
 ${G_myName} ${extraInfo} -i siteBasePlatform_newBoxAssign
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p model=Host -p abode=Shield -p function=Server -i siteBasePlatform_containerBoxAssignAndRepo
@@ -403,6 +407,37 @@ _EOF_
     lpDo vis_siteBasePlatform_containerBoxAssignAndRepo
     lpDo vis_siteBasePlatform_sysCharContainerBoxRealize
 }
+
+
+function vis_siteBasePlatform_newBoxAscertain {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Add thisBox to site info base.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local boxNu=""
+
+    if [ -z "${targetName}" ] ; then
+	boxNu=$( siteBoxAssign.sh -i thisBoxFindNu )
+
+	if [ -z "${boxNu}" ] ; then
+	    ANT_raw "This box has NOT been registered -- Needs to be added"
+	else
+	    ANT_raw "This box (${boxNu}) has already been registered -- addition skipped"
+	fi
+    else
+	boxNu=$( sshpass -p intra ${sshCmnd} intra@"${targetName}" $(which siteBoxAssign.sh) -i thisBoxFindNu )
+
+	if [ -z "${boxNu}" ] ; then
+	    ANT_raw "This box has NOT been registered -- Needs to be added"	    
+	else
+	    ANT_raw "This box (${boxNu}) has already been registered -- addition skipped"
+	fi
+    fi
+}
+
 
 
 function vis_siteBasePlatform_newBoxAssign {    
