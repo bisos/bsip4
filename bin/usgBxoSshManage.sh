@@ -475,6 +475,8 @@ _EOF_
     lpDo fileParamManage.py  -i fileParamWrite  ${gitLabelPath} userEmail "${gitUserEmail}"
     EH_retOnFail
 
+    lpDo vis_usgAcct_gitConfigUpdate "${usg}" "${gitUserName}" "${gitUserEmail}"
+
     lpReturn
 }
 

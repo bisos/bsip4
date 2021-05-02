@@ -214,7 +214,7 @@ function vis_baseUpdate_blee {
 acctName bxo.ue
 _EOF_
     }
-    EH_assert [[ $# -eq gt 1 ]]
+    EH_assert [[ $# -eq 1 ]]
     local usgAcctName=$1
 
     lpReturn
@@ -226,7 +226,7 @@ function vis_baseUpdate_bue {
 acctName bxo.ue
 _EOF_
     }
-    EH_assert [[ $# -eq gt 1 ]]
+    EH_assert [[ $# -eq 1 ]]
     local usgAcctName=$1
 
     lpReturn

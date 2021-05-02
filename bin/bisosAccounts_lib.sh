@@ -431,15 +431,24 @@ function vis_usgAcct_gitConfigUpdate {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Configure git pars -- just a starting point for now.
 _EOF_
-    }
-    EH_assert [[ $# -eq 1 ]]
+		       }
+    EH_assert [[ $# -lt 4 ]]
+    EH_assert [[ $# -gt 0 ]]
 
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;        
 
+    local userName="Default BISOS"
+    local userEmail="bystar@bisos.net"
+    
     local acctName="$1"
 
-    lpDo sudo -u ${acctName} git config --global user.email "bystar@bisos.net"
-    lpDo sudo -u ${acctName} git config --global user.name "Default Bisos"
+    if [ $# -eq 3 ] ; then
+	userName="$2"
+	userEmail="$3"
+    fi
+
+    lpDo sudo -u ${acctName} git config --global user.name "${userName}"
+    lpDo sudo -u ${acctName} git config --global user.email "${userEmail}"
 }
 
 
