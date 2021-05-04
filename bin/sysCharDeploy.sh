@@ -206,9 +206,14 @@ ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_ne
 ${G_myName} ${extraInfo} -i siteBasePlatform_newBoxAssign
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p model=Host -p abode=Shield -p function=Server -i siteBasePlatform_containerBoxAssignAndRepo
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i siteBasePlatform_containerBoxAssignAndRepo
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_containerBoxSiteAscertain
+${G_myName} ${extraInfo} -i siteBasePlatform_containerBoxSiteAscertain
 $( examplesSeperatorChapter "Container Box Realize -- One Time Activity --  On Target Box" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_sysCharContainerBoxRealize
 ${G_myName} ${extraInfo} -i siteBasePlatform_sysCharContainerBoxRealize
+${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i siteBasePlatform_containerBoxAssignAndRepo
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_containerBoxBpoAscertain
+${G_myName} ${extraInfo} -i siteBasePlatform_containerBoxBpoAscertain
 $( examplesSeperatorChapter "siteBasePlatform Actions -- On Manager Or On Target Box" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_sysCharBoxIdentitySet
 ${G_myName} ${extraInfo} -i siteBasePlatform_sysCharBoxIdentitySet
@@ -493,6 +498,45 @@ _EOF_
     fi
 }
 
+function vis_siteBasePlatform_containerBoxSiteAscertain {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** NOTYET
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local containerAssignBase=""
+    local containerRepoBase=""
+
+    if [ -z "${targetName}" ] ; then
+	containerAssignBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
+	EH_assert [ ! -z "${containerAssignBase}" ]
+
+	echo "containerAssignBase=${containerAssignBase}"	
+
+	containerRepoBase=$( siteContainerRepo.sh -i containerRepoBase "${containerAssignBase}" )
+	EH_assert [ -d "${containerRepoBase}" ]
+
+	echo "containerRepoBase=${containerRepoBase}"
+    else
+	containerAssignBase=$( sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+				     $(which siteContainerAssign.sh) \
+				     -i forThisSysFindContainerBase )
+	EH_assert [ ! -z "${containerAssignBase}" ]
+
+	echo "containerAssignBase=${containerAssignBase}"
+	
+	containerRepoBase=$( sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+				     $(which siteContainerRepo.sh) \
+				     -i containerRepoBase "${containerAssignBase}" )
+	EH_assert [ ! -z "${containerRepoBase}" ]
+
+	echo "containerRepoBase=${containerRepoBase}"
+    fi
+}
+
+
 function vis_siteBasePlatform_sysCharContainerBoxRealize {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -510,6 +554,50 @@ _EOF_
 	     -i sysCharContainerBoxRealize
     fi
 }
+
+function vis_siteBasePlatform_containerBoxBpoAscertain {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** NOTYET
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local containerAssignBase=""
+    local containerRepoBase=""
+
+    # sysCharRealize.sh -h -v -n showRun -i sysCharContainerBxoIdName
+
+    if [ -z "${targetName}" ] ; then
+	containerAssignBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
+	EH_assert [ ! -z "${containerAssignBase}" ]
+
+	echo "containerAssignBase=${containerAssignBase}"	
+
+	containerRepoBase=$( siteContainerRepo.sh -i containerRepoBase "${containerAssignBase}" )
+	EH_assert [ -d "${containerRepoBase}" ]
+
+	echo "containerRepoBase=${containerRepoBase}"
+    else
+	containerAssignBase=$( sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+				     $(which siteContainerAssign.sh) \
+				     -i forThisSysFindContainerBase )
+	EH_assert [ ! -z "${containerAssignBase}" ]
+
+	echo "containerAssignBase=${containerAssignBase}"
+	
+	containerRepoBase=$( sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+				     $(which siteContainerRepo.sh) \
+				     -i containerRepoBase "${containerAssignBase}" )
+	EH_assert [ ! -z "${containerRepoBase}" ]
+
+	echo "containerRepoBase=${containerRepoBase}"
+    fi
+}
+
+
+
+
 
 function vis_siteBasePlatform_sysCharBoxIdentitySet {    
     G_funcEntry
