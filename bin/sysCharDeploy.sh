@@ -101,6 +101,8 @@ _CommentEnd_
 
 . ${opBinBase}/container_lib.sh
 
+. ${opBinBase}/usgBpos_lib.sh
+
 # PRE parameters
 
 typeset -t bxoId=""
@@ -193,9 +195,10 @@ ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_provisionBis
 $( examplesSeperatorChapter "bisosBasePlatform Actions -- On Manager -- Ssh In Other" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_fullUpdate
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_siteSetup
+$( examplesSeperatorChapter "Target Box Developmenet Preps -- On Manager" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i sysDeveloperSetup
 $( examplesSeperatorChapter "Target Box Developmenet Preps -- On Target Box" )
 ssh -X bystar@${oneTargetName}    # Then run emacs
-${G_myName} ${extraInfo} -i sysDeveloperSetup   # NOTYET, locate existing work
 bleeVisit /bisos/panels/bisos-dev/howToBecomeDeveloper/fullUsagePanel-en.org
 $( examplesSeperatorChapter "siteBasePlatform Actions -- On Manager Or On Target Box" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_fullUpdate
@@ -396,6 +399,49 @@ _EOF_
 	     $(which bisosSiteSetup.sh) ${G_commandPrefs} \
 	     -i activate_siteBxoPlusAndSelect "${siteBxoId}"
     fi
+}
+
+
+function vis_sysDeveloperSetup {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Activate the bisosDev usage env bpo. authClone using credentials of bisosDev.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert [ ! -z "${targetName}" ]
+    
+    local bisosDevBxoId=$( vis_usgBposUsageEnvs_bisosDev_bxoId )
+    EH_assert [ ! -z "${bisosDevBxoId}" ]
+
+    bisosDevBxoHome=$( FN_absolutePathGet ~${bisosDevBxoId} )
+    
+    # Activate bisosDev usage env bpo
+    lpDo echo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+	 $(which bxoManage.sh) ${G_commandPrefs} \
+	 -p privacy=priv -p bxoId=${bisosDevBxoId} \
+	 -i fullConstruct
+
+    # record the activated bpo as bisosDev
+    lpDo echo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+	 $(which usgBpos.sh) ${G_commandPrefs} \
+	 -i usgBposUsageEnvs_bisosDev_update ${bisosDevBxoHome}
+
+    # Install bisosDev dev crentials in ~/.ssh
+    lpDo echo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+	 ${bisosDevBxoHome}/sys/bin/usgBxoSshManage-niche.sh ${G_commandPrefs} \
+	 -i bxoInit
+
+    # Auth clone using bisosDev credentials
+    lpDo echo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+	 ${bisosDevBxoHome}/sys/bin/bisosBaseDirs-niche.sh ${G_commandPrefs} \
+	 -i bxoInit
+
+    # switch to auth based bxRepos
+    lpDo echo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+	 $(which bisosBaseDirs.sh) ${G_commandPrefs} \
+	 -i bxReposAuthSet
 }
 
 
