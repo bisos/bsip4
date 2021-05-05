@@ -100,9 +100,44 @@ _CommentEnd_
 function examplesHookPost {
   cat  << _EOF_
 ----- ADDITIONS -------
-${G_myName} -i moduleDescription
+${G_myName} -i sysPreps
 _EOF_
 }
+
+function vis_sysPreps {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+
+[org/gnome/settings-daemon/plugins/power]
+
+sleep-inactive-ac-type='blank'
+
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    echo "suspension disabling comes here"
+
+    case ${opRunDistFamily} in
+	"UBUNTU")
+	    if [ "${opRunDistGeneration}" == "2004" ] ; then
+		doNothing
+	    fi
+       ;;
+    "DEBIAN")
+	doNothing
+	echo sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
+       ;;
+    *)
+       opRunDistGeneration="UNSUPPORTED"
+	EH_oops ;
+       return
+       ;;
+  esac
+    
+    lpReturn
+}
+
 
 ####+BEGIN: bx:dblock:lsip:binsprep:apt :module "debconf-utils"
 _CommentBegin_
