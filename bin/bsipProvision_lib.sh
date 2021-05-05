@@ -88,8 +88,6 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    
-
     lpDo vis_provisionBisosAccts
     
     lpDo vis_provisionUsgAcctBases
@@ -172,7 +170,8 @@ _EOF_
     if [ ! -x "${bisosProg}" ] ; then
 	EH_problem "Missing ${bisosProg}"
 	lpReturn 1
-    else	
+    else
+	opDo "${bisosProg}" -h -v -n showRun -i sysPreps
     	opDo "${bisosProg}" -h -v -n showRun -i fullUpdate
     fi
     

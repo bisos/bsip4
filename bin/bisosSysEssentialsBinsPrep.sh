@@ -98,9 +98,10 @@ _CommentEnd_
 
 
 function examplesHookPost {
+    typeset extraInfo="-h -v -n showRun"
   cat  << _EOF_
 ----- ADDITIONS -------
-${G_myName} -i sysPreps
+${G_myName} ${extraInfo} -i sysPreps
 _EOF_
 }
 
@@ -116,24 +117,21 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    echo "suspension disabling comes here"
-
     case ${opRunDistFamily} in
 	"UBUNTU")
 	    if [ "${opRunDistGeneration}" == "2004" ] ; then
 		doNothing
 	    fi
-       ;;
-    "DEBIAN")
-	doNothing
-	echo sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
-       ;;
-    *)
-       opRunDistGeneration="UNSUPPORTED"
-	EH_oops ;
-       return
-       ;;
-  esac
+	    ;;
+	"DEBIAN")
+	    lpDo sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
+	    ;;
+	*)
+	    opRunDistGeneration="UNSUPPORTED"
+	    EH_oops ;
+	    return
+	    ;;
+    esac
     
     lpReturn
 }
