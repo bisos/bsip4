@@ -119,7 +119,7 @@ function G_postParamHook {
 
 
 noArgsHook() {
-  vis_examples
+  vis_examples_general "general"
 }
 
 
@@ -127,8 +127,11 @@ _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  Examples      :: Examples [[elisp:(org-cycle)][| ]]
 _CommentEnd_
 
+function vis_examples_general {
+    EH_assert [[ $# -eq 1 ]]
 
-function vis_examples {
+    local context="$1"
+
     typeset extraInfo="-h -v -n showRun"
     #typeset extraInfo=""
     typeset runInfo="-p ri=lsipusr:passive"
@@ -136,18 +139,38 @@ function vis_examples {
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
     #bisosCurrentsGet
+
+    oneDevicePartition=$( lsblk -l | egrep 'part $' | cut -d ' ' -f 1 | head -1 )
     
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "effectiveContainerBxoId"
+$( examplesSeperatorChapter "BOX Attached Disk Drives -- Locate -- Partition -- Format -- Mount " )
+$( examplesSeperatorSection "Locate Attached Disk Drives" )
+sudo fdisk -l       # Locate Attached Disks
+sudo blkid          # Locate Attached Disks
+lsblk               # Locate Attached Disks
+lsblk -l            # Locate Attached Disks
+$( examplesSeperatorSection "Partition Attached Disks" )
+gnome-disks         # GUI on Desktop -- Partition Attached Disks, Format Attached Disks
+gparted             # GUI on Desktop -- Partition Attached Disks, secondary to gnome-disks
+parted              # Command Line
+$( examplesSeperatorSection "Partition Format Disks" )
+gnome-disks         # GUI on Desktop -- Partition Attached Disks, Format Attached Disks
+$( examplesSeperatorSection "Partition Attached Disks" )
+gnome-disks         # GUI on Desktop -- Partition Attached Disks, Format Attached Disks
 $( examplesSeperatorChapter "Initialize /dd" )
-${G_myName} ${extraInfo} -i sysDiskDriveBasePrep  # Creates /dd/this
+${G_myName} ${extraInfo} -i mountPointsPrep  # Creates /dd/this
 $( examplesSeperatorChapter "Add Disk Drive Base" )
-${G_myName} ${extraInfo} -i sysDiskDriveBaseAdd d1  # Creates /dd/this/d1
+${G_myName} ${extraInfo} -i mountPointCreate d1  # Creates /dd/this/d1
 $( examplesSeperatorChapter "Add /etc/fstab Line" )
-${G_myName} ${extraInfo} -i fstabLineGen /dev/sdb1ZZ /dd/this/d1 ext4
+lsblk -l | egrep 'part $' | cut -d ' ' -f 1   # List Of Available Device Partitions
+${G_myName} ${extraInfo} -i fstabLineGen /dev/${oneDevicePartition} /dd/this/d1 ext4
+${G_myName} ${extraInfo} -i fstabLineGen /dev/${oneDevicePartition} /dd/this/d1 ext4 >> /tmp/sysDisks.fstab
+${G_myName} ${extraInfo} -i appendFilesToFstab /tmp/sysDisks.fstab
+${G_myName} ${extraInfo} -i mountAllFstab
 $( examplesSeperatorChapter "Mount Disk Drive Base" )
 _EOF_
 }

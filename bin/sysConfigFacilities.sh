@@ -143,20 +143,6 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "effectiveContainerBxoId"
-$( examplesSeperatorChapter "BOX Attached Disk Drives -- Locate -- Partition -- Format -- Mount " )
-$( examplesSeperatorSection "Locate Attached Disk Drives" )
-sudo fdisk -l       # Locate Attached Disks
-sudo blkid          # Locate Attached Disks
-lsblk               # Locate Attached Disks
-lsblk -l            # Locate Attached Disks
-$( examplesSeperatorSection "Partition Attached Disks" )
-gnome-disks         # GUI on Desktop -- Partition Attached Disks, Format Attached Disks
-gparted             # GUI on Desktop -- Partition Attached Disks, secondary to gnome-disks
-parted              # Command Line
-$( examplesSeperatorSection "Partition Format Disks" )
-gnome-disks         # GUI on Desktop -- Partition Attached Disks, Format Attached Disks
-$( examplesSeperatorSection "Partition Attached Disks" )
-gnome-disks         # GUI on Desktop -- Partition Attached Disks, Format Attached Disks
 _EOF_
 }
 
