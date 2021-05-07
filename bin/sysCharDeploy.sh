@@ -428,15 +428,11 @@ _EOF_
 	 $(which usgBpos.sh) ${G_commandPrefs} \
 	 -i usgBposUsageEnvs_bisosDev_update ${bisosDevBxoHome}
 
-    # Install bisosDev dev crentials in ~/.ssh
+    # Install bisosDev dev crentials in ~/.ssh and
+    # auth clone using bisosDev credentials
     lpDo echo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-	 ${bisosDevBxoHome}/sys/bin/usgBxoSshManage-niche.sh ${G_commandPrefs} \
-	 -i bxoInit
-
-    # Auth clone using bisosDev credentials
-    lpDo echo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-	 ${bisosDevBxoHome}/sys/bin/bisosBaseDirs-niche.sh ${G_commandPrefs} \
-	 -i bxoInit
+	 ${bisosDevBxoHome}/sys/bin/bxoSysSetup.sh ${G_commandPrefs} \
+	 -i developerMode
 
     # switch to auth based bxRepos
     lpDo echo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
