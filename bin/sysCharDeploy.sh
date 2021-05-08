@@ -211,12 +211,17 @@ ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p model=Host -p abode
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i siteBasePlatform_containerBoxAssignAndRepo
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_containerBoxSiteAscertain
 ${G_myName} ${extraInfo} -i siteBasePlatform_containerBoxSiteAscertain
-$( examplesSeperatorChapter "Container Box Realize -- One Time Activity --  On Target Box" )
+$( examplesSeperatorChapter "SysBxo Realize -- Container Box Realize -- One Time Activity --  On Target Box" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_sysCharContainerBoxRealize
 ${G_myName} ${extraInfo} -i siteBasePlatform_sysCharContainerBoxRealize
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i siteBasePlatform_containerBoxAssignAndRepo
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_containerBoxBpoAscertain
 ${G_myName} ${extraInfo} -i siteBasePlatform_containerBoxBpoAscertain
+$( examplesSeperatorChapter "SysBxO Activate -- On Manager Or On Target Box" )
+${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i activate_sysBxo
+$( examplesSeperatorChapter "Specify DeployInfo -- On Manager Or On Target Box" )
+${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -p privA=192.168.0.121 -i deployInfo # For Generic Guests
+${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -p otherParams=NOTYET -i deployInfo
 $( examplesSeperatorChapter "siteBasePlatform Actions -- On Manager Or On Target Box" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_sysCharBoxIdentitySet
 ${G_myName} ${extraInfo} -i siteBasePlatform_sysCharBoxIdentitySet
