@@ -173,8 +173,8 @@ function vis_examples {
     local password=$( vis_registrarUserPassword )        
 
     # local oneTargetName="192.168.0.38"
-    local oneTargetName="192.168.0.37"
-    # local oneTargetName="localhost"
+    # local oneTargetName="192.168.0.37"
+    local oneTargetName="localhost"
     
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
@@ -188,10 +188,10 @@ ${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i recordDeployme
 $( examplesSeperatorChapter "Full Update" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i fullUpdate
 $( examplesSeperatorChapter "Distro Actions -- On Manager -- Ssh In Target" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_fullUpdate
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_intraToSudoersAddition
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_aptSourcesPrep
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_provisionBisos_sysBasePlatform
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_fullUpdate # intra user
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_intraToSudoersAddition # intra user
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_aptSourcesPrep # intra user
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_provisionBisos_sysBasePlatform # intra user
 $( examplesSeperatorChapter "bisosBasePlatform Actions -- On Manager -- Ssh In Other" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_fullUpdate
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_siteSetup
@@ -430,14 +430,10 @@ _EOF_
 
     # Install bisosDev dev crentials in ~/.ssh and
     # auth clone using bisosDev credentials
+    # switch to auth based bxRepos 
     lpDo echo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
 	 ${bisosDevBxoHome}/sys/bin/bxoSysSetup.sh ${G_commandPrefs} \
 	 -i developerMode
-
-    # switch to auth based bxRepos
-    lpDo echo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-	 $(which bisosBaseDirs.sh) ${G_commandPrefs} \
-	 -i bxReposAuthSet
 }
 
 
@@ -597,7 +593,7 @@ _EOF_
     fi
 }
 
-function vis_siteBasePlatform_containerBoxBpoAscertain {    
+function vis_siteBasePlatform_containerBoxBpoAscertain%% {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** NOTYET
@@ -637,14 +633,50 @@ _EOF_
     fi
 }
 
+function vis_siteBasePlatform_containerBoxBpoAscertain {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Ascertain that containerAssignBase= and containerRepoBase= are in place.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
 
+    local containerAssignBase=""
+    local containerRepoBase=""
 
+    # sysCharRealize.sh -h -v -n showRun -i sysCharContainerBxoIdName
+
+    function onTargetRun {
+	containerAssignBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
+	EH_assert [ ! -z "${containerAssignBase}" ]
+
+	echo "containerAssignBase=${containerAssignBase}"	
+
+	containerRepoBase=$( siteContainerRepo.sh -i containerRepoBase "${containerAssignBase}" )
+	EH_assert [ -d "${containerRepoBase}" ]
+
+	echo "containerRepoBase=${containerRepoBase}"
+    }
+
+####+BEGIN: bx:bsip:bash/onTargetRun 
+    if [ "${targetName}" == "onTargetRun" ] ; then
+	lpDo onTargetRun
+    elif [ -z "${targetName}" ] ; then
+	lpDo onTargetRun
+    else
+	local commandName=${FUNCNAME##vis_}		
+	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+	     $(which ${G_myName}) ${G_commandPrefs} \
+	     -p targetName=onTargetRun -i ${commandName}
+    fi
+####+END:
+}
 
 
 function vis_siteBasePlatform_sysCharBoxIdentitySet {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Duplicates code 
+** Duplicates code  
 *** Duplicates code in vis_deployWithSysCharDeployInfo
 _EOF_
     }
@@ -682,11 +714,25 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    if [ -z "${targetName}" ] ; then
-	lpDo echo bisosSiteSetup.sh NOTYET
+    EH_assert [ ! -z "${targetName}" ]
+    
+    function onTargetRun {
+	lpDo echo On Target Execution
+    }
+
+####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" 
+    if [ "${targetName}" == "onTargetRun" ] ; then
+	lpDo onTargetRun
+    elif [ -z "${targetName}" ] ; then
+	lpDo onTargetRun
     else
-	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" echo bisosSiteSetup.sh NOTYET
+	local commandName=${FUNCNAME##vis_}		
+	lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+	     $(which ${G_myName}) ${G_commandPrefs} \
+	     -p targetName=onTargetRun -i ${commandName}
     fi
+####+END:
+
 }
 
 function vis_siteBasePlatform_deployWithSysChar {    
