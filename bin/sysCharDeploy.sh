@@ -189,9 +189,9 @@ $( examplesSeperatorChapter "Full Update" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i fullUpdate
 $( examplesSeperatorChapter "Distro Actions -- On Manager -- Ssh In Target" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_fullUpdate # intra user
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_intraToSudoersAddition # intra user
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_aptSourcesPrep # intra user
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_provisionBisos_sysBasePlatform # intra user
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_intraToSudoersAddition # ManagerOnly -- intra user
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_aptSourcesPrep # ManagerOnly -- intra user
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_provisionBisos_sysBasePlatform # ManagerOnly -- intra user
 $( examplesSeperatorChapter "bisosBasePlatform Actions -- On Manager -- Ssh In Other" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_fullUpdate
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_siteSetup
@@ -288,22 +288,37 @@ function vis_distro_intraToSudoersAddition {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Specific to debian. Allow for sudo-ing as intra.
 *** By policy, at distro installation, intra is used as acctName, acctNamePasswd and rootPasswd
-*** in the command below intra is used 4 times. acctName is used twice.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert [ ! -z "${targetName}" ]
+    function onTargetRun {
+	# redirection of stderr gets rid of the Password: prompt, which can throw emacs off
+	local intraLine=$( echo intra | su - root -c 'egrep ^intra /etc/sudoers' 2> /dev/null )
 
-    # redirection of stderr gets rid of the Password: prompt, which can throw emacs off
-    local intraLine=$( sshpass -p intra ${sshCmnd} intra@"${targetName}" "echo intra | su - root -c 'egrep ^intra /etc/sudoers'" 2> /dev/null )
+	if [ -z "${intraLine}" ] ; then
+	    lpDo eval "echo intra | su - root -c 'echo intra ALL=\(ALL\) NOPASSWD: ALL >> /etc/sudoers'"
+	else
+	    ANT_raw "intra is already in /etc/sudoers -- skipped"
+	fi
+    }
 
-    if [ -z "${intraLine}" ] ; then
-	lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-	     "echo intra | su - root -c 'echo intra ALL=\(ALL\) NOPASSWD: ALL >> /etc/sudoers'"
-    else
-	ANT_raw "intra is already in /etc/sudoers -- skipped"
+####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "intra" :managerOrTarget "manager" 
+    if [ -z "${targetName}" ] ; then
+       ANT_raw "Can Only Be Run On Manager -- Can Not Be Run On Target."
+       lpReturn
     fi
+    if [ "${targetName}" == "onTargetRun" ] ; then
+	lpDo onTargetRun
+    elif [ -z "${targetName}" ] ; then
+	lpDo onTargetRun
+    else
+	local commandName=${FUNCNAME##vis_}		
+	lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+	     $(which ${G_myName}) ${G_commandPrefs} \
+	     -p targetName=onTargetRun -i ${commandName}
+    fi
+####+END:
 }
 
 
@@ -316,26 +331,40 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert [ ! -z "${targetName}" ]
+    function onTargetRun {
+	if [ -e /etc/apt/sources.list.orig ] ; then
+	    ANT_raw "/etc/apt/sources.list.orig exists -- copying skipped"
+	else
+	    sudo cp -p /etc/apt/sources.list /etc/apt/sources.list.orig
+	fi
 
-    local lsOrig=$( sshpass -p intra ${sshCmnd} intra@"${targetName}" sudo ls /etc/apt/sources.list.orig 2> /dev/null )
+	# In "''" "" is consumed by lpDo
+	lpDo eval \
+	     grep -v "'^deb cdrom:'" /etc/apt/sources.list \> /tmp/sources.list
 
-    if [ -z "${lsOrig}" ] ; then
-	lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-	     sudo cp -p /etc/apt/sources.list /etc/apt/sources.list.orig
-    else
-	ANT_raw "/etc/apt/sources.list.orig exists -- copying skipped"
+	lpDo eval \
+	     sudo mv /tmp/sources.list /etc/apt/sources.list
+
+	lpDo eval \
+	     sudo apt-get update
+    }
+
+####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "intra" :managerOrTarget "manager" 
+    if [ -z "${targetName}" ] ; then
+       ANT_raw "Can Only Be Run On Manager -- Can Not Be Run On Target."
+       lpReturn
     fi
-
-    # In "''" "" is consumed by lpDo
-    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-	 grep -v "'^deb cdrom:'" /etc/apt/sources.list \> /tmp/sources.list
-
-    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-	 sudo mv /tmp/sources.list /etc/apt/sources.list
-
-    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-	 sudo apt-get update
+    if [ "${targetName}" == "onTargetRun" ] ; then
+	lpDo onTargetRun
+    elif [ -z "${targetName}" ] ; then
+	lpDo onTargetRun
+    else
+	local commandName=${FUNCNAME##vis_}		
+	lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+	     $(which ${G_myName}) ${G_commandPrefs} \
+	     -p targetName=onTargetRun -i ${commandName}
+    fi
+####+END:
 }
 
 function vis_distro_provisionBisos_sysBasePlatform {    
@@ -346,18 +375,31 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert [ ! -z "${targetName}" ]
+    function onTargetRun {
+	lpDo sudo apt-get install -y python3-pip
+    
+	lpDo sudo pip3 install --upgrade bisos.provision
+    
+	lpDo sudo provisionBisos.sh ${G_commandPrefs} -i sysBasePlatform
+    }
 
-    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-	 sudo apt-get install -y python3-pip
-    
-    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-	 sudo pip3 install --upgrade bisos.provision
-    
-    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-	 sudo provisionBisos.sh ${G_commandPrefs} -i sysBasePlatform
+####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "intra" :managerOrTarget "manager" 
+    if [ -z "${targetName}" ] ; then
+       ANT_raw "Can Only Be Run On Manager -- Can Not Be Run On Target."
+       lpReturn
+    fi
+    if [ "${targetName}" == "onTargetRun" ] ; then
+	lpDo onTargetRun
+    elif [ -z "${targetName}" ] ; then
+	lpDo onTargetRun
+    else
+	local commandName=${FUNCNAME##vis_}		
+	lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+	     $(which ${G_myName}) ${G_commandPrefs} \
+	     -p targetName=onTargetRun -i ${commandName}
+    fi
+####+END:
 }
-
 
 function vis_bisosBasePlatform_fullUpdate {    
     G_funcEntry
@@ -461,28 +503,29 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    local boxNu=""
-
-    if [ -z "${targetName}" ] ; then
-	boxNu=$( siteBoxAssign.sh -i thisBoxFindNu )
+    function onTargetRun {
+	local boxNu=$( siteBoxAssign.sh -i thisBoxFindNu )
 
 	if [ -z "${boxNu}" ] ; then
 	    ANT_raw "This box has NOT been registered -- Needs to be added"
 	else
 	    ANT_raw "This box (${boxNu}) has already been registered -- addition skipped"
 	fi
+    }
+
+####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" 
+    if [ "${targetName}" == "onTargetRun" ] ; then
+	lpDo onTargetRun
+    elif [ -z "${targetName}" ] ; then
+	lpDo onTargetRun
     else
-	boxNu=$( sshpass -p intra ${sshCmnd} intra@"${targetName}" $(which siteBoxAssign.sh) -i thisBoxFindNu )
-
-	if [ -z "${boxNu}" ] ; then
-	    ANT_raw "This box has NOT been registered -- Needs to be added"	    
-	else
-	    ANT_raw "This box (${boxNu}) has already been registered -- addition skipped"
-	fi
+	local commandName=${FUNCNAME##vis_}		
+	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+	     $(which ${G_myName}) ${G_commandPrefs} \
+	     -p targetName=onTargetRun -i ${commandName}
     fi
+####+END:
 }
-
-
 
 function vis_siteBasePlatform_newBoxAssign {    
     G_funcEntry
@@ -492,27 +535,35 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    local boxNu=""
-
-    if [ -z "${targetName}" ] ; then
-	boxNu=$( siteBoxAssign.sh -i thisBoxFindNu )
+    function onTargetRun {
+	local boxNu=$( siteBoxAssign.sh -i thisBoxFindNu )
 
 	if [ -z "${boxNu}" ] ; then
 	    lpDo siteBoxAssign.sh ${G_commandPrefs} -i thisBoxAddAndPush
 	else
 	    ANT_raw "This box (${boxNu}) has already been registered -- addition skipped"
 	fi
-    else
-	boxNu=$( sshpass -p intra ${sshCmnd} intra@"${targetName}" $(which siteBoxAssign.sh) -i thisBoxFindNu )
+    }
 
-	if [ -z "${boxNu}" ] ; then
-	    lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" $(which siteBoxAssign.sh) ${G_commandPrefs} -i thisBoxAddAndPush
-	    lpDo siteBoxAssign.sh ${G_commandPrefs} -i boxesGitPull
-	else
-	    ANT_raw "This box (${boxNu}) has already been registered -- addition skipped"
-	fi
+####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" 
+    if [ "${targetName}" == "onTargetRun" ] ; then
+	lpDo onTargetRun
+    elif [ -z "${targetName}" ] ; then
+	lpDo onTargetRun
+    else
+	local commandName=${FUNCNAME##vis_}		
+	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+	     $(which ${G_myName}) ${G_commandPrefs} \
+	     -p targetName=onTargetRun -i ${commandName}
+    fi
+####+END:
+    
+    # Manager Run
+    if [ "${targetName}" != "onTargetRun" ] ; then
+	lpDo siteBoxAssign.sh ${G_commandPrefs} -i boxesGitPull
     fi
 }
+
 
 function vis_siteBasePlatform_containerBoxAssignAndRepo {    
     G_funcEntry
@@ -593,46 +644,6 @@ _EOF_
     fi
 }
 
-function vis_siteBasePlatform_containerBoxBpoAscertain%% {    
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** NOTYET
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    local containerAssignBase=""
-    local containerRepoBase=""
-
-    # sysCharRealize.sh -h -v -n showRun -i sysCharContainerBxoIdName
-
-    if [ -z "${targetName}" ] ; then
-	containerAssignBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
-	EH_assert [ ! -z "${containerAssignBase}" ]
-
-	echo "containerAssignBase=${containerAssignBase}"	
-
-	containerRepoBase=$( siteContainerRepo.sh -i containerRepoBase "${containerAssignBase}" )
-	EH_assert [ -d "${containerRepoBase}" ]
-
-	echo "containerRepoBase=${containerRepoBase}"
-    else
-	containerAssignBase=$( sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-				     $(which siteContainerAssign.sh) \
-				     -i forThisSysFindContainerBase )
-	EH_assert [ ! -z "${containerAssignBase}" ]
-
-	echo "containerAssignBase=${containerAssignBase}"
-	
-	containerRepoBase=$( sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-				     $(which siteContainerRepo.sh) \
-				     -i containerRepoBase "${containerAssignBase}" )
-	EH_assert [ ! -z "${containerRepoBase}" ]
-
-	echo "containerRepoBase=${containerRepoBase}"
-    fi
-}
-
 function vis_siteBasePlatform_containerBoxBpoAscertain {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -641,12 +652,12 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    local containerAssignBase=""
-    local containerRepoBase=""
-
     # sysCharRealize.sh -h -v -n showRun -i sysCharContainerBxoIdName
 
     function onTargetRun {
+	local containerAssignBase=""
+	local containerRepoBase=""
+
 	containerAssignBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
 	EH_assert [ ! -z "${containerAssignBase}" ]
 
@@ -732,7 +743,6 @@ _EOF_
 	     -p targetName=onTargetRun -i ${commandName}
     fi
 ####+END:
-
 }
 
 function vis_siteBasePlatform_deployWithSysChar {    
