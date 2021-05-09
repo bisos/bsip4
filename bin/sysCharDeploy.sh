@@ -837,9 +837,11 @@ _EOF_
 
     local siteBxoId=$1
 
-    EH_assert [ ! -z "${bxoId}" ]
-    EH_assert vis_bxoAcctVerify "${bxoId}"
-    bxoHome=$( FN_absolutePathGet ~${bxoId} )
+    EH_assert bxoIdPrep
+    
+    # EH_assert [ ! -z "${bxoId}" ]
+    # EH_assert vis_bxoAcctVerify "${bxoId}"
+    # bxoHome=$( FN_absolutePathGet ~${bxoId} )
 
     local sysCharDeployInfoBase="${bxoHome}/var/sysCharDeployInfo"
 
@@ -854,6 +856,8 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
+    # EH_assert bxoIdPrep
+    
     EH_assert [ ! -z "${bxoId}" ]
     EH_assert vis_bxoAcctVerify "${bxoId}"
     bxoHome=$( FN_absolutePathGet ~${bxoId} )
