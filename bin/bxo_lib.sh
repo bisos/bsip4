@@ -58,8 +58,8 @@ _EOF_
     esac
 
     #lpDo bxoIdCentralIsValid 
-    #bxoIdCentralIsValid 
-    #EH_retOnFail
+    bxoCentralIsValid 
+    EH_retOnFail
 
     lpReturn 0
 }
