@@ -114,7 +114,7 @@ $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "FULL Site Deployment" )
 ${G_myName} ${extraInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -i fullUpdate  # currents + siteFullUpdate
 ${G_myName} ${extraInfo} -i fullUpdate   # currents + siteFullUpdate
-${G_myName} ${extraInfo} -i activate_siteBxoPlusAndSelect "${siteBxoId}"
+${G_myName} ${extraInfo} -p bxoId="${siteBxoId}" -i activate_siteBxoPlusAndSelect 
 $( examplesSeperatorChapter "Full Operations" )
 ${G_myName} ${extraInfo} -i siteFullUpdate
 ${G_myName} ${extraInfo} -p registrar=TBD -p id=TBD -p password=TBD -i siteFullUpdate
@@ -213,9 +213,13 @@ function vis_activate_siteBxoPlusAndSelect {
 ** Create the specified bxoId 
 _EOF_
     }
-    EH_assert [[ $# -eq 1 ]]
+    EH_assert [[ $# -eq 0 ]]
 
-    local siteBxoId="$1"
+    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert vis_bxoAcctVerify "${bxoId}"
+    bxoHome=$( FN_absolutePathGet ~${bxoId} )
+
+    local siteBxoId="${bxoId}"
 
     lpDo vis_activate_siteBxoPlus "${siteBxoId}"
 

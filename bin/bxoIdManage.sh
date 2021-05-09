@@ -75,6 +75,8 @@ _CommentEnd_
 
 . ${opBinBase}/bxo_lib.sh
 
+. ${opBinBase}/bxoId_lib.sh
+
 . ${opBinBase}/bxeDesc_lib.sh
 
 . ${opBinBase}/bystarHook.libSh
@@ -139,27 +141,29 @@ $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "sysChar"
 $( examplesSeperatorChapter "Well Known BxoIds" )
+${G_myName} -i bxoIdPrep "sysChar"
 ${G_myName} ${extraInfo} -p bxoId="sysChar" -i bxoIdShow
+${G_myName} -i bxoIdPrep "site"
 ${G_myName} ${extraInfo} -p bxoId="site" -i bxoIdShow
 ${G_myName} ${extraInfo} -p bxoId="siteBoxes" -i bxoIdShow
 ${G_myName} ${extraInfo} -p bxoId="siteContainers" -i bxoIdShow
 ${G_myName} ${extraInfo} -p bxoId="siteNets" -i bxoIdShow
+$( examplesSeperatorChapter "Prompt, Current, Default" )
+${G_myName} ${extraInfo} -p bxoId="current" -i bxoIdShow
+${G_myName} -i bxoIdPrep "prompt"
+${G_myName} ${extraInfo} -p bxoId="prompt" -i bxoIdShow
+${G_myName} ${extraInfo} -p bxoId="default" -i bxoIdShow
+${G_myName} ${extraInfo} -p bxoId="any" -i bxoIdShow
+$( examplesSeperatorChapter "BxoIFile Parameters" )
+${G_myName} ${extraInfo} -i bxoIdFpsBase
+${G_myName} ${extraInfo} -i bxoIdFpsReadDeep
+${G_myName} ${extraInfo} -i bxoIdFpsWrite sysChar pmp_HSS-1003
+${G_myName} ${extraInfo} -i bxoIdFpsInit_sysChar   # _site, 
+${G_myName} ${extraInfo} -f -i bxoIdFpsInit_sysChar # _site,
+${G_myName} ${extraInfo} -i bxoIdFpsRead sysChar
 _EOF_
 }
 
-
-function vis_bxoIdShow {    
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** Update Everything.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    EH_assert bxoIdPrep
-
-    lpDo echo ${bxoId}
-}
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*

@@ -151,21 +151,7 @@ function vis_examples {
 
     #bisosCurrentsGet
 
-    local selectedContainerBxoId=$( vis_selectedContainerBxoId 2> /dev/null )
-
-    if [ -z "${selectedContainerBxoId}" ] ; then
-
-	local containerAssignBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
-	if [ -z "${containerAssignBase}" ] ; then
-	    effectiveContainerBxoId="${selectedContainerBxoId}"
-	else
-   	    local sysCharContainerBxoId=$( vis_sysCharContainerBxoIdName ${containerAssignBase} )
-
-	    effectiveContainerBxoId="${sysCharContainerBxoId}"
-	fi
-    else
-	effectiveContainerBxoId="${selectedContainerBxoId}"
-    fi
+    local effectiveContainerBxoId="sysChar"
 
     local siteBxoId=$( sysCharRealize.sh -i selectedSiteBxoId )
 
@@ -245,7 +231,7 @@ ${G_myName} ${extraInfo} -i sysCharedPlatform_containerBoxReport
 $( examplesSeperatorChapter "VAGRANT Model -- FULL SYSTEM Deployment" )
 ${G_myName} ${extraInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -i bisosSiteSetup
 ${G_myName} ${extraInfo} -i bisosSiteSetup
-${G_myName} ${extraInfo} -i activate_siteBxoPlusAndSelect "${effectiveContainerBxoId}"
+${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i activate_siteBxoPlusAndSelect
 ${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i activate_sysBxo
 # ${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i capture_siteBxo ${siteBxoId}
 ${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -p privA=192.168.0.121 -i capture_identity
@@ -253,7 +239,6 @@ ${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -p privGit=anon -
 $( examplesSeperatorChapter "VAGRANT Model -- FULL SYSTEM Deployment" )
 ${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i deployWithSysCharDeployInfo
 $( examplesSeperatorSection "Update" )
-${G_myName} ${extraInfo} -i activate_siteBxoPlus ${siteBxoId}
 ${G_myName} ${extraInfo} -i identityUpdate
 $( examplesSeperatorChapter "Overview Report And Summary" )
 ${G_myName} -p bxoId="${effectiveContainerBxoId}" -i sysCharReport
@@ -447,7 +432,7 @@ _EOF_
     
 	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
 	     $(which bisosSiteSetup.sh) ${G_commandPrefs} \
-	     -i activate_siteBxoPlusAndSelect "${siteBxoId}"
+	     -p bxoId="${siteBxoId}" -i activate_siteBxoPlusAndSelect
     fi
 }
 

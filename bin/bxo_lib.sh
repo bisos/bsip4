@@ -16,55 +16,6 @@ fi
 
 
 
-function bxoIdPrep {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** Looks at the global bxoId and replaces it accordingly. Returns none-zero for assertion.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    case ${bxoId} in 
-      "")
-	    EH_problem "bxoId=\"\" -- empty/blank -- invalid bxoId"
-	    lpReturn 101
-	    ;;
-      "INVALID"|"MANDATORY")
-	    EH_problem "bxoId=${bxoId} -- empty/blank -- invalid bxoId"
-	    lpReturn 101
-	    ;;
-      "current")
-	    lpCurrentsGet
-	    if [ "${currentBxoId}" != "" ] ; then
-		bxoId=${currentBxoId}
-	    else
-		EH_problem "bxoId=current But current is unset -- invalid bxoId"
-		lpReturn 101
-	    fi	
-	    ;;
-      "prompt")
-	    echo -n "Specify bxoId: "
-	    read bxoId
-	    ;;
-      "default")   # e.g., first applicable entry in /etc/passwd
-            doNothing
-	    ;;	
-      "all")
-            doNothing
-	    ;;	
-	*)
-	    doNothing
-	    ;;
-    esac
-
-    #lpDo bxoIdCentralIsValid 
-    bxoCentralIsValid 
-    EH_retOnFail
-
-    lpReturn 0
-}
-
-
 function bxoIdAssert {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_

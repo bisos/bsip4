@@ -591,7 +591,7 @@ _OUTER_EOF_
 _EOF_
 	sudo ifconfig eth1 down  # Needed for deb11
 	sudo -u bystar /bisos/core/bsip/bin/bisosSiteSetup.sh -h -v -n showRun -p registrar="${registrar}" -p id="${id}" -p password="${password}" -i bisosSiteSetup
-	sudo -u bystar /bisos/core/bsip/bin/bisosSiteSetup.sh -h -v -n showRun -i activate_siteBxoPlusAndSelect "${siteBxoId}"
+	sudo -u bystar /bisos/core/bsip/bin/bisosSiteSetup.sh -h -v -n showRun -p bxoId="${siteBxoId}" -i activate_siteBxoPlusAndSelect
 	sudo -u bystar /bisos/core/bsip/bin/sysCharDeploy.sh -h -v -n showRun -p bxoId="${bxoId}" -i activate_sysBxo
 	sudo -u bystar /bisos/core/bsip/bin/sysCharDeploy.sh -h -v -n showRun -p bxoId="${bxoId}" -p privA="$( vis_getIpAddr_privA )" -i capture_identity
         sudo -u bystar /bisos/core/bsip/bin/sysCharDeploy.sh -h -v -n showRun -p bxoId="${bxoId}" -p privGit=anon -p pubGit=anon -p devMode=someTag -i capture_accessMode
