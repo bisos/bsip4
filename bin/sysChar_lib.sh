@@ -49,6 +49,10 @@ _CommentBegin_
 _CommentEnd_
 
 
+function sansTargetName {
+    echo $1 | sed -e 's/-p targetName=.* //' -e 's/-p targetName=.*$//'
+}
+
 function fromGenericContainerIdGetDistro {
      G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
