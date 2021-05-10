@@ -143,6 +143,7 @@ $( examplesSeperatorSection "Obtain A Snapshot Of RBxE At $(vis_bxoConstructBase
 ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i obtainRepoSnapshot rbxe
 $( examplesSeperatorSection "BxO Creation Based On ISO Info" )
 ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i bxoAcctCreate
+${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i initialReposClone
 $( examplesSeperatorSection "BxO Construct Full Update -- All Of The Above" )
 ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i fullConstruct $(vis_bxoConstructBaseDir_obtain priv)/${oneBxoId}/home # noAcct
 ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i fullConstruct # Creats Acct & git clones in ${oneBxoHome}
@@ -205,7 +206,8 @@ _EOF_
 	lpReturn
     fi
     
-    local reposList="rbxe bxeTree mapFiles"
+    #local reposList="rbxe bxeTree mapFiles vagrants"
+    local reposList="rbxe mapFiles vagrants"
 
     local eachRepo=""
     local gitServerUrl=""

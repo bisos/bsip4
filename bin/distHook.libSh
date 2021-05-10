@@ -150,6 +150,7 @@ lsipAdoptedFamilyGenerationArchList=( \
     "lsipAdopted_DEBIAN_LENNY" \
     "lsipAdopted_DEBIAN_SQUEEZE" \
     "lsipAdopted_DEBIAN_7" \
+    "lsipAdopted_DEBIAN_11" \    
     "lsipAdopted_UBUNTU_FIESTY" \
     "lsipAdopted_UBUNTU_GUTSY" \
     "lsipAdopted_UBUNTU_HARDY" \
@@ -205,6 +206,15 @@ lsipAdopted_DEBIAN_7 () {
    adoptedDistArchs=( "i386"  "sparc" )
    adoptedDistNextGen=""
 }
+
+lsipAdopted_DEBIAN_11 () {
+   adoptedDistFamily="debian"
+   adoptedDistGeneration="11"  # bullseye
+   adoptedDistRev="11.0"
+   adoptedDistArchs=( "i386"  "sparc" )
+   adoptedDistNextGen=""
+}
+
 
 
 lsipAdopted_UBUNTU_FIESTY () {

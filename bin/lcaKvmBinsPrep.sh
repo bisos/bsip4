@@ -86,6 +86,25 @@ _EOF_
     )
 }
 
+function pkgsList_DEBIAN_11 {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+
+    #qemu-system libvirt-clients libvirt-daemon-system
+    
+    itemOrderedList=(
+	qemu_kvm
+	"$( itemNameFor libvirt-daemon-system )"
+	"$( itemNameFor libvirt-clients )"
+	"$( itemNameFor bridge-utils )"
+	virt_manager
+	libguestfs_tools	
+    )
+}
+
+
 function pkgsList_UBUNTU_2004 {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_

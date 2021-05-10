@@ -74,6 +74,7 @@ _CommentEnd_
 . ${opBinBase}/platformBases_lib.sh
 
 . ${opBinBase}/bxo_lib.sh
+. ${opBinBase}/bxoId_lib.sh
 
 . ${opBinBase}/bxeDesc_lib.sh
 
@@ -880,9 +881,7 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     function onTargetRun {
-	EH_assert [ ! -z "${bxoId}" ]
-	EH_assert vis_bxoAcctVerify "${bxoId}"
-	bxoHome=$( FN_absolutePathGet ~${bxoId} )
+	EH_assert bxoIdPrep
 
 	${bxoHome}/sys/bin/bxoSysSetup.sh ${G_commandPrefs} \
 		  -i setup
