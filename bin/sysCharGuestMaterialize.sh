@@ -863,7 +863,7 @@ $( vis_vagStdout_netInterfaces )
 
     end
     
-    guest.disksize.size = "${vmParamDisk}"
+    # guest.disksize.size = "${vmParamDisk}"
 
 _EOF_
     }

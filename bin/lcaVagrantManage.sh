@@ -109,8 +109,10 @@ vagrant box outdated --global
 vagrant box prune --provider libvirt peru/ubuntu-20.04-desktop-amd64
 $( examplesSeperatorSection "Vagrant Plugins" )
 vagrant plugin list --local
+vagrant plugin list 
 vagrant plugin update
-vagrant plugin install NOTYET
+vagrant plugin install vagrant-libvirt
+vagrant plugin install vagrant-disksize
 $( examplesSeperatorSection "Vagrant Status And Information" )
 vagrant --version
 vagrant global-status
