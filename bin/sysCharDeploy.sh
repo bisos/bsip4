@@ -508,7 +508,7 @@ _EOF_
 
     function onManagerRun {
 	if [ -z "${bisosDevBxoId}" ] ; then
-	    bisosDevBxoId=$( usgBposUsageEnvs_bisosDevBxoId_read )
+	    bisosDevBxoId=$( vis_usgBposUsageEnvs_bisosDevBxoId_read )
 	    EH_assert [ ! -z "${bisosDevBxoId}" ]
 	fi
     }
