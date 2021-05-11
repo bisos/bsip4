@@ -127,7 +127,6 @@ ${G_myName} -i withSiteBxoId_write_boxesBxoId ${oneBxoId} BOXES
 ${G_myName} -i withSiteBxoId_write_containersBxoId ${oneBxoId} CONTAINERS
 ${G_myName} -i withSiteBxoId_write_networksBxoId ${oneBxoId} NETWORKS
 ${G_myName} -i withSiteBxoId_write_domainsBxoId ${oneBxoId} DOMAINS
-${G_myName} -i withSiteBxoId_write_bisosDevelBxoId ${oneBxoId} ~piu_
 $( examplesSeperatorChapter "Site FileParam Read Commands" )
 ${G_myName} ${extraInfo} -i selectedSiteBxoId    # based on ~ -- ${usgHome}/bisos/sites/selected
 ${G_myName} ${extraInfo} -i activate_siteBxoPlus ${oneBxoId}
@@ -135,7 +134,6 @@ ${G_myName} -i fromSiteBxoIdGet_boxesBxoId ${oneBxoId}
 ${G_myName} -i fromSiteBxoIdGet_containersBxoId ${oneBxoId}
 ${G_myName} -i fromSiteBxoIdGet_networksBxoId ${oneBxoId}
 ${G_myName} -i fromSiteBxoIdGet_domainsBxoId ${oneBxoId}   # NOTYET -- has not been implemented
-${G_myName} -i fromSiteBxoIdGet_bisosDevelBxoId ${oneBxoId}
 $( examplesSeperatorChapter "siteBisosBase -- Site Library Commands" )
 ${G_myName} ${extraInfo} -i siteBisosBase
 ${G_myName} ${extraInfo} -i siteBisosAdd ${oneBxoId}

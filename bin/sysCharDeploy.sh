@@ -187,8 +187,8 @@ ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_s
 ${G_myName} ${extraInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -i bisosSiteSetup # VAGRANT MODEL
 ${G_myName} ${extraInfo} -i bisosSiteSetup # VAGRANT MODEL
 $( examplesSeperatorChapter "Target Box Developmenet Preps -- On Manager" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i sysDeveloperSelect # onManager+onTarget
-${G_myName} ${extraInfo} -p bisosDevBxoId=prompt -i sysDeveloperSelect  # onTarget
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i usgConvey_bisosDeveloper # onManager+onTarget
+${G_myName} ${extraInfo} -p bisosDevBxoId=prompt -i usgConvey_bisosDeveloper # onTarget
 $( examplesSeperatorChapter "Target Box Developmenet Preps -- On Target Box" )
 ssh -X bystar@${oneTargetName}    # Then run emacs
 bleeVisit /bisos/panels/bisos-dev/howToBecomeDeveloper/fullUsagePanel-en.org
@@ -498,7 +498,7 @@ _EOF_
 }
 
 
-function vis_sysDeveloperSelect {
+function vis_usgConvey_bisosDeveloper {
      G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Preps the site (configs for gitlab server, etc) and activates the siteBxo.

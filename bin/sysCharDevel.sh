@@ -97,6 +97,8 @@ _CommentEnd_
 
 . ${opBinBase}/sysChar_lib.sh
 
+. ${opBinBase}/usgBpos_lib.sh
+
 
 # PRE parameters
 
@@ -197,6 +199,37 @@ _EOF_
     lpReturn
 }	
 
+function vis_bisosDevBxo_activate {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Activate the bisosDev usage env bpo. authClone using credentials of bisosDev.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local bisosDevBxoId=$( vis_usgBposUsageEnvs_bisosDevBxoId_read )
+    EH_assert [ ! -z "${bisosDevBxoId}" ]
+
+    bisosDevBxoHome=$( FN_absolutePathGet ~${bisosDevBxoId} )
+    
+    # Activate bisosDev usage env bpo
+    lpDo bxoManage.sh ${G_commandPrefs} \
+	 -p privacy=priv -p bxoId=${bisosDevBxoId} \
+	 -i fullConstruct
+
+    # record the activated bpo as bisosDev
+    lpDo usgBpos.sh ${G_commandPrefs} \
+	 -i usgBposUsageEnvs_bisosDev_update ${bisosDevBxoHome}
+
+    # Install bisosDev dev crentials in ~/.ssh and
+    # auth clone using bisosDev credentials
+    # switch to auth based bxRepos 
+    lpDo echo  ${bisosDevBxoHome}/sys/bin/bxoSysSetup.sh ${G_commandPrefs} \
+	 -i developerMode
+}
+
+
+
 function vis_sysDeveloperSetup {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -207,27 +240,24 @@ _EOF_
 
     EH_assert [ ! -z "${targetName}" ]
     
-    local bisosDevBxoPath=$( vis_usgBposUsageEnvs_bisosDev_bxoId )
+    local bisosDevBxoId=$( vis_usgBposUsageEnvs_bisosDevBxoId_read )
     EH_assert [ ! -z "${bisosDevBxoId}" ]
 
     bisosDevBxoHome=$( FN_absolutePathGet ~${bisosDevBxoId} )
     
     # Activate bisosDev usage env bpo
-    lpDo echo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-	 $(which bxoManage.sh) ${G_commandPrefs} \
+    lpDo bxoManage.sh ${G_commandPrefs} \
 	 -p privacy=priv -p bxoId=${bisosDevBxoId} \
 	 -i fullConstruct
 
     # record the activated bpo as bisosDev
-    lpDo echo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-	 $(which usgBpos.sh) ${G_commandPrefs} \
+    lpDo usgBpos.sh ${G_commandPrefs} \
 	 -i usgBposUsageEnvs_bisosDev_update ${bisosDevBxoHome}
 
     # Install bisosDev dev crentials in ~/.ssh and
     # auth clone using bisosDev credentials
     # switch to auth based bxRepos 
-    lpDo echo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-	 ${bisosDevBxoHome}/sys/bin/bxoSysSetup.sh ${G_commandPrefs} \
+    lpDo echo  ${bisosDevBxoHome}/sys/bin/bxoSysSetup.sh ${G_commandPrefs} \
 	 -i developerMode
 }
 
