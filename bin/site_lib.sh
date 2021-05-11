@@ -217,6 +217,89 @@ _EOF_
     lpReturn
 }
 
+
+function vis_withSiteBxoId_write_boxesBxoId {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** returns on stdout: 
+_EOF_
+		      }
+    EH_assert [[ $# -eq 2 ]]
+    local siteBxoId=$1
+    local bxoIdValue=$2
+
+    EH_assert vis_bxoAcctVerify "${siteBxoId}"
+    siteBxoHome=$( FN_absolutePathGet ~${siteBxoId} )
+
+    lpDo fileParamManage.py -i fileParamRead  ${siteBxoHome}/siteBpos/boxes.bpoFp bpoId ${bxoIdValue}
+}
+
+
+function vis_withSiteBxoId_write_containersBxoId {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** returns on stdout: 
+_EOF_
+		      }
+    EH_assert [[ $# -eq 2 ]]
+    local siteBxoId=$1
+    local bxoIdValue=$2
+
+    EH_assert vis_bxoAcctVerify "${siteBxoId}"
+    siteBxoHome=$( FN_absolutePathGet ~${siteBxoId} )
+
+    lpDo fileParamManage.py -i fileParamWrite  ${siteBxoHome}/siteBpos/containers.bpoFp bpoId ${bxoIdValue}
+}
+
+function vis_withSiteBxoId_write_networksBxoId {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** returns on stdout: 
+_EOF_
+		      }
+    EH_assert [[ $# -eq 2 ]]
+    local siteBxoId=$1
+    local bxoIdValue=$2        
+
+    EH_assert vis_bxoAcctVerify "${siteBxoId}"
+    siteBxoHome=$( FN_absolutePathGet ~${siteBxoId} )
+
+    lpDo fileParamManage.py -i fileParamWrite  ${siteBxoHome}/siteBpos networks.bpoFp ${bxoIdValue}
+}
+
+function vis_withSiteBxoId_write_domainsBxoId {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** returns on stdout: 
+_EOF_
+		      }
+    EH_assert [[ $# -eq 2 ]]
+    local siteBxoId=$1
+    local bxoIdValue=$2            
+
+    EH_assert vis_bxoAcctVerify "${siteBxoId}"
+    siteBxoHome=$( FN_absolutePathGet ~${siteBxoId} )
+
+    lpDo fileParamManage.py -i fileParamWrite ${siteBxoHome}/siteBpos domains.bpoFp ${bxoIdValue}
+}
+
+function vis_withSiteBxoId_write_bisosDevelBxoId {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** returns on stdout: 
+_EOF_
+		      }
+    EH_assert [[ $# -eq 2 ]]
+    local siteBxoId=$1
+    local bxoIdValue=$2            
+
+    EH_assert vis_bxoAcctVerify "${siteBxoId}"
+    siteBxoHome=$( FN_absolutePathGet ~${siteBxoId} )
+
+    lpDo fileParamManage.py -i fileParamWrite ${siteBxoHome}/siteBpos bisosDevel.bpoFp ${bxoIdValue}
+}
+
+
 function vis_fromSiteBxoIdGet_boxesBxoId {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -255,25 +338,6 @@ _EOF_
 }
 
 
-function vis_fromSiteBxoIdGet_domainsBxoId {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** returns on stdout: 
-_EOF_
-		      }
-    EH_assert [[ $# -eq 1 ]]
-    local siteBxoId=$1
-
-    EH_assert vis_bxoAcctVerify "${siteBxoId}"
-    siteBxoHome=$( FN_absolutePathGet ~${siteBxoId} )
-
-    local domainsBxoId=NOTYET # $( fileParamManage.py -i fileParamRead  ${siteBxoHome}/siteBpos/boxes.bpoFp bpoId )
-    EH_assert [ ! -z "${domainsBxoId}" ]
-
-    echo "" # ${domainsBxoId}
-}
-
-
 function vis_fromSiteBxoIdGet_networksBxoId {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -291,6 +355,44 @@ _EOF_
 
     echo ${networkBxoId}
 }
+
+function vis_fromSiteBxoIdGet_domainsBxoId {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** returns on stdout: 
+_EOF_
+		      }
+    EH_assert [[ $# -eq 1 ]]
+    local siteBxoId=$1
+
+    EH_assert vis_bxoAcctVerify "${siteBxoId}"
+    siteBxoHome=$( FN_absolutePathGet ~${siteBxoId} )
+
+    local resultBxoId=$( fileParamManage.py -i fileParamRead  ${siteBxoHome}/siteBpos domains.bpoFp )
+    EH_assert [ ! -z "${resultBxoId}" ]
+
+    echo ${resultBxoId}
+}
+
+function vis_fromSiteBxoIdGet_bisosDevelBxoId {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** returns on stdout: 
+_EOF_
+		      }
+    EH_assert [[ $# -eq 1 ]]
+    local siteBxoId=$1
+
+    EH_assert vis_bxoAcctVerify "${siteBxoId}"
+    siteBxoHome=$( FN_absolutePathGet ~${siteBxoId} )
+
+    local resultBxoId=$( fileParamManage.py -i fileParamRead  ${siteBxoHome}/siteBpos bisosDevel.bpoFp )
+    EH_assert [ ! -z "${resultBxoId}" ]
+
+    echo ${resultBxoId}
+}
+
+
 
 
 function vis_sysCharContainerBxoIdName {

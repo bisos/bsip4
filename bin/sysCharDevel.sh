@@ -141,11 +141,19 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
-bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VAG-deb10-
+bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VAG-deb11_
 $( examplesSeperatorChapter "Specialized Actions" )
 ${G_myName} ${extraInfo} -i fullUpdate
 ${G_myName} ${extraInfo} -i vagrantBaseBoxesBuild
 ${G_myName} ${extraInfo} -i siteContainersAssignGenerics
+$( examplesSeperatorChapter "Developer Git Credentials Activate" )
+${G_myName} ${extraInfo} -i bisosDevBxo_activate
+${G_myName} ${extraInfo} -i bisosDevBxo_actuate
+${G_myName} ${extraInfo} -i developerMode
+$( examplesSeperatorChapter "Developer Git Credentials Deactivate" )
+${G_myName} ${extraInfo} -i bisosDevBxo_delete
+${G_myName} ${extraInfo} -i stableMode
+
 _EOF_
 }
 
@@ -188,6 +196,41 @@ _EOF_
     
     lpReturn
 }	
+
+function vis_sysDeveloperSetup {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Activate the bisosDev usage env bpo. authClone using credentials of bisosDev.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert [ ! -z "${targetName}" ]
+    
+    local bisosDevBxoId=$( vis_usgBposUsageEnvs_bisosDev_bxoId )
+    EH_assert [ ! -z "${bisosDevBxoId}" ]
+
+    bisosDevBxoHome=$( FN_absolutePathGet ~${bisosDevBxoId} )
+    
+    # Activate bisosDev usage env bpo
+    lpDo echo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+	 $(which bxoManage.sh) ${G_commandPrefs} \
+	 -p privacy=priv -p bxoId=${bisosDevBxoId} \
+	 -i fullConstruct
+
+    # record the activated bpo as bisosDev
+    lpDo echo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+	 $(which usgBpos.sh) ${G_commandPrefs} \
+	 -i usgBposUsageEnvs_bisosDev_update ${bisosDevBxoHome}
+
+    # Install bisosDev dev crentials in ~/.ssh and
+    # auth clone using bisosDev credentials
+    # switch to auth based bxRepos 
+    lpDo echo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+	 ${bisosDevBxoHome}/sys/bin/bxoSysSetup.sh ${G_commandPrefs} \
+	 -i developerMode
+}
+
 
 
 

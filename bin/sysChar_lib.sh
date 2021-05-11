@@ -289,7 +289,7 @@ function vis_containerId {
    function describeF {  G_funcEntryShow; cat  << _EOF_
 containerId is sequence of 3 initial letters of model, abode and function.
 word="Host"; firstLetter=${word:0:1} -- "H"
-For function==Generic, containerNu is not a number. So, we add a dash
+For function==Generic, containerNu is not a number. So, we add an underscore
 at the end.
 _EOF_
 		      }

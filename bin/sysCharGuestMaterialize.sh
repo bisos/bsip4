@@ -145,7 +145,7 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
-bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VAG-deb10-
+bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VAG-deb11_
 $( examplesSeperatorChapter "Specialized Actions" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantBaseBoxFromSysChar   # which vagrantBaseBox will be used
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantBase_last     # on host

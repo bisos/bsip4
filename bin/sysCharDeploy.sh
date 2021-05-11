@@ -112,6 +112,7 @@ typeset -t registrar=""
 typeset -t id=""
 typeset -t password=""
 typeset -t siteBxoId=""
+typeset -t bisosDevBxoId=""
 
 typeset -t model=""     # one of [HPV]
 typeset -t abode=""     # one of [MAPIS]
@@ -186,7 +187,8 @@ ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_s
 ${G_myName} ${extraInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -i bisosSiteSetup # VAGRANT MODEL
 ${G_myName} ${extraInfo} -i bisosSiteSetup # VAGRANT MODEL
 $( examplesSeperatorChapter "Target Box Developmenet Preps -- On Manager" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i sysDeveloperSetup
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i sysDeveloperSelect # onManager+onTarget
+${G_myName} ${extraInfo} -p bisosDevBxoId=prompt -i sysDeveloperSelect  # onTarget
 $( examplesSeperatorChapter "Target Box Developmenet Preps -- On Target Box" )
 ssh -X bystar@${oneTargetName}    # Then run emacs
 bleeVisit /bisos/panels/bisos-dev/howToBecomeDeveloper/fullUsagePanel-en.org
@@ -495,7 +497,52 @@ _EOF_
 ####+END:
 }
 
-function vis_sysDeveloperSetup {    
+
+function vis_sysDeveloperSelect {
+     G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Preps the site (configs for gitlab server, etc) and activates the siteBxo.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    function onManagerRun {
+	if [ -z "${bisosDevBxoId}" ] ; then
+	    bisosDevBxoId=$( vis_usgBposUsageEnvs_bisosDev_bxoId )
+	    EH_assert [ ! -z "${bisosDevBxoId}" ]
+	fi
+    }
+
+    function onTargetRun {
+	usgBpos.sh ${G_commandPrefs} \
+	 -i usgBposUsageEnvs_bisosDev_update ${bisosDevBxoHome}
+
+    }
+
+    if [ "${targetName}" != "onTargetRun" ] && [ ! -z "${targetName}" ] ; then
+	lpDo onManagerRun
+    fi
+
+    EH_assert [ ! -z "${bisosDevBxoId}" ]
+
+    G_paramCmndOption="-p bisosDevBxoId=${bisosDevBxoId}"
+    
+####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" :cmndOption t
+    if [ "${targetName}" == "onTargetRun" ] ; then
+	lpDo onTargetRun
+    elif [ -z "${targetName}" ] ; then
+	lpDo onTargetRun
+    else
+	local commandName=${FUNCNAME##vis_}		
+	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+	     $(which ${G_myName}) ${G_commandPrefs} \
+	     -p targetName=onTargetRun ${G_paramCmndOption} -i ${commandName}
+    fi
+####+END:
+}
+
+
+function vis_sysDeveloperSetup%% {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Activate the bisosDev usage env bpo. authClone using credentials of bisosDev.
