@@ -74,6 +74,42 @@ _EOF_
 }
 
 
+function vis_usgBposUsageEnvs_bisosDevBxoId_write {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** 
+_EOF_
+		      }
+    EH_assert [[ $# -eq 1 ]]
+    local bxoIdValue=$1
+
+    bxoIdValue=$(bxoIdPrep ${bxoIdValue})
+    EH_assert [ ! -z ${bxoIdValue} ]
+
+    local curUsgBposBase=$( vis_curUsgBposBase )
+
+    lpDo mkdir -p ${curUsgBposBase}/usageEnvs
+    
+    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/usageEnvs bisosDevel.bpoFp ${bxoIdValue}
+}
+
+
+function vis_usgBposUsageEnvs_bisosDevBxoId_read {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** returns on stdout: 
+_EOF_
+		      }
+    EH_assert [[ $# -eq 0 ]]
+
+    local resultBxoId=$( fileParamManage.py -i fileParamRead  ${curUsgBposBase}/usageEnvs bisosDevel.bpoFp )
+    EH_assert [ ! -z "${resultBxoId}" ]
+
+    echo ${resultBxoId}
+}
+
+
+
 function vis_usgBposUsageEnvs_bisosDev_update {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -83,7 +119,9 @@ _EOF_
 
    local bisosDevBpoPath="$1"
 
-   local curUsgBposBase=$( vis_curUsgBposBase )   
+   local curUsgBposBase=$( vis_curUsgBposBase )
+
+   lpDo mkdir -p ${curUsgBposBase}/usageEnvs
 
    lpDo FN_fileSymlinkUpdate ${bisosDevBpoPath} ${curUsgBposBase}/usageEnvs/bisosDev
 }

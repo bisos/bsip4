@@ -207,7 +207,7 @@ _EOF_
 
     EH_assert [ ! -z "${targetName}" ]
     
-    local bisosDevBxoId=$( vis_usgBposUsageEnvs_bisosDev_bxoId )
+    local bisosDevBxoPath=$( vis_usgBposUsageEnvs_bisosDev_bxoId )
     EH_assert [ ! -z "${bisosDevBxoId}" ]
 
     bisosDevBxoHome=$( FN_absolutePathGet ~${bisosDevBxoId} )

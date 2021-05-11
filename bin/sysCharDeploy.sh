@@ -508,15 +508,14 @@ _EOF_
 
     function onManagerRun {
 	if [ -z "${bisosDevBxoId}" ] ; then
-	    bisosDevBxoId=$( vis_usgBposUsageEnvs_bisosDev_bxoId )
+	    bisosDevBxoId=$( usgBposUsageEnvs_bisosDevBxoId_read )
 	    EH_assert [ ! -z "${bisosDevBxoId}" ]
 	fi
     }
 
     function onTargetRun {
-	usgBpos.sh ${G_commandPrefs} \
-	 -i usgBposUsageEnvs_bisosDev_update ${bisosDevBxoId}
-
+	lpDo usgBpos.sh ${G_commandPrefs} \
+	 -i usgBposUsageEnvs_bisosDevBxoId_write ${bisosDevBxoId}
     }
 
     if [ "${targetName}" != "onTargetRun" ] && [ ! -z "${targetName}" ] ; then

@@ -65,6 +65,7 @@ _CommentEnd_
 . ${opBinBase}/bxeDesc_lib.sh
 
 . ${opBinBase}/bxo_lib.sh
+. ${opBinBase}/bxoId_lib.sh
 
 . ${opBinBase}/bystarHook.libSh
 
@@ -128,7 +129,8 @@ bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId XXoneBxoId
 $( examplesSeperatorChapter "Preps" )
 ${G_myName} ${extraInfo} -i usgBposFpsPrep
 $( examplesSeperatorChapter "UsageEnvs" )
-${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDev_update piu_XXBisosDev
+${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDevBxoId_write piu_XXBisosDev
+${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDev_update ~piu_XXBisosDev
 ${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDev_bxoPath
 ${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDev_bxoId
 _EOF_
