@@ -515,7 +515,7 @@ _EOF_
 
     function onTargetRun {
 	usgBpos.sh ${G_commandPrefs} \
-	 -i usgBposUsageEnvs_bisosDev_update ${bisosDevBxoHome}
+	 -i usgBposUsageEnvs_bisosDev_update ${bisosDevBxoId}
 
     }
 
