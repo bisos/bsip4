@@ -83,7 +83,7 @@ _EOF_
     EH_assert [[ $# -eq 1 ]]
     local bxoIdValue=$1
 
-    bxoIdValue=$(bxoIdPrep ${bxoIdValue})
+    # NOTYET bxoIdValue=$(bxoIdPrep ${bxoIdValue})
     EH_assert [ ! -z ${bxoIdValue} ]
 
     local curUsgBposBase=$( vis_curUsgBposBase )
@@ -102,6 +102,8 @@ _EOF_
 		      }
     EH_assert [[ $# -eq 0 ]]
 
+    local curUsgBposBase=$( vis_curUsgBposBase )
+    
     local resultBxoId=$( fileParamManage.py -i fileParamRead  ${curUsgBposBase}/usageEnvs bisosDevel.bpoFp )
     EH_assert [ ! -z "${resultBxoId}" ]
 

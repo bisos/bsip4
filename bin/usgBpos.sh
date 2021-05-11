@@ -130,6 +130,7 @@ $( examplesSeperatorChapter "Preps" )
 ${G_myName} ${extraInfo} -i usgBposFpsPrep
 $( examplesSeperatorChapter "UsageEnvs" )
 ${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDevBxoId_write piu_XXBisosDev
+${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDevBxoId_read
 ${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDev_update ~piu_XXBisosDev
 ${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDev_bxoPath
 ${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDev_bxoId
