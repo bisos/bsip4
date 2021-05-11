@@ -582,6 +582,9 @@ _OUTER_EOF_
 	local registrar=$( vis_registrarHostName )
 	local id=$( vis_registrarUserName )
 	local password=$( vis_registrarUserPassword )        
+
+	local runInfo="-h -v -n showRun"
+	local binPath="/bisos/core/bsip/bin/sysCharDeploy.sh"
 	
 	#/bisos/core/bsip/bin/bisosSiteGitServer.sh -h -v -n showRun -p gitServerName=${site_gitServerName} -p gitServerUrl=${site_gitServerUrl} -p gitServerPrivToken=${site_gitServerPrivToken} -i gitServerInfoSet
 	
@@ -590,13 +593,11 @@ _OUTER_EOF_
 ######### PHASE 2: BISOS Site And Identity Set -- With IpAddrs settings
 _EOF_
 	sudo ifconfig eth1 down  # Needed for deb11
-	sudo -u bystar /bisos/core/bsip/bin/bisosSiteSetup.sh -h -v -n showRun -p registrar="${registrar}" -p id="${id}" -p password="${password}" -i bisosSiteSetup
-	sudo -u bystar /bisos/core/bsip/bin/bisosSiteSetup.sh -h -v -n showRun -p bxoId="${siteBxoId}" -i activate_siteBxoPlusAndSelect
-	sudo -u bystar /bisos/core/bsip/bin/sysCharDeploy.sh -h -v -n showRun -p bxoId="${bxoId}" -i activate_sysBxo
-	sudo -u bystar /bisos/core/bsip/bin/sysCharDeploy.sh -h -v -n showRun -p bxoId="${bxoId}" -p privA="$( vis_getIpAddr_privA )" -i capture_identity
-        sudo -u bystar /bisos/core/bsip/bin/sysCharDeploy.sh -h -v -n showRun -p bxoId="${bxoId}" -p privGit=anon -p pubGit=anon -p devMode=someTag -i capture_accessMode
-        sudo -u bystar /bisos/core/bsip/bin/sysCharDeploy.sh -h -v -n showRun -p bxoId="${bxoId}" -p hostId=NOTYET -i capture_deployInfo
-	sudo -u bystar /bisos/core/bsip/bin/sysCharDeploy.sh -h -v -n showRun -p bxoId="${bxoId}" -i deployWithSysCharDeployInfo
+	sudo -u bystar ${binPath}/sysCharDeploy.sh ${runInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -p bxoId="${siteBxoId}" -i bisosBasePlatform_siteSetup
+	sudo -u bystar ${binPath}/sysCharDeploy.sh ${runInfo} -p bxoId="${bxoId}" -i siteBasePlatform_sysBxoActivate
+	sudo -u bystar ${binPath}/sysCharDeploy.sh ${runInfo} -p bxoId="${bxoId}" -p cfpPrivA="$( vis_getIpAddr_privA )" -i conveyInfoStore
+	# vis_usgConvey_bisosDeveloper
+	sudo -u bystar ${binPath}/sysCharDeploy.sh ${runInfo} -p bxoId="${bxoId}" -i deployWithSysCharConveyInfo
 _OUTER_EOF_
     }
 

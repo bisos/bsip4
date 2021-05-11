@@ -118,6 +118,10 @@ typeset -t model=""     # one of [HPV]
 typeset -t abode=""     # one of [MAPIS]
 typeset -t function=""  # one of [LASD]
 
+typeset -t cfpPrivA=""
+typeset -t cfpPubA=""
+typeset -t cfpSecurityMode=""
+
 typeset -t targetName=""
 
 sshCmnd="ssh -o StrictHostKeyChecking=no"
@@ -181,20 +185,40 @@ ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_fullUpdate #
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_intraToSudoersAddition # ManagerOnly -- intra user
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_aptSourcesPrep # ManagerOnly -- intra user
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_provisionBisos_sysBasePlatform # ManagerOnly -- intra user
-$( examplesSeperatorChapter "Site Setup bisosBasePlatform Actions -- On Manager -- Ssh In Target" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_fullUpdate
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_siteSetup
-${G_myName} ${extraInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -i bisosSiteSetup # VAGRANT MODEL
-${G_myName} ${extraInfo} -i bisosSiteSetup # VAGRANT MODEL
-$( examplesSeperatorChapter "Target Box Developmenet Preps -- On Manager" )
+$( examplesSeperatorChapter "Site Setup -- bisosBasePlatform Actions" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_fullUpdate # onManager
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_siteSetup # onManager
+${G_myName} ${extraInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -p siteBxoId=${siteBxoId}" -i bisosBasePlatform_siteSetup # onTarget
+$( examplesSeperatorChapter "SysChar Setup -- siteBasePlatform Actions" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_fullUpdate  # onManager
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_sysBxoActivate  # onManager
+${G_myName} ${extraInfo} -p bxoId="${bxoId}" -i siteBasePlatform_sysBxoActivate  # onTarget
+$( examplesSeperatorChapter "Specify ConveyInfo -- sysCharBasePlatform Actions" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p bxoId="${effectiveContainerBxoId}" -p cfpSecurityMode=bisosDev -i conveyInfoStore
+${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -p cfpPrivA=192.168.0.121 -i conveyInfoStore # For Generic Guests
+${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -p cfpSecurityMode=bisosDev -i conveyInfoStore
+$( examplesSeperatorChapter "Deploy With Convey Info -- FULL SYSTEM Deployment" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p bxoId="${effectiveContainerBxoId}" -i deployWithSysCharConveyInfo # onManager
+${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i deployWithSysCharConveyInfo # onTarget
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p bxoId="${effectiveContainerBxoId}" -i deploySysChar_sysBin_setup # NOTYET, placeHolder
+${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i deploySysChar_sysBin_setup  # NOTYET, placeHolder
+$( examplesSeperatorChapter "sysCharedPlatform Service Actions" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i sysCharedPlatform_fullUpdate
+${G_myName} ${extraInfo} -i sysCharedPlatform_fullUpdate
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i sysCharedPlatform_actuateServices
+${G_myName} ${extraInfo} -i sysCharedPlatform_actuateServices
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i sysCharedPlatform_sealActuatedServices
+${G_myName} ${extraInfo} -i sysCharedPlatform_sealActuatedServices
+$( examplesSeperatorChapter "sysCharedPlatform Report -- Ssh In Other" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i sysCharedPlatform_containerBoxReport
+${G_myName} ${extraInfo} -i sysCharedPlatform_containerBoxReport
+$( examplesSeperatorChapter "BISOS Development Preps -- bisosBasePlatform Actions" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i usgConvey_bisosDeveloper # onManager+onTarget
 ${G_myName} ${extraInfo} -p bisosDevBxoId=prompt -i usgConvey_bisosDeveloper # onTarget
 $( examplesSeperatorChapter "Target Box Developmenet Preps -- On Target Box" )
 ssh -X bystar@${oneTargetName}    # Then run emacs
 bleeVisit /bisos/panels/bisos-dev/howToBecomeDeveloper/fullUsagePanel-en.org
 $( examplesSeperatorChapter "siteBasePlatform Actions -- On Manager Or On Target Box" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_fullUpdate
-${G_myName} ${extraInfo} -i siteBasePlatform_fullUpdate
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_newBoxAscertain
 ${G_myName} ${extraInfo} -i siteBasePlatform_newBoxAscertain
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_newBoxAssign
@@ -209,42 +233,9 @@ ${G_myName} ${extraInfo} -i siteBasePlatform_sysCharContainerBoxRealize
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i siteBasePlatform_containerBoxAssignAndRepo
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_containerBoxBpoAscertain
 ${G_myName} ${extraInfo} -i siteBasePlatform_containerBoxBpoAscertain
-$( examplesSeperatorChapter "SysBxO Activate -- On Manager Or On Target Box" )
-${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i activate_sysBxo
-$( examplesSeperatorChapter "Specify DeployInfo -- On Manager Or On Target Box" )
-${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -p privA=192.168.0.121 -i deployInfo # For Generic Guests
-${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -p otherParams=NOTYET -i deployInfo
 $( examplesSeperatorChapter "siteBasePlatform Actions -- On Manager Or On Target Box" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_sysCharBoxIdentitySet
-${G_myName} ${extraInfo} -i siteBasePlatform_sysCharBoxIdentitySet
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_deployBox
-${G_myName} ${extraInfo} -i siteBasePlatform_deployBox
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p bxoId="${effectiveContainerBxoId}" -i deploySysChar_sysBin_setup
-${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i deploySysChar_sysBin_setup
-$( examplesSeperatorChapter "sysCharedPlatform Service Actions -- Ssh In Other" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i sysCharedPlatform_fullUpdate
-${G_myName} ${extraInfo} -i sysCharedPlatform_fullUpdate
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i sysCharedPlatform_actuateServices
-${G_myName} ${extraInfo} -i sysCharedPlatform_actuateServices
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i sysCharedPlatform_sealActuatedServices
-${G_myName} ${extraInfo} -i sysCharedPlatform_sealActuatedServices
-$( examplesSeperatorChapter "sysCharedPlatform Report -- Ssh In Other" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i sysCharedPlatform_containerBoxReport
-${G_myName} ${extraInfo} -i sysCharedPlatform_containerBoxReport
-$( examplesSeperatorChapter "VAGRANT Model -- FULL SYSTEM Deployment" )
-${G_myName} ${extraInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -i bisosSiteSetup
-${G_myName} ${extraInfo} -i bisosSiteSetup
-${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i activate_siteBxoPlusAndSelect
-${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i activate_sysBxo
-# ${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i capture_siteBxo ${siteBxoId}
-${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -p privA=192.168.0.121 -i capture_identity
-${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -p privGit=anon -p pubGit=anon -p devMode=someTag -i capture_accessMode
-$( examplesSeperatorChapter "VAGRANT Model -- FULL SYSTEM Deployment" )
-${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i deployWithSysCharDeployInfo
-$( examplesSeperatorSection "Update" )
-${G_myName} ${extraInfo} -i identityUpdate
-$( examplesSeperatorChapter "Overview Report And Summary" )
-${G_myName} -p bxoId="${effectiveContainerBxoId}" -i sysCharReport
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_sysCharBoxIdentitySet # NOTYET, likely not necessary
+${G_myName} ${extraInfo} -i siteBasePlatform_sysCharBoxIdentitySet # NOTYET, likely not necessary
 _EOF_
 }
 
@@ -410,35 +401,6 @@ _EOF_
     lpDo vis_bisosBasePlatform_siteSetup
 }
 
-function vis_bisosBasePlatform_siteSetup%% {    
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** Preps the site (configs for gitlab server, etc) and activates the siteBxo.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    local registrar=$( vis_registrarHostName )
-    local id=$( vis_registrarUserName )
-    local password=$( vis_registrarUserPassword )
-
-    local siteBxoId=$( sysCharRealize.sh -i selectedSiteBxoId )
-
-    if [ -z "${targetName}" ] ; then
-	EH_problem "Can Not Be Run Locally. Run it remotely and specify targetName"
-    else
-	# Preps Currents and Preps the site (configs for gitlab server, etc)
-	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-	     $(which bisosSiteSetup.sh) ${G_commandPrefs} \
-	     -p registrar="${registrar}" -p id="${id}" -p password="${password}" \
-	     -i fullUpdate
-    
-	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-	     $(which bisosSiteSetup.sh) ${G_commandPrefs} \
-	     -p bxoId="${siteBxoId}" -i activate_siteBxoPlusAndSelect
-    fi
-}
-
 function vis_bisosBasePlatform_siteSetup {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -540,42 +502,6 @@ _EOF_
 ####+END:
 }
 
-
-function vis_sysDeveloperSetup%% {    
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** Activate the bisosDev usage env bpo. authClone using credentials of bisosDev.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    EH_assert [ ! -z "${targetName}" ]
-    
-    local bisosDevBxoId=$( vis_usgBposUsageEnvs_bisosDev_bxoId )
-    EH_assert [ ! -z "${bisosDevBxoId}" ]
-
-    bisosDevBxoHome=$( FN_absolutePathGet ~${bisosDevBxoId} )
-    
-    # Activate bisosDev usage env bpo
-    lpDo echo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-	 $(which bxoManage.sh) ${G_commandPrefs} \
-	 -p privacy=priv -p bxoId=${bisosDevBxoId} \
-	 -i fullConstruct
-
-    # record the activated bpo as bisosDev
-    lpDo echo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-	 $(which usgBpos.sh) ${G_commandPrefs} \
-	 -i usgBposUsageEnvs_bisosDev_update ${bisosDevBxoHome}
-
-    # Install bisosDev dev crentials in ~/.ssh and
-    # auth clone using bisosDev credentials
-    # switch to auth based bxRepos 
-    lpDo echo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-	 ${bisosDevBxoHome}/sys/bin/bxoSysSetup.sh ${G_commandPrefs} \
-	 -i developerMode
-}
-
-
 function vis_siteBasePlatform_fullUpdate {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -590,6 +516,53 @@ _EOF_
     lpDo vis_siteBasePlatform_containerBoxAssignAndRepo
     lpDo vis_siteBasePlatform_sysCharContainerBoxRealize
 }
+
+
+function vis_siteBasePlatform_sysBxoActivate {
+     G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Preps the site (configs for gitlab server, etc) and activates the siteBxo.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    function onManagerRun {
+	if [ -z "${bxoId}" ] ; then
+	    # if physical from box, otherwise prompt for spec
+	    # NOTYET
+	    bxoId="sysChar"
+	fi
+    }
+
+    function onTargetRun {
+	lpDo sysCharActivate.sh ${G_commandPrefs} \
+	     -p bxoId="${bxoId}"
+	     -i activate_sysContainerBxo
+    }
+
+    if [ "${targetName}" != "onTargetRun" ] && [ ! -z "${targetName}" ] ; then
+	lpDo onManagerRun
+    fi
+
+    EH_assert [ ! -z "${bxoId}" ]
+
+    G_paramCmndOption="-p bxoId=${bxoId}"
+    
+####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" :cmndOption t
+    if [ "${targetName}" == "onTargetRun" ] ; then
+	lpDo onTargetRun
+    elif [ -z "${targetName}" ] ; then
+	lpDo onTargetRun
+    else
+	local commandName=${FUNCNAME##vis_}		
+	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+	     $(which ${G_myName}) ${G_commandPrefs} \
+	     -p targetName=onTargetRun ${G_paramCmndOption} -i ${commandName}
+    fi
+####+END:
+}
+
+
 
 
 function vis_siteBasePlatform_newBoxAscertain {    
@@ -781,66 +754,93 @@ _EOF_
 }
 
 
-function vis_siteBasePlatform_sysCharBoxIdentitySet {    
+function vis_deployWithSysCharConveyInfo {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Duplicates code  
-*** Duplicates code in vis_deployWithSysCharDeployInfo
+Activate essential site BxOs. Activate bxoId.
+Set identity. Set Mode (dev vs prod). deploy svcs.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    # determin bxoId for box
+    function onManagerRun { doNothing; }
 
-    local containerBase=$( vis_forThisSysFindContainerBase )
-    EH_assert [ ! -z "${containerBase}" ]
-
-    vis_containerAssignRead "${containerBase}"
-    EH_assert [ ! -z "${containerAssign_containerId}" ]
-
-    local hostContainerId="${containerAssign_containerId}"
-    
-    bxoId=$( withContainerIdGetBxoId ${hostContainerId} )
-    EH_assert vis_bxoAcctVerify "${bxoId}"
-
-    if [ -z "${targetName}" ] ; then
-	lpDo sysCharIdentity.sh ${G_commandPrefs} \
-	     -p bxoId="${bxoId}" -i identityUpdate
-    else
-	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-	     $(which sysCharIdentity.sh) ${G_commandPrefs} \
-	     -p bxoId="${bxoId}" -i identityUpdate
-    fi
-}
-
-
-function vis_siteBasePlatform_deployBox {    
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** NOTYET
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    EH_assert [ ! -z "${targetName}" ]
-    
     function onTargetRun {
-	lpDo echo On Target Execution
+	EH_assert bxoIdPrep
+
+	local sysCharDeployInfoBase="${bxoHome}/var/sysCharDeployInfo"
+
+	# local siteBoxId=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} siteBxoId )
+    
+	local ipAddr_privA=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} ipAddr_privA )
+	local ipAddr_pubA=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} ipAddr_pubA )
+	local privGitMode=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} privGit )
+	local pubGitMode=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} pubGitMode )
+	local devMode=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} devMode )
+
+	lpDo vis_deploySysChar_identitySet
     }
 
-####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" 
+    if [ "${targetName}" != "onTargetRun" ] && [ ! -z "${targetName}" ] ; then lpDo onManagerRun; fi
+
+    G_paramCmndOption="-p bxoId=${bxoId}"
+    
+####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" :cmndOption t
     if [ "${targetName}" == "onTargetRun" ] ; then
 	lpDo onTargetRun
     elif [ -z "${targetName}" ] ; then
 	lpDo onTargetRun
     else
 	local commandName=${FUNCNAME##vis_}		
-	lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
 	     $(which ${G_myName}) ${G_commandPrefs} \
-	     -p targetName=onTargetRun -i ${commandName}
+	     -p targetName=onTargetRun ${G_paramCmndOption} -i ${commandName}
     fi
 ####+END:
 }
+
+function vis_deploySysChar_identitySet {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Set container's identity based on sysChar. -p targetName -p bxoId.
+*** onTargetRun :sshAcct "bystar" :managerOrTarget "both"
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    function onManagerRun { doNothing; }
+
+    function onTargetRun {
+	EH_assert bxoIdPrep
+
+	lpDo sysCharIdentity.sh ${G_commandPrefs} \
+	     -p bxoId="${bxoId}" -i identityUpdate
+	# sysCharIdentity.sh: Sets up motdSet, nodename, netL3Interface, netEtcHosts
+    }
+
+    if [ "${targetName}" != "onTargetRun" ] && [ ! -z "${targetName}" ] ; then lpDo onManagerRun; fi
+
+    G_paramCmndOption="-p bxoId=${bxoId}"
+    
+####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" :cmndOption t
+    if [ "${targetName}" == "onTargetRun" ] ; then
+	lpDo onTargetRun
+    elif [ -z "${targetName}" ] ; then
+	lpDo onTargetRun
+    else
+	local commandName=${FUNCNAME##vis_}		
+	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+	     $(which ${G_myName}) ${G_commandPrefs} \
+	     -p targetName=onTargetRun ${G_paramCmndOption} -i ${commandName}
+    fi
+####+END:
+}
+
+#
+#
+#  BOX Based ACTIONS and REALIZATIONS
+#
+#
 
 function vis_deploySysChar_identitySet_forBox {    
     G_funcEntry
@@ -864,10 +864,8 @@ _EOF_
     
 	bxoId=$( withContainerIdGetBxoId ${hostContainerId} )
 	EH_assert vis_bxoAcctVerify "${bxoId}"
-	
-	lpDo sysCharDeploy.sh ${G_commandPrefs} \
-	     -p bxoId="${bxoId}" \
-	     -i deploySysChar_identitySet
+
+	lpDo vis_deployWithSysCharConveyInfo
     }
 
 ####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" :cmndOption nil
@@ -880,39 +878,6 @@ _EOF_
 	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
 	     $(which ${G_myName}) ${G_commandPrefs} \
 	     -p targetName=onTargetRun  -i ${commandName}
-    fi
-####+END:
-}
-
-function vis_deploySysChar_identitySet {    
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** Set container's identity based on sysChar. -p targetName -p bxoId.
-*** onTargetRun :sshAcct "bystar" :managerOrTarget "both"
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    function onTargetRun {
-	EH_assert [ ! -z "${bxoId}" ]
-	EH_assert vis_bxoAcctVerify "${bxoId}"
-	bxoHome=$( FN_absolutePathGet ~${bxoId} )
-	
-	lpDo sysCharIdentity.sh ${G_commandPrefs} \
-	     -p bxoId="${bxoId}" \
-	     -i identityUpdate
-    }
-
-####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" 
-    if [ "${targetName}" == "onTargetRun" ] ; then
-	lpDo onTargetRun
-    elif [ -z "${targetName}" ] ; then
-	lpDo onTargetRun
-    else
-	local commandName=${FUNCNAME##vis_}		
-	lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-	     $(which ${G_myName}) ${G_commandPrefs} \
-	     -p targetName=onTargetRun -i ${commandName}
     fi
 ####+END:
 }
@@ -1019,151 +984,111 @@ _EOF_
 ####+END:
 }
 
-
-function vis_capture_siteBxo%% {    
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 1 ]]
-
-    local siteBxoId=$1
-
-    EH_assert [ ! -z "${bxoId}" ]
-    EH_assert vis_bxoAcctVerify "${bxoId}"
-    bxoHome=$( FN_absolutePathGet ~${bxoId} )
-
-    local sysCharDeployInfoBase="${bxoHome}/var/sysCharDeployInfo"
-
-    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} siteBxoId "${siteBxoId}"
-}
-
-
-function vis_capture_identity {    
+function vis_conveyInfoStore {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert [ ! -z "${bxoId}" ]
-    EH_assert vis_bxoAcctVerify "${bxoId}"
-    bxoHome=$( FN_absolutePathGet ~${bxoId} )
+    function onManagerRun {
+	if [ -z "${cfpPrivA}" ] ; then
+	    lpDo echo "prompt"
+	fi
+	if [ -z "${cfpPubA}" ] ; then
+	    lpDo echo "prompt"
+	fi
+	# if [ -z "${cfpPrivGit}" ] ; then
+	#     lpDo echo "prompt"
+	# fi
+	# if [ -z "${cfpPubGit}" ] ; then
+	#     lpDo echo "prompt"
+	# fi
+	if [ -z "${cfpSecurityMode}" ] ; then
+	    lpDo echo "prompt"
+	fi
+    }
 
-    local sysCharDeployInfoBase="${bxoHome}/var/sysCharDeployInfo"
+    function onTargetRun {
+	EH_assert bxoIdPrep
 
-    lpDo FN_dirCreatePathIfNotThere ${sysCharDeployInfoBase}
+	local sysCharDeployInfoBase="${bxoHome}/var/sysCharDeployInfo"
+
+	lpDo FN_dirCreatePathIfNotThere ${sysCharDeployInfoBase}
+
+	if [ ! -z "${cfpPrivA}" ] ; then
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} ipAddr_privA "${privA}"
+	fi
+	if [ ! -z "${cfpPubA}" ] ; then
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} ipAddr_pubA "${pubA}"
+	fi
+	# if [ ! -z "${cfpPrivGit}" ] ; then
+	#     lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} privGit "${privGit}"
+	# fi
+	# if [ ! -z "${cfpPubGit}" ] ; then
+	#     lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} pubGit "${pubGit}"
+	# fi
+	if [ ! -z "${cfpSecurityMode}" ] ; then
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} devMode "${cfpSecurityMode}"
+	fi
+    }
+
+    if [ "${targetName}" != "onTargetRun" ] && [ ! -z "${targetName}" ] ; then
+	lpDo onManagerRun
+    fi
+
+    # Empty values are passed along
+
+    G_paramCmndOption="-p bxoId=\"${bxoId}\" -p cfpPrivA=\"${cfpPrivA}\" -p cfpPubA=\"${cfpPubA}\" -p cfpSecurityMode=\"${cfpSecurityMode}\""
     
-    if [ ! -z "${privA}" ] ; then
-	lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} ipAddr_privA "${privA}"
-    elif [ ! -z "${pubA}" ] ; then
-	lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} ipAddr_pubA "${pubA}"
+####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" :cmndOption t
+    if [ "${targetName}" == "onTargetRun" ] ; then
+	lpDo onTargetRun
+    elif [ -z "${targetName}" ] ; then
+	lpDo onTargetRun
     else
-	doNothing
+	local commandName=${FUNCNAME##vis_}		
+	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+	     $(which ${G_myName}) ${G_commandPrefs} \
+	     -p targetName=onTargetRun ${G_paramCmndOption} -i ${commandName}
     fi
+####+END:
 }
 
 
-function vis_capture_accessMode {    
+function vis_conveyInfoShow {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert [ ! -z "${bxoId}" ]
-    EH_assert vis_bxoAcctVerify "${bxoId}"
-    bxoHome=$( FN_absolutePathGet ~${bxoId} )
+    function onManagerRun { doNothing; }
 
-    local sysCharDeployInfoBase="${bxoHome}/var/sysCharDeployInfo"
+    function onTargetRun {
+	EH_assert bxoIdPrep
 
-    if [ ! -z "${privGit}" ] ; then
-	lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} privGit "${privGit}"
-    fi
-    if [ ! -z "${pubGit}" ] ; then
-	lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} pubGit "${pubGit}"
-    fi
-    if [ ! -z "${devMode}" ] ; then
-	lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} devMode "${devMode}"
-    fi
-}
+	local sysCharDeployInfoBase="${bxoHome}/var/sysCharDeployInfo"
 
-
-
-
-
-function vis_deployInfoStore {    
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
+	lpDo  fileParamManage.py -i fileParamDictReadDeep ${sysCharDeployInfoBase}
     }
-    EH_assert [[ $# -eq 0 ]]
 
-    EH_assert [ ! -z "${bxoId}" ]
-    EH_assert vis_bxoAcctVerify "${bxoId}"
-    bxoHome=$( FN_absolutePathGet ~${bxoId} )
+    if [ "${targetName}" != "onTargetRun" ] && [ ! -z "${targetName}" ] ; then lpDo onManagerRun; fi
 
-    local sysCharDeployInfoBase="${bxoHome}/var/sysCharDeployInfo"
-
-    lpDo FN_dirCreatePathIfNotThere ${sysCharDeployInfoBase}
-
-    if [ ! -z "${siteBxoId}" ] ; then
-	lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} siteBxoId "${siteBxoId}"	
-    fi
-    if [ ! -z "${privA}" ] ; then
-	lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} ipAddr_privA "${privA}"
-    fi
-    if [ ! -z "${pubA}" ] ; then
-	lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} ipAddr_pubA "${pubA}"
-    fi
-    if [ ! -z "${privGit}" ] ; then
-	lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} privGit "${privGit}"
-    fi
-    if [ ! -z "${pubGit}" ] ; then
-	lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} pubGit "${pubGit}"
-    fi
-    if [ ! -z "${devMode}" ] ; then
-	lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} devMode "${devMode}"
-    fi
-}
-
-
-function vis_deployWithSysCharDeployInfo {    
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-Activate essential site BxOs. Activate bxoId.
-Set identity. Set Mode (dev vs prod). deploy svcs.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    # EH_assert bxoIdPrep
-
-    EH_assert [ ! -z "${bxoId}" ]
-    EH_assert vis_bxoAcctVerify "${bxoId}"
-    bxoHome=$( FN_absolutePathGet ~${bxoId} )
-
-    local sysCharDeployInfoBase="${bxoHome}/var/sysCharDeployInfo"
-
-    # local siteBoxId=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} siteBxoId )
+    G_paramCmndOption="-p bxoId=${bxoId}"
     
-    local ipAddr_privA=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} ipAddr_privA )
-    local ipAddr_pubA=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} ipAddr_pubA )
-    local privGitMode=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} privGit )
-    local pubGitMode=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} pubGitMode )
-    local devMode=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} devMode )
-
-    local extraInfo="-h -v -n showRun"
-    
-    # ---- IDENTITY
-    lpDo sysCharIdentity.sh ${extraInfo} -p bxoId="${bxoId}" -i motdSet
-    lpDo sysCharIdentity.sh ${extraInfo} -p bxoId="${bxoId}" -i nodename
-  
-    #NETWORK
-    lpDo sysCharIdentity.sh ${extraInfo} -p bxoId="${bxoId}" -i netL3Interface
-    lpDo sysCharIdentity.sh ${extraInfo} -p bxoId="${bxoId}" -i netEtcHosts
-
-    lpReturn
+####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" :cmndOption t
+    if [ "${targetName}" == "onTargetRun" ] ; then
+	lpDo onTargetRun
+    elif [ -z "${targetName}" ] ; then
+	lpDo onTargetRun
+    else
+	local commandName=${FUNCNAME##vis_}		
+	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+	     $(which ${G_myName}) ${G_commandPrefs} \
+	     -p targetName=onTargetRun ${G_paramCmndOption} -i ${commandName}
+    fi
+####+END:
 }
 
 
@@ -1183,6 +1108,51 @@ _EOF_
     
     lpReturn
 }	
+
+
+function vis_usgConvey_bisosDeveloper {
+     G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Preps the site (configs for gitlab server, etc) and activates the siteBxo.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    function onManagerRun {
+	if [ -z "${bisosDevBxoId}" ] ; then
+	    bisosDevBxoId=$( vis_usgBposUsageEnvs_bisosDevBxoId_read )
+	    EH_assert [ ! -z "${bisosDevBxoId}" ]
+	fi
+    }
+
+    function onTargetRun {
+	lpDo usgBpos.sh ${G_commandPrefs} \
+	 -i usgBposUsageEnvs_bisosDevBxoId_write ${bisosDevBxoId}
+    }
+
+    if [ "${targetName}" != "onTargetRun" ] && [ ! -z "${targetName}" ] ; then
+	lpDo onManagerRun
+    fi
+
+    EH_assert [ ! -z "${bisosDevBxoId}" ]
+
+    G_paramCmndOption="-p bisosDevBxoId=${bisosDevBxoId}"
+    
+####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" :cmndOption t
+    if [ "${targetName}" == "onTargetRun" ] ; then
+	lpDo onTargetRun
+    elif [ -z "${targetName}" ] ; then
+	lpDo onTargetRun
+    else
+	local commandName=${FUNCNAME##vis_}		
+	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+	     $(which ${G_myName}) ${G_commandPrefs} \
+	     -p targetName=onTargetRun ${G_paramCmndOption} -i ${commandName}
+    fi
+####+END:
+
+}
+
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*

@@ -149,9 +149,10 @@ ${G_myName} ${extraInfo} -i fullUpdate
 ${G_myName} ${extraInfo} -i vagrantBaseBoxesBuild
 ${G_myName} ${extraInfo} -i siteContainersAssignGenerics
 $( examplesSeperatorChapter "Developer Git Credentials Activate" )
+${G_myName} ${extraInfo} -i bisosDevBxo_fullSetup
 ${G_myName} ${extraInfo} -i bisosDevBxo_activate
 ${G_myName} ${extraInfo} -i bisosDevBxo_actuate
-${G_myName} ${extraInfo} -i developerMode
+${G_myName} ${extraInfo} -i developerMode  # NOTYET
 $( examplesSeperatorChapter "Developer Git Credentials Deactivate" )
 ${G_myName} ${extraInfo} -i bisosDevBxo_delete
 ${G_myName} ${extraInfo} -i stableMode
@@ -199,6 +200,19 @@ _EOF_
     lpReturn
 }	
 
+function vis_bisosDevBxo_fullSetup {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Activate the bisosDev usage env bpo. authClone using credentials of bisosDev.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo vis_bisosDevBxo_activate
+
+    lpDo vis_bisosDevBxo_actuate
+}
+
 function vis_bisosDevBxo_activate {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -220,40 +234,20 @@ _EOF_
     # record the activated bpo as bisosDev
     lpDo usgBpos.sh ${G_commandPrefs} \
 	 -i usgBposUsageEnvs_bisosDev_update ${bisosDevBxoHome}
-
-    # Install bisosDev dev crentials in ~/.ssh and
-    # auth clone using bisosDev credentials
-    # switch to auth based bxRepos 
-    lpDo echo  ${bisosDevBxoHome}/sys/bin/bxoSysSetup.sh ${G_commandPrefs} \
-	 -i developerMode
 }
 
 
-
-function vis_sysDeveloperSetup {    
+function vis_bisosDevBxo_actuate {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Activate the bisosDev usage env bpo. authClone using credentials of bisosDev.
+** actuate
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert [ ! -z "${targetName}" ]
+    bisosDevBxoHome=$( vis_usgBposUsageEnvs_bisosDev_bxoPath )
+    EH_assert [ ! -z "${bisosDevBxoHome}" ]
     
-    local bisosDevBxoId=$( vis_usgBposUsageEnvs_bisosDevBxoId_read )
-    EH_assert [ ! -z "${bisosDevBxoId}" ]
-
-    bisosDevBxoHome=$( FN_absolutePathGet ~${bisosDevBxoId} )
-    
-    # Activate bisosDev usage env bpo
-    lpDo bxoManage.sh ${G_commandPrefs} \
-	 -p privacy=priv -p bxoId=${bisosDevBxoId} \
-	 -i fullConstruct
-
-    # record the activated bpo as bisosDev
-    lpDo usgBpos.sh ${G_commandPrefs} \
-	 -i usgBposUsageEnvs_bisosDev_update ${bisosDevBxoHome}
-
     # Install bisosDev dev crentials in ~/.ssh and
     # auth clone using bisosDev credentials
     # switch to auth based bxRepos 
