@@ -425,11 +425,11 @@ _EOF_
     }
 
     function onTargetRun {
-	lpDo echo bisosSiteSetup.sh ${G_commandPrefs} \
+	lpDo bisosSiteSetup.sh ${G_commandPrefs} \
 	     -p registrar="${registrar}" -p id="${id}" -p password="${password}" \
 	     -i fullUpdate
 
-	lpDo echo bisosSiteSetup.sh ${G_commandPrefs} \
+	lpDo bisosSiteSetup.sh ${G_commandPrefs} \
 	     -p siteBxoId="${siteBxoId}" \
 	     -i activate_siteBxoPlusAndSelect 
     }

@@ -145,7 +145,10 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
-bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VAG-deb11_
+bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VAG-deb11_  # Generic, Auto, Dhcp,  
+bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VSG-deb11_  # Generic, Shielded, StaticIP
+$( examplesSeperatorChapter "Activate Subject sysContainerBxo" )
+sysCharActivate.sh -h -v -n showRun -p bxoId="${oneBxoId}" -i activate_sysContainerBxo
 $( examplesSeperatorChapter "Specialized Actions" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantBaseBoxFromSysChar   # which vagrantBaseBox will be used
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantBase_last     # on host
@@ -593,11 +596,11 @@ _OUTER_EOF_
 ######### PHASE 2: BISOS Site And Identity Set -- With IpAddrs settings
 _EOF_
 	sudo ifconfig eth1 down  # Needed for deb11
-	sudo -u bystar ${binPath}/sysCharDeploy.sh ${runInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -p bxoId="${siteBxoId}" -i bisosBasePlatform_siteSetup
-	sudo -u bystar ${binPath}/sysCharDeploy.sh ${runInfo} -p bxoId="${bxoId}" -i siteBasePlatform_sysBxoActivate
-	sudo -u bystar ${binPath}/sysCharDeploy.sh ${runInfo} -p bxoId="${bxoId}" -p cfpPrivA="$( vis_getIpAddr_privA )" -i conveyInfoStore
+	sudo -u bystar ${binPath} ${runInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -p siteBxoId="${siteBxoId}" -i bisosBasePlatform_siteSetup
+	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -i siteBasePlatform_sysBxoActivate
+	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpPrivA="$( vis_getIpAddr_privA )" -i conveyInfoStore
 	# vis_usgConvey_bisosDeveloper
-	sudo -u bystar ${binPath}/sysCharDeploy.sh ${runInfo} -p bxoId="${bxoId}" -i deployWithSysCharConveyInfo
+	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -i deployWithSysCharConveyInfo
 _OUTER_EOF_
     }
 

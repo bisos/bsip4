@@ -138,8 +138,9 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
-    #bisosCurrentsGet
-
+    bisosCurrentsGet
+    oneBxoId="${currentBxoId}"
+    
     local selectedContainerBxoId=$( vis_selectedContainerBxoId 2> /dev/null )
 
     if [ -z "${selectedContainerBxoId}" ] ; then
@@ -159,9 +160,12 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${effectiveContainerBxoId}"
+bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VAG-deb11_  # Generic, Auto, Dhcp,  
+bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VSG-deb11_  # Generic, Shielded, StaticIP
 $( examplesSeperatorChapter "SysChar Containers Info" )
 ${G_myName} -i containerReposList  # listAvaiableSysChars
 $( examplesSeperatorChapter "SysChar Container Activate" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i activate_sysContainerBxo
 ${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i activate_sysContainerBxo
 ${G_myName} ${extraInfo} -i activate_containersAll # Activates each of containerReposList
 $( examplesSeperatorChapter "BISOS Container Add and Select Information" )
