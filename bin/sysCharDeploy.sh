@@ -536,7 +536,7 @@ _EOF_
 
     function onTargetRun {
 	lpDo sysCharActivate.sh ${G_commandPrefs} \
-	     -p bxoId="${bxoId}"
+	     -p bxoId="${bxoId}" \
 	     -i activate_sysContainerBxo
     }
 
@@ -1017,10 +1017,10 @@ _EOF_
 	lpDo FN_dirCreatePathIfNotThere ${sysCharDeployInfoBase}
 
 	if [ ! -z "${cfpPrivA}" ] ; then
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} ipAddr_privA "${privA}"
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} ipAddr_privA "${cfpPrivA}"
 	fi
 	if [ ! -z "${cfpPubA}" ] ; then
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} ipAddr_pubA "${pubA}"
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} ipAddr_pubA "${cfpPubA}"
 	fi
 	# if [ ! -z "${cfpPrivGit}" ] ; then
 	#     lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} privGit "${privGit}"

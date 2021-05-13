@@ -152,6 +152,8 @@ _EOF_
     local sysCharDeployInfoBase="${bxoHome}/var/sysCharDeployInfo"
 
     lpDo FN_dirCreatePathIfNotThere ${sysCharDeployInfoBase}
+
+    lpDo bxoIdManage.sh -h -v -n showRun -i bxoIdFpsWrite sysChar "${bxoId}"
 }
 
 

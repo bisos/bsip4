@@ -118,6 +118,11 @@ function vis_examples {
 	EH_problem "lpCurrentsGet Failure"
 	lpReturn 101
     fi
+
+    local thisBisosDevBxoId=$( vis_usgBposUsageEnvs_bisosDevBxoId_read )
+    if [ -z "${thisBisosDevBxoId}" ] ; then
+	thisBisosDevBxoId="piu_XXBisosDev"
+    fi
     
     visLibExamplesOutput ${G_myName}
 
@@ -131,7 +136,7 @@ ${G_myName} ${extraInfo} -i usgBposFpsPrep
 $( examplesSeperatorChapter "UsageEnvs" )
 ${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDevBxoId_write piu_XXBisosDev
 ${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDevBxoId_read
-${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDev_update ~piu_XXBisosDev
+${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDev_update ${thisBisosDevBxoId}
 ${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDev_bxoPath
 ${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDev_bxoId
 _EOF_

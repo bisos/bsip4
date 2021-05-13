@@ -165,9 +165,32 @@ Incomplete -- interim work -- does not support machineId yet
 _EOF_
 		      }
    EH_assert [[ $# -eq 0 ]]
+
+   local virtualizationType=$( facter virtual )
+   local boxId=""
+
+   # lpDo vis_bxoIdPrep "sysChar"
    
-   local boxId=$( siteBoxAssign.sh -i thisBoxFindId )
-   lpDo vis_withBoxIdFindContainerBase "${boxId}"
+    if [ "${virtualizationType}" == "physical" ] ; then
+	boxId=$( siteBoxAssign.sh -i thisBoxFindId )
+	lpDo vis_withBoxIdFindContainerBase "${boxId}"
+    else
+	bxoId=$( vis_bxoIdPrep "sysChar" )
+	lpDo vis_fromBxoIdFindContainerBase ${bxoId}
+    fi
+}
+
+
+function vis_fromBxoIdFindContainerBase {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   
+   EH_assert [[ $# -eq 1 ]]
+   local bxoId="$1"
+   local bxoHome=$( FN_absolutePathGet ~${bxoId} )
+   echo ${bxoHome}/siteContainersRepo
 }
 
 
@@ -429,11 +452,11 @@ _EOF_
 
    EH_assert [ -d "${containerSteadyBase}" ]
 
-   if [ ! -z "${containerSteady_networkMode}" ] ; then
+   if [ ! -z "${containerSteady_networkMode:-}" ] ; then
        lpDo fileParamManage.py -v 20 -i fileParamWrite ${containerSteadyBase}/net networkMode.fp "${containerSteady_networkMode}"
    fi
    
-   if [ ! -z "${containerSteady_privA_addr}" ] ; then
+   if [ ! -z "${containerSteady_privA_addr:-}" ] ; then
        lpDo fileParamManage.py -i fileParamWrite ${containerSteadyBase}/net/ipv4/privA.fps addr "${containerSteady_privA_addr}"
 
        local netSiteFpsPath=$( vis_netSiteFpsPath privA )

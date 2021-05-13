@@ -144,6 +144,8 @@ $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VAG-deb11_
+$( examplesSeperatorChapter "Identify or Locate bisosDevBxo" )
+usgBpos.sh
 $( examplesSeperatorChapter "Specialized Actions" )
 ${G_myName} ${extraInfo} -i fullUpdate
 ${G_myName} ${extraInfo} -i vagrantBaseBoxesBuild
@@ -156,7 +158,6 @@ ${G_myName} ${extraInfo} -i developerMode  # NOTYET
 $( examplesSeperatorChapter "Developer Git Credentials Deactivate" )
 ${G_myName} ${extraInfo} -i bisosDevBxo_delete
 ${G_myName} ${extraInfo} -i stableMode
-
 _EOF_
 }
 

@@ -120,8 +120,8 @@ $( examplesSeperatorChapter "Container Repo Information" )
 ${G_myName} ${extraInfo} -i containerRepoBase ${containerBase}  # returns path on stdout
 ${G_myName} ${extraInfo} -i containerRepoBaseExistsP ${containerBase} # exists 0 or 1
 $( examplesSeperatorChapter "Container Repo Creation -- Updates steady" )
-${G_myName} ${extraInfo} -i containerRepoUpdate basePrep ${containerBase}
-${G_myName} ${extraInfo} -i containerRepoUpdate realize ${containerBase}
+${G_myName} ${extraInfo} -i containerRepoUpdate basePrep "${containerBase}"
+${G_myName} ${extraInfo} -i containerRepoUpdate realize "${containerBase}"
 ${G_myName} ${extraInfo} -i containerRepoUpdate full ${containerBase}
 $( examplesSeperatorChapter "Generic Container Repo Creation -- Applies To All Generics" )
 ${G_myName} ${extraInfo} -i containerRepoUpdate ${containersBase}/assign/Virt/Auto/Generic/deb10

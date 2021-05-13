@@ -1164,7 +1164,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    case ${bxoId} in 
+    case ${bxoId:-} in 
       "all")
 	    lpReturn 0
 	    ;;

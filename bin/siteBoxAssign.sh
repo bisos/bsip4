@@ -319,8 +319,12 @@ function vis_thisBoxFindId {
 _EOF_
 		      }
    EH_assert [[ $# -eq 0 ]]
-   
-   echo $( vis_boxNuToBoxId $( vis_thisBoxFindNu ))
+
+   local boxNu=$( vis_thisBoxFindNu )
+
+   if [ ! -z "${boxNu}" ] ; then
+       echo $( vis_boxNuToBoxId "${boxNu}" )
+   fi
 }
 
 function vis_thisBoxFindNu {
