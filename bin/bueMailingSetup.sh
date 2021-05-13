@@ -146,7 +146,7 @@ _EOF_
 
     # Output base directory
     typeset baseDir="$( FN_absolutePathGet ~/bxo/usageEnv/selected/mailings/compose )"
-    if [ ! -z "${base}" ] ; then
+    if [ ! -z "${base:-}" ] ; then
 	baseDir="$( FN_absolutePathGet ${base} )"
     fi
 
@@ -179,7 +179,7 @@ _EOF_
     ### Mailing Template
 
     typeset templateBaseDir="/bisos/apps/defaults/mailing/compose/enFa/generic"
-    if [ ! -z "${template}" ] ; then
+    if [ ! -z "${template:-}" ] ; then
 	templateBaseDir=${template}
     fi
 
