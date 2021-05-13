@@ -430,7 +430,7 @@ _EOF_
 	     -i fullUpdate
 
 	lpDo bisosSiteSetup.sh ${G_commandPrefs} \
-	     -p siteBxoId="${siteBxoId}" \
+	     -p bxoId="${siteBxoId}" \
 	     -i activate_siteBxoPlusAndSelect 
     }
 

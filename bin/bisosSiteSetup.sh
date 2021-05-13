@@ -215,9 +215,9 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert [ ! -z "${bxoId}" ]
-    EH_assert vis_bxoAcctVerify "${bxoId}"
-    bxoHome=$( FN_absolutePathGet ~${bxoId} )
+    # EH_assert [ ! -z "${bxoId}" ]
+    # EH_assert vis_bxoAcctVerify "${bxoId}"
+    # bxoHome=$( FN_absolutePathGet ~${bxoId} )
 
     local siteBxoId="${bxoId}"
 
