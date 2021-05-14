@@ -317,8 +317,10 @@ _EOF_
 
     vis_containerAssignRead
     EH_assert [ ! -z "${containerAssign_containerId}" ]
+
+    vis_sysCharConveyInfoRead
     
-    opDo eval "echo ${containerAssign_containerId} > /etc/hostname"
+    opDo eval "echo ${containerAssign_containerId}-${sysChar_conveyInfo_vmNameQualifier} | sed -e s/_// > /etc/hostname"
     opDo chmod 444 /etc/hostname
 
     opDo hostname --file /etc/hostname

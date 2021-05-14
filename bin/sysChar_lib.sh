@@ -512,6 +512,48 @@ _EOF_
 }
 
 
+function vis_sysCharConveyInfoRead {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+bxoId is the sysChar.
+sysInfo.fps of sysChar overwrites sysInfo.fps of siteContainersRepo.
+_EOF_
+		       }
+
+    EH_assert [[ $# -lt 2 ]]
+
+    local thisBxoId="${bxoId}"
+    
+    if [ $# -eq 1 ] ; then
+	thisBxoId=$1
+    fi
+
+    EH_assert [ ! -z "${thisBxoId}" ]
+
+    EH_assert vis_bxoAcctVerify "${thisBxoId}"
+    bxoHome=$( FN_absolutePathGet ~${thisBxoId} )
+
+    local sysCharDeployInfoBase="${bxoHome}/var/sysCharDeployInfo"
+    
+    if [ -d "${sysCharDeployInfoBase}" ] ; then
+	sysChar_conveyInfo_vmNameQualifier=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} vmNameQualifier )
+	sysChar_conveyInfo_ipAddr_privA=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} ipAddr_privA )
+	sysChar_conveyInfo_ipAddr_pubA=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} ipAddr_pubA )
+	sysChar_conveyInfo_privGitMode=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} privGit )
+	sysChar_conveyInfo_pubGitMode=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} pubGitMode )
+	sysChar_conveyInfo_devMode=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} devMode )
+    else
+	sysChar_conveyInfo_vmNameQualifier=""
+	sysChar_conveyInfo_ipAddr_privA=""
+	sysChar_conveyInfo_ipAddr_pubA=""
+	sysChar_conveyInfo_privGitMode=""
+	sysChar_conveyInfo_pubGitMode=""
+	sysChar_conveyInfo_devMode=""
+    fi
+}
+
+
+
 function vis_sysCharRead {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -555,6 +597,8 @@ _EOF_
 	sysChar_virtSpec_sizing=""
 	sysChar_virtSpec_vagBaseBox=""
     fi
+
+    
 
     if [ -d "${containerSpecFps}" ] ; then
 	sysChar_containerSpec_netIfs_privA=$( fileParamManage.py -i fileParamRead ${containerSpecFps}/netIfs privA )

@@ -74,6 +74,7 @@ _CommentEnd_
 . ${opBinBase}/platformBases_lib.sh
 
 . ${opBinBase}/bxo_lib.sh
+. ${opBinBase}/bxoId_lib.sh
 
 . ${opBinBase}/bxeDesc_lib.sh
 
@@ -551,7 +552,7 @@ function vis_vagStdout_bisosSetIdAndDeploy {
 *** 
 _EOF_
 		       }
-    EH_assert [[ $# -eq 0 ]]
+    EH_assert [[ $# -eq 1 ]]
 
     EH_assert [ ! -z "${bxoId}" ]
     EH_assert vis_bxoAcctVerify "${bxoId}"
@@ -559,6 +560,8 @@ _EOF_
     #lpDo vis_containerAssignRead
     #lpDo vis_containerSteadyRead
 
+    local vmNameQualifier="$1"
+    
     lpDo vis_sysCharRead
 
     local siteBxoId=$( sysCharRealize.sh -i selectedSiteBxoId )
@@ -602,6 +605,7 @@ _EOF_
 	sudo -u bystar ${binPath} ${runInfo} -p bisosDevBxoId=${bisosDevBxoId} -i usgConvey_bisosDeveloper
 	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -i siteBasePlatform_sysBxoActivate
 	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpPrivA="$( vis_getIpAddr_privA )" -i conveyInfoStore
+	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpVmNameQualifier=\"${vmNameQualifier}\" -i conveyInfoStore
 	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -i deployWithSysCharConveyInfo
 _OUTER_EOF_
     }
@@ -875,7 +879,7 @@ _EOF_
     }
     
     topPart
-    vis_vagrantFile_bottomPart $@
+    vis_vagrantFile_bottomPart "${vmNameQualifier}" $@
 }
 
 
@@ -887,11 +891,15 @@ function vis_vagrantFile_bottomPart {
 _EOF_
 		       }
     local thisFunc=${G_thisFunc}
-    EH_assert [[ $# -lt 2 ]]
+    EH_assert [[ $# -lt 3 ]]
+    EH_assert [[ $# -gt 0 ]]
     EH_assert [ ! -z "${bxoId}" ]
 
     EH_assert  vis_bxoAcctVerify "${bxoId}"
 
+    local vmNameQualifier="$1"
+    shift
+    
     local shellProvisioning=""
 
     if [ $# -eq 0 ] ; then
@@ -911,7 +919,7 @@ $( vis_vagStdout_serverToDesktop )
 
 $( vis_vagStdout_bisosProvision )
 
-$( vis_vagStdout_bisosSetIdAndDeploy )	
+$( vis_vagStdout_bisosSetIdAndDeploy "${vmNameQualifier}" )	
 
 $( vis_vagStdout_platformBinsRun )	
 

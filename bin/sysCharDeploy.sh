@@ -118,6 +118,7 @@ typeset -t model=""     # one of [HPV]
 typeset -t abode=""     # one of [MAPIS]
 typeset -t function=""  # one of [LASD]
 
+typeset -t cfpVmNameQualifier=""
 typeset -t cfpPrivA=""
 typeset -t cfpPubA=""
 typeset -t cfpSecurityMode=""
@@ -768,16 +769,6 @@ _EOF_
     function onTargetRun {
 	EH_assert bxoIdPrep
 
-	local sysCharDeployInfoBase="${bxoHome}/var/sysCharDeployInfo"
-
-	# local siteBoxId=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} siteBxoId )
-    
-	local ipAddr_privA=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} ipAddr_privA )
-	local ipAddr_pubA=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} ipAddr_pubA )
-	local privGitMode=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} privGit )
-	local pubGitMode=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} pubGitMode )
-	local devMode=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} devMode )
-
 	lpDo vis_deploySysChar_identitySet
     }
 
@@ -1016,6 +1007,9 @@ _EOF_
 
 	lpDo FN_dirCreatePathIfNotThere ${sysCharDeployInfoBase}
 
+	if [ ! -z "${cfpVmNameQualifier}" ] ; then
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} vmNameQualifier "${cfpVmNameQualifier}"
+	fi
 	if [ ! -z "${cfpPrivA}" ] ; then
 	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} ipAddr_privA "${cfpPrivA}"
 	fi
@@ -1039,7 +1033,7 @@ _EOF_
 
     # Empty values are passed along
 
-    G_paramCmndOption="-p bxoId=\"${bxoId}\" -p cfpPrivA=\"${cfpPrivA}\" -p cfpPubA=\"${cfpPubA}\" -p cfpSecurityMode=\"${cfpSecurityMode}\""
+    G_paramCmndOption="-p bxoId=\"${bxoId}\" -p cfpVmNameQualifier=\"${cfpVmNameQualifier}\" -p cfpPrivA=\"${cfpPrivA}\" -p cfpPubA=\"${cfpPubA}\" -p cfpSecurityMode=\"${cfpSecurityMode}\""
     
 ####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" :cmndOption t
     if [ "${targetName}" == "onTargetRun" ] ; then
