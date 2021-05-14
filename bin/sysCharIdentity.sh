@@ -213,9 +213,10 @@ _EOF_
   
     #NETWORK
     opDoComplain vis_netL3Interface
-    opDoComplain vis_netEtcHosts
+    # opDoComplain vis_netEtcHosts  # produces vis_netEtcHosts [ErrCode]= 25, Why, NOTYET
+    lpDo vis_netEtcHosts    
 
-    lpReturn
+    lpReturn 0
 }
 
 
@@ -291,7 +292,7 @@ _EOF_
 	    ;;
     esac
 
-    lpReturn
+    lpReturn 0
 }
 
 
