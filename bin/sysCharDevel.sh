@@ -225,13 +225,13 @@ _EOF_
     local bisosDevBxoId=$( vis_usgBposUsageEnvs_bisosDevBxoId_read )
     EH_assert [ ! -z "${bisosDevBxoId}" ]
 
-    bisosDevBxoHome=$( FN_absolutePathGet ~${bisosDevBxoId} )
-    
     # Activate bisosDev usage env bpo
     lpDo bxoManage.sh ${G_commandPrefs} \
 	 -p privacy=priv -p bxoId=${bisosDevBxoId} \
 	 -i fullConstruct
 
+    local bisosDevBxoHome=$( FN_absolutePathGet ~${bisosDevBxoId} )
+    
     # record the activated bpo as bisosDev
     lpDo usgBpos.sh ${G_commandPrefs} \
 	 -i usgBposUsageEnvs_bisosDev_update ${bisosDevBxoHome}
