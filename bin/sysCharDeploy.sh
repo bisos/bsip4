@@ -167,8 +167,8 @@ function vis_examples {
     local password=$( vis_registrarUserPassword )        
 
     # local oneTargetName="192.168.0.38"
-    # local oneTargetName="192.168.0.37"
-    local oneTargetName="localhost"
+    local oneTargetName="192.168.0.52"
+    # local oneTargetName="localhost"
     
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
@@ -183,9 +183,9 @@ $( examplesSeperatorChapter "Full Update" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i fullUpdate
 $( examplesSeperatorChapter "Distro Actions -- On Manager -- Ssh In Target" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_fullUpdate # intra user
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_intraToSudoersAddition # ManagerOnly -- intra user
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_aptSourcesPrep # ManagerOnly -- intra user
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_provisionBisos_sysBasePlatform # ManagerOnly -- intra user
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_intraToSudoersAddition # ManagerOnly -- intra user -- no bisos
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_aptSourcesPrep # ManagerOnly -- intra user -- no bisos
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_provisionBisos_sysBasePlatform # ManagerOnly -- intra user -- no bisos
 $( examplesSeperatorChapter "Site Setup -- bisosBasePlatform Actions" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_fullUpdate # onManager
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_siteSetup # onManager
@@ -259,6 +259,7 @@ function vis_distro_fullUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Update distro, and bring it to bisosBasePlatform.
+*** ManagerOnly -- intra user -- no bisos
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -276,37 +277,23 @@ function vis_distro_intraToSudoersAddition {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Specific to debian. Allow for sudo-ing as intra.
 *** By policy, at distro installation, intra is used as acctName, acctNamePasswd and rootPasswd
+*** in the command below intra is used 4 times. acctName is used twice.
+*** ManagerOnly -- intra user -- no bisos
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    function onTargetRun {
-	# redirection of stderr gets rid of the Password: prompt, which can throw emacs off
-	local intraLine=$( echo intra | su - root -c 'egrep ^intra /etc/sudoers' 2> /dev/null )
+    EH_assert [ ! -z "${targetName}" ]
+    
+    # redirection of stderr gets rid of the Password: prompt, which can throw emacs off
+    local intraLine=$( sshpass -p intra ${sshCmnd} intra@"${targetName}" "echo intra | su - root -c 'egrep ^intra /etc/sudoers'" 2> /dev/null )
 
-	if [ -z "${intraLine}" ] ; then
-	    lpDo eval "echo intra | su - root -c 'echo intra ALL=\(ALL\) NOPASSWD: ALL >> /etc/sudoers'"
-	else
-	    ANT_raw "intra is already in /etc/sudoers -- skipped"
-	fi
-    }
-
-####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "intra" :managerOrTarget "manager" 
-    if [ -z "${targetName}" ] ; then
-       ANT_raw "Can Only Be Run On Manager -- Can Not Be Run On Target."
-       lpReturn
-    fi
-    if [ "${targetName}" == "onTargetRun" ] ; then
-	lpDo onTargetRun
-    elif [ -z "${targetName}" ] ; then
-	lpDo onTargetRun
-    else
-	local commandName=${FUNCNAME##vis_}		
+    if [ -z "${intraLine}" ] ; then
 	lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-	     $(which ${G_myName}) ${G_commandPrefs} \
-	     -p targetName=onTargetRun -i ${commandName}
+	     "echo intra | su - root -c 'echo intra ALL=\(ALL\) NOPASSWD: ALL >> /etc/sudoers'"
+    else
+	ANT_raw "intra is already in /etc/sudoers -- skipped"
     fi
-####+END:
 }
 
 
@@ -315,78 +302,53 @@ function vis_distro_aptSourcesPrep {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Setup apt/sources.list for initial use. Different for debian and ubuntu
 *** In a debian box, the deb cdrom: line needs to be removed.
+*** ManagerOnly -- intra user -- no bisos
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    function onTargetRun {
-	if [ -e /etc/apt/sources.list.orig ] ; then
-	    ANT_raw "/etc/apt/sources.list.orig exists -- copying skipped"
-	else
-	    sudo cp -p /etc/apt/sources.list /etc/apt/sources.list.orig
-	fi
+    EH_assert [ ! -z "${targetName}" ]
 
-	# In "''" "" is consumed by lpDo
-	lpDo eval \
-	     grep -v "'^deb cdrom:'" /etc/apt/sources.list \> /tmp/sources.list
+    local lsOrig=$( sshpass -p intra ${sshCmnd} intra@"${targetName}" sudo ls /etc/apt/sources.list.orig 2> /dev/null )
 
-	lpDo eval \
-	     sudo mv /tmp/sources.list /etc/apt/sources.list
-
-	lpDo eval \
-	     sudo apt-get update
-    }
-
-####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "intra" :managerOrTarget "manager" 
-    if [ -z "${targetName}" ] ; then
-       ANT_raw "Can Only Be Run On Manager -- Can Not Be Run On Target."
-       lpReturn
-    fi
-    if [ "${targetName}" == "onTargetRun" ] ; then
-	lpDo onTargetRun
-    elif [ -z "${targetName}" ] ; then
-	lpDo onTargetRun
-    else
-	local commandName=${FUNCNAME##vis_}		
+    if [ -z "${lsOrig}" ] ; then
 	lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-	     $(which ${G_myName}) ${G_commandPrefs} \
-	     -p targetName=onTargetRun -i ${commandName}
+	     sudo cp -p /etc/apt/sources.list /etc/apt/sources.list.orig
+    else
+	ANT_raw "/etc/apt/sources.list.orig exists -- copying skipped"
     fi
-####+END:
+
+    # In "''" "" is consumed by lpDo
+    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+	 grep -v "'^deb cdrom:'" /etc/apt/sources.list \> /tmp/sources.list
+
+    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+	 sudo mv /tmp/sources.list /etc/apt/sources.list
+
+    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+	 sudo apt-get update
 }
+
 
 function vis_distro_provisionBisos_sysBasePlatform {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Applies identically to all distros.
+*** ManagerOnly -- intra user -- no bisos
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-
-    function onTargetRun {
-	lpDo sudo apt-get install -y python3-pip
     
-	lpDo sudo pip3 install --upgrade bisos.provision
-    
-	lpDo sudo provisionBisos.sh ${G_commandPrefs} -i sysBasePlatform
-    }
+    EH_assert [ ! -z "${targetName}" ]
 
-####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "intra" :managerOrTarget "manager" 
-    if [ -z "${targetName}" ] ; then
-       ANT_raw "Can Only Be Run On Manager -- Can Not Be Run On Target."
-       lpReturn
-    fi
-    if [ "${targetName}" == "onTargetRun" ] ; then
-	lpDo onTargetRun
-    elif [ -z "${targetName}" ] ; then
-	lpDo onTargetRun
-    else
-	local commandName=${FUNCNAME##vis_}		
-	lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-	     $(which ${G_myName}) ${G_commandPrefs} \
-	     -p targetName=onTargetRun -i ${commandName}
-    fi
-####+END:
+    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+	 sudo apt-get install -y python3-pip
+
+    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+	 sudo pip3 install --upgrade bisos.provision
+
+    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+	 sudo provisionBisos.sh ${G_commandPrefs} -i sysBasePlatform
 }
 
 function vis_bisosBasePlatform_fullUpdate {    
