@@ -170,6 +170,7 @@ $( examplesSeperatorChapter "Network Identity Parameters" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i netEtcHosts
 $( examplesSeperatorChapter "Overview Report And Summary" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i sysCharReport
+${G_myName} ${extraInfo} -i identitySetAscertain
 _EOF_
 }
 
@@ -299,6 +300,20 @@ _EOF_
 _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  IIF           :: vis_nodename |  [[elisp:(org-cycle)][| ]]
 _CommentEnd_
+
+function vis_identitySetAscertain {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    if [ -e /bisos/var/bxoId/sysChar.fp/value ] ; then
+	lpDo cat /bisos/var/bxoId/sysChar.fp/value
+    else
+	ANT_raw "sysChar Identity Has Not Been Set"
+    fi
+}
 
 
 function vis_nodename {

@@ -225,13 +225,13 @@ ${G_myName} ${extraInfo} -i siteBasePlatform_newBoxAscertain
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_newBoxAssign
 ${G_myName} ${extraInfo} -i siteBasePlatform_newBoxAssign
 $( examplesSeperatorChapter "siteBasePlatform New Container Assign -- On Manager Or On Target Box" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_containerBoxSiteAscertain
-${G_myName} ${extraInfo} -i siteBasePlatform_containerBoxSiteAscertain
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_containerBoxRepoAscertain
+${G_myName} ${extraInfo} -i siteBasePlatform_containerBoxRepoAscertain
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p model=Host -p abode=Shield -p function=Server -i siteBasePlatform_containerBoxAssignAndRepo
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i siteBasePlatform_containerBoxAssignAndRepo
 $( examplesSeperatorChapter "SysBxo Realize -- Container Box Realize -- One Time Activity --  On Target Box" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_containerBoxBpoAscertain
-${G_myName} ${extraInfo} -i siteBasePlatform_containerBoxBpoAscertain
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_containerBoxRepoAscertain
+${G_myName} ${extraInfo} -i siteBasePlatform_containerBoxRepoAscertain
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_sysCharContainerBoxRealize
 ${G_myName} ${extraInfo} -i siteBasePlatform_sysCharContainerBoxRealize
 $( examplesSeperatorChapter "siteBasePlatform Actions -- On Manager Or On Target Box" )
@@ -241,6 +241,10 @@ $( examplesSeperatorChapter "Full Box Actions -- On Manager Or On Target Box" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i boxFullActivateOrRealize
 ${G_myName} ${extraInfo} -i boxFullActivateOrRealize
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i boxFullRealizeHere  # onTarget only
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i containerBoxBpoId
+${G_myName} ${extraInfo} -i containerBoxBpoId
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i containerBoxBpoPath
+${G_myName} ${extraInfo} -i containerBoxBpoPath
 _EOF_
 }
 
@@ -535,42 +539,7 @@ _EOF_
 
     lpDo vis_bisosBasePlatform_fullUpdate  # siteSetup + usgConvey_bisosDeveloper
 
-    local siteBoxNu=$( vis_siteBasePlatform_newBoxAscertain )
-
-    if [ -z "${siteBoxNu}" ] ; then
-	lpDo vis_siteBasePlatform_newBoxAssign
-    else
-	ANT_cooked "siteBoxNu=${siteBoxNu} has already been assined"
-    fi
-
-    local siteBoxContainer=$( vis_siteBasePlatform_containerBoxBpoAscertain )
-
-    if [ -z "${siteBoxContainer}" ] ; then
-	EH_assert [ ! -z "${model}" ]
-	EH_assert [ ! -z "${abode}" ]
-	EH_assert [ ! -z "${function}" ]
-
-	lpDo vis_siteBasePlatform_containerBoxAssignAndRepo
-    else
-	ANT_cooked "siteBoxContainer=${siteBoxContainer} has already been assined"
-    fi
-
-    local boxSysChar=$( vis_siteBasePlatform_containerBoxBpoAscertain )
-
-    if [ -z "${boxSysChar}" ] ; then
-	EH_assert [ ! -z "${model}" ]
-	EH_assert [ ! -z "${abode}" ]
-	EH_assert [ ! -z "${function}" ]
-
-	ANT_cooked "Must Be Run Localy:"
-	ANT_cooked "sysCharDeploy.sh -h -v -n showRun -i siteBasePlatform_sysCharContainerBoxRealize"
-	lpReturn
-    else
-	ANT_cooked "boxSysChar=${boxSysChar} has already been Realized, it can be Activated."
-	ANT_raw "NOTYET"
-    fi
-
-    lpDo vis_deployWithSysCharDeployInfo
+    lpDo vis_boxFullRealizeHere
 }
 
 
@@ -585,6 +554,9 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
+    # Assumes that
+    # BISOS has been installed and ByStar Account Is Now In Place
+    # And that site has been setup.
 
     local siteBoxNu=$( vis_siteBasePlatform_newBoxAscertain )
 
@@ -594,7 +566,7 @@ _EOF_
 	ANT_cooked "siteBoxNu=${siteBoxNu} has already been assined"
     fi
 
-    local siteBoxContainer=$( vis_siteBasePlatform_containerBoxBpoAscertain )
+    local siteBoxContainer=$( vis_siteBasePlatform_containerBoxRepoAscertain )
 
     if [ -z "${siteBoxContainer}" ] ; then
 	EH_assert [ ! -z "${model}" ]
@@ -606,20 +578,27 @@ _EOF_
 	ANT_cooked "siteBoxContainer=${siteBoxContainer} has already been assined"
     fi
 
-    local boxSysChar=$( vis_siteBasePlatform_containerBoxBpoAscertain )
+    local boxBpoPath=$( vis_containerBoxBpoPath )
 
-    if [ -z "${boxSysChar}" ] ; then
+    if [ -z "${boxBpoPath}" ] ; then
 	EH_assert [ ! -z "${model}" ]
 	EH_assert [ ! -z "${abode}" ]
 	EH_assert [ ! -z "${function}" ]
 
 	lpDo vis_siteBasePlatform_sysCharContainerBoxRealize
+	bxoId=$( vis_containerBoxBpoId )
     else
-	ANT_cooked "boxSysChar=${boxSysChar} has already been Realized, it can be Activated."
-	ANT_raw "NOTYET"
+	bxoId=$( vis_containerBoxBpoId )
+	ANT_cooked "boxBpoPath=${boxBpoPath} -- bxoId=${bxoId} has already been Realized, it can be Activated."
+	lpDo sysCharActivate.sh -h -v -n showRun -p bxoId="${bxoId}" -i activate_sysContainerBxo
     fi
 
-    lpDo vis_deployWithSysCharDeployInfo
+    local identityIsSet=$( sysCharIdentity.sh -i identitySetAscertain )
+    if [ -z "${identityIsSet}" ] ; then
+	lpDo vis_deployWithSysCharConveyInfo
+    else
+	ANT_cooked "SysChar Identity Is Already Set"
+    fi
 }
 
 
@@ -715,44 +694,6 @@ _EOF_
     fi
 }
 
-function vis_siteBasePlatform_containerBoxSiteAscertain {    
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** NOTYET
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    local containerAssignBase=""
-    local containerRepoBase=""
-
-    if [ -z "${targetName}" ] ; then
-	containerAssignBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
-	EH_assert [ ! -z "${containerAssignBase}" ]
-
-	echo "containerAssignBase=${containerAssignBase}"	
-
-	containerRepoBase=$( siteContainerRepo.sh -i containerRepoBase "${containerAssignBase}" )
-	EH_assert [ -d "${containerRepoBase}" ]
-
-	echo "containerRepoBase=${containerRepoBase}"
-    else
-	containerAssignBase=$( sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-				     $(which siteContainerAssign.sh) \
-				     -i forThisSysFindContainerBase )
-	EH_assert [ ! -z "${containerAssignBase}" ]
-
-	echo "containerAssignBase=${containerAssignBase}"
-	
-	containerRepoBase=$( sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-				     $(which siteContainerRepo.sh) \
-				     -i containerRepoBase "${containerAssignBase}" )
-	EH_assert [ ! -z "${containerRepoBase}" ]
-
-	echo "containerRepoBase=${containerRepoBase}"
-    fi
-}
-
 
 function vis_siteBasePlatform_sysCharContainerBoxRealize {    
     G_funcEntry
@@ -772,7 +713,7 @@ _EOF_
     fi
 }
 
-function vis_siteBasePlatform_containerBoxBpoAscertain {    
+function vis_siteBasePlatform_containerBoxRepoAscertain {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Ascertain that containerAssignBase= and containerRepoBase= are in place.
@@ -813,6 +754,91 @@ _EOF_
     fi
 ####+END:
 }
+
+
+function vis_containerBoxBpoId {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** onTarget obtain the bpoId for the box, the bpoId account may or may not exist.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    # sysCharRealize.sh -h -v -n showRun -i sysCharContainerBxoIdName
+
+    function onTargetRun {
+	local containerAssignBase=""
+
+	containerAssignBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
+	if [ -z "${containerAssignBase}" ] ; then
+	    ANT_raw "Missing containerAssignBase"
+	    lpReturn
+	fi
+
+	local sysCharContainerBpoId=$( vis_sysCharContainerBxoIdName ${containerAssignBase} )
+	echo ${sysCharContainerBpoId}
+    }
+
+####+BEGIN: bx:bsip:bash/onTargetRun 
+    if [ "${targetName}" == "onTargetRun" ] ; then
+	lpDo onTargetRun
+    elif [ -z "${targetName}" ] ; then
+	lpDo onTargetRun
+    else
+	local commandName=${FUNCNAME##vis_}		
+	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+	     $(which ${G_myName}) ${G_commandPrefs} \
+	     -p targetName=onTargetRun -i ${commandName}
+    fi
+####+END:
+}
+
+
+function vis_containerBoxBpoPath {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** onTarget obtain the bpoId for the box, the bpoId account may or may not exist.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    # sysCharRealize.sh -h -v -n showRun -i sysCharContainerBxoIdName
+
+    function onTargetRun {
+	local containerAssignBase=""
+
+	containerAssignBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
+	if [ -z "${containerAssignBase}" ] ; then
+	    ANT_raw "Missing containerAssignBase"
+	    lpReturn
+	fi
+
+	local sysCharContainerBpoId=$( vis_sysCharContainerBxoIdName ${containerAssignBase} )
+	local bxoHome=""
+	
+	if vis_userAcctExists ${sysCharContainerBpoId} ; then
+	    bxoHome=$( FN_absolutePathGet ~${sysCharContainerBpoId} )
+	else
+	    EH_problem "${sysCharContainerBpoId} Account Does Not Exist"
+	fi
+	echo ${bxoHome}
+
+    }
+
+####+BEGIN: bx:bsip:bash/onTargetRun 
+    if [ "${targetName}" == "onTargetRun" ] ; then
+	lpDo onTargetRun
+    elif [ -z "${targetName}" ] ; then
+	lpDo onTargetRun
+    else
+	local commandName=${FUNCNAME##vis_}		
+	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+	     $(which ${G_myName}) ${G_commandPrefs} \
+	     -p targetName=onTargetRun -i ${commandName}
+    fi
+####+END:
+}
+
 
 
 function vis_deployWithSysCharConveyInfo {
@@ -866,7 +892,7 @@ _EOF_
 
 	lpDo sysCharIdentity.sh ${G_commandPrefs} \
 	     -p bxoId="${bxoId}" -i identityUpdate
-	# sysCharIdentity.sh: Sets up motdSet, nodename, netL3Interface, netEtcHosts
+	# sysCharIdentity.sh: Sets up motdSet, hostname, netL3Interface, netEtcHosts
     }
 
     if [ "${targetName}" != "onTargetRun" ] && [ ! -z "${targetName}" ] ; then lpDo onManagerRun; fi
