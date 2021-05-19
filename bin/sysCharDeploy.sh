@@ -787,7 +787,10 @@ _EOF_
 	local containerRepoBase=""
 
 	containerAssignBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
-	EH_assert [ ! -z "${containerAssignBase}" ]
+	if [ -z "${containerAssignBase}" ] ; then
+	    ANT_raw "Missing containerAssignBase"
+	    lpReturn
+	fi
 
 	echo "containerAssignBase=${containerAssignBase}"	
 
