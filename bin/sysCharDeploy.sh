@@ -240,9 +240,9 @@ ${G_myName} ${extraInfo} -i siteBasePlatform_sysCharBoxIdentitySet # NOTYET, lik
 $( examplesSeperatorChapter "Full Box Actions -- On Manager Or On Target Box" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i boxFullActivateOrRealize
 ${G_myName} ${extraInfo} -i boxFullActivateOrRealize
+${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i boxFullRealizeHere  # onTarget only
 _EOF_
 }
-
 
 
 function vis_fullUpdate {    
@@ -381,6 +381,8 @@ _EOF_
     EH_assert [ ! -z "${targetName}" ]
 
     lpDo vis_bisosBasePlatform_siteSetup
+
+    lpDo vis_usgConvey_bisosDeveloper
 }
 
 function vis_bisosBasePlatform_siteSetup {    
@@ -441,48 +443,6 @@ _EOF_
 ####+END:
 }
 
-
-function vis_usgConvey_bisosDeveloper {
-     G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** Preps the site (configs for gitlab server, etc) and activates the siteBxo.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    function onManagerRun {
-	if [ -z "${bisosDevBxoId}" ] ; then
-	    bisosDevBxoId=$( vis_usgBposUsageEnvs_bisosDevBxoId_read )
-	    EH_assert [ ! -z "${bisosDevBxoId}" ]
-	fi
-    }
-
-    function onTargetRun {
-	lpDo usgBpos.sh ${G_commandPrefs} \
-	 -i usgBposUsageEnvs_bisosDevBxoId_write ${bisosDevBxoId}
-    }
-
-    if [ "${targetName}" != "onTargetRun" ] && [ ! -z "${targetName}" ] ; then
-	lpDo onManagerRun
-    fi
-
-    EH_assert [ ! -z "${bisosDevBxoId}" ]
-
-    G_paramCmndOption="-p bisosDevBxoId=${bisosDevBxoId}"
-    
-####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" :cmndOption t
-    if [ "${targetName}" == "onTargetRun" ] ; then
-	lpDo onTargetRun
-    elif [ -z "${targetName}" ] ; then
-	lpDo onTargetRun
-    else
-	local commandName=${FUNCNAME##vis_}		
-	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-	     $(which ${G_myName}) ${G_commandPrefs} \
-	     -p targetName=onTargetRun ${G_paramCmndOption} -i ${commandName}
-    fi
-####+END:
-}
 
 function vis_siteBasePlatform_fullUpdate {    
     G_funcEntry
@@ -573,7 +533,7 @@ _EOF_
 
     # BISOS has been installed and ByStar Account Is Now In Place
 
-    lpDo vis_bisosBasePlatform_fullUpdate  # siteSetup
+    lpDo vis_bisosBasePlatform_fullUpdate  # siteSetup + usgConvey_bisosDeveloper
 
     local siteBoxNu=$( vis_siteBasePlatform_newBoxAscertain )
 
@@ -613,6 +573,54 @@ _EOF_
     lpDo vis_deployWithSysCharDeployInfo
 }
 
+
+function vis_boxFullRealizeHere {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Update Everything. Runs On Manager.
+*** If Box's Character already exists, box's sysChar is deployed on box. Activated.
+*** If Box's Character does not exists, box is registered in site & its sysChar is realized.
+*** If Box's Character does not exists, model, abode and function should be specified.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+
+    local siteBoxNu=$( vis_siteBasePlatform_newBoxAscertain )
+
+    if [ -z "${siteBoxNu}" ] ; then
+	lpDo vis_siteBasePlatform_newBoxAssign
+    else
+	ANT_cooked "siteBoxNu=${siteBoxNu} has already been assined"
+    fi
+
+    local siteBoxContainer=$( vis_siteBasePlatform_containerBoxBpoAscertain )
+
+    if [ -z "${siteBoxContainer}" ] ; then
+	EH_assert [ ! -z "${model}" ]
+	EH_assert [ ! -z "${abode}" ]
+	EH_assert [ ! -z "${function}" ]
+
+	lpDo vis_siteBasePlatform_containerBoxAssignAndRepo
+    else
+	ANT_cooked "siteBoxContainer=${siteBoxContainer} has already been assined"
+    fi
+
+    local boxSysChar=$( vis_siteBasePlatform_containerBoxBpoAscertain )
+
+    if [ -z "${boxSysChar}" ] ; then
+	EH_assert [ ! -z "${model}" ]
+	EH_assert [ ! -z "${abode}" ]
+	EH_assert [ ! -z "${function}" ]
+
+	lpDo vis_siteBasePlatform_sysCharContainerBoxRealize
+    else
+	ANT_cooked "boxSysChar=${boxSysChar} has already been Realized, it can be Activated."
+	ANT_raw "NOTYET"
+    fi
+
+    lpDo vis_deployWithSysCharDeployInfo
+}
 
 
 function vis_siteBasePlatform_newBoxAscertain {    
@@ -1193,7 +1201,6 @@ _EOF_
 	     -p targetName=onTargetRun ${G_paramCmndOption} -i ${commandName}
     fi
 ####+END:
-
 }
 
 
