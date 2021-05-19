@@ -219,24 +219,27 @@ ${G_myName} ${extraInfo} -p bisosDevBxoId=prompt -i usgConvey_bisosDeveloper # o
 $( examplesSeperatorChapter "Target Box Developmenet Preps -- On Target Box" )
 ssh -X bystar@${oneTargetName}    # Then run emacs
 bleeVisit /bisos/panels/bisos-dev/howToBecomeDeveloper/fullUsagePanel-en.org
-$( examplesSeperatorChapter "siteBasePlatform Actions -- On Manager Or On Target Box" )
+$( examplesSeperatorChapter "siteBasePlatform New Box Assign -- On Manager Or On Target Box" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_newBoxAscertain
 ${G_myName} ${extraInfo} -i siteBasePlatform_newBoxAscertain
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_newBoxAssign
 ${G_myName} ${extraInfo} -i siteBasePlatform_newBoxAssign
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p model=Host -p abode=Shield -p function=Server -i siteBasePlatform_containerBoxAssignAndRepo
-${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i siteBasePlatform_containerBoxAssignAndRepo
+$( examplesSeperatorChapter "siteBasePlatform New Container Assign -- On Manager Or On Target Box" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_containerBoxSiteAscertain
 ${G_myName} ${extraInfo} -i siteBasePlatform_containerBoxSiteAscertain
-$( examplesSeperatorChapter "SysBxo Realize -- Container Box Realize -- One Time Activity --  On Target Box" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_sysCharContainerBoxRealize
-${G_myName} ${extraInfo} -i siteBasePlatform_sysCharContainerBoxRealize
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p model=Host -p abode=Shield -p function=Server -i siteBasePlatform_containerBoxAssignAndRepo
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i siteBasePlatform_containerBoxAssignAndRepo
+$( examplesSeperatorChapter "SysBxo Realize -- Container Box Realize -- One Time Activity --  On Target Box" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_containerBoxBpoAscertain
 ${G_myName} ${extraInfo} -i siteBasePlatform_containerBoxBpoAscertain
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_sysCharContainerBoxRealize
+${G_myName} ${extraInfo} -i siteBasePlatform_sysCharContainerBoxRealize
 $( examplesSeperatorChapter "siteBasePlatform Actions -- On Manager Or On Target Box" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_sysCharBoxIdentitySet # NOTYET, likely not necessary
 ${G_myName} ${extraInfo} -i siteBasePlatform_sysCharBoxIdentitySet # NOTYET, likely not necessary
+$( examplesSeperatorChapter "Full Box Actions -- On Manager Or On Target Box" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i boxFullActivateOrRealize
+${G_myName} ${extraInfo} -i boxFullActivateOrRealize
 _EOF_
 }
 
@@ -327,6 +330,22 @@ _EOF_
 
     lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
 	 sudo apt-get update
+}
+
+function vis_distro_provisionBisos_ascertain {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Applies identically to all distros.
+*** ManagerOnly -- intra user
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    
+    EH_assert [ ! -z "${targetName}" ]
+
+    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+	 sudo ls -l /bisos/core/bsip
+
 }
 
 
@@ -525,6 +544,74 @@ _EOF_
 ####+END:
 }
 
+#
+#
+#  #############  Box Specific Facilities
+#
+#
+
+function vis_boxFullActivateOrRealize {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Update Everything. Runs On Manager.
+*** If Box's Character already exists, box's sysChar is deployed on box. Activated.
+*** If Box's Character does not exists, box is registered in site & its sysChar is realized.
+*** If Box's Character does not exists, model, abode and function should be specified.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert [ ! -z "${targetName}" ]
+
+    local bisosAscertain=$( vis_distro_provisionBisos_ascertain )
+    
+    if [ -z "${bisosAscertain}" ] ; then
+	lpDo vis_distro_fullUpdate
+    else
+	ANT_cooked "BISOS has already been installed -- ${bisosAscertain}"
+    fi	
+
+    # BISOS has been installed and ByStar Account Is Now In Place
+
+    lpDo vis_bisosBasePlatform_fullUpdate  # siteSetup
+
+    local siteBoxNu=$( vis_siteBasePlatform_newBoxAscertain )
+
+    if [ -z "${siteBoxNu}" ] ; then
+	lpDo vis_siteBasePlatform_newBoxAssign
+    else
+	ANT_cooked "siteBoxNu=${siteBoxNu} has already been assined"
+    fi
+
+    local siteBoxContainer=$( vis_siteBasePlatform_containerBoxBpoAscertain )
+
+    if [ -z "${siteBoxContainer}" ] ; then
+	EH_assert [ ! -z "${model}" ]
+	EH_assert [ ! -z "${abode}" ]
+	EH_assert [ ! -z "${function}" ]
+
+	lpDo vis_siteBasePlatform_containerBoxAssignAndRepo
+    else
+	ANT_cooked "siteBoxContainer=${siteBoxContainer} has already been assined"
+    fi
+
+    local boxSysChar=$( vis_siteBasePlatform_containerBoxBpoAscertain )
+
+    if [ -z "${boxSysChar}" ] ; then
+	EH_assert [ ! -z "${model}" ]
+	EH_assert [ ! -z "${abode}" ]
+	EH_assert [ ! -z "${function}" ]
+
+	ANT_cooked "Must Be Run Localy:"
+	ANT_cooked "sysCharDeploy.sh -h -v -n showRun -i siteBasePlatform_sysCharContainerBoxRealize"
+	lpReturn
+    else
+	ANT_cooked "boxSysChar=${boxSysChar} has already been Realized, it can be Activated."
+	ANT_raw "NOTYET"
+    fi
+
+    lpDo vis_deployWithSysCharDeployInfo
+}
 
 
 
