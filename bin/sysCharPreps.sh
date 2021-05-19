@@ -103,10 +103,13 @@ function vis_examples {
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
-$( examplesSeperatorChapter "Python Overlap -- Needs To Be Merged" )
-bx-currentsManage.py
 $( examplesSeperatorChapter "Full Operations" )
-${G_myName} ${extraInfo} -i bxoSysInit
+${G_myName} ${extraInfo} -i bxoSysInit    # Applies to both physical and virtual systems
+( examplesSeperatorChapter "Step By Step Preps" )
+${G_myName} ${extraInfo} -i sysChar_binsPrep  # installs vagrant ...
+${G_myName} ${extraInfo} -i sysChar_containerPrep  # creates vag base boxes
+( examplesSeperatorChapter "Actuate Services" )
+${G_myName} ${extraInfo} -i sysChar_svcsActuate
 _EOF_
 }
 
