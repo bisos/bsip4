@@ -484,6 +484,9 @@ _EOF_
 	lpDo sysCharActivate.sh ${G_commandPrefs} \
 	     -p bxoId="${bxoId}" \
 	     -i activate_sysContainerBxo
+
+	lpDo sysCharActivate.sh ${G_commandPrefs} \
+	     -i bisosContainerSelect "${bxoId}"
     }
 
     if [ "${targetName}" != "onTargetRun" ] && [ ! -z "${targetName}" ] ; then
@@ -590,8 +593,14 @@ _EOF_
     else
 	bxoId=$( vis_containerBoxBpoId )
 	ANT_cooked "boxBpoPath=${boxBpoPath} -- bxoId=${bxoId} has already been Realized, it can be Activated."
-	lpDo sysCharActivate.sh -h -v -n showRun -p bxoId="${bxoId}" -i activate_sysContainerBxo
+	
+	lpDo sysCharActivate.sh ${G_commandPrefs} \
+	     -p bxoId="${bxoId}" -i activate_sysContainerBxo
+	
     fi
+
+    lpDo sysCharActivate.sh ${G_commandPrefs} \
+	 -i bisosContainerSelect "${bxoId}"
 
     local identityIsSet=$( sysCharIdentity.sh -i identitySetAscertain )
     if [ -z "${identityIsSet}" ] ; then

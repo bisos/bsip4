@@ -264,7 +264,8 @@ _EOF_
 	echo "Build the guest based on BxO and run the Guest"
 	echo "Generic Guest To Be Materialized"
         lpDo sysCharActivate.sh -h -v -n showRun -p bxoId="pmp_VAG-deb11_" -i activate_sysContainerBxo
-	
+
+	lpDo sysCharGuestMaterialize.sh -h -v -n showRun -p bxoId="pmp_VAG-deb11_" -i vagrantFile_run
     else
 	lpDo echo "This is a virtual machine and we need NOTYET"
     fi

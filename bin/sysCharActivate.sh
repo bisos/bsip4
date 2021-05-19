@@ -174,6 +174,8 @@ ${G_myName} ${extraInfo} -i selectedContainerBxoId
 $( examplesSeperatorChapter "BISOS Container Add and Select Actions" )
 ${G_myName} ${extraInfo} -i bisosContainerAdd "${effectiveContainerBxoId}"
 ${G_myName} ${extraInfo} -i bisosContainerSelect "${effectiveContainerBxoId}"
+${G_myName} ${extraInfo} -i selectedContainerBxoId
+${G_myName} ${extraInfo} -i selectedContainerBxoPath
 $( examplesSeperatorChapter "Overview Report And Summary" )
 ${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i sysCharContainerReport
 _EOF_

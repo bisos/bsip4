@@ -77,10 +77,12 @@ _EOF_
     EH_assert [[ $# -eq 1 ]]
     local containerBxoId=$1
 
-    local bisosContainerBase=$( vis_bisosContainerBase )
+    local bisosContainerBase=$( vis_bisosContainerBase )  # /bisos/var/containers
     local containerBxoIdHome=$( FN_absolutePathGet ~${containerBxoId} )
 
     lpDo FN_fileSymlinkUpdate ${containerBxoIdHome} ${bisosContainerBase}/selected
+
+    lpDo bxoIdManage.sh -h -v -n showRun -i bxoIdFpsWrite sysChar "${containerBxoId}"
 }
 
 
@@ -109,6 +111,30 @@ _EOF_
     fi
 
     echo "${selectedContainerBxoId}"
+
+    lpReturn
+}	
+
+function vis_selectedContainerBxoPath {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** With stdout return: bxoId of selected container.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local bisosContainerBase=$( vis_bisosContainerBase )
+    
+    local selectedContainerPath="${bisosContainerBase}/selected"
+
+    if [ ! -e "${selectedContainerPath}" ] ; then
+	EH_problem "Missing selectedContainerPath=${selectedContainerPath}"
+	lpReturn 101
+    fi
+
+    selectedContainerPath=$( readlink -f ${selectedContainerPath} )
+    
+    echo "${selectedContainerPath}"
 
     lpReturn
 }	
@@ -152,8 +178,6 @@ _EOF_
     local sysCharDeployInfoBase="${bxoHome}/var/sysCharDeployInfo"
 
     lpDo FN_dirCreatePathIfNotThere ${sysCharDeployInfoBase}
-
-    lpDo bxoIdManage.sh -h -v -n showRun -i bxoIdFpsWrite sysChar "${bxoId}"
 }
 
 
