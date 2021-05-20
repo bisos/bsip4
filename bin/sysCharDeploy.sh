@@ -135,7 +135,7 @@ function G_postParamHook {
      	bxoHome=$( FN_absolutePathGet ~${bxoId} )
     fi
     
-    # bisosCurrentsGet
+    bisosCurrentsGet
 }
 
 
@@ -166,8 +166,8 @@ function vis_examples {
     local id=$( vis_registrarUserName )
     local password=$( vis_registrarUserPassword )        
 
-    # local oneTargetName="192.168.0.38"
-    local oneTargetName="192.168.0.52"
+    # local oneTargetName="192.168.0.52"
+    local oneTargetName=${curTargetBox:-}
     # local oneTargetName="localhost"
     
     visLibExamplesOutput ${G_myName} 
@@ -175,6 +175,8 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${effectiveContainerBxoId}"
+bisosCurrentsManage.sh  ${extraInfo} -i setParam curTargetBox 192.168.0.45
+${curTargetBox:-}
 $( examplesSeperatorChapter "Ssh Based Cusomizations -- Bx Based (not vagrant based)" )
 ${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i postCustomize  # on host - bx-ssh
 ${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i secureSeal     # on host - bx-ssh
@@ -237,10 +239,12 @@ ${G_myName} ${extraInfo} -i siteBasePlatform_sysCharContainerBoxRealize
 $( examplesSeperatorChapter "siteBasePlatform Actions -- On Manager Or On Target Box" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_sysCharBoxIdentitySet # NOTYET, likely not necessary
 ${G_myName} ${extraInfo} -i siteBasePlatform_sysCharBoxIdentitySet # NOTYET, likely not necessary
-$( examplesSeperatorChapter "Full Box Actions -- On Manager Or On Target Box" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i boxFullActivateOrRealize
-${G_myName} ${extraInfo} -i boxFullActivateOrRealize
-${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i boxFullRealizeHere  # onTarget only
+$( examplesSeperatorChapter "Full New Box Actions -- On Manager And On Target Box" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i boxSiteBasePlatform  # OnManager
+${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i boxRealizeAtSiteBasePlatformOnTarget # OnTarget Only
+$( examplesSeperatorChapter "Full Existing Box Actions -- On Manager Or On Target Box" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i boxFullActivate # On Manager From Begining-To-End
+$( examplesSeperatorChapter "Full Existing Box Actions -- On Manager Or On Target Box" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i containerBoxBpoId
 ${G_myName} ${extraInfo} -i containerBoxBpoId
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i containerBoxBpoPath
@@ -517,7 +521,7 @@ _EOF_
 #
 #
 
-function vis_boxFullActivateOrRealize {    
+function vis_boxSiteBasePlatform {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Update Everything. Runs On Manager.
@@ -541,12 +545,43 @@ _EOF_
     # BISOS has been installed and ByStar Account Is Now In Place
 
     lpDo vis_bisosBasePlatform_fullUpdate  # siteSetup + usgConvey_bisosDeveloper
-
-    lpDo vis_boxFullRealizeHere
 }
 
 
-function vis_boxFullRealizeHere {    
+function vis_boxFullActivate {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Update Everything. Runs On Manager.
+*** If Box's Character already exists, box's sysChar is deployed on box. Activated.
+*** If Box's Character does not exists, box is registered in site & its sysChar is realized.
+*** If Box's Character does not exists, model, abode and function should be specified.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert [ ! -z "${targetName}" ]
+
+    lpDo vis_boxSiteBasePlatform
+
+    lpDo vis_boxActivateAtSiteBasePlatform
+}
+
+
+function vis_boxActivateAtSiteBasePlatform {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Update Everything. Runs On Manager.
+*** If Box's Character already exists, box's sysChar is deployed on box. Activated.
+*** If Box's Character does not exists, box is registered in site & its sysChar is realized.
+*** If Box's Character does not exists, model, abode and function should be specified.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    echo "NOTYET"
+}
+
+function vis_boxRealizeAtSiteBasePlatformOnTarget {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Update Everything. Runs On Manager.
