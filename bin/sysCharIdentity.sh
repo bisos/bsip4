@@ -308,10 +308,17 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    if [ -e /bisos/var/bxoId/sysChar.fp/value ] ; then
-	lpDo cat /bisos/var/bxoId/sysChar.fp/value
-    else
+    local hostName=$( cat /etc/hostname )
+
+    if [ "${hostName}" == "intra" ] ; then
 	ANT_raw "sysChar Identity Has Not Been Set"
+    else
+	if [ -e /bisos/var/bxoId/sysChar.fp/value ] ; then
+	    lpDo cat /bisos/var/bxoId/sysChar.fp/value
+	else
+	    EH_problem "Missing /bisos/var/bxoId/sysChar.fp/value"
+	    echo "unknown"
+	fi
     fi
 }
 
