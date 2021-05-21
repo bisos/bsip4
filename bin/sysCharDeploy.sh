@@ -417,6 +417,10 @@ _EOF_
     }
 
     function onTargetRun {
+	
+	# NOTYET, perhaps this should be done even sooner
+	lpDo bisosCurrentsManage.sh ${G_commandPrefs} -i currentsFileCreate
+	
 	lpDo bisosSiteSetup.sh ${G_commandPrefs} \
 	     -p registrar="${registrar}" -p id="${id}" -p password="${password}" \
 	     -i fullUpdate
@@ -534,13 +538,18 @@ _EOF_
 
     EH_assert [ ! -z "${targetName}" ]
 
-    local bisosAscertain=$( vis_distro_provisionBisos_ascertain )
+    # NOTYET, commented part below should be absorbed in distro_fullUpdate after sudo addition.
+
     
-    if [ -z "${bisosAscertain}" ] ; then
-	lpDo vis_distro_fullUpdate
-    else
-	ANT_cooked "BISOS has already been installed -- ${bisosAscertain}"
-    fi	
+    # local bisosAscertain=$( vis_distro_provisionBisos_ascertain )
+    
+    # if [ -z "${bisosAscertain}" ] ; then
+    # 	lpDo vis_distro_fullUpdate
+    # else
+    # 	ANT_cooked "BISOS has already been installed -- ${bisosAscertain}"
+    # fi
+
+    lpDo vis_distro_fullUpdate    
 
     # BISOS has been installed and ByStar Account Is Now In Place
 
