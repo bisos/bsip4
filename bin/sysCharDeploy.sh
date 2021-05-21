@@ -135,7 +135,6 @@ function G_postParamHook {
      	bxoHome=$( FN_absolutePathGet ~${bxoId} )
     fi
     
-    bisosCurrentsGet
 }
 
 
@@ -156,7 +155,7 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
-    #bisosCurrentsGet
+    bisosCurrentsGet
 
     local effectiveContainerBxoId="sysChar"
 
