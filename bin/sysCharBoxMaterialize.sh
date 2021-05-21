@@ -169,6 +169,8 @@ sysCharDeploy.sh ${extraInfo} -i containerBoxBpoPath
 $( examplesSeperatorChapter "Box Convey Parameters And BISOS Development Preps" )
 sysCharDeploy.sh ${extraInfo} -p targetName="${oneTargetBox}" -i usgConvey_bisosDeveloper # onManager+onTarget
 sysCharDeploy.sh ${extraInfo} -p bisosDevBxoId=prompt -i usgConvey_bisosDeveloper # onTarget
+# NOTYET, show selected usgConvey_bisosDeveloper
+sysCharDevel.sh ${extraInfo} -i bisosDevBxo_fullSetup  # activate, actuate, set mode
 $( examplesSeperatorChapter "Box Disk Preps" )
 NOTYET, add disks, add software raids
 $( examplesSeperatorChapter "Hosting Container Actions" )
