@@ -136,24 +136,6 @@ _EOF_
 }
 
 
-function vis_developerMode {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    lpDo vis_nicheRun usgBxoSshManage-niche.sh sysSetup
-    EH_retOnFail
-
-    lpDo vis_nicheRun bisosBaseDirs-niche.sh sysSetup
-    EH_retOnFail
-
-    lpDo bisosBaseDirs.sh ${G_commandPrefs} -i bxReposAuthSet
-	
-    lpReturn
-}
-
 function vis_sysChar_binsPrep {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_

@@ -167,15 +167,17 @@ sysCharDeploy.sh ${extraInfo} -p targetName="${oneTargetBox}" -i containerBoxBpo
 sysCharDeploy.sh ${extraInfo} -p targetName="${oneTargetBox}" -i sysCharedPlatform_containerBoxReport
 sysCharDeploy.sh ${extraInfo} -i sysCharedPlatform_containerBoxReport
 sysCharDeploy.sh ${extraInfo} -i containerBoxBpoPath
-$( examplesSeperatorChapter "Box Convey Parameters And BISOS Development Preps" )
+$( examplesSeperatorChapter "Box Convey Parameters And BISOS Development Preps -- After sysChar Activation" )
 sysCharDeploy.sh ${extraInfo} -p targetName="${oneTargetBox}" -i usgConvey_bisosDeveloper # onManager+onTarget
 sysCharDeploy.sh ${extraInfo} -p bisosDevBxoId=prompt -i usgConvey_bisosDeveloper # onTarget
 # NOTYET, show selected usgConvey_bisosDeveloper
 sysCharDevel.sh ${extraInfo} -i bisosDevBxo_fullSetup  # activate, actuate, set mode
 $( examplesSeperatorChapter "Box Disk Preps" )
-NOTYET, add disks, add software raids
+sysDiskDrives.sh 
+$( sysCharDeploy.sh -i containerBoxBpoPath )/sys/bin/sysDiskDrives-niche.sh 
 $( examplesSeperatorChapter "Hosting Container Actions" )
-NOTYET, Setup virtualization environment
+sysCharPreps.sh
+sysCharPreps.sh -h -v -n showRun -i bxoSysInit
 $( examplesSeperatorChapter "Pure Container Actions" )
 _EOF_
 }

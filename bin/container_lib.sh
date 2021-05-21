@@ -175,9 +175,9 @@ _EOF_
 
     lpDo sysCharRealize.sh -h -v -n showRun -p bxoId="${bxoId}" -i basesFullCreate
 
-    local sysCharDeployInfoBase="${bxoHome}/var/sysCharDeployInfo"
+    local sysCharConveyInfoBase="${bxoHome}/var/sysCharConveyInfo"
 
-    lpDo FN_dirCreatePathIfNotThere ${sysCharDeployInfoBase}
+    lpDo FN_dirCreatePathIfNotThere ${sysCharConveyInfoBase}
 }
 
 

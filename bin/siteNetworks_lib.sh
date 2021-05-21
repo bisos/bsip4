@@ -203,7 +203,7 @@ _EOF_
     EH_assert vis_bxoAcctVerify "${containerBxoId}"
 
     containerBxoIdHome=$( FN_absolutePathGet ~${containerBxoId} )
-    local ipAddr_privA=$( fileParamManage.py -v 30 -i fileParamRead  ${containerBxoIdHome}/var/sysCharDeployInfo ipAddr_privA )
+    local ipAddr_privA=$( fileParamManage.py -v 30 -i fileParamRead  ${containerBxoIdHome}/var/sysCharConveyInfo ipAddr_privA )
 
     echo ${ipAddr_privA}
 }
