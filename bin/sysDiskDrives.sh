@@ -171,7 +171,9 @@ ${G_myName} ${extraInfo} -i fstabLineGen /dev/${oneDevicePartition} /dd/this/d1 
 ${G_myName} ${extraInfo} -i fstabLineGen /dev/${oneDevicePartition} /dd/this/d1 ext4 >> /tmp/sysDisks.fstab
 ${G_myName} ${extraInfo} -i appendFilesToFstab /tmp/sysDisks.fstab
 ${G_myName} ${extraInfo} -i mountAllFstab
-$( examplesSeperatorChapter "Mount Disk Drive Base" )
+$( examplesSeperatorChapter "Software RAID" )
+cat /proc/mdstat
+sudo mdadm --query --detail /dev/md0
 _EOF_
 }
 
