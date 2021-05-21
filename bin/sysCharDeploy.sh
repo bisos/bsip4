@@ -649,7 +649,7 @@ _EOF_
     if [ -z "${identityIsSet}" ] ; then
 	lpDo vis_deployWithSysCharConveyInfo
     else
-	ANT_cooked "SysChar Identity Is Already Set"
+	ANT_cooked "SysChar Identity Is Already Set -- identityIsSet=${identityIsSet}"
     fi
 }
 

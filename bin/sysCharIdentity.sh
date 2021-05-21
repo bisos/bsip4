@@ -342,7 +342,7 @@ _EOF_
 
     vis_sysCharConveyInfoRead
     
-    opDo eval "echo ${containerAssign_containerId}-${sysChar_conveyInfo_vmNameQualifier} | sed -e s/_// > /etc/hostname"
+    opDo eval "echo ${containerAssign_containerId}-${sysChar_conveyInfo_vmNameQualifier} | sed -e s/_// -e 's/-$//' > /etc/hostname"
     opDo chmod 444 /etc/hostname
 
     opDo hostname --file /etc/hostname
