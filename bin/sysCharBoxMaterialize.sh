@@ -177,7 +177,7 @@ sysDiskDrives.sh
 $( sysCharDeploy.sh -i containerBoxBpoPath )/sys/bin/sysDiskDrives-niche.sh 
 $( examplesSeperatorChapter "Hosting Container Actions" )
 sysCharPreps.sh
-sysCharPreps.sh -h -v -n showRun -i bxoSysInit
+sysCharPreps.sh -h -v -n showRun -i fullUpdate
 $( examplesSeperatorChapter "Pure Container Actions" )
 _EOF_
 }

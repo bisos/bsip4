@@ -1142,8 +1142,6 @@ _EOF_
     function onTargetRun {
 	EH_assert bxoIdPrep
 
-	# convey
-
 	local sysCharConveyInfoBase="${bxoHome}/var/sysCharConveyInfo"
 
 	lpDo FN_dirCreatePathIfNotThere ${sysCharConveyInfoBase}

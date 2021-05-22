@@ -104,7 +104,7 @@ function vis_examples {
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Full Operations" )
-${G_myName} ${extraInfo} -i bxoSysInit    # Applies to both physical and virtual systems
+${G_myName} ${extraInfo} -i fullUpdate    # Applies to both physical and virtual systems
 ( examplesSeperatorChapter "Step By Step Preps" )
 ${G_myName} ${extraInfo} -i sysChar_binsPrep  # installs vagrant ...
 ${G_myName} ${extraInfo} -i sysChar_containerPrep  # creates vag base boxes
@@ -118,7 +118,7 @@ noArgsHook() {
 }
 
 
-function vis_setup {
+function vis_fullUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
