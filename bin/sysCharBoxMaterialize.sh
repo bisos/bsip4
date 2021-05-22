@@ -74,6 +74,7 @@ _CommentEnd_
 . ${opBinBase}/platformBases_lib.sh
 
 . ${opBinBase}/bxo_lib.sh
+. ${opBinBase}/bxoId_lib.sh
 
 . ${opBinBase}/bxeDesc_lib.sh
 
@@ -97,18 +98,15 @@ _CommentEnd_
 
 . ${opBinBase}/sysChar_lib.sh
 
+. ${opBinBase}/siteNetworks_lib.sh
+
 . ${opBinBase}/siteRegistrar_lib.sh
 
-. ${opBinBase}/container_lib.sh
 
 # PRE parameters
 
 typeset -t bxoId=""
-typeset -t privA=""
-typeset -t registrar=""
-typeset -t id=""
-typeset -t password=""
-
+# usg=""
 
 function G_postParamHook {
     bxoIdPrepValidate    
@@ -117,7 +115,7 @@ function G_postParamHook {
      	bxoHome=$( FN_absolutePathGet ~${bxoId} )
     fi
     
-    # bisosCurrentsGet
+    bisosCurrentsGet
 }
 
 
@@ -138,48 +136,52 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
-    bisosCurrentsGet
     oneBxoId="${currentBxoId}"
+    oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )
+
+    oneTargetBox=${curTargetBox:-}
     
-    local selectedContainerBxoId=$( vis_selectedContainerBxoId 2> /dev/null )
-
-    if [ -z "${selectedContainerBxoId}" ] ; then
-
-	local containerAssignBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
-	EH_assert [ ! -z "${containerAssignBase}" ]
-   
-	local sysCharContainerBxoId=$( vis_sysCharContainerBxoIdName ${containerAssignBase} )
-
-	effectiveContainerBxoId="${sysCharContainerBxoId}"
-    else
-	effectiveContainerBxoId="${selectedContainerBxoId}"
-    fi
-
     visLibExamplesOutput ${G_myName} 
-    cat  << _EOF_
+  cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
-bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${effectiveContainerBxoId}"
-bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VAG-deb11_  # Generic, Auto, Dhcp,  
-bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VSG-deb11_  # Generic, Shielded, StaticIP
-$( examplesSeperatorChapter "SysChar Containers Info" )
-${G_myName} -i containerReposList  # listAvaiableSysChars
-$( examplesSeperatorChapter "SysChar Container Activate" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i activate_sysContainerBxo
-${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i activate_sysContainerBxo
-${G_myName} ${extraInfo} -i activate_containersAll # Activates each of containerReposList
-$( examplesSeperatorChapter "BISOS Container Add and Select Information" )
-${G_myName} ${extraInfo} -i bisosContainerBase
-${G_myName} ${extraInfo} -i selectedContainerBxoId
-$( examplesSeperatorChapter "BISOS Container Add and Select Actions" )
-${G_myName} ${extraInfo} -i bisosContainerAdd "${effectiveContainerBxoId}"
-${G_myName} ${extraInfo} -i bisosContainerSelect "${effectiveContainerBxoId}"
-${G_myName} ${extraInfo} -i selectedContainerBxoId
-${G_myName} ${extraInfo} -i selectedContainerBxoPath
-$( examplesSeperatorChapter "Overview Report And Summary" )
-${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i sysCharContainerReport
+bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
+bisosCurrentsManage.sh  ${extraInfo} -i setParam curTargetBox 192.168.0.45  # Currently curTargetBox=${curTargetBox:-}
+bisosCurrentsManage.sh  ${extraInfo} -i setParam curTargetBox localhost  # Currently curTargetBox=${curTargetBox:-}
+$( examplesSeperatorChapter "New Box Realize -- On Manager And On Target Box" )
+sysCharDeploy.sh ${extraInfo} -p targetName="${oneTargetBox}" -i boxSiteBasePlatform  # OnManager
+ssh -X bystar@${oneTargetBox}    # Then run emacs, then realize as below
+sysCharDeploy.sh ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i boxRealizeAtSiteBasePlatformOnTarget # OnTarget Only
+sysCharDeploy.sh ${extraInfo} -p model=Pure -p abode=Shield -p function=Server -i boxRealizeAtSiteBasePlatformOnTarget # OnTarget Only
+$( examplesSeperatorChapter "Full Existing Box Activateer -- On Manager Or On Target Box" )
+sysCharDeploy.sh ${extraInfo} -p targetName="${oneTargetBox}" -i boxFullActivate # On Manager From Begining-To-End
+sysCharDeploy.sh ${extraInfo} -i boxFullActivate # OnTarget after bystar account has been setup
+$( examplesSeperatorChapter "Target Box Information -- On Manager Or On Target Box" )
+sysCharDeploy.sh ${extraInfo} -p targetName="${oneTargetBox}" -i siteBasePlatform_newBoxAscertain
+sysCharDeploy.sh ${extraInfo} -i siteBasePlatform_newBoxAscertain
+sysCharDeploy.sh ${extraInfo} -p targetName="${oneTargetBox}" -i siteBasePlatform_containerBoxRepoAscertain
+sysCharDeploy.sh ${extraInfo} -i siteBasePlatform_containerBoxRepoAscertain
+sysCharDeploy.sh ${extraInfo} -p targetName="${oneTargetBox}" -i containerBoxBpoId
+sysCharDeploy.sh ${extraInfo} -i containerBoxBpoId
+sysCharDeploy.sh ${extraInfo} -p targetName="${oneTargetBox}" -i containerBoxBpoPath
+sysCharDeploy.sh ${extraInfo} -p targetName="${oneTargetBox}" -i sysCharedPlatform_containerBoxReport
+sysCharDeploy.sh ${extraInfo} -i sysCharedPlatform_containerBoxReport
+sysCharDeploy.sh ${extraInfo} -i containerBoxBpoPath
+$( examplesSeperatorChapter "Box Convey Parameters And BISOS Development Preps -- After sysChar Activation" )
+sysCharDeploy.sh ${extraInfo} -p targetName="${oneTargetBox}" -i usgConvey_bisosDeveloper # onManager+onTarget
+sysCharDeploy.sh ${extraInfo} -p bisosDevBxoId=prompt -i usgConvey_bisosDeveloper # onTarget
+# NOTYET, show selected usgConvey_bisosDeveloper
+sysCharDevel.sh ${extraInfo} -i bisosDevBxo_fullSetup  # activate, actuate, set mode
+$( examplesSeperatorChapter "Box Disk Preps" )
+sysDiskDrives.sh 
+$( sysCharDeploy.sh -i containerBoxBpoPath )/sys/bin/sysDiskDrives-niche.sh 
+$( examplesSeperatorChapter "Hosting Container Actions" )
+sysCharPreps.sh
+sysCharPreps.sh -h -v -n showRun -i fullUpdate
+$( examplesSeperatorChapter "Pure Container Actions" )
 _EOF_
 }
+
 
 
 _CommentBegin_

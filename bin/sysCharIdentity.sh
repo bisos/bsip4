@@ -170,6 +170,7 @@ $( examplesSeperatorChapter "Network Identity Parameters" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i netEtcHosts
 $( examplesSeperatorChapter "Overview Report And Summary" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i sysCharReport
+${G_myName} ${extraInfo} -i identitySetAscertain
 _EOF_
 }
 
@@ -301,6 +302,27 @@ _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  IIF           :: vis_nodename |  [[elisp:(org-cycle)][| ]]
 _CommentEnd_
 
+function vis_identitySetAscertain {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local hostName=$( cat /etc/hostname )
+
+    if [ "${hostName}" == "intra" ] ; then
+	ANT_raw "sysChar Identity Has Not Been Set"
+    else
+	if [ -e /bisos/var/bxoId/sysChar.fp/value ] ; then
+	    lpDo cat /bisos/var/bxoId/sysChar.fp/value
+	else
+	    EH_problem "Missing /bisos/var/bxoId/sysChar.fp/value"
+	    echo "unknown"
+	fi
+    fi
+}
+
 
 function vis_nodename {
     G_funcEntry
@@ -321,7 +343,7 @@ _EOF_
 
     vis_sysCharConveyInfoRead
     
-    opDo eval "echo ${containerAssign_containerId}-${sysChar_conveyInfo_vmNameQualifier} | sed -e s/_// > /etc/hostname"
+    opDo eval "echo ${containerAssign_containerId}-${sysChar_conveyInfo_vmNameQualifier} | sed -e s/_// -e 's/-$//' > /etc/hostname"
     opDo chmod 444 /etc/hostname
 
     opDo hostname --file /etc/hostname

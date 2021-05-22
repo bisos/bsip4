@@ -74,6 +74,7 @@ _CommentEnd_
 . ${opBinBase}/platformBases_lib.sh
 
 . ${opBinBase}/bxo_lib.sh
+. ${opBinBase}/bxoId_lib.sh
 
 . ${opBinBase}/bxeDesc_lib.sh
 
@@ -154,10 +155,15 @@ $( examplesSeperatorChapter "Developer Git Credentials Activate" )
 ${G_myName} ${extraInfo} -i bisosDevBxo_fullSetup
 ${G_myName} ${extraInfo} -i bisosDevBxo_activate
 ${G_myName} ${extraInfo} -i bisosDevBxo_actuate
-${G_myName} ${extraInfo} -i developerMode  # NOTYET
 $( examplesSeperatorChapter "Developer Git Credentials Deactivate" )
 ${G_myName} ${extraInfo} -i bisosDevBxo_delete
-${G_myName} ${extraInfo} -i stableMode
+$( examplesSeperatorChapter "Mode Selection" )
+sysCharDeploy.sh ${extraInfo} -p bxoId="sysChar" -i conveyInfoShow
+${G_myName} ${extraInfo} -p bxoId="sysChar" -i sysCharConveyInfoWrite securityMode developer
+${G_myName} ${extraInfo} -p bxoId="sysChar" -i sysCharConveyInfoWrite securityMode stable
+${G_myName} ${extraInfo} -i securityMode developer
+${G_myName} ${extraInfo} -i securityMode stable
+${G_myName} ${extraInfo} -i securityMode sealed
 _EOF_
 }
 
@@ -256,6 +262,35 @@ _EOF_
 	 -i developerMode
 }
 
+
+function vis_securityMode {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local secMode="$1"
+
+    case ${secMode} in
+	developer)
+	    lpDo bisosBaseDirs.sh ${G_commandPrefs} -i bxReposAuthSet
+	    lpDo vis_sysCharConveyInfoWrite securityMode developer
+	    ;;
+	stable)
+	    lpDo bisosBaseDirs.sh ${G_commandPrefs} -i bxReposAnonSet
+	    lpDo vis_sysCharConveyInfoWrite securityMode stable    
+	    ;;
+	sealed)
+	    EH_problem "NOTYET"
+	    ;;
+	*)
+	    EH_problem "Bad Usage -- ${secMode}"
+	    ;;
+    esac
+	
+    lpReturn
+}
 
 
 

@@ -135,7 +135,6 @@ function G_postParamHook {
      	bxoHome=$( FN_absolutePathGet ~${bxoId} )
     fi
     
-    # bisosCurrentsGet
 }
 
 
@@ -156,7 +155,7 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
-    #bisosCurrentsGet
+    bisosCurrentsGet
 
     local effectiveContainerBxoId="sysChar"
 
@@ -166,15 +165,17 @@ function vis_examples {
     local id=$( vis_registrarUserName )
     local password=$( vis_registrarUserPassword )        
 
-    # local oneTargetName="192.168.0.38"
-    # local oneTargetName="192.168.0.37"
-    local oneTargetName="localhost"
+    # local oneTargetName="192.168.0.52"
+    local oneTargetName=${curTargetBox:-}
+    # local oneTargetName="localhost"
     
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${effectiveContainerBxoId}"
+bisosCurrentsManage.sh  ${extraInfo} -i setParam curTargetBox 192.168.0.45
+${curTargetBox:-}
 $( examplesSeperatorChapter "Ssh Based Cusomizations -- Bx Based (not vagrant based)" )
 ${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i postCustomize  # on host - bx-ssh
 ${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i secureSeal     # on host - bx-ssh
@@ -183,9 +184,9 @@ $( examplesSeperatorChapter "Full Update" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i fullUpdate
 $( examplesSeperatorChapter "Distro Actions -- On Manager -- Ssh In Target" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_fullUpdate # intra user
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_intraToSudoersAddition # ManagerOnly -- intra user
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_aptSourcesPrep # ManagerOnly -- intra user
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_provisionBisos_sysBasePlatform # ManagerOnly -- intra user
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_intraToSudoersAddition # ManagerOnly -- intra user -- no bisos
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_aptSourcesPrep # ManagerOnly -- intra user -- no bisos
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_provisionBisos_sysBasePlatform # ManagerOnly -- intra user -- no bisos
 $( examplesSeperatorChapter "Site Setup -- bisosBasePlatform Actions" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_fullUpdate # onManager
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_siteSetup # onManager
@@ -198,6 +199,7 @@ $( examplesSeperatorChapter "Specify ConveyInfo -- sysCharBasePlatform Actions" 
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p bxoId="${effectiveContainerBxoId}" -p cfpSecurityMode=bisosDev -i conveyInfoStore
 ${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -p cfpPrivA=192.168.0.121 -i conveyInfoStore # For Generic Guests
 ${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -p cfpSecurityMode=bisosDev -i conveyInfoStore
+${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i conveyInfoShow
 $( examplesSeperatorChapter "Deploy With Convey Info -- FULL SYSTEM Deployment" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p bxoId="${effectiveContainerBxoId}" -i deployWithSysCharConveyInfo # onManager
 ${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i deployWithSysCharConveyInfo # onTarget
@@ -219,27 +221,36 @@ ${G_myName} ${extraInfo} -p bisosDevBxoId=prompt -i usgConvey_bisosDeveloper # o
 $( examplesSeperatorChapter "Target Box Developmenet Preps -- On Target Box" )
 ssh -X bystar@${oneTargetName}    # Then run emacs
 bleeVisit /bisos/panels/bisos-dev/howToBecomeDeveloper/fullUsagePanel-en.org
-$( examplesSeperatorChapter "siteBasePlatform Actions -- On Manager Or On Target Box" )
+$( examplesSeperatorChapter "siteBasePlatform New Box Assign -- On Manager Or On Target Box" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_newBoxAscertain
 ${G_myName} ${extraInfo} -i siteBasePlatform_newBoxAscertain
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_newBoxAssign
 ${G_myName} ${extraInfo} -i siteBasePlatform_newBoxAssign
+$( examplesSeperatorChapter "siteBasePlatform New Container Assign -- On Manager Or On Target Box" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_containerBoxRepoAscertain
+${G_myName} ${extraInfo} -i siteBasePlatform_containerBoxRepoAscertain
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p model=Host -p abode=Shield -p function=Server -i siteBasePlatform_containerBoxAssignAndRepo
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i siteBasePlatform_containerBoxAssignAndRepo
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_containerBoxSiteAscertain
-${G_myName} ${extraInfo} -i siteBasePlatform_containerBoxSiteAscertain
 $( examplesSeperatorChapter "SysBxo Realize -- Container Box Realize -- One Time Activity --  On Target Box" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_containerBoxRepoAscertain
+${G_myName} ${extraInfo} -i siteBasePlatform_containerBoxRepoAscertain
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_sysCharContainerBoxRealize
 ${G_myName} ${extraInfo} -i siteBasePlatform_sysCharContainerBoxRealize
-${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i siteBasePlatform_containerBoxAssignAndRepo
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_containerBoxBpoAscertain
-${G_myName} ${extraInfo} -i siteBasePlatform_containerBoxBpoAscertain
 $( examplesSeperatorChapter "siteBasePlatform Actions -- On Manager Or On Target Box" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_sysCharBoxIdentitySet # NOTYET, likely not necessary
 ${G_myName} ${extraInfo} -i siteBasePlatform_sysCharBoxIdentitySet # NOTYET, likely not necessary
+$( examplesSeperatorChapter "Full New Box Actions -- On Manager And On Target Box" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i boxSiteBasePlatform  # OnManager
+${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i boxRealizeAtSiteBasePlatformOnTarget # OnTarget Only
+$( examplesSeperatorChapter "Full Existing Box Actions -- On Manager Or On Target Box" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i boxFullActivate # On Manager From Begining-To-End
+$( examplesSeperatorChapter "Full Existing Box Actions -- On Manager Or On Target Box" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i containerBoxBpoId
+${G_myName} ${extraInfo} -i containerBoxBpoId
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i containerBoxBpoPath
+${G_myName} ${extraInfo} -i containerBoxBpoPath
 _EOF_
 }
-
 
 
 function vis_fullUpdate {    
@@ -259,6 +270,7 @@ function vis_distro_fullUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Update distro, and bring it to bisosBasePlatform.
+*** ManagerOnly -- intra user -- no bisos
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -276,37 +288,23 @@ function vis_distro_intraToSudoersAddition {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Specific to debian. Allow for sudo-ing as intra.
 *** By policy, at distro installation, intra is used as acctName, acctNamePasswd and rootPasswd
+*** in the command below intra is used 4 times. acctName is used twice.
+*** ManagerOnly -- intra user -- no bisos
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    function onTargetRun {
-	# redirection of stderr gets rid of the Password: prompt, which can throw emacs off
-	local intraLine=$( echo intra | su - root -c 'egrep ^intra /etc/sudoers' 2> /dev/null )
+    EH_assert [ ! -z "${targetName}" ]
+    
+    # redirection of stderr gets rid of the Password: prompt, which can throw emacs off
+    local intraLine=$( sshpass -p intra ${sshCmnd} intra@"${targetName}" "echo intra | su - root -c 'egrep ^intra /etc/sudoers'" 2> /dev/null )
 
-	if [ -z "${intraLine}" ] ; then
-	    lpDo eval "echo intra | su - root -c 'echo intra ALL=\(ALL\) NOPASSWD: ALL >> /etc/sudoers'"
-	else
-	    ANT_raw "intra is already in /etc/sudoers -- skipped"
-	fi
-    }
-
-####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "intra" :managerOrTarget "manager" 
-    if [ -z "${targetName}" ] ; then
-       ANT_raw "Can Only Be Run On Manager -- Can Not Be Run On Target."
-       lpReturn
-    fi
-    if [ "${targetName}" == "onTargetRun" ] ; then
-	lpDo onTargetRun
-    elif [ -z "${targetName}" ] ; then
-	lpDo onTargetRun
-    else
-	local commandName=${FUNCNAME##vis_}		
+    if [ -z "${intraLine}" ] ; then
 	lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-	     $(which ${G_myName}) ${G_commandPrefs} \
-	     -p targetName=onTargetRun -i ${commandName}
+	     "echo intra | su - root -c 'echo intra ALL=\(ALL\) NOPASSWD: ALL >> /etc/sudoers'"
+    else
+	ANT_raw "intra is already in /etc/sudoers -- skipped"
     fi
-####+END:
 }
 
 
@@ -315,78 +313,69 @@ function vis_distro_aptSourcesPrep {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Setup apt/sources.list for initial use. Different for debian and ubuntu
 *** In a debian box, the deb cdrom: line needs to be removed.
+*** ManagerOnly -- intra user -- no bisos
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    function onTargetRun {
-	if [ -e /etc/apt/sources.list.orig ] ; then
-	    ANT_raw "/etc/apt/sources.list.orig exists -- copying skipped"
-	else
-	    sudo cp -p /etc/apt/sources.list /etc/apt/sources.list.orig
-	fi
+    EH_assert [ ! -z "${targetName}" ]
 
-	# In "''" "" is consumed by lpDo
-	lpDo eval \
-	     grep -v "'^deb cdrom:'" /etc/apt/sources.list \> /tmp/sources.list
+    local lsOrig=$( sshpass -p intra ${sshCmnd} intra@"${targetName}" sudo ls /etc/apt/sources.list.orig 2> /dev/null )
 
-	lpDo eval \
-	     sudo mv /tmp/sources.list /etc/apt/sources.list
-
-	lpDo eval \
-	     sudo apt-get update
-    }
-
-####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "intra" :managerOrTarget "manager" 
-    if [ -z "${targetName}" ] ; then
-       ANT_raw "Can Only Be Run On Manager -- Can Not Be Run On Target."
-       lpReturn
-    fi
-    if [ "${targetName}" == "onTargetRun" ] ; then
-	lpDo onTargetRun
-    elif [ -z "${targetName}" ] ; then
-	lpDo onTargetRun
-    else
-	local commandName=${FUNCNAME##vis_}		
+    if [ -z "${lsOrig}" ] ; then
 	lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-	     $(which ${G_myName}) ${G_commandPrefs} \
-	     -p targetName=onTargetRun -i ${commandName}
+	     sudo cp -p /etc/apt/sources.list /etc/apt/sources.list.orig
+    else
+	ANT_raw "/etc/apt/sources.list.orig exists -- copying skipped"
     fi
-####+END:
+
+    # In "''" "" is consumed by lpDo
+    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+	 grep -v "'^deb cdrom:'" /etc/apt/sources.list \> /tmp/sources.list
+
+    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+	 sudo mv /tmp/sources.list /etc/apt/sources.list
+
+    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+	 sudo apt-get update
 }
+
+function vis_distro_provisionBisos_ascertain {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Applies identically to all distros.
+*** ManagerOnly -- intra user
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    
+    EH_assert [ ! -z "${targetName}" ]
+
+    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+	 sudo ls -l /bisos/core/bsip
+
+}
+
 
 function vis_distro_provisionBisos_sysBasePlatform {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Applies identically to all distros.
+*** ManagerOnly -- intra user -- no bisos
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-
-    function onTargetRun {
-	lpDo sudo apt-get install -y python3-pip
     
-	lpDo sudo pip3 install --upgrade bisos.provision
-    
-	lpDo sudo provisionBisos.sh ${G_commandPrefs} -i sysBasePlatform
-    }
+    EH_assert [ ! -z "${targetName}" ]
 
-####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "intra" :managerOrTarget "manager" 
-    if [ -z "${targetName}" ] ; then
-       ANT_raw "Can Only Be Run On Manager -- Can Not Be Run On Target."
-       lpReturn
-    fi
-    if [ "${targetName}" == "onTargetRun" ] ; then
-	lpDo onTargetRun
-    elif [ -z "${targetName}" ] ; then
-	lpDo onTargetRun
-    else
-	local commandName=${FUNCNAME##vis_}		
-	lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-	     $(which ${G_myName}) ${G_commandPrefs} \
-	     -p targetName=onTargetRun -i ${commandName}
-    fi
-####+END:
+    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+	 sudo apt-get install -y python3-pip
+
+    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+	 sudo pip3 install --upgrade bisos.provision
+
+    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+	 sudo provisionBisos.sh ${G_commandPrefs} -i sysBasePlatform
 }
 
 function vis_bisosBasePlatform_fullUpdate {    
@@ -400,6 +389,8 @@ _EOF_
     EH_assert [ ! -z "${targetName}" ]
 
     lpDo vis_bisosBasePlatform_siteSetup
+
+    lpDo vis_usgConvey_bisosDeveloper
 }
 
 function vis_bisosBasePlatform_siteSetup {    
@@ -426,6 +417,10 @@ _EOF_
     }
 
     function onTargetRun {
+	
+	# NOTYET, perhaps this should be done even sooner
+	lpDo bisosCurrentsManage.sh ${G_commandPrefs} -i currentsFileCreate
+	
 	lpDo bisosSiteSetup.sh ${G_commandPrefs} \
 	     -p registrar="${registrar}" -p id="${id}" -p password="${password}" \
 	     -i fullUpdate
@@ -460,48 +455,6 @@ _EOF_
 ####+END:
 }
 
-
-function vis_usgConvey_bisosDeveloper {
-     G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** Preps the site (configs for gitlab server, etc) and activates the siteBxo.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    function onManagerRun {
-	if [ -z "${bisosDevBxoId}" ] ; then
-	    bisosDevBxoId=$( vis_usgBposUsageEnvs_bisosDevBxoId_read )
-	    EH_assert [ ! -z "${bisosDevBxoId}" ]
-	fi
-    }
-
-    function onTargetRun {
-	lpDo usgBpos.sh ${G_commandPrefs} \
-	 -i usgBposUsageEnvs_bisosDevBxoId_write ${bisosDevBxoId}
-    }
-
-    if [ "${targetName}" != "onTargetRun" ] && [ ! -z "${targetName}" ] ; then
-	lpDo onManagerRun
-    fi
-
-    EH_assert [ ! -z "${bisosDevBxoId}" ]
-
-    G_paramCmndOption="-p bisosDevBxoId=${bisosDevBxoId}"
-    
-####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" :cmndOption t
-    if [ "${targetName}" == "onTargetRun" ] ; then
-	lpDo onTargetRun
-    elif [ -z "${targetName}" ] ; then
-	lpDo onTargetRun
-    else
-	local commandName=${FUNCNAME##vis_}		
-	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-	     $(which ${G_myName}) ${G_commandPrefs} \
-	     -p targetName=onTargetRun ${G_paramCmndOption} -i ${commandName}
-    fi
-####+END:
-}
 
 function vis_siteBasePlatform_fullUpdate {    
     G_funcEntry
@@ -539,6 +492,9 @@ _EOF_
 	lpDo sysCharActivate.sh ${G_commandPrefs} \
 	     -p bxoId="${bxoId}" \
 	     -i activate_sysContainerBxo
+
+	lpDo sysCharActivate.sh ${G_commandPrefs} \
+	     -i bisosContainerSelect "${bxoId}"
     }
 
     if [ "${targetName}" != "onTargetRun" ] && [ ! -z "${targetName}" ] ; then
@@ -563,7 +519,140 @@ _EOF_
 ####+END:
 }
 
+#
+#
+#  #############  Box Specific Facilities
+#
+#
 
+function vis_boxSiteBasePlatform {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Update Everything. Runs On Manager.
+*** If Box's Character already exists, box's sysChar is deployed on box. Activated.
+*** If Box's Character does not exists, box is registered in site & its sysChar is realized.
+*** If Box's Character does not exists, model, abode and function should be specified.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert [ ! -z "${targetName}" ]
+
+    # NOTYET, commented part below should be absorbed in distro_fullUpdate after sudo addition.
+
+    
+    # local bisosAscertain=$( vis_distro_provisionBisos_ascertain )
+    
+    # if [ -z "${bisosAscertain}" ] ; then
+    # 	lpDo vis_distro_fullUpdate
+    # else
+    # 	ANT_cooked "BISOS has already been installed -- ${bisosAscertain}"
+    # fi
+
+    lpDo vis_distro_fullUpdate    
+
+    # BISOS has been installed and ByStar Account Is Now In Place
+
+    lpDo vis_bisosBasePlatform_fullUpdate  # siteSetup + usgConvey_bisosDeveloper
+}
+
+
+function vis_boxFullActivate {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Update Everything. Runs On Manager.
+*** If Box's Character already exists, box's sysChar is deployed on box. Activated.
+*** If Box's Character does not exists, box is registered in site & its sysChar is realized.
+*** If Box's Character does not exists, model, abode and function should be specified.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert [ ! -z "${targetName}" ]
+
+    lpDo vis_boxSiteBasePlatform
+
+    lpDo vis_boxActivateAtSiteBasePlatform
+}
+
+
+function vis_boxActivateAtSiteBasePlatform {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Update Everything. Runs On Manager.
+*** If Box's Character already exists, box's sysChar is deployed on box. Activated.
+*** If Box's Character does not exists, box is registered in site & its sysChar is realized.
+*** If Box's Character does not exists, model, abode and function should be specified.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    echo "NOTYET"
+}
+
+function vis_boxRealizeAtSiteBasePlatformOnTarget {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Update Everything. Runs On Manager.
+*** If Box's Character already exists, box's sysChar is deployed on box. Activated.
+*** If Box's Character does not exists, box is registered in site & its sysChar is realized.
+*** If Box's Character does not exists, model, abode and function should be specified.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    # Assumes that
+    # BISOS has been installed and ByStar Account Is Now In Place
+    # And that site has been setup.
+
+    local siteBoxNu=$( vis_siteBasePlatform_newBoxAscertain )
+
+    if [ -z "${siteBoxNu}" ] ; then
+	lpDo vis_siteBasePlatform_newBoxAssign
+    else
+	ANT_cooked "siteBoxNu=${siteBoxNu} has already been assined"
+    fi
+
+    local siteBoxContainer=$( vis_siteBasePlatform_containerBoxRepoAscertain )
+
+    if [ -z "${siteBoxContainer}" ] ; then
+	EH_assert [ ! -z "${model}" ]
+	EH_assert [ ! -z "${abode}" ]
+	EH_assert [ ! -z "${function}" ]
+
+	lpDo vis_siteBasePlatform_containerBoxAssignAndRepo
+    else
+	ANT_cooked "siteBoxContainer=${siteBoxContainer} has already been assined"
+    fi
+
+    local boxBpoPath=$( vis_containerBoxBpoPath )
+
+    if [ -z "${boxBpoPath}" ] ; then
+	EH_assert [ ! -z "${model}" ]
+	EH_assert [ ! -z "${abode}" ]
+	EH_assert [ ! -z "${function}" ]
+
+	lpDo vis_siteBasePlatform_sysCharContainerBoxRealize
+	bxoId=$( vis_containerBoxBpoId )
+    else
+	bxoId=$( vis_containerBoxBpoId )
+	ANT_cooked "boxBpoPath=${boxBpoPath} -- bxoId=${bxoId} has already been Realized, it can be Activated."
+	
+	lpDo sysCharActivate.sh ${G_commandPrefs} \
+	     -p bxoId="${bxoId}" -i activate_sysContainerBxo
+	
+    fi
+
+    lpDo sysCharActivate.sh ${G_commandPrefs} \
+	 -i bisosContainerSelect "${bxoId}"
+
+    local identityIsSet=$( sysCharIdentity.sh -i identitySetAscertain )
+    if [ -z "${identityIsSet}" ] ; then
+	lpDo vis_deployWithSysCharConveyInfo
+    else
+	ANT_cooked "SysChar Identity Is Already Set -- identityIsSet=${identityIsSet}"
+    fi
+}
 
 
 function vis_siteBasePlatform_newBoxAscertain {    
@@ -658,44 +747,6 @@ _EOF_
     fi
 }
 
-function vis_siteBasePlatform_containerBoxSiteAscertain {    
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** NOTYET
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    local containerAssignBase=""
-    local containerRepoBase=""
-
-    if [ -z "${targetName}" ] ; then
-	containerAssignBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
-	EH_assert [ ! -z "${containerAssignBase}" ]
-
-	echo "containerAssignBase=${containerAssignBase}"	
-
-	containerRepoBase=$( siteContainerRepo.sh -i containerRepoBase "${containerAssignBase}" )
-	EH_assert [ -d "${containerRepoBase}" ]
-
-	echo "containerRepoBase=${containerRepoBase}"
-    else
-	containerAssignBase=$( sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-				     $(which siteContainerAssign.sh) \
-				     -i forThisSysFindContainerBase )
-	EH_assert [ ! -z "${containerAssignBase}" ]
-
-	echo "containerAssignBase=${containerAssignBase}"
-	
-	containerRepoBase=$( sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-				     $(which siteContainerRepo.sh) \
-				     -i containerRepoBase "${containerAssignBase}" )
-	EH_assert [ ! -z "${containerRepoBase}" ]
-
-	echo "containerRepoBase=${containerRepoBase}"
-    fi
-}
-
 
 function vis_siteBasePlatform_sysCharContainerBoxRealize {    
     G_funcEntry
@@ -715,7 +766,7 @@ _EOF_
     fi
 }
 
-function vis_siteBasePlatform_containerBoxBpoAscertain {    
+function vis_siteBasePlatform_containerBoxRepoAscertain {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Ascertain that containerAssignBase= and containerRepoBase= are in place.
@@ -730,7 +781,10 @@ _EOF_
 	local containerRepoBase=""
 
 	containerAssignBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
-	EH_assert [ ! -z "${containerAssignBase}" ]
+	if [ -z "${containerAssignBase}" ] ; then
+	    ANT_raw "Missing containerAssignBase"
+	    lpReturn
+	fi
 
 	echo "containerAssignBase=${containerAssignBase}"	
 
@@ -753,6 +807,91 @@ _EOF_
     fi
 ####+END:
 }
+
+
+function vis_containerBoxBpoId {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** onTarget obtain the bpoId for the box, the bpoId account may or may not exist.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    # sysCharRealize.sh -h -v -n showRun -i sysCharContainerBxoIdName
+
+    function onTargetRun {
+	local containerAssignBase=""
+
+	containerAssignBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
+	if [ -z "${containerAssignBase}" ] ; then
+	    ANT_raw "Missing containerAssignBase"
+	    lpReturn
+	fi
+
+	local sysCharContainerBpoId=$( vis_sysCharContainerBxoIdName ${containerAssignBase} )
+	echo ${sysCharContainerBpoId}
+    }
+
+####+BEGIN: bx:bsip:bash/onTargetRun 
+    if [ "${targetName}" == "onTargetRun" ] ; then
+	lpDo onTargetRun
+    elif [ -z "${targetName}" ] ; then
+	lpDo onTargetRun
+    else
+	local commandName=${FUNCNAME##vis_}		
+	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+	     $(which ${G_myName}) ${G_commandPrefs} \
+	     -p targetName=onTargetRun -i ${commandName}
+    fi
+####+END:
+}
+
+
+function vis_containerBoxBpoPath {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** onTarget obtain the bpoId for the box, the bpoId account may or may not exist.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    # sysCharRealize.sh -h -v -n showRun -i sysCharContainerBxoIdName
+
+    function onTargetRun {
+	local containerAssignBase=""
+
+	containerAssignBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
+	if [ -z "${containerAssignBase}" ] ; then
+	    ANT_raw "Missing containerAssignBase"
+	    lpReturn
+	fi
+
+	local sysCharContainerBpoId=$( vis_sysCharContainerBxoIdName ${containerAssignBase} )
+	local bxoHome=""
+	
+	if vis_userAcctExists ${sysCharContainerBpoId} ; then
+	    bxoHome=$( FN_absolutePathGet ~${sysCharContainerBpoId} )
+	else
+	    EH_problem "${sysCharContainerBpoId} Account Does Not Exist"
+	fi
+	echo ${bxoHome}
+
+    }
+
+####+BEGIN: bx:bsip:bash/onTargetRun 
+    if [ "${targetName}" == "onTargetRun" ] ; then
+	lpDo onTargetRun
+    elif [ -z "${targetName}" ] ; then
+	lpDo onTargetRun
+    else
+	local commandName=${FUNCNAME##vis_}		
+	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+	     $(which ${G_myName}) ${G_commandPrefs} \
+	     -p targetName=onTargetRun -i ${commandName}
+    fi
+####+END:
+}
+
 
 
 function vis_deployWithSysCharConveyInfo {
@@ -806,7 +945,7 @@ _EOF_
 
 	lpDo sysCharIdentity.sh ${G_commandPrefs} \
 	     -p bxoId="${bxoId}" -i identityUpdate
-	# sysCharIdentity.sh: Sets up motdSet, nodename, netL3Interface, netEtcHosts
+	# sysCharIdentity.sh: Sets up motdSet, hostname, netL3Interface, netEtcHosts
     }
 
     if [ "${targetName}" != "onTargetRun" ] && [ ! -z "${targetName}" ] ; then lpDo onManagerRun; fi
@@ -1003,27 +1142,27 @@ _EOF_
     function onTargetRun {
 	EH_assert bxoIdPrep
 
-	local sysCharDeployInfoBase="${bxoHome}/var/sysCharDeployInfo"
+	local sysCharConveyInfoBase="${bxoHome}/var/sysCharConveyInfo"
 
-	lpDo FN_dirCreatePathIfNotThere ${sysCharDeployInfoBase}
+	lpDo FN_dirCreatePathIfNotThere ${sysCharConveyInfoBase}
 
 	if [ ! -z "${cfpVmNameQualifier}" ] ; then
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} vmNameQualifier "${cfpVmNameQualifier}"
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} vmNameQualifier "${cfpVmNameQualifier}"
 	fi
 	if [ ! -z "${cfpPrivA}" ] ; then
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} ipAddr_privA "${cfpPrivA}"
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} ipAddr_privA "${cfpPrivA}"
 	fi
 	if [ ! -z "${cfpPubA}" ] ; then
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} ipAddr_pubA "${cfpPubA}"
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} ipAddr_pubA "${cfpPubA}"
 	fi
 	# if [ ! -z "${cfpPrivGit}" ] ; then
-	#     lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} privGit "${privGit}"
+	#     lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} privGit "${privGit}"
 	# fi
 	# if [ ! -z "${cfpPubGit}" ] ; then
-	#     lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} pubGit "${pubGit}"
+	#     lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} pubGit "${pubGit}"
 	# fi
 	if [ ! -z "${cfpSecurityMode}" ] ; then
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} devMode "${cfpSecurityMode}"
+	    lpDo sysCharConveyInfoWrite securityMode "${cfpSecurityMode}"
 	fi
     }
 
@@ -1062,9 +1201,9 @@ _EOF_
     function onTargetRun {
 	EH_assert bxoIdPrep
 
-	local sysCharDeployInfoBase="${bxoHome}/var/sysCharDeployInfo"
+	local sysCharConveyInfoBase="${bxoHome}/var/sysCharConveyInfo"
 
-	lpDo  fileParamManage.py -i fileParamDictReadDeep ${sysCharDeployInfoBase}
+	lpDo  fileParamManage.py -i fileParamDictReadDeep ${sysCharConveyInfoBase}
     }
 
     if [ "${targetName}" != "onTargetRun" ] && [ ! -z "${targetName}" ] ; then lpDo onManagerRun; fi
@@ -1144,7 +1283,6 @@ _EOF_
 	     -p targetName=onTargetRun ${G_paramCmndOption} -i ${commandName}
     fi
 ####+END:
-
 }
 
 
