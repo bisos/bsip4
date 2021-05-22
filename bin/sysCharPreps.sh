@@ -140,7 +140,6 @@ function vis_sysChar_binsPrep {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Install sysChar specific packages.
-*** NOTYET, cleanly determine sysChar type.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -149,9 +148,7 @@ _EOF_
 
     if [ "${virtualizationType}" == "physical" ] ; then
 	
-	lpDo lcaKvmBinsPrep.sh -v -n showRun -i fullUpdate
-
-	lpDo echo "NOTYET -- IMPORTANT"
+	lpDo lcaKvmBinsPrep.sh -v -n showRun -i fullUpdatePlus   #  not just fullUpdate
 
 	lpDo usgAcctManage.sh -h -v -n showRun -i usgAcct_supplementaryGroupsUpdate bystar
 

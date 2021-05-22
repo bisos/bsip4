@@ -193,14 +193,17 @@ _EOF_
 	    libvirtGroupName="libvirtd"
 	fi
     fi
-	
-    ANT_raw "Maybe This Is Broken, because libvirtd does not exist at that time"
-    opDo sudo adduser $( id -un ) ${libvirtGroupName}
 
-    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
+    local effectiveCurUser=$( id -un )
 
-    opDo vis_fullUpdate
-    opDo sudo adduser lsipusr ${libvirtGroupName}
+    #if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
+
+    opDo lcaKvmBinsPrep.sh -v -n showRun -i fullUpdate
+
+    #ANT_raw "Maybe This Is Broken, because libvirtd does not exist at that time"
+    opDo sudo adduser ${effectiveCurUser} ${libvirtGroupName}
+
+    # opDo sudo adduser lsipusr ${libvirtGroupName}
 }
 
 
