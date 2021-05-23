@@ -340,6 +340,41 @@ _EOF_
 
 
 
+function vis_assignVirtAddr {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** 
+_EOF_
+		       }
+    EH_assert [[ $# -eq 2 ]]
+
+    local netName=$1
+    local containerNu=$2
+
+    local addrType=containers
+
+    local networksBase=$( networksBaseObtain )
+    EH_assert [ ! -z "${networksBase}" ]
+
+    local netBase=${networksBase}/${netName}/addrs/${addrType}
+    EH_assert [ -d "${netBase}" ]
+
+    local minAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} minAddr.fp )
+    local maxAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} maxAddr.fp )
+
+    local assignedBase="${netBase}/assigned"
+
+    local containerIndex=$(( ${containerNu} - 1000 ))
+    local containerAddrNu=$(( ${containerIndex} + ${minAddr} ))
+    local containerAddr="192.168.0.${containerAddrNu}"
+
+    echo ${containerAddr}
+    
+    lpReturn
+}
+
+
+
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*
