@@ -178,9 +178,10 @@ ${G_myName} ${extraInfo} -i sysCharContainerRealize ${oneBxoRepoScope} ${contain
 ${G_myName} ${extraInfo} -i sysCharContainerRealize ${oneBxoRepoScope} ${containersBase}/assign/Virt/Auto/Generic/deb10
 ${G_myName} ${extraInfo} -i sysCharContainerRealize ${oneBxoRepoScope} ${containersBase}/assign/Virt/Shield/Server/1009
 $( examplesSeperatorChapter "Box -- Site Assign SysChar And Container Realization" )
-${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerBoxAssignAndRepo
+${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerBoxAssignAndRepo  # Obsoleted
+${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerAssignAndRepo
 ${G_myName} ${extraInfo} -i sysCharContainerBoxRealize
-${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerBoxAssignAndRepoAndSysCharRealize  # FULL ACTION -- PRIMARY COMMAND
+${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerAssignAndRepoAndSysCharRealize  # FULL ACTION -- PRIMARY COMMAND
 $( examplesSeperatorChapter "Virt -- Site Assign SysChar And Container Realization" )
 ${G_myName} ${extraInfo} -p model=Virt -p abode=Shield -p function=Server -i containerAssignAndRepo
 ${G_myName} ${extraInfo} -p model=Virt -p abode=Shield -p function=Server -i containerAssignAndRepoAndSysCharRealize  # FULL ACTION -- PRIMARY COMMAND
@@ -221,6 +222,7 @@ _EOF_
 function vis_containerAssignAndRepoAndSysCharRealize {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Dispatches to BoxRealize or to VirtRealize.
 _EOF_
 		      }
    EH_assert [[ $# -eq 0 ]]
@@ -237,9 +239,9 @@ _EOF_
 	   lpDo vis_sysCharContainerBoxRealize
 	   ;;
        Virt|virt|VIRT)
-	   siteContainerRepoBase=$( vis_containerVirtAssignAndRepo )
-	   EH_assert [ ! -z "${siteContainerRepoBase}" ]
-	   lpDo vis_sysCharContainerVirtRealize "${siteContainerRepoBase}"
+	   siteContainerAssignBase=$( vis_containerVirtAssignAndRepo )
+	   EH_assert [ ! -z "${siteContainerAssignBase}" ]
+	   lpDo vis_sysCharContainerVirtRealize "${siteContainerAssignBase}"
 	   ;;
        *)
 	   EH_problem "Bad Usage -- model=${model}"
@@ -250,10 +252,15 @@ _EOF_
 function vis_sysCharContainerBoxRealize {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Assigns a site container to box (if needed), invokes sysCharContainerRealize full
 _EOF_
 		      }
    EH_assert [[ $# -eq 0 ]]
 
+   EH_assert [ ! -z "${model}" ]   
+   EH_assert [ ! -z "${abode}" ]
+   EH_assert [ ! -z "${function}" ]
+   
    local containerAssignBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
    EH_assert [ ! -z "${containerAssignBase}" ]
    
@@ -271,15 +278,9 @@ _EOF_
 		      }
    EH_assert [[ $# -eq 1 ]]
 
-   lpReturn # NOTYET
-   
-   local containerAssignBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
-   EH_assert [ ! -z "${containerAssignBase}" ]
-   
-   local containerRepoBase=$( siteContainerRepo.sh -i containerRepoBase "${containerAssignBase}" )
-   EH_assert [ -d "${containerRepoBase}" ]
+   local siteContainerAssignBase=$1
 			      
-   lpDo vis_sysCharContainerRealize full ${containerAssignBase}
+   lpDo vis_sysCharContainerRealize full ${siteContainerAssignBase}
 }	
 
 
@@ -329,6 +330,7 @@ _EOF_
 function vis_containerVirtAssignAndRepo {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Returns site container assign base.
 _EOF_
 		      }
    EH_assert [[ $# -eq 0 ]]
@@ -353,12 +355,12 @@ _EOF_
        ANT_raw "containerRepoBase=${containerRepoBase} already exists -- creation skipped"
        #lpDo siteContainerRepo.sh -h -v -n showRun -i containerRepoUpdate basePrep ${containerAssignBase}
    else
-       lpDo echo siteContainerRepo.sh -h -v -n showRun -i containerRepoUpdate full ${containerAssignBase}
+       lpDo siteContainerRepo.sh -h -v -n showRun -i containerRepoUpdate full ${containerAssignBase}
    fi
 
-   # Re-Enable -- EH_assert [ -d "${containerRepoBase}" ]
+   EH_assert [ -d "${containerRepoBase}" ]
 
-   echo "${containerRepoBase}"
+   echo "${containerAssignBase}"
 }	
 
 
@@ -397,15 +399,16 @@ _EOF_
 function vis_sysCharContainerRealize {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
-** \$1 is bxoRepoScope -- \$2 is path to containerAssignBase   
-** With $1=containerBase, realize the sysCharContainerBxoId.
-*** Typical usage is \$=container base of this system obtained from siteContainerAssign.sh -i forThisSysFindContainerBase
+** \$1 is bxoRepoScope -- \$2 is path to siteContainerAssignBase   
+** With $1=siteContainerAssignBase, realize the sysCharContainerBxoId.
+*** Typical usage is on box \$2=siteContainerAssignBase is base 
+    of this system obtained from siteContainerAssign.sh -i forThisSysFindContainerBase
 _EOF_
 		      }
    EH_assert [[ $# -eq 2 ]]
 
    local bxoRealizationScope=$1   
-   local containerAssignBase=$2  # global variable
+   local containerAssignBase=$2
 
    EH_assert bxoRealizationScopeIsValid "${bxoRealizationScope}"
    EH_assert [ -d ${containerAssignBase} ]
