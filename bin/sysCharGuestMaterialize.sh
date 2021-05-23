@@ -148,6 +148,7 @@ bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VAG-deb11_  # Generic, Auto, Dhcp,  
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VSG-deb11_  # Generic, Shielded, StaticIP
+bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VSS-1009    # Specific, Shielded, StaticIP
 $( examplesSeperatorChapter "Activate Subject sysContainerBxo" )
 sysCharActivate.sh -h -v -n showRun -p bxoId="${oneBxoId}" -i activate_sysContainerBxo
 $( examplesSeperatorChapter "Specialized Actions" )
