@@ -239,8 +239,13 @@ _EOF_
 	   lpDo vis_sysCharContainerBoxRealize
 	   ;;
        Virt|virt|VIRT)
-	   siteContainerAssignBase=$( vis_containerVirtAssignAndRepo )
+	   siteContainerAssignBase=$( vis_containerAssignBase )
 	   EH_assert [ ! -z "${siteContainerAssignBase}" ]
+	   
+	   # NOTYET, needs to be git pushed
+	   
+	   lpDo vis_containerVirtAssignAndRepo "${siteContainerAssignBase}"
+	   
 	   lpDo vis_sysCharContainerVirtRealize "${siteContainerAssignBase}"
 	   ;;
        *)
@@ -327,10 +332,11 @@ _EOF_
 }	
 
 
-function vis_containerVirtAssignAndRepo {
+function vis_containerAssignBase {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Returns site container assign base.
+*** something like:  /server/1001
 _EOF_
 		      }
    EH_assert [[ $# -eq 0 ]]
@@ -348,8 +354,26 @@ _EOF_
 
    containerAssignBase=${modelAbodeFunctionBase}/${containerNu}
    EH_assert [ ! -z "${containerAssignBase}" ]
+ 
+   echo "${containerAssignBase}"
+}	
 
-   local containerRepoBase=$( siteContainerRepo.sh -i containerRepoBase "${containerAssignBase}" )
+
+function vis_containerVirtAssignAndRepo {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+** Returns site container assign base.
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
+
+   EH_assert [ ! -z "${model}" ]   
+   EH_assert [ ! -z "${abode}" ]
+   EH_assert [ ! -z "${function}" ]
+
+   local siteContainerAssignBase=$1
+
+   local containerRepoBase=$( siteContainerRepo.sh -i containerRepoBase "${siteContainerAssignBase}" )
 
    if [ -d "${containerRepoBase}" ] ; then
        ANT_raw "containerRepoBase=${containerRepoBase} already exists -- creation skipped"
@@ -359,8 +383,6 @@ _EOF_
    fi
 
    EH_assert [ -d "${containerRepoBase}" ]
-
-   echo "${containerAssignBase}"
 }	
 
 
