@@ -479,7 +479,13 @@ _EOF_
 		       }
     EH_assert [[ $# -eq 0 ]]
 
-    vis_assignNextAddr privA generic
+    local functionAbbrev=$( vis_containerBxoId_getFunction )
+
+    if [ "${functionAbbrev}" == "G" ] ; then
+	lpDo vis_assignNextAddr privA generic
+    else
+	echo "containerBxoId"
+    fi
 }
 
 function vis_vagStdout_netInterfaces {

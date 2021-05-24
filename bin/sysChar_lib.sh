@@ -53,6 +53,19 @@ function sansTargetName {
     echo $1 | sed -e 's/-p targetName=.* //' -e 's/-p targetName=.*$//'
 }
 
+function vis_containerBxoId_getFunction {
+     G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** For example, from  pmp_VSG-deb11_, get "G" for generic
+_EOF_
+		       }
+    EH_assert [[ $# -eq 1 ]]    
+    local containerBxoId=$1
+    echo ${containerBxoId} | sed -e 's:pmp_..\(.\).*:\1:'
+}
+
+
+
 function fromGenericContainerIdGetDistro {
      G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
