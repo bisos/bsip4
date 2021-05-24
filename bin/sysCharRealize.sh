@@ -236,13 +236,14 @@ _EOF_
    case "${model}" in
        Host|host|HOST|Pure|pure|PURE)
 	   lpDo vis_containerBoxAssignAndRepo
+	   lpDo siteContainerAssign.sh -i forThisSysContainerAssignBasePush
 	   lpDo vis_sysCharContainerBoxRealize
 	   ;;
        Virt|virt|VIRT)
 	   siteContainerAssignBase=$( vis_containerAssignBase )
 	   EH_assert [ ! -z "${siteContainerAssignBase}" ]
 	   
-	   # NOTYET, needs to be git pushed
+	   lpDo eval echo ${siteContainerAssignBase} \| bx-gitRepos -i addCommitPush all
 	   
 	   lpDo vis_containerVirtAssignAndRepo "${siteContainerAssignBase}"
 	   

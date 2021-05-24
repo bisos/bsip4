@@ -141,7 +141,7 @@ ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i con
 $( examplesSeperatorChapter "SET -- Container Virt Assignment -- Primary Commands" )
 ${G_myName} ${extraInfo} -p model=Virt -p abode=Shield -p function=Server -i containerAssignAndPush  # PRIMARY COMMAND
 ${G_myName} ${extraInfo} -p model=Virt -p abode=Shield -p function=Server -i containerAssign  # PRIMARY COMMAND
-${G_myName} ${extraInfo} -i forThisSysContainerAssignBasePush
+echo ${containerBase} | bx-gitRepos -i addCommitPush all
 ${G_myName} ${extraInfo} -i containersAssignBasePull
 ${G_myName} ${extraInfo} -p model=Virt -p abode=Shield -p function=Server -i containerUpdate_atNu "${containerNu}"
 $( examplesSeperatorChapter "GET -- Container Nu" )
