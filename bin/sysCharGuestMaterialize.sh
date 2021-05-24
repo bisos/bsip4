@@ -514,7 +514,9 @@ _EOF_
 
     
     function privA_update {
-	EH_assert [[ $# -eq 0 ]]
+	EH_assert [[ $# -eq 1 ]]
+
+	ethCount=$1
 
 	local hostBxoId=$( withContainerIdGetBxoId ${hostContainerId} )
 	EH_assert vis_bxoAcctVerify "${hostBxoId}"
@@ -523,7 +525,7 @@ _EOF_
 	EH_assert [ ! -z "${sysChar_containerSpec_netIfs_privA}" ]
 
     	     cat   << _EOF_
-    # privA interface on hostBxoId=${hostBxoId}	     
+    # privA interface on hostBxoId=${hostBxoId}	   eth${ethCount} 
     guest.vm.network :public_network, :dev => "${sysChar_containerSpec_netIfs_privA}", :mode => 'bridge', auto_config: false
 _EOF_
     }
@@ -544,8 +546,10 @@ _EOF_
 
     lpDo withAbodeGetApplicableNetsList "${containerAssign_abode}"
 
+    local ethCount=0
     for eachNet in ${applicableNetsList[@]} ; do
-	lpDo ${eachNet}_update
+	(( ethCount++ ))
+	lpDo ${eachNet}_update ${ethCount}
     done
     
     lpReturn
@@ -848,8 +852,9 @@ _EOF_
 
     local containerBaseBox=$( vis_vagrantBaseBoxFromSysChar )
 
-    local containerName=${containerAssign_containerId}${vmNameQualifier}
-    local hostname=$( echo ${containerName} | sed -e 's:_:-:g' )
+    local containerName="${containerAssign_containerId}-${vmNameQualifier}"
+    # local hostname=$( echo ${containerName} | sed -e 's:_:-:g' )
+    local hostname=$( echo ${containerName} | sed -e 's:_::g' )
 
     local defaultInterface=$( ip -4 route ls | grep default | grep -Po '(?<=dev )(\S+)' )
 

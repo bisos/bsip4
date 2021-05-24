@@ -762,7 +762,7 @@ _EOF_
 	    interfaceOfNet=$( vis_givenNetGetInterface 198.62.92.0 24 )
 	    if [ -z "${interfaceOfNet}" ] ; then
 		if [ ${model} == "Virt" ] ; then
-		    interfaceOfNet=eth1
+		    interfaceOfNet=eth2
 		else
 		    interfaceOfNet=TBD
 		fi

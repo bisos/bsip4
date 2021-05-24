@@ -185,6 +185,8 @@ ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i con
 $( examplesSeperatorChapter "Virt -- Site Assign SysChar And Container Realization" )
 ${G_myName} ${extraInfo} -p model=Virt -p abode=Shield -p function=Server -i containerAssignAndRepo
 ${G_myName} ${extraInfo} -p model=Virt -p abode=Shield -p function=Server -i containerAssignAndRepoAndSysCharRealize  # FULL ACTION -- PRIMARY COMMAND
+${G_myName} ${extraInfo} -p model=Virt -p abode=Internet -p function=Server -i containerAssignAndRepo
+${G_myName} ${extraInfo} -p model=Virt -p abode=Internet -p function=Server -i containerAssignAndRepoAndSysCharRealize  # FULL ACTION -- PRIMARY COMMAND
 $( examplesSeperatorChapter "SysChar Container BxoIdName -- Info" )
 ${G_myName} ${extraInfo} -i sysCharContainerBxoIdName ${containerBase}
 ${G_myName} ${extraInfo} -i sysCharContainerBxoIdName ${containersBase}/assign/Virt/Auto/Generic/deb10
