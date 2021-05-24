@@ -575,7 +575,7 @@ _EOF_
 	    applicableNetsList=("pubA" "pubB" "perimA")
 	    ;;
 	*)
-	    EH_problem "Bad Usage -- abodeInitial=${abodeInitial}"
+	    EH_problem "Bad Usage -- containerAssign_abode=${containerAssign_abode}"
     esac
 
     lpDo vis_loopback_update
