@@ -203,7 +203,7 @@ _EOF_
     EH_assert vis_bxoAcctVerify "${containerBxoId}"
 
     containerBxoIdHome=$( FN_absolutePathGet ~${containerBxoId} )
-    local ipAddr_privA=$( fileParamManage.py -v 30 -i fileParamRead  ${containerBxoIdHome}/var/sysCharDeployInfo ipAddr_privA )
+    local ipAddr_privA=$( fileParamManage.py -v 30 -i fileParamRead  ${containerBxoIdHome}/var/sysCharConveyInfo ipAddr_privA )
 
     echo ${ipAddr_privA}
 }
@@ -334,6 +334,41 @@ _EOF_
     local boxAddr="192.168.0.${boxAddrNu}"
 
     echo ${boxAddr}
+    
+    lpReturn
+}
+
+
+
+function vis_assignVirtAddr {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** 
+_EOF_
+		       }
+    EH_assert [[ $# -eq 2 ]]
+
+    local netName=$1
+    local containerNu=$2
+
+    local addrType=containers
+
+    local networksBase=$( networksBaseObtain )
+    EH_assert [ ! -z "${networksBase}" ]
+
+    local netBase=${networksBase}/${netName}/addrs/${addrType}
+    EH_assert [ -d "${netBase}" ]
+
+    local minAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} minAddr.fp )
+    local maxAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} maxAddr.fp )
+
+    local assignedBase="${netBase}/assigned"
+
+    local containerIndex=$(( ${containerNu} - 1000 ))
+    local containerAddrNu=$(( ${containerIndex} + ${minAddr} ))
+    local containerAddr="192.168.0.${containerAddrNu}"
+
+    echo ${containerAddr}
     
     lpReturn
 }

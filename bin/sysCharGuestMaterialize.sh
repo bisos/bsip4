@@ -148,6 +148,7 @@ bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VAG-deb11_  # Generic, Auto, Dhcp,  
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VSG-deb11_  # Generic, Shielded, StaticIP
+bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VSS-1009    # Specific, Shielded, StaticIP
 $( examplesSeperatorChapter "Activate Subject sysContainerBxo" )
 sysCharActivate.sh -h -v -n showRun -p bxoId="${oneBxoId}" -i activate_sysContainerBxo
 $( examplesSeperatorChapter "Specialized Actions" )
@@ -478,7 +479,13 @@ _EOF_
 		       }
     EH_assert [[ $# -eq 0 ]]
 
-    vis_assignNextAddr privA generic
+    local functionAbbrev=$( vis_containerBxoId_getFunction )
+
+    if [ "${functionAbbrev}" == "G" ] ; then
+	lpDo vis_assignNextAddr privA generic
+    else
+	echo "containerBxoId"
+    fi
 }
 
 function vis_vagStdout_netInterfaces {
@@ -507,7 +514,9 @@ _EOF_
 
     
     function privA_update {
-	EH_assert [[ $# -eq 0 ]]
+	EH_assert [[ $# -eq 1 ]]
+
+	ethCount=$1
 
 	local hostBxoId=$( withContainerIdGetBxoId ${hostContainerId} )
 	EH_assert vis_bxoAcctVerify "${hostBxoId}"
@@ -516,7 +525,7 @@ _EOF_
 	EH_assert [ ! -z "${sysChar_containerSpec_netIfs_privA}" ]
 
     	     cat   << _EOF_
-    # privA interface on hostBxoId=${hostBxoId}	     
+    # privA interface on hostBxoId=${hostBxoId}	   eth${ethCount} 
     guest.vm.network :public_network, :dev => "${sysChar_containerSpec_netIfs_privA}", :mode => 'bridge', auto_config: false
 _EOF_
     }
@@ -537,8 +546,10 @@ _EOF_
 
     lpDo withAbodeGetApplicableNetsList "${containerAssign_abode}"
 
+    local ethCount=0
     for eachNet in ${applicableNetsList[@]} ; do
-	lpDo ${eachNet}_update
+	(( ethCount++ ))
+	lpDo ${eachNet}_update ${ethCount}
     done
     
     lpReturn
@@ -841,8 +852,9 @@ _EOF_
 
     local containerBaseBox=$( vis_vagrantBaseBoxFromSysChar )
 
-    local containerName=${containerAssign_containerId}${vmNameQualifier}
-    local hostname=$( echo ${containerName} | sed -e 's:_:-:g' )
+    local containerName="${containerAssign_containerId}-${vmNameQualifier}"
+    # local hostname=$( echo ${containerName} | sed -e 's:_:-:g' )
+    local hostname=$( echo ${containerName} | sed -e 's:_::g' )
 
     local defaultInterface=$( ip -4 route ls | grep default | grep -Po '(?<=dev )(\S+)' )
 

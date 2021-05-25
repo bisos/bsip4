@@ -258,6 +258,7 @@ _EOF_
    local containersBase=$( containersBaseObtain )
    
    local containerId=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} containerId )
+   local containerNu=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} containerNu )
 
    local repoBase="${containersBase}/${containerId}"
 
@@ -306,7 +307,7 @@ _EOF_
 			   containerSteady_privA_addr=$( siteNetworks.sh -i assignBoxAddr privA $( siteBoxAssign.sh -i thisBoxFindNu ) )
 			   ;;
 		       Virt)
-			   containerSteady_privA_addr="assign" # NOTYET
+			   containerSteady_privA_addr=$( siteNetworks.sh -i assignVirtAddr privA ${containerNu} )
 			   ;;
 		       *)
 			   EH_problem "Bad Usage -- invalid model=${model}"

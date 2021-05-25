@@ -150,6 +150,8 @@ ${G_myName} ${extraInfo} -i releaseAddr privA generic 121
 $( examplesSeperatorChapter "Assign Box IP Addrs" )
 ${G_myName} ${extraInfo} -i assignBoxAddr privA ${thisBoxNu}
 ${G_myName} ${extraInfo} -i releaseBoxAddr privA ${thisBoxNu}
+${G_myName} ${extraInfo} -i assignVirtAddr privA 1009
+${G_myName} ${extraInfo} -i releaseVirtAddr privA 1009
 _EOF_
 }
 

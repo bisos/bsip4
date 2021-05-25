@@ -104,7 +104,7 @@ function vis_examples {
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Full Operations" )
-${G_myName} ${extraInfo} -i bxoSysInit    # Applies to both physical and virtual systems
+${G_myName} ${extraInfo} -i fullUpdate    # Applies to both physical and virtual systems
 ( examplesSeperatorChapter "Step By Step Preps" )
 ${G_myName} ${extraInfo} -i sysChar_binsPrep  # installs vagrant ...
 ${G_myName} ${extraInfo} -i sysChar_containerPrep  # creates vag base boxes
@@ -118,7 +118,7 @@ noArgsHook() {
 }
 
 
-function vis_setup {
+function vis_fullUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -136,29 +136,10 @@ _EOF_
 }
 
 
-function vis_developerMode {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    lpDo vis_nicheRun usgBxoSshManage-niche.sh sysSetup
-    EH_retOnFail
-
-    lpDo vis_nicheRun bisosBaseDirs-niche.sh sysSetup
-    EH_retOnFail
-
-    lpDo bisosBaseDirs.sh ${G_commandPrefs} -i bxReposAuthSet
-	
-    lpReturn
-}
-
 function vis_sysChar_binsPrep {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Install sysChar specific packages.
-*** NOTYET, cleanly determine sysChar type.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -167,9 +148,7 @@ _EOF_
 
     if [ "${virtualizationType}" == "physical" ] ; then
 	
-	lpDo lcaKvmBinsPrep.sh -v -n showRun -i fullUpdate
-
-	lpDo echo "NOTYET -- IMPORTANT"
+	lpDo lcaKvmBinsPrep.sh -v -n showRun -i fullUpdatePlus   #  not just fullUpdate
 
 	lpDo usgAcctManage.sh -h -v -n showRun -i usgAcct_supplementaryGroupsUpdate bystar
 

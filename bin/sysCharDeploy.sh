@@ -199,6 +199,7 @@ $( examplesSeperatorChapter "Specify ConveyInfo -- sysCharBasePlatform Actions" 
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p bxoId="${effectiveContainerBxoId}" -p cfpSecurityMode=bisosDev -i conveyInfoStore
 ${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -p cfpPrivA=192.168.0.121 -i conveyInfoStore # For Generic Guests
 ${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -p cfpSecurityMode=bisosDev -i conveyInfoStore
+${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i conveyInfoShow
 $( examplesSeperatorChapter "Deploy With Convey Info -- FULL SYSTEM Deployment" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p bxoId="${effectiveContainerBxoId}" -i deployWithSysCharConveyInfo # onManager
 ${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i deployWithSysCharConveyInfo # onTarget
@@ -1141,27 +1142,27 @@ _EOF_
     function onTargetRun {
 	EH_assert bxoIdPrep
 
-	local sysCharDeployInfoBase="${bxoHome}/var/sysCharDeployInfo"
+	local sysCharConveyInfoBase="${bxoHome}/var/sysCharConveyInfo"
 
-	lpDo FN_dirCreatePathIfNotThere ${sysCharDeployInfoBase}
+	lpDo FN_dirCreatePathIfNotThere ${sysCharConveyInfoBase}
 
 	if [ ! -z "${cfpVmNameQualifier}" ] ; then
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} vmNameQualifier "${cfpVmNameQualifier}"
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} vmNameQualifier "${cfpVmNameQualifier}"
 	fi
 	if [ ! -z "${cfpPrivA}" ] ; then
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} ipAddr_privA "${cfpPrivA}"
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} ipAddr_privA "${cfpPrivA}"
 	fi
 	if [ ! -z "${cfpPubA}" ] ; then
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} ipAddr_pubA "${cfpPubA}"
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} ipAddr_pubA "${cfpPubA}"
 	fi
 	# if [ ! -z "${cfpPrivGit}" ] ; then
-	#     lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} privGit "${privGit}"
+	#     lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} privGit "${privGit}"
 	# fi
 	# if [ ! -z "${cfpPubGit}" ] ; then
-	#     lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} pubGit "${pubGit}"
+	#     lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} pubGit "${pubGit}"
 	# fi
 	if [ ! -z "${cfpSecurityMode}" ] ; then
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharDeployInfoBase} devMode "${cfpSecurityMode}"
+	    lpDo sysCharConveyInfoWrite securityMode "${cfpSecurityMode}"
 	fi
     }
 
@@ -1200,9 +1201,9 @@ _EOF_
     function onTargetRun {
 	EH_assert bxoIdPrep
 
-	local sysCharDeployInfoBase="${bxoHome}/var/sysCharDeployInfo"
+	local sysCharConveyInfoBase="${bxoHome}/var/sysCharConveyInfo"
 
-	lpDo  fileParamManage.py -i fileParamDictReadDeep ${sysCharDeployInfoBase}
+	lpDo  fileParamManage.py -i fileParamDictReadDeep ${sysCharConveyInfoBase}
     }
 
     if [ "${targetName}" != "onTargetRun" ] && [ ! -z "${targetName}" ] ; then lpDo onManagerRun; fi

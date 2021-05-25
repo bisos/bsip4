@@ -49,6 +49,20 @@ _CommentBegin_
 _CommentEnd_
 
 
+function vis_disksBinsPrep {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+
+    EH_assert [[ $# -eq 0 ]]
+
+    sudo apt-get install mdadm
+
+    lpReturn
+}
+
+
 
 function vis_fstabLineGen {
     G_funcEntry

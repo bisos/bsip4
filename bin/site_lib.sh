@@ -474,6 +474,26 @@ _EOF_
     lpReturn
 }	
 
+function container_modelAbodeFunctionBase {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 0 ]]
+
+   local containersBase=$( containersAssignBaseObtain )
+   EH_assert [ ! -z "${containersBase}" ]
+   
+   EH_assert [ ! -z "${model}" ]
+   EH_assert [ ! -z "${abode}" ]
+   EH_assert [ ! -z "${function}" ]
+   
+   echo "${containersBase}/${model}/${abode}/${function}"
+}
+
+
+
+
 function vis_containersGenericsAssignList {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_

@@ -214,9 +214,10 @@ _EOF_
   
     #NETWORK
     opDoComplain vis_netL3Interface
-    opDoComplain vis_netEtcHosts
+    # opDoComplain vis_netEtcHosts  # produces vis_netEtcHosts [ErrCode]= 25, Why, NOTYET
+    lpDo vis_netEtcHosts    
 
-    lpReturn
+    lpReturn 0
 }
 
 
@@ -292,7 +293,7 @@ _EOF_
 	    ;;
     esac
 
-    lpReturn
+    lpReturn 0
 }
 
 
@@ -574,7 +575,7 @@ _EOF_
 	    applicableNetsList=("pubA" "pubB" "perimA")
 	    ;;
 	*)
-	    EH_problem "Bad Usage -- abodeInitial=${abodeInitial}"
+	    EH_problem "Bad Usage -- containerAssign_abode=${containerAssign_abode}"
     esac
 
     lpDo vis_loopback_update

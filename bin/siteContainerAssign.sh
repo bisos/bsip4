@@ -132,12 +132,18 @@ ${G_myName} ${extraInfo} -i withMachineIdFindContainerBase "$( vis_thisMachineId
 $( examplesSeperatorChapter "BoxOrMachineId To ContainerId Mapping" )
 ${G_myName} ${extraInfo} -i withBoxOrMachineIdFindContainerBase "$( vis_thisMachineId )"
 ${G_myName} ${extraInfo} -i forThisSysFindContainerBase
-$( examplesSeperatorChapter "SET -- Container Box Assignment -- Primary Commans" )
+$( examplesSeperatorChapter "SET -- Container Box Assignment -- Primary Commands" )
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerBoxAssignAndPush  # PRIMARY COMMAND
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerBoxAssign  # PRIMARY COMMAND
 ${G_myName} ${extraInfo} -i forThisSysContainerAssignBasePush
 ${G_myName} ${extraInfo} -i containersAssignBasePull
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerUpdate_atNu "${containerNu}"
+$( examplesSeperatorChapter "SET -- Container Virt Assignment -- Primary Commands" )
+${G_myName} ${extraInfo} -p model=Virt -p abode=Shield -p function=Server -i containerAssignAndPush  # PRIMARY COMMAND
+${G_myName} ${extraInfo} -p model=Virt -p abode=Shield -p function=Server -i containerAssign  # PRIMARY COMMAND
+echo ${containerBase} | bx-gitRepos -i addCommitPush all
+${G_myName} ${extraInfo} -i containersAssignBasePull
+${G_myName} ${extraInfo} -p model=Virt -p abode=Shield -p function=Server -i containerUpdate_atNu "${containerNu}"
 $( examplesSeperatorChapter "GET -- Container Nu" )
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerNuGetNext
 $( examplesSeperatorChapter "Assigned Containers Report" )
@@ -536,23 +542,6 @@ _EOF_
 }
 
 
-function container_modelAbodeFunctionBase {
-   G_funcEntry
-   function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-		      }
-   EH_assert [[ $# -eq 0 ]]
-
-   local containersBase=$( containersAssignBaseObtain )
-   EH_assert [ ! -z "${containersBase}" ]
-   
-   EH_assert [ ! -z "${model}" ]
-   EH_assert [ ! -z "${abode}" ]
-   EH_assert [ ! -z "${function}" ]
-   
-   echo "${containersBase}/${model}/${abode}/${function}"
-}
-
 function vis_containerBoxAssignAndPush {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -603,6 +592,43 @@ _EOF_
 
    lpDo eval echo ${containersAssignBase} \| bx-gitRepos -i gitRemPull
 }
+
+
+function vis_containerAssign {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+For the subject physical sys (thisBoxNu) identified by system-uuid, assign a container.
+Return on stdout, a containerId  such as HSS-1001.
+- Determine box or machine
+- When there are no exisiting entities matching system-uuid, assign a box (thisBoxAdd)
+- If an assigned container exists which coresponds to thisBox, then use that
+- If one does not exist, assign one (with vis_containerNuGetNext)
+- Then after vis_containerUpdate_atNu, return containerId
+_EOF_
+		      }
+   EH_assert [[ $# -lt 2 ]]
+
+   EH_assert [ ! -z "${model}" ]   
+   EH_assert [ ! -z "${abode}" ]
+   EH_assert [ ! -z "${function}" ]
+
+   if [ $# -eq 1 ] ; then
+       lpDo vis_containerAssignGeneric "$1"
+       lpReturn
+   fi
+	  
+   case "${model}" in
+       Host|host|HOST|Pure|pure|PURE)
+	   lpDo vis_containerBoxAssignNumbered	   
+	   ;;
+       Virt|virt|VIRT)
+	   lpDo vis_containerVirtAssignNumbered	   	   
+	   ;;
+       *)
+	   EH_problem "Bad Usage -- model=${model}"
+   esac
+}	
+
 
 
 function vis_containerBoxAssign {
@@ -705,6 +731,49 @@ _EOF_
    local containerBase=$( vis_assignedContainerBase "${containerNu}" )
 
    lpDo  fileParamManage.py -i fileParamRead  ${containerBase} containerId
+
+   lpReturn
+}	
+
+
+
+function vis_containerVirtAssignNumbered {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+NOTYET, duplicate below
+For the subject physical sys (thisBoxNu) identified by system-uuid, assign a container.
+Return on stdout, a containerId  such as HSS-1001.
+- Determine box or machine
+- When there are no exisiting entities matching system-uuid, assign a box (thisBoxAdd)
+- If an assigned container exists which coresponds to thisBox, then use that
+- If one does not exist, assign one (with vis_containerNuGetNext)
+- Then after vis_containerUpdate_atNu, return containerId
+_EOF_
+		      }
+   EH_assert [[ $# -eq 0 ]]
+
+   EH_assert [ ! -z "${model}" ]   
+   EH_assert [ ! -z "${abode}" ]
+   EH_assert [ ! -z "${function}" ]
+
+   EH_assert [ "${model}" == "Virt" ] 
+   
+   local containerNu=""
+
+   local containersBase=$( containersAssignBaseObtain )
+   EH_assert [ ! -z "${containersBase}" ]
+
+   # containersBase is something like /bxo/r3/iso/pmc_clusterNeda-containers/assign
+
+   containerNu=$( vis_containerNuGetNext )
+   
+   lpDo vis_containerUpdate_atNu "${containerNu}"
+
+   local containerBase=$( vis_assignedContainerBase "${containerNu}" )
+
+   #lpDo  fileParamManage.py -i fileParamRead  ${containerBase} containerId
+
+   echo "${containerNu}"
 
    lpReturn
 }	
@@ -850,9 +919,24 @@ _EOF_
        if [ "${containerId}" != "${stored_containerId}" ] ; then
 	   EH_problem "Expected ${containerId} -- got ${stored_containerId} -- Updating it."
 	   lpDo fileParamManage.py -i fileParamWrite ${containerBase} containerId "${containerId}"
+       else
+	   ANT_cooked "containerId=${containerId} -- No action taken"
        fi
    fi
 
+   local stored_containerNu=$( fileParamManage.py -i fileParamRead  ${containerBase} containerNu )
+
+   if [ -z "${stored_containerNu}" ] ; then
+       lpDo fileParamManage.py -i fileParamWrite ${containerBase} containerNu "${containerNu}"
+   else
+       if [ "${containerNu}" != "${stored_containerNu}" ] ; then
+	   EH_problem "Expected ${containerNu} -- got ${stored_containerNu} -- Updating it."
+	   lpDo fileParamManage.py -i fileParamWrite ${containerBase} containerNu "${containerNu}"
+       else
+	   ANT_cooked "containerNu=${containerNu} -- No action taken"
+       fi
+   fi
+   
    lpDo fileParamManage.py -i fileParamWrite ${containerBase} model "${model}"
    lpDo fileParamManage.py -i fileParamWrite ${containerBase} abode "${abode}"
    lpDo fileParamManage.py -i fileParamWrite ${containerBase} function "${function}"         

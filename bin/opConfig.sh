@@ -137,6 +137,9 @@ vis_opRunDistFamilySet () {
 	      elif grep "bullseye" /etc/issue ; then
 		opRunDistGeneration="11"
 		opRunDistGenNu="11"
+	      elif grep "11" /etc/issue ; then
+		opRunDistGeneration="11"
+		opRunDistGenNu="11"
 	      else
 		opRunDistGeneration="UNSUPPORTED"
 		opRunDistGenNu="UNSUPORTED"

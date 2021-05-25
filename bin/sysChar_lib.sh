@@ -53,6 +53,19 @@ function sansTargetName {
     echo $1 | sed -e 's/-p targetName=.* //' -e 's/-p targetName=.*$//'
 }
 
+function vis_containerBxoId_getFunction {
+     G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** For example, from  pmp_VSG-deb11_, get "G" for generic
+_EOF_
+		       }
+    EH_assert [[ $# -eq 1 ]]    
+    local containerBxoId=$1
+    echo ${containerBxoId} | sed -e 's:pmp_..\(.\).*:\1:'
+}
+
+
+
 function fromGenericContainerIdGetDistro {
      G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -512,6 +525,45 @@ _EOF_
 }
 
 
+function vis_sysCharConveyInfoWrite {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+bxoId is the sysChar.
+sysInfo.fps of sysChar overwrites sysInfo.fps of siteContainersRepo.
+_EOF_
+		       }
+
+    EH_assert [[ $# -eq 2 ]]
+
+    local paramName=$1
+    local paramValue=$2
+
+    EH_assert bxoIdPrep
+    
+    # local thisBxoId="${bxoId}"
+
+    # EH_assert [ ! -z "${thisBxoId}" ]
+
+    # EH_assert vis_bxoAcctVerify "${thisBxoId}"
+    # bxoHome=$( FN_absolutePathGet ~${thisBxoId} )
+
+    local sysCharConveyInfoBase="${bxoHome}/var/sysCharConveyInfo"
+    
+    if [ ! -d "${sysCharConveyInfoBase}" ] ; then
+	lpDo mkdir "${sysCharConveyInfoBase}"
+    fi
+
+    case ${paramName} in
+	securityMode|vmNameQualifier)
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} "${paramName}" "${paramValue}"
+	    ;;
+	*)
+	    EH_problem "Bad Usage -- ${paramName}"
+	    ;;
+    esac
+}
+
+
 function vis_sysCharConveyInfoRead {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -533,22 +585,22 @@ _EOF_
     EH_assert vis_bxoAcctVerify "${thisBxoId}"
     bxoHome=$( FN_absolutePathGet ~${thisBxoId} )
 
-    local sysCharDeployInfoBase="${bxoHome}/var/sysCharDeployInfo"
+    local sysCharConveyInfoBase="${bxoHome}/var/sysCharConveyInfo"
     
-    if [ -d "${sysCharDeployInfoBase}" ] ; then
-	sysChar_conveyInfo_vmNameQualifier=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} vmNameQualifier )
-	sysChar_conveyInfo_ipAddr_privA=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} ipAddr_privA )
-	sysChar_conveyInfo_ipAddr_pubA=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} ipAddr_pubA )
-	sysChar_conveyInfo_privGitMode=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} privGit )
-	sysChar_conveyInfo_pubGitMode=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} pubGitMode )
-	sysChar_conveyInfo_devMode=$( fileParamManage.py -i fileParamRead  ${sysCharDeployInfoBase} devMode )
+    if [ -d "${sysCharConveyInfoBase}" ] ; then
+	sysChar_conveyInfo_vmNameQualifier=$( fileParamManage.py -i fileParamRead  ${sysCharConveyInfoBase} vmNameQualifier )
+	sysChar_conveyInfo_ipAddr_privA=$( fileParamManage.py -i fileParamRead  ${sysCharConveyInfoBase} ipAddr_privA )
+	sysChar_conveyInfo_ipAddr_pubA=$( fileParamManage.py -i fileParamRead  ${sysCharConveyInfoBase} ipAddr_pubA )
+	sysChar_conveyInfo_privGitMode=$( fileParamManage.py -i fileParamRead  ${sysCharConveyInfoBase} privGit )
+	sysChar_conveyInfo_pubGitMode=$( fileParamManage.py -i fileParamRead  ${sysCharConveyInfoBase} pubGitMode )
+	sysChar_conveyInfo_securityMode=$( fileParamManage.py -i fileParamRead  ${sysCharConveyInfoBase} securityMode )
     else
 	sysChar_conveyInfo_vmNameQualifier=""
 	sysChar_conveyInfo_ipAddr_privA=""
 	sysChar_conveyInfo_ipAddr_pubA=""
 	sysChar_conveyInfo_privGitMode=""
 	sysChar_conveyInfo_pubGitMode=""
-	sysChar_conveyInfo_devMode=""
+	sysChar_conveyInfo_securityMode=""
     fi
 }
 
@@ -710,7 +762,7 @@ _EOF_
 	    interfaceOfNet=$( vis_givenNetGetInterface 198.62.92.0 24 )
 	    if [ -z "${interfaceOfNet}" ] ; then
 		if [ ${model} == "Virt" ] ; then
-		    interfaceOfNet=eth1
+		    interfaceOfNet=eth2
 		else
 		    interfaceOfNet=TBD
 		fi
