@@ -132,11 +132,12 @@ $( examplesSeperatorChapter "Currents And BxO Management Information" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId XXoneBxoId
 $( examplesSeperatorChapter "Preps" )
+${G_myName} ${extraInfo} -i usgBposInit # Should be invoked after bisosDevBxoId Has Been Conveyed
 ${G_myName} ${extraInfo} -i usgBposFpsPrep
 $( examplesSeperatorChapter "UsageEnvs" )
 ${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDevBxoId_write piu_XXBisosDev
 ${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDevBxoId_read
-${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDev_update ${thisBisosDevBxoId}
+${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDev_update ${thisBisosDevBxoId} # Sets up 
 ${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDev_bxoPath
 ${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDev_bxoId
 _EOF_

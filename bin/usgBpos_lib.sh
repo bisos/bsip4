@@ -58,6 +58,25 @@ function vis_curUsgBposBase {
    echo ${curUsgAcctHome}/bpos
 }
 
+function vis_usgBposInit {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 0 ]]
+
+   lpDo vis_usgBposFpsPrep
+   
+   local thisBisosDevBxoId=$( vis_usgBposUsageEnvs_bisosDevBxoId_read )
+   if [ -z "${thisBisosDevBxoId}" ] ; then
+       ANT_raw "bisosDevBxoId Has Not Been Conveyed -- Skipping full initialization"
+       lpReturn
+   fi
+
+   lpDo vis_usgBposUsageEnvs_bisosDev_update ${thisBisosDevBxoId}
+}
+
+
 function vis_usgBposFpsPrep {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -122,6 +141,8 @@ _EOF_
    local bisosDevBpoPath="$1"
 
    local curUsgBposBase=$( vis_curUsgBposBase )
+
+   lpDo vis_usgBposFpsPrep   
 
    lpDo mkdir -p ${curUsgBposBase}/usageEnvs
 

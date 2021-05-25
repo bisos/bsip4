@@ -147,6 +147,7 @@ bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VAG-deb11_
 $( examplesSeperatorChapter "Identify or Locate bisosDevBxo" )
 usgBpos.sh
+usgBpos.sh -i usgBposUsageEnvs_bisosDevBxoId_read
 $( examplesSeperatorChapter "Specialized Actions" )
 ${G_myName} ${extraInfo} -i fullUpdate
 ${G_myName} ${extraInfo} -i vagrantBaseBoxesBuild
@@ -158,7 +159,7 @@ ${G_myName} ${extraInfo} -i bisosDevBxo_actuate
 $( examplesSeperatorChapter "Developer Git Credentials Deactivate" )
 ${G_myName} ${extraInfo} -i bisosDevBxo_delete
 $( examplesSeperatorChapter "Mode Selection" )
-sysCharDeploy.sh ${extraInfo} -p bxoId="sysChar" -i conveyInfoShow
+sysCharDeploy.sh -p bxoId="sysChar" -i conveyInfoShow
 ${G_myName} ${extraInfo} -p bxoId="sysChar" -i sysCharConveyInfoWrite securityMode developer
 ${G_myName} ${extraInfo} -p bxoId="sysChar" -i sysCharConveyInfoWrite securityMode stable
 ${G_myName} ${extraInfo} -i securityMode developer
