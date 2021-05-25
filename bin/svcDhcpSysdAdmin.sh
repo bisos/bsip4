@@ -107,13 +107,17 @@ $( examplesSeperatorChapter "Full Operations" )
 ${G_myName} ${extraInfo} -i fullUpdate    # Applies to both physical and virtual systems
 ( examplesSeperatorChapter "Step By Step Preps" )
 --- Server Enable/Disable ---
-${G_myName} -e "STOP" -i runFunc /etc/init.d/dhcp3-server stop
-${G_myName} -e "START" -i runFunc /etc/init.d/dhcp3-server start
+${G_myName} -e "STOP" -i runFunc /etc/init.d/dhcp-server stop
+${G_myName} -e "START" -i runFunc /etc/init.d/dhcp-server start
 --- Server Config File ---
-${G_myName} -n showRun -e "Config File Gen" -i dhcp3ServerConfigOutput
-${G_myName} -n showRun -e "Config File Install" -i dhcp3ServerConfigUpdate
-${G_myName} -n showRun -e "Config File Show Current" -i dhcp3ServerConfigShow
-${G_myName} -n showRun -e "Defaults File Show Current" -i dhcp3ServerDefaultsShow
+${G_myName} -n showRun -e "Config File Gen" -i dhcpServerConfigOutput
+${G_myName} -n showRun -e "Config File Install" -i dhcpServerConfigUpdate
+( examplesSeperatorChapter "Name Or Visit Service Files" )
+cat ${dhcpV4ServerConfigFile}  # dhcpV4ServerConfigFile
+cat ${dhcpV4ServerDefaultFile} # dhcpV4ServerDefaultFile
+cat ${dhcpV4PidFile} # dhcpV4PidFile
+${G_myName} -n showRun -e "Config File Show Current" -i dhcpServerConfigShow
+${G_myName} -n showRun -e "Defaults File Show Current" -i dhcpServerDefaultsShow
 --- Client Examples ---
 ${G_myName} -e "WARNING: may CHANGE IP Addr" -i runFunc dhclient3 -d -w -n eth0
 --- Log Files ---
@@ -140,39 +144,40 @@ _EOF_
 }
 
 
-dhcp3ServerConfigFile="/etc/dhcp3/dhcpd.conf"
-dhcp3ServerDefaultsFile="/etc/default/dhcp3-server"
+dhcpV4ServerConfigFile="/etc/dhcp/dhcpd.conf"
+dhcpV4ServerDefaultFile="/etc/default/isc-dhcp-server"
+dhcpV4PidFile="/var/run/dhcpd.pid"
 
 DEVICE=eth0
 
-function vis_dhcp3ServerConfigShow {
- opDoComplain cat  ${dhcp3ServerConfigFile}
+function vis_dhcpServerConfigShow {
+ opDoComplain cat  ${dhcpServerConfigFile}
 }
 
-function vis_dhcp3ServerDefaultsShow {
- opDoComplain cat  ${dhcp3ServerDefaultsFile}
+function vis_dhcpServerDefaultsShow {
+ opDoComplain cat  ${dhcpServerDefaultsFile}
 }
 
 
-function vis_dhcp3ServerConfigUpdate {
+function vis_dhcpServerConfigUpdate {
 
   if [ "${opRunHostName}_" == "_zanjan" ] ; then
       EH_problem "$0 not supported on ${opRunHostName}"
       exit 1
   fi
 
-  opDoComplain FN_fileDefunctMake ${dhcp3ServerConfigFile} ${dhcp3ServerConfigFile}.notUsed.${dateTag}
+  opDoComplain FN_fileDefunctMake ${dhcpServerConfigFile} ${dhcpServerConfigFile}.notUsed.${dateTag}
 
-  opDoComplain vis_dhcp3ServerConfigOutput > ${dhcp3ServerConfigFile}
-  opDoComplain chown root:root ${dhcp3ServerConfigFile}
-  opDoComplain chmod 644  ${dhcp3ServerConfigFile}
+  opDoComplain vis_dhcpServerConfigOutput > ${dhcpServerConfigFile}
+  opDoComplain chown root:root ${dhcpServerConfigFile}
+  opDoComplain chmod 644  ${dhcpServerConfigFile}
 
 
-  opDoComplain FN_fileDefunctMake ${dhcp3ServerDefaultsFile} ${dhcp3ServerDefaultsFile}.notUsed.${dateTag}
+  opDoComplain FN_fileDefunctMake ${dhcpServerDefaultsFile} ${dhcpServerDefaultsFile}.notUsed.${dateTag}
 
-  echo "INTERFACES=\"$DEVICE\"" > ${dhcp3ServerDefaultsFile}
-  opDoComplain chown root:root ${dhcp3ServerDefaultsFile}
-  opDoComplain chmod 644  ${dhcp3ServerDefaultsFile}
+  echo "INTERFACES=\"$DEVICE\"" > ${dhcpServerDefaultsFile}
+  opDoComplain chown root:root ${dhcpServerDefaultsFile}
+  opDoComplain chmod 644  ${dhcpServerDefaultsFile}
 
 }
 
@@ -181,7 +186,7 @@ echo "$1" | egrep -q -e '[0-9]+\.[0-9]+\.[0-9]+.[0-9]+'
 return $?
 }
 
-vis_dhcp3ServerConfigOutput(){
+vis_dhcpServerConfigOutput(){
 
 # Taken liberally from knoppix-terminalserver 
 
