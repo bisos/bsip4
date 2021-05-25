@@ -81,8 +81,9 @@ _EOF_
 	"build_essential"
 	"dkms"
 	"linux_headers_generic"
- 	"net_tools"
 	"sshpass"
+	# Network Client Tools
+	"net_tools"
     )
 
     itemOptionalOrderedList=()
