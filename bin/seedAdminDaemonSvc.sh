@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IimBriefDescription="NOTYET: Short Description Of The Module"
+IimBriefDescription="svcXxSysdAdmin.sh SysD (systemd) Daemon Admin -- nichable"
 
 ORIGIN="
 * Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee

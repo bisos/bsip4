@@ -103,6 +103,8 @@ _CommentEnd_
 
 . ${opBinBase}/sysDiskDrives_lib.sh
 
+. ${opBinBase}/niche_lib.sh
+
 # PRE parameters
 
 typeset -t bxoId=""

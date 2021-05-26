@@ -83,6 +83,13 @@ _EOF_
 }
 
 
+function vis_examplesNicheRun {
+    cat  << _EOF_
+$( examplesSeperatorChapter "Niche Examples" )
+$( sysCharDeploy.sh -i selectedContainerBxoPath )/sys/bin/${G_myName%%.sh}-niche.sh 
+_EOF_
+}
+
 
 
 _CommentBegin_

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IimBriefDescription="lcaXxSysdAdmin.sh SysD (systemd) Daemon Admin"
+IimBriefDescription="svcXxSysdAdmin.sh SysD (systemd) Daemon Admin -- nichable"
 
 ORIGIN="
 * Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee
@@ -66,6 +66,21 @@ _CommentBegin_
 _CommentEnd_
 
 
+dhcpV4ServerConfigFile="/etc/dhcp/dhcpd.conf"
+dhcpV4ServerDefaultFile="/etc/default/isc-dhcp-server"
+dhcpV4PidFile="/var/run/dhcpd.pid"
+
+DEVICE=eth0
+
+validip(){
+echo "$1" | egrep -q -e '[0-9]+\.[0-9]+\.[0-9]+.[0-9]+'
+return $?
+}
+
+
+# IP=`mmaLayer3Admin.sh -i runFunc givenInterfaceGetIPAddr eth0`
+
+
 daemonName="dhcp"
 daemonsServiceName=(
     "isc-dhcp-server"
@@ -77,7 +92,7 @@ serviceDefaultFile="/etc/default/isc-dhcp-server"
 
 # /etc/dhcp/
 daemonConfigDir="/etc/dhcp"
-daemonConfigFile="${daemonConfigDir}/$dhcpd.conf"
+daemonConfigFile="${daemonConfigDir}/dhcpd.conf"
 
 # /var/log
 daemonLogDir="/var/log"
@@ -92,8 +107,10 @@ _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  Examples      :: Customized Examples [[elisp:(org-cycle)][| ]]
 _CommentEnd_
 
+function vis_examples_general {
+    EH_assert [[ $# -eq 1 ]]
 
-function vis_examples {
+    local context="$1"
   typeset extraInfo="-h -v -n showRun"
   #typeset extraInfo=""
 
@@ -115,6 +132,8 @@ _EOF_
   vis_examplesServerConfig
 
   vis_examplesLogInfo
+
+  vis_examplesNicheRun
 
  cat  << _EOF_
 $( examplesSeperatorChapter "Misc -- Validation and Testing" )
@@ -147,7 +166,7 @@ _EOF_
 }
 
 noArgsHook() {
-  vis_examples
+  vis_examples_general "general"
 }
 
 
@@ -197,115 +216,8 @@ _CommentEnd_
 
 
 function do_setConfigFile {
-
-  echo  "About to configure Samba configuration"
-  continueAfterThis
-
-  subjectValidatePrepare
-
-  typeset configTemplate="/usr/share/samba/smb.conf"
-  typeset sambaConfigFile="/etc/samba/smb.conf"
-
-  EH_assert [[ -e ${configTemplate} ]]
-
-  FN_fileSafeKeep ${sambaConfigFile}
-
-  opDo cp ${configTemplate} ${sambaConfigFile}
-
-  opDo FN_textReplace "workgroup = DEBIAN_FANS$" "workgroup =  ${iv_sambaHost_workgroup}" ${sambaConfigFile}
-
-  opDo FN_textReplace "^;   security = user$" "security = ${iv_sambaHost_security}" ${sambaConfigFile}
-
-  if [[ "${iv_sambaHost_shareDirsRef[@]}_" != "_" ]] ; then
-    typeset oneRef
-    for oneRef in ${iv_sambaHost_shareDirsRef[@]}; do
-      ${oneRef} >> ${sambaConfigFile}
-    done
-  fi
+    doNothing
 }
-
-_CommentBegin_
-*  [[elisp:(org-cycle)][| ]]  Repos Prep    :: Create/Update Repositories and SymLinks [[elisp:(org-cycle)][| ]]
-_CommentEnd_
-
-function vis_reposPrep {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-/dd/this/a/6/samba/anon
-/dd/this/a/6/samba/auth
-/samba/anon
-/samba/auth
-_EOF_
-    }
-    EH_assert [[ $# -eq 1 ]]
-
-    typeset sambaBaseRepo=$1
-
-    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;    
-
-    opDo FN_dirCreatePathIfNotThere ${sambaBaseRepo}/samba
-    opDo FN_dirCreatePathIfNotThere ${sambaBaseRepo}/samba/anon
-    opDo chmod 777 ${sambaBaseRepo}/samba/anon
-    opDo FN_dirCreatePathIfNotThere ${sambaBaseRepo}/samba/auth
-    opDo chmod 777 ${sambaBaseRepo}/samba/auth
-
-    opDo FN_dirCreatePathIfNotThere /samba
-
-    opDo FN_fileSymlinkUpdate ${sambaBaseRepo}/samba/anon /samba/anon
-    opDo FN_fileSymlinkUpdate ${sambaBaseRepo}/samba/auth /samba/auth    
-    
-    lpReturn
-}
-
-
-
-_CommentBegin_
-*  [[elisp:(org-cycle)][| ]]  verifys       :: Basic Verfications and Tests --  vis_visitUrl [[elisp:(org-cycle)][| ]]
-_CommentEnd_
-
-function vis_visitUrl {
-    lpReturn
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    typeset thisUrl="http://localhost/git-daemon"
-
-    #opDo bx-browse-url.sh -i openUrlNewTab ${thisUrl}
- 
-    echo ${thisUrl}
-
-    lpReturn
-}
-
-
-function vis_fullUpdate {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    lpReturn
-}
-
-
-dhcpV4ServerConfigFile="/etc/dhcp/dhcpd.conf"
-dhcpV4ServerDefaultFile="/etc/default/isc-dhcp-server"
-dhcpV4PidFile="/var/run/dhcpd.pid"
-
-DEVICE=eth0
-
-function vis_dhcpServerConfigShow {
- opDoComplain cat  ${dhcpServerConfigFile}
-}
-
-function vis_dhcpServerDefaultsShow {
- opDoComplain cat  ${dhcpServerDefaultsFile}
-}
-
 
 function vis_dhcpServerConfigUpdate {
 
@@ -329,11 +241,6 @@ function vis_dhcpServerConfigUpdate {
 
 }
 
-validip(){
-echo "$1" | egrep -q -e '[0-9]+\.[0-9]+\.[0-9]+.[0-9]+'
-return $?
-}
-
 vis_dhcpServerConfigOutput(){
 
 # Taken liberally from knoppix-terminalserver 
@@ -353,8 +260,6 @@ ALLNAMESERVERS="66.93.87.2, 192.168.0.126"
 
 ALLGATEWAYS="192.168.0.220"
 #ALLGATEWAYS="192.168.0.22"
-
-IP=`mmaLayer3Admin.sh -i runFunc givenInterfaceGetIPAddr eth0`
 
 # Generate dhcpd.conf from template
 # Borrowed  lots of code from knoppix
