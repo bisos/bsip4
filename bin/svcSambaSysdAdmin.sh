@@ -19,15 +19,15 @@ __author__="
 "
 
 
-####+BEGIN: bx:dblock:lsip:bash:seed-spec :types "seedAdminDaemonSysD.sh"
+####+BEGIN: bx:bsip:bash:seed-spec :types "seedAdminDaemonSysD.sh"
 SEED="
-*  /[dblock]/ /Seed/ :: [[file:/opt/public/osmt/bin/seedAdminDaemonSysD.sh]] | 
+*  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedAdminDaemonSysD.sh]] | 
 "
 FILE="
-*  /This File/ :: /opt/public/osmt/bin/lcaSambaSysdAdmin.sh 
+*  /This File/ :: /bisos/bsip/bin/svcSambaSysdAdmin.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
-    /opt/public/osmt/bin/seedAdminDaemonSysD.sh -l $0 "$@" 
+    /bisos/core/bsip/bin/seedAdminDaemonSysD.sh -l $0 "$@" 
     exit $?
 fi
 ####+END:

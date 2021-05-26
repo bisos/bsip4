@@ -112,10 +112,24 @@ ${G_myName} ${extraInfo} -i serverConfigStdout
 _EOF_
 }
 
+function vis_examplesSystemDaemonsStatus {
+ cat  << _EOF_
+--- All Daemons Status (And Greps) ---
+systemctl --type=service --all                        # All sysD services
+systemctl --type=service --all | grep "${daemonName}" # All Relevant sysD services
+systemctl list-unit-files                             # All Svc Names
+systemctl list-unit-files | grep "${daemonName}"      # All Relevant Svc Names
+sudo service --status-all                             # Checks on each and reports +/-
+sudo ufw status                                       #  [UFW Firewall]
+netstat -ltup | grep "${daemonName}"                  # What port daemon is listening on
+ss -ltup | grep "${daemonName}"                       # What port daemon is listening on
+_EOF_
+}
 
 function vis_examplesDaemonControl {
  cat  << _EOF_
 --- /etc/init.d/Daemon Control/Status ---
+${G_myName} -i examplesSystemDaemonsStatus  # List All and/or relevant systemd svcs
 ${G_myName} ${extraInfo} -i daemonDisable
 ${G_myName} ${extraInfo} -i daemonEnable
 ${G_myName} ${extraInfo} -i daemonEnabledStatus
@@ -155,49 +169,26 @@ function vis_daemonDisable {
 
     EH_assert daemonPrep
 
-  if grep -q 'ENABLED=yes' ${serviceDefaultFile} ; then
-      grep -v 'ENABLED=yes' ${serviceDefaultFile} > ${serviceDefaultFile}.new
-      echo 'ENABLED=no' >> ${serviceDefaultFile}.new
-      opDo mv ${serviceDefaultFile}.new ${serviceDefaultFile}
-  else
-      ANT_raw "No Action (yes)-- Daemon was not enabled"
-  fi
-  opDo  grep 'ENABLED=no' ${serviceDefaultFile}
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
 
-  if grep -q 'ENABLED=1' ${serviceDefaultFile} ; then
-      grep -v 'ENABLED=1' ${serviceDefaultFile} > ${serviceDefaultFile}.new
-      echo 'ENABLED=0' >> ${serviceDefaultFile}.new
-      opDo mv ${serviceDefaultFile}.new ${serviceDefaultFile}
-  else
-      ANT_raw "No Action (1) -- Daemon was not enabled"
-  fi
-  opDo  grep 'ENABLED=0' ${serviceDefaultFile}
-
+    local thisSvc=""
+    
+    for thisSvc in ${daemonsServiceName[@]} ; do
+	lpDo systemctl --no-pager disable ${thisSvc}
+    done
 }
 
 function vis_daemonEnable {
 
     EH_assert daemonPrep
 
-  if grep -q 'ENABLED=no' ${serviceDefaultFile} ; then
-      grep -v 'ENABLED=no' ${serviceDefaultFile} > ${serviceDefaultFile}.new
-      echo 'ENABLED=yes' >> ${serviceDefaultFile}.new
-      opDo mv ${serviceDefaultFile}.new ${serviceDefaultFile}
-  else
-      ANT_raw "No Action (no)-- Daemon was already enabled"
-  fi
-  opDo  grep 'ENABLED=yes' ${serviceDefaultFile}
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
 
-  if grep -q 'ENABLED=0' ${serviceDefaultFile} ; then
-      grep -v 'ENABLED=0' ${serviceDefaultFile} > ${serviceDefaultFile}.new
-      echo 'ENABLED=1' >> ${serviceDefaultFile}.new
-      opDo mv ${serviceDefaultFile}.new ${serviceDefaultFile}
-  else
-      ANT_raw "No Action (0) -- Daemon was already enabled"
-  fi
-  opDo  grep 'ENABLED=1' ${serviceDefaultFile}
-
-
+    local thisSvc=""
+    
+    for thisSvc in ${daemonsServiceName[@]} ; do
+	lpDo systemctl --no-pager enable ${thisSvc}
+    done
 }
 
 function vis_daemonEnabledStatus {
@@ -278,7 +269,11 @@ _EOF_
 
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
 
-    opDoComplain ${daemonControlScript} start
+    local thisSvc=""
+    
+    for thisSvc in ${daemonsServiceName[@]} ; do
+	lpDo systemctl --no-pager start ${thisSvc}
+    done
 
     lpReturn
 }
@@ -294,7 +289,11 @@ _EOF_
 
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
 
-    opDoComplain ${daemonControlScript} stop
+    local thisSvc=""
+    
+    for thisSvc in ${daemonsServiceName[@]} ; do
+	lpDo systemctl --no-pager stop ${thisSvc}
+    done
 
     lpReturn
 }
@@ -310,7 +309,11 @@ _EOF_
 
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
 
-    opDoComplain ${daemonControlScript} restart
+    local thisSvc=""
+    
+    for thisSvc in ${daemonsServiceName[@]} ; do
+	lpDo systemctl --no-pager restart ${thisSvc}
+    done
 
     lpReturn
 }
@@ -325,7 +328,12 @@ vis_daemonStatus () {
     EH_assert daemonPrep
 
     #opDoComplain ${daemonControlScript} status
-    opDo systemctl --no-pager status ${daemonName}
+
+    local thisSvc=""
+    
+    for thisSvc in ${daemonsServiceName[@]} ; do
+	lpDo systemctl --no-pager status ${thisSvc}
+    done
 }
 
 
@@ -391,15 +399,17 @@ daemonLogFile="${daemonLogFile}"
 daemonLogErrFile="${daemonLogErrFile}"
 _EOF_
 
-  if [ "${daemonLogDir}_" != "_" ] ; then 
-      opDo ls -l ${daemonLogDir} 
+  if [ ! -z "${daemonLogDir}" ] ; then
+      if [ "${daemonLogDir}" != "/var/log" ] ; then
+	  opDo ls -l ${daemonLogDir}
+      fi
   fi
 
-  if [ "${daemonLogFile}_" != "_" ] ; then 
+  if [ ! -z "${daemonLogFile}" ] ; then 
       opDo ls -l ${daemonLogFile} 
   fi
 
-  if [ "${daemonLogErrFile}_" != "_" ] ; then 
+  if [ ! -z "${daemonLogErrFile}" ] ; then 
       opDo ls -l ${daemonLogErrFile} 
   fi
 }
@@ -407,7 +417,7 @@ _EOF_
 function vis_logTail {
   EH_assert daemonPrep
 
-  if [ "${daemonLogFile}_" != "_" ] ; then 
+  if [ ! -z "${daemonLogFile}" ] ; then 
       opDo tail -50 ${daemonLogFile} 
   fi
 }
