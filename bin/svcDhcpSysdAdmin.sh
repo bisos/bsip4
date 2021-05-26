@@ -19,15 +19,15 @@ __author__="
 "
 
 
-####+BEGIN: bx:bsip:bash:seed-spec :types "seedActions.bash"
+####+BEGIN: bx:bsip:bash:seed-spec :types "seedAdminDaemonSysD.sh"
 SEED="
-*  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
+*  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedAdminDaemonSysD.sh]] | 
 "
 FILE="
-*  /This File/ :: /bxo/iso/piu_mbFullUsage/sys/bin/bxoSetup.sh 
+*  /This File/ :: /bisos/bsip/bin/svcDhcpSysdAdmin.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
-    /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
+    /bisos/core/bsip/bin/seedAdminDaemonSysD.sh -l $0 "$@" 
     exit $?
 fi
 ####+END:
