@@ -48,11 +48,15 @@ _CommentBegin_
 _CommentEnd_
 
 function G_myNicheNameGet {
-    echo ${G_myName%%.sh}-niche.sh
+    # if it already has a -niche we take it out
+    local myName=$( echo ${G_myName} | sed -e 's/-niche//' )
+    echo ${myName%%.sh}-niche.sh
 }
 
 function G_myUnNicheNameGet {
-    echo ${G_myName%%-niche.sh}.sh
+    local myName=$( echo ${G_myName} | sed -e 's/-niche//' )
+    echo ${myName}
+    # echo ${G_myName%%-niche.sh}.sh
 }
 
 G_myUnNicheName=$( G_myUnNicheNameGet )

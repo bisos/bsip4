@@ -93,9 +93,29 @@ _CommentBegin_
 _CommentEnd_
 
 
+function vis_examplesDefaultConfig {
+ cat  << _EOF_
+$( examplesSeperatorSection "DEFAULT CONFIG FILES" )
+${G_myName} ${extraInfo} -i defaultConfigUpdate         # SafeKeep configFile and replace with ConfigStdout
+${G_myName} ${extraInfo} -i defaultConfigVerify         # diff configFile vs ConfigStdout
+${G_myName} ${extraInfo} -i defaultConfigShow           # ls -l configFile
+${G_myName} ${extraInfo} -i defaultConfigStdout         # Likely provided in -niche.sh
+_EOF_
+}
+
+function vis_examplesServerConfig {
+ cat  << _EOF_
+$( examplesSeperatorSection "SERVER CONFIG FILES" )
+${G_myName} ${extraInfo} -i serverConfigUpdate         # SafeKeep configFile and replace with ConfigStdout
+${G_myName} ${extraInfo} -i serverConfigVerify         # diff configFile vs ConfigStdout
+${G_myName} ${extraInfo} -i serverConfigShow           # ls -l configFile
+${G_myName} ${extraInfo} -i serverConfigStdout         # Likely provided in -niche.sh	
+_EOF_
+}
+
 function vis_examplesFullService {
  cat  << _EOF_
---- SERVER FULL ACTION  ---
+$( examplesSeperatorSection "SERVER FULL ACTIONS" )
 ${G_myName} ${extraInfo} -i fullInfo
 ${G_myName} ${extraInfo} -i fullVerify
 ${G_myName} ${extraInfo} -i fullUpdate                 # serverConfigUpdate + daemonRestart
@@ -103,19 +123,9 @@ ${G_myName} ${extraInfo} -i fullDelete
 _EOF_
 }
 
-function vis_examplesServerConfig {
- cat  << _EOF_
---- SERVER CONFIG  ---
-${G_myName} ${extraInfo} -i serverConfigUpdate         # SafeKeep configFile and replace with ConfigStdout
-${G_myName} ${extraInfo} -i serverConfigVerify         # diff configFile vs ConfigStdout
-${G_myName} ${extraInfo} -i serverConfigShow           # ls -l configFile
-${G_myName} ${extraInfo} -i serverConfigStdout         
-_EOF_
-}
-
 function vis_examplesSystemDaemonsStatus {
  cat  << _EOF_
---- All Daemons Status (And Greps) ---
+$( examplesSeperatorSection "All Daemons Status (And Greps)" )
 systemctl --type=service --all                        # All sysD services
 systemctl --type=service --all | grep "${daemonName}" # All Relevant sysD services
 systemctl list-unit-files                             # All Svc Names
@@ -129,7 +139,7 @@ _EOF_
 
 function vis_examplesDaemonControl {
  cat  << _EOF_
---- /etc/init.d/Daemon Control/Status ---
+$( examplesSeperatorSection "SystemD Daemons Status And Control" )
 ${G_myName} -i examplesSystemDaemonsStatus  # List All and/or relevant systemd svcs
 ${G_myName} ${extraInfo} -i daemonDisable
 ${G_myName} ${extraInfo} -i daemonEnable
@@ -145,7 +155,7 @@ _EOF_
 
 function vis_examplesLogInfo {
  cat  << _EOF_
---- /var/log Info ---
+$( examplesSeperatorSection "Log And Info Files" )
 ${G_myName} ${extraInfo} -i logFilesList
 ${G_myName} ${extraInfo} -i logTail
 ${G_myName} ${extraInfo} -i logGrep
@@ -343,6 +353,28 @@ _CommentBegin_
 _CommentEnd_
 
 
+function vis_keepAsOrig {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
+
+    local keepFile=$1
+
+    EH_assert [ -e "${keepFile}" ]
+
+    local origFile="${keepFile}.orig"
+
+    if [ -e "${origFile}" ] ; then
+	lpDo doNothing
+    else
+	lpDo cp -p "${keepFile}" "${origFile}"
+    fi
+}
+
 function vis_serverConfigUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -359,12 +391,15 @@ _EOF_
 
     EH_assert daemonPrep
 
+    lpDo vis_keepAsOrig "${daemonConfigFile}"
+    
     FN_fileSafeKeep ${daemonConfigFile}
 
     opDo eval vis_serverConfigStdout \> ${daemonConfigFile}
 
     opDo ls -l ${daemonConfigFile}
 }
+
 
 
 function vis_serverConfigVerify {
@@ -385,6 +420,57 @@ function vis_serverConfigShow {
   opDo ls -l ${daemonConfigFile} 
 
 }
+
+
+
+
+function vis_defaultConfigUpdate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
+
+    if [ -z "${serviceDefaultFile}" ] ; then
+	ANT_raw "Blank daemonConfigFile -- No Configuration Performed"
+	return
+    fi
+
+    EH_assert daemonPrep
+
+    lpDo vis_keepAsOrig "${serviceDefaultFile}"
+    
+    FN_fileSafeKeep ${serviceDefaultFile}
+
+    opDo eval vis_defaultConfigStdout \> ${serviceDefaultFile}
+
+    opDo ls -l ${serviceDefaultFile}
+}
+
+
+
+function vis_defaultConfigVerify {
+  EH_assert daemonPrep
+
+  typeset tmpFile=$( FN_tempFile )
+
+  vis_defaultConfigStdout > ${tmpFile} 
+
+  FN_fileCmpAndDiff ${serviceDefaultFile} ${tmpFile}
+ 
+  FN_fileRmIfThere ${tmpFile} 
+}
+
+function vis_defaultConfigShow {
+  EH_assert daemonPrep
+
+  opDo ls -l ${serviceDefaultFile} 
+
+}
+
+
 
 _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  IIFs          :: logFilesList [[elisp:(org-cycle)][| ]]

@@ -70,13 +70,6 @@ dhcpV4ServerConfigFile="/etc/dhcp/dhcpd.conf"
 dhcpV4ServerDefaultFile="/etc/default/isc-dhcp-server"
 dhcpV4PidFile="/var/run/dhcpd.pid"
 
-DEVICE=eth0
-
-validip(){
-echo "$1" | egrep -q -e '[0-9]+\.[0-9]+\.[0-9]+.[0-9]+'
-return $?
-}
-
 
 # IP=`mmaLayer3Admin.sh -i runFunc givenInterfaceGetIPAddr eth0`
 
@@ -114,7 +107,16 @@ function vis_examples_general {
   typeset extraInfo="-h -v -n showRun"
   #typeset extraInfo=""
 
-#$( examplesSeperatorSection "Section Title" )
+  if [ "${context}" == "general" ] ; then
+      doNothing
+  elif [ "${context}" == "niche" ] ; then
+      doNothing
+      #G_myName=$( G_myUnNicheNameGet )      
+  else
+      EH_problem "Bad context=${context}"
+      lpReturn 101
+  fi
+  
 
   visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
@@ -129,40 +131,19 @@ _EOF_
 $( examplesSeperatorChapter "Server Config" )
 _EOF_
   
-  vis_examplesServerConfig
+  vis_examplesDefaultConfig
 
+  vis_examplesServerConfig  
+  
   vis_examplesLogInfo
 
-  vis_examplesNicheRun
-
- cat  << _EOF_
-$( examplesSeperatorChapter "Misc -- Validation and Testing" )
----- CONFIGURE ----
-${G_myName} ${extraInfo} -i serverConfigStdout here
-${G_myName} ${extraInfo} -i serverConfigUpdate here
-${G_myName} ${extraInfo} -i serverConfigShow
-$( examplesSeperatorTopLabel "${G_myName}" )
-$( examplesSeperatorChapter "Full Operations" )
-${G_myName} ${extraInfo} -i fullUpdate    # Applies to both physical and virtual systems
-( examplesSeperatorChapter "Step By Step Preps" )
---- Server Enable/Disable ---
-${G_myName} -e "STOP" -i runFunc /etc/init.d/dhcp-server stop
-${G_myName} -e "START" -i runFunc /etc/init.d/dhcp-server start
---- Server Config File ---
-${G_myName} -n showRun -e "Config File Gen" -i dhcpServerConfigOutput
-${G_myName} -n showRun -e "Config File Install" -i dhcpServerConfigUpdate
-( examplesSeperatorChapter "Name Or Visit Service Files" )
-cat ${dhcpV4ServerConfigFile}  # dhcpV4ServerConfigFile
-cat ${dhcpV4ServerDefaultFile} # dhcpV4ServerDefaultFile
-cat ${dhcpV4PidFile} # dhcpV4PidFile
-${G_myName} -n showRun -e "Config File Show Current" -i dhcpServerConfigShow
-${G_myName} -n showRun -e "Defaults File Show Current" -i dhcpServerDefaultsShow
---- Client Examples ---
-${G_myName} -e "WARNING: may CHANGE IP Addr" -i runFunc dhclient3 -d -w -n eth0
---- Log Files ---
-${G_myName} -e "Server Logs" -i runFunc grep dhcpd /var/log/syslog
-${G_myName} -e "Client Logs" -i runFunc grep dhclient /var/log/syslog
+  cat  << _EOF_
+$( examplesSeperatorChapter "CLIENT VERIFICATIONS" )
+NOTYET -- Identify DHCP servers on subnet -- take from blee panel
 _EOF_
+  
+  
+  vis_examplesNicheRun
 }
 
 noArgsHook() {
@@ -173,125 +154,6 @@ noArgsHook() {
 _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  serverConfig  :: serverConfigUpdate Overwrites [[elisp:(org-cycle)][| ]]
 _CommentEnd_
-
-#
-# NOTE WELL: vis_serverConfigUpdate overwrites the seed
-#
-
-function vis_serverConfigUpdate {
-    return
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-    # seed Overwrite
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
-
-    typeset thisConfigFile=${serviceDefaultFile}
-
-    typeset thisDateTag=`date +%y%m%d%H%M%S`
-
-    FN_fileSafeCopy ${thisConfigFile} ${thisConfigFile}.${thisDateTag}
-
-    opDo FN_textReplace "^ENABLED=\"false\"" "ENABLED=true" ${thisConfigFile}
-    opDo FN_textReplace "^CELERYD_CHDIR=\/opt\/celery\/project\/" "CELERYD_CHDIR=/de/bx/nne/dev-py/iimsPkgs/celeryFirst" ${thisConfigFile}
-    opDo FN_textReplace "^CELERYD_CHDIR=\"\/opt\/Myproject\/\"" "CELERYD_CHDIR=\"/de/bx/nne/dev-py/iimsPkgs/celeryFirst\"" ${thisConfigFile}
-    opDo FN_textReplace "^CELERY_APP=tasks"  "CELERY_APP=tasks" ${thisConfigFile}
-
-    opDo chmod go+r ${thisConfigFile}
-    opDo ls -ldt ${thisConfigFile}
-    opDo diff  ${thisConfigFile} ${thisConfigFile}.${thisDateTag}
-
-    opDo /etc/init.d/${daemonName} restart
-
-    lpReturn
-}
-
-
-_CommentBegin_
-*  [[elisp:(org-cycle)][| ]]  setConfigFile :: NOTYET, Unprocessed [[elisp:(org-cycle)][| ]]
-_CommentEnd_
-
-
-function do_setConfigFile {
-    doNothing
-}
-
-function vis_dhcpServerConfigUpdate {
-
-  if [ "${opRunHostName}_" == "_zanjan" ] ; then
-      EH_problem "$0 not supported on ${opRunHostName}"
-      exit 1
-  fi
-
-  opDoComplain FN_fileDefunctMake ${dhcpServerConfigFile} ${dhcpServerConfigFile}.notUsed.${dateTag}
-
-  opDoComplain vis_dhcpServerConfigOutput > ${dhcpServerConfigFile}
-  opDoComplain chown root:root ${dhcpServerConfigFile}
-  opDoComplain chmod 644  ${dhcpServerConfigFile}
-
-
-  opDoComplain FN_fileDefunctMake ${dhcpServerDefaultsFile} ${dhcpServerDefaultsFile}.notUsed.${dateTag}
-
-  echo "INTERFACES=\"$DEVICE\"" > ${dhcpServerDefaultsFile}
-  opDoComplain chown root:root ${dhcpServerDefaultsFile}
-  opDoComplain chmod 644  ${dhcpServerDefaultsFile}
-
-}
-
-vis_dhcpServerConfigOutput(){
-
-# Taken liberally from knoppix-terminalserver 
-
-NETWORK=192.168.0
-NETMASK=255.255.255.0
-
-IPRANGE_FROM="192.168.0.161"
-IPRANGE_TO="192.168.0.169"
-
-EH_assert validip "$IPRANGE_FROM"
-EH_assert validip "$IPRANGE_TO"
-
-#ALLNAMESERVERS="64.8.192.9, 192.168.0.126"
-#ALLNAMESERVERS="66.93.87.2, 216.231.41.2, 192.168.0.126"
-ALLNAMESERVERS="66.93.87.2, 192.168.0.126"
-
-ALLGATEWAYS="192.168.0.220"
-#ALLGATEWAYS="192.168.0.22"
-
-# Generate dhcpd.conf from template
-# Borrowed  lots of code from knoppix
-
-cat <<EOT
-# dhcpd.conf Auto Generated by OSMT
-
-# global settings
-allow booting;
-allow bootp;
-default-lease-time 600;
-max-lease-time 7200;
-
-subnet ${NETWORK}.0 netmask ${NETMASK} {
-  next-server $IP;
-  if substring (option vendor-class-identifier, 0, 9) = "Etherboot" { filename "etherboot.nbi"; }
-  else { filename "pxelinux.0"; }
-  option subnet-mask ${NETMASK};
-  range ${IPRANGE_FROM} ${IPRANGE_TO};
-  ${ALLNAMESERVERS:+option domain-name-servers $ALLNAMESERVERS;}
-  ${ALLGATEWAYS:+option routers $ALLGATEWAYS;}
-
-  host aladdin {
-    hardware ethernet 00:0F:B5:8F:67:C5; # boxname=kerman
-    #fixed-address 192.168.0.107;
-    fixed-address 192.168.0.108;
-  }
-
-}
-EOT
-}
-
 
 
 _CommentBegin_
