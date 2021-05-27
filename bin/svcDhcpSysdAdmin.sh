@@ -66,32 +66,24 @@ _CommentBegin_
 _CommentEnd_
 
 
-dhcpV4ServerConfigFile="/etc/dhcp/dhcpd.conf"
-dhcpV4ServerDefaultFile="/etc/default/isc-dhcp-server"
-dhcpV4PidFile="/var/run/dhcpd.pid"
-
-
-# IP=`mmaLayer3Admin.sh -i runFunc givenInterfaceGetIPAddr eth0`
-
-
-daemonName="dhcp"
+daemonName="dhcp"  # common name, used as a tag
 daemonsServiceName=(
     "isc-dhcp-server"
     # "isc_dhcp_server6"
 )
-daemonControlScript="/etc/init.d/${daemonName}"
+daemonControlScript="/etc/init.d/isc-dhcp-server"
 
-serviceDefaultFile="/etc/default/isc-dhcp-server"
+daemonDefaultFile="/etc/default/isc-dhcp-server"
 
-# /etc/dhcp/
+# Daemon Config Vars
 daemonConfigDir="/etc/dhcp"
 daemonConfigFile="${daemonConfigDir}/dhcpd.conf"
 
-# /var/log
+# Daemon Log Vars
 daemonLogDir="/var/log"
-# /var/log
 daemonLogFile="${daemonLogDir}/syslog"
 daemonLogErrFile="${daemonLogDir}/syslog"
+daemonLogTag=${daemonName}
 
 dhcpV4PidFile="/var/run/dhcpd.pid"
 
@@ -104,50 +96,67 @@ function vis_examples_general {
     EH_assert [[ $# -eq 1 ]]
 
     local context="$1"
-  typeset extraInfo="-h -v -n showRun"
-  #typeset extraInfo=""
+    typeset extraInfo="-h -v -n showRun"
+    #typeset extraInfo=""
 
-  if [ "${context}" == "general" ] ; then
-      doNothing
-  elif [ "${context}" == "niche" ] ; then
-      doNothing
-      #G_myName=$( G_myUnNicheNameGet )      
-  else
-      EH_problem "Bad context=${context}"
-      lpReturn 101
-  fi
+    if [ "${context}" == "general" ] ; then
+	doNothing
+    elif [ "${context}" == "niche" ] ; then
+	doNothing
+	#G_myName=$( G_myUnNicheNameGet )      
+    else
+	EH_problem "Bad context=${context}"
+	lpReturn 101
+    fi
   
 
-  visLibExamplesOutput ${G_myName} 
-  cat  << _EOF_
+    visLibExamplesOutput ${G_myName} 
+    cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 _EOF_
 
-  vis_examplesFullService
-  vis_examplesDaemonControl
+    vis_examplesFullService
+    vis_examplesDaemonControl
 
 
-  cat  << _EOF_
+    cat  << _EOF_
 $( examplesSeperatorChapter "Server Config" )
 _EOF_
   
-  vis_examplesDefaultConfig
+    vis_examplesDefaultConfig
 
-  vis_examplesServerConfig  
+    vis_examplesServerConfig  
   
-  vis_examplesLogInfo
+    vis_examplesLogInfo
 
-  cat  << _EOF_
+    cat  << _EOF_
 $( examplesSeperatorChapter "CLIENT VERIFICATIONS" )
-NOTYET -- Identify DHCP servers on subnet -- take from blee panel
+${G_myName} -e "WARNING: may CHANGE IP Addr" -i runFunc dhclient3 -d -w -n eth0
+sudo nmap --script broadcast-dhcp-discover
+${G_myName} -i getPrivA_SNPA
 _EOF_
   
   
-  vis_examplesNicheRun
+    vis_examplesNicheRun
 }
 
 noArgsHook() {
-  vis_examples_general "general"
+    vis_examples_general "general"
+}
+
+
+function vis_getPrivA_SNPA {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** This should really be gotten from sysCharDeploy, what we have here is temporary.
+*** seed and general overwrite.
+Could also have been done with something like:
+opDo FN_textReplace "^ENABLED=\"false\"" "ENABLED=true" ${thisConfigFile}
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    ip -4 route ls | grep default | grep -v 192.168.121 | grep -v 192.168.0.122 | grep -Po '(?<=dev )(\S+)'
 }
 
 

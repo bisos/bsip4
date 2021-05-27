@@ -98,7 +98,7 @@ function vis_examplesDefaultConfig {
 $( examplesSeperatorSection "DEFAULT CONFIG FILES" )
 ${G_myName} ${extraInfo} -i defaultConfigUpdate         # SafeKeep configFile and replace with ConfigStdout
 ${G_myName} ${extraInfo} -i defaultConfigVerify         # diff configFile vs ConfigStdout
-${G_myName} ${extraInfo} -i defaultConfigShow           # ls -l configFile
+${G_myName} ${extraInfo} -i defaultConfigShow           # ls -l ${daemonDefaultFile}
 ${G_myName} ${extraInfo} -i defaultConfigStdout         # Likely provided in -niche.sh
 _EOF_
 }
@@ -108,7 +108,7 @@ function vis_examplesServerConfig {
 $( examplesSeperatorSection "SERVER CONFIG FILES" )
 ${G_myName} ${extraInfo} -i serverConfigUpdate         # SafeKeep configFile and replace with ConfigStdout
 ${G_myName} ${extraInfo} -i serverConfigVerify         # diff configFile vs ConfigStdout
-${G_myName} ${extraInfo} -i serverConfigShow           # ls -l configFile
+${G_myName} ${extraInfo} -i serverConfigShow           # ls -l ${daemonConfigFile}
 ${G_myName} ${extraInfo} -i serverConfigStdout         # Likely provided in -niche.sh	
 _EOF_
 }
@@ -157,10 +157,10 @@ function vis_examplesLogInfo {
  cat  << _EOF_
 $( examplesSeperatorSection "Log And Info Files" )
 ${G_myName} ${extraInfo} -i logFilesList
-${G_myName} ${extraInfo} -i logTail
-${G_myName} ${extraInfo} -i logGrep
-${G_myName} ${extraInfo} -i logErrTail
-${G_myName} ${extraInfo} -i logErrGrep
+${G_myName} ${extraInfo} -i logTail                   # ${daemonLogFile}
+${G_myName} ${extraInfo} -i logGrep                   # ${daemonLogFile} ${daemonName}
+${G_myName} ${extraInfo} -i logErrTail                # ${daemonLogFile}
+${G_myName} ${extraInfo} -i logErrGrep                # ${daemonLogFile} ${daemonName}
 _EOF_
 }
 
@@ -205,7 +205,7 @@ function vis_daemonEnable {
 function vis_daemonEnabledStatus {
     EH_assert daemonPrep
 
-  opDo  grep 'ENABLED=' ${serviceDefaultFile}
+  opDo  grep 'ENABLED=' ${daemonDefaultFile}
 }
 
 
@@ -214,8 +214,8 @@ function daemonPrep {
 	EH_problem "Missing Parameter: daemonControlScript"
 	return 1
     fi
-    if [ "${serviceDefaultFile}_" == "_" ] ; then
-	EH_problem "Missing Parameter: serviceDefaultFile"
+    if [ "${daemonDefaultFile}_" == "_" ] ; then
+	EH_problem "Missing Parameter: daemonDefaultFile"
 	return 1
     fi
 }
@@ -433,20 +433,20 @@ _EOF_
 
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
 
-    if [ -z "${serviceDefaultFile}" ] ; then
+    if [ -z "${daemonDefaultFile}" ] ; then
 	ANT_raw "Blank daemonConfigFile -- No Configuration Performed"
 	return
     fi
 
     EH_assert daemonPrep
 
-    lpDo vis_keepAsOrig "${serviceDefaultFile}"
+    lpDo vis_keepAsOrig "${daemonDefaultFile}"
     
-    FN_fileSafeKeep ${serviceDefaultFile}
+    FN_fileSafeKeep ${daemonDefaultFile}
 
-    opDo eval vis_defaultConfigStdout \> ${serviceDefaultFile}
+    opDo eval vis_defaultConfigStdout \> ${daemonDefaultFile}
 
-    opDo ls -l ${serviceDefaultFile}
+    opDo ls -l ${daemonDefaultFile}
 }
 
 
@@ -458,7 +458,7 @@ function vis_defaultConfigVerify {
 
   vis_defaultConfigStdout > ${tmpFile} 
 
-  FN_fileCmpAndDiff ${serviceDefaultFile} ${tmpFile}
+  FN_fileCmpAndDiff ${daemonDefaultFile} ${tmpFile}
  
   FN_fileRmIfThere ${tmpFile} 
 }
@@ -466,7 +466,7 @@ function vis_defaultConfigVerify {
 function vis_defaultConfigShow {
   EH_assert daemonPrep
 
-  opDo ls -l ${serviceDefaultFile} 
+  opDo ls -l ${daemonDefaultFile} 
 
 }
 
