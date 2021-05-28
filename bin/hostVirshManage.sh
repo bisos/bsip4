@@ -72,6 +72,12 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
+. ${opBinBase}/unisosAccounts_lib.sh
+. ${opBinBase}/bisosGroupAccount_lib.sh
+. ${opBinBase}/bisosAccounts_lib.sh
+
+. ${opBinBase}/bisosCurrents_lib.sh
+
 
 # PRE parameters
 
@@ -97,11 +103,20 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
-    typeset currentVmName="ub-1604-bx2-bxInstaller-"$( ${G_myName}  -i getCurNuForVmTemplate ub-1604-bx2-bxInstaller-)
+    bisosCurrentsGet
 
+    currentVmName=${currentVmName-unspecified}
+    
+    #typeset currentVmName="ub-1604-bx2-bxInstaller-"$( ${G_myName}  -i getCurNuForVmTemplate ub-1604-bx2-bxInstaller-)
+
+    vmHostUri="qemu+ssh://localhost/system"
+
+    
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
+bisosCurrentsManage.sh
+bisosCurrentsManage.sh  ${extraInfo} -i setParam currentVmName "bxoVSS-1001-7"
 $( examplesSeperatorChapter "GUI Interfaces" )
 virt-manager  # Gui Interface for managing VMs
 virt-viewer   # Connect to desktop of running VM with VNC
@@ -130,6 +145,17 @@ ${G_myName} ${extraInfo} -i vmDelete ub1604preseed4
 $( examplesSeperatorChapter "Start And Connect To VMs" )
 ${G_myName} ${extraInfo} -i virtStartConnect ub-1604-bx2-bxInstaller-13
 ${G_myName} ${extraInfo} -i virtStartConnect ${currentVmName}
+$( examplesSeperatorChapter "Auto Start A VM At Boot time" )
+virsh --connect ${vmHostUri} autostart ${currentVmName}   # enable auto start
+virsh --connect ${vmHostUri} autostart ${currentVmName} --disable  # disable auto start
+virsh --connect ${vmHostUri} dominfo ${currentVmName}
+ls -l /etc/libvirt/qemu/autostart
+sudo systemctl stop libvirt-guests   # stops VMs
+sudo systemctl restart libvirtd      # starts VMs agains
+sudo virsh net-autostart --network vagrant-libvirt
+sudo virsh net-autostart --network default
+sudo virsh net-list --all
+virsh --connect ${vmHostUri} start ${currentVmName}
 $( examplesSeperatorChapter "Development And Experimentation" )
 ${G_myName} ${extraInfo} -i examplesPlus
 _EOF_
