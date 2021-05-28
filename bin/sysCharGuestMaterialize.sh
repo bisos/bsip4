@@ -719,6 +719,8 @@ _OUTER_EOF_
 ######### PHASE 1: BISOS Provisioning -- baseBox=${containerBaseBox}
 _EOF_
 
+	sudo apt-get update
+	sudo apt-get -y upgrade
         sudo apt-get -y install python3-pip
         sudo pip3 install --upgrade bisos.provision  
         /usr/local/bin/provisionBisos.sh -h -v -n showRun -i sysBasePlatform

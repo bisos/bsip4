@@ -369,8 +369,14 @@ _EOF_
     EH_assert [ ! -z "${targetName}" ]
 
     lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-	 sudo apt-get install -y python3-pip
+	 sudo apt-get update
 
+    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+	 sudo apt-get -y upgrade
+
+    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+	 sudo apt-get install -y python3-pip
+    
     lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
 	 sudo pip3 install --upgrade bisos.provision
 

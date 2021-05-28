@@ -173,6 +173,12 @@ _EOF_
     EH_assert vis_bxoAcctVerify "${bxoId}"
     bxoHome=$( FN_absolutePathGet ~${bxoId} )
 
+    local containerId=$( vis_containerBxoId_getContainerId "${bxoId}" )
+
+    # make sure the repo for the container is in place at site
+    lpDo siteContainerRepo.sh -v -n showRun -i containerRepoNamedClone ${containerId}
+    
+    # Create all bases and make symlinks
     lpDo sysCharRealize.sh -h -v -n showRun -p bxoId="${bxoId}" -i basesFullCreate
 
     local sysCharConveyInfoBase="${bxoHome}/var/sysCharConveyInfo"

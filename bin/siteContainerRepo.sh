@@ -105,7 +105,8 @@ function vis_examples {
     local containerBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
 
     local containerRepoBase=$( vis_containerRepoBase ${containerBase} )
-
+    local containerId=$( basename ${containerRepoBase} )
+    
     visLibExamplesOutput ${G_myName}
     # ${doLibExamples} 
   cat  << _EOF_
@@ -131,7 +132,7 @@ ${G_myName} ${extraInfo} -i containerRepoGenericsUpdate examples full # bxoReali
 ${G_myName} ${extraInfo} -i containerRepoGenericsUpdate doIt full  # bxoRealizationScope=basePrep|realize|full
 $( examplesSeperatorChapter "Repos Clonining" )
 ${G_myName} ${extraInfo} -i containerRepoClone ${containerBase}
-${G_myName} ${extraInfo} -i containerRepoNamedClone ${containerRepoBase}
+${G_myName} ${extraInfo} -i containerRepoNamedClone ${containerId}
 ${G_myName} ${extraInfo} -i containerRepoNamedCloneAll
 _EOF_
 }
