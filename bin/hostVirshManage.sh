@@ -140,16 +140,15 @@ ${G_myName} ${extraInfo} -i importVmFrom /uniform/VMs/Public/bx/1/kvm/ virgin-ub
 $( examplesSeperatorChapter "Virt-Install -- Create New VMs From Scratch" )
 # unaborbed OSMT -- bxBootstrap.sh ${extraInfo} -i virtBuild next distro medium ubuntu 1604 bx2
 $( examplesSeperatorChapter "Delete VMs" )
-${G_myName} ${extraInfo} -i vmDelete vmName
-${G_myName} ${extraInfo} -i vmDelete ub1604preseed4
-$( examplesSeperatorChapter "Start And Connect To VMs" )
-${G_myName} ${extraInfo} -i virtStartConnect ub-1604-bx2-bxInstaller-13
+${G_myName} ${extraInfo} -i vmDelete localhost vmName
 ${G_myName} ${extraInfo} -i virtStartConnect ${currentVmName}
 $( examplesSeperatorChapter "Auto Start A VM At Boot time" )
 virsh --connect ${vmHostUri} autostart ${currentVmName}   # enable auto start
 virsh --connect ${vmHostUri} autostart ${currentVmName} --disable  # disable auto start
 virsh --connect ${vmHostUri} dominfo ${currentVmName}
 ls -l /etc/libvirt/qemu/autostart
+virsh --connect ${vmHostUri} desc ${currentVmName} --current --title "TitleOfVm" --new-desc "Description of VM comes here"
+virsh --connect ${vmHostUri} desc ${currentVmName} --title
 sudo systemctl stop libvirt-guests   # stops VMs
 sudo systemctl restart libvirtd      # starts VMs agains
 sudo virsh net-autostart --network vagrant-libvirt
@@ -158,6 +157,10 @@ sudo virsh net-list --all
 virsh --connect ${vmHostUri} start ${currentVmName}
 $( examplesSeperatorChapter "Development And Experimentation" )
 ${G_myName} ${extraInfo} -i examplesPlus
+export VIRSH_DEFAULT_CONNECT_URI=qemu:///system
+echo \${VIRSH_DEFAULT_CONNECT_URI}
+unset VIRSH_DEFAULT_CONNECT_URI
+# NOTYET, Absorb from OSMT panel
 _EOF_
 }
 
@@ -249,8 +252,6 @@ _EOF_
     }
     EH_assert [[ $# -gt 0 ]]
 
-    echo ZZZ
-    
     typeset vmHost=$1
     shift
     typeset vmName
