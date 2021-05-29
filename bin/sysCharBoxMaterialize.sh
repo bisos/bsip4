@@ -149,10 +149,11 @@ bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
 bisosCurrentsManage.sh  ${extraInfo} -i setParam curTargetBox 192.168.0.45  # Currently curTargetBox=${curTargetBox:-}
 bisosCurrentsManage.sh  ${extraInfo} -i setParam curTargetBox localhost  # Currently curTargetBox=${curTargetBox:-}
 $( examplesSeperatorChapter "New Box Realize -- On Manager And On Target Box" )
+# Install Distro With Intra Account And Priv Interface Access -- record ipAddr for curTargetBox
 sysCharDeploy.sh ${extraInfo} -p targetName="${oneTargetBox}" -i boxSiteBasePlatform  # OnManager
 ssh -X bystar@${oneTargetBox}    # Then run emacs, then realize as below
-sysCharDeploy.sh ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i boxRealizeAtSiteBasePlatformOnTarget # OnTarget Only
-sysCharDeploy.sh ${extraInfo} -p model=Pure -p abode=Shield -p function=Server -i boxRealizeAtSiteBasePlatformOnTarget # OnTarget Only
+sysCharDeploy.sh ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i boxRealizeOrActivateOnTarget # OnTarget Only
+sysCharDeploy.sh ${extraInfo} -p model=Pure -p abode=Shield -p function=Server -i boxRealizeOrActivateOnTarget # OnTarget Only
 $( examplesSeperatorChapter "Full Existing Box Activateer -- On Manager Or On Target Box" )
 sysCharDeploy.sh ${extraInfo} -p targetName="${oneTargetBox}" -i boxFullActivate # On Manager From Begining-To-End
 sysCharDeploy.sh ${extraInfo} -i boxFullActivate # OnTarget after bystar account has been setup

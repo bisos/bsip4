@@ -241,7 +241,7 @@ ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_sy
 ${G_myName} ${extraInfo} -i siteBasePlatform_sysCharBoxIdentitySet # NOTYET, likely not necessary
 $( examplesSeperatorChapter "Full New Box Actions -- On Manager And On Target Box" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i boxSiteBasePlatform  # OnManager
-${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i boxRealizeAtSiteBasePlatformOnTarget # OnTarget Only
+${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i boxRealizeOrActivateOnTarget # OnTarget Only
 $( examplesSeperatorChapter "Full Existing Box Actions -- On Manager Or On Target Box" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i boxFullActivate # On Manager From Begining-To-End
 $( examplesSeperatorChapter "Full Existing Box Actions -- On Manager Or On Target Box" )
@@ -262,6 +262,7 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     EH_assert [ ! -z "${targetName}" ]
+    EH_assert [ "${targetName}" != "localhost" ] # Must be invoked OnManger
 
     lpDo vis_distro_fullUpdate
 }
@@ -270,12 +271,13 @@ function vis_distro_fullUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Update distro, and bring it to bisosBasePlatform.
-*** ManagerOnly -- intra user -- no bisos
+*** TargetOnly -- intra user -- no bisos
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
     EH_assert [ ! -z "${targetName}" ]
+    EH_assert [ "${targetName}" != "localhost" ] # Must be invoked OnManger
 
     lpDo vis_distro_intraToSudoersAddition
     lpDo vis_distro_aptSourcesPrep
@@ -481,25 +483,25 @@ _EOF_
 function vis_siteBasePlatform_sysBxoActivate {
      G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Preps the site (configs for gitlab server, etc) and activates the siteBxo.
+** Activates the specified bxoId. Not intended to be used with a Box.
+*** For a box, run vis_boxActivateAtSiteBasePlatform instead.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
     function onManagerRun {
 	if [ -z "${bxoId}" ] ; then
-	    # if physical from box, otherwise prompt for spec
-	    # NOTYET
-	    bxoId="sysChar"
+	    EH_problem "Missing bxoId"
+	    lpReturn
 	fi
     }
 
     function onTargetRun {
-	lpDo sysCharActivate.sh ${G_commandPrefs} \
+	lpDo echo sysCharActivate.sh ${G_commandPrefs} \
 	     -p bxoId="${bxoId}" \
 	     -i activate_sysContainerBxo
 
-	lpDo sysCharActivate.sh ${G_commandPrefs} \
+	lpDo echo sysCharActivate.sh ${G_commandPrefs} \
 	     -i bisosContainerSelect "${bxoId}"
     }
 
@@ -534,7 +536,7 @@ _EOF_
 function vis_boxSiteBasePlatform {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Update Everything. Runs On Manager.
+** Runs OnMamaner Only. Start at BISOS-Distro (eg Deb11) and gets to site setup.
 *** If Box's Character already exists, box's sysChar is deployed on box. Activated.
 *** If Box's Character does not exists, box is registered in site & its sysChar is realized.
 *** If Box's Character does not exists, model, abode and function should be specified.
@@ -543,6 +545,8 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     EH_assert [ ! -z "${targetName}" ]
+    EH_assert [ "${targetName}" != "localhost" ] # Must be invoked OnManger
+	
 
     # NOTYET, commented part below should be absorbed in distro_fullUpdate after sudo addition.
 
@@ -566,10 +570,7 @@ _EOF_
 function vis_boxFullActivate {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Update Everything. Runs On Manager.
-*** If Box's Character already exists, box's sysChar is deployed on box. Activated.
-*** If Box's Character does not exists, box is registered in site & its sysChar is realized.
-*** If Box's Character does not exists, model, abode and function should be specified.
+** Must be invoked OnManager as vis_boxSiteBasePlatform needs site info.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -585,18 +586,37 @@ _EOF_
 function vis_boxActivateAtSiteBasePlatform {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Update Everything. Runs On Manager.
-*** If Box's Character already exists, box's sysChar is deployed on box. Activated.
-*** If Box's Character does not exists, box is registered in site & its sysChar is realized.
-*** If Box's Character does not exists, model, abode and function should be specified.
+** Activate Bxo associated with the box on target. Can be invoked OnManager or OnTarget.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    echo "NOTYET"
+    function onTargetRun {
+	local boxBpoPath=$( vis_containerBoxBpoPath )
+
+	if [ -z "${boxBpoPath}" ] ; then
+	    EH_problem "Box Must Have Been Realized To Be Activated."
+	    lpReturn 101
+	fi
+
+	lpDo vis_boxRealizeOrActivateOnTarget 
+    }
+
+####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" 
+    if [ "${targetName}" == "onTargetRun" ] ; then
+	lpDo onTargetRun
+    elif [ -z "${targetName}" ] ; then
+	lpDo onTargetRun
+    else
+	local commandName=${FUNCNAME##vis_}		
+	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+	     $(which ${G_myName}) ${G_commandPrefs} \
+	     -p targetName=onTargetRun -i ${commandName}
+    fi
+####+END:
 }
 
-function vis_boxRealizeAtSiteBasePlatformOnTarget {    
+function vis_boxRealizeOrActivateOnTarget {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Update Everything. Runs On Manager.
