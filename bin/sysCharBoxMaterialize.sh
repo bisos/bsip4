@@ -154,9 +154,14 @@ sysCharDeploy.sh ${extraInfo} -p targetName="${oneTargetBox}" -i boxSiteBasePlat
 ssh -X bystar@${oneTargetBox}    # Then run emacs, then realize as below
 sysCharDeploy.sh ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i boxRealizeOrActivateOnTarget # OnTarget Only
 sysCharDeploy.sh ${extraInfo} -p model=Pure -p abode=Shield -p function=Server -i boxRealizeOrActivateOnTarget # OnTarget Only
-$( examplesSeperatorChapter "Full Existing Box Activateer -- On Manager Or On Target Box" )
-sysCharDeploy.sh ${extraInfo} -p targetName="${oneTargetBox}" -i boxFullActivate # On Manager From Begining-To-End
-sysCharDeploy.sh ${extraInfo} -i boxFullActivate # OnTarget after bystar account has been setup
+sysCharDeploy.sh ${extraInfo} -p model=Host -p abode=Internet -p function=Server -i boxRealizeOrActivateOnTarget # OnTarget Only
+$( examplesSeperatorChapter "Full Existing Box Activation -- On Manager Or On Target Box" )
+# Install Distro With Intra Account And Priv Interface Access -- record ipAddr for curTargetBox
+sysCharDeploy.sh ${extraInfo} -p targetName="${oneTargetBox}" -i boxFullActivate # OnManager From Begining-To-End
+# Or In Steps boxFullActivate = boxSiteBasePlatform + boxActivateAtSiteBasePlatform
+sysCharDeploy.sh ${extraInfo} -p targetName="${oneTargetBox}" -i boxSiteBasePlatform  # OnManager
+sysCharDeploy.sh ${extraInfo} -p targetName="${oneTargetBox}" -i boxActivateAtSiteBasePlatform # OnManager
+sysCharDeploy.sh ${extraInfo} -i boxActivateAtSiteBasePlatform # OnTarget -- After site has been setup
 $( examplesSeperatorChapter "Target Box Information -- On Manager Or On Target Box" )
 sysCharDeploy.sh ${extraInfo} -p targetName="${oneTargetBox}" -i siteBasePlatform_newBoxAscertain
 sysCharDeploy.sh ${extraInfo} -i siteBasePlatform_newBoxAscertain

@@ -587,6 +587,8 @@ function vis_boxActivateAtSiteBasePlatform {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Activate Bxo associated with the box on target. Can be invoked OnManager or OnTarget.
+*** Can be invoked OnManager or OnTarget
+*** Runs vis_boxRealizeOrActivateOnTarget, for activation (not materialization).
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -619,7 +621,9 @@ _EOF_
 function vis_boxRealizeOrActivateOnTarget {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Update Everything. Runs On Manager.
+** Depending on whether or not, if this is a new box or not, we register and realize or just activate.
+*** Can only be invoked OnTarget as relaization involves self Blee dblock features.
+*** For activation only, it can be invoked OnManager throuhg vis_boxActivateAtSiteBasePlatform
 *** If Box's Character already exists, box's sysChar is deployed on box. Activated.
 *** If Box's Character does not exists, box is registered in site & its sysChar is realized.
 *** If Box's Character does not exists, model, abode and function should be specified.
@@ -717,6 +721,8 @@ function vis_siteBasePlatform_newBoxAssign {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Add thisBox to site info base.
+*** Can be invoked OnTarget or OnManager. 
+*** When OnManager, the registration on target is reflected on manager with a boxesGitPull.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
