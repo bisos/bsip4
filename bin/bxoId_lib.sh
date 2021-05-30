@@ -21,7 +21,7 @@ _EOF_
     local bxoName="$1"
     local bxoNamesList=$( bxoGitlab.py -v 30 -i acctList )
     
-    if LIST_isIn "bxoName" "${bxoNamesList}"  ; then
+    if LIST_isIn "${bxoName}" "${bxoNamesList}"  ; then
 	lpReturn 0
     else
 	lpReturn 1
