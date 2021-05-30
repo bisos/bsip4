@@ -180,7 +180,7 @@ ${G_myName} ${extraInfo} -i sysCharContainerRealize ${oneBxoRepoScope} ${contain
 $( examplesSeperatorChapter "Box -- Site Assign SysChar And Container Realization" )
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerBoxAssignAndRepo  # Uses thisBoxFindId
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerVirtAssignAndRepo
-${G_myName} ${extraInfo} -i sysCharContainerBoxRealize
+${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i sysCharContainerBoxRealize
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerAssignAndRepoAndSysCharRealize  # FULL ACTION -- PRIMARY COMMAND
 ${G_myName} ${extraInfo} -p model=Host -p abode=Internet -p function=Server -i containerAssignAndRepoAndSysCharRealize  # FULL ACTION -- PRIMARY COMMAND
 $( examplesSeperatorChapter "Virt -- Site Assign SysChar And Container Realization" )

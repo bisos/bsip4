@@ -790,10 +790,12 @@ _EOF_
 
     if [ -z "${targetName}" ] ; then
 	lpDo sysCharRealize.sh ${G_commandPrefs} \
+	     -p model=${model} -p abode=${abode} -p function=${function} \
 	     -i sysCharContainerBoxRealize
     else    
 	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
 	     $(which sysCharRealize.sh) ${G_commandPrefs} \
+	     -p model=${model} -p abode=${abode} -p function=${function} \
 	     -i sysCharContainerBoxRealize
     fi
 }

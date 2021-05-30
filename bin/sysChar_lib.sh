@@ -673,8 +673,10 @@ _EOF_
 function vis_sysCharWrite {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-bxoId is the sysChar.
-sysInfo.fps of sysChar overwrites sysInfo.fps of siteContainersRepo.
+** Writes into ~containerBxo/sysChar
+*** bxoId is the sysChar.
+*** sysInfo.fps of sysChar overwrites sysInfo.fps of siteContainersRepo.
+
 _EOF_
 		      }
     EH_assert [[ $# -eq 0 ]]

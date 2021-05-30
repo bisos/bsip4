@@ -648,7 +648,7 @@ _EOF_
    EH_assert [ ! -z "${containerBasePath}" ]
 
    local containerBoxIdFpPath="${containerBasePath}/boxId"
-   EH_assert [ -d "${containerBoxIdFpPath}"]
+   EH_assert [ -d "${containerBoxIdFpPath}" ]
 
    local dateTag=$( DATE_nowTag )
    lpDo cp -p ${containerBoxIdFpPath}/value ${containerBoxIdFpPath}/value.${dateTag}
