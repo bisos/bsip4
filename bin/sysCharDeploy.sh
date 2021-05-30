@@ -594,9 +594,9 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     function onTargetRun {
-	local boxBpoPath=$( vis_containerBoxBpoPath )
+	local boxBpoId=$( vis_containerBoxBpoId )
 
-	if [ -z "${boxBpoPath}" ] ; then
+	if [ -z "${boxBpoId}" ] ; then
 	    EH_problem "Box Must Have Been Realized To Be Activated."
 	    lpReturn 101
 	fi
