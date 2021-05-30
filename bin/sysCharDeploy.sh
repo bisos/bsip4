@@ -660,7 +660,7 @@ _EOF_
 
     if vis_bxoNameExists "${boxBpoId}" ; then
 	bxoId="${boxBpoId}"
-	ANT_cooked "boxBpoPath=${boxBpoPath} -- bxoId=${bxoId} has already been Realized, it can be Activated."
+	ANT_cooked "boxBpoId=${boxBpoId} -- bxoId=${bxoId} has already been Realized, it can be Activated."
 	
 	lpDo sysCharActivate.sh ${G_commandPrefs} \
 	     -p bxoId="${bxoId}" -i activate_sysContainerBxo
