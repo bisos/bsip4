@@ -138,6 +138,10 @@ ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i con
 ${G_myName} ${extraInfo} -i forThisSysContainerAssignBasePush
 ${G_myName} ${extraInfo} -i containersAssignBasePull
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerUpdate_atNu "${containerNu}"
+$( examplesSeperatorChapter "UNSET -- Container Box Un Assignment" )
+${G_myName} ${extraInfo} -i withBoxIdFindContainerBase "${boxId}"
+${G_myName} ${extraInfo} -i containerBoxUnAssignAndPush "${boxId}"
+${G_myName} ${extraInfo} -i containerBoxUnAssign "${boxId}"
 $( examplesSeperatorChapter "SET -- Container Virt Assignment -- Primary Commands" )
 ${G_myName} ${extraInfo} -p model=Virt -p abode=Shield -p function=Server -i containerAssignAndPush  # PRIMARY COMMAND
 ${G_myName} ${extraInfo} -p model=Virt -p abode=Shield -p function=Server -i containerAssign  # PRIMARY COMMAND
@@ -628,6 +632,46 @@ _EOF_
 	   EH_problem "Bad Usage -- model=${model}"
    esac
 }	
+
+
+
+function vis_containerBoxUnAssign {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
+
+   local boxId="$1"
+
+   local containerBasePath=$( vis_withBoxIdFindContainerBase "${boxId}" )
+   EH_assert [ ! -z "${containerBasePath}" ]
+
+   local containerBoxIdFpPath="${containerBasePath}/boxId"
+   EH_assert [ -d "${containerBoxIdFpPath}"]
+
+   local dateTag=$( DATE_nowTag )
+   lpDo cp -p ${containerBoxIdFpPath}/value ${containerBoxIdFpPath}/value.${dateTag}
+
+   lpDo fileParamManage.py -i fileParamWrite "${containerBasePath}" boxId "unassigned"
+}
+
+function vis_containerBoxUnAssignAndPush {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
+
+   local boxId="$1"
+
+   local containerBasePath=$( vis_withBoxIdFindContainerBase "${boxId}" )
+   EH_assert [ ! -z "${containerBasePath}" ]
+
+   lpDo vis_containerBoxUnAssign "${boxId}"
+
+   lpDo eval echo ${containerBasePath} \| bx-gitRepos -i addCommitPush all
+}
 
 
 

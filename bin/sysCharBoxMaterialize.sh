@@ -140,6 +140,8 @@ function vis_examples {
     oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )
 
     oneTargetBox=${curTargetBox:-}
+
+    local boxId=$( siteBoxAssign.sh -i thisBoxFindId )    
     
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
@@ -162,6 +164,11 @@ sysCharDeploy.sh ${extraInfo} -p targetName="${oneTargetBox}" -i boxFullActivate
 sysCharDeploy.sh ${extraInfo} -p targetName="${oneTargetBox}" -i boxSiteBasePlatform  # OnManager
 sysCharDeploy.sh ${extraInfo} -p targetName="${oneTargetBox}" -i boxActivateAtSiteBasePlatform # OnManager
 sysCharDeploy.sh ${extraInfo} -i boxActivateAtSiteBasePlatform # OnTarget -- After site has been setup
+$( examplesSeperatorChapter "Full Box Un Assign -- OnManager/OnTarget -- For ReAssignment/ReRealize" )
+siteBoxAssign.sh -i thisBoxFindId
+siteContainerAssign.sh ${extraInfo} -i withBoxIdFindContainerBase "${boxId}"
+siteContainerAssign.sh ${extraInfo} -i containerBoxUnAssignAndPush "${boxId}"
+siteContainerAssign.sh ${extraInfo} -i containerBoxUnAssign "${boxId}"
 $( examplesSeperatorChapter "Target Box Information -- On Manager Or On Target Box" )
 sysCharDeploy.sh ${extraInfo} -p targetName="${oneTargetBox}" -i siteBasePlatform_newBoxAscertain
 sysCharDeploy.sh ${extraInfo} -i siteBasePlatform_newBoxAscertain

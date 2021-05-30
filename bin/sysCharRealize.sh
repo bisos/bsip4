@@ -178,10 +178,11 @@ ${G_myName} ${extraInfo} -i sysCharContainerRealize ${oneBxoRepoScope} ${contain
 ${G_myName} ${extraInfo} -i sysCharContainerRealize ${oneBxoRepoScope} ${containersBase}/assign/Virt/Auto/Generic/deb10
 ${G_myName} ${extraInfo} -i sysCharContainerRealize ${oneBxoRepoScope} ${containersBase}/assign/Virt/Shield/Server/1009
 $( examplesSeperatorChapter "Box -- Site Assign SysChar And Container Realization" )
-${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerBoxAssignAndRepo  # Obsoleted
-${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerAssignAndRepo
+${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerBoxAssignAndRepo  # Uses thisBoxFindId
+${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerVirtAssignAndRepo
 ${G_myName} ${extraInfo} -i sysCharContainerBoxRealize
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerAssignAndRepoAndSysCharRealize  # FULL ACTION -- PRIMARY COMMAND
+${G_myName} ${extraInfo} -p model=Host -p abode=Internet -p function=Server -i containerAssignAndRepoAndSysCharRealize  # FULL ACTION -- PRIMARY COMMAND
 $( examplesSeperatorChapter "Virt -- Site Assign SysChar And Container Realization" )
 ${G_myName} ${extraInfo} -p model=Virt -p abode=Shield -p function=Server -i containerAssignAndRepo
 ${G_myName} ${extraInfo} -p model=Virt -p abode=Shield -p function=Server -i containerAssignAndRepoAndSysCharRealize  # FULL ACTION -- PRIMARY COMMAND
