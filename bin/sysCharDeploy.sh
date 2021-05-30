@@ -655,22 +655,22 @@ _EOF_
 	ANT_cooked "siteBoxContainer=${siteBoxContainer} has already been assined"
     fi
 
-    local boxBpoPath=$( vis_containerBoxBpoPath )
+    local boxBpoId=$( vis_containerBoxBpoId )
+    EH_assert [ ! -z "${boxBpoId}" ]
 
-    if [ -z "${boxBpoPath}" ] ; then
+    if vis_bxoNameExists "${boxBpoId}" ; then
+	bxoId="${boxBpoId}"
+	ANT_cooked "boxBpoPath=${boxBpoPath} -- bxoId=${bxoId} has already been Realized, it can be Activated."
+	
+	lpDo sysCharActivate.sh ${G_commandPrefs} \
+	     -p bxoId="${bxoId}" -i activate_sysContainerBxo
+    else	
 	EH_assert [ ! -z "${model}" ]
 	EH_assert [ ! -z "${abode}" ]
 	EH_assert [ ! -z "${function}" ]
 
 	lpDo vis_siteBasePlatform_sysCharContainerBoxRealize
 	bxoId=$( vis_containerBoxBpoId )
-    else
-	bxoId=$( vis_containerBoxBpoId )
-	ANT_cooked "boxBpoPath=${boxBpoPath} -- bxoId=${bxoId} has already been Realized, it can be Activated."
-	
-	lpDo sysCharActivate.sh ${G_commandPrefs} \
-	     -p bxoId="${bxoId}" -i activate_sysContainerBxo
-	
     fi
 
     lpDo sysCharActivate.sh ${G_commandPrefs} \

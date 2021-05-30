@@ -8,6 +8,29 @@ else
 fi
 ####+END:
 
+
+# a bxoNameExists when a bxo has been realized. It is the account in gitLab.
+
+function vis_bxoNameExists {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		       }
+    EH_assert [[ $# -eq 1 ]]
+
+    local bxoName="$1"
+    local bxoNamesList=$( bxoGitlab.py -v 30 -i acctList )
+    
+    if LIST_isIn "bxoName" "${bxoNamesList}"  ; then
+	lpReturn 0
+    else
+	lpReturn 1
+    fi
+}	
+
+
+
+
 function vis_bxoIdFpsBase {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
