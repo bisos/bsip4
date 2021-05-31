@@ -123,6 +123,11 @@ ls -ld ${siteNetworksBxoIdHome}/networks/*
 find ${siteNetworksBxoIdHome}/routes -print
 $( examplesSeperatorChapter "This Network Actions" )
 ${G_myName} -i netsReport
+$( examplesSeperatorChapter "Site Networks -- getNetAddrPrefix" )
+${G_myName} -i forNetName_getNetAddrPrefix pubA
+${G_myName} -i forNetName_getNetAddrPrefix pubB
+${G_myName} -i forNetName_getNetAddrPrefix privA
+${G_myName} -i forNetName_getNetAddrPrefix perimA
 $( examplesSeperatorChapter "This Network Actions" )
 ${G_myName} -i netAddr pubA
 ${G_myName} -i netAddr pubB
@@ -140,9 +145,14 @@ ${G_myName} -i routerDefault privA
 ${G_myName} -i routerDefault perimA
 $( examplesSeperatorChapter "This Network Actions" )
 ${G_myName} -i routerSiteFpsPath privA pubA
-$( examplesSeperatorChapter "This Network Actions" )
-${G_myName} -i netSiteFpsPath privA
+$( examplesSeperatorChapter "With Abode Get Nets List" )
+${G_myName} -i withAbodeGetApplicableNetsList Auto
+${G_myName} -i withAbodeGetApplicableNetsList Mobile
+${G_myName} -i withAbodeGetApplicableNetsList Perim
+${G_myName} -i withAbodeGetApplicableNetsList Shield
+${G_myName} -i withAbodeGetApplicableNetsList Internet
 $( examplesSeperatorChapter "Obtain IP Addrs" )
+${G_myName} -i routerDefault pubA
 ${G_myName} -i containerIpAddrObtain_privA VSG-ub2004_ generic
 $( examplesSeperatorChapter "Assign IP Addrs" )
 ${G_myName} ${extraInfo} -i assignNextAddr privA generic

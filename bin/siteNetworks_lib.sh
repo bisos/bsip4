@@ -87,6 +87,82 @@ _EOF_
    find ${networksBase} -print | grep value | xargs egrep ^.
 }
 
+
+
+function vis_withAbodeGetApplicableNetsList {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Based on Abode get applicableNetsList
+_EOF_
+		       }
+    EH_assert [[ $# -eq 1 ]]
+
+    local abode=$1
+    
+    local applicableNetsList=()
+
+    case "${abode}" in
+	"Auto")
+	    applicableNetsList=("nat")
+	    ;;
+	"Mobile")
+	    applicableNetsList=("nat")
+	    ;;
+	"Perim")
+	    applicableNetsList=("perimA")
+	    ;;
+	"Shield")
+	    applicableNetsList=("privA")
+	    ;;
+	"Internet")
+	    applicableNetsList=("pubA" "pubB" "perimA")
+	    ;;
+	*)
+	    EH_problem "Bad Usage -- abodeInitial=${abodeInitial}"
+    esac
+
+    local result=""
+    
+    local eachNet=""
+    for eachNet in ${applicableNetsList[@]} ; do
+	result+=$( echo -n "${eachNet} " )
+    done
+
+    echo ${result}
+    
+}
+
+
+function vis_forNetName_getNetAddrPrefix {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+** Full implementation will use python and ipaddr library.
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
+
+   local netName="$1"
+
+   local netAddr=$( vis_netAddr ${netName} )
+   local netMask=$( vis_netmask ${netName} )
+
+   local netAddrPrefix=""
+
+   if [ "${netMask}" == 24 ] ; then
+       netAddrPrefix=$( echo "${netAddr}" | sed -e 's:.0$::' )
+   elif [ "${netMask}" == 28 ] ; then
+       netAddrPrefix=$( echo "${netAddr}" )
+   elif [ "${netMask}" > 0 ] ; then
+       EH_problem "unimplemented ${netMask}"
+   else
+       EH_oops
+   fi
+
+   echo ${netAddrPrefix}
+}
+
+
+
 function vis_netAddr {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -212,7 +288,10 @@ _EOF_
 function vis_assignNextAddr {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** If generic, one way, if not anotherway
+** Obtain next ip address from relevant address pool based on netName=\$1 and addrType=\$2.
+*** netName=\$1 is one of privA, pubA, pubB, perimA.
+*** addrType=\$2 is generic, assign, containerBoxes, etc.
+*** addrPool i referenced by $( networksBaseObtain )/${netName}/addrs/${addrType}
 _EOF_
 		       }
     EH_assert [[ $# -eq 2 ]]
@@ -232,6 +311,8 @@ _EOF_
     local assignedBase="${netBase}/assigned"
 
     local nextAddr=""
+
+    local netAddrPrefix=$( vis_forNetName_getNetAddrPrefix "${netName}" )
     
     local assignmentCandidate=""
     local i=0
@@ -241,7 +322,7 @@ _EOF_
 	    doNothing
 	else
 	    lpDo mkdir -p "${assignmentCandidate}"
-	    nextAddr="192.168.0.$i"
+	    nextAddr="${netAddrPrefix}.$i"
 	    break
 	fi
     done
@@ -256,59 +337,12 @@ _EOF_
     lpReturn
 }
 
-
-function vis_assignNextAddr {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** If generic, one way, if not anotherway
-_EOF_
-		       }
-    EH_assert [[ $# -eq 2 ]]
-
-    local netName=$1
-    local addrType=$2    # generic/assign/auto
-
-    local networksBase=$( networksBaseObtain )
-    EH_assert [ ! -z "${networksBase}" ]
-
-    local netBase=${networksBase}/${netName}/addrs/${addrType}
-    EH_assert [ -d "${netBase}" ]
-
-    local minAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} minAddr.fp )
-    local maxAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} maxAddr.fp )
-
-    local assignedBase="${netBase}/assigned"
-
-    local nextAddr=""
-    
-    local assignmentCandidate=""
-    local i=0
-    for (( i=${minAddr}; i<=${maxAddr}; i++ )) ; do
-	assignmentCandidate=${assignedBase}/$i
-	if [ -d "${assignmentCandidate}" ] ; then
-	    doNothing
-	else
-	    lpDo mkdir -p "${assignmentCandidate}"
-	    nextAddr="192.168.0.$i"
-	    break
-	fi
-    done
-
-    if (( i > ${maxAddr} )) ; then
-	EH_problem "All available Addrs Have Already Been Assigned"
-	nextAddr=""
-    fi
-
-    echo ${nextAddr}
-    
-    lpReturn
-}
 
 
 function vis_assignBoxAddr {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** If generic, one way, if not anotherway
+** Similar to vis_assignNextAddr but uses different pool and indexes based on boxNu.
 _EOF_
 		       }
     EH_assert [[ $# -eq 2 ]]
@@ -327,11 +361,13 @@ _EOF_
     local minAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} minAddr.fp )
     local maxAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} maxAddr.fp )
 
-    local assignedBase="${netBase}/assigned"
+    # NOTYET, Unused local assignedBase="${netBase}/assigned"
+
+    local netAddrPrefix=$( vis_forNetName_getNetAddrPrefix "${netName}" )
 
     local boxIndex=$(( ${boxNu} - 1000 ))
     local boxAddrNu=$(( ${boxIndex} + ${minAddr} ))
-    local boxAddr="192.168.0.${boxAddrNu}"
+    local boxAddr="${netAddrPrefix}.${boxAddrNu}"
 
     echo ${boxAddr}
     
@@ -362,11 +398,13 @@ _EOF_
     local minAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} minAddr.fp )
     local maxAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} maxAddr.fp )
 
-    local assignedBase="${netBase}/assigned"
+    # NOTYET, unused local assignedBase="${netBase}/assigned"
 
+    local netAddrPrefix=$( vis_forNetName_getNetAddrPrefix "${netName}" )
+    
     local containerIndex=$(( ${containerNu} - 1000 ))
     local containerAddrNu=$(( ${containerIndex} + ${minAddr} ))
-    local containerAddr="192.168.0.${containerAddrNu}"
+    local containerAddr="${netAddrPrefix}.${containerAddrNu}"
 
     echo ${containerAddr}
     

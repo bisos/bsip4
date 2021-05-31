@@ -437,7 +437,7 @@ _EOF_
 }
 
 
-function withAbodeGetApplicableNetsList {
+function withAbodeGetApplicableNetsList%%Obsoleted {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Based on Abode get applicableNetsList
@@ -544,10 +544,10 @@ _EOF_
 _EOF_
     }
 
-    lpDo withAbodeGetApplicableNetsList "${containerAssign_abode}"
+    local applicableNets=$( vis_withAbodeGetApplicableNetsList "${containerAssign_abode}" )
 
     local ethCount=0
-    for eachNet in ${applicableNetsList[@]} ; do
+    for eachNet in ${applicableNets} ; do    
 	(( ethCount++ ))
 	lpDo ${eachNet}_update ${ethCount}
     done
@@ -621,9 +621,9 @@ _EOF_
 _OUTER_EOF_
     }
 
-    lpDo withAbodeGetApplicableNetsList "${containerAssign_abode}"
+    local applicableNets=$( vis_withAbodeGetApplicableNetsList "${containerAssign_abode}" )
 
-    for eachNet in ${applicableNetsList[@]} ; do
+    for eachNet in ${applicableNets} ; do
 	lpDo ${eachNet}_setIdAndDeploy
     done
 

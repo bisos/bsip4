@@ -676,7 +676,7 @@ function vis_sysCharWrite {
 ** Writes into ~containerBxo/sysChar
 *** bxoId is the sysChar.
 *** sysInfo.fps of sysChar overwrites sysInfo.fps of siteContainersRepo.
-
+*** TODO Needs to be developed in conjunction with siteNetworks_lib.sh
 _EOF_
 		      }
     EH_assert [[ $# -eq 0 ]]
@@ -751,54 +751,40 @@ _EOF_
     # NOTYET, ipAddrs are hard coded for now. Should be fixed.
     # Perhaps in a bisosL3_lib.sh where privA, etc are mapped.
     #
-    
-    case ${abode} in
-	Auto|Mobile)
-	    doNothing
-	    ;;
-	Perim)
-	    lpDo FN_dirCreatePathIfNotThere ${containerSpecFps_netIfs}
-	    interfaceOfNet=$( vis_givenNetGetInterface 10.x.x..0 24 )
-	    if [ -z "${interfaceOfNet}" ] ; then
-		if [ ${model} == "Virt" ] ; then
-		    interfaceOfNet=eth1
-		else
-		    interfaceOfNet=TBD
-		fi
-	    fi
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${containerSpecFps_netIfs} perimA "${interfaceOfNet}"
-	    ;;
+
+    function netInterfaceFpUpdate {
+	EH_assert [[ $# -eq 1 ]]
+
+	local netName="$1"
+
+	EH_assert [ ! -z "${netName}" ]
+
+	if [ "${netName}" == "nat" ] ; then
+	    ANT_raw "netName=nat requires no processing"
+	    lpReturn
+	fi
 	
-	Internet)
-	    lpDo FN_dirCreatePathIfNotThere ${containerSpecFps_netIfs}
-	    interfaceOfNet=$( vis_givenNetGetInterface 198.62.92.0 24 )
-	    if [ -z "${interfaceOfNet}" ] ; then
-		if [ ${model} == "Virt" ] ; then
-		    interfaceOfNet=eth2
-		else
-		    interfaceOfNet=TBD
-		fi
+	local netAddr=$( vis_netAddr ${netName} )
+	local netmask=$( vis_netmask ${netName} )
+
+	lpDo FN_dirCreatePathIfNotThere ${containerSpecFps_netIfs}
+	interfaceOfNet=$( vis_givenNetGetInterface "${netAddr}" "${netmask}" )
+	if [ -z "${interfaceOfNet}" ] ; then
+	    if [ ${model} == "Virt" ] ; then
+		# Interface name has been communicated at VM creation
+		interfaceOfNet=eth1
+	    else
+		interfaceOfNet=TBD
 	    fi
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${containerSpecFps_netIfs} pubA "${interfaceOfNet}"
-	    ;;
-	    
-	Shield)
-	    lpDo FN_dirCreatePathIfNotThere ${containerSpecFps_netIfs}
-	    interfaceOfNet=$( vis_givenNetGetInterface 192.168.0.0 24 )
-	    if [ -z "${interfaceOfNet}" ] ; then
-		if [ ${model} == "Virt" ] ; then
-		    interfaceOfNet=eth1
-		else
-		    interfaceOfNet=TBD
-		fi
-	    fi
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${containerSpecFps_netIfs} privA "${interfaceOfNet}"
-	    ;;
-	
-	*)
-	    EH_problem "Bad Usage abode=${abode}"	    
-	    ;;
-    esac
+	fi
+	lpDo fileParamManage.py -v 30 -i fileParamWrite ${containerSpecFps_netIfs} "${netName}" "${interfaceOfNet}"
+    }
+
+    local applicableNets=$( vis_withAbodeGetApplicableNetsList "${containerAssign_abode}" )
+
+    for eachNetName in ${applicableNets} ; do    
+	lpDo netInterfaceFpUpdate ${eachNetName}
+    done
 }
 
 
