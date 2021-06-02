@@ -475,6 +475,7 @@ _EOF_
 
    EH_assert [ -d "${containerSteadyBase}" ]
 
+   # blank or auto or static
    if [ ! -z "${containerSteady_networkMode:-}" ] ; then
        lpDo fileParamManage.py -v 20 -i fileParamWrite ${containerSteadyBase}/net networkMode.fp "${containerSteady_networkMode}"
    fi
@@ -682,10 +683,8 @@ function vis_sysCharWrite {
 _EOF_
 		      }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
 
-    EH_assert vis_bxoAcctVerify "${bxoId}"
-    bxoHome=$( FN_absolutePathGet ~${bxoId} )
+    EH_assert bxoIdPrep
 
     local repoName="sysChar"
     local repoBase="${bxoHome}/${repoName}"
@@ -787,7 +786,6 @@ _EOF_
     EH_assert bxoIdPrep
 
     local netName="$1"
-
     EH_assert [ ! -z "${netName}" ]
 
     if [ "${netName}" == "nat" ] ; then

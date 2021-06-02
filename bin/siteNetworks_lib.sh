@@ -143,8 +143,8 @@ _EOF_
 
    local netName="$1"
 
-   local netAddr=$( vis_netAddr ${netName} )
-   local netMask=$( vis_netmask ${netName} )
+   local netAddr=$( vis_site_netNameAddr ${netName} )
+   local netMask=$( vis_site_netNameNetmask ${netName} )
 
    local netAddrPrefix=""
 
@@ -163,7 +163,7 @@ _EOF_
 
 
 
-function vis_netAddr {
+function vis_site_netNameAddr {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -184,7 +184,7 @@ _EOF_
    echo ${netAddr}
 }
 
-function vis_netmask {
+function vis_site_netNameNetmask {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -205,7 +205,7 @@ _EOF_
    echo ${netmask}
 }
 
-function vis_routerDefault {
+function vis_site_netName_routerDefault {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -220,7 +220,7 @@ _EOF_
    local netBase=${networksBase}/${netName}/net.fps  
 
    local routerDefault=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} routerDefault )
-   EH_assert [ -d "${routerDefault}" ]
+   # EH_assert [ -d "${netBase}/${routerDefault}" ]
    
    echo ${routerDefault}
 }
@@ -260,6 +260,16 @@ _EOF_
    EH_assert [ -d "${routerSiteFpsPath}" ]
 
    echo ${routerSiteFpsPath}
+}
+
+function vis_site_srcDestNetName_routerFpsBase {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 2 ]]
+
+   lpDo vis_routerSiteFpsPath $@
 }
 
 
@@ -412,7 +422,153 @@ _EOF_
 }
 
 
+function vis_cntnr_netName_ipAddr {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Analyze sysCharBxoId, list applicable netNames based on abode.
+_EOF_
+		       }
+    EH_assert [[ $# -eq 1 ]]
 
+    EH_assert bxoIdPrep
+
+    local netName="$1"
+    EH_assert [ ! -z "${netName}" ]
+
+    if [ "${netName}" == "nat" ] ; then
+	ANT_raw "netName=nat requires no processing"
+	lpReturn
+    fi
+     
+    # Generics one way, auto one way, assigned one way
+
+    local siteContainersRepo="${bxoHome}/siteContainersRepo"
+    local containerAssignBase="${siteContainersRepo}/assign"
+
+    local model=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} model )
+    local abode=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} abode )
+    local function=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} function )
+    local containerId=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} containerId )    
+
+    local sysCharBase=${bxoHome}/sysChar
+    local repoName="sysChar"
+    local repoBase="${bxoHome}/${repoName}"
+    
+    local sysInfoFps=${repoBase}/sysInfo.fps
+    EH_assert [ -d "${sysInfoFps}" ]
+
+    local virtSpecFps=${repoBase}/virtSpec.fps
+    EH_assert [ -d "${virtSpecFps}" ]
+
+    local containerSpecFps=${repoBase}/containerSpec.fps  
+    local containerSpecFps_netIfs=${containerSpecFps}/netIfs
+
+    local result=""
+    
+    case ${function} in
+	Generic)
+	    ANR_raw "Generic IP ADDR NOTYET"
+	    lpReturn 
+	    ;;
+	Server)
+	    doNothing
+	    ;;
+	*)
+	    EH_problem "NOTYET -- unimplemented ${function}"
+	    ;;
+    esac
+
+    case ${model} in
+	Virt)
+	    result=$(vis_getVirtAddr ${netName} NOTYETContainerNu)
+	    ;;
+	Host|Pure)
+	    # /bxo/r3/iso/pmp_HIS-1001/siteContainersRepo/assign/boxId/
+	    local boxId=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} boxId )
+	    local boxNu=$( echo "${boxId}" | sed -e 's:box::' )
+	    result=$(vis_getBoxAddr ${netName} ${boxNu})
+	    ;;
+	*)
+	    EH_problem "Bad Usage model=${model}"
+	    ;;
+    esac
+
+    echo "${result}"
+}
+
+
+function vis_getVirtAddr {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** 
+_EOF_
+		       }
+    EH_assert [[ $# -eq 2 ]]
+
+    local netName=$1
+    local containerNu=$2
+
+    local addrType=containers
+
+    local networksBase=$( networksBaseObtain )
+    EH_assert [ ! -z "${networksBase}" ]
+
+    local netBase=${networksBase}/${netName}/addrs/${addrType}
+    EH_assert [ -d "${netBase}" ]
+
+    local minAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} minAddr.fp )
+    local maxAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} maxAddr.fp )
+
+    # NOTYET, unused local assignedBase="${netBase}/assigned"
+
+    local netAddrPrefix=$( vis_forNetName_getNetAddrPrefix "${netName}" )
+    
+    local containerIndex=$(( ${containerNu} - 1000 ))
+    local containerAddrNu=$(( ${containerIndex} + ${minAddr} ))
+    local containerAddr="${netAddrPrefix}.${containerAddrNu}"
+
+    echo ${containerAddr}
+    
+    lpReturn
+}
+
+
+function vis_getBoxAddr {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Similar to vis_assignNextAddr but uses different pool and indexes based on boxNu.
+_EOF_
+		       }
+    EH_assert [[ $# -eq 2 ]]
+
+    local netName=$1
+    local boxNu=$2
+
+    local addrType=containerBoxes
+
+    local networksBase=$( networksBaseObtain )
+    EH_assert [ ! -z "${networksBase}" ]
+
+    local netBase=${networksBase}/${netName}/addrs/${addrType}
+    EH_assert [ -d "${netBase}" ]
+
+    local minAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} minAddr.fp )
+    local maxAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} maxAddr.fp )
+
+    # NOTYET, Unused local assignedBase="${netBase}/assigned"
+
+    local netAddrPrefix=$( vis_forNetName_getNetAddrPrefix "${netName}" )
+
+    local boxIndex=$(( ${boxNu} - 1000 ))
+    local boxAddrNu=$(( ${boxIndex} + ${minAddr} ))
+    local boxAddr="${netAddrPrefix}.${boxAddrNu}"
+
+    echo ${boxAddr}
+    
+    lpReturn
+}
+
+    
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*

@@ -201,6 +201,8 @@ ${G_myName} -p bxoId=sysChar -i cntnr_netName_applicables
 ${G_myName} ${extraInfo} -p bxoId=sysChar -i cntnr_netName_interfaceUpdate ${oneInterface} enSomeNu
 ${G_myName} -p bxoId=sysChar -i cntnr_netName_interfacesConject
 ${G_myName} ${extraInfo} -p bxoId=sysChar -i cntnr_netName_interfacesUpdateBasedOnConjecture
+$( examplesSeperatorChapter "Container File Set/Update" )
+${G_myName} ${extraInfo} -p bxoId=sysChar -i sysCharWrite  # Initially invoked in sysCharRealize.sh
 _EOF_
 }
 

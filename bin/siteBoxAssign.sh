@@ -313,6 +313,20 @@ _EOF_
    echo "box${boxNu}"
 }
 
+function vis_boxIdToBoxNu {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+
+   EH_assert [[ $# -eq 1 ]]
+   
+   local boxId=$1
+   echo "${boxId}" | sed -e 's:box::'
+}
+
+
+
 function vis_thisBoxFindId {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_

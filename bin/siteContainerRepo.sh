@@ -282,6 +282,7 @@ _EOF_
    
    case ${function} in
        Generic)
+	   # Generic applies to privA only
 	   case ${abode} in
 	       Auto)
 		   containerSteady_networkMode="auto"
@@ -297,23 +298,26 @@ _EOF_
 	   ;;
        Server)
 	   case ${abode} in
-	       Auto)
+	       Auto|Mobile)
 		   containerSteady_networkMode="auto"
 		   ;;
-	       Shield)
+	       Shield|Internet|perim)
 		   containerSteady_networkMode="static"
-		   case ${model} in
-		       Host|Pure)
-			   # Host or Pure = containerBox
-			   containerSteady_privA_addr=$( siteNetworks.sh -i assignBoxAddr privA $( siteBoxAssign.sh -i thisBoxFindNu ) )
-			   ;;
-		       Virt)
-			   containerSteady_privA_addr=$( siteNetworks.sh -i assignVirtAddr privA ${containerNu} )
-			   ;;
-		       *)
-			   EH_problem "Bad Usage -- invalid model=${model}"
-			   ;;
-		   esac
+		   local applicableNets=$( vis_withAbodeGetApplicableNetsList "${containerAssign_abode}" )
+		   for eachNetName in ${applicableNets} ; do
+		       case ${model} in
+			   Host|Pure)
+			       # Host or Pure = containerBox
+			       lpDo siteNetworks.sh -i assignBoxAddr privA $(siteBoxAssign.sh -i thisBoxFindNu)
+			       ;;
+			   Virt)
+			       lpDo siteNetworks.sh -i assignVirtAddr privA ${containerNu}
+			       ;;
+			   *)
+			       EH_problem "Bad Usage -- invalid model=${model}"
+			       ;;
+		       esac
+		   done
 		   ;;
 	       *)
 		   doNothing

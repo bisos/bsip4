@@ -62,6 +62,7 @@ _CommentEnd_
 . ${opBinBase}/platformBases_lib.sh
 
 . ${opBinBase}/bxo_lib.sh
+. ${opBinBase}/bxoId_lib.sh
 
 # ./lcnFileParams.libSh
 . ${opBinBase}/lcnFileParams.libSh
@@ -129,20 +130,20 @@ ${G_myName} -i forNetName_getNetAddrPrefix pubB
 ${G_myName} -i forNetName_getNetAddrPrefix privA
 ${G_myName} -i forNetName_getNetAddrPrefix perimA
 $( examplesSeperatorChapter "This Network Actions" )
-${G_myName} -i netAddr pubA
-${G_myName} -i netAddr pubB
-${G_myName} -i netAddr privA
-${G_myName} -i netAddr perimA
+${G_myName} -i site_netNameAddr pubA
+${G_myName} -i site_netNameAddr pubB
+${G_myName} -i site_netNameAddr privA
+${G_myName} -i site_netNameAddr perimA
 $( examplesSeperatorChapter "This Network Actions" )
-${G_myName} -i netmask pubA
-${G_myName} -i netmask pubB
-${G_myName} -i netmask privA
-${G_myName} -i netmask perimA
+${G_myName} -i site_netNameNetmask pubA
+${G_myName} -i site_netNameNetmask pubB
+${G_myName} -i site_netNameNetmask privA
+${G_myName} -i site_netNameNetmask perimA
 $( examplesSeperatorChapter "This Network Actions" )
-${G_myName} -i routerDefault pubA
-${G_myName} -i routerDefault pubB
-${G_myName} -i routerDefault privA
-${G_myName} -i routerDefault perimA
+${G_myName} -i site_netName_routerDefault pubA
+${G_myName} -i site_netName_routerDefault pubB
+${G_myName} -i site_netName_routerDefault privA
+${G_myName} -i site_netName_routerDefault perimA
 $( examplesSeperatorChapter "This Network Actions" )
 ${G_myName} -i routerSiteFpsPath privA pubA
 $( examplesSeperatorChapter "With Abode Get Nets List" )
@@ -152,7 +153,7 @@ ${G_myName} -i withAbodeGetApplicableNetsList Perim
 ${G_myName} -i withAbodeGetApplicableNetsList Shield
 ${G_myName} -i withAbodeGetApplicableNetsList Internet
 $( examplesSeperatorChapter "Obtain IP Addrs" )
-${G_myName} -i routerDefault pubA
+${G_myName} -i site_netName_routerDefault pubA
 ${G_myName} -i containerIpAddrObtain_privA VSG-ub2004_ generic
 $( examplesSeperatorChapter "Assign IP Addrs" )
 ${G_myName} ${extraInfo} -i assignNextAddr privA generic
@@ -162,6 +163,11 @@ ${G_myName} ${extraInfo} -i assignBoxAddr privA ${thisBoxNu}
 ${G_myName} ${extraInfo} -i releaseBoxAddr privA ${thisBoxNu}
 ${G_myName} ${extraInfo} -i assignVirtAddr privA 1009
 ${G_myName} ${extraInfo} -i releaseVirtAddr privA 1009
+$( examplesSeperatorChapter "This Network Actions" )
+${G_myName} ${extraInfo} -p bxoId=sysChar -i cntnr_netName_ipAddr pubA
+${G_myName} ${extraInfo} -p bxoId=sysChar -i cntnr_netName_ipAddr pubB
+${G_myName} ${extraInfo} -p bxoId=sysChar -i cntnr_netName_ipAddr privA
+${G_myName} ${extraInfo} -p bxoId=sysChar -i cntnr_netName_ipAddr perimA
 _EOF_
 }
 
