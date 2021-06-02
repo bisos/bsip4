@@ -95,6 +95,8 @@ _CommentEnd_
 . ${opBinBase}/bisosCurrents_lib.sh
 
 . ${opBinBase}/site_lib.sh
+. ${opBinBase}/siteNetworks_lib.sh
+. ${opBinBase}/l3_lib.sh
 
 . ${opBinBase}/sysChar_lib.sh
 
@@ -168,20 +170,37 @@ function vis_examples {
     # local oneTargetName="192.168.0.52"
     local oneTargetName=${curTargetBox:-}
     # local oneTargetName="localhost"
+
+    bxoId=sysChar
+    local oneInterface=$( vis_cntnr_netName_applicables | head -1 )
+
+    oneBxoId="${currentBxoId}"
     
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${effectiveContainerBxoId}"
-bisosCurrentsManage.sh  ${extraInfo} -i setParam curTargetBox 192.168.0.45
-${curTargetBox:-}
+${currentBxoId:-}
 $( examplesSeperatorChapter "Ssh Based Cusomizations -- Bx Based (not vagrant based)" )
 ${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i postCustomize  # on host - bx-ssh
 ${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i secureSeal     # on host - bx-ssh
 ${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i recordDeployment      # inside of parent bxo
 $( examplesSeperatorChapter "Full Update" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i fullUpdate
+${G_myName} ${extraInfo} -i fullUpdate
+$( examplesSeperatorChapter "Overview Report And Summary" )
+${G_myName} ${extraInfo} -p bxoId=sysChar -i bxoIdShow  # from  bxoIdManage.sh 
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i sysCharReport
+${G_myName} ${extraInfo} -i containerBoxSysCharReport
+$( examplesSeperatorChapter "Container Networks Info" )
+${G_myName} -p bxoId=sysChar -i cntnr_netName_applicables
+${G_myName} ${extraInfo} -p bxoId=sysChar -i cntnr_netName_interfaceObtain ${oneInterface}
+${G_myName} -p bxoId=sysChar -i cntnr_netName_applicables | xargs -n1 -- ${G_myName} -p bxoId=sysChar -i cntnr_netName_interfaceObtain
+$( examplesSeperatorChapter "Container Networks Set/Update" )
+${G_myName} -p bxoId=sysChar -i cntnr_netName_applicables
+${G_myName} ${extraInfo} -p bxoId=sysChar -i cntnr_netName_interfaceUpdate ${oneInterface} enSomeNu
+${G_myName} -p bxoId=sysChar -i cntnr_netName_interfacesConject
+${G_myName} ${extraInfo} -p bxoId=sysChar -i cntnr_netName_interfacesUpdateBasedOnConjecture
 _EOF_
 }
 

@@ -491,10 +491,10 @@ _EOF_
 }
 
 
-function vis_sysChar_netIfsRead {
+function vis_sysChar_netIfsRead%% {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-bxoId is the sysChar.
+** bxoId is the sysChar and can be specified through -p or as \$1. Reads value of applicable net interfaces.
 _EOF_
 		       }
 
@@ -505,6 +505,8 @@ _EOF_
     if [ $# -eq 1 ] ; then
 	thisBxoId=$1
     fi
+
+    thisBxoId=$( bxoIdPrep ${thisBxoId} )
 
     EH_assert [ ! -z "${thisBxoId}" ]
 
@@ -737,53 +739,257 @@ _EOF_
   	    #vagBaseBox=$( withDistroGetVagBaseBox ${distro} ${distroType} ${vagBaseBoxType} )
 	    vagBaseBox=$( withDistroGetVagBaseBox ${function} ${distro} ${distroType} ${containerId} )	    
 	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${virtSpecFps} vagBaseBox ${vagBaseBox}
+
+	    ANT_raw "For modle=${model} Network InterfaceName was communicated at VM creation"	    
 	    ;;
 	Host|Pure)
 	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${virtSpecFps} virtType none
+
+	    lpDo vis_cntnr_netName_interfacesUpdateBasedOnConjecture
+	    ;;
+	*)
+	    EH_problem "Bad Usage model=${model}"
+	    ;;
+    esac
+}
+
+
+function vis_cntnr_netName_applicables {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Analyze sysCharBxoId, list applicable netNames based on abode.
+_EOF_
+		      }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert bxoIdPrep
+
+    local repoName="sysChar"
+    local repoBase="${bxoHome}/${repoName}"
+
+    local siteContainersRepo="${bxoHome}/siteContainersRepo"
+    local containerAssignBase="${siteContainersRepo}/assign"
+
+    local abode=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} abode )
+
+    lpDo vis_withAbodeGetApplicableNetsList "${abode}"
+}
+    
+
+function vis_cntnr_netName_interfaceObtain {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Analyze sysCharBxoId, based on that and specified NetName, obtaine network interface.
+_EOF_
+		      }
+    EH_assert [[ $# -eq 1 ]]
+
+    EH_assert bxoIdPrep
+
+    local netName="$1"
+
+    EH_assert [ ! -z "${netName}" ]
+
+    if [ "${netName}" == "nat" ] ; then
+	ANT_raw "netName=nat requires no processing"
+	lpReturn
+    fi
+    
+    local repoName="sysChar"
+    local repoBase="${bxoHome}/${repoName}"
+
+    local siteContainersRepo="${bxoHome}/siteContainersRepo"
+    local containerAssignBase="${siteContainersRepo}/assign"
+
+    local model=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} model )
+    local abode=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} abode )
+    local function=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} function )
+    local containerId=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} containerId )    
+
+    local sysInfoFps=${repoBase}/sysInfo.fps
+    lpDo FN_dirCreatePathIfNotThere ${sysInfoFps}
+
+    local virtSpecFps=${repoBase}/virtSpec.fps
+    lpDo FN_dirCreatePathIfNotThere ${virtSpecFps}
+
+    local containerSpecFps=${repoBase}/containerSpec.fps  
+    local containerSpecFps_netIfs=${containerSpecFps}/netIfs
+
+    local interfaceOfNet=""
+    
+    case ${model} in
+	Virt)
+	    # Result is something like eth0  and is obtained from
+	    # sysCharBxoHome/var
+
+	    # NOTYET
+	    #
+	    interfaceOfNet=$( fileParamManage.py -v 30 -i fileParamRead ${${bxoHome}/var/conveyInfo} "${netName}-netIf" )
+	    ;;
+	Host|Pure)
+	    # Result is somethnk like en0 and is obtained from
+	    # sysCharBxoHome/sysChar/containerSpec.fps/netIfs
+	    interfaceOfNet=$( fileParamManage.py -v 30 -i fileParamRead ${containerSpecFps_netIfs} "${netName}" )	    
 	    ;;
 	*)
 	    EH_problem "Bad Usage model=${model}"
 	    ;;
     esac
 
-    local interfaceOfNet=""
-    #
-    # NOTYET, ipAddrs are hard coded for now. Should be fixed.
-    # Perhaps in a bisosL3_lib.sh where privA, etc are mapped.
-    #
+    echo "${interfaceOfNet}"
+}
 
-    function netInterfaceFpUpdate {
-	EH_assert [[ $# -eq 1 ]]
 
-	local netName="$1"
+function vis_cntnr_netName_interfaceUpdate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Analyze sysCharBxoId, based on that and specified NetName, obtaine network interface.
+_EOF_
+		      }
+    EH_assert [[ $# -eq 2 ]]
 
-	EH_assert [ ! -z "${netName}" ]
+    EH_assert bxoIdPrep
 
-	if [ "${netName}" == "nat" ] ; then
-	    ANT_raw "netName=nat requires no processing"
+    local netName="$1"
+    local interfaceOfNet="$2"   
+
+    EH_assert [ ! -z "${netName}" ]
+
+    if [ "${netName}" == "nat" ] ; then
+	ANT_raw "netName=nat requires no processing"
+	lpReturn
+    fi
+    
+    local repoName="sysChar"
+    local repoBase="${bxoHome}/${repoName}"
+
+    local siteContainersRepo="${bxoHome}/siteContainersRepo"
+    local containerAssignBase="${siteContainersRepo}/assign"
+
+    local model=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} model )
+    local abode=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} abode )
+    local function=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} function )
+    local containerId=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} containerId )    
+
+    local sysInfoFps=${repoBase}/sysInfo.fps
+    lpDo FN_dirCreatePathIfNotThere ${sysInfoFps}
+
+    local virtSpecFps=${repoBase}/virtSpec.fps
+    lpDo FN_dirCreatePathIfNotThere ${virtSpecFps}
+
+    local containerSpecFps=${repoBase}/containerSpec.fps  
+    local containerSpecFps_netIfs=${containerSpecFps}/netIfs
+    
+    case ${model} in
+	Virt)
+	    # Result is something like eth0  and is obtained from
+	    # sysCharBxoHome/var
+
+	    # NOTYET
+	    #
+	    lpDo echo  NOTYET fileParamManage.py -v 30 -i fileParamWrite ${${bxoHome}/var/conveyInfo} "${netName}-netIf"
+	    ;;
+	Host|Pure)
+	    # Result is something like en0 and is obtained from
+	    # sysCharBxoHome/sysChar/containerSpec.fps/netIfs
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${containerSpecFps_netIfs} "${netName}" "${interfaceOfNet}"
+	    ;;
+	*)
+	    EH_problem "Bad Usage model=${model}"
+	    ;;
+    esac
+}
+
+
+function vis_cntnr_netName_interfacesUpdateBasedOnConjecture {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Analyze sysCharBxoId, based on that and specified netName, and specified interfaceOfNet, set network interface.
+_EOF_
+		      }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert bxoIdPrep
+
+    local line=""
+    local netName=""
+    local netInterface
+
+    function procNetNameInterface {
+	netName=$1
+	netInterface=$2
+
+	if [ "${netInterface}" == "unknown" ] ; then
+	    ANT_raw "No conjectures for netName=$1 and netInterface=$2"
 	    lpReturn
 	fi
-	
-	local netAddr=$( vis_netAddr ${netName} )
-	local netmask=$( vis_netmask ${netName} )
+	lpDo vis_cntnr_netName_interfaceUpdate ${netName} ${netInterface}
+    }
+    
+    vis_cntnr_netName_interfacesConject |
+	while read line ; do
+	    procNetNameInterface ${line} 
+	done
+}
 
-	lpDo FN_dirCreatePathIfNotThere ${containerSpecFps_netIfs}
+
+function vis_cntnr_netName_interfacesConject {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Analyze sysCharBxoId, based on that and specified netName, and specified interfaceOfNet, set network interface.
+_EOF_
+		      }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert bxoIdPrep
+
+    # local netName="$1"
+    # local interfaceOfNet="$2"
+
+    # EH_assert [ ! -z "${netName}" ]
+
+    # if [ "${netName}" == "nat" ] ; then
+    # 	ANT_raw "netName=nat requires no processing"
+    # 	lpReturn
+    # fi
+    
+    local repoName="sysChar"
+    local repoBase="${bxoHome}/${repoName}"
+
+    local siteContainersRepo="${bxoHome}/siteContainersRepo"
+    local containerAssignBase="${siteContainersRepo}/assign"
+
+    local model=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} model )
+    local abode=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} abode )
+    local function=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} function )
+    local containerId=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} containerId )    
+
+    local sysInfoFps=${repoBase}/sysInfo.fps
+    lpDo FN_dirCreatePathIfNotThere ${sysInfoFps}
+
+    local virtSpecFps=${repoBase}/virtSpec.fps
+    lpDo FN_dirCreatePathIfNotThere ${virtSpecFps}
+
+    local containerSpecFps=${repoBase}/containerSpec.fps  
+    local containerSpecFps_netIfs=${containerSpecFps}/netIfs
+
+    local interfaceOfNet=""
+    local netAddr=""
+    local netmask=""
+
+    local applicableNets=$( vis_withAbodeGetApplicableNetsList "${abode}" )
+    
+    for eachNetName in ${applicableNets} ; do
+
+	netAddr=$( vis_netAddr ${eachNetName} )
+	netmask=$( vis_netmask ${eachNetName} )
+
 	interfaceOfNet=$( vis_givenNetGetInterface "${netAddr}" "${netmask}" )
 	if [ -z "${interfaceOfNet}" ] ; then
-	    if [ ${model} == "Virt" ] ; then
-		# Interface name has been communicated at VM creation
-		interfaceOfNet=eth1
-	    else
-		interfaceOfNet=TBD
-	    fi
+	    interfaceOfNet="unknown"
 	fi
-	lpDo fileParamManage.py -v 30 -i fileParamWrite ${containerSpecFps_netIfs} "${netName}" "${interfaceOfNet}"
-    }
 
-    local applicableNets=$( vis_withAbodeGetApplicableNetsList "${containerAssign_abode}" )
-
-    for eachNetName in ${applicableNets} ; do    
-	lpDo netInterfaceFpUpdate ${eachNetName}
+	lpDo echo "${eachNetName}" "${interfaceOfNet}"
     done
 }
 

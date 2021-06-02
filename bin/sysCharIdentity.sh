@@ -426,6 +426,7 @@ function vis_privA_stdout {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** TODO NOTYET, based on ${containerAssign_abode} determine if privA is applicable.
+** TODO Re-do all of this based on new revisions.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -437,7 +438,9 @@ _EOF_
     lpDo vis_containerSteadyRead    
     lpDo vis_sysCharRead
 
-    lpDo vis_sysChar_netIfsRead
+    lpDo echo Obsoleted vis_sysChar_netIfsRead
+
+    netIf= $( vis_cntnr_netName_interfaceObtain privA )
     
     local ipAddr_privA=""
     
@@ -556,32 +559,12 @@ _EOF_
     lpDo vis_containerSteadyRead    
     lpDo vis_sysCharRead
 
-    local applicableNetsList=()
-
-    case "${containerAssign_abode}" in
-	"Auto")
-	    applicableNetsList=()
-	    ;;
-	"Mobile")
-	    applicableNetsList=()
-	    ;;
-	"Perim")
-	    applicableNetsList=("perimA")
-	    ;;
-	"Shield")
-	    applicableNetsList=("privA")
-	    ;;
-	"Internet")
-	    applicableNetsList=("pubA" "pubB" "perimA")
-	    ;;
-	*)
-	    EH_problem "Bad Usage -- containerAssign_abode=${containerAssign_abode}"
-    esac
-
     lpDo vis_loopback_update
+
+    local applicableNets=$( vis_withAbodeGetApplicableNetsList "${containerAssign_abode}" )
     
     local eachNet
-    for eachNet in ${applicableNetsList[@]} ; do
+    for eachNet in ${applicableNets} ; do
 	lpDo vis_${eachNet}_update
     done
 

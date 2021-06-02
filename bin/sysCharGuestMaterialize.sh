@@ -108,6 +108,16 @@ _CommentEnd_
 typeset -t bxoId=""
 # usg=""
 
+# Associative Array
+typeset -A vmNetIfsArray=(
+    [auto]=""
+    [privA]=""
+    [pubA]=""
+    [pubB]=""
+    [perimA]=""
+)
+
+
 function G_postParamHook {
     bxoIdPrepValidate    
 
@@ -437,38 +447,38 @@ _EOF_
 }
 
 
-function withAbodeGetApplicableNetsList%%Obsoleted {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** Based on Abode get applicableNetsList
-_EOF_
-		       }
-    EH_assert [[ $# -eq 1 ]]
+# function withAbodeGetApplicableNetsList%%Obsoleted {
+#     G_funcEntry
+#     function describeF {  G_funcEntryShow; cat  << _EOF_
+# ** Based on Abode get applicableNetsList
+# _EOF_
+# 		       }
+#     EH_assert [[ $# -eq 1 ]]
 
-    local abode=$1
+#     local abode=$1
     
-    applicableNetsList=()   # global variable
+#     applicableNetsList=()   # global variable
 
-    case "${containerAssign_abode}" in
-	"Auto")
-	    applicableNetsList=("nat")
-	    ;;
-	"Mobile")
-	    applicableNetsList=("nat")
-	    ;;
-	"Perim")
-	    applicableNetsList=("perimA")
-	    ;;
-	"Shield")
-	    applicableNetsList=("privA")
-	    ;;
-	"Internet")
-	    applicableNetsList=("pubA" "pubB" "perimA")
-	    ;;
-	*)
-	    EH_problem "Bad Usage -- abodeInitial=${abodeInitial}"
-    esac
-}
+#     case "${containerAssign_abode}" in
+# 	"Auto")
+# 	    applicableNetsList=("nat")
+# 	    ;;
+# 	"Mobile")
+# 	    applicableNetsList=("nat")
+# 	    ;;
+# 	"Perim")
+# 	    applicableNetsList=("perimA")
+# 	    ;;
+# 	"Shield")
+# 	    applicableNetsList=("privA")
+# 	    ;;
+# 	"Internet")
+# 	    applicableNetsList=("pubA" "pubB" "perimA")
+# 	    ;;
+# 	*)
+# 	    EH_problem "Bad Usage -- abodeInitial=${abodeInitial}"
+#     esac
+# }
 
 
 function vis_getIpAddr_privA {
@@ -512,44 +522,47 @@ _EOF_
     lpDo vis_containerAssignRead
     EH_assert [ ! -z "${containerAssign_abode}" ]
 
-    
-    function privA_update {
-	EH_assert [[ $# -eq 1 ]]
+    function netInterfaceUpdate {
+	EH_assert [[ $# -eq 2 ]]
 
-	ethCount=$1
+	local netName="$1"
+	local ethCount="$2"
 
-	local hostBxoId=$( withContainerIdGetBxoId ${hostContainerId} )
-	EH_assert vis_bxoAcctVerify "${hostBxoId}"
-	
-	lpDo vis_sysCharRead ${hostBxoId}
-	EH_assert [ ! -z "${sysChar_containerSpec_netIfs_privA}" ]
-
-    	     cat   << _EOF_
-    # privA interface on hostBxoId=${hostBxoId}	   eth${ethCount} 
-    guest.vm.network :public_network, :dev => "${sysChar_containerSpec_netIfs_privA}", :mode => 'bridge', auto_config: false
-_EOF_
-    }
-
-    function nat_update {
-	EH_assert [[ $# -eq 0 ]]
+	EH_assert [ ! -z "${netName}" ]
 
 	local hostBxoId=$( withContainerIdGetBxoId ${hostContainerId} )
 	EH_assert vis_bxoAcctVerify "${hostBxoId}"
-	
-	lpDo vis_sysCharRead ${hostBxoId}
-	EH_assert [ ! -z "${sysChar_containerSpec_netIfs_privA}" ]
 
-    	     cat   << _EOF_
+	if [ "${netName}" == "nat" ] ; then
+    	cat   << _EOF_
     # NAT on hostBxoId=${hostBxoId} -- No additional network interface is being configured.
+_EOF_
+	    
+	    lpReturn
+	fi
+	
+	lpDo vis_sysCharRead ${hostBxoId}
+	# EH_assert [ ! -z "${sysChar_containerSpec_netIfs_${netName}}" ]
+
+	vmNetIfsArray[${netName}]=eth${ethCount}
+
+
+	lpDo echo ZZZ ${vmNetIfsArray[${netName}]}
+
+	# guest.vm.network :public_network, :dev => "${sysChar_containerSpec_netIfs_${netName}}", :mode => 'bridge', auto_config: false
+	
+        cat   << _EOF_
+    # ${netName} interface on hostBxoId=${hostBxoId}	   eth${ethCount} 
+    guest.vm.network :public_network, :dev => "someThingHere", :mode => 'bridge', auto_config: false
 _EOF_
     }
 
     local applicableNets=$( vis_withAbodeGetApplicableNetsList "${containerAssign_abode}" )
 
     local ethCount=0
-    for eachNet in ${applicableNets} ; do    
+    for eachNetName in ${applicableNets} ; do
 	(( ethCount++ ))
-	lpDo ${eachNet}_update ${ethCount}
+	lpDo netInterfaceUpdate ${eachNetName} ${ethCount}
     done
     
     lpReturn
@@ -582,50 +595,81 @@ _EOF_
     local site_gitServerName=$( fileParamManage.py -i fileParamRead ${siteGitServerInfoBaseDir} gitServerName )
     local site_gitServerUrl=$( fileParamManage.py -i fileParamRead ${siteGitServerInfoBaseDir} gitServerUrl )    
     local site_gitServerPrivToken=$( fileParamManage.py -i fileParamRead ${siteGitServerInfoBaseDir} gitServerPrivToken )
+
+    local registrar=$( vis_registrarHostName )
+    local id=$( vis_registrarUserName )
+    local password=$( vis_registrarUserPassword )        
+
+    local runInfo="-h -v -n showRun"
+    local binPath="/bisos/core/bsip/bin/sysCharDeploy.sh"
+
+    local bisosDevBxoId=$( usgBpos.sh -i usgBposUsageEnvs_bisosDevBxoId_read )
+
+
+    # 
+    # No longer needed:: /bisos/core/bsip/bin/bisosSiteGitServer.sh -h -v -n showRun -p gitServerName=${site_gitServerName} -p gitServerUrl=${site_gitServerUrl} -p gitServerPrivToken=${site_gitServerPrivToken} -i gitServerInfoSet
     
-    function nat_setIdAndDeploy {
-    EH_assert [[ $# -eq 0 ]]
+    
     cat  << _OUTER_EOF_
-	     cat   << _EOF_
-######### PHASE 2: BISOS Set Identity And Deploy -- NOTYET IpAddr setting
+	cat   << _EOF_
+######### PHASE 2.1: BISOS Site Setup And SysChar Container Activate And Identity Set -- With IpAddrs settings
 _EOF_
-	echo "Vagrant Skipped BISOS Identity Provisioning."
-_OUTER_EOF_
-    }
-
-    function privA_setIdAndDeploy {
-	EH_assert [[ $# -eq 0 ]]
-
-	local registrar=$( vis_registrarHostName )
-	local id=$( vis_registrarUserName )
-	local password=$( vis_registrarUserPassword )        
-
-	local runInfo="-h -v -n showRun"
-	local binPath="/bisos/core/bsip/bin/sysCharDeploy.sh"
-
-	local bisosDevBxoId=$( usgBpos.sh -i usgBposUsageEnvs_bisosDevBxoId_read )
-	
-	#/bisos/core/bsip/bin/bisosSiteGitServer.sh -h -v -n showRun -p gitServerName=${site_gitServerName} -p gitServerUrl=${site_gitServerUrl} -p gitServerPrivToken=${site_gitServerPrivToken} -i gitServerInfoSet
-	
-	cat  << _OUTER_EOF_
-	     cat   << _EOF_
-######### PHASE 2: BISOS Site And Identity Set -- With IpAddrs settings
-_EOF_
-	sudo ifconfig eth1 down  # Needed for deb11
 	sudo -u bystar ${binPath} ${runInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -p siteBxoId="${siteBxoId}" -i bisosBasePlatform_siteSetup
 	sudo -u bystar ${binPath} ${runInfo} -p bisosDevBxoId=${bisosDevBxoId} -i usgConvey_bisosDeveloper
 	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -i siteBasePlatform_sysBxoActivate
-	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpPrivA="$( vis_getIpAddr_privA )" -i conveyInfoStore
 	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpVmNameQualifier=\"${vmNameQualifier}\" -i conveyInfoStore
-	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -i deployWithSysCharConveyInfo
+_OUTER_EOF_
+
+
+    function conveyNetInterfacesInfo {
+	EH_assert [[ $# -eq 1 ]]
+
+	local netName="$1"
+
+	EH_assert [ ! -z "${netName}" ]
+
+	if [ "${netName}" == "nat" ] ; then
+	    cat  << _OUTER_EOF_
+	echo "netName=${netName} Requires No ConveyInfo."
+_OUTER_EOF_
+	    lpReturn
+	fi
+
+	local vmNetIf="${vmNetIfsArray[${netName}]}"
+
+	if [ -z "${vmNetIf}" ] ; then
+	    cat  << _OUTER_EOF_
+	echo "netName=${netName} Interface Is Not In Use."
+_OUTER_EOF_
+	    lpReturn
+	fi
+
+	cat  << _OUTER_EOF_
+	sudo ifconfig ${netName} down  # Needed for deb11
+	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpNetIf="${vmNetIf}" -i conveyNetInfoStore ${netName}
+	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpNetAddr="$( vis_getIpAddr_${netName} )" -i conveyNetInfoStore ${netName}
 _OUTER_EOF_
     }
 
     local applicableNets=$( vis_withAbodeGetApplicableNetsList "${containerAssign_abode}" )
 
-    for eachNet in ${applicableNets} ; do
-	lpDo ${eachNet}_setIdAndDeploy
+    cat  << _OUTER_EOF_
+	cat   << _EOF_
+######### PHASE 2.2: Convey Network Interfaces Info For: ${applicableNets}
+_EOF_
+_OUTER_EOF_
+    
+    for eachNetName in ${applicableNets} ; do    
+	lpDo conveyNetInterfacesInfo ${eachNetName}
     done
+    
+    cat  << _OUTER_EOF_
+	cat   << _EOF_
+######### PHASE 2.3: Deploy The SysChar Based On Abobe Provided ConveyInfo
+_EOF_
+	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -i deployWithSysCharConveyInfo
+_OUTER_EOF_
+    
 
     lpReturn
 }

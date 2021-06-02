@@ -14,6 +14,7 @@ fi
 function vis_bxoNameExists {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+** Could also be called bxoHasBeenRealizedP
 _EOF_
 		       }
     EH_assert [[ $# -eq 1 ]]

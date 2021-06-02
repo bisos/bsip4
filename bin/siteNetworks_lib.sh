@@ -125,11 +125,11 @@ _EOF_
     
     local eachNet=""
     for eachNet in ${applicableNetsList[@]} ; do
-	result+=$( echo -n "${eachNet} " )
+	# result+=$( echo -n "${eachNet} " )
+	echo "${eachNet}"
     done
 
-    echo ${result}
-    
+    #echo ${result}
 }
 
 
