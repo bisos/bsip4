@@ -381,9 +381,9 @@ _EOF_
 
    if [ -d "${containerRepoBase}" ] ; then
        ANT_raw "containerRepoBase=${containerRepoBase} already exists -- creation skipped"
-       #lpDo siteContainerRepo.sh -h -v -n showRun -i containerRepoUpdate basePrep ${containerAssignBase}
+       #lpDo siteContainerRepo.sh -h -v -n showRun -i containerRepoUpdate basePrep ${siteContainerAssignBase}
    else
-       lpDo siteContainerRepo.sh -h -v -n showRun -i containerRepoUpdate full ${containerAssignBase}
+       lpDo siteContainerRepo.sh -h -v -n showRun -i containerRepoUpdate full ${siteContainerAssignBase}
    fi
 
    EH_assert [ -d "${containerRepoBase}" ]
