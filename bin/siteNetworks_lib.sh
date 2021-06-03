@@ -257,7 +257,7 @@ _EOF_
    EH_assert [ -d "${siteNetworksBxoIdHome}" ]
 
    local routerSiteFpsPath=${siteNetworksBxoIdHome}/routes/${srcNetName}-${destNetName}.fps
-   EH_assert [ -d "${routerSiteFpsPath}" ]
+   # EH_assert [ -d "${routerSiteFpsPath}" ]
 
    echo ${routerSiteFpsPath}
 }

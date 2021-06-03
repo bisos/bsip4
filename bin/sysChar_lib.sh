@@ -805,36 +805,37 @@ _EOF_
     local containerId=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} containerId )    
 
     local sysInfoFps=${repoBase}/sysInfo.fps
-    lpDo FN_dirCreatePathIfNotThere ${sysInfoFps}
+    EH_assert [ -d ${sysInfoFps} ]
 
     local virtSpecFps=${repoBase}/virtSpec.fps
-    lpDo FN_dirCreatePathIfNotThere ${virtSpecFps}
+    EH_assert [ -d ${virtSpecFps} ]
 
     local containerSpecFps=${repoBase}/containerSpec.fps  
     local containerSpecFps_netIfs=${containerSpecFps}/netIfs
 
     local interfaceOfNet=""
+    local interfaceOfNetControl=""    
     
     case ${model} in
 	Virt)
 	    # Result is something like eth0  and is obtained from
 	    # sysCharBxoHome/var
 
-	    # NOTYET
-	    #
-	    interfaceOfNet=$( fileParamManage.py -v 30 -i fileParamRead ${${bxoHome}/var/conveyInfo} "${netName}-netIf" )
+	    interfaceOfNet=$( fileParamManage.py -v 30 -i fileParamRead ${bxoHome}/var/conveyInfo/netIfs "${netName}" )
+	    interfaceOfNetControl=$( fileParamManage.py -v 30 -i fileParamRead ${bxoHome}/var/conveyInfo/netIfs "${netName}-control" )	    	    
 	    ;;
 	Host|Pure)
-	    # Result is somethnk like en0 and is obtained from
+	    # Result is something like en0 and is obtained from
 	    # sysCharBxoHome/sysChar/containerSpec.fps/netIfs
-	    interfaceOfNet=$( fileParamManage.py -v 30 -i fileParamRead ${containerSpecFps_netIfs} "${netName}" )	    
+	    interfaceOfNet=$( fileParamManage.py -v 30 -i fileParamRead ${containerSpecFps_netIfs} "${netName}" )
+	    interfaceOfNetControl=$( fileParamManage.py -v 30 -i fileParamRead ${containerSpecFps_netIfs} "${netName}-control" )	    	    
 	    ;;
 	*)
 	    EH_problem "Bad Usage model=${model}"
 	    ;;
     esac
 
-    echo "${interfaceOfNet}"
+    echo "${interfaceOfNet}" "${interfaceOfNetControl}"
 }
 
 
@@ -844,12 +845,13 @@ function vis_cntnr_netName_interfaceUpdate {
 ** Analyze sysCharBxoId, based on that and specified NetName, obtaine network interface.
 _EOF_
 		      }
-    EH_assert [[ $# -eq 2 ]]
+    EH_assert [[ $# -eq 3 ]]
 
     EH_assert bxoIdPrep
 
     local netName="$1"
-    local interfaceOfNet="$2"   
+    local interfaceOfNet="$2"
+    local interfaceOfNetControl="$3"       
 
     EH_assert [ ! -z "${netName}" ]
 
@@ -883,14 +885,21 @@ _EOF_
 	    # Result is something like eth0  and is obtained from
 	    # sysCharBxoHome/var
 
-	    # NOTYET
-	    #
-	    lpDo echo  NOTYET fileParamManage.py -v 30 -i fileParamWrite ${${bxoHome}/var/conveyInfo} "${netName}-netIf"
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${bxoHome}/var/conveyInfo/netIfs "${netName}" "${interfaceOfNet}"
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${bxoHome}/var/conveyInfo/netIfs "${netName}-control" "${interfaceOfNetControl}"	    
 	    ;;
 	Host|Pure)
 	    # Result is something like en0 and is obtained from
 	    # sysCharBxoHome/sysChar/containerSpec.fps/netIfs
 	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${containerSpecFps_netIfs} "${netName}" "${interfaceOfNet}"
+	    case ${netName} in
+		pubA|pubB)
+		    lpDo fileParamManage.py -v 30 -i fileParamWrite ${containerSpecFps_netIfs} "${netName}-control" "disabled"
+		    ;;
+		*)
+		    lpDo fileParamManage.py -v 30 -i fileParamWrite ${containerSpecFps_netIfs} "${netName}-control" "enabled"
+		    ;;
+	    esac
 	    ;;
 	*)
 	    EH_problem "Bad Usage model=${model}"
@@ -911,22 +920,46 @@ _EOF_
 
     local line=""
     local netName=""
-    local netInterface
+    local netInterface=""
+
+    local repoName="sysChar"
+    local repoBase="${bxoHome}/${repoName}"
+    local containerAssignBase="${siteContainersRepo}/assign"
+
+    local model=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} model )
 
     function procNetNameInterface {
 	netName=$1
 	netInterface=$2
 
 	if [ "${netInterface}" == "unknown" ] ; then
+	    lpDo vis_cntnr_netName_interfaceUpdate ${netName} ${netInterface} "unconfigured"
 	    ANT_raw "No conjectures for netName=$1 and netInterface=$2"
 	    lpReturn
+	else
+	    lpDo vis_cntnr_netName_interfaceUpdate ${netName} ${netInterface} "enabled"
 	fi
-	lpDo vis_cntnr_netName_interfaceUpdate ${netName} ${netInterface}
+
+	case ${model} in
+	    Host|Pure)
+		case ${netName} in
+		    pubA|pubB)
+			lpDo vis_cntnr_netName_interfaceUpdate ${netName} ${netInterface} "disabled"
+			;;
+		    *)
+			doNothing
+			;;
+		esac
+		;;
+	    *)
+		doNothing
+		;;
+	esac
     }
     
     vis_cntnr_netName_interfacesConject |
 	while read line ; do
-	    procNetNameInterface ${line} 
+	    procNetNameInterface ${line} # 2 Args
 	done
 }
 
@@ -979,8 +1012,8 @@ _EOF_
     
     for eachNetName in ${applicableNets} ; do
 
-	netAddr=$( vis_netAddr ${eachNetName} )
-	netmask=$( vis_netmask ${eachNetName} )
+	netAddr=$(vis_site_netNameAddr ${eachNetName} )
+	netmask=$(vis_site_netNameNetmask ${eachNetName} )
 
 	interfaceOfNet=$( vis_givenNetGetInterface "${netAddr}" "${netmask}" )
 	if [ -z "${interfaceOfNet}" ] ; then
