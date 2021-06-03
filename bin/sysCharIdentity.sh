@@ -153,10 +153,12 @@ ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i secureSeal     # on host - bx
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i recordDeployment      # inside of parent bxo
 $( examplesSeperatorChapter "FULL SYSTEM Identity LEVEL SETUPS" )
 $( examplesSeperatorSection "Update" )
-${G_myName} ${extraInfo} -i identityUpdate
+${G_myName} ${extraInfo} -p bxoId=sysChar -i identityUpdate
 $( examplesSeperatorChapter "General Identity Parameters" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i motdSet
+${G_myName} ${extraInfo} -p bxoId=sysChar -i motdSet
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i nodename
+${G_myName} ${extraInfo} -p bxoId=sysChar -i nodename
 $( examplesSeperatorChapter "Network Interfaces" )
 ${G_myName} ${extraInfo} -i loopback_stdout
 ${G_myName} ${extraInfo} -i loopback_update
@@ -170,8 +172,9 @@ ${G_myName} -p bxoId="${oneBxoId}" -i pubA_stdout
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i pubA_update
 ${G_myName} -p bxoId="${oneBxoId}" -i interface_stdout
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i interface_update
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i netL3Interface  # above updates
-${G_myName} ${extraInfo} -p bxoId=sysChar -i netL3InterfacesUpdate  # above updates
+$( examplesSeperatorChapter "Container Abode Based Full Network Interfaces Update" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i netL3InterfacesUpdate  # above updates
+${G_myName} ${extraInfo} -p bxoId=sysChar -i netL3InterfacesUpdate
 ${G_myName} ${extraInfo} -p bxoId=sysChar -i netL3InterfacesStdout
 $( examplesSeperatorChapter "Network Identity Parameters" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i netEtcHosts
@@ -208,10 +211,9 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
+    # if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
 
-    EH_assert [ ! -z "${bxoId}" ]
-    EH_assert vis_bxoAcctVerify "${bxoId}"
+    EH_assert bxoIdPrep
     
     ANT_raw "About To identityUpdate"    
 
@@ -220,7 +222,7 @@ _EOF_
     opDoComplain vis_nodename
   
     #NETWORK
-    opDoComplain vis_netL3Interface
+    opDoComplain vis_netL3InterfacesUpdate
     # opDoComplain vis_netEtcHosts  # produces vis_netEtcHosts [ErrCode]= 25, Why, NOTYET
     lpDo vis_netEtcHosts    
 
@@ -271,9 +273,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
-
-    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert bxoIdPrep
 
     opDo vis_fileDotDistOrDateTagKeep /etc/hostname
 
@@ -286,7 +286,7 @@ _EOF_
 	    ;;
 	Internet)
 	    opDo vis_fileDotDistOrDateTagKeep /etc/motd 
-	    cat << _EOF_ > /etc/motd
+	    cat << _EOF_ | sudo tee /etc/motd > /dev/null
 
 Private ByStar Machine -- This service is restricted to authorized users only. 
 _EOF_
@@ -338,10 +338,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
-
-    EH_assert [ ! -z "${bxoId}" ]
-    EH_assert vis_bxoAcctVerify "${bxoId}"
+    EH_assert bxoIdPrep
 
     opDo vis_fileDotDistOrDateTagKeep /etc/hostname
 
@@ -350,10 +347,10 @@ _EOF_
 
     vis_sysCharConveyInfoRead
     
-    opDo eval "echo ${containerAssign_containerId}-${sysChar_conveyInfo_vmNameQualifier} | sed -e s/_// -e 's/-$//' > /etc/hostname"
-    opDo chmod 444 /etc/hostname
-
-    opDo hostname --file /etc/hostname
+    opDo eval "echo ${containerAssign_containerId}-${sysChar_conveyInfo_vmNameQualifier} | sed -e s/_// -e 's/-$//' | sudo tee /etc/hostname"
+    
+    opDo sudo chmod 444 /etc/hostname
+    opDo sudo hostname --file /etc/hostname
 
     return 0
 }
@@ -372,12 +369,11 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
-
-    EH_assert [ ! -z "${bxoId}" ]
-    EH_assert vis_bxoAcctVerify "${bxoId}"
+    EH_assert bxoIdPrep
 
     lpDo vis_containerAssignRead
+
+    lpDo vis_netEtcHostsAsRoot ${containerAssign_containerId}
     
     hostsFileName=/etc/hosts
 
@@ -387,6 +383,25 @@ _EOF_
     cat /etc/hosts
     
     lpReturn 0
+}
+
+function vis_netEtcHostsAsRoot {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Puts the containerId in /etc/hosts. Keeps the old one.
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local containerId=$1
+    local hostsFileName=/etc/hosts
+    
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
+
+    opDo FN_textReplaceOrAdd "^127.0.1.1.*$" "127.0.1.1       ${containerId}" "$hostsFileName"
+
+    ANT_raw "${hostsFileName} now reads:"
+    cat ${hostsFileName}
 }
 
 
