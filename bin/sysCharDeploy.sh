@@ -508,11 +508,11 @@ _EOF_
     }
 
     function onTargetRun {
-	lpDo echo sysCharActivate.sh ${G_commandPrefs} \
+	lpDo sysCharActivate.sh ${G_commandPrefs} \
 	     -p bxoId="${bxoId}" \
 	     -i activate_sysContainerBxo
 
-	lpDo echo sysCharActivate.sh ${G_commandPrefs} \
+	lpDo sysCharActivate.sh ${G_commandPrefs} \
 	     -i bisosContainerSelect "${bxoId}"
     }
 
