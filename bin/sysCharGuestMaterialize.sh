@@ -845,7 +845,7 @@ _OUTER_EOF_
 _EOF_
 
 	sudo apt-get update
-	sudo apt-get -y upgrade
+	sudo echo after release  -- apt-get -y upgrade # Prompts for keyboard selection
         sudo apt-get -y install python3-pip
         sudo pip3 install --upgrade bisos.provision  
         /usr/local/bin/provisionBisos.sh -h -v -n showRun -i sysBasePlatform
