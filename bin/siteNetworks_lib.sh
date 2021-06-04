@@ -371,8 +371,6 @@ _EOF_
     local minAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} minAddr.fp )
     local maxAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} maxAddr.fp )
 
-    # NOTYET, Unused local assignedBase="${netBase}/assigned"
-
     local netAddrPrefix=$( vis_forNetName_getNetAddrPrefix "${netName}" )
 
     local boxIndex=$(( ${boxNu} - 1000 ))
@@ -407,8 +405,6 @@ _EOF_
 
     local minAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} minAddr.fp )
     local maxAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} maxAddr.fp )
-
-    # NOTYET, unused local assignedBase="${netBase}/assigned"
 
     local netAddrPrefix=$( vis_forNetName_getNetAddrPrefix "${netName}" )
     
@@ -480,7 +476,8 @@ _EOF_
 
     case ${model} in
 	Virt)
-	    result=$(vis_getVirtAddr ${netName} NOTYETContainerNu)
+	    local containerNu=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} containerNu )
+	    result=$(vis_getVirtAddr ${netName} "${containerNu}")
 	    ;;
 	Host|Pure)
 	    # /bxo/r3/iso/pmp_HIS-1001/siteContainersRepo/assign/boxId/
@@ -519,8 +516,6 @@ _EOF_
     local minAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} minAddr.fp )
     local maxAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} maxAddr.fp )
 
-    # NOTYET, unused local assignedBase="${netBase}/assigned"
-
     local netAddrPrefix=$( vis_forNetName_getNetAddrPrefix "${netName}" )
     
     local containerIndex=$(( ${containerNu} - 1000 ))
@@ -554,8 +549,6 @@ _EOF_
 
     local minAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} minAddr.fp )
     local maxAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} maxAddr.fp )
-
-    # NOTYET, Unused local assignedBase="${netBase}/assigned"
 
     local netAddrPrefix=$( vis_forNetName_getNetAddrPrefix "${netName}" )
 

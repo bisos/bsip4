@@ -109,14 +109,19 @@ typeset -t bxoId=""
 # usg=""
 
 # Associative Array
-typeset -A vmNetIfsArray=(
-    [auto]=""
-    [privA]=""
-    [pubA]=""
-    [pubB]=""
-    [perimA]=""
+declare -A vmNetIfsArray=(
+    [auto]="none"
+    [privA]="none"
+    [pubA]="none"
+    [pubB]="none"
+    [perimA]="none"
 )
 
+vmNetIf_auto="blank"
+vmNetIf_privA="blank"
+vmNetIf_pubA="blank"
+vmNetIf_pubB="blank"
+vmNetIf_perimA="blank"
 
 function G_postParamHook {
     bxoIdPrepValidate    
@@ -184,6 +189,46 @@ ${G_myName} -i containerGenericMaterialize examples
 ${G_myName} ${extraInfo} -i containerGenericMaterialize doIt
 _EOF_
 }
+
+
+function netNameInfoInit {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		       }
+    EH_assert [[ $# -eq 0 ]]
+
+    if [ -d /tmp/netNameInfo ] ; then
+	lpDo rm -r /tmp/netNameInfo
+    fi
+    lpDo mkdir -p /tmp/netNameInfo
+}
+
+
+function netNameInfoWrite {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		       }
+    EH_assert [[ $# -eq 2 ]]
+    local key=$1
+    local value=$2
+
+    lpDo fileParamManage.py -v 30 -i fileParamWrite /tmp/netNameInfo "${key}" "${value}"
+}
+
+function netNameInfoRead {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Vagrant stdout -- Based on Abode and Host Network Interface put on stdout needed guest.vm.network info.
+_EOF_
+		       }
+    EH_assert [[ $# -eq 1 ]]
+    local key=$1
+
+    lpDo fileParamManage.py -v 30 -i fileParamRead /tmp/netNameInfo "${key}"
+}
+
 
 function vis_containerGenericMaterialize {
    G_funcEntry
@@ -498,16 +543,18 @@ _EOF_
     fi
 }
 
+
+inUseEthCount=0
+
 function vis_vagStdout_netInterfaces {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Based on Abode and Host Network Interface put on stdout needed guest.vm.network info.
+** Vagrant stdout -- Based on Abode and Host Network Interface put on stdout needed guest.vm.network info.
 _EOF_
 		       }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert [ ! -z "${bxoId}" ]
-    EH_assert vis_bxoAcctVerify "${bxoId}"
+    EH_assert bxoIdPrep
 
     #lpDo vis_containerSteadyRead    
 
@@ -523,46 +570,62 @@ _EOF_
     EH_assert [ ! -z "${containerAssign_abode}" ]
 
     function netInterfaceUpdate {
-	EH_assert [[ $# -eq 2 ]]
+	EH_assert [[ $# -eq 1 ]]
 
 	local netName="$1"
-	local ethCount="$2"
+	# local ethCount="$2"
 
 	EH_assert [ ! -z "${netName}" ]
 
 	local hostBxoId=$( withContainerIdGetBxoId ${hostContainerId} )
 	EH_assert vis_bxoAcctVerify "${hostBxoId}"
 
+	local netIf=""
+	local netIfControl=""
+
+	function getNetIfAsArgs { netIf=$1; netIfControl=$2; }
+    	lpDo getNetIfAsArgs  $(vis_cntnr_netName_interfaceObtain ${netName} sysChar)
+	EH_assert [ ! -z "${netIf}" ]
+	
 	if [ "${netName}" == "nat" ] ; then
     	cat   << _EOF_
     # NAT on hostBxoId=${hostBxoId} -- No additional network interface is being configured.
 _EOF_
-	    
 	    lpReturn
 	fi
-	
+
 	lpDo vis_sysCharRead ${hostBxoId}
 	# EH_assert [ ! -z "${sysChar_containerSpec_netIfs_${netName}}" ]
 
-	vmNetIfsArray[${netName}]=eth${ethCount}
+	if [ "${netIfControl}" == "enabled" ] || [ "${netIfControl}" == "guestOnly" ] ; then
 
+	    (( inUseEthCount++ ))
 
-	lpDo echo ZZZ ${vmNetIfsArray[${netName}]}
+	    # Store netName's ethNu for use in conveyInfo
+	    # Mystery -- vmNetIfsArray does not work??!!
+	    vmNetIfsArray[${netName}]=eth${inUseEthCount}
+	    lpDo netNameInfoWrite ${netName} eth${inUseEthCount}
+	    lpDo netNameInfoWrite ${netName}-host ${netIf}
+	    
+            cat   << _EOF_
+    # ${netName} interface on hostBxoId=${hostBxoId}  eth${inUseEthCount} netIf=${netIf} netIfControl=${netIfControl}
+    guest.vm.network :public_network, :dev => "${netIf}", :mode => 'bridge', auto_config: false
 
-	# guest.vm.network :public_network, :dev => "${sysChar_containerSpec_netIfs_${netName}}", :mode => 'bridge', auto_config: false
-	
-        cat   << _EOF_
-    # ${netName} interface on hostBxoId=${hostBxoId}	   eth${ethCount} 
-    guest.vm.network :public_network, :dev => "someThingHere", :mode => 'bridge', auto_config: false
 _EOF_
+	else
+	    lpDo netNameInfoWrite ${netName} unUsed
+	    lpDo netNameInfoWrite ${netName}-host ${netIf}
+	    cat   << _EOF_
+    # ${netName} interface on hostBxoId=${hostBxoId}  unUsed netIf=${netIf} netIfControl=${netIfControl}
+
+_EOF_
+	fi
     }
 
     local applicableNets=$( vis_withAbodeGetApplicableNetsList "${containerAssign_abode}" )
 
-    local ethCount=0
-    for eachNetName in ${applicableNets} ; do
-	(( ethCount++ ))
-	lpDo netInterfaceUpdate ${eachNetName} ${ethCount}
+     for eachNetName in ${applicableNets} ; do
+	lpDo netInterfaceUpdate ${eachNetName}
     done
     
     lpReturn
@@ -608,7 +671,8 @@ _EOF_
 
     # 
     # No longer needed:: /bisos/core/bsip/bin/bisosSiteGitServer.sh -h -v -n showRun -p gitServerName=${site_gitServerName} -p gitServerUrl=${site_gitServerUrl} -p gitServerPrivToken=${site_gitServerPrivToken} -i gitServerInfoSet
-    
+
+    hostCntnr=$( vis_bxoIdPrep "sysChar" )
     
     cat  << _OUTER_EOF_
 	cat   << _EOF_
@@ -618,6 +682,7 @@ _EOF_
 	sudo -u bystar ${binPath} ${runInfo} -p bisosDevBxoId=${bisosDevBxoId} -i usgConvey_bisosDeveloper
 	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -i siteBasePlatform_sysBxoActivate
 	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpVmNameQualifier=\"${vmNameQualifier}\" -i conveyInfoStore
+	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpHostCntnr=\"${hostCntnr}\" -i conveyInfoStore
 _OUTER_EOF_
 
 
@@ -635,27 +700,43 @@ _OUTER_EOF_
 	    lpReturn
 	fi
 
-	local vmNetIf="${vmNetIfsArray[${netName}]}"
+	local vmNetIf=$(netNameInfoRead ${netName})
+	local hostNetIf=$(netNameInfoRead ${netName}-host)	
 
-	if [ -z "${vmNetIf}" ] ; then
+	if [ -z "${vmNetIf}" ] || [ "${vmNetIf}" == "unUsed" ] ; then
 	    cat  << _OUTER_EOF_
-	echo "netName=${netName} Interface Is Not In Use."
+	echo "netName=${netName} Interface Is Not In Use cfpNetIf=${vmNetIf} cfpHostNetIf=${hostNetIf}."
 _OUTER_EOF_
-	    lpReturn
+	else
+	    cat  << _OUTER_EOF_
+	sudo ifconfig ${vmNetIf}  down  # Shutting Down ${netName} -- Needed for deb11
+	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpNetIf="${vmNetIf}" -i conveyNetInfoStore ${netName}
+	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpHostNetIf="${hostNetIf}" -i conveyNetInfoStore ${netName}
+_OUTER_EOF_
 	fi
 
 	cat  << _OUTER_EOF_
-	sudo ifconfig ${netName} down  # Needed for deb11
-	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpNetIf="${vmNetIf}" -i conveyNetInfoStore ${netName}
-	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpNetAddr="$( vis_getIpAddr_${netName} )" -i conveyNetInfoStore ${netName}
+
 _OUTER_EOF_
+
+	# IP Addrs are only converyed as over-writes or when Generic.
+
+	if [ "${netName}" == "privA" ] ; then
+	    cfpNetAddr="$( vis_getIpAddr_${netName} )"
+	    if [ ! -z "${cfpNetAddr}" ] ; then
+		cat  << _OUTER_EOF_
+	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpNetAddr="${cfpNetAddr}" -i conveyNetInfoStore ${netName}
+_OUTER_EOF_
+	    fi
+	fi
     }
 
     local applicableNets=$( vis_withAbodeGetApplicableNetsList "${containerAssign_abode}" )
+    local applicableNetsLine=$(echo ${applicableNets})
 
     cat  << _OUTER_EOF_
 	cat   << _EOF_
-######### PHASE 2.2: Convey Network Interfaces Info For: ${applicableNets}
+######### PHASE 2.2: Convey Network Interfaces Info For: ${applicableNetsLine}
 _EOF_
 _OUTER_EOF_
     
@@ -904,6 +985,8 @@ _EOF_
 
     local defaultInterface=$( ip -4 route ls | grep default | grep -Po '(?<=dev )(\S+)' )
 
+    lpDo netNameInfoInit
+    
     function topPart {
     cat  << _EOF_
 # -*- mode: ruby -*-
@@ -920,6 +1003,7 @@ Vagrant.configure("2") do |config|
     guest.vm.box = "${containerBaseBox}"
     guest.vm.hostname = "${hostname}"
 $( vis_vagStdout_netInterfaces )
+
     guest.vm.synced_folder '.', '/vagrant', disabled: true
 
     config.vm.provider :libvirt do |libvirt|

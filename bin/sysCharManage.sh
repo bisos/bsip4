@@ -191,6 +191,7 @@ ${G_myName} ${extraInfo} -i fullUpdate
 $( examplesSeperatorChapter "Overview Report And Summary" )
 ${G_myName} ${extraInfo} -p bxoId=sysChar -i bxoIdShow  # from  bxoIdManage.sh 
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i sysCharReport
+${G_myName} ${extraInfo} -p bxoId=sysChar -i sysCharReport
 ${G_myName} ${extraInfo} -i containerBoxSysCharReport
 $( examplesSeperatorChapter "Container Networks Info" )
 ${G_myName} -p bxoId=sysChar -i cntnr_netName_applicables
@@ -198,10 +199,13 @@ ${G_myName} ${extraInfo} -p bxoId=sysChar -i cntnr_netName_interfaceObtain ${one
 ${G_myName} -p bxoId=sysChar -i cntnr_netName_applicables | xargs -n1 -- ${G_myName} -p bxoId=sysChar -i cntnr_netName_interfaceObtain
 $( examplesSeperatorChapter "Container Networks Set/Update" )
 ${G_myName} -p bxoId=sysChar -i cntnr_netName_applicables
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i cntnr_netName_interfaceUpdate ${oneInterface} enSomeNu enabled
 ${G_myName} ${extraInfo} -p bxoId=sysChar -i cntnr_netName_interfaceUpdate ${oneInterface} enSomeNu enabled
+${G_myName} -p bxoId="${oneBxoId}" -i cntnr_netName_interfacesConject
 ${G_myName} -p bxoId=sysChar -i cntnr_netName_interfacesConject
 ${G_myName} ${extraInfo} -p bxoId=sysChar -i cntnr_netName_interfacesUpdateBasedOnConjecture
 $( examplesSeperatorChapter "Container File Set/Update" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i sysCharWrite  # Initially invoked in sysCharRealize.sh
 ${G_myName} ${extraInfo} -p bxoId=sysChar -i sysCharWrite  # Initially invoked in sysCharRealize.sh
 _EOF_
 }

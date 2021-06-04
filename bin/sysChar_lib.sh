@@ -725,7 +725,7 @@ _EOF_
 	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysInfoFps} distroType ${distroType}
 	    ;;
 	*)
-	    EH_problem "NOTYET -- unimplemented ${function}"
+	    EH_problem "Unimplemented yet -- ${function}"
 	    ;;
     esac
 
@@ -739,7 +739,9 @@ _EOF_
 	    vagBaseBox=$( withDistroGetVagBaseBox ${function} ${distro} ${distroType} ${containerId} )	    
 	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${virtSpecFps} vagBaseBox ${vagBaseBox}
 
-	    ANT_raw "For modle=${model} Network InterfaceName was communicated at VM creation"	    
+	    ANT_raw "For model=${model} Network InterfaceName was communicated at VM creation"
+	    ANT_raw "Through conjecture, we label them as any enabled"	    
+	    lpDo vis_cntnr_netName_interfacesUpdateBasedOnConjecture
 	    ;;
 	Host|Pure)
 	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${virtSpecFps} virtType none
@@ -781,15 +783,27 @@ function vis_cntnr_netName_interfaceObtain {
 ** Analyze sysCharBxoId, based on that and specified NetName, obtaine network interface.
 _EOF_
 		      }
-    EH_assert [[ $# -eq 1 ]]
+    EH_assert [[ $# -lt 3 ]]
 
-    EH_assert bxoIdPrep
+    local thisBxoId="${bxoId}"
+    
+    if [ $# -eq 2 ] ; then
+	thisBxoId=$2
+    fi
+
+    thisBxoId=$( bxoIdPrep ${thisBxoId} )
+
+    EH_assert [ ! -z "${thisBxoId}" ]
+
+    EH_assert vis_bxoAcctVerify "${thisBxoId}"
+    bxoHome=$( FN_absolutePathGet ~${thisBxoId} )
 
     local netName="$1"
     EH_assert [ ! -z "${netName}" ]
 
     if [ "${netName}" == "nat" ] ; then
-	ANT_raw "netName=nat requires no processing"
+	# ANT_raw "netName=nat requires no processing"
+	lpDo echo "nat" "nat"
 	lpReturn
     fi
     
@@ -834,6 +848,10 @@ _EOF_
 	    EH_problem "Bad Usage model=${model}"
 	    ;;
     esac
+
+    if [ -z "${interfaceOfNet}" ] || [ -z "${interfaceOfNetControl}" ] ; then
+	EH_problem "Missing Net Interface Info -- ${interfaceOfNet} -- ${interfaceOfNetControl}"
+    fi
 
     echo "${interfaceOfNet}" "${interfaceOfNetControl}"
 }
@@ -892,14 +910,15 @@ _EOF_
 	    # Result is something like en0 and is obtained from
 	    # sysCharBxoHome/sysChar/containerSpec.fps/netIfs
 	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${containerSpecFps_netIfs} "${netName}" "${interfaceOfNet}"
-	    case ${netName} in
-		pubA|pubB)
-		    lpDo fileParamManage.py -v 30 -i fileParamWrite ${containerSpecFps_netIfs} "${netName}-control" "disabled"
-		    ;;
-		*)
-		    lpDo fileParamManage.py -v 30 -i fileParamWrite ${containerSpecFps_netIfs} "${netName}-control" "enabled"
-		    ;;
-	    esac
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${containerSpecFps_netIfs} "${netName}-control" "${interfaceOfNetControl}"	    
+	    # case ${netName} in
+	    # 	pubA|pubB)
+	    # 	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${containerSpecFps_netIfs} "${netName}-control" "disabled"
+	    # 	    ;;
+	    # 	*)
+	    # 	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${containerSpecFps_netIfs} "${netName}-control" "enabled"
+	    # 	    ;;
+	    # esac
 	    ;;
 	*)
 	    EH_problem "Bad Usage model=${model}"
@@ -941,6 +960,9 @@ _EOF_
 	fi
 
 	case ${model} in
+	    Virt)
+		lpDo vis_cntnr_netName_interfaceUpdate ${netName} "any" "enabled"
+		;;
 	    Host|Pure)
 		case ${netName} in
 		    pubA|pubB)

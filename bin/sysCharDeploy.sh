@@ -118,10 +118,19 @@ typeset -t model=""     # one of [HPV]
 typeset -t abode=""     # one of [MAPIS]
 typeset -t function=""  # one of [LASD]
 
+# vis_conveyInfoStore
 typeset -t cfpVmNameQualifier=""
+typeset -t cfpHostCntnr=""
+typeset -t cfpSecurityMode=""
+
+# vis_conveyNetInfoStore
+typeset -t cfpNetIf=""
+typeset -t cfpHostNetIf=""
+
+# obsoletred
 typeset -t cfpPrivA=""
 typeset -t cfpPubA=""
-typeset -t cfpSecurityMode=""
+
 
 typeset -t targetName=""
 
@@ -199,6 +208,8 @@ $( examplesSeperatorChapter "Specify ConveyInfo -- sysCharBasePlatform Actions" 
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p bxoId="${effectiveContainerBxoId}" -p cfpSecurityMode=bisosDev -i conveyInfoStore
 ${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -p cfpPrivA=192.168.0.121 -i conveyInfoStore # For Generic Guests
 ${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -p cfpSecurityMode=bisosDev -i conveyInfoStore
+${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -p cfpNetIf=eth2 -i conveyNetInfoStore pubA
+${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -p cfpHostNetIf=eno1 -i conveyNetInfoStore pubA
 ${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i conveyInfoShow
 $( examplesSeperatorChapter "Deploy With Convey Info -- FULL SYSTEM Deployment" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p bxoId="${effectiveContainerBxoId}" -i deployWithSysCharConveyInfo # onManager
@@ -1183,21 +1194,26 @@ _EOF_
 	if [ ! -z "${cfpVmNameQualifier}" ] ; then
 	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} vmNameQualifier "${cfpVmNameQualifier}"
 	fi
-	if [ ! -z "${cfpPrivA}" ] ; then
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} ipAddr_privA "${cfpPrivA}"
+	if [ ! -z "${cfpHostCntnr}" ] ; then
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} vmNameQualifier "${cfpHostCntnr}"
 	fi
-	if [ ! -z "${cfpPubA}" ] ; then
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} ipAddr_pubA "${cfpPubA}"
+	if [ ! -z "${cfpSecurityMode}" ] ; then
+	    lpDo sysCharConveyInfoWrite securityMode "${cfpSecurityMode}"
 	fi
+
+	
+	# if [ ! -z "${cfpPrivA}" ] ; then
+	#     lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} ipAddr_privA "${cfpPrivA}"
+	# fi
+	# if [ ! -z "${cfpPubA}" ] ; then
+	#     lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} ipAddr_pubA "${cfpPubA}"
+	# fi
 	# if [ ! -z "${cfpPrivGit}" ] ; then
 	#     lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} privGit "${privGit}"
 	# fi
 	# if [ ! -z "${cfpPubGit}" ] ; then
 	#     lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} pubGit "${pubGit}"
 	# fi
-	if [ ! -z "${cfpSecurityMode}" ] ; then
-	    lpDo sysCharConveyInfoWrite securityMode "${cfpSecurityMode}"
-	fi
     }
 
     if [ "${targetName}" != "onTargetRun" ] && [ ! -z "${targetName}" ] ; then
@@ -1206,7 +1222,8 @@ _EOF_
 
     # Empty values are passed along
 
-    G_paramCmndOption="-p bxoId=\"${bxoId}\" -p cfpVmNameQualifier=\"${cfpVmNameQualifier}\" -p cfpPrivA=\"${cfpPrivA}\" -p cfpPubA=\"${cfpPubA}\" -p cfpSecurityMode=\"${cfpSecurityMode}\""
+    # G_paramCmndOption="-p bxoId=\"${bxoId}\" -p cfpVmNameQualifier=\"${cfpVmNameQualifier}\" -p cfpPrivA=\"${cfpPrivA}\" -p cfpPubA=\"${cfpPubA}\" -p cfpSecurityMode=\"${cfpSecurityMode}\""
+    G_paramCmndOption="-p bxoId=\"${bxoId}\" -p cfpVmNameQualifier=\"${cfpVmNameQualifier}\" -p cfpHostCntnr=\"${cfpHostCntnr}\" -p cfpSecurityMode=\"${cfpSecurityMode}\""
     
 ####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" :cmndOption t
     if [ "${targetName}" == "onTargetRun" ] ; then
@@ -1218,6 +1235,60 @@ _EOF_
 	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
 	     $(which ${G_myName}) ${G_commandPrefs} \
 	     -p targetName=onTargetRun ${G_paramCmndOption} -i ${commandName}
+    fi
+####+END:
+}
+
+
+function vis_conveyNetInfoStore {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local netName="$1"
+
+    function onManagerRun {
+	lpDo doNothing
+    }
+
+    function onTargetRun {
+	EH_assert bxoIdPrep
+	local netName="$1"
+	
+	local sysCharConveyNetInfoBase="${bxoHome}/var/sysCharConveyInfo/netIfs"
+
+	lpDo FN_dirCreatePathIfNotThere ${sysCharConveyNetInfoBase}
+
+	if [ ! -z "${cfpNetIf}" ] ; then
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyNetInfoBase} ${netName} "${cfpNetIf}"
+	fi
+	if [ ! -z "${cfpHostNetIf}" ] ; then
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyNetInfoBase} ${netName}-host "${cfpHostNetIf}"
+	fi
+    }
+
+    if [ "${targetName}" != "onTargetRun" ] && [ ! -z "${targetName}" ] ; then
+	lpDo onManagerRun
+    fi
+
+    # Empty values are passed along
+
+    G_paramCmndOption="-p bxoId=\"${bxoId}\" -p cfpNetIf=\"${cfpNetIf}\" -p cfpHostNetIf=\"${cfpHostNetIf}\""
+
+    g_args=$@
+    
+####+BEGINNOT: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" :cmndOption t
+    if [ "${targetName}" == "onTargetRun" ] ; then
+	lpDo onTargetRun ${g_args}
+    elif [ -z "${targetName}" ] ; then
+	lpDo onTargetRun ${g_args}
+    else
+	local commandName=${FUNCNAME##vis_}		
+	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+	     $(which ${G_myName}) ${G_commandPrefs} \
+	     -p targetName=onTargetRun ${G_paramCmndOption} -i ${commandName} ${g_args}
     fi
 ####+END:
 }
