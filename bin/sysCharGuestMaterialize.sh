@@ -703,7 +703,8 @@ _OUTER_EOF_
 	fi
 
 	local vmNetIf=$(netNameInfoRead ${netName})
-	local hostNetIf=$(netNameInfoRead ${netName}-host)	
+	local hostNetIf=$(netNameInfoRead ${netName}-host)
+	local vmNetIfControl=$(netNameInfoRead ${netName}-control)		
 
 	if [ -z "${vmNetIf}" ] || [ "${vmNetIf}" == "unUsed" ] ; then
 	    cat  << _OUTER_EOF_
@@ -713,6 +714,7 @@ _OUTER_EOF_
 	    cat  << _OUTER_EOF_
 	sudo ifconfig ${vmNetIf}  down  # Shutting Down ${netName} -- Needed for deb11
 	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpNetIf="${vmNetIf}" -i conveyNetInfoStore ${netName}
+	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpNetIfControl="${vmNetIfControl}" -i conveyNetInfoStore ${netName}
 	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpHostNetIf="${hostNetIf}" -i conveyNetInfoStore ${netName}
 _OUTER_EOF_
 	fi
