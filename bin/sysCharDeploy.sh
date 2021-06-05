@@ -1196,7 +1196,7 @@ _EOF_
 	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} vmNameQualifier "${cfpVmNameQualifier}"
 	fi
 	if [ ! -z "${cfpHostCntnr}" ] ; then
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} vmNameQualifier "${cfpHostCntnr}"
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} hostCntnr "${cfpHostCntnr}"
 	fi
 	if [ ! -z "${cfpSecurityMode}" ] ; then
 	    lpDo sysCharConveyInfoWrite securityMode "${cfpSecurityMode}"

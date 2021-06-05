@@ -602,6 +602,7 @@ _EOF_
     
     if [ -d "${sysCharConveyInfoBase}" ] ; then
 	sysChar_conveyInfo_vmNameQualifier=$( fileParamManage.py -i fileParamRead  ${sysCharConveyInfoBase} vmNameQualifier )
+	sysChar_conveyInfo_hostCntnr=$( fileParamManage.py -i fileParamRead  ${sysCharConveyInfoBase} hostCntnr )	
 	sysChar_conveyInfo_ipAddr_privA=$( fileParamManage.py -i fileParamRead  ${sysCharConveyInfoBase} ipAddr_privA )
 	sysChar_conveyInfo_ipAddr_pubA=$( fileParamManage.py -i fileParamRead  ${sysCharConveyInfoBase} ipAddr_pubA )
 	sysChar_conveyInfo_privGitMode=$( fileParamManage.py -i fileParamRead  ${sysCharConveyInfoBase} privGit )
@@ -609,6 +610,7 @@ _EOF_
 	sysChar_conveyInfo_securityMode=$( fileParamManage.py -i fileParamRead  ${sysCharConveyInfoBase} securityMode )
     else
 	sysChar_conveyInfo_vmNameQualifier=""
+	sysChar_conveyInfo_hostCntnr=""	
 	sysChar_conveyInfo_ipAddr_privA=""
 	sysChar_conveyInfo_ipAddr_pubA=""
 	sysChar_conveyInfo_privGitMode=""

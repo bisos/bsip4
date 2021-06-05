@@ -346,8 +346,14 @@ _EOF_
     EH_assert [ ! -z "${containerAssign_containerId}" ]
 
     vis_sysCharConveyInfoRead
-    
-    opDo eval "echo ${containerAssign_containerId}-${sysChar_conveyInfo_vmNameQualifier} | sed -e s/_// -e 's/-$//' | sudo tee /etc/hostname"
+
+    local hostCntnr=$(echo ${sysChar_conveyInfo_hostCntnr} | sed -e s/_// -e 's/pmp_//' )
+
+    if [ -z "${hostCntnr}" ] ; then
+	opDo eval "echo ${containerAssign_containerId}-${sysChar_conveyInfo_vmNameQualifier} | sed -e s/_// -e 's/-$//' | sudo tee /etc/hostname"
+    else
+	opDo eval "echo ${containerAssign_containerId}-${sysChar_conveyInfo_vmNameQualifier}-${hostCntnr} | sed -e s/_// -e 's/-$//' | sudo tee /etc/hostname"
+    fi
     
     opDo sudo chmod 444 /etc/hostname
     opDo sudo hostname --file /etc/hostname
