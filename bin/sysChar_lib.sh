@@ -818,11 +818,11 @@ _EOF_
     local function=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} function )
     local containerId=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} containerId )    
 
-    local sysInfoFps=${repoBase}/sysInfo.fps
-    EH_assert [ -d ${sysInfoFps} ]
+    # local sysInfoFps=${repoBase}/sysInfo.fps
+    # EH_assert [ -d ${sysInfoFps} ]
 
-    local virtSpecFps=${repoBase}/virtSpec.fps
-    EH_assert [ -d ${virtSpecFps} ]
+    # local virtSpecFps=${repoBase}/virtSpec.fps
+    # EH_assert [ -d ${virtSpecFps} ]
 
     local containerSpecFps=${repoBase}/containerSpec.fps  
     local containerSpecFps_netIfs=${containerSpecFps}/netIfs
@@ -835,8 +835,8 @@ _EOF_
 	    # Result is something like eth0  and is obtained from
 	    # sysCharBxoHome/var
 
-	    interfaceOfNet=$( fileParamManage.py -v 30 -i fileParamRead ${bxoHome}/var/conveyInfo/netIfs "${netName}" )
-	    interfaceOfNetControl=$( fileParamManage.py -v 30 -i fileParamRead ${bxoHome}/var/conveyInfo/netIfs "${netName}-control" )	    	    
+	    interfaceOfNet=$( fileParamManage.py -v 30 -i fileParamRead ${bxoHome}/var/sysCharConveyInfo/netIfs "${netName}" )
+	    interfaceOfNetControl=$( fileParamManage.py -v 30 -i fileParamRead ${bxoHome}/var/sysCharConveyInfo/netIfs "${netName}-control" )	    	    
 	    ;;
 	Host|Pure)
 	    # Result is something like en0 and is obtained from
@@ -849,10 +849,15 @@ _EOF_
 	    ;;
     esac
 
-    if [ -z "${interfaceOfNet}" ] || [ -z "${interfaceOfNetControl}" ] ; then
-	EH_problem "Missing Net Interface Info -- ${interfaceOfNet} -- ${interfaceOfNetControl}"
+    if [ -z "${interfaceOfNet}" ] ; then
+	ANT_cooked "Missing Net Interface Info -- interfaceOfNet=${interfaceOfNet} -- Set to blank"
+	interfaceOfNet="blank"
     fi
-
+    if [ -z "${interfaceOfNetControl}" ] ; then
+	ANT_cooked "Missing Net Interface Info -- interfaceOfNetControl=${interfaceOfNetControl} -- Set to blank"
+	interfaceOfNetControl="blank"	
+    fi
+    
     echo "${interfaceOfNet}" "${interfaceOfNetControl}"
 }
 
@@ -903,8 +908,8 @@ _EOF_
 	    # Result is something like eth0  and is obtained from
 	    # sysCharBxoHome/var
 
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${bxoHome}/var/conveyInfo/netIfs "${netName}" "${interfaceOfNet}"
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${bxoHome}/var/conveyInfo/netIfs "${netName}-control" "${interfaceOfNetControl}"	    
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${bxoHome}/var/sysCharConveyInfo/netIfs "${netName}" "${interfaceOfNet}"
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${bxoHome}/var/sysCharConveyInfo/netIfs "${netName}-control" "${interfaceOfNetControl}"	    
 	    ;;
 	Host|Pure)
 	    # Result is something like en0 and is obtained from

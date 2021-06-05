@@ -263,7 +263,7 @@ _EOF_
       *)
 	  # See if it is a path, and locate bxoId based on path
 	  # bxoId=$( vis_bxoIdObtainForPath "${bxoPath}" )
-	  doNothing
+	  lpDo setOutBxoId "${inBxoId}"
 	  ;;
     esac
 

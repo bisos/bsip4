@@ -606,6 +606,7 @@ _EOF_
 	    vmNetIfsArray[${netName}]=eth${inUseEthCount}
 	    lpDo netNameInfoWrite ${netName} eth${inUseEthCount}
 	    lpDo netNameInfoWrite ${netName}-host ${netIf}
+	    lpDo netNameInfoWrite ${netName}-control enabled
 	    
             cat   << _EOF_
     # ${netName} interface on hostBxoId=${hostBxoId}  eth${inUseEthCount} netIf=${netIf} netIfControl=${netIfControl}
@@ -615,6 +616,7 @@ _EOF_
 	else
 	    lpDo netNameInfoWrite ${netName} unUsed
 	    lpDo netNameInfoWrite ${netName}-host ${netIf}
+	    lpDo netNameInfoWrite ${netName}-control disabled
 	    cat   << _EOF_
     # ${netName} interface on hostBxoId=${hostBxoId}  unUsed netIf=${netIf} netIfControl=${netIfControl}
 

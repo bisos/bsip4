@@ -125,6 +125,7 @@ typeset -t cfpSecurityMode=""
 
 # vis_conveyNetInfoStore
 typeset -t cfpNetIf=""
+typeset -t cfpNetIfControl=""
 typeset -t cfpHostNetIf=""
 
 # obsoletred
@@ -1263,6 +1264,9 @@ _EOF_
 
 	if [ ! -z "${cfpNetIf}" ] ; then
 	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyNetInfoBase} ${netName} "${cfpNetIf}"
+	fi
+	if [ ! -z "${cfpNetIfControl}" ] ; then
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyNetInfoBase} ${netName}-control "${cfpNetIfControl}"
 	fi
 	if [ ! -z "${cfpHostNetIf}" ] ; then
 	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyNetInfoBase} ${netName}-host "${cfpHostNetIf}"

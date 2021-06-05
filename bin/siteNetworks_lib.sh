@@ -450,11 +450,11 @@ _EOF_
     local repoName="sysChar"
     local repoBase="${bxoHome}/${repoName}"
     
-    local sysInfoFps=${repoBase}/sysInfo.fps
-    EH_assert [ -d "${sysInfoFps}" ]
+    # local sysInfoFps=${repoBase}/sysInfo.fps
+    # EH_assert [ -d "${sysInfoFps}" ]
 
-    local virtSpecFps=${repoBase}/virtSpec.fps
-    EH_assert [ -d "${virtSpecFps}" ]
+    # local virtSpecFps=${repoBase}/virtSpec.fps
+    # EH_assert [ -d "${virtSpecFps}" ]
 
     local containerSpecFps=${repoBase}/containerSpec.fps  
     local containerSpecFps_netIfs=${containerSpecFps}/netIfs
