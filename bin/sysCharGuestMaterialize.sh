@@ -266,7 +266,7 @@ _EOF_
 }	
 
 
-function vis_vagrantBaseObtain {
+function vis_vagrantBaseObtain%% {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Return stdout path to Vagrantfile's base directory of the bxoHome.
@@ -284,8 +284,29 @@ _EOF_
     lpReturn
 }	
 
+function vis_vagrantBaseObtain {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Return stdout path to Vagrantfile's base directory of the bxoHome.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    local hostCntnr=$( vis_bxoIdPrep "sysChar" )    
+    EH_assert [ ! -z "${bxoId}" ]
 
-function vis_vagrantBase_last {
+    # NOTYET 
+    # EH_assert  vis_bxoHasBeenRealized "${bxoId}"
+    
+    hostCntnrHome=$( FN_absolutePathGet ~${hostCntnr} )
+
+    lpDo FN_dirCreatePathIfNotThere ${hostCntnrHome}/var/vagrantBase/${bxoId}
+
+    echo ${hostCntnrHome}/var/vagrantBase/${bxoId}
+    
+    lpReturn
+}	
+
+function vis_vagrantBase_last%% {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Based on the Vagrantfile, create a VM image.
@@ -317,6 +338,38 @@ _EOF_
 }	
 
 
+function vis_vagrantBase_last {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Based on the Vagrantfile, create a VM image.
+NAT + genesis target.
+_EOF_
+    }
+    EH_assert [[ $# -lt 2 ]]    
+    EH_assert [ ! -z "${bxoId}" ]
+
+    # EH_assert  vis_bxoAcctVerify "${bxoId}"
+
+    local dirsPart=$( vis_vagrantBaseObtain )
+    EH_assert [ ! -z "${dirsPart}" ]
+    
+    local thisDir=""
+
+    opDoExit cd ${dirsPart}    
+    local vmsDirsList=$( ls | grep -v Vagrantfile | grep -v bxo | grep -v history | sort -n )
+
+    for thisDir in ${vmsDirsList} ; do
+	doNothing
+    done
+
+    if [ ! -z "${thisDir}" ] ; then
+	echo $(pwd)/${thisDir}
+    fi
+    
+    lpReturn
+}	
+
+
 function vis_vagrantFile_run {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -327,7 +380,7 @@ _EOF_
     EH_assert [[ $# -lt 2 ]]    
     EH_assert [ ! -z "${bxoId}" ]
 
-    EH_assert  vis_bxoAcctVerify "${bxoId}"
+    # EH_assert  vis_bxoAcctVerify "${bxoId}"
 
     local dirsPart=$( vis_vagrantBaseObtain )
     EH_assert [ ! -z "${dirsPart}" ]
@@ -706,18 +759,25 @@ _OUTER_EOF_
 	local hostNetIf=$(netNameInfoRead ${netName}-host)
 	local vmNetIfControl=$(netNameInfoRead ${netName}-control)		
 
-	if [ -z "${vmNetIf}" ] || [ "${vmNetIf}" == "unUsed" ] ; then
+	# Below comments are ok2Del
+
+
+ 	if [ -z "${vmNetIf}" ] || [ "${vmNetIf}" == "unUsed" ] || [ "${vmNetIf}" == "blank" ] ; then
+ 	    cat  << _OUTER_EOF_
+ 	echo "netName=${netName} Interface Is Not In Use cfpNetIf=${vmNetIf} cfpHostNetIf=${hostNetIf}."
+ _OUTER_EOF_
+ 	else
 	    cat  << _OUTER_EOF_
-	echo "netName=${netName} Interface Is Not In Use cfpNetIf=${vmNetIf} cfpHostNetIf=${hostNetIf}."
+	sudo ifconfig ${vmNetIf}  down  # Shutting Down ${netName} -- Needed for deb11
 _OUTER_EOF_
-	else
-	    cat  << _OUTER_EOF_
+	fi
+
+	cat  << _OUTER_EOF_
 	sudo ifconfig ${vmNetIf}  down  # Shutting Down ${netName} -- Needed for deb11
 	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpNetIf="${vmNetIf}" -i conveyNetInfoStore ${netName}
 	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpNetIfControl="${vmNetIfControl}" -i conveyNetInfoStore ${netName}
 	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpHostNetIf="${hostNetIf}" -i conveyNetInfoStore ${netName}
 _OUTER_EOF_
-	fi
 
 	cat  << _OUTER_EOF_
 

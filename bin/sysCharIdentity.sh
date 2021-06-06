@@ -347,7 +347,7 @@ _EOF_
 
     vis_sysCharConveyInfoRead
 
-    local hostCntnr=$(echo ${sysChar_conveyInfo_hostCntnr} | sed -e s/_// -e 's/pmp_//' )
+    local hostCntnr=$(echo ${sysChar_conveyInfo_hostCntnr} | sed -e 's/pmp_//' )
 
     if [ -z "${hostCntnr}" ] ; then
 	opDo eval "echo ${containerAssign_containerId}-${sysChar_conveyInfo_vmNameQualifier} | sed -e s/_// -e 's/-$//' | sudo tee /etc/hostname"

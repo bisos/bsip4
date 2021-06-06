@@ -152,7 +152,9 @@ virsh --connect ${vmHostUri} desc ${currentVmName} --title
 sudo systemctl stop libvirt-guests   # stops VMs
 sudo systemctl restart libvirtd      # starts VMs agains
 sudo virsh net-autostart --network vagrant-libvirt
+sudo virsh net-start --network vagrant-libvirt
 sudo virsh net-autostart --network default
+sudo virsh net-start --network default
 sudo virsh net-list --all
 virsh --connect ${vmHostUri} start ${currentVmName}
 $( examplesSeperatorChapter "Development And Experimentation" )
