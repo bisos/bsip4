@@ -71,6 +71,7 @@ _CommentEnd_
 . ${opBinBase}/lpReRunAs.libSh
 
 . ${opBinBase}/bxo_lib.sh
+. ${opBinBase}/bxoId_lib.sh
 
 . ${opBinBase}/bxeDesc_lib.sh
 
@@ -96,6 +97,8 @@ _CommentEnd_
 
 . ${opBinBase}/l3_lib.sh
 . ${opBinBase}/sysChar_lib.sh
+
+. ${opBinBase}/siteNetworks_lib.sh
 
 
 # PRE parameters
@@ -213,6 +216,7 @@ ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBasesList
 $( repoBaseCreateAndPushExamples sysChar "sysChar Repo (System Character)" )
 $( repoBaseCreateAndPushExamples svcsSpec "svcsSpec Repo (Services Specifications)" )
 $( repoBaseCreateAndPushExamples deploymentRecords "Deployment Records Repo" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i sysCharWrite   # Temporary -- This is not the right place
 $( examplesSeperatorChapter "Bases Create" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i baseCreate_var
 $( examplesSeperatorChapter "Overview Report And Summary" )
@@ -589,9 +593,7 @@ function vis_repoBaseCreate_svcsSpec {
 _EOF_
 		       }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
-
-    EH_assert  vis_userAcctExists "${bxoId}"
+    EH_assert bxoIdPrep
 
     local repoName=${FUNCNAME##vis_repoBaseCreate_}
     local repoBase="${bxoHome}/${repoName}"
@@ -618,9 +620,7 @@ function vis_repoBaseCreate_sysChar {
 _EOF_
 		       }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
-
-    EH_assert vis_bxoAcctVerify "${bxoId}"
+    EH_assert bxoIdPrep
 
     local repoName=${FUNCNAME##vis_repoBaseCreate_}
     local repoBase="${bxoHome}/${repoName}"
