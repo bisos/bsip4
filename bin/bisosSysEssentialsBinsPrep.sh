@@ -80,10 +80,11 @@ _EOF_
 	"facter"
 	"build_essential"
 	"dkms"
-	"linux_headers_generic"
 	"sshpass"
 	# Network Client Tools
 	"net_tools"
+	# Perhaps not available on all revs, hence coming last
+	"linux_headers_generic"
     )
 
     itemOptionalOrderedList=()
