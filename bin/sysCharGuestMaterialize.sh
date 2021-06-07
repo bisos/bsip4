@@ -170,13 +170,10 @@ $( examplesSeperatorChapter "Specialized Actions" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantBaseBoxFromSysChar   # which vagrantBaseBox will be used
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantBase_last     # on host
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_run       # on host - ends with image
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_run testNetSet      # on host - ends with image
 $( examplesSeperatorChapter "Vagrantfile Stdout and Creation " )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_bottomPart
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_bottomPart testNetSet
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_stdout    # on host
 ${G_myName} -p bxoId="${oneBxoId}" -i vagrantFile_stdout    # on host
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_stdout testNetSet
 $( examplesSeperatorChapter "Post Vagrant Virsh Activities" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vmCustomize           # using virsh sets up guest ip addrs
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vmRun                 # on host
@@ -370,7 +367,7 @@ _EOF_
 }	
 
 
-function vis_vagrantFile_run {
+function vis_vagrantFile_run%% {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Based on the Vagrantfile, create a VM image.
@@ -380,7 +377,7 @@ _EOF_
     EH_assert [[ $# -lt 2 ]]    
     EH_assert [ ! -z "${bxoId}" ]
 
-    # EH_assert  vis_bxoAcctVerify "${bxoId}"
+    EH_assert  vis_bxoAcctVerify "${bxoId}"
 
     local dirsPart=$( vis_vagrantBaseObtain )
     EH_assert [ ! -z "${dirsPart}" ]
@@ -410,6 +407,50 @@ _EOF_
     
     lpReturn
 }	
+
+
+function vis_vagrantFile_run {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Based on the Vagrantfile, create a VM image.
+*** With arguments, the argument is passed through all the way to stdout
+*** With arguments as callableNames, we can customized the vagrantFile.
+*** NAT + genesis target.
+_EOF_
+    }
+    EH_assert [[ $# -lt 2 ]]
+    EH_assert [ ! -z "${bxoId}" ]
+
+    # EH_assert  vis_bxoAcctVerify "${bxoId}"
+
+    local dirsPart=$( vis_vagrantBaseObtain )
+    EH_assert [ ! -z "${dirsPart}" ]
+
+    local thisDir=""
+
+    opDoExit cd ${dirsPart}
+    local vmsDirsList=$( ls | grep -v Vagrantfile | grep -v bxo | grep -v history | sort -n )
+
+    # echo ${vmsDirsList}
+    for thisDir in ${vmsDirsList} ; do
+	# echo $(pwd)/${thisDir}
+	doNothing
+    done
+
+    nextNu=$( expr ${thisDir} +  1 )
+    opDoExit mkdir ${nextNu}
+    thisDir=${nextNu}
+
+    lpDo cd ${thisDir}
+
+    lpDo eval vis_vagrantFile_stdout ${nextNu} $@ \> Vagrantfile
+
+    lpDo pwd
+
+    lpDo vagrant up
+
+    lpReturn
+}
 
 
 function vis_vmCustomize {
@@ -687,11 +728,76 @@ _EOF_
 }
 
 
+function vis_vagStdout_netInterfacesDown {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Based on XX put on stdout needed provioning facilities to produce a container.
+_EOF_
+		       }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert [ ! -z "${bxoId}" ]
+    # EH_assert vis_bxoAcctVerify "${bxoId}"
+
+
+    hostCntnr=$( vis_bxoIdPrep "sysChar" )
+
+    cat  << _OUTER_EOF_
+	cat   << _EOF_
+######### PHASE -1.0: Deactivate All Network Interfaces
+_EOF_
+_OUTER_EOF_
+
+
+    function netInterfacesDown {
+	EH_assert [[ $# -eq 1 ]]
+
+	local netName="$1"
+
+	EH_assert [ ! -z "${netName}" ]
+
+	if [ "${netName}" == "nat" ] ; then
+	    cat  << _OUTER_EOF_
+	echo "netName=${netName} Requires No Deactivation."
+_OUTER_EOF_
+	    lpReturn
+	fi
+
+	local vmNetIf=$(netNameInfoRead ${netName})
+	local hostNetIf=$(netNameInfoRead ${netName}-host)
+	local vmNetIfControl=$(netNameInfoRead ${netName}-control)
+
+ 	if [ -z "${vmNetIf}" ] || [ "${vmNetIf}" == "unUsed" ] || [ "${vmNetIf}" == "blank" ] ; then
+ 	    cat  << _OUTER_EOF_
+ 	echo "netName=${netName} Interface Is Not In Use cfpNetIf=${vmNetIf} cfpHostNetIf=${hostNetIf}."
+_OUTER_EOF_
+
+ 	else
+	    if [ "${netName}" == "pubA" ]  || [ "${netName}" == "pubB" ] ; then
+
+		cat  << _OUTER_EOF_
+	sudo ifconfig ${vmNetIf}  down  # Shutting Down ${netName} -- Needed for deb11
+_OUTER_EOF_
+	    fi
+
+	fi
+    }
+
+    local applicableNets=$( vis_withAbodeGetApplicableNetsList "${containerAssign_abode}" )
+    local applicableNetsLine=$(echo ${applicableNets})
+
+    for eachNetName in ${applicableNets} ; do
+	lpDo netInterfacesDown ${eachNetName}
+    done
+
+    lpReturn
+}
+
+
 function vis_vagStdout_bisosSetIdAndDeploy {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Based on XX put on stdout needed provioning facilities to produce a container.
-*** 
 _EOF_
 		       }
     EH_assert [[ $# -eq 1 ]]
@@ -703,20 +809,20 @@ _EOF_
     #lpDo vis_containerSteadyRead
 
     local vmNameQualifier="$1"
-    
+
     lpDo vis_sysCharRead
 
     local siteBxoId=$( sysCharRealize.sh -i selectedSiteBxoId )
 
     local siteGitServerInfoBaseDir=$( bisosSiteGitServer.sh -i gitServerInfoBaseDir )
-    
+
     local site_gitServerName=$( fileParamManage.py -i fileParamRead ${siteGitServerInfoBaseDir} gitServerName )
-    local site_gitServerUrl=$( fileParamManage.py -i fileParamRead ${siteGitServerInfoBaseDir} gitServerUrl )    
+    local site_gitServerUrl=$( fileParamManage.py -i fileParamRead ${siteGitServerInfoBaseDir} gitServerUrl )
     local site_gitServerPrivToken=$( fileParamManage.py -i fileParamRead ${siteGitServerInfoBaseDir} gitServerPrivToken )
 
     local registrar=$( vis_registrarHostName )
     local id=$( vis_registrarUserName )
-    local password=$( vis_registrarUserPassword )        
+    local password=$( vis_registrarUserPassword )
 
     local runInfo="-h -v -n showRun"
     local binPath="/bisos/core/bsip/bin/sysCharDeploy.sh"
@@ -724,11 +830,11 @@ _EOF_
     local bisosDevBxoId=$( usgBpos.sh -i usgBposUsageEnvs_bisosDevBxoId_read )
 
 
-    # 
+    #
     # No longer needed:: /bisos/core/bsip/bin/bisosSiteGitServer.sh -h -v -n showRun -p gitServerName=${site_gitServerName} -p gitServerUrl=${site_gitServerUrl} -p gitServerPrivToken=${site_gitServerPrivToken} -i gitServerInfoSet
 
     hostCntnr=$( vis_bxoIdPrep "sysChar" )
-    
+
     cat  << _OUTER_EOF_
 	cat   << _EOF_
 ######### PHASE 2.1: BISOS Site Setup And SysChar Container Activate And Identity Set -- With IpAddrs settings
@@ -757,23 +863,9 @@ _OUTER_EOF_
 
 	local vmNetIf=$(netNameInfoRead ${netName})
 	local hostNetIf=$(netNameInfoRead ${netName}-host)
-	local vmNetIfControl=$(netNameInfoRead ${netName}-control)		
-
-	# Below comments are ok2Del
-
-
- 	if [ -z "${vmNetIf}" ] || [ "${vmNetIf}" == "unUsed" ] || [ "${vmNetIf}" == "blank" ] ; then
- 	    cat  << _OUTER_EOF_
- 	echo "netName=${netName} Interface Is Not In Use cfpNetIf=${vmNetIf} cfpHostNetIf=${hostNetIf}."
- _OUTER_EOF_
- 	else
-	    cat  << _OUTER_EOF_
-	sudo ifconfig ${vmNetIf}  down  # Shutting Down ${netName} -- Needed for deb11
-_OUTER_EOF_
-	fi
+	local vmNetIfControl=$(netNameInfoRead ${netName}-control)
 
 	cat  << _OUTER_EOF_
-	sudo ifconfig ${vmNetIf}  down  # Shutting Down ${netName} -- Needed for deb11
 	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpNetIf="${vmNetIf}" -i conveyNetInfoStore ${netName}
 	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpNetIfControl="${vmNetIfControl}" -i conveyNetInfoStore ${netName}
 	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpHostNetIf="${hostNetIf}" -i conveyNetInfoStore ${netName}
@@ -803,8 +895,8 @@ _OUTER_EOF_
 ######### PHASE 2.2: Convey Network Interfaces Info For: ${applicableNetsLine}
 _EOF_
 _OUTER_EOF_
-    
-    for eachNetName in ${applicableNets} ; do    
+
+    for eachNetName in ${applicableNets} ; do
 	lpDo conveyNetInterfacesInfo ${eachNetName}
     done
     
@@ -1121,18 +1213,20 @@ _EOF_
     guest.vm.provision "shell", inline: <<-_EOF_MainRootShell_
        set -x
 
-$( vis_vagStdout_serverToDesktop )
+$(vis_vagStdout_netInterfacesDown)
 
-$( vis_vagStdout_bisosProvision )
+$(vis_vagStdout_serverToDesktop)
 
-$( vis_vagStdout_bisosSetIdAndDeploy "${vmNameQualifier}" )	
+$(vis_vagStdout_bisosProvision)
 
-$( vis_vagStdout_platformBinsRun )	
+$(vis_vagStdout_bisosSetIdAndDeploy "${vmNameQualifier}")
+
+$(vis_vagStdout_platformBinsRun)
 
       cat  << _EOF_
  ######### PHASE 4: Cleanup and Shutdown  -- Running As Root
 _EOF_
-      
+
       shutdown now
       exit 0
 
@@ -1140,31 +1234,6 @@ _EOF_MainRootShell_
   end
 end
 
-_OUTER_EOF_
-    }
-
-    function testNetSet {
-    cat  << _OUTER_EOF_
-
-    ## SHELL PROVISIONING
-    guest.vm.provision "shell", inline: <<-_EOF_MainRootShell_
-      cat  << _EOF_
- ######### PHASE 0: Bx Level Distro (serverToDesktop)
-_EOF_
-        set -x
-
-        sudo apt-get update
-
-        sudo apt-get -y install net-tools
-        sudo ifconfig eth1 192.168.0.217 netmask 255.255.255.0 up
-        sudo route add default gw 192.168.0.220       
-    
-        shutdown now
-        exit 0
-
-_EOF_MainRootShell_
-  end
-end
 _OUTER_EOF_
     }
 
