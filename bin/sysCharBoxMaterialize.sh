@@ -193,6 +193,9 @@ $( examplesSeperatorChapter "Hosting Container Actions" )
 sysCharPreps.sh
 sysCharPreps.sh -h -v -n showRun -i fullUpdate
 $( examplesSeperatorChapter "Pure Container Actions" )
+$( examplesSeperatorChapter "Manual BISOS Installation" )
+${G_myName} -i initialBisosBoxInstall
+${G_myName} -i androidGuestBisosInstall
 _EOF_
 }
 
@@ -224,9 +227,35 @@ _EOF_
    fi
 }
 
-
-
 function vis_firstBisosBoxInstall {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 0 ]]
+
+   cat  << _EOF_
+** vis_distro_intraToSudoersAddition
+*** echo intra | su - root -c 'echo intra ALL=\(ALL\) NOPASSWD: ALL >> /etc/sudoers'
+** vis_distro_aptSourcesPrep
+*** sudo cp -p /etc/apt/sources.list /etc/apt/sources.list.orig
+*** grep -v "'^deb cdrom:'" /etc/apt/sources.list \> /tmp/sources.list
+*** sudo mv /tmp/sources.list /etc/apt/sources.list
+*** sudo apt-get update
+** vis_distro_provisionBisos_sysBasePlatform
+*** sudo apt-get update
+*** sudo apt-get -y upgrade
+*** sudo apt-get install -y python3-pip
+*** sudo pip3 install --upgrade bisos.provision
+*** sudo provisionBisos.sh -v -h -n showRun -i sysBasePlatform
+** Do The equivalent of vagrantfile -- Get TBD's from there
+*** sudo /bisos/core/bsip/bin/sysCharDeploy.sh -h -v -n showRun -p registrar="TBD" -p id="TBD" -p password="intra" -p siteBxoId="TBD" -i bisosBasePlatform_siteSetup
+*** sudo -u bystar /bisos/core/bsip/bin/sysCharDeploy.sh -h -v -n showRun -p bisosDevBxoId=TBD -i usgConvey_bisosDeveloper
+_EOF_
+}
+
+
+function vis_androidGuestBisosInstall {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
