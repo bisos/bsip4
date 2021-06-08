@@ -102,6 +102,8 @@ _CommentEnd_
 
 . ${opBinBase}/siteRegistrar_lib.sh
 
+. ${opBinBase}/niche_lib.sh
+
 
 # PRE parameters
 
@@ -197,6 +199,8 @@ $( examplesSeperatorChapter "Manual BISOS Installation" )
 ${G_myName} -i initialBisosBoxInstall
 ${G_myName} -i androidGuestBisosInstall
 _EOF_
+  
+     vis_examplesNicheRun site
 }
 
 
@@ -263,13 +267,6 @@ _EOF_
    EH_assert [[ $# -eq 0 ]]
 
    cat  << _EOF_
-** vis_distro_intraToSudoersAddition
-*** echo intra | su - root -c 'echo intra ALL=\(ALL\) NOPASSWD: ALL >> /etc/sudoers'
-** vis_distro_aptSourcesPrep
-*** sudo cp -p /etc/apt/sources.list /etc/apt/sources.list.orig
-*** grep -v "'^deb cdrom:'" /etc/apt/sources.list \> /tmp/sources.list
-*** sudo mv /tmp/sources.list /etc/apt/sources.list
-*** sudo apt-get update
 ** vis_distro_provisionBisos_sysBasePlatform
 *** sudo apt-get update
 *** sudo apt-get -y upgrade

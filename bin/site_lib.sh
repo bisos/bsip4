@@ -168,6 +168,34 @@ _EOF_
 }	
 
 
+function vis_selectedSiteBxoPath {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** With stdout return: bxoId of selected site based for current user (usgHome).
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    
+    usgHome=$( FN_absolutePathGet ~ )
+    # ~/bisos/sites/selected/siteBpos/containers.bpoFp/bpoId
+    local selectedSitePath="$( vis_siteUsgBase ${usgHome} )/selected"
+
+    if [ ! -e "${selectedSitePath}" ] ; then
+	selectedSitePath="$( vis_siteBisosBase )/selected"
+	if [ ! -e "${selectedSitePath}" ] ; then
+	    EH_problem "Missing selectedSitePath=${selectedSitePath}"
+	    lpReturn 101
+	fi
+    fi
+    
+    local selectedSiteBxoPath="$( readlink -f ${selectedSitePath} )"
+
+    echo "${selectedSiteBxoPath}"
+
+    lpReturn
+}	
+
+
 function vis_activate_siteBxoPlus {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
