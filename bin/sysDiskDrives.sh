@@ -176,6 +176,9 @@ ${G_myName} ${extraInfo} -i mountAllFstab
 $( examplesSeperatorChapter "Software RAID" )
 cat /proc/mdstat
 sudo mdadm --query --detail /dev/md0
+$( examplesSeperatorChapter "SysChar Niche" )
+$(sysCharManage.sh  -p bxoId=sysChar -i bxoIdShow | tail -1)/sys/bin/$(G_myNicheNameGet)
+$(dirname $(dirname ${G_myFullName}))/examples/$(G_myNicheNameGet)
 _EOF_
 }
 
