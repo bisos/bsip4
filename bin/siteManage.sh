@@ -80,6 +80,8 @@ _CommentEnd_
 
 . ${opBinBase}/sysChar_lib.sh
 
+. ${opBinBase}/box_lib.sh
+
 # PRE parameters
 typeset -t model=""     # one of [HPV]
 typeset -t abode=""     # one of [MAPIS]
@@ -98,7 +100,8 @@ function vis_examples {
     #typeset extraInfo=""
     typeset runInfo="-p ri=lsipusr:passive"
     #typeset oneId=`ifconfig eth0 | grep HWaddr | cut -c 39-55`
-    local oneId=$( sudo dmidecode -s system-uuid )
+    # local oneId=$( sudo dmidecode -s system-uuid )
+    local oneId=$(vis_thisBoxUUID)
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 

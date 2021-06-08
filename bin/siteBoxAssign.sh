@@ -80,6 +80,8 @@ _CommentEnd_
 
 . ${opBinBase}/sysChar_lib.sh
 
+. ${opBinBase}/box_lib.sh
+
 # PRE parameters
 typeset -t siteName="MANDATORY"
 
@@ -98,7 +100,8 @@ function vis_examples {
     #typeset extraInfo=""
     typeset runInfo="-p ri=lsipusr:passive"
     #typeset oneId=`ifconfig eth0 | grep HWaddr | cut -c 39-55`
-    local oneId=$( sudo dmidecode -s system-uuid )
+    #local oneId=$( sudo dmidecode -s system-uuid )
+    local oneId=$(vis_thisBoxUUID)
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
@@ -123,7 +126,7 @@ ${G_myName} -i thisBoxFindNu
 ${G_myName} ${extraInfo} -i thisBoxFindNu
 ${G_myName} ${extraInfo} -i thisBoxFindId
 ${G_myName} ${extraInfo} -i thisBoxFindBase
-$( examplesSeperatorChapter "Uniue Box Id" )
+$( examplesSeperatorChapter "Unique Box Id" )
 ${G_myName} ${extraInfo} -i thisBoxUUID
 ${G_myName} ${extraInfo} -i givenUniqueBoxIdFindBoxNuBase "$(vis_thisBoxUUID)"
 $( examplesSeperatorChapter "Next BoxNu" )
@@ -131,6 +134,9 @@ ${G_myName} ${extraInfo} -i boxNuGetNext
 ${G_myName} -i boxNuGetNext
 $( examplesSeperatorChapter "Common Facilities" )
 ${G_myName} -i boxNuToBoxId "$( vis_thisBoxFindNu )"
+$( examplesSeperatorChapter "Android Container Specific Facilities" )
+${G_myName} -v -i runningInAndroidContainer
+${G_myName} -i thisBoxUUID  # Should be based on Mac Address
 _EOF_
 }
 
@@ -361,20 +367,6 @@ _EOF_
    EH_assert [[ $# -eq 0 ]]
    
    vis_givenUniqueBoxIdFindBoxNuBase "$(vis_thisBoxUUID)"
-}
-
-
-function vis_thisBoxUUID {
-   G_funcEntry
-   function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-		      }
-
-   EH_assert [[ $# -eq 0 ]]
-    
-    # if not physical, exit
-    sudo dmidecode -s system-uuid
-    lpReturn
 }
 
 

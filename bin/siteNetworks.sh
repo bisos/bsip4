@@ -82,6 +82,7 @@ _CommentEnd_
 
 . ${opBinBase}/siteNetworks_lib.sh
 
+. ${opBinBase}/box_lib.sh
 
 setBasicItemsFiles opMachineItems
 
@@ -105,7 +106,9 @@ function vis_examples {
     #typeset extraInfo=""
     typeset runInfo="-p ri=lsipusr:passive"
     #typeset oneId=`ifconfig eth0 | grep HWaddr | cut -c 39-55`
-    local oneId=$( sudo dmidecode -s system-uuid )
+    # local oneId=$( sudo dmidecode -s system-uuid )
+    local oneId=$(vis_thisBoxUUID)
+
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
