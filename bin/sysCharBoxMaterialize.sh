@@ -196,6 +196,62 @@ _EOF_
 }
 
 
+function vis_containerSteadyWrite {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
+   local containerSteadyBase="$1"
+   # typically something like: /bxo/r3/iso/pmc_siteName-containers/VAG-deb10_/steady/
+
+   EH_assert [ -d "${containerSteadyBase}" ]
+
+   # blank or auto or static
+   if [ ! -z "${containerSteady_networkMode:-}" ] ; then
+       lpDo fileParamManage.py -v 20 -i fileParamWrite ${containerSteadyBase}/net networkMode.fp "${containerSteady_networkMode}"
+   fi
+   
+   if [ ! -z "${containerSteady_privA_addr:-}" ] ; then
+       lpDo fileParamManage.py -i fileParamWrite ${containerSteadyBase}/net/ipv4/privA.fps addr "${containerSteady_privA_addr}"
+
+       local netSiteFpsPath=$( vis_netSiteFpsPath privA )
+       lpDo FN_fileSymlinkUpdate "${netSiteFpsPath}"  ${containerSteadyBase}/net/ipv4/privA.fps/net.fps
+
+       local routerSiteFpsPath=$( vis_routerSiteFpsPath privA pubA)
+       lpDo FN_fileSymlinkUpdate "${routerSiteFpsPath}"  ${containerSteadyBase}/net/ipv4/privA.fps/router-pubA.fps
+   fi
+}
+
+
+
+function vis_firstBisosBoxInstall {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 0 ]]
+
+   cat  << _EOF_
+** vis_distro_intraToSudoersAddition
+*** echo intra | su - root -c 'echo intra ALL=\(ALL\) NOPASSWD: ALL >> /etc/sudoers'
+** vis_distro_aptSourcesPrep
+*** sudo cp -p /etc/apt/sources.list /etc/apt/sources.list.orig
+*** grep -v "'^deb cdrom:'" /etc/apt/sources.list \> /tmp/sources.list
+*** sudo mv /tmp/sources.list /etc/apt/sources.list
+*** sudo apt-get update
+** vis_distro_provisionBisos_sysBasePlatform
+*** sudo apt-get update
+*** sudo apt-get -y upgrade
+*** sudo apt-get install -y python3-pip
+*** sudo pip3 install --upgrade bisos.provision
+*** sudo provisionBisos.sh -v -h -n showRun -i sysBasePlatform
+** Do The equivalent of vagrantfile -- Get TBD's from there
+*** sudo /bisos/core/bsip/bin/sysCharDeploy.sh -h -v -n showRun -p registrar="TBD" -p id="TBD" -p password="intra" -p siteBxoId="TBD" -i bisosBasePlatform_siteSetup
+*** sudo -u bystar /bisos/core/bsip/bin/sysCharDeploy.sh -h -v -n showRun -p bisosDevBxoId=TBD -i usgConvey_bisosDeveloper
+_EOF_
+}
+
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*
