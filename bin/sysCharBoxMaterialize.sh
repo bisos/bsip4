@@ -155,8 +155,9 @@ $( examplesSeperatorChapter "New Box Realize -- On Manager And On Target Box" )
 sysCharDeploy.sh ${extraInfo} -p targetName="${oneTargetBox}" -i boxSiteBasePlatform  # OnManager
 ssh -X bystar@${oneTargetBox}    # Then run emacs, then realize as below
 sysCharDeploy.sh ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i boxRealizeOrActivateOnTarget # OnTarget Only
-sysCharDeploy.sh ${extraInfo} -p model=Pure -p abode=Shield -p function=Server -i boxRealizeOrActivateOnTarget # OnTarget Only
+sysCharDeploy.sh ${extraInfo} -p model=Pure -p abode=Shield -p function=Server -i boxRealizeOrActivateOnTarget # Eg Media Center
 sysCharDeploy.sh ${extraInfo} -p model=Host -p abode=Internet -p function=Server -i boxRealizeOrActivateOnTarget # OnTarget Only
+sysCharDeploy.sh ${extraInfo} -p model=Pure -p abode=Mobile -p function=LinuxU -i boxRealizeOrActivateOnTarget # Eg Debian on Android
 $( examplesSeperatorChapter "Full Existing Box Activation -- On Manager Or On Target Box" )
 # Install Distro With Intra Account And Priv Interface Access -- record ipAddr for curTargetBox
 sysCharDeploy.sh ${extraInfo} -p targetName="${oneTargetBox}" -i boxFullActivate # OnManager From Begining-To-End

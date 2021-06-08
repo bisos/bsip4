@@ -324,6 +324,16 @@ _EOF_
 		   ;;
 	   esac
 	   ;;
+       LinuxU)
+	   case ${abode} in
+	       Auto|Mobile)
+		   containerSteady_networkMode="auto"
+		   ;;
+	       *)
+		   doNothing
+		   ;;
+	   esac
+	   ;;
        *)
 	   EH_problem "NOTYET -- unimplemented ${function}"
    esac
