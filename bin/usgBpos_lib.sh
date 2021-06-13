@@ -1,10 +1,10 @@
 #!/bin/bash
 
 ####+BEGIN: bx:bsip:bash/libLoadOnce :libName "auto"
-if [ -z "${bxeProvision_lib:-}" ] ; then
-    bxoLib="LOADED" ; TM_trace 7 "bxeProvision_lib :: Loading Library -- /bisos/bsip/bin/bxeProvision_lib.sh"
+if [ -z "${usgBpos_lib:-}" ] ; then
+    usgBpos_lib="LOADED" ; TM_trace 7 "usgBpos_lib :: Loading Library -- /bisos/bsip/bin/usgBpos_lib.sh"
 else
-    TM_trace 7 "bxeProvision_lib :: Prviously Loaded -- Skipping /bisos/bsip/bin/bxeProvision_lib.sh" ; return
+    TM_trace 7 "usgBpos_lib :: Prviously Loaded -- Skipping /bisos/bsip/bin/usgBpos_lib.sh" ; return
 fi
 ####+END:
 
@@ -39,9 +39,6 @@ _CommentEnd_
 _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  Imports       :: Prefaces (Imports/Libraries) [[elisp:(org-cycle)][| ]]
 _CommentEnd_
-
-# PRE parameters
-typeset -t XX=""
 
 
 _CommentBegin_

@@ -78,6 +78,9 @@ _CommentEnd_
 
 . ${opBinBase}/bxoManage_lib.sh
 
+. ${opBinBase}/niche_lib.sh
+
+
 # PRE parameters
 
 typeset -t bxoId=""
@@ -142,15 +145,6 @@ usgBxoSshManage.sh ${extraInfo}  -p bxoId="${oneBxoId}"  -i usgBxoFullDelete
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i fullRemove $(vis_bxoConstructBaseDir_obtain priv)/${oneBxoId}/home # noAcct
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i fullRemove # Delete Acct and remove ${oneBxoHome}
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i fullDelete # _ALERT_ FullRemove + bxoGitServerFullDelete
-$( examplesSeperatorChapter "Delete A BxO At privGitServer" )
-bxoGitlab.py
-bxoGitlab.py -v 20 --bxoId="${oneBxoId}" -i reposDelete repoName1
-bxoGitlab.py -v 20 --bxoId="${oneBxoId}" --keyName="_priv-pubkey"  -i pubkeyDelete 
-bxoGitlab.py -v 20 --bxoId="${oneBxoId}" -i acctDelete
-${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoPath="." -i reposDelete repoName1
-${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i bxoGitServerReposDeleteAll
-${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i bxoGitServerKeysDeleteAll
-${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i bxoGitServerFullDelete
 $( examplesSeperatorChapter "Construct A BxO From Its Realized BxE" )
 $( examplesSeperatorSection "Obtain A Snapshot Of RBxE At $(vis_bxoConstructBaseDir_obtain priv)" )
 ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i obtainRepoSnapshot rbxe
@@ -165,15 +159,17 @@ ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i initialR
 $( examplesSeperatorSection "BxO Construct Full Update -- All Of The Above" )
 ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i fullConstruct $(vis_bxoConstructBaseDir_obtain priv)/${oneBxoId}/home # noAcct
 ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i fullConstruct # Creats Acct & clones in ${oneBxoHome}
+$( examplesSeperatorChapter "Overview Report And Summary" )
+${G_myName} -i containerReposList  # listAvaiableSysChars
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i sysCharContainerReport
 $( examplesSeperatorChapter "Related -- See Also" )
+bxoAcctManage.sh # Bxo Accts
+bxoManage.sh # usg Keys managements
 bxoReposManage.sh # BxO Repos Create And Push And Pull
-# Default Nich Comes Here Or in a separate function after this
 _EOF_
+    
+   vis_examplesNicheRun container
 }
-
-_CommentBegin_
-*  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
-_CommentEnd_
 
 
 _CommentBegin_
