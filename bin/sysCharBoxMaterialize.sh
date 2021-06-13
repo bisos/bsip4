@@ -195,7 +195,7 @@ $( examplesSeperatorChapter "Hosting Container Actions" )
 sysCharPreps.sh
 sysCharPreps.sh -h -v -n showRun -i fullUpdate
 $( examplesSeperatorChapter "Pure Container Actions" )
-$( examplesSeperatorChapter "Manual BISOS Installation" )
+$( examplesSeperatorChapter "Manual BISOS Installation (Site Niched Below)" )
 ${G_myName} -i initialBisosBoxInstall
 ${G_myName} -i androidGuestBisosInstall
 _EOF_
