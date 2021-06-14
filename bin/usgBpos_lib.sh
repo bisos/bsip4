@@ -173,6 +173,44 @@ _EOF_
 }
 
 
+function vis_usgBposUsageEnvs_realIndivBxoId_write {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** 
+_EOF_
+		      }
+    EH_assert [[ $# -eq 1 ]]
+    local bxoIdValue=$1
+
+    # NOTYET bxoIdValue=$(bxoIdPrep ${bxoIdValue})
+    EH_assert [ ! -z ${bxoIdValue} ]
+
+    local curUsgBposBase=$( vis_curUsgBposBase )
+
+    lpDo mkdir -p ${curUsgBposBase}/usageEnvs
+    
+    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/usageEnvs realIndiv.bpoFp ${bxoIdValue}
+}
+
+
+function vis_usgBposUsageEnvs_realIndivBxoId_read {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** returns on stdout: 
+_EOF_
+		      }
+    EH_assert [[ $# -eq 0 ]]
+
+    local curUsgBposBase=$( vis_curUsgBposBase )
+    
+    local resultBxoId=$( fileParamManage.py -i fileParamRead  ${curUsgBposBase}/usageEnvs realIndiv.bpoFp )
+    EH_assert [ ! -z "${resultBxoId}" ]
+
+    echo ${resultBxoId}
+}
+
+
+
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*
 _CommentEnd_

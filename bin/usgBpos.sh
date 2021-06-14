@@ -140,6 +140,8 @@ ${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDevBxoId_read
 ${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDev_update ${thisBisosDevBxoId} # Sets up 
 ${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDev_bxoPath
 ${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDev_bxoId
+${G_myName} ${extraInfo} -i usgBposUsageEnvs_realIndivBxoId_write $(bxoGitlab.py -v 30  -i acctList  | grep pri_ | head -1)
+${G_myName} ${extraInfo} -i usgBposUsageEnvs_realIndivBxoId_read
 _EOF_
 }
 

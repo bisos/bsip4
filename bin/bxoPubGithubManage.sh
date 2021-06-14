@@ -226,6 +226,7 @@ _EOF_
 function vis_fullConstruct {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+** TODO Should be merged with bxoManage_lib.sh
 Get a snapshot for the specified bxoId.
 Setup the ~usg/.ssh/config.
 Clone the repos in bxoHome or where specified.
@@ -245,6 +246,7 @@ _EOF_
 
     lpDo vis_obtainRepoSnapshot rbxe
 
+    # 
     #lpDo vis_usgSshConfigUpdate
 
     if [ $# -eq 0 ] ; then

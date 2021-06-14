@@ -78,6 +78,70 @@ _EOF_
 }
 
 
+function vis_bpoActivate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** 
+Get a snapshot for the specified bxoId.
+Setup the ~usg/.ssh/config.
+Clone the repos in bxoHome or where specified.
+_EOF_
+		       }
+
+    local inputsList="$@"
+    local thisFunc=${G_thisFunc}
+
+    function processEach {
+	EH_assert [[ $# -eq 1 ]]
+	bxoId=$1
+
+	if [ "${G_verbose}_" == "verbose_" ] ; then
+	    ANT_raw "Activating bxoId=${bxoId}"
+	fi
+    
+	if vis_userAcctExists "${bxoId}" ; then
+	    ANT_raw "${bxoId} account already exists."
+	    lpReturn 101
+	fi
+
+	lpDo vis_obtainRepoSnapshot rbxe
+
+	lpDo vis_usgSshConfigUpdate
+
+	lpDo vis_bxoAcctCreate
+
+	lpDo vis_initialReposClone
+	
+	lpReturn
+    }
+
+    if [ ! -z "${bxoId}" ] ; then
+	processEach "${bxoId}"
+    fi
+
+####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
+    if [ $# -gt 0 ] ; then
+	local each=""
+	for each in ${inputsList} ; do
+	    lpDo processEach ${each}
+	done
+    else
+	local eachLine=""
+	while read -r -t 1 eachLine ; do
+	    if [ ! -z "${eachLine}" ] ; then
+		local each=""
+		for each in ${eachLine} ; do
+		    lpDo processEach ${each}
+		done
+	    fi
+	done
+    fi
+
+####+END:
+    
+    lpReturn
+}
+
 
 function vis_fullConstruct {
     G_funcEntry
@@ -240,6 +304,36 @@ _EOF_
     lpDo vis_bxoGitServerReposDeleteAll
 
     lpDo bxoGitlab.py -v 20 --bxoId="${bxoId}" -i acctDelete
+    
+    lpReturn
+}
+
+
+function vis_bxoTreeDescendantsList {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert bxoIdPrep
+
+    local bxeTreeBase="${bxoHome}/bxeTree"
+    
+    if [ ! -d "${bxeTreeBase}" ] ; then
+	EH_problem "Missing ${bxeTreeBase}"
+	lpReturn
+    fi
+
+    local bxeDescBase="${bxeTreeBase}/bxeDesc"
+    
+    if [ ! -d "${bxeDescBase}" ] ; then
+	EH_problem "Missing ${bxeDescBase}"
+	lpReturn
+    fi
+
+    local descendantsList=$( inBaseDirDo ${bxeDescBase} ls 2> /dev/null | grep -v node)
+
+    echo ${descendantsList}
     
     lpReturn
 }

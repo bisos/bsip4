@@ -158,6 +158,7 @@ $( examplesSeperatorChapter "BxoIFile Parameters" )
 ${G_myName} ${extraInfo} -i bxoIdFpsBase
 ${G_myName} ${extraInfo} -i bxoIdFpsReadDeep
 ${G_myName} ${extraInfo} -i bxoIdFpsWrite sysChar pmp_HSS-1003
+${G_myName} ${extraInfo} -i bxoIdFpsInit_all   # _sysChar_ and _site_, 
 ${G_myName} ${extraInfo} -i bxoIdFpsInit_sysChar   # _site, 
 ${G_myName} ${extraInfo} -f -i bxoIdFpsInit_sysChar # _site,
 ${G_myName} ${extraInfo} -i bxoIdFpsRead sysChar

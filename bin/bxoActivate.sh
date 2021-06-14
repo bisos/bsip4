@@ -65,6 +65,7 @@ _CommentEnd_
 . ${opBinBase}/bxeDesc_lib.sh
 
 . ${opBinBase}/bxo_lib.sh
+. ${opBinBase}/bxoId_lib.sh
 
 . ${opBinBase}/bystarHook.libSh
 
@@ -127,7 +128,9 @@ function vis_examples {
     #local oneBxoId="prs_bisos"
     local oneBxoId=${currentBxoId}    
     #oneBxoId="as-test1_5"    
-    oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )    
+    oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )
+
+    oneRealIndivBxoId=$(usgBpos.sh -i usgBposUsageEnvs_realIndivBxoId_read)
 
     visLibExamplesOutput ${G_myName}
 
@@ -159,6 +162,12 @@ ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i initialR
 $( examplesSeperatorSection "BxO Construct Full Update -- All Of The Above" )
 ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i fullConstruct $(vis_bxoConstructBaseDir_obtain priv)/${oneBxoId}/home # noAcct
 ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i fullConstruct # Creats Acct & clones in ${oneBxoHome}
+$( examplesSeperatorChapter "Activate Selected Real Individual" )
+${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneRealIndivBxoId}" -i fullConstruct
+${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneRealIndivBxoId}" -i bpoActivate
+${G_myName} ${extraInfo} -p privacy="${priv}" -i bpoActivate ${oneRealIndivBxoId} 
+echo ${oneRealIndivBxoId} | ${G_myName} ${extraInfo} -p privacy="${priv}" -i bpoActivate
+${G_myName} ${extraInfo} -p bxoId=${oneRealIndivBxoId} -i bxoTreeDescendantsList | ${G_myName} ${extraInfo} -p privacy="${priv}" -i bpoActivate
 $( examplesSeperatorChapter "Overview Report And Summary" )
 ${G_myName} -i containerReposList  # listAvaiableSysChars
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i sysCharContainerReport

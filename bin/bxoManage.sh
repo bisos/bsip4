@@ -65,6 +65,7 @@ _CommentEnd_
 . ${opBinBase}/bxeDesc_lib.sh
 
 . ${opBinBase}/bxo_lib.sh
+. ${opBinBase}/bxoId_lib.sh
 
 . ${opBinBase}/bystarHook.libSh
 
@@ -165,6 +166,10 @@ ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i initialR
 $( examplesSeperatorSection "BxO Construct Full Update -- All Of The Above" )
 ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i fullConstruct $(vis_bxoConstructBaseDir_obtain priv)/${oneBxoId}/home # noAcct
 ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i fullConstruct # Creats Acct & clones in ${oneBxoHome}
+$( examplesSeperatorChapter "Bxo Tree -- Ancestors and Descendants" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i bxoTreeDescendantsList
+${G_myName} ${extraInfo} -p bxoId="site" -i bxoTreeDescendantsList
+${G_myName} ${extraInfo} -p bxoId="$(usgBpos.sh -i usgBposUsageEnvs_realIndivBxoId_read)" -i bxoTreeDescendantsList
 $( examplesSeperatorChapter "Related -- See Also" )
 bxoReposManage.sh # BxO Repos Create And Push And Pull
 # Default Nich Comes Here Or in a separate function after this

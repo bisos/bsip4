@@ -87,9 +87,10 @@ _EOF_
 function vis_bxoIdFpsInit_all {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+** NOTYET -- When should this be called 
 _EOF_
 		       }
-    EH_assert [[ $# -eq 1 ]]
+    EH_assert [[ $# -eq 0 ]]
 
     lpDo vis_bxoIdFpsInit_sysChar
     lpDo vis_bxoIdFpsInit_site
