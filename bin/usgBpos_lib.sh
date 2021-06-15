@@ -127,7 +127,6 @@ _EOF_
 }
 
 
-
 function vis_usgBposUsageEnvs_bisosDev_update {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -173,7 +172,7 @@ _EOF_
 }
 
 
-function vis_usgBposUsageEnvs_realIndivBxoId_write {
+function vis_usgBpos_real_indivBxoId_write {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** 
@@ -182,18 +181,16 @@ _EOF_
     EH_assert [[ $# -eq 1 ]]
     local bxoIdValue=$1
 
-    # NOTYET bxoIdValue=$(bxoIdPrep ${bxoIdValue})
+    bxoIdValue=$(bxoIdPrep ${bxoIdValue})
     EH_assert [ ! -z ${bxoIdValue} ]
 
     local curUsgBposBase=$( vis_curUsgBposBase )
-
-    lpDo mkdir -p ${curUsgBposBase}/usageEnvs
-    
-    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/usageEnvs realIndiv.bpoFp ${bxoIdValue}
+    lpDo mkdir -p ${curUsgBposBase}/real
+    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/real realIndiv.bpoFp ${bxoIdValue}
 }
 
 
-function vis_usgBposUsageEnvs_realIndivBxoId_read {
+function vis_usgBpos_real_indivBxoId_read {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** returns on stdout: 
@@ -203,12 +200,134 @@ _EOF_
 
     local curUsgBposBase=$( vis_curUsgBposBase )
     
-    local resultBxoId=$( fileParamManage.py -i fileParamRead  ${curUsgBposBase}/usageEnvs realIndiv.bpoFp )
+    local resultBxoId=$( fileParamManage.py -i fileParamRead  ${curUsgBposBase}/real realIndiv.bpoFp )
     EH_assert [ ! -z "${resultBxoId}" ]
 
     echo ${resultBxoId}
 }
 
+
+function vis_usgBpos_real_indiv_update {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
+   local bxoIdValue=$1
+
+   bxoIdValue=$(lpDo bxoIdPrep ${bxoIdValue})
+   EH_assert [ ! -z "${bxoIdValue}" ]
+
+   bxoPath=$(lpDo vis_bxoPathObtainForBxoId "${bxoIdValue}")
+   EH_assert [ ! -z "${bxoIdValue}" ]
+   
+   local curUsgBposBase=$(lpDo vis_curUsgBposBase)
+
+   lpDo vis_usgBpos_real_indivBxoId_write ${bxoIdValue}
+   lpDo FN_fileSymlinkUpdate ${bxoPath} ${curUsgBposBase}/real/realIndiv
+}
+
+
+function vis_usgBpos_real_indiv_bxoPath {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 0 ]]
+   local curUsgBposBase=$(lpDo vis_curUsgBposBase)   
+   EH_assert [ -e ${curUsgBposBase}/real/realIndiv ]
+   lpDo FN_absolutePathGet ${curUsgBposBase}/real/realIndiv
+}
+
+
+function vis_usgBpos_real_indiv_bxoId {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 0 ]]
+   local bxoId=$(lpDo vis_usgBpos_real_indivBxoId_read)
+   echo ${bxoId}
+}
+
+
+function vis_usgBpos_usageEnvs_fullUse_write {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** 
+_EOF_
+		      }
+    EH_assert [[ $# -eq 1 ]]
+    local bxoIdValue=$1
+
+    bxoIdValue=$(bxoIdPrep ${bxoIdValue})
+    EH_assert [ ! -z ${bxoIdValue} ]
+
+    local curUsgBposBase=$( vis_curUsgBposBase )
+    lpDo mkdir -p ${curUsgBposBase}/usageEnvs
+    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/usageEnvs fullUse.bpoFp ${bxoIdValue}
+}
+
+
+function vis_usgBpos_usageEnvs_fullUse_read {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** returns on stdout: 
+_EOF_
+		      }
+    EH_assert [[ $# -eq 0 ]]
+
+    local curUsgBposBase=$( vis_curUsgBposBase )
+    
+    local resultBxoId=$( fileParamManage.py -i fileParamRead  ${curUsgBposBase}/usageEnvs fullUse.bpoFp )
+    EH_assert [ ! -z "${resultBxoId}" ]
+
+    echo ${resultBxoId}
+}
+
+
+function vis_usgBpos_usageEnvs_fullUse_update {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
+   local bxoIdValue=$1
+
+   bxoIdValue=$(lpDo bxoIdPrep ${bxoIdValue})
+   EH_assert [ ! -z "${bxoIdValue}" ]
+
+   bxoPath=$(lpDo vis_bxoPathObtainForBxoId "${bxoIdValue}")
+   EH_assert [ ! -z "${bxoIdValue}" ]
+   
+   local curUsgBposBase=$(lpDo vis_curUsgBposBase)
+
+   lpDo vis_usgBpos_usageEnvs_fullUse_write ${bxoIdValue}
+   lpDo FN_fileSymlinkUpdate ${bxoPath} ${curUsgBposBase}/usageEnvs/fullUse
+}
+
+
+function vis_usgBpos_usageEnvs_fullUse_bxoPath {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 0 ]]
+   local curUsgBposBase=$(lpDo vis_curUsgBposBase)   
+   EH_assert [ -e ${curUsgBposBase}/usageEnvs/fullUse ]
+   lpDo FN_absolutePathGet ${curUsgBposBase}/usageEnvs/fullUse
+}
+
+
+function vis_usgBpos_usageEnvs_fullUse_bxoId {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 0 ]]
+   local bxoId=$(lpDo vis_usgBpos_usageEnvs_fullUse_read)
+   echo ${bxoId}
+}
 
 
 _CommentBegin_

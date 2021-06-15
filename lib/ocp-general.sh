@@ -999,6 +999,7 @@ function FN_absolutePathGet {
   fi
 
   typeset givenFile=$1
+  local processedGivenFile=""
 
   if [ "${givenFile}" == "" ] ; then
       return 1
@@ -1006,9 +1007,23 @@ function FN_absolutePathGet {
 
   # Similar to expand-file-name in elisp
   # Convert filename NAME to absolute, and canonicalize it.
-  # 
-
-  givenFile=`eval /bin/echo "${givenFile}"`
+  #
+  
+  case "${givenFile}" in
+      ~*)
+	  processedGivenFile=$(eval /bin/echo "${givenFile}")
+	  if [ "${processedGivenFile}" == "${givenFile}" ] ; then
+	      printf "FN_absolutePathGet: Missing ${givenFile}\n" 1>&2
+	      echo ""
+	      return
+	  else
+	      givenFile="${processedGivenFile}"
+	  fi
+	  ;;
+      *)
+	  givenFile=$(eval /bin/echo "${givenFile}")
+	  ;;
+  esac
 
   local absPath=""
 
@@ -1023,7 +1038,7 @@ function FN_absolutePathGet {
 )/${givenFile##*/}
   fi
 
-  echo ${absPath}
+  echo -n ${absPath}
 }
 
 

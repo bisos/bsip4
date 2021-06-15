@@ -123,6 +123,10 @@ function vis_examples {
     if [ -z "${thisBisosDevBxoId}" ] ; then
 	thisBisosDevBxoId="piu_XXBisosDev"
     fi
+
+    local oneRealIndiv=$(bxoGitlab.py -v 30  -i acctList  | grep pri_ | head -1)    
+
+    local oneFullUse=$(bxoGitlab.py -v 30  -i acctList  | grep piu_ | grep -i full | head -1)    
     
     visLibExamplesOutput ${G_myName}
 
@@ -135,13 +139,22 @@ $( examplesSeperatorChapter "Preps" )
 ${G_myName} ${extraInfo} -i usgBposInit # Should be invoked after bisosDevBxoId Has Been Conveyed
 ${G_myName} ${extraInfo} -i usgBposFpsPrep
 $( examplesSeperatorChapter "UsageEnvs" )
+$( examplesSeperatorSection "UsageEnvs -- Bisos Development BPO" )
 ${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDevBxoId_write piu_XXBisosDev
 ${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDevBxoId_read
-${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDev_update ${thisBisosDevBxoId} # Sets up 
+${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDev_update ${thisBisosDevBxoId} # Main Sets up 
 ${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDev_bxoPath
 ${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDev_bxoId
-${G_myName} ${extraInfo} -i usgBposUsageEnvs_realIndivBxoId_write $(bxoGitlab.py -v 30  -i acctList  | grep pri_ | head -1)
-${G_myName} ${extraInfo} -i usgBposUsageEnvs_realIndivBxoId_read
+$( examplesSeperatorSection "Real BPOs -- Real Individual BPO" )
+${G_myName} ${extraInfo} -i usgBpos_real_indivBxoId_write ${oneRealIndiv} # Low Level Function
+${G_myName} ${extraInfo} -i usgBpos_real_indivBxoId_read 
+${G_myName} ${extraInfo} -i usgBpos_real_indiv_update ${oneRealIndiv} # Main Entry -- Sets 
+${G_myName} ${extraInfo} -i usgBpos_real_indiv_bxoPath # Main Entry -- Gets
+${G_myName} ${extraInfo} -i usgBpos_real_indiv_bxoId
+$( examplesSeperatorSection "UsageEnv -- Full Use BPO" )
+${G_myName} ${extraInfo} -i usgBpos_usageEnvs_fullUse_update ${oneFullUse} # Main Entry -- Sets 
+${G_myName} ${extraInfo} -i usgBpos_usageEnvs_fullUse_bxoPath # Main Entry -- Gets
+${G_myName} ${extraInfo} -i usgBpos_usageEnvs_fullUse_bxoId
 _EOF_
 }
 

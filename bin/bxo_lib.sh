@@ -150,6 +150,26 @@ _EOF_
     lpReturn
 }
 
+
+function vis_bxoPathObtainForBxoId {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local thisBxoId="$1"
+
+    thisBxoId=$(bxoIdPrep ${thisBxoId})
+    EH_assert [ ! -z ${thisBxoId} ]
+
+    local thisBxoHome=$( FN_absolutePathGet ~${thisBxoId} )
+    EH_assert [ ! -z "${thisBxoHome}" ]
+
+    echo "${thisBxoHome}"
+    lpReturn
+}
+
 function vis_bxoIdObtainForPath {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
