@@ -46,471 +46,249 @@ _CommentBegin_
 _CommentEnd_
 
 
-abodes=("Mobile" "Auto" "Perim" "Internet" "Shield")
-functions=("LinuxU" "AndroidU" "Server" "Devel" "Generic")
-distros=("deb10" "deb11" "ub2004")
-
-function vis_modelAbodeFunctionBaseDirsCreate {
+function vis_aabis_registrarBaseObtain {
    G_funcEntry
-   function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-		      }
-   EH_assert [[ $# -eq 0 ]]
-
-   local containersBase=$( containersAssignBaseObtain )
-   EH_assert [ ! -z "${containersBase}" ] 
-
-   for eachModel in ${models[@]} ;  do
-       for eachAbode in ${abodes[@]} ; do
-	   for eachFunction in ${functions[@]} ; do
-	       lpDo mkdir -p  ${containersBase}/${eachModel}/${eachAbode}/${eachFunction}
-	   done
-       done
-   done
-
-   lpReturn
-}
-
-
-function vis_assignGenerics_auto {
-   G_funcEntry
-   function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-		      }
-   EH_assert [[ $# -eq 1 ]]
-
-   local examplesOrDoIt=$1
-
-   local command=containerBoxAssign
-
-   model=Virt
-   abode=Auto
-   function=Generic
-
-   function outLine {
-       EH_assert [[ $# -eq 3 ]]
-       local thisModel=$1
-       local thisAbode=$2
-       local thisFunction=$3
-       for eachDistro in ${distros[@]} ; do
-	   if [ "${examplesOrDoIt}" == "examples" ] ; then
-	       cat  << _EOF_
-${G_myName} -p model=${thisModel} -p abode=${thisAbode} -p function=${thisFunction} -i ${command} ${eachDistro}
-${G_myName} -p model=${thisModel} -p abode=${thisAbode} -p function=${thisFunction} -i ${command} bx_${eachDistro}
-_EOF_
-	   elif [ "${examplesOrDoIt}" == "doIt" ] ; then
-	       lpDo vis_${command} ${eachDistro}
-	       lpDo vis_${command} bx_${eachDistro}
-	   else
-	       EH_problem "Bad Usage -- ${examplesOrDoIt}"
-	   fi
-       done
-   }
-   
-   function functionsList {
-       EH_assert [[ $# -eq 2 ]]
-       local thisModel=$1
-       local thisAbode=$2       
-       if [ ! -z ${function} ] ; then
-	   outLine ${thisModel} ${thisAbode} ${function}
-       else
-	   for eachFunction in ${functions[@]} ; do
-	       outLine ${thisModel} ${thisAbode} ${eachFunction}
-	   done
-       fi
-   }
-
-   function abodesFunctionsList {
-       EH_assert [[ $# -eq 1 ]]
-       local thisModel=$1
-       if [ ! -z ${abode} ] ; then
-	   functionsList ${thisModel} ${abode}
-       else
-	   for eachAbode in ${abodes[@]} ; do
-	       functionsList  ${thisModel} ${eachAbode}
-	   done
-       fi
-   }
-
-   if [ ! -z ${model} ] ; then
-       abodesFunctionsList ${model}
-   else
-       for eachModel in ${models[@]} ;  do
-	   abodesFunctionsList ${eachModel}  
-       done
-   fi
-
-   lpReturn
-}
-
-
-function vis_assignGenerics_box {
-    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+** Obtains registrar bxoId's path
+*** Status: functional
 _EOF_
-		      }
-    EH_assert [[ $# -eq 1 ]]
+    }
+    EH_assert [[ $# -eq 0 ]]
 
-    local examplesOrDoIt=$1
+    local registrarBxoId="pir_bystarRegistrar"
+    
+    local registrarBxoPath=$( FN_absolutePathGet ~pir_bystarRegistrar )
 
-    local command=containerBoxAssign
+    EH_assert [ ! -z "${registrarBxoPath}" ]
 
-    local containerBase=$( vis_forThisSysFindContainerBase )
-    EH_assert [ ! -z "${containerBase}" ]
+    echo "${registrarBxoPath}"
 
-    vis_containerAssignRead "${containerBase}"
-    EH_assert [ ! -z "${containerAssign_abode}" ]
-
-    model=Virt
-    abode=${containerAssign_abode}
-    function=Generic
-
-   function outLine {
-       EH_assert [[ $# -eq 3 ]]
-       local thisModel=$1
-       local thisAbode=$2
-       local thisFunction=$3
-       for eachDistro in ${distros[@]} ; do
-	   if [ "${examplesOrDoIt}" == "examples" ] ; then
-	       cat  << _EOF_
-${G_myName} -p model=${thisModel} -p abode=${thisAbode} -p function=${thisFunction} -i ${command} ${eachDistro}
-${G_myName} -p model=${thisModel} -p abode=${thisAbode} -p function=${thisFunction} -i ${command} bx_${eachDistro}
-_EOF_
-	   elif [ "${examplesOrDoIt}" == "doIt" ] ; then
-	       lpDo vis_${command} ${eachDistro}
-	       lpDo vis_${command} bx_${eachDistro}
-	   else
-	       EH_problem "Bad Usage -- ${examplesOrDoIt}"
-	   fi
-       done
-   }
-   
-   function functionsList {
-       EH_assert [[ $# -eq 2 ]]
-       local thisModel=$1
-       local thisAbode=$2       
-       if [ ! -z ${function} ] ; then
-	   outLine ${thisModel} ${thisAbode} ${function}
-       else
-	   for eachFunction in ${functions[@]} ; do
-	       outLine ${thisModel} ${thisAbode} ${eachFunction}
-	   done
-       fi
-   }
-
-   function abodesFunctionsList {
-       EH_assert [[ $# -eq 1 ]]
-       local thisModel=$1
-       if [ ! -z ${abode} ] ; then
-	   functionsList ${thisModel} ${abode}
-       else
-	   for eachAbode in ${abodes[@]} ; do
-	       functionsList  ${thisModel} ${eachAbode}
-	   done
-       fi
-   }
-
-   if [ ! -z ${model} ] ; then
-       abodesFunctionsList ${model}
-   else
-       for eachModel in ${models[@]} ;  do
-	   abodesFunctionsList ${eachModel}  
-       done
-   fi
-
-   lpReturn
-}
-
-
-function vis_modelAbodeFunction_listExamples {
-   G_funcEntry
-   function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-		      }
-   EH_assert [[ $# -eq 1 ]]
-
-   local command=$1
-
-   function outLine {
-       EH_assert [[ $# -eq 3 ]]
-       local thisModel=$1
-       local thisAbode=$2
-       local thisFunction=$3
-       cat  << _EOF_
-${G_myName} -p model=${thisModel} -p abode=${thisAbode} -p function=${thisFunction} -i ${command}
-_EOF_
-   }
-   
-   function functionsList {
-       EH_assert [[ $# -eq 2 ]]
-       local thisModel=$1
-       local thisAbode=$2       
-       if [ ! -z ${function} ] ; then
-	   outLine ${thisModel} ${thisAbode} ${function}
-       else
-	   for eachFunction in ${functions[@]} ; do
-	       outLine ${thisModel} ${thisAbode} ${eachFunction}
-	   done
-       fi
-   }
-
-   function abodesFunctionsList {
-       EH_assert [[ $# -eq 1 ]]
-       local thisModel=$1
-       if [ ! -z ${abode} ] ; then
-	   functionsList ${thisModel} ${abode}
-       else
-	   for eachAbode in ${abodes[@]} ; do
-	       functionsList  ${thisModel} ${eachAbode}
-	   done
-       fi
-   }
-
-   if [ ! -z ${model} ] ; then
-       abodesFunctionsList ${model}
-   else
-       for eachModel in ${models[@]} ;  do
-	   abodesFunctionsList ${eachModel}  
-       done
-   fi
-
-   lpReturn
-}
-
-function vis_withInitialGetModel {
-   G_funcEntry
-   function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-		      }
-   EH_assert [[ $# -eq 1 ]]
-   local modelInitial=$1
-   local result=""   
-
-   case "${modelInitial}" in
-       "H")
-	   result="Host"
-	   ;;
-       "P")
-	   result="Pure"
-	   ;;
-       "V")
-	   result="Virt"
-	   ;;
-       *)
-	   EH_problem "Bad Usage -- modelInitial=${modelInitial}"
-   esac
-   echo ${result}
-}
-
-function vis_withInitialGetAbode {
-   G_funcEntry
-   function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-		      }
-   EH_assert [[ $# -eq 1 ]]
-   local abodeInitial=$1
-   local result=""
-
-   case "${abodeInitial}" in
-       "A")
-	   result="Auto"
-	   ;;
-       "M")
-	   result="Mobile"
-	   ;;
-       "P")
-	   result="Perim"
-	   ;;
-       "S")
-	   result="Shield"
-	   ;;
-       "I")
-	   result="Internet"
-	   ;;
-       *)
-	   EH_problem "Bad Usage -- abodeInitial=${abodeInitial}"
-   esac
-   echo ${result}
-}
-
-
-function vis_withInitialGetFunction {
-   G_funcEntry
-   function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-		      }
-   EH_assert [[ $# -eq 1 ]]
-   local functionInitial=$1
-   local result=""
-
-   case "${functionInitial}" in
-       "L")
-	   result="LinuxU"
-	   ;;
-       "A")
-	   result="AndroidU"
-	   ;;
-       "S")
-	   result="Server"
-	   ;;
-       "D")
-	   result="Devel"
-	   ;;
-       "G")
-	   result="Generic"
-	   ;;
-       *)
-	   EH_problem "Bad Usage -- functionInitial=${functionInitial}"
-   esac
-   echo ${result}
-}
-
-function vis_withContainerIdGetBase {
-   G_funcEntry
-   function describeF {  G_funcEntryShow; cat  << _EOF_
-ContainerId is VAG-xxx
-_EOF_
-		      }
-   EH_assert [[ $# -eq 1 ]]
-   local containerId=$1
-
-   local modelInitial=${containerId:0:1}
-   local abodeInitial=${containerId:1:1}
-   local functionInitial=${containerId:2:1}
-   local containerNu=$( echo ${containerId} |  sed -e 's:...-::' ) 
-
-   local thisModel=$( vis_withInitialGetModel ${modelInitial} )
-   local thisAbode=$( vis_withInitialGetAbode ${abodeInitial} )
-   local thisFunction=$( vis_withInitialGetFunction ${functionInitial} )
-   
-   local containersBase=$( containersAssignBaseObtain )
-   EH_assert [ ! -z "${containersBase}" ]
-
-   local containerIdBase="${containersBase}/${thisModel}/${thisAbode}/${thisFunction}/${containerNu}"
-
-   if [ ! -d "${containerIdBase}" ] ; then
-       EH_problem "Missing containerIdBase=${containerIdBase}"
-   fi
-
-   echo ${containerIdBase}
-}
-
-
-function vis_assignedContainerBase {
-   G_funcEntry
-   function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-		      }
-   EH_assert [[ $# -eq 1 ]]
-   local containerNu=$1
-
-   local containersBase=$( containersAssignBaseObtain )
-   EH_assert [ ! -z "${containersBase}" ]
-   
-   EH_assert [ ! -z "${model}" ]
-   EH_assert [ ! -z "${abode}" ]
-   EH_assert [ ! -z "${function}" ]
-   
-   echo "${containersBase}/${model}/${abode}/${function}/${containerNu}"
-}
-
-
-function vis_containerBoxAssignAndPush {
-   G_funcEntry
-   function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-		      }
-   EH_assert [[ $# -lt 2 ]]
-
-   EH_assert [ ! -z "${model}" ]   
-   EH_assert [ ! -z "${abode}" ]
-   EH_assert [ ! -z "${function}" ]
-
-   if [ $# -eq 0 ] ; then
-       vis_containerBoxAssignNumbered
-   else
-       vis_containerAssignGeneric "$1"
-   fi
-
-   lpDo vis_forThisSysContainerBasePush
-   
+    lpReturn
 }	
 
-function vis_forThisSysContainerAssignBasePush {
+function vis_aabis_registrarAssignBaseObtain {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Obtains registrar bxoId's path + "/assign"
+*** Status: functional
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local registrarBxoPath=$(vis_aabis_registrarBaseObtain)
+    EH_assert [ ! -z "${registrarBxoPath}" ]
+
+    echo "${registrarBxoPath}/assign"
+
+    lpReturn
+}	
+
+
+function vis_aabis_withServiceTypeGetServiceLetter {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+** With \$1 as N B F etc return ServiceType
+*** Status: functional
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
+   local thisServiceType=$1
+   local result=""   
+
+   case "${thisServiceType}" in
+       "ByName")
+	   result="N"
+	   ;;
+       "BySmb")
+	   result="B"
+	   ;;
+       "ByFamily")
+	   result="F"
+	   ;;
+       *)
+	   EH_problem "Bad Usage -- serviceType=${thisServiceType}"
+   esac
+   echo ${result}
+}
+
+
+function vis_aabis_withServiceLetterGetServiceType {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+** With \$1 as N B F etc return ServiceType
+*** Status: functional
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
+   local letter=$1
+   local result=""   
+
+   case "${letter}" in
+       "N")
+	   result="ByName"
+	   ;;
+       "B")
+	   result="BySmb"
+	   ;;
+       "F")
+	   result="ByFamily"
+	   ;;
+       *)
+	   EH_problem "Bad Usage -- serviceLetter=${letter}"
+   esac
+   echo ${result}
+}
+
+
+function vis_aabis_withNuGetId {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
+   local aabisNu="$1"
+
+   EH_assert [ ! -z "${serviceType}" ]      
+
+   if ! isnum ${aabisNu} ; then
+       EH_problem "Bad input -- Expected a number -- aabisNu=${aabisNu}"
+       lpReturn
+   fi
+
+   local serviceLetter=$(lpDo vis_aabis_withServiceTypeGetServiceLetter ${serviceType})
+   
+   echo "By${serviceLetter}-${aabisNu}"
+}
+
+
+function vis_aabis_withIdGetAssignedBase {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+** aabisId is something like BN-1001
+*** Status: untested
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
+   local aabisId=$1
+
+   local byStarInitial=${aabisId:0:1}
+   local serviceTypeInitial=${aabisId:1:1}
+   local aabisNu=$( echo ${aabisId} |  sed -e 's:..-::' ) 
+
+   local thisServiceName=$(vis_aabis_withServiceInitialGetServiceType ${serviceTypeInitial} )
+   
+   local registrarBase=$(vis_aabis_registrarBaseObtain)
+   EH_assert [ ! -z "${registrarBase}" ]
+
+   local aabisIdBase="${registrarBase}/assign/${thisServiceName}/${aabisNu}"
+
+   if [ ! -d "${aabisIdBase}" ] ; then
+       EH_problem "Missing aabisIdBase=${aabisIdBase}"
+       lpReturn 101
+   fi
+
+   echo ${aabisIdBase}
+}
+
+
+function vis_aabis_withNuGetAssignedBase {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+** With aabisNu, get assigned base.
+*** Status: untested
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
+   local aabisNu=$1
+
+   local assignsBase=$(vis_aabis_registrarAssignBaseObtain)
+   EH_assert [ ! -z "${assignsBase}" ]
+   
+   EH_assert [ ! -z "${serviceType}" ]
+   
+   echo "${assignsBase}/${serviceType}/${aabisNu}"
+}
+
+
+function vis_aabis_serviceTypeAssignToCorrespondingBxoAndPush {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
 		      }
    EH_assert [[ $# -eq 0 ]]
 
+   EH_assert [ ! -z "${serviceType}" ]   
+   EH_assert [ ! -z "${correspondingBxo}" ]
+
+   lpDo vis_aabis_serviceTypeAssignToCorrespondingBxoAndPush
+
+   lpDo vis_aabis_assignedServiceIdPush
+}	
+
+function vis_aabis_assignedServiceIdPush {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 0 ]]
+
+   echo NOTYET
+
+   lpReturn
+
    local thisContainerBase=$( vis_forThisSysFindContainerBase )
-   
    EH_assert [ ! -z "${thisContainerBase}" ]
 
    lpDo eval echo ${thisContainerBase} \| bx-gitRepos -i addCommitPush all
 }	
 
 
-function vis_containersAssignBasePull {
+function vis_aabis_assignBasePull {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
 		      }
 
    EH_assert [[ $# -eq 0 ]]
-
-   local containersAssignBase=$( containersAssignBaseObtain )
-
-   EH_assert [ ! -z "${containersAssignBase}" ]
-
-   lpDo eval echo ${containersAssignBase} \| bx-gitRepos -i gitRemPull
+   
+   local registrarAssignPath=$(vis_aabis_registrAssignBaseObtain)
+   EH_assert [ ! -z "${registrarAssignPath}" ]
+  
+   lpDo eval echo ${registrarAssignBase} \| bx-gitRepos -i gitRemPull
 }
 
 
-function vis_containerAssign {
+function vis_aabis_assignId {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
-For the subject physical sys (thisBoxNu) identified by system-uuid, assign a container.
-Return on stdout, a containerId  such as HSS-1001.
-- Determine box or machine
-- When there are no exisiting entities matching system-uuid, assign a box (thisBoxAdd)
-- If an assigned container exists which coresponds to thisBox, then use that
-- If one does not exist, assign one (with vis_containerNuGetNext)
-- Then after vis_containerUpdate_atNu, return containerId
+
 _EOF_
 		      }
    EH_assert [[ $# -lt 2 ]]
 
-   EH_assert [ ! -z "${model}" ]   
-   EH_assert [ ! -z "${abode}" ]
-   EH_assert [ ! -z "${function}" ]
+   EH_assert [ ! -z "${serviceType}" ]   
+   EH_assert [ ! -z "${correspondingBxo}" ]
 
-   if [ $# -eq 1 ] ; then
-       lpDo vis_containerAssignGeneric "$1"
-       lpReturn
-   fi
-	  
-   case "${model}" in
-       Host|host|HOST|Pure|pure|PURE)
-	   lpDo vis_containerBoxAssignNumbered	   
-	   ;;
-       Virt|virt|VIRT)
-	   lpDo vis_containerVirtAssignNumbered	   	   
-	   ;;
-       *)
-	   EH_problem "Bad Usage -- model=${model}"
-   esac
+   lpDo echo NOTYET
+
+   lpReturn
+   
+   lpDo vis_containerBoxAssignNumbered	   
 }	
 
 
 
-function vis_containerBoxUnAssign {
+function vis_aabis_UnAssign {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
 		      }
    EH_assert [[ $# -eq 1 ]]
 
+   echo NOTYET
+
+   lpReturn
+   
    local boxId="$1"
 
    local containerBasePath=$( vis_withBoxIdFindContainerBase "${boxId}" )
@@ -525,13 +303,19 @@ _EOF_
    lpDo fileParamManage.py -i fileParamWrite "${containerBasePath}" boxId "unassigned"
 }
 
-function vis_containerBoxUnAssignAndPush {
+function vis_aabis_unAssignAndPush {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
 		      }
    EH_assert [[ $# -eq 1 ]]
 
+
+   echo NOTYET
+
+   lpReturn
+
+   
    local boxId="$1"
 
    local containerBasePath=$( vis_withBoxIdFindContainerBase "${boxId}" )
@@ -543,196 +327,55 @@ _EOF_
 }
 
 
-
-function vis_containerBoxAssign {
-   G_funcEntry
-   function describeF {  G_funcEntryShow; cat  << _EOF_
-For the subject physical sys (thisBoxNu) identified by system-uuid, assign a container.
-Return on stdout, a containerId  such as HSS-1001.
-- Determine box or machine
-- When there are no exisiting entities matching system-uuid, assign a box (thisBoxAdd)
-- If an assigned container exists which coresponds to thisBox, then use that
-- If one does not exist, assign one (with vis_containerNuGetNext)
-- Then after vis_containerUpdate_atNu, return containerId
-_EOF_
-		      }
-   EH_assert [[ $# -lt 2 ]]
-
-   EH_assert [ ! -z "${model}" ]   
-   EH_assert [ ! -z "${abode}" ]
-   EH_assert [ ! -z "${function}" ]
-
-   if [ $# -eq 0 ] ; then
-       vis_containerBoxAssignNumbered
-   else
-       vis_containerAssignGeneric "$1"
-   fi
-}	
-
-
-function vis_containerAssignGeneric {
-   G_funcEntry
-   function describeF {  G_funcEntryShow; cat  << _EOF_
-For the subject physical sys (thisBoxNu) identified by system-uuid, assign a container.
-Return on stdout, a containerId  such as HSS-1001.
-- Determine box or machine
-- When there are no exisiting entities matching system-uuid, assign a box (thisBoxAdd)
-- If an assigned container exists which coresponds to thisBox, then use that
-- If one does not exist, assign one (with vis_containerNuGetNext)
-- Then after vis_containerUpdate_atNu, return containerId
-_EOF_
-		      }
-   EH_assert [[ $# -eq 1 ]]
-
-   EH_assert [ ! -z "${model}" ]   
-   EH_assert [ ! -z "${abode}" ]
-   EH_assert [ ! -z "${function}" ]
-
-   local containerGenericTag="$1"
-
-   lpDo vis_containerUpdate_atNu "${containerGenericTag}"
-
-   local containerBase=$( vis_assignedContainerBase "${containerGenericTag}" )
-
-   lpDo fileParamManage.py -i fileParamRead  ${containerBase} containerId
-
-   lpReturn
-}	
-
-
-function vis_containerBoxAssignNumbered {
-   G_funcEntry
-   function describeF {  G_funcEntryShow; cat  << _EOF_
-For the subject physical sys (thisBoxNu) identified by system-uuid, assign a container.
-Return on stdout, a containerId  such as HSS-1001.
-- Determine box or machine
-- When there are no exisiting entities matching system-uuid, assign a box (thisBoxAdd)
-- If an assigned container exists which coresponds to thisBox, then use that
-- If one does not exist, assign one (with vis_containerNuGetNext)
-- Then after vis_containerUpdate_atNu, return containerId
-_EOF_
-		      }
-   EH_assert [[ $# -eq 0 ]]
-
-   EH_assert [ ! -z "${model}" ]   
-   EH_assert [ ! -z "${abode}" ]
-   EH_assert [ ! -z "${function}" ]
-
-   local thisBoxNu=$( siteBoxAssign.sh -h -v -n showRun -i thisBoxFindNu )
-
-   if [ -z "${thisBoxNu}" ] ; then
-       thisBoxNu=$( siteBoxAssign.sh -i thisBoxAdd )
-   fi
-   EH_assert [ ! -z "${thisBoxNu}" ]
-
-   local thisBoxId=$( siteBoxAssign.sh -i boxNuToBoxId ${thisBoxNu})
-
-   local containerNu=""
-
-   local containerBase=$( vis_withBoxIdFindContainerBase "${thisBoxId}" )   
-   local existingContainerNu=$( vis_fromContainerBaseGetContainerNu "${containerBase}" )
-   if [ -z "${existingContainerNu}" ] ; then
-       ANT_raw "Container for boxId=${thisBoxId} not found -- will be created"
-       containerNu=$( vis_containerNuGetNext )
-   else
-       ANT_raw "Container of boxId=${thisBoxId} existed and will be used."
-       containerNu=${existingContainerNu}
-   fi
-
-   lpDo vis_containerUpdate_atNu "${containerNu}"
-
-   local containerBase=$( vis_assignedContainerBase "${containerNu}" )
-
-   lpDo  fileParamManage.py -i fileParamRead  ${containerBase} containerId
-
-   lpReturn
-}	
-
-
-
-function vis_containerVirtAssignNumbered {
-   G_funcEntry
-   function describeF {  G_funcEntryShow; cat  << _EOF_
-NOTYET, duplicate below
-For the subject physical sys (thisBoxNu) identified by system-uuid, assign a container.
-Return on stdout, a containerId  such as HSS-1001.
-- Determine box or machine
-- When there are no exisiting entities matching system-uuid, assign a box (thisBoxAdd)
-- If an assigned container exists which coresponds to thisBox, then use that
-- If one does not exist, assign one (with vis_containerNuGetNext)
-- Then after vis_containerUpdate_atNu, return containerId
-_EOF_
-		      }
-   EH_assert [[ $# -eq 0 ]]
-
-   EH_assert [ ! -z "${model}" ]   
-   EH_assert [ ! -z "${abode}" ]
-   EH_assert [ ! -z "${function}" ]
-
-   EH_assert [ "${model}" == "Virt" ] 
-   
-   local containerNu=""
-
-   local containersBase=$( containersAssignBaseObtain )
-   EH_assert [ ! -z "${containersBase}" ]
-
-   # containersBase is something like /bxo/r3/iso/pmc_clusterNeda-containers/assign
-
-   containerNu=$( vis_containerNuGetNext )
-   
-   lpDo vis_containerUpdate_atNu "${containerNu}"
-
-   local containerBase=$( vis_assignedContainerBase "${containerNu}" )
-
-   #lpDo  fileParamManage.py -i fileParamRead  ${containerBase} containerId
-
-   echo "${containerNu}"
-
-   lpReturn
-}	
-
-
-
-function vis_containerNuGetNext {
+function vis_aabis_serviceTypeAssignCorespondingBxo {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
 		      }
    EH_assert [[ $# -eq 0 ]]
-   EH_assert [ ! -z "${model}" ]
-   EH_assert [ ! -z "${abode}" ]
-   EH_assert [ ! -z "${function}" ]      
-
-   local containersBase=$( containersAssignBaseObtain )
-   EH_assert [ ! -z "${containersBase}" ]
-
-   local modelAbodeFunctionBase=$( container_modelAbodeFunctionBase )
-   EH_assert [ -d "${modelAbodeFunctionBase}" ]
+   EH_assert [ ! -z "${serviceType}" ]   
+   EH_assert [ ! -z "${correspondingBxo}" ]
    
-   opDoExit pushd "${modelAbodeFunctionBase}" > /dev/null
-   local lastContainer=$(  ls  | sort -n | tail -1 )
-   if [ -z "${lastContainer}" ] ; then
-       lastContainer=1000
+   local aabisNu=$(vis_aabis_assignNuGetNext)
+   EH_assert [ ! -z "${aabisNu}" ]   
+   
+   lpDo vis_aabis_assignUpdate_atNu "${aabisNu}"
+
+   echo "${aabisNu}"
+
+   lpReturn
+}	
+
+
+function vis_aabis_assignNuGetNext {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+** LastId +1
+*** Status: Functional
+_EOF_
+		      }
+   EH_assert [[ $# -eq 0 ]]
+   EH_assert [ ! -z "${serviceType}" ]
+
+   local assignsBase=$(vis_aabis_registrarAssignBaseObtain)
+   EH_assert [ ! -z "${assignsBase}" ]
+
+   local serviceTypeBase="${assignsBase}/${serviceType}"
+   EH_assert [ -d "${serviceTypeBase}" ]
+   
+   opDoExit pushd "${serviceTypeBase}" > /dev/null
+   local lastId=$(  ls  | sort -n | tail -1 )
+   if [ -z "${lastId}" ] ; then
+       lastId=10000
    fi
    opDoExit popd > /dev/null
 
-   local nextContainer=$( expr ${lastContainer} +  1 )
+   local nextId=$( expr ${lastId} +  1 )
 
-   echo ${nextContainer}   
+   echo ${nextId}   
 }
 
-
-function vis_thisMachineId {
-   G_funcEntry
-   function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-		      }
-   EH_assert [[ $# -eq 0 ]]
-   cat /etc/machine-id
-}
-
-
-function vis_withMachineIdFindContainerBase {
+function vis_aabis_forCorrespondingBxodFindAssignBase {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -740,6 +383,10 @@ _EOF_
    
    EH_assert [[ $# -eq 1 ]]
    local boxId="$1"
+
+   lpDo echo NOTYET
+
+   lpReturn
 
    local containersBase=$( containersAssignBaseObtain )
    EH_assert [ ! -z "${containersBase}" ] 
@@ -779,86 +426,68 @@ _EOF_
 
 
 
-function vis_containerUpdate_atNu {
+function vis_aabis_assignUpdate_atNu {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
 		      }
    EH_assert [[ $# -eq 1 ]]
-   local containerNu="$1"
+   local aabisNu="$1"
 
-   EH_assert [ ! -z "${model}" ]
-   EH_assert [ ! -z "${abode}" ]
-   EH_assert [ ! -z "${function}" ]      
+   EH_assert [ ! -z "${serviceType}" ]
+   EH_assert [ ! -z "${correspondingBxo}" ]
 
-   local containersBase=$( containersAssignBaseObtain )
-   EH_assert [ ! -z "${containersBase}" ]
+   local assignsBase=$(vis_aabis_registrarAssignBaseObtain)
+   EH_assert [ ! -z "${assignsBase}" ]
 
-   local modelAbodeFunctionBase=$( container_modelAbodeFunctionBase )
-   EH_assert [ -d "${modelAbodeFunctionBase}" ]
+   local serviceTypeBase="${assignsBase}/${serviceType}"
+   EH_assert [ -d "${serviceTypeBase}" ]
 
-   local containerBase="${modelAbodeFunctionBase}/${containerNu}"
+   local aabisBase="${serviceTypeBase}/${aabisNu}"
 
-   if [ -d "${containerBase}" ] ; then
-       ANT_raw "containerBase=${containerBase} is in place, updating"
+   if [ -d "${aabisBase}" ] ; then
+       ANT_raw "aabisBase=${aabisBase} is in place, updating"
    else
-       ANT_raw "containerBase=${containerBase} missing, creating"
-       lpDo mkdir -p ${containerBase}
+       ANT_raw "aabisBase=${aabisBase} missing, creating"
+       lpDo mkdir -p ${aabisBase}
    fi
-   EH_assert [ -d "${containerBase}" ]
+   EH_assert [ -d "${aabisBase}" ]
 
-   if [ "${model}" == "Virt" ] ; then
-       lpDo fileParamManage.py -i fileParamWrite ${containerBase} boxId "virt"
+   local aabisId=$( vis_aabis_withNuGetId ${aabisNu} )
+   local stored_aabisId=$( fileParamManage.py -i fileParamRead  ${aabisBase} aabisId )
+
+   if [ -z "${stored_aabisId}" ] ; then
+       lpDo fileParamManage.py -i fileParamWrite ${aabisBase} aabisId "${aabisId}"
    else
-       local boxId=$( siteBoxAssign.sh -i thisBoxFindId )
-       local stored_boxId=$( fileParamManage.py -i fileParamRead  ${containerBase} boxId )
-
-       if [ -z "${stored_boxId}" ] ; then
-	   lpDo fileParamManage.py -i fileParamWrite ${containerBase} boxId "${boxId}"
+       if [ "${aabisId}" != "${stored_aabisId}" ] ; then
+	   EH_problem "Expected ${aabisId} -- got ${stored_aabisId} -- Updating it."
+	   lpDo fileParamManage.py -i fileParamWrite ${aabisBase} aabisId "${aabisId}"
        else
-	   if [ "${boxId}" != "${stored_boxId}" ] ; then
-	       EH_problem "Expected ${boxId} -- got ${stored_boxId}"
-	       lpReturn 101
-	   fi
+	   ANT_cooked "aabisId=${aabisId} -- No action taken"
        fi
    fi
 
-   local containerId=$( vis_containerId ${containerNu} )
-   local stored_containerId=$( fileParamManage.py -i fileParamRead  ${containerBase} containerId )
+   local stored_aabisNu=$( fileParamManage.py -i fileParamRead  ${aabisBase} aabisNu )
 
-   if [ -z "${stored_containerId}" ] ; then
-       lpDo fileParamManage.py -i fileParamWrite ${containerBase} containerId "${containerId}"
+   if [ -z "${stored_aabisNu}" ] ; then
+       lpDo fileParamManage.py -i fileParamWrite ${aabisBase} aabisNu "${aabisNu}"
    else
-       if [ "${containerId}" != "${stored_containerId}" ] ; then
-	   EH_problem "Expected ${containerId} -- got ${stored_containerId} -- Updating it."
-	   lpDo fileParamManage.py -i fileParamWrite ${containerBase} containerId "${containerId}"
+       if [ "${aabisNu}" != "${stored_aabisNu}" ] ; then
+	   EH_problem "Expected ${aabisNu} -- got ${stored_aabisNu} -- Updating it."
+	   lpDo fileParamManage.py -i fileParamWrite ${aabisBase} aabisNu "${aabisNu}"
        else
-	   ANT_cooked "containerId=${containerId} -- No action taken"
-       fi
-   fi
-
-   local stored_containerNu=$( fileParamManage.py -i fileParamRead  ${containerBase} containerNu )
-
-   if [ -z "${stored_containerNu}" ] ; then
-       lpDo fileParamManage.py -i fileParamWrite ${containerBase} containerNu "${containerNu}"
-   else
-       if [ "${containerNu}" != "${stored_containerNu}" ] ; then
-	   EH_problem "Expected ${containerNu} -- got ${stored_containerNu} -- Updating it."
-	   lpDo fileParamManage.py -i fileParamWrite ${containerBase} containerNu "${containerNu}"
-       else
-	   ANT_cooked "containerNu=${containerNu} -- No action taken"
+	   ANT_cooked "aabisNu=${aabisNu} -- No action taken"
        fi
    fi
    
-   lpDo fileParamManage.py -i fileParamWrite ${containerBase} model "${model}"
-   lpDo fileParamManage.py -i fileParamWrite ${containerBase} abode "${abode}"
-   lpDo fileParamManage.py -i fileParamWrite ${containerBase} function "${function}"         
+   lpDo fileParamManage.py -i fileParamWrite ${aabisBase} serviceType "${serviceType}"
+   lpDo fileParamManage.py -i fileParamWrite ${aabisBase} correspondingBxo "${correspondingBxo}"
 
    lpReturn
 }	
 
 
-function vis_containerReport_atNu {
+function vis_aabis_assignReport_atNu {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -867,8 +496,12 @@ _EOF_
    EH_assert [[ $# -eq 1 ]]
    local containerNu="$1"
 
-   EH_assert [ ! -z "${model}" ]
-   EH_assert [ ! -z "${abode}" ]
+   lpDo echo NOTYET
+
+   lpReturn
+
+   EH_assert [ ! -z "${serviceType}" ]
+   EH_assert [ ! -z "${correspondingBxo}" ]
    EH_assert [ ! -z "${function}" ]      
 
    local containersBase=$( containersAssignBaseObtain )
@@ -885,7 +518,7 @@ _EOF_
    lpReturn
 }	
 
-function vis_containerReport_atBase {
+function vis_aabis_assignReport_atBase {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_

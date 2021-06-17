@@ -103,9 +103,9 @@ _CommentEnd_
 
 # PRE parameters
 
-local -t bxoId=""
+typeset -t bxoId=""
 
-local -t realIndiv=""
+typeset -t realIndiv=""
 
 
 function G_postParamHook {
@@ -162,6 +162,8 @@ ${selectedSiteBxoId}               # Selected Site bxoId
 $( examplesSeperatorChapter "ByName Assign And Realize" )
 ${G_myName} ${extraInfo} -p realIndiv=pri_mohsen_banan -i bynameAssignAndAaisRealize  # FULL ACTION -- PRIMARY COMMAND
 _EOF_
+}
+
 
 function vis_bynameAssignAndAaisRealize {
    G_funcEntry

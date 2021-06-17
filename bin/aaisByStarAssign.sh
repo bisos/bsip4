@@ -33,11 +33,6 @@ function vis_moduleDescription {  cat  << _EOF_
 *  [[elisp:(org-cycle)][| ]]  Xrefs         :: *[Related/Xrefs:]*  <<Xref-Here->>  -- External Documents  [[elisp:(org-cycle)][| ]]
 **  [[elisp:(org-cycle)][| ]]  Panel        :: [[file:/libre/ByStar/InitialTemplates/activeDocs/bxServices/versionControl/fullUsagePanel-en.org::Xref-VersionControl][Panel Roadmap Documentation]] [[elisp:(org-cycle)][| ]]
 *  [[elisp:(org-cycle)][| ]]  Info          :: *[Module Description:]* [[elisp:(org-cycle)][| ]]
-
-* This is a starting point for Merging opMachines.sh and bystarBoxAdmin.sh -- IMPORTANT --
-** Use site/assign/BOX/box0059/cpf_box0059.sh
-** Get rid of items file -- Get rid of subjectAction
-** Scope of this is Physiacl Machines -- Not Virtual Machines -- unique id comes from dmidecode -s system-uuid and being physical
 _EOF_
 }
 
@@ -87,9 +82,8 @@ _CommentEnd_
 
 
 # PRE parameters
-typeset -t model=""     # one of [HPV]
-typeset -t abode=""     # one of [MAPIS]
-typeset -t function=""  # one of [LASD]
+typeset -t serviceType=""     # one of [HPV]
+typeset -t correspondingBxo=""     # one of [MAPIS]
 
 function G_postParamHook {
 
@@ -98,83 +92,73 @@ function G_postParamHook {
     lpReturn 0
 }
 
-
 function vis_examples {
     typeset extraInfo="-h -v -n showRun"
     #typeset extraInfo=""
-    typeset runInfo="-p ri=lsipusr:passive"
-    #typeset oneId=`ifconfig eth0 | grep HWaddr | cut -c 39-55`
-    #local oneId=$( sudo dmidecode -s system-uuid )
+
     local oneId=$(vis_thisBoxUUID)
 
+    typeset examplesInfo="${extraInfo}"
 
-    typeset examplesInfo="${extraInfo} ${runInfo}"
-
-    local containersBase=$( containersAssignBaseObtain )
-    EH_assert [ ! -z "${containersBase}" ]
+    local assignsBase=$(vis_aabis_registrarAssignBaseObtain)
+    EH_assert [ ! -z "${assignsBase}" ]
 
     local boxId=$( siteBoxAssign.sh -i thisBoxFindId )
     #local containerBase=$( vis_withBoxIdFindContainerBase "${boxId}" )
     local containerBase=$( vis_forThisSysFindContainerBase )
     local containerNu=$( vis_fromContainerBaseGetContainerNu "${containerBase}" )    
 
+    local oneRealIndiv=$(cat /bxo/usg/bystar/bpos/real/realIndiv.bpoFp/value)
+    
     visLibExamplesOutput ${G_myName}
     # ${doLibExamples} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
-$( examplesSeperatorChapter "Containers Bases Information" )
-${G_myName} ${extraInfo} -i containersBaseObtain
-${G_myName} ${extraInfo} -i containersAssignBaseObtain
-ls -ld ${containersBase}/*
-find ${containersBase} -print
-${G_myName} -i containersGenericsAssignList
+$( examplesSeperatorChapter "Assignment Bases Information" )
+${G_myName} ${extraInfo} -i aabis_registrarBaseObtain
+${G_myName} ${extraInfo} -i aabis_registrarAssignBaseObtain
+ls -ld ${assignsBase}/*
+find ${assignsBase} -print
 $( examplesSeperatorChapter "Containers Bases Initializations" )
-${G_myName} ${extraInfo} -i modelAbodeFunctionBaseDirsCreate    # INITIALIZATION -- create basis for nu assignments
-$( examplesSeperatorChapter "BoxId To ContainerId Mapping" )
-${G_myName} ${extraInfo} -i withBoxIdFindContainerBase "${boxId}"
+${G_myName} ${extraInfo} -i aabis_registrarBaseDirsCreate    # INITIALIZATION -- create basis for nu assignments
+$( examplesSeperatorChapter "ServiceInitial To ServiceType Mapping" )
+${G_myName} ${extraInfo} -i aabis_withServiceInitialGetServiceType N # [NBF]
+${G_myName} ${extraInfo} -i aabis_withIdGetAssignedBase BN-1001 # [NBF]
+${G_myName} ${extraInfo} -i aabis_withNuGetAssignedBase 1001
 ${G_myName} ${extraInfo} -i fromContainerBaseGetContainerNu "${containerBase}"
-$( examplesSeperatorChapter "machineId To ContainerId Mapping" )
-${G_myName} ${extraInfo} -i thisMachineId
-${G_myName} ${extraInfo} -i withMachineIdFindContainerBase "$( vis_thisMachineId )"
-$( examplesSeperatorChapter "BoxOrMachineId To ContainerId Mapping" )
-${G_myName} ${extraInfo} -i withBoxOrMachineIdFindContainerBase "$( vis_thisMachineId )"
-${G_myName} ${extraInfo} -i forThisSysFindContainerBase
 $( examplesSeperatorChapter "SET -- Container Box Assignment -- Primary Commands" )
-${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerBoxAssignAndPush  # PRIMARY COMMAND
-${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerBoxAssign  # PRIMARY COMMAND
+${G_myName} ${extraInfo} -p serviceType=Host -p correspondingBxo=Shield -p function=Server -i containerBoxAssignAndPush  # PRIMARY COMMAND
+${G_myName} ${extraInfo} -p serviceType=Host -p correspondingBxo=Shield -p function=Server -i containerBoxAssign  # PRIMARY COMMAND
 ${G_myName} ${extraInfo} -i forThisSysContainerAssignBasePush
 ${G_myName} ${extraInfo} -i containersAssignBasePull
-${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerUpdate_atNu "${containerNu}"
+${G_myName} ${extraInfo} -p serviceType=Host -p correspondingBxo=Shield -p function=Server -i containerUpdate_atNu "${containerNu}"
 $( examplesSeperatorChapter "UNSET -- Container Box Un Assignment" )
 ${G_myName} ${extraInfo} -i withBoxIdFindContainerBase "${boxId}"
 ${G_myName} ${extraInfo} -i containerBoxUnAssignAndPush "${boxId}"
 ${G_myName} ${extraInfo} -i containerBoxUnAssign "${boxId}"
 $( examplesSeperatorChapter "SET -- Container Virt Assignment -- Primary Commands" )
-${G_myName} ${extraInfo} -p model=Virt -p abode=Shield -p function=Server -i containerAssignAndPush  # PRIMARY COMMAND
-${G_myName} ${extraInfo} -p model=Virt -p abode=Shield -p function=Server -i containerAssign  # PRIMARY COMMAND
+${G_myName} ${extraInfo} -p serviceType=Virt -p correspondingBxo=Shield -p function=Server -i containerAssignAndPush  # PRIMARY COMMAND
+${G_myName} ${extraInfo} -p serviceType=Virt -p correspondingBxo=Shield -p function=Server -i containerAssign  # PRIMARY COMMAND
 echo ${containerBase} | bx-gitRepos -i addCommitPush all
 ${G_myName} ${extraInfo} -i containersAssignBasePull
-${G_myName} ${extraInfo} -p model=Virt -p abode=Shield -p function=Server -i containerUpdate_atNu "${containerNu}"
+${G_myName} ${extraInfo} -p serviceType=Virt -p correspondingBxo=Shield -p function=Server -i containerUpdate_atNu "${containerNu}"
 $( examplesSeperatorChapter "GET -- Container Nu" )
-${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerNuGetNext
+${G_myName} ${extraInfo} -p serviceType=Host -p correspondingBxo=Shield -p function=Server -i containerNuGetNext
 $( examplesSeperatorChapter "Assigned Containers Report" )
-${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerReport_atNu "${containerNu}"
+${G_myName} ${extraInfo} -p serviceType=Host -p correspondingBxo=Shield -p function=Server -i containerReport_atNu "${containerNu}"
 ${G_myName} -i containerReport_atBase "${containerBase}"
 $( examplesSeperatorChapter "GET -- General Assignment Facilities" )
-${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerId "${containerNu}"
-${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i assignedContainerBase "${containerNu}"
+${G_myName} ${extraInfo} -p serviceType=Host -p correspondingBxo=Shield -p function=Server -i containerId "${containerNu}"
+${G_myName} ${extraInfo} -p serviceType=Host -p correspondingBxo=Shield -p function=Server -i assignedContainerBase "${containerNu}"
 ${G_myName} ${extraInfo} -i withContainerIdGetBase "HSS-1001"
-${G_myName} ${extraInfo} -i withInitialGetModel "H"     # one of: [HPV]
+${G_myName} ${extraInfo} -i withInitialGetServiceType "H"     # one of: [HPV]
 ${G_myName} ${extraInfo} -i withInitialGetAbode "S"     # one of: [AMPSI]
 ${G_myName} ${extraInfo} -i withInitialGetFunction "S"  # one of: [LASD]
 $( examplesSeperatorChapter "Container Assignment List Examples" )
-${G_myName} ${extraInfo} -i modelAbodeFunction_listExamples containerBoxAssign   # Examples for all container models
-${G_myName} ${extraInfo} -p model=Virt -i modelAbodeFunction_listExamples containerBoxAssign
-${G_myName} ${extraInfo} -i modelAbodeFunction_listExamples containerNuGetNext  # Examples for all container models
-${G_myName} -i assignGenerics_auto examples
-${G_myName} ${extraInfo} -i assignGenerics_auto doIt
-${G_myName} -i assignGenerics_box examples
-${G_myName} ${extraInfo} -i assignGenerics_box doIt
+${G_myName} ${extraInfo} -i serviceTypeAbodeFunction_listExamples containerBoxAssign   # Examples for all container serviceTypes
+${G_myName} ${extraInfo} -p serviceType=Virt -i serviceTypeAbodeFunction_listExamples containerBoxAssign
+${G_myName} ${extraInfo} -p serviceType=ByName -i aabis_withNuGetId 10001 # Internal
+${G_myName} ${extraInfo} -p serviceType=ByName -p correspondingBxo=${oneRealIndiv} -i aabis_assignUpdate_atNu 100001
 _EOF_
 }
 
