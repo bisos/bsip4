@@ -84,6 +84,8 @@ _EOF_
    local aabisAssignBase=$1
    EH_assert [ -d ${aabisAssignBase} ]
 
+   lpDo echo ${aabisAssignBase}
+   
    lpReturn
 
    # sysCharAabisBxoId is just a bxoId derived from aabisId assignment. It may or may not exist

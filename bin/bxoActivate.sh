@@ -131,7 +131,9 @@ function vis_examples {
     oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )
 
     oneRealIndivBxoId=$(usgBpos.sh -i usgBposUsageEnvs_realIndivBxoId_read)
-
+    if [ -z "${oneRealIndivBxoId}" ] ; then
+	oneRealIndivBxoId=$(bxoGitlab.py -v 30  -i acctList  | grep pri_ | head -1)
+    fi
     visLibExamplesOutput ${G_myName}
 
   cat  << _EOF_
@@ -163,8 +165,8 @@ $( examplesSeperatorSection "BxO Construct Full Update -- All Of The Above" )
 ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i fullConstruct $(vis_bxoConstructBaseDir_obtain priv)/${oneBxoId}/home # noAcct
 ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i fullConstruct # Creats Acct & clones in ${oneBxoHome}
 $( examplesSeperatorChapter "Activate Selected Real Individual" )
-${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneRealIndivBxoId}" -i fullConstruct
 ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneRealIndivBxoId}" -i bpoActivate
+usgBpos.sh ${extraInfo} -i usgBposUsageEnvs_realIndivBxoId_write "${oneRealIndivBxoId}"
 ${G_myName} ${extraInfo} -p privacy="${priv}" -i bpoActivate ${oneRealIndivBxoId} 
 echo ${oneRealIndivBxoId} | ${G_myName} ${extraInfo} -p privacy="${priv}" -i bpoActivate
 ${G_myName} ${extraInfo} -p bxoId=${oneRealIndivBxoId} -i bxoTreeDescendantsList | ${G_myName} ${extraInfo} -p privacy="${priv}" -i bpoActivate
