@@ -121,6 +121,7 @@ ls -ld ${assignsBase}/*
 find ${assignsBase} -print
 $( examplesSeperatorChapter "Containers Bases Initializations" )
 ${G_myName} ${extraInfo} -i aabis_registrarBaseDirsCreate    # INITIALIZATION -- create basis for nu assignments
+${G_myName} ${extraInfo} -p serviceType=ByName -p correspondingBxo=${oneRealIndiv} -i aabis_serviceTypeAssignCorrespondingBxo
 $( examplesSeperatorChapter "ServiceInitial To ServiceType Mapping" )
 ${G_myName} ${extraInfo} -i aabis_withServiceInitialGetServiceType N # [NBF]
 ${G_myName} ${extraInfo} -i aabis_withIdGetAssignedBase BN-1001 # [NBF]
@@ -128,17 +129,9 @@ ${G_myName} ${extraInfo} -i aabis_withNuGetAssignedBase 1001
 ${G_myName} ${extraInfo} -i fromContainerBaseGetContainerNu "${containerBase}"
 $( examplesSeperatorChapter "SET -- Container Box Assignment -- Primary Commands" )
 ${G_myName} ${extraInfo} -p serviceType=Host -p correspondingBxo=Shield -p function=Server -i containerBoxAssignAndPush  # PRIMARY COMMAND
-${G_myName} ${extraInfo} -p serviceType=Host -p correspondingBxo=Shield -p function=Server -i containerBoxAssign  # PRIMARY COMMAND
-${G_myName} ${extraInfo} -i forThisSysContainerAssignBasePush
-${G_myName} ${extraInfo} -i containersAssignBasePull
-${G_myName} ${extraInfo} -p serviceType=Host -p correspondingBxo=Shield -p function=Server -i containerUpdate_atNu "${containerNu}"
 $( examplesSeperatorChapter "UNSET -- Container Box Un Assignment" )
-${G_myName} ${extraInfo} -i withBoxIdFindContainerBase "${boxId}"
-${G_myName} ${extraInfo} -i containerBoxUnAssignAndPush "${boxId}"
 ${G_myName} ${extraInfo} -i containerBoxUnAssign "${boxId}"
 $( examplesSeperatorChapter "SET -- Container Virt Assignment -- Primary Commands" )
-${G_myName} ${extraInfo} -p serviceType=Virt -p correspondingBxo=Shield -p function=Server -i containerAssignAndPush  # PRIMARY COMMAND
-${G_myName} ${extraInfo} -p serviceType=Virt -p correspondingBxo=Shield -p function=Server -i containerAssign  # PRIMARY COMMAND
 echo ${containerBase} | bx-gitRepos -i addCommitPush all
 ${G_myName} ${extraInfo} -i containersAssignBasePull
 ${G_myName} ${extraInfo} -p serviceType=Virt -p correspondingBxo=Shield -p function=Server -i containerUpdate_atNu "${containerNu}"
@@ -150,12 +143,7 @@ ${G_myName} -i containerReport_atBase "${containerBase}"
 $( examplesSeperatorChapter "GET -- General Assignment Facilities" )
 ${G_myName} ${extraInfo} -p serviceType=Host -p correspondingBxo=Shield -p function=Server -i containerId "${containerNu}"
 ${G_myName} ${extraInfo} -p serviceType=Host -p correspondingBxo=Shield -p function=Server -i assignedContainerBase "${containerNu}"
-${G_myName} ${extraInfo} -i withContainerIdGetBase "HSS-1001"
-${G_myName} ${extraInfo} -i withInitialGetServiceType "H"     # one of: [HPV]
-${G_myName} ${extraInfo} -i withInitialGetAbode "S"     # one of: [AMPSI]
-${G_myName} ${extraInfo} -i withInitialGetFunction "S"  # one of: [LASD]
 $( examplesSeperatorChapter "Container Assignment List Examples" )
-${G_myName} ${extraInfo} -i serviceTypeAbodeFunction_listExamples containerBoxAssign   # Examples for all container serviceTypes
 ${G_myName} ${extraInfo} -p serviceType=Virt -i serviceTypeAbodeFunction_listExamples containerBoxAssign
 ${G_myName} ${extraInfo} -p serviceType=ByName -i aabis_withNuGetId 10001 # Internal
 ${G_myName} ${extraInfo} -p serviceType=ByName -p correspondingBxo=${oneRealIndiv} -i aabis_assignUpdate_atNu 100001

@@ -100,6 +100,8 @@ _CommentEnd_
 
 . ${opBinBase}/siteNetworks_lib.sh
 
+. ${opBinBase}/aaisByStarAssign_lib.sh
+. ${opBinBase}/aaisByStarRealize_lib.sh
 
 # PRE parameters
 

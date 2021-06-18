@@ -327,7 +327,7 @@ _EOF_
 }
 
 
-function vis_aabis_serviceTypeAssignCorespondingBxo {
+function vis_aabis_serviceTypeAssignCorrespondingBxo {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -338,10 +338,11 @@ _EOF_
    
    local aabisNu=$(vis_aabis_assignNuGetNext)
    EH_assert [ ! -z "${aabisNu}" ]   
-   
-   lpDo vis_aabis_assignUpdate_atNu "${aabisNu}"
 
-   echo "${aabisNu}"
+   local aabisBase=$(lpDo vis_aabis_assignUpdate_atNu "${aabisNu}")
+   EH_assert [ ! -z "${aabisBase}" ]      
+
+   echo "${aabisBase}"
 
    lpReturn
 }	
@@ -483,8 +484,30 @@ _EOF_
    lpDo fileParamManage.py -i fileParamWrite ${aabisBase} serviceType "${serviceType}"
    lpDo fileParamManage.py -i fileParamWrite ${aabisBase} correspondingBxo "${correspondingBxo}"
 
+   echo ${aabisBase}
+
    lpReturn
 }	
+
+function vis_aabis_withAssignBaseRealizeGetParam {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   
+   EH_assert [[ $# -eq 2 ]]
+   local assignBase="$1"
+   local paramName="$2"
+
+   local result=$(lpDo fileParamManage.py -i fileParamRead ${assignBase} "${paramName}")
+   EH_assert [ ! -z "${result}" ]
+
+   lpDo echo "${result}"
+
+}
+
+
+
 
 
 function vis_aabis_assignReport_atNu {
@@ -502,7 +525,6 @@ _EOF_
 
    EH_assert [ ! -z "${serviceType}" ]
    EH_assert [ ! -z "${correspondingBxo}" ]
-   EH_assert [ ! -z "${function}" ]      
 
    local containersBase=$( containersAssignBaseObtain )
    EH_assert [ ! -z "${containersBase}" ]
