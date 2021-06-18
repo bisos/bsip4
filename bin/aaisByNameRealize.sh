@@ -156,7 +156,8 @@ _EOF_
     cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Site Container Bases" )
-${G_myName} ${extraInfo} -p correspondingBxo=pri_mohsen_banan -i aabis_bynameAssignAndRealize  # FULL ACTION -- PRIMARY COMMAND
+${G_myName} ${extraInfo} -p serviceType=ByName -p correspondingBxo=pri_mohsen_banan -i aabis_assignAndRealize  # FULL ACTION -- PRIMARY COMMAND
+${G_myName} ${extraInfo} -p correspondingBxo=pri_mohsen_banan -i aabis_byname_assignAndRealize
 ${G_myName} ${extraInfo} -p serviceType=ByName -p correspondingBxo=pri_mohsen_banan -i aabis_withAssignBaseRealize
 _EOF_
 }

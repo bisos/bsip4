@@ -46,6 +46,9 @@ _CommentBegin_
 _CommentEnd_
 
 
+function vis_aabis_byname_assignAndRealize { serviceType=ByName; lpDo vis_aabis_assignAndRealize; }
+
+
 function vis_aabis_assignAndRealize {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -61,7 +64,7 @@ _EOF_
    
    case "${serviceType}" in
        ByName|BySmb|ByFamily)
-	   assignBase=$(lpDo vis_aabis_serviceTypeAssignCorespondingBxo)
+	   assignBase=$(lpDo vis_aabis_serviceTypeAssignCorrespondingBxo)
 	   lpDo vis_aabis_withAssignBaseRealize ${assignBase}
 	   ;;
        *)
@@ -69,7 +72,6 @@ _EOF_
 	   ;;
    esac
 }	
-
 
 
 function vis_aabis_withAssignBaseRealize {
