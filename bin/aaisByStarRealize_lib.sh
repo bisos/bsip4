@@ -66,6 +66,7 @@ _EOF_
        ByName|BySmb|ByFamily)
 	   assignBase=$(lpDo vis_aabis_serviceTypeAssignCorrespondingBxo)
 	   EH_assert [ ! -z "${assignBase}" ]
+	   
 	   lpDo vis_aabis_withAssignBaseRealize ${assignBase}
 	   ;;
        *)

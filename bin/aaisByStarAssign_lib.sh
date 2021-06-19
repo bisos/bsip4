@@ -143,6 +143,8 @@ _EOF_
 function vis_aabis_withNuGetId {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
+** This is just string manipulation based on naming rules.
+*** Status: functional
 _EOF_
 		      }
    EH_assert [[ $# -eq 1 ]]
@@ -172,10 +174,10 @@ _EOF_
    local aabisId=$1
 
    local byStarInitial=${aabisId:0:1}
-   local serviceTypeInitial=${aabisId:1:1}
-   local aabisNu=$( echo ${aabisId} |  sed -e 's:..-::' ) 
+   local serviceTypeInitial=${aabisId:2:1}
+   local aabisNu=$( echo ${aabisId} |  sed -e 's:...-::' ) 
 
-   local thisServiceName=$(vis_aabis_withServiceInitialGetServiceType ${serviceTypeInitial} )
+   local thisServiceName=$(vis_aabis_withServiceLetterGetServiceType ${serviceTypeInitial} )
    
    local registrarBase=$(vis_aabis_registrarBaseObtain)
    EH_assert [ ! -z "${registrarBase}" ]
@@ -220,9 +222,10 @@ _EOF_
    EH_assert [ ! -z "${serviceType}" ]   
    EH_assert [ ! -z "${correspondingBxo}" ]
 
-   lpDo vis_aabis_serviceTypeAssignToCorrespondingBxoAndPush
+   local aabisBase=$(lpDo vis_aabis_serviceTypeAssignToCorrespondingBxo)
+   EH_assert [ ! -z "${aabisBase}" ]
 
-   lpDo vis_aabis_assignedServiceIdPush
+   lpDo vis_aabis_assignedServiceIdPush ${aabisBase}
 }	
 
 function vis_aabis_assignedServiceIdPush {
@@ -230,16 +233,13 @@ function vis_aabis_assignedServiceIdPush {
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
 		      }
-   EH_assert [[ $# -eq 0 ]]
-
-   echo NOTYET
+   EH_assert [[ $# -eq 1 ]]
+   local aabisBase="$1"
+   EH_assert [ ! -z "${aabisBase}" ]
 
    lpReturn
-
-   local thisContainerBase=$( vis_forThisSysFindContainerBase )
-   EH_assert [ ! -z "${thisContainerBase}" ]
-
-   lpDo eval echo ${thisContainerBase} \| bx-gitRepos -i addCommitPush all
+   
+   lpDo eval echo ${aabisBase} \| bx-gitRepos -i addCommitPush all
 }	
 
 
@@ -258,49 +258,24 @@ _EOF_
 }
 
 
-function vis_aabis_assignId {
-   G_funcEntry
-   function describeF {  G_funcEntryShow; cat  << _EOF_
-
-_EOF_
-		      }
-   EH_assert [[ $# -lt 2 ]]
-
-   EH_assert [ ! -z "${serviceType}" ]   
-   EH_assert [ ! -z "${correspondingBxo}" ]
-
-   lpDo echo NOTYET
-
-   lpReturn
-   
-   lpDo vis_containerBoxAssignNumbered	   
-}	
-
-
-
 function vis_aabis_UnAssign {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
+** NOTYET, mark correspondingBxo as unassigned -- When to be used?
 _EOF_
 		      }
    EH_assert [[ $# -eq 1 ]]
 
-   echo NOTYET
+   local aabisBase="$1"
+   EH_assert [ ! -z "${aabisBase}" ]
 
-   lpReturn
-   
-   local boxId="$1"
-
-   local containerBasePath=$( vis_withBoxIdFindContainerBase "${boxId}" )
-   EH_assert [ ! -z "${containerBasePath}" ]
-
-   local containerBoxIdFpPath="${containerBasePath}/boxId"
-   EH_assert [ -d "${containerBoxIdFpPath}" ]
+   local correspondingBxoFpPath="${aabisBase}/correspondingBxo"
+   EH_assert [ -d "${correspondingBxoFpPath}" ]
 
    local dateTag=$( DATE_nowTag )
-   lpDo cp -p ${containerBoxIdFpPath}/value ${containerBoxIdFpPath}/value.${dateTag}
+   lpDo cp -p ${correspondingBxoFpPath}/value ${correspondingBxoFpPath}/value.${dateTag}
 
-   lpDo fileParamManage.py -i fileParamWrite "${containerBasePath}" boxId "unassigned"
+   lpDo fileParamManage.py -i fileParamWrite "${aabisBase}" correspondingBxo "unassigned"
 }
 
 function vis_aabis_unAssignAndPush {
@@ -309,21 +284,12 @@ function vis_aabis_unAssignAndPush {
 _EOF_
 		      }
    EH_assert [[ $# -eq 1 ]]
+   local aabisBase="$1"
+   EH_assert [ ! -z "${aabisBase}" ]
 
+   lpDo vis_aabis_UnAssign "${boxId}"
 
-   echo NOTYET
-
-   lpReturn
-
-   
-   local boxId="$1"
-
-   local containerBasePath=$( vis_withBoxIdFindContainerBase "${boxId}" )
-   EH_assert [ ! -z "${containerBasePath}" ]
-
-   lpDo vis_containerBoxUnAssign "${boxId}"
-
-   lpDo eval echo ${containerBasePath} \| bx-gitRepos -i addCommitPush all
+   lpDo eval echo ${aabisBase} \| bx-gitRepos -i addCommitPush all
 }
 
 
@@ -335,8 +301,19 @@ _EOF_
    EH_assert [[ $# -eq 0 ]]
    EH_assert [ ! -z "${serviceType}" ]   
    EH_assert [ ! -z "${correspondingBxo}" ]
+
+   local existingBase=$(lpDo vis_aabis_forCorrespondingBxoFindAssignBase ${correspondingBxo})
+
+   if [ ! -z "${existingBase}" ] ; then
+       if [ "${G_forceMode}" == "force" ] ; then
+	   ANT_raw "assignBase exists but forceMode is specified -- ${existingBase}"
+       else
+	   echo "${existingBase}"
+	   lpReturn
+       fi
+   fi
    
-   local aabisNu=$(vis_aabis_assignNuGetNext)
+   local aabisNu=$(lpDo vis_aabis_assignNuGetNext)
    EH_assert [ ! -z "${aabisNu}" ]   
 
    local aabisBase=$(lpDo vis_aabis_assignUpdate_atNu "${aabisNu}")
@@ -367,7 +344,7 @@ _EOF_
    opDoExit pushd "${serviceTypeBase}" > /dev/null
    local lastId=$(  ls  | sort -n | tail -1 )
    if [ -z "${lastId}" ] ; then
-       lastId=10000
+       lastId=100000
    fi
    opDoExit popd > /dev/null
 
@@ -376,40 +353,36 @@ _EOF_
    echo ${nextId}   
 }
 
-function vis_aabis_forCorrespondingBxodFindAssignBase {
+function vis_aabis_forCorrespondingBxoFindAssignBase {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
 		      }
    
    EH_assert [[ $# -eq 1 ]]
-   local boxId="$1"
+   local correspondingBxo="$1"
 
-   lpDo echo NOTYET
+   local assignBase=$(vis_aabis_registrarAssignBaseObtain)
+   EH_assert [ ! -z "${assignBase}" ] 
 
-   lpReturn
+   local correspondingBxoIdFps=$( find ${assignBase} -type d -print | sort -n | grep correspondingBxo )
 
-   local containersBase=$( containersAssignBaseObtain )
-   EH_assert [ ! -z "${containersBase}" ] 
-
-   local boxIdFps=$( find ${containersBase} -type d -print | grep boxId )
-
-   local eachBoxIdFp=""
-   local stored_boxId=""
+   local eachCorrespondingBxoIdFp=""
+   local stored_correspondingBxoId=""
    local found=""
 
-   for eachBoxIdFp in ${boxIdFps} ; do   
-       stored_boxId=$( fileParamManage.py -i fileParamReadPath ${eachBoxIdFp} )
+   for eachCorrespondingBxoIdFp in ${correspondingBxoIdFps} ; do   
+       stored_correspondingBxoId=$( fileParamManage.py -i fileParamReadPath ${eachCorrespondingBxoIdFp} )
 
-       if [ -z "${stored_boxId}" ] ; then
-	   EH_problem "Missing boxId in ${eachBoxIdFp} -- continuing"
+       if [ -z "${stored_correspondingBxoId}" ] ; then
+	   EH_problem "Missing correspondingBxoId in ${eachCorrespondingBxoIdFp} -- continuing"
 	   continue
        else
-	   if [ "${boxId}" == "${stored_boxId}" ] ; then
+	   if [ "${correspondingBxo}" == "${stored_correspondingBxoId}" ] ; then
 	       if [ -z "${found}" ] ; then
-		   found=${eachBoxIdFp}
+		   found=${eachCorrespondingBxoIdFp}
 	       else
-   		   ANT_raw "Also Found: ${eachBoxIdFp}"
+   		   ANT_raw "Also Found: ${eachCorrespondingBxoIdFp}"
 	       fi
 	       #break
 	   fi
@@ -489,7 +462,7 @@ _EOF_
    lpReturn
 }	
 
-function vis_aabis_withAssignBaseRealizeGetParam {
+function vis_aabis_withAssignBaseReadFileParam {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -499,63 +472,80 @@ _EOF_
    local assignBase="$1"
    local paramName="$2"
 
-   local result=$(lpDo fileParamManage.py -i fileParamRead ${assignBase} "${paramName}")
-   EH_assert [ ! -z "${result}" ]
+   local result=""
+
+   case "${paramName}" in
+       correspondingBxo|serviceType|aabisNu|aabisId)
+	   result=$(lpDo fileParamManage.py -i fileParamRead ${assignBase} "${paramName}")
+	   EH_assert [ ! -z "${result}" ]
+	   ;;
+       *)
+	   EH_problem "Bad Usage -- paramName=${paramName}"
+	   ;;
+   esac
 
    lpDo echo "${result}"
-
 }
 
-
-
-
-
-function vis_aabis_assignReport_atNu {
+function vis_aabis_withAssignBaseGet_correspondingBxo {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
 		      }
-   
    EH_assert [[ $# -eq 1 ]]
-   local containerNu="$1"
+   local assignBase="$1"
+   local paramName=${FUNCNAME##vis_aabis_withAssignBaseGet_}
+   lpDo vis_aabis_withAssignBaseReadFileParam ${assignBase} ${paramName}
+}
 
-   lpDo echo NOTYET
-
-   lpReturn
-
-   EH_assert [ ! -z "${serviceType}" ]
-   EH_assert [ ! -z "${correspondingBxo}" ]
-
-   local containersBase=$( containersAssignBaseObtain )
-   EH_assert [ ! -z "${containersBase}" ]
-
-   local modelAbodeFunctionBase=$( container_modelAbodeFunctionBase )   
-   EH_assert [ -d "${modelAbodeFunctionBase}" ]
-
-   local containerBase="${modelAbodeFunctionBase}/${containerNu}"   
-   EH_assert [ -d "${containerBase}" ]
-
-   lpDo vis_containerReport_atBase "${containerBase}"
-
-   lpReturn
-}	
-
-function vis_aabis_assignReport_atBase {
+function vis_aabis_withAssignBaseGet_serviceType {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
 		      }
-   
    EH_assert [[ $# -eq 1 ]]
-   local containerBase="$1"
+   local assignBase="$1"
+   local paramName=${FUNCNAME##vis_aabis_withAssignBaseGet_}
+   lpDo vis_aabis_withAssignBaseReadFileParam ${assignBase} ${paramName}
+}
 
-   local stored_boxId=$( fileParamManage.py -i fileParamRead  ${containerBase} boxId )
-   local stored_containerId=$( fileParamManage.py -i fileParamRead  ${containerBase} containerId )
+function vis_aabis_withAssignBaseGet_aabisNu {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
+   local assignBase="$1"
+   local paramName=${FUNCNAME##vis_aabis_withAssignBaseGet_}
+   lpDo vis_aabis_withAssignBaseReadFileParam ${assignBase} ${paramName}
+}
 
-   ANT_raw "boxId=${stored_boxId}"
-   ANT_raw "containerId=${stored_containerId}"
+function vis_aabis_withAssignBaseGet_aabisId {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
+   local assignBase="$1"
+   local paramName=${FUNCNAME##vis_aabis_withAssignBaseGet_}
+   lpDo vis_aabis_withAssignBaseReadFileParam ${assignBase} ${paramName}
+}
 
-   opDoExit pushd "${containerBase}" > /dev/null
+function vis_aabis_withAssignBaseReport {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
+   local assignBase="$1"
+
+   local aabisId=$(vis_aabis_withAssignBaseGet_aabisId ${assignBase})
+   
+   ANT_raw "aabisId=${aabisId}"
+
+   ANT_raw "${assignBase}"
+   
+   opDoExit pushd "${assignBase}" > /dev/null
    find . -type f -print | grep -v _tree_ | xargs egrep '^.' 
    opDoExit popd > /dev/null
     

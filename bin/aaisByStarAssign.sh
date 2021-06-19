@@ -121,32 +121,35 @@ ls -ld ${assignsBase}/*
 find ${assignsBase} -print
 $( examplesSeperatorChapter "Containers Bases Initializations" )
 ${G_myName} ${extraInfo} -i aabis_registrarBaseDirsCreate    # INITIALIZATION -- create basis for nu assignments
-${G_myName} ${extraInfo} -p serviceType=ByName -p correspondingBxo=${oneRealIndiv} -i aabis_serviceTypeAssignCorrespondingBxo
 $( examplesSeperatorChapter "ServiceInitial To ServiceType Mapping" )
-${G_myName} ${extraInfo} -i aabis_withServiceInitialGetServiceType N # [NBF]
-${G_myName} ${extraInfo} -i aabis_withIdGetAssignedBase BN-1001 # [NBF]
-${G_myName} ${extraInfo} -i aabis_withNuGetAssignedBase 1001
+${G_myName} ${extraInfo} -i aabis_withServiceLetterGetServiceType N # [NBF]
+${G_myName} ${extraInfo} -i aabis_withServiceTypeGetServiceLetter ByName # ByName, BySmb, ByFamily
+${G_myName} ${extraInfo} -i aabis_withNuGetId 100001
+${G_myName} ${extraInfo} -i aabis_withIdGetAssignedBase ByN-100001 # [NBF]
+${G_myName} ${extraInfo} -p serviceType=ByName -i aabis_withNuGetAssignedBase 100001
 ${G_myName} ${extraInfo} -i fromContainerBaseGetContainerNu "${containerBase}"
-$( examplesSeperatorChapter "SET -- Container Box Assignment -- Primary Commands" )
-${G_myName} ${extraInfo} -p serviceType=Host -p correspondingBxo=Shield -p function=Server -i containerBoxAssignAndPush  # PRIMARY COMMAND
+$( examplesSeperatorChapter "SET -- Assignment -- Primary Commands" )
+${G_myName} -f ${extraInfo} -p serviceType=ByName -p correspondingBxo=${oneRealIndiv} -i aabis_serviceTypeAssignCorrespondingBxo
+${G_myName} ${extraInfo} -p serviceType=ByName -p correspondingBxo=${oneRealIndiv} -i aabis_serviceTypeAssignCorrespondingBxo
+${G_myName} ${extraInfo} -p serviceType=ByName -p correspondingBxo=${oneRealIndiv} -i aabis_serviceTypeAssignCorrespondingBxoAndPush  # PRIMARY COMMAND
+${G_myName} -f ${extraInfo} -p serviceType=ByName -p correspondingBxo=${oneRealIndiv} -i aabis_serviceTypeAssignCorrespondingBxoAndPush  # PRIMARY COMMAND
+${G_myName} ${extraInfo} -p serviceType=ByName -p correspondingBxo=${oneRealIndiv} -i aabis_assignUpdate_atNu 100001 # Internal
 $( examplesSeperatorChapter "UNSET -- Container Box Un Assignment" )
-${G_myName} ${extraInfo} -i containerBoxUnAssign "${boxId}"
-$( examplesSeperatorChapter "SET -- Container Virt Assignment -- Primary Commands" )
-echo ${containerBase} | bx-gitRepos -i addCommitPush all
-${G_myName} ${extraInfo} -i containersAssignBasePull
-${G_myName} ${extraInfo} -p serviceType=Virt -p correspondingBxo=Shield -p function=Server -i containerUpdate_atNu "${containerNu}"
+${G_myName} ${extraInfo} -i aabis_UnAssign aabisBase
+${G_myName} ${extraInfo} -i aabis_UnAssignAndPush aabisBase
+$( examplesSeperatorChapter "GIT -- Synchronization" )
+echo aabisBase | bx-gitRepos -i addCommitPush all
+${G_myName} ${extraInfo} -i aabos_ssignBasePull
 $( examplesSeperatorChapter "GET -- Container Nu" )
-${G_myName} ${extraInfo} -p serviceType=Host -p correspondingBxo=Shield -p function=Server -i containerNuGetNext
-$( examplesSeperatorChapter "Assigned Containers Report" )
-${G_myName} ${extraInfo} -p serviceType=Host -p correspondingBxo=Shield -p function=Server -i containerReport_atNu "${containerNu}"
-${G_myName} -i containerReport_atBase "${containerBase}"
-$( examplesSeperatorChapter "GET -- General Assignment Facilities" )
-${G_myName} ${extraInfo} -p serviceType=Host -p correspondingBxo=Shield -p function=Server -i containerId "${containerNu}"
-${G_myName} ${extraInfo} -p serviceType=Host -p correspondingBxo=Shield -p function=Server -i assignedContainerBase "${containerNu}"
-$( examplesSeperatorChapter "Container Assignment List Examples" )
-${G_myName} ${extraInfo} -p serviceType=Virt -i serviceTypeAbodeFunction_listExamples containerBoxAssign
-${G_myName} ${extraInfo} -p serviceType=ByName -i aabis_withNuGetId 10001 # Internal
-${G_myName} ${extraInfo} -p serviceType=ByName -p correspondingBxo=${oneRealIndiv} -i aabis_assignUpdate_atNu 100001
+${G_myName} ${extraInfo} -p serviceType=ByName -i aabis_assignNuGetNext
+${G_myName} ${extraInfo} -i aabis_forCorrespondingBxoFindAssignBase ${oneRealIndiv}
+${G_myName} -i aabis_withAssignBaseReport /bxo/r3/iso/pir_bystarRegistrar/assign/ByName/100001
+$( examplesSeperatorChapter "GET -- Params" )
+${G_myName} ${extraInfo} -i aabis_withAssignBaseGet_correspondingBxo /bxo/r3/iso/pir_bystarRegistrar/assign/ByName/100001
+${G_myName} ${extraInfo} -i aabis_withAssignBaseGet_serviceType /bxo/r3/iso/pir_bystarRegistrar/assign/ByName/100001
+${G_myName} ${extraInfo} -i aabis_withAssignBaseGet_aabisNu /bxo/r3/iso/pir_bystarRegistrar/assign/ByName/100001
+${G_myName} ${extraInfo} -i aabis_withAssignBaseGet_aabisId /bxo/r3/iso/pir_bystarRegistrar/assign/ByName/100001
+${G_myName} ${extraInfo} -i aabis_withAssignBaseReadFileParam /bxo/r3/iso/pir_bystarRegistrar/assign/ByName/100001 correspondingBxo
 _EOF_
 }
 
