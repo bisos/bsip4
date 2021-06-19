@@ -450,6 +450,10 @@ _EOF_
 	    vis_examplesBxInfoSite
 	    vis_examplesApplyProvisioners "ByStar Site Information Entity" ${provisioningScope} ${paramsDetail}
 	    ;;
+	aais)
+	    vis_examplesBxInfoAais
+	    vis_examplesApplyProvisioners "Asserted Autonomy Information Entity" ${provisioningScope} ${paramsDetail}
+	    ;;
 	sysChar)
 	    vis_examplesBxInfoSysChar
 	    vis_examplesApplyProvisioners "ByStar System Characteristics Information Entity" ${provisioningScope} ${paramsDetail}
@@ -475,6 +479,8 @@ _EOF_
 	    vis_examplesApplyProvisioners "ByStar Registrar Information Entity" ${provisioningScope} ${paramsDetail} 
 	    vis_examplesBxInfoSite
 	    vis_examplesApplyProvisioners "ByStar Site Information Entity" ${provisioningScope} ${paramsDetail}
+	    vis_examplesBxInfoAais
+	    vis_examplesApplyProvisioners "Asserted Autonomy Information Entity" ${provisioningScope} ${paramsDetail}
 	    vis_examplesBxInfoSysChar
 	    vis_examplesApplyProvisioners "ByStar System Characteristics Information Entity" ${provisioningScope} ${paramsDetail}
 	    vis_examplesBxInfoUsgAcct
@@ -743,6 +749,10 @@ _EOF_
 	    vis_examplesBxMaterializationSysChar
 	    vis_examplesApplyProvisioners "ByStar SysChar Materialization Entity" ${provisioningScope}  ${paramsDetail}
 	    ;;
+	aais)
+	    vis_examplesBxMaterializationAais
+	    vis_examplesApplyProvisioners "Asserted Autonomy Information Service Materialization Entity" ${provisioningScope}  ${paramsDetail}
+	    ;;
 	all)
 	    vis_examplesBxMaterializationSite
 	    vis_examplesApplyProvisioners "ByStar Site Materialization Entity" ${provisioningScope}  ${paramsDetail}
@@ -756,6 +766,8 @@ _EOF_
 	    vis_examplesApplyProvisioners "ByStar Container Materialization Entity" ${provisioningScope}  ${paramsDetail}
 	    vis_examplesBxMaterializationSysChar
 	    vis_examplesApplyProvisioners "ByStar SysChar Materialization Entity" ${provisioningScope}  ${paramsDetail}
+	    vis_examplesBxMaterializationAais
+	    vis_examplesApplyProvisioners "Asserted Autonomy Information Service Materialization Entity" ${provisioningScope}  ${paramsDetail}
 	    ;;
 	*)
 	    EH_problem "Bad bxeType -- ${bxeType}"

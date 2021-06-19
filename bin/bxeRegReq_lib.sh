@@ -135,6 +135,11 @@ function vis_examplesBxInfoSysChar {
     bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"sysChar\" -p parent=\"${cur_bxoId_parent}\" -p name=\"gitlabServer\" "
 }
 
+function vis_examplesBxInfoAais {
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"aais\" -p parent=\"${cur_bxoId_parent}\" -p name=\"ByN-000\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"aais\" -p parent=\"${cur_bxoId_parent}\" -p name=\"ByN-000\" "
+}
+
 function vis_examplesBxInfoUsgAcct {
     bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"usage\" -p parent=\"${cur_bxoId_parent}\" -p name=\"usg_name\" "
     bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"usage\" -p parent=\"${cur_bxoId_parent}\" -p name=\"usg_name\" "
@@ -228,6 +233,11 @@ function vis_examplesBxMaterializationContainers {
 
 function vis_examplesBxMaterializationSysChar {
     bxeParamsMini="-p privacy=\"priv\" -p kind=\"materialization\" -p type=\"sysChar\" -p parent=\"${cur_bxoId_parent}\" -p name=\"HSS-1001\" "
+    bxeParamsFull=${bxeParamsMini}
+}
+
+function vis_examplesBxMaterializationAais {
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"materialization\" -p type=\"aais\" -p parent=\"${cur_bxoId_parent}\" -p name=\"ByN-000\" "
     bxeParamsFull=${bxeParamsMini}
 }
 
@@ -372,6 +382,22 @@ regReqContainerStdoutSpecific_info_sysChar () {
     }
 _EOF_
 }
+
+regReqContainerStdoutSpecific_info_aais () {
+    EH_assert [[ $# -eq 1 ]]
+
+    if [ "$1" = "passive" ] ; then
+	regReqTag="${kind}_${type}_${name}"
+	return
+    fi
+
+    cat  << _EOF_
+    function regReqContainer_${kind}_${type} {
+      bc_name="${name}"
+    }
+_EOF_
+}
+
 
 regReqContainerStdoutSpecific_info_usage () {
     EH_assert [[ $# -eq 1 ]]
@@ -600,6 +626,21 @@ _EOF_
 }
 
 regReqContainerStdoutSpecific_materialization_sysChar () {
+    EH_assert [[ $# -eq 1 ]]
+
+    if [ "$1" = "passive" ] ; then
+	regReqTag="${kind}_${type}_${name}"
+	return
+    fi
+
+    cat  << _EOF_
+    function regReqContainer_${kind}_${type} {
+      bc_name="${name}"
+    }
+_EOF_
+}
+
+regReqContainerStdoutSpecific_materialization_aais () {
     EH_assert [[ $# -eq 1 ]]
 
     if [ "$1" = "passive" ] ; then

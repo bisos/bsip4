@@ -205,6 +205,10 @@ _EOF_
 		    alpha="mp"
 		    numeric=96
 		    ;;
+		"aais")
+		    alpha="mi"
+		    numeric=97
+		    ;;
 		*)
 		    EH_problem "bxeType=${bxeType} -- Unexpected"
 		    return

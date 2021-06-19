@@ -76,6 +76,22 @@ _EOF_
 }	
 
 
+function vis_aabis_withAssignBaseGetBxoId {
+	G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+** \$1 is bxoRepoScope -- \$2 is path to siteAabisAssignBase 
+*** -p passive= instead of  EH_assert bxoRealizationScopeIsValid "${bxoRealizationScope}"
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
+
+   local aabisAssignBase=$1
+   EH_assert [ -d ${aabisAssignBase} ]
+
+   echo "NOTYET-$(vis_aabis_withAssignBaseGet_aabisId ${aabisAssignBase})"
+}
+
+
 function vis_aabis_withAssignBaseRealize {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -88,23 +104,20 @@ _EOF_
    local aabisAssignBase=$1
    EH_assert [ -d ${aabisAssignBase} ]
 
-   lpDo echo ${aabisAssignBase}
+   local bxoRealizationScope="full" # NOTYET
    
-   lpReturn
-
-   # sysCharAabisBxoId is just a bxoId derived from aabisId assignment. It may or may not exist
-   local aabisBxoId=$( vis_withAssignBaseGetBxoIdName "${aabisAssignBase}" )
+   local aabisBxoId=$(vis_aabis_withAssignBaseGetBxoId "${aabisAssignBase}" )
    EH_assert [ ! -z "${aabisBxoId}" ]
 
-   local parentBxoId=$( vis_parentBxoId )   # used as parent for provisioning of sysCharAabisBxoId
-   local aabisId=$( fileParamManage.py -i fileParamRead  "${aabisAssignBase}" aabisId )  # used as name for provisioning
+   local parentBxoId=$(vis_aabis_withAssignBaseGet_correspondingBxo "${aabisAssignBase}")
+   
+   local aabisId=$(vis_aabis_withAssignBaseGet_aabisId ${aabisAssignBase})  # used as name for provisioning
 
    if vis_bxoAcctVerify "${aabisBxoId}" ; then
        ANT_raw "${aabisBxoId} account exists, already realized -- provisioning skipped"
    else
        ANT_raw "${aabisBxoId} will be realized"       
-       #lpDo bxmeProvision.sh -h -v -n showRun -p privacy="priv" -p kind="materialization" -p type="sysChar" -p parent="${selectedSiteBxoId}" -p name="${aabisId}" -i startToPrivRealize
-       lpDo bxmeProvision.sh -h -v -n showRun -p privacy="priv" -p kind="materialization" -p type="sysChar" -p parent="${selectedSiteBxoId}" -p name="${aabisId}" -i startToPrivRealize ${bxoRealizationScope}
+       lpDo echo bxmeProvision.sh -h -v -n showRun -p privacy="priv" -p kind="materialization" -p type="aais" -p parent="${parentBxoId}" -p name="${aabisId}" -i startToPrivRealize ${bxoRealizationScope}
    fi
 
    bxoId="${aabisBxoId}"
