@@ -130,7 +130,7 @@ function vis_examples {
     #oneBxoId="as-test1_5"    
     oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )
 
-    oneRealIndivBxoId=$(usgBpos.sh -i usgBposUsageEnvs_realIndivBxoId_read)
+    oneRealIndivBxoId=$(usgBpos.sh -i usgBpos_real_indivBxoId_read)
     if [ -z "${oneRealIndivBxoId}" ] ; then
 	oneRealIndivBxoId=$(bxoGitlab.py -v 30  -i acctList  | grep pri_ | head -1)
     fi
@@ -169,6 +169,7 @@ ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneRealIndivBxoId}" -i
 usgBpos.sh ${extraInfo} -i usgBposUsageEnvs_realIndivBxoId_write "${oneRealIndivBxoId}"
 ${G_myName} ${extraInfo} -p privacy="${priv}" -i bpoActivate ${oneRealIndivBxoId} 
 echo ${oneRealIndivBxoId} | ${G_myName} ${extraInfo} -p privacy="${priv}" -i bpoActivate
+${G_myName} ${extraInfo} -p bxoId=${oneRealIndivBxoId} -i bxoTreeDescendantsList
 ${G_myName} ${extraInfo} -p bxoId=${oneRealIndivBxoId} -i bxoTreeDescendantsList | ${G_myName} ${extraInfo} -p privacy="${priv}" -i bpoActivate
 $( examplesSeperatorChapter "Overview Report And Summary" )
 ${G_myName} -i containerReposList  # listAvaiableSysChars

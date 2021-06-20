@@ -49,7 +49,34 @@ _CommentEnd_
 function vis_aabis_byname_assignAndRealize { serviceType=ByName; lpDo vis_aabis_assignAndRealize; }
 
 
-function vis_aabis_assignAndRealize {
+function vis_aabis_assignAndFullRealize {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+** Dispatches to BoxRealize or to VirtRealize.
+_EOF_
+		      }
+   EH_assert [[ $# -eq 0 ]]
+
+   EH_assert [ ! -z "${serviceType}" ]   
+   EH_assert [ ! -z "${correspondingBxo}" ]
+
+   # Realize a new BxO based on correspondingBxo
+   # 
+   local thisBxo=$(lpDo vis_aabis_assignAndBasicBxoRealize)
+   EH_assert [ ! -z "${thisBxo}" ]
+
+   lpDo bxoIdPrep ${thisBxo}
+   
+   # vis_aabis_nonRepoBasesFullCreate should be run before vis_aabis_repoBasesFullCreate
+   #
+   lpDo vis_aabis_nonRepoBasesAllCreate # Creates symlinks in ~bxo   
+
+   lpDo vis_aabis_repoBasesAllCreate
+   lpDo vis_aabis_repoBasesAllPush   
+}	
+
+
+function vis_aabis_assignAndBasicBxoRealize {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Dispatches to BoxRealize or to VirtRealize.
@@ -61,18 +88,22 @@ _EOF_
    EH_assert [ ! -z "${correspondingBxo}" ]
 
    local assignBase=""
+   local thisBxoId=""
    
    case "${serviceType}" in
        ByName|BySmb|ByFamily)
 	   assignBase=$(lpDo vis_aabis_serviceTypeAssignCorrespondingBxo)
 	   EH_assert [ ! -z "${assignBase}" ]
 	   
-	   lpDo vis_aabis_withAssignBaseRealize ${assignBase}
+	   thisBxoId=$(lpDo vis_aabis_withAssignBaseBasicBxoRealize ${assignBase})
+	   EH_assert [ ! -z "${thisBxoId}" ]
 	   ;;
        *)
 	   EH_problem "Bad Usage -- serviceType=${serviceType}"
 	   ;;
    esac
+
+   echo "${thisBxoId}"
 }	
 
 
@@ -88,11 +119,10 @@ _EOF_
    local aabisAssignBase=$1
    EH_assert [ -d ${aabisAssignBase} ]
 
-   echo "NOTYET-$(vis_aabis_withAssignBaseGet_aabisId ${aabisAssignBase})"
+   echo "pmi_$(vis_aabis_withAssignBaseGet_aabisId ${aabisAssignBase})"
 }
 
-
-function vis_aabis_withAssignBaseRealize {
+function vis_aabis_withAssignBaseBasicBxoRealize {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 ** \$1 is bxoRepoScope -- \$2 is path to siteAabisAssignBase 
@@ -117,17 +147,13 @@ _EOF_
        ANT_raw "${aabisBxoId} account exists, already realized -- provisioning skipped"
    else
        ANT_raw "${aabisBxoId} will be realized"       
-       lpDo echo bxmeProvision.sh -h -v -n showRun -p privacy="priv" -p kind="materialization" -p type="aais" -p parent="${parentBxoId}" -p name="${aabisId}" -i startToPrivRealize ${bxoRealizationScope}
+       lpDo bxmeProvision.sh -h -v -n showRun -p privacy="priv" -p kind="materialization" -p type="aais" -p parent="${parentBxoId}" -p name="${aabisId}" -i startToPrivRealize ${bxoRealizationScope}
    fi
 
    bxoId="${aabisBxoId}"
    EH_assert vis_bxoAcctVerify "${bxoId}"
-   bxoHome=$( FN_absolutePathGet ~${bxoId} )
 
-   # vis_basesFullCreate needs to run before vis_kindTypeRealizeRepoBases
-   vis_aabis_basesFullCreate # Creates symlinks in ~bxo   
-
-   vis_aabis_kindTypeRealizeRepoBases ${bxoRealizationScope}
+   echo "${bxoId}"
 }
 
 function vis_aabis_repoBasesList {
@@ -139,34 +165,67 @@ _EOF_
 
     cat  << _EOF_
 panel
-deploymentRecords
-sysChar
-svcsSpec
+BAGP
+NSP
+par_live
 _EOF_
 
     lpReturn
 }
 
-function vis_aabis_basesList {
+function vis_aabis_nonRepoBasesList {
     cat  << _EOF_
 var
-siteAabissRepo
 _EOF_
 }
 
+function vis_aabis_repoBasesAllCreate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** 
+_EOF_
+		       }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert bxoIdPrep
 
-function vis_aabis_baseCreate_var {
+    lpDo eval vis_aabis_repoBasesList \| vis_bxoRealize_repoBasesCreate aabis
+}	
+
+function vis_aabis_repoBasesAllPush {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** 
+_EOF_
+		       }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert bxoIdPrep
+
+    lpDo eval vis_aabis_repoBasesList \| vis_bxoRealize_repoBasesPush
+}	
+
+function vis_aabis_nonRepoBasesAllCreate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** 
+_EOF_
+		       }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert bxoIdPrep
+
+    lpDo eval vis_aabis_nonRepoBasesList \| vis_bxoRealize_nonRepoBasesCreate aabis
+}	
+
+
+function vis_aabis_nonRepoBaseCreate_var {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Create /bisos/var/bxoId/${bxoId} and symlink to it.
 _EOF_
 		       }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert bxoIdPrep
 
-    EH_assert vis_bxoAcctVerify "${bxoId}"
-
-    local baseName=${FUNCNAME##vis_baseCreate_}
+    local baseName=${FUNCNAME##vis_aabis_nonRepoBaseCreate_}
     local basePath="${bxoHome}/${baseName}"
     
     local bisosVarBaseDir="/bisos/var/bxoId/${bxoId}"
@@ -178,76 +237,9 @@ _EOF_
     lpReturn
 }	
 
+function vis_aabis_repoBaseCreate_panel { vis_repoBaseCreate_panel; }
 
-
-function vis_aabis_baseCreate_siteAabissRepo {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-Symlink to site aabiss.
-_EOF_
-		       }
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
-
-    EH_assert vis_bxoAcctVerify "${bxoId}"
-
-    local baseName=${FUNCNAME##vis_baseCreate_}
-    local basePath="${bxoHome}/${baseName}"
-
-    local siteAabissBase=$( siteAabisRepo.sh -i aabissBaseObtain )
-    local aabissRepoPath="${siteAabissBase}/${bxoId##pmp_}"
-    EH_assert [ -d "${aabissRepoPath}" ]
-
-    lpDo FN_fileSymlinkUpdate "${aabissRepoPath}" "${basePath}"
-
-    lpReturn
-}	
-
-function vis_aabis_basesFullCreate {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** Creates bases (eg var) based on vis_basesList.
-_EOF_
-		       }
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
-
-    EH_assert vis_bxoAcctVerify "${bxoId}"
-
-    for each in $(vis_basesList) ; do
-	lpDo vis_baseCreate_${each}
-    done
-
-    lpReturn
-}	
-
-function vis_aabis_repoBaseCreate_deploymentRecords {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-		       }
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
-
-    EH_assert  vis_userAcctExists "${bxoId}"
-
-    local repoName=${FUNCNAME##vis_repoBaseCreate_}
-    local repoBase="${bxoHome}/${repoName}"
-
-    lpDo FN_dirCreatePathIfNotThere "${repoBase}"
-
-    lpDo eval cat  << _EOF_  \> "${repoBase}/README.org"
-BxO Repo: ${repoBase} 
-Placeholder for records/logs of materialization/deployment.
-_EOF_
-
-    lpDo bx-gitRepos -h -v -n showRun -i baseUpdateDotIgnore "${repoBase}"
-
-    lpReturn
-}	
-
-
-function vis_aabis_repoBaseCreate_svcsSpec {
+function vis_aabis_repoBaseCreate_BAGP {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -255,34 +247,7 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
     EH_assert bxoIdPrep
 
-    local repoName=${FUNCNAME##vis_repoBaseCreate_}
-    local repoBase="${bxoHome}/${repoName}"
-
-    lpDo FN_dirCreatePathIfNotThere "${repoBase}"
-
-    lpDo eval cat  << _EOF_  \> "${repoBase}/README.org"    
-BxO Repo: ${repoBase} 
-includes a list of BxSO's which provide the expected services
-_EOF_
-
-    lpDo FN_dirCreatePathIfNotThere ${repoBase}/fps
-    lpDo fileParamManage.py -i fileParamWrite ${repoBase}/fps bxoId UnSpecified
-
-    lpDo bx-gitRepos -h -v -n showRun -i baseUpdateDotIgnore "${repoBase}"
-
-    lpReturn
-}	
-
-
-function vis_aabis_repoBaseCreate_sysChar {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-		       }
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert bxoIdPrep
-
-    local repoName=${FUNCNAME##vis_repoBaseCreate_}
+    local repoName=${FUNCNAME##vis_aabis_repoBaseCreate_}
     local repoBase="${bxoHome}/${repoName}"
 
     lpDo FN_dirCreatePathIfNotThere "${repoBase}"
@@ -293,10 +258,60 @@ for now just a bin directory
 _EOF_
 
     # vis_sysCharWrite is in ./sysChar_lib.sh 
-    lpDo vis_sysCharWrite
+    #lpDo vis_sysCharWrite
 
-    lpDo FN_dirCreatePathIfNotThere ${repoBase}/bin
-    lpDo touch ${repoBase}/bin/materialize.sh
+    lpDo bx-gitRepos -h -v -n showRun -i baseUpdateDotIgnore "${repoBase}"
+
+    lpReturn
+}	
+
+function vis_aabis_repoBaseCreate_NSP {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		       }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert bxoIdPrep
+
+    local repoName=${FUNCNAME##vis_aabis_repoBaseCreate_}
+    local repoBase="${bxoHome}/${repoName}"
+
+    lpDo FN_dirCreatePathIfNotThere "${repoBase}"
+
+    lpDo eval cat  << _EOF_  \> "${repoBase}/README.org"    
+BxO Repo: ${repoBase} 
+for now just a bin directory
+_EOF_
+
+    # vis_sysCharWrite is in ./sysChar_lib.sh 
+    #lpDo vis_sysCharWrite
+
+    lpDo bx-gitRepos -h -v -n showRun -i baseUpdateDotIgnore "${repoBase}"
+
+    lpReturn
+}	
+
+function vis_aabis_repoBaseCreate_par_live {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		       }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert bxoIdPrep
+
+    #local repoName=${FUNCNAME##vis_aabis_repoBaseCreate_}
+    local repoName=par.live
+    local repoBase="${bxoHome}/${repoName}"
+
+    lpDo FN_dirCreatePathIfNotThere "${repoBase}"
+
+    lpDo eval cat  << _EOF_  \> "${repoBase}/README.org"    
+BxO Repo: ${repoBase} 
+for now just a bin directory
+_EOF_
+
+    # vis_sysCharWrite is in ./sysChar_lib.sh 
+    #lpDo vis_sysCharWrite
 
     lpDo bx-gitRepos -h -v -n showRun -i baseUpdateDotIgnore "${repoBase}"
 

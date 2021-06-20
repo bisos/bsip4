@@ -402,6 +402,7 @@ _EOF_
 function vis_bxoReposNameList {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+** Given a list of BxOs on stdin or as args, for each list all of its repos.
 _EOF_
     }
 

@@ -147,21 +147,59 @@ function vis_examples {
 	local repoName=$1
 	local description=$2
 	cat  << _EOF_
-$( examplesSeperatorSection "${description}" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBaseCreate_${repoName}
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBasePush ${repoName}
+$( examplesSeperatorSubSection "${description}" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i aabis_repoBaseCreate_${repoName}
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i bxoRealize_repoBasesPush ${repoName}
 _EOF_
     }	
+
+    function nonRepoBaseCreateAndPushExamples {
+	EH_assert [[ $# -eq 2 ]]
+	local repoName=$1
+	local description=$2
+	cat  << _EOF_
+$( examplesSeperatorSubSection "${description}" )
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i aabis_nonRepoBaseCreate_${repoName}
+_EOF_
+    }	
+
     
     visLibExamplesOutput ${G_myName}
-
+    
+    cat  << _EOF_
+$( examplesSeperatorTopLabel "${G_myName}" )
+bisosCurrentsManage.sh
+bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
+_EOF_
+    
     cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Site Container Bases" )
-${G_myName} ${extraInfo} -p serviceType=ByName -p correspondingBxo=pri_mohsen_banan -i aabis_assignAndRealize  # FULL ACTION -- PRIMARY COMMAND
-${G_myName} ${extraInfo} -p correspondingBxo=pri_mohsen_banan -i aabis_byname_assignAndRealize
+${G_myName} ${extraInfo} -p serviceType=ByName -p correspondingBxo=pri_mohsen_banan -i aabis_assignAndBasicBxoRealize  # FULL ACTION -- PRIMARY COMMAND
+${G_myName} ${extraInfo} -p correspondingBxo=pri_mohsen_banan -i aabis_byname_assignAndBasicBxoRealize
+${G_myName} ${extraInfo} -p serviceType=ByName -p correspondingBxo=pri_mohsen_banan -i aabis_assignAndFullRealize  # FULL ACTION -- PRIMARY COMMAND
+$( examplesSeperatorChapter "Internal Functions For Basic BxO Realization" )
 ${G_myName} ${extraInfo} -p serviceType=ByName -p correspondingBxo=pri_mohsen_banan -i aabis_withAssignBaseRealize
 _EOF_
+
+    cat  << _EOF_
+$( examplesSeperatorChapter "Specific Initial Repo Realizition" )
+$( examplesSeperatorSection "Repo Bases List And Create -- Realizition" )
+${G_myName} ${extraInfo} -i aabis_repoBasesList
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i aabis_repoBasesAllCreate
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i aabis_repoBasesAllPush
+${G_myName} -i aabis_repoBasesList | ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i bxoRealize_repoBasesCreate aabis
+$( repoBaseCreateAndPushExamples panel "Panel Repo (Basic Panel)" )
+$( repoBaseCreateAndPushExamples BAGP "Repo" )
+$( repoBaseCreateAndPushExamples NSP "Repo" )
+$( repoBaseCreateAndPushExamples par_live "Repo" )
+$( examplesSeperatorSection "Non Repo Bases List And Create -- Realizition" )
+${G_myName} ${extraInfo} -i aabis_nonRepoBasesList
+${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i aabis_nonRepoBasesAllCreate
+${G_myName} -i aabis_nonRepoBasesList | ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i bxoRealize_nonRepoBasesCreate aabis
+$( nonRepoBaseCreateAndPushExamples var "Var BaseDir Link" )
+_EOF_
+
 }
 
 

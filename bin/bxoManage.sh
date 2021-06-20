@@ -169,7 +169,7 @@ ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i fullCons
 $( examplesSeperatorChapter "Bxo Tree -- Ancestors and Descendants" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i bxoTreeDescendantsList
 ${G_myName} ${extraInfo} -p bxoId="site" -i bxoTreeDescendantsList
-${G_myName} ${extraInfo} -p bxoId="$(usgBpos.sh -i usgBposUsageEnvs_realIndivBxoId_read)" -i bxoTreeDescendantsList
+${G_myName} ${extraInfo} -p bxoId="$(usgBpos.sh -i usgBpos_real_indivBxoId_read)" -i bxoTreeDescendantsList
 $( examplesSeperatorChapter "Related -- See Also" )
 bxoReposManage.sh # BxO Repos Create And Push And Pull
 # Default Nich Comes Here Or in a separate function after this

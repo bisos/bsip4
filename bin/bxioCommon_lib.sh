@@ -95,6 +95,163 @@ _EOF_
 }
 
 
+function vis_repoBasePush {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** To be obsoleted by vis_bxoRealize_repoBasesPush
+** Based on -p bxoId and \$1=repoName, creates a repo in bxoId.
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+    EH_assert bxoIdAssert
+
+    EH_assert  vis_userAcctExists "${bxoId}"
+
+    local repoName=$1
+
+    local repoBase="${bxoHome}/${repoName}"
+
+    lpDo vis_repoCreateAndPushBasedOnPath "${repoBase}"
+    
+    lpReturn
+}	
+
+function vis_bxoRealize_repoBasesPush {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** For BxO, create and push each specified repo.
+*** Design Pattern: processEach based on args or stdin.
+*** Examples:
+      ${G_myName} -i ${G_thisFunc} arg1 arg2
+      printf "stdinArg1\nstdin2\n" | ${G_myName} -i ${G_thisFunc} arg1 arg2
+_EOF_
+		       }
+    local thisFunc=${G_thisFunc}
+    EH_assert bxoIdPrep
+
+
+    function processEach {
+	EH_assert [[ $# -eq 1 ]]
+	local repoName=$1
+
+	# For example, par_live will become par.live
+	repoName=$(lpDo eval  echo ${repoName} \|  sed -e 's/_/./g')
+
+	local repoBase="${bxoHome}/${repoName}"
+
+	lpDo vis_repoCreateAndPushBasedOnPath "${repoBase}"
+    }
+
+####+BEGIN: bx:bsip:bash/processArgsAndStdin  
+     function processArgsAndStdin {
+	local effectiveArgs=( "$@" )
+	local stdinArgs=()
+	local each
+	if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
+	    readarray stdinArgs < /dev/stdin
+	    effectiveArgs=( "$@" "${stdinArgs[@]}" )
+	fi
+	if [ ${#effectiveArgs[@]} -eq 0 ] ; then
+	    ANT_raw "No Args And Stdin Is Empty"
+	    lpReturn
+	fi
+	for each in "${effectiveArgs[@]}"; do
+	    lpDo processEach "${each%$'\n'}"
+	done
+    }
+    lpDo processArgsAndStdin "$@"
+####+END:
+    
+    lpReturn
+}
+
+
+
+function vis_bxoRealize_repoBasesCreate {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** 
+_EOF_
+		       }
+    EH_assert [[ $# -eq 1 ]]
+    EH_assert bxoIdPrep
+
+    # \$1 becomes \$2 in processEach
+    
+    local thisFunc=${G_thisFunc}
+
+    function processEach {
+	EH_assert [[ $# -gt 1 ]]
+	local eachRepoName=$1
+	local moduleName=$2
+	if [ "${G_verbose}_" == "verbose_" ] ; then
+	    ANT_raw "For each=${eachRepoName} running vis_${moduleName}_repoBaseCreate_${eachRepoName}"
+	fi
+	lpDo vis_${moduleName}_repoBaseCreate_${eachRepoName}
+    }
+
+####+BEGIN: bx:bsip:bash/processStdinWithArgs 
+    function processStdinWithArgs {
+	local stdinArgs=()
+	local each
+	if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
+	    readarray stdinArgs < /dev/stdin
+	fi
+	if [ ${#stdinArgs[@]} -eq 0 ] ; then
+	    ANT_raw "No StdinArgs -- Processing Skipped"
+	    lpReturn
+	fi
+	for each in "${stdinArgs[@]}"; do
+	    lpDo processEach "${each%$'\n'}" "$@"
+	done
+    }
+    lpDo processStdinWithArgs "$@"
+####+END:
+    lpReturn
+}
+
+function vis_bxoRealize_nonRepoBasesCreate {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** 
+_EOF_
+		       }
+    EH_assert [[ $# -eq 1 ]]
+    EH_assert bxoIdPrep
+    
+    local thisFunc=${G_thisFunc}
+
+    function processEach {
+	EH_assert [[ $# -gt 1 ]]
+	local eachRepoName=$1
+	local moduleName=$2
+	if [ "${G_verbose}_" == "verbose_" ] ; then
+	    ANT_raw "For each=${eachRepoName} running vis_${moduleName}_nonRepoBaseCreate_${eachRepoName}"
+	fi
+	lpDo vis_${moduleName}_nonRepoBaseCreate_${eachRepoName}
+    }
+
+####+BEGIN: bx:bsip:bash/processStdinWithArgs 
+    function processStdinWithArgs {
+	local stdinArgs=()
+	local each
+	if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
+	    readarray stdinArgs < /dev/stdin
+	fi
+	if [ ${#stdinArgs[@]} -eq 0 ] ; then
+	    ANT_raw "No StdinArgs -- Processing Skipped"
+	    lpReturn
+	fi
+	for each in "${stdinArgs[@]}"; do
+	    lpDo processEach "${each%$'\n'}" "$@"
+	done
+    }
+    lpDo processStdinWithArgs "$@"
+####+END:
+    lpReturn
+}
+
+
 function vis_kindTypeRealizeRepoBasesCreate {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
