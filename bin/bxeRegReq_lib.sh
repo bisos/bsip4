@@ -140,6 +140,11 @@ function vis_examplesBxInfoAais {
     bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"aais\" -p parent=\"${cur_bxoId_parent}\" -p name=\"ByN-000\" "
 }
 
+function vis_examplesBxInfoScs {
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"scs\" -p parent=\"${cur_bxoId_parent}\" -p name=\"DNSS-priv1\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"scs\" -p parent=\"${cur_bxoId_parent}\" -p name=\"DNSS-priv1\" "
+}
+
 function vis_examplesBxInfoUsgAcct {
     bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"usage\" -p parent=\"${cur_bxoId_parent}\" -p name=\"usg_name\" "
     bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"usage\" -p parent=\"${cur_bxoId_parent}\" -p name=\"usg_name\" "
@@ -240,6 +245,12 @@ function vis_examplesBxMaterializationAais {
     bxeParamsMini="-p privacy=\"priv\" -p kind=\"materialization\" -p type=\"aais\" -p parent=\"${cur_bxoId_parent}\" -p name=\"ByN-000\" "
     bxeParamsFull=${bxeParamsMini}
 }
+
+function vis_examplesBxMaterializationScs {
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"materialization\" -p type=\"scs\" -p parent=\"${cur_bxoId_parent}\" -p name=\"DNSS-priv1\" "
+    bxeParamsFull=${bxeParamsMini}
+}
+
 
 function vis_regReqStdout {
    G_funcEntry
@@ -384,6 +395,22 @@ _EOF_
 }
 
 regReqContainerStdoutSpecific_info_aais () {
+    EH_assert [[ $# -eq 1 ]]
+
+    if [ "$1" = "passive" ] ; then
+	regReqTag="${kind}_${type}_${name}"
+	return
+    fi
+
+    cat  << _EOF_
+    function regReqContainer_${kind}_${type} {
+      bc_name="${name}"
+    }
+_EOF_
+}
+
+
+regReqContainerStdoutSpecific_info_scs () {
     EH_assert [[ $# -eq 1 ]]
 
     if [ "$1" = "passive" ] ; then
@@ -654,6 +681,23 @@ regReqContainerStdoutSpecific_materialization_aais () {
     }
 _EOF_
 }
+
+
+regReqContainerStdoutSpecific_materialization_scs () {
+    EH_assert [[ $# -eq 1 ]]
+
+    if [ "$1" = "passive" ] ; then
+	regReqTag="${kind}_${type}_${name}"
+	return
+    fi
+
+    cat  << _EOF_
+    function regReqContainer_${kind}_${type} {
+      bc_name="${name}"
+    }
+_EOF_
+}
+
 
 
 function vis_regReqFileName {

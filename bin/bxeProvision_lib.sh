@@ -452,7 +452,11 @@ _EOF_
 	    ;;
 	aais)
 	    vis_examplesBxInfoAais
-	    vis_examplesApplyProvisioners "Asserted Autonomy Information Entity" ${provisioningScope} ${paramsDetail}
+	    vis_examplesApplyProvisioners "Asserted Autonomy Internet Service" ${provisioningScope} ${paramsDetail}
+	    ;;
+	scs)
+	    vis_examplesBxInfoScs
+	    vis_examplesApplyProvisioners "Self Contained Internet Service" ${provisioningScope} ${paramsDetail}
 	    ;;
 	sysChar)
 	    vis_examplesBxInfoSysChar
@@ -480,7 +484,9 @@ _EOF_
 	    vis_examplesBxInfoSite
 	    vis_examplesApplyProvisioners "ByStar Site Information Entity" ${provisioningScope} ${paramsDetail}
 	    vis_examplesBxInfoAais
-	    vis_examplesApplyProvisioners "Asserted Autonomy Information Entity" ${provisioningScope} ${paramsDetail}
+	    vis_examplesApplyProvisioners "Asserted Autonomy Internet Service" ${provisioningScope} ${paramsDetail}
+	    vis_examplesBxInfoScs
+	    vis_examplesApplyProvisioners "Self Contained Internet Service" ${provisioningScope} ${paramsDetail}
 	    vis_examplesBxInfoSysChar
 	    vis_examplesApplyProvisioners "ByStar System Characteristics Information Entity" ${provisioningScope} ${paramsDetail}
 	    vis_examplesBxInfoUsgAcct
@@ -751,7 +757,11 @@ _EOF_
 	    ;;
 	aais)
 	    vis_examplesBxMaterializationAais
-	    vis_examplesApplyProvisioners "Asserted Autonomy Information Service Materialization Entity" ${provisioningScope}  ${paramsDetail}
+	    vis_examplesApplyProvisioners "Asserted Autonomy Internet Service Materialization Entity" ${provisioningScope}  ${paramsDetail}
+	    ;;
+	scs)
+	    vis_examplesBxMaterializationScs
+	    vis_examplesApplyProvisioners "Self Contained Internet Service Materialization Entity" ${provisioningScope}  ${paramsDetail}
 	    ;;
 	all)
 	    vis_examplesBxMaterializationSite
@@ -767,7 +777,9 @@ _EOF_
 	    vis_examplesBxMaterializationSysChar
 	    vis_examplesApplyProvisioners "ByStar SysChar Materialization Entity" ${provisioningScope}  ${paramsDetail}
 	    vis_examplesBxMaterializationAais
-	    vis_examplesApplyProvisioners "Asserted Autonomy Information Service Materialization Entity" ${provisioningScope}  ${paramsDetail}
+	    vis_examplesApplyProvisioners "Asserted Autonomy Internet Service Materialization Entity" ${provisioningScope}  ${paramsDetail}
+	    vis_examplesBxMaterializationScs
+	    vis_examplesApplyProvisioners "Self Contained Service Materialization Entity" ${provisioningScope}  ${paramsDetail}
 	    ;;
 	*)
 	    EH_problem "Bad bxeType -- ${bxeType}"

@@ -209,6 +209,11 @@ _EOF_
 		    alpha="mi"
 		    numeric=97
 		    ;;
+		"scs")
+		    # s,c,i are taken, z because it is available
+		    alpha="mz"
+		    numeric=98
+		    ;;
 		*)
 		    EH_problem "bxeType=${bxeType} -- Unexpected"
 		    return
