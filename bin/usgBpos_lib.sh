@@ -86,7 +86,9 @@ _EOF_
    lpDo FN_dirCreatePathIfNotThere ${curUsgBposBase}
    lpDo FN_dirCreatePathIfNotThere ${curUsgBposBase}/sites
    lpDo FN_dirCreatePathIfNotThere ${curUsgBposBase}/usageEnvs
-   lpDo FN_dirCreatePathIfNotThere ${curUsgBposBase}/projs   
+   lpDo FN_dirCreatePathIfNotThere ${curUsgBposBase}/projs
+   lpDo FN_dirCreatePathIfNotThere ${curUsgBposBase}/aais
+   lpDo FN_dirCreatePathIfNotThere ${curUsgBposBase}/real      
 }
 
 
@@ -328,6 +330,87 @@ _EOF_
    local bxoId=$(lpDo vis_usgBpos_usageEnvs_fullUse_read)
    echo ${bxoId}
 }
+
+
+
+function vis_usgBpos_aais_byname_bxoId_fpWrite {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** 
+_EOF_
+		      }
+    EH_assert [[ $# -eq 1 ]]
+    local bxoIdValue=$1
+
+    bxoIdValue=$(bxoIdPrep ${bxoIdValue})
+    EH_assert [ ! -z ${bxoIdValue} ]
+
+    local curUsgBposBase=$( vis_curUsgBposBase )
+    lpDo mkdir -p ${curUsgBposBase}/aais
+    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/aais byname.bpoFp ${bxoIdValue}
+}
+
+
+function vis_usgBpos_aais_byname_bxoId_fpRead {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** returns on stdout: 
+_EOF_
+		      }
+    EH_assert [[ $# -eq 0 ]]
+
+    local curUsgBposBase=$( vis_curUsgBposBase )
+    
+    local resultBxoId=$( fileParamManage.py -i fileParamRead  ${curUsgBposBase}/aais byname.bpoFp )
+    EH_assert [ ! -z "${resultBxoId}" ]
+
+    echo ${resultBxoId}
+}
+
+
+function vis_usgBpos_aais_byname_update {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
+   local bxoIdValue=$1
+
+   bxoIdValue=$(lpDo bxoIdPrep ${bxoIdValue})
+   EH_assert [ ! -z "${bxoIdValue}" ]
+
+   bxoPath=$(lpDo vis_bxoPathObtainForBxoId "${bxoIdValue}")
+   EH_assert [ ! -z "${bxoIdValue}" ]
+   
+   local curUsgBposBase=$(lpDo vis_curUsgBposBase)
+
+   lpDo vis_usgBpos_aais_byname_bxoId_fpWrite ${bxoIdValue}
+   lpDo FN_fileSymlinkUpdate ${bxoPath} ${curUsgBposBase}/aais/byname
+}
+
+
+function vis_usgBpos_aais_byname_bxoPath {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 0 ]]
+   local curUsgBposBase=$(lpDo vis_curUsgBposBase)   
+   EH_assert [ -e ${curUsgBposBase}/aais/byname ]
+   lpDo FN_absolutePathGet ${curUsgBposBase}/aais/byname
+}
+
+
+function vis_usgBpos_aais_byname_bxoId {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 0 ]]
+   local bxoId=$(lpDo vis_usgBpos_aais_byname_bxoId_fpRead)
+   echo ${bxoId}
+}
+
 
 
 _CommentBegin_

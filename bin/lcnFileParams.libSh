@@ -84,7 +84,7 @@ function fileParamsCodeGenOutput {
       return 100
   fi
 
-  filesList=$( find . -maxdepth 1 -type f   -print | egrep -v '~$' | egrep -v '\.sh$' | egrep -v README | sed -e s:^./:: )
+  filesList=$( find . -maxdepth 1 -type f   -print | egrep -v '~$' | egrep -v '\.sh$' | egrep -v README | egrep -v gitignore | egrep -v gitattributes | sed -e s:^./:: )
 
   funcName=cpf_$( FN_nonDirsPart ${paramsFileBaseDir} | sed -e s:-:_: )
 
@@ -172,7 +172,7 @@ function fileParamsShow {
       return 100
   fi
 
-  filesList=$( find . -maxdepth 1 -type f   -print | egrep -v '~$' | egrep -v '\.sh$' | egrep -v README | sed -e s:^./:: )
+  filesList=$( find . -maxdepth 1 -type f   -print | egrep -v '~$' | egrep -v '\.sh$' | egrep -v README | egrep -v gitignore | egrep -v gitattributes | sed -e s:^./:: )
 
   if [ -z "${filesList}" ] ; then
       ANT_raw "Empty fileParams -- directory=$1"
@@ -228,7 +228,7 @@ function fileParamsWrite {
       return 100
   fi
 
-  filesList=$( find . -maxdepth 1 -type f   -print | egrep -v '~$' | egrep -v '\.sh$' | egrep -v README | sed -e s:^./:: )
+  filesList=$( find . -maxdepth 1 -type f   -print | egrep -v '~$' | egrep -v '\.sh$' | egrep -v README | egrep -v gitignore | egrep -v gitattributes | sed -e s:^./:: )
 
 
   for oneFile in ${filesList}; do

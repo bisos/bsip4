@@ -126,6 +126,8 @@ function vis_examples {
 
     local oneRealIndiv=$(bxoGitlab.py -v 30  -i acctList  | grep pri_ | head -1)    
 
+    local oneAaipByname=$(bxoGitlab.py -v 30  -i acctList  | grep pmi_ | head -1)    
+
     local oneFullUse=$(bxoGitlab.py -v 30  -i acctList  | grep piu_ | grep -i full | head -1)    
     
     visLibExamplesOutput ${G_myName}
@@ -155,6 +157,12 @@ $( examplesSeperatorSection "UsageEnv -- Full Use BPO" )
 ${G_myName} ${extraInfo} -i usgBpos_usageEnvs_fullUse_update ${oneFullUse} # Main Entry -- Sets 
 ${G_myName} ${extraInfo} -i usgBpos_usageEnvs_fullUse_bxoPath # Main Entry -- Gets
 ${G_myName} ${extraInfo} -i usgBpos_usageEnvs_fullUse_bxoId
+$( examplesSeperatorSection "AAIS BPOs -- Asserted  BPO" )
+${G_myName} ${extraInfo} -i usgBpos_aais_byname_bxoId_fpWrite ${oneAaipByname} # Low Level Function
+${G_myName} ${extraInfo} -i usgBpos_aais_byname_bxoId_fpRead 
+${G_myName} ${extraInfo} -i usgBpos_aais_byname_update ${oneAaipByname} # Main Entry -- Sets 
+${G_myName} ${extraInfo} -i usgBpos_aais_byname_bxoPath # Main Entry -- Gets
+${G_myName} ${extraInfo} -i usgBpos_aais_byname_bxoId
 _EOF_
 }
 
