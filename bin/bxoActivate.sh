@@ -166,7 +166,8 @@ ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i fullCons
 ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i fullConstruct # Creats Acct & clones in ${oneBxoHome}
 $( examplesSeperatorChapter "Activate Selected Real Individual" )
 ${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneRealIndivBxoId}" -i bpoActivate
-usgBpos.sh ${extraInfo} -i usgBposUsageEnvs_realIndivBxoId_write "${oneRealIndivBxoId}"
+usgBpos.sh ${extraInfo} -i usgBpos_real_indivBxoId_read
+usgBpos.sh ${extraInfo} -i usgBpos_real_indivBxoId_write "${oneRealIndivBxoId}"
 ${G_myName} ${extraInfo} -p privacy="${priv}" -i bpoActivate ${oneRealIndivBxoId} 
 echo ${oneRealIndivBxoId} | ${G_myName} ${extraInfo} -p privacy="${priv}" -i bpoActivate
 ${G_myName} ${extraInfo} -p bxoId=${oneRealIndivBxoId} -i bxoTreeDescendantsList
