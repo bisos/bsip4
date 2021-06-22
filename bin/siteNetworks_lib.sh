@@ -463,7 +463,7 @@ _EOF_
     
     case ${function} in
 	Generic)
-	    ANR_raw "Generic IP ADDR NOTYET"
+	    ANT_raw "Generic IP ADDR NOTYET"
 	    lpReturn 
 	    ;;
 	Server)

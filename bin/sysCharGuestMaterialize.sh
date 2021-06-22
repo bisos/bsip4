@@ -628,12 +628,12 @@ _EOF_
 		       }
     EH_assert [[ $# -eq 0 ]]
 
-    local functionAbbrev=$( vis_containerBxoId_getFunction )
+    local functionAbbrev=$(lpDo vis_containerBxoId_getFunction pmp_${containerAssign_containerId})
 
     if [ "${functionAbbrev}" == "G" ] ; then
 	lpDo vis_assignNextAddr privA generic
     else
-	echo "containerBxoId"
+	lpDo echo "containerBxoId"
     fi
 }
 
