@@ -86,6 +86,18 @@ _EOF_
     lpReturn
 }
 
+function vis_unNicheRunExamples {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    cat  << _EOF_
+$( examplesSeperatorChapter "Run UnNiche ICM" )
+${G_myUnNicheName}
+_EOF_
+}
+
 
 function vis_examplesNicheRun {
     G_funcEntry
@@ -115,7 +127,7 @@ _EOF_
 	site)
 	    cat  << _EOF_
 $( examplesSeperatorChapter "Selected Site Niche Examples" )
-$( sysCharDeploy.sh -i selectedSiteBxoPath )/sys/bin/$(G_myNicheNameGet)
+$(sysCharDeploy.sh -i selectedSiteBxoPath)/sys/bin/$(G_myNicheNameGet)
 _EOF_
 
 	    nicheExamplesFile="$(dirname $(dirname ${G_myFullName}))/examples/$(G_myNicheNameGet)"
@@ -124,7 +136,19 @@ _EOF_
 ${nicheExamplesFile}
 _EOF_
 	    fi
-	    
+	    ;;
+	usage)
+	    cat  << _EOF_
+$( examplesSeperatorChapter "Selected Usage Niche Examples" )
+$(vis_usgBpos_controller_bxoPath)/sys/bin/$(G_myNicheNameGet)
+_EOF_
+
+	    nicheExamplesFile="$(dirname $(dirname ${G_myFullName}))/examples/$(G_myNicheNameGet)"
+	    if [ -e "${nicheExamplesFile}" ] ; then
+		cat  << _EOF_
+${nicheExamplesFile}
+_EOF_
+	    fi
 	    ;;
 	*)
 	    EH_problem "Unimplemented yet -- ${function}"

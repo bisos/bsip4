@@ -79,6 +79,9 @@ _CommentEnd_
 
 . ${opBinBase}/usgBpos_lib.sh
 
+. ${opBinBase}/niche_lib.sh
+. ${opBinBase}/bxoManage_lib.sh
+
 # PRE parameters
 
 typeset -t bxoId=""
@@ -163,7 +166,15 @@ ${G_myName} ${extraInfo} -i usgBpos_aais_byname_bxoId_fpRead
 ${G_myName} ${extraInfo} -i usgBpos_aais_byname_update ${oneAaipByname} # Main Entry -- Sets 
 ${G_myName} ${extraInfo} -i usgBpos_aais_byname_bxoPath # Main Entry -- Gets
 ${G_myName} ${extraInfo} -i usgBpos_aais_byname_bxoId
+$( examplesSeperatorSection "Controller BPO -- Used To Set Other usgBpos" )
+${G_myName} ${extraInfo} -i usgBpos_controller_bxoId_fpWrite ${oneRealIndiv} # Low Level Function
+${G_myName} ${extraInfo} -i usgBpos_controller_bxoId_fpRead 
+${G_myName} ${extraInfo} -i usgBpos_controller_update ${oneRealIndiv} # Main Entry -- Sets 
+${G_myName} ${extraInfo} -i usgBpos_controller_bxoPath # Main Entry -- Gets
+${G_myName} ${extraInfo} -i usgBpos_controller_bxoId
 _EOF_
+
+  vis_examplesNicheRun usage
 }
 
 _CommentBegin_
