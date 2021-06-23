@@ -1137,6 +1137,10 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
+    bxoIdPrep
+
+    lpReturn
+
     case ${bxoId} in 
       "")
 	    # EH_problem "bxoId=\"\" -- empty/blank -- invalid bxo"

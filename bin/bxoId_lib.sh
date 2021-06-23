@@ -193,7 +193,8 @@ function bxoIdPrep {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Looks at the global bxoId and replaces it accordingly. Returns none-zero for assertion.
 _EOF_
-    }
+		       }
+
     EH_assert [[ $# -lt 2 ]]
 
     local inBxoId=""
