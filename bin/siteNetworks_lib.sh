@@ -459,11 +459,15 @@ _EOF_
     local containerSpecFps=${repoBase}/containerSpec.fps  
     local containerSpecFps_netIfs=${containerSpecFps}/netIfs
 
+    local sysCharConveyInfoBase="${bxoHome}/var/sysCharConveyInfo"
+    
     local result=""
     
     case ${function} in
 	Generic)
-	    ANT_raw "Generic IP ADDR NOTYET"
+	    result=$(lpDo fileParamManage.py -i fileParamRead ${sysCharConveyInfoBase}/netIfs ${netName}-ipv4Addr)
+	    EH_assert [ ! -z "${result}" ]
+	    lpDo echo ${result}
 	    lpReturn 
 	    ;;
 	Server)

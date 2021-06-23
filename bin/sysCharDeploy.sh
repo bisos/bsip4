@@ -127,6 +127,7 @@ typeset -t cfpSecurityMode=""
 typeset -t cfpNetIf=""
 typeset -t cfpNetIfControl=""
 typeset -t cfpHostNetIf=""
+typeset -t cfpNetAddr=""
 
 # obsoletred
 typeset -t cfpPrivA=""
@@ -1270,6 +1271,9 @@ _EOF_
 	fi
 	if [ ! -z "${cfpHostNetIf}" ] ; then
 	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyNetInfoBase} ${netName}-host "${cfpHostNetIf}"
+	fi
+	if [ ! -z "${cfpNetAddr}" ] ; then
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyNetInfoBase} ${netName}-ipv4Addr "${cfpNetAddr}"
 	fi
     }
 
