@@ -8,6 +8,8 @@ else
 fi
 ####+END:
 
+. ${opBinBase}/bxoId_lib.sh
+
 # ./opAcctLib.sh
 . ${opBinBase}/opAcctLib.sh
 
