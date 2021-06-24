@@ -150,11 +150,10 @@ ${G_myName} -p user=${oneUser} -i bystarAccountsShow
 ${G_myName} ${extraInfo} -i showCurrentDeveloper
 $( examplesSeperatorSection "Full Updates" )
 # clones in gatherer/bxo/bxoId if needed -- Then 
-${G_myName} ${uidInfo:-} ${extraInfo} -p bystarUid=${oneBystarUid} -p user=${oneUser} -p developer=${oneUser} -i userServiceFullUpdate
 ${G_myName} ${uidInfo} ${extraInfo} -p bystarUid=${oneBystarUid} -p user=${oneUser} -i bueFullUpdate
 $( examplesSeperatorSection "ASSOCIATE ~/BUE (ByStar User Account)  TO BxO-BUE" )
 ${G_myName} ${uidInfo} ${extraInfo} -i usgEnvWithAaisBynameAssociate  # Do the symlinks
-${G_myName} ${uidInfo} ${extraInfo} -p bystarHome=/acct/subs/banan/1/mohsen -p bystarUid=${oneBystarUid} -p user=${thisUserAcct} -i userServiceAssociateCurrent # Do MAEMO  symlinks
+${G_myName} ${uidInfo} ${extraInfo} -p bystarHome=/acct/subs/banan/1/mohsen -p bystarUid=${oneBystarUid} -p user=${thisUserAcct} -i userServiceAssociateCurrent # Do symlinks
 $( examplesSeperatorSection "BxU-BxISo-UE Setup For Offlineimap" )
 ${G_myName} ${extraInfo} -p bystarUid=all -p user=${oneUser} -i offlineimapUpdate
 ${G_myName} ${extraInfo} -p bystarUid=${oneBystarUid} -p user=${oneUser} -i offlineimapUpdate
@@ -165,9 +164,11 @@ ${G_myName} ${extraInfo} -p bystarUid=${oneBystarUid} -p user=${oneUser} -i auth
 $( examplesSeperatorSection "Update Blee BUE Profile -- Converts BUE pars elisp" )
 ${G_myName} ${extraInfo} -p bystarUid=${oneBystarUid} -p user=${oneUser} -i bleeUpdateOne
 ${G_myName} ${extraInfo} -p bystarUid=${oneBystarUid} -p user=${oneUser} -i bleeStdoutOne
-${G_myName} ${extraInfo} -p bystarUid=${oneBystarUid} -p user=${oneUser} -i bleeAcctMainStdout
-${G_myName} ${extraInfo} -p bystarUid=${oneBystarUid} -p user=${oneUser} -i bleeAcctMainUpdate
 _EOF_
+
+  # ${G_myName} ${extraInfo} -p bystarUid=${oneBystarUid} -p user=${oneUser} -i bleeAcctMainStdout
+  # ${G_myName} ${extraInfo} -p bystarUid=${oneBystarUid} -p user=${oneUser} -i bleeAcctMainUpdate
+
 }
 
 noArgsHook() {
@@ -541,7 +542,7 @@ _EOF_
     local usgEnvBxoPath=$(lpDo vis_usgBpos_usageEnvs_fullUse_bxoPath)
 
     local curUsgAcctHome=$( vis_curUsgAcctHome )
-    local bueAccctMainFilePath=${usgEnvBxoPath}/blee/elisp/bue-acct-main.el
+    local bueAccctMainFilePath=${usgEnvBxoPath}/blee/elisp/bue-acct-main-start.el
 
     lpDo eval vis_bleeAcctMainStdout \> ${bueAccctMainFilePath}
 

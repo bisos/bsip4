@@ -145,7 +145,7 @@ ${G_myName} ${extraInfo} -i usgBposInit # Should be invoked after bisosDevBxoId 
 ${G_myName} ${extraInfo} -i usgBposFpsPrep
 $( examplesSeperatorChapter "UsageEnvs" )
 $( examplesSeperatorSection "UsageEnvs -- Bisos Development BPO" )
-${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDevBxoId_write piu_XXBisosDev
+${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDevBxoId_write ${thisBisosDevBxoId}
 ${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDevBxoId_read
 ${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDev_update ${thisBisosDevBxoId} # Main Sets up 
 ${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDev_bxoPath
@@ -172,6 +172,11 @@ ${G_myName} ${extraInfo} -i usgBpos_controller_bxoId_fpRead
 ${G_myName} ${extraInfo} -i usgBpos_controller_update ${oneRealIndiv} # Main Entry -- Sets 
 ${G_myName} ${extraInfo} -i usgBpos_controller_bxoPath # Main Entry -- Gets
 ${G_myName} ${extraInfo} -i usgBpos_controller_bxoId
+_EOF_
+
+  cat  << _EOF_
+$( examplesSeperatorChapter "Related -- See Also" )
+bxoActivate.sh -h -v -n showRun -p privacy="priv" -p bxoId="${oneRealIndiv}" -i bpoActivate
 _EOF_
 
   vis_examplesNicheRun usage

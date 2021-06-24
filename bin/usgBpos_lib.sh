@@ -300,7 +300,11 @@ _EOF_
    EH_assert [ ! -z "${bxoIdValue}" ]
 
    bxoPath=$(lpDo vis_bxoPathObtainForBxoId "${bxoIdValue}")
-   EH_assert [ ! -z "${bxoIdValue}" ]
+   EH_assert [ ! -z "${bxoPath}" ]
+
+   local curUsgAcctHome=$(vis_curUsgAcctHome)
+
+   lpDo FN_fileSymlinkUpdate ${bxoPath}/blee ${curUsgAcctHome}/BUE
    
    local curUsgBposBase=$(lpDo vis_curUsgBposBase)
 
