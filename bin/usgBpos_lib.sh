@@ -88,7 +88,9 @@ _EOF_
    lpDo FN_dirCreatePathIfNotThere ${curUsgBposBase}/usageEnvs
    lpDo FN_dirCreatePathIfNotThere ${curUsgBposBase}/projs
    lpDo FN_dirCreatePathIfNotThere ${curUsgBposBase}/aais
-   lpDo FN_dirCreatePathIfNotThere ${curUsgBposBase}/real      
+   lpDo FN_dirCreatePathIfNotThere ${curUsgBposBase}/real
+   lpDo FN_dirCreatePathIfNotThere ${curUsgBposBase}/credentials
+   lpDo FN_dirCreatePathIfNotThere ${curUsgBposBase}/controller   
 }
 
 
@@ -415,6 +417,7 @@ _EOF_
    echo ${bxoId}
 }
 
+
 function vis_usgBpos_controller_bxoId_fpWrite {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -431,7 +434,6 @@ _EOF_
     lpDo mkdir -p ${curUsgBposBase}/controller
     lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/controller controller.bpoFp ${bxoIdValue}
 }
-
 
 function vis_usgBpos_controller_bxoId_fpRead {
     G_funcEntry
@@ -494,6 +496,82 @@ _EOF_
 }
 
 
+function vis_usgBpos_credentials_bxoId_fpWrite {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** 
+_EOF_
+		      }
+    EH_assert [[ $# -eq 1 ]]
+    local bxoIdValue=$1
+
+    bxoIdValue=$(bxoIdPrep ${bxoIdValue})
+    EH_assert [ ! -z ${bxoIdValue} ]
+
+    local curUsgBposBase=$( vis_curUsgBposBase )
+    lpDo mkdir -p ${curUsgBposBase}/credentials
+    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/credentials credentials.bpoFp ${bxoIdValue}
+}
+
+function vis_usgBpos_credentials_bxoId_fpRead {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** returns on stdout: 
+_EOF_
+		      }
+    EH_assert [[ $# -eq 0 ]]
+
+    local curUsgBposBase=$( vis_curUsgBposBase )
+    
+    local resultBxoId=$( fileParamManage.py -i fileParamRead  ${curUsgBposBase}/credentials credentials.bpoFp )
+    EH_assert [ ! -z "${resultBxoId}" ]
+
+    echo ${resultBxoId}
+}
+
+
+function vis_usgBpos_credentials_update {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
+   local bxoIdValue=$1
+
+   bxoIdValue=$(lpDo bxoIdPrep ${bxoIdValue})
+   EH_assert [ ! -z "${bxoIdValue}" ]
+
+   bxoPath=$(lpDo vis_bxoPathObtainForBxoId "${bxoIdValue}")
+   EH_assert [ ! -z "${bxoIdValue}" ]
+   
+   local curUsgBposBase=$(lpDo vis_curUsgBposBase)
+
+   lpDo vis_usgBpos_credentials_bxoId_fpWrite ${bxoIdValue}
+   lpDo FN_fileSymlinkUpdate ${bxoPath} ${curUsgBposBase}/credentials/credentials
+}
+
+
+function vis_usgBpos_credentials_bxoPath {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 0 ]]
+   local curUsgBposBase=$(lpDo vis_curUsgBposBase)   
+   EH_assert [ -e ${curUsgBposBase}/credentials/credentials ]
+   lpDo FN_absolutePathGet ${curUsgBposBase}/credentials/credentials
+}
+
+
+function vis_usgBpos_credentials_bxoId {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 0 ]]
+   local bxoId=$(lpDo vis_usgBpos_credentials_bxoId_fpRead)
+   echo ${bxoId}
+}
 
 
 
