@@ -140,6 +140,9 @@ ${G_myName} -i cachedLs | ${G_myName} ${extraInfo} -i gitBaseConfig
 $( examplesSeperatorSection "Pull Remote" )
 ${G_myName} ${extraInfo} -i gitRemPull ${oneRepoBaseDir}
 ${G_myName} -i cachedLs | ${G_myName} -i gitRemPull
+$( examplesSeperatorSection "Clone When Missing" )
+echo ${oneRepoBaseDir}  | ${G_myName} ${extraInfo} -i cloneWhenMissing
+${G_myName} -i cachedLs | ${G_myName} -i cloneWhenMissing
 $( examplesSeperatorSection "Add, Commit and Push" )
 echo ${oneRepoBaseDir}  | ${G_myName} ${extraInfo} -i addCommitPush modifieds 
 echo  ${oneRepoBaseDir} | ${G_myName} ${extraInfo} -i addCommitPush all
@@ -824,6 +827,81 @@ _EOF_
 _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || IIF       ::  vis_gitBaseIsCollection  [[elisp:(org-cycle)][| ]]
 _CommentEnd_
+
+
+function vis_cloneWhenMissing {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+Apply args to each line of stdin.
+_EOF_
+		       }
+
+    function hereMissingDo {
+	local here=$(pwd)
+	local repoName=$@
+
+	fetchUrl=$( git remote show origin | grep 'Fetch URL' | cut -d ':' -f 2-100 | xargs uriParseStdout.py )
+	remoteHostName=$( printf "${fetchUrl}" | grep -i hostname | cut -d '=' -f 2 )    
+	remoteGitPath=$( printf "${fetchUrl}" | grep -i path | cut -d '=' -f 2 )
+	remoteGitName=$( FN_dirsPart "${remoteGitPath}" )
+
+	ANT_raw "${here}/${repoName} is missing -- cloning from: ${remoteGitName}/${repoName}.git"
+
+	lpDo git clone ${remoteGitName}/$@.git
+    }
+
+    function hereInPlaceReport {
+	local here=$(pwd)
+
+	fetchUrl=$( git remote show origin | grep 'Fetch URL' | cut -d ':' -f 2-100 | xargs uriParseStdout.py )
+	remoteHostName=$( printf "${fetchUrl}" | grep -i hostname | cut -d '=' -f 2 )    
+	remoteGitPath=$( printf "${fetchUrl}" | grep -i path | cut -d '=' -f 2 )
+	remoteGitName=$( FN_dirsPart "${remoteGitPath}" )
+
+	ANT_raw "${here} is in place -- no need to clone -- remoteGit=${remoteGitPath}"
+    }
+
+    function processEach {
+	EH_assert [[ $# -eq 1 ]]
+	local each="$1"
+	local repoName=$(basename "${each}")
+	shift
+
+	if [ -d "${each}" ] ; then
+	    inBaseDirDo \
+		${each} \
+		hereInPlaceReport
+	else
+	    each=$(FN_dirsPart "${each}")
+	
+	    inBaseDirDo \
+		${each} \
+		hereMissingDo "${repoName}"
+	fi
+    }
+
+####+BEGIN: bx:bsip:bash/processStdinWithArgs 
+    function processStdinWithArgs {
+	local stdinArgs
+	local each
+	if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
+	    readarray stdinArgs < /dev/stdin
+	fi
+	if [ ${#stdinArgs[@]} -eq 0 ] ; then
+	    ANT_raw "No StdinArgs -- Processing Skipped"
+	    lpReturn
+	fi
+	for each in "${stdinArgs[@]}"; do
+	    lpDo processEach "${each%$'\n'}" "$@"
+	done
+    }
+    lpDo processStdinWithArgs "$@"
+####+END:
+    
+    lpReturn
+}	
+
+
 
 function vis_status {
     G_funcEntry
