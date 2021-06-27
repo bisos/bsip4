@@ -138,7 +138,7 @@ $( examplesSeperatorChapter "BxO Repos Create And Push And Pull" )
 $( examplesSeperatorSection "BxO Repo Create And Push" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoCreateAndPush "rbxe" "${oneBxoHome}/rbxe" "priv"
 $( examplesSeperatorChapter "BxO Path Based Actvities" )
-${G_myName} ${extraInfo} -i bxoIdObtainForPath .
+${G_myName} ${extraInfo} -i bxoIdObtainForPath . 
 ${G_myName} ${extraInfo} -i repoCreateAndPushBasedOnPath .
 ${G_myName} ${extraInfo} -i repoDeleteBasedOnPath .  # use -f to also remove dir
 $( examplesSeperatorChapter "BxO Pull Git Repos" )
@@ -146,6 +146,12 @@ echo $(pwd) | bx-gitRepos -i gitRemPull
 ${G_myName} -i basedOnPath_reposPathList . | bx-gitRepos -i gitRemPull
 echo "${oneBxoId}" | ${G_myName} -i bxoReposPathList | bx-gitRepos -i gitRemPull
 bxoAcctManage.sh -i bxoIdsList | ${G_myName} -i bxoReposPathList | bx-gitRepos -i gitRemPull # ALL BxOs on This Container
+$( examplesSeperatorSection "Clone When Missing" )
+${G_myName} -i basedOnPath_reposPathList . | bx-gitRepos -i cloneWhenMissing
+echo "${oneBxoId}" | ${G_myName} -i bxoReposPathList | bx-gitRepos -i cloneWhenMissing
+bxoAcctManage.sh -i bxoIdsList | ${G_myName} -i bxoReposPathList | bx-gitRepos -i cloneWhenMissing # ALL BxOs on This Container
+echo "${oneBxoId}" | ${G_myName} -i bxoReposPathList | bx-gitRepos -i gitRemPullAndCloneWhenMissing
+bxoAcctManage.sh -i bxoIdsList | ${G_myName} -i bxoReposPathList | bx-gitRepos -i gitRemPullAndCloneWhenMissing # ALL BxOs on This Container
 $( examplesSeperatorChapter "BxO Push Git Repos" )
 echo $(pwd) | bx-gitRepos -i addCommitPush all
 ${G_myName} -i basedOnPath_reposPathList . | bx-gitRepos -i addCommitPush modifieds
