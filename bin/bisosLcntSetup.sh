@@ -1,7 +1,5 @@
 #!/bin/bash
 
-
-
 IcmBriefDescription="NOTYET: Short Description Of The Module"
 
 ####+BEGIN: bx:bsip:bash:seed-spec :types "seedActions.bash"

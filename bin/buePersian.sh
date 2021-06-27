@@ -1,25 +1,57 @@
-#!/bin/osmtKsh
-#!/bin/osmtKsh
+#!/bin/bash
 
-typeset RcsId="$Id:"
+IcmBriefDescription="NOTYET: Short Description Of The Module"
 
-if [ "${loadFiles}X" == "X" ] ; then
-     `dirname $0`/seedActions.sh -l $0 "$@"
-     exit $?
+####+BEGIN: bx:bsip:bash:seed-spec :types "seedActions.bash"
+SEED="
+*  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
+"
+FILE="
+*  /This File/ :: /bisos/core/bsip/bin/bisosAccounts.sh 
+"
+if [ "${loadFiles}" == "" ] ; then
+    /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
+    exit $?
 fi
+####+END:
 
+_CommentBegin_
+####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/libre/ByStar/InitialTemplates/software/plusOrg/dblock/inserts/topControls.org"
+*  /Controls/ ::  [[elisp:(org-cycle)][| ]]  [[elisp:(show-all)][Show-All]]  [[elisp:(org-shifttab)][Overview]]  [[elisp:(progn (org-shifttab) (org-content))][Content]] | [[file:Panel.org][Panel]] | [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] | [[elisp:(bx:org:run-me)][Run]] | [[elisp:(bx:org:run-me-eml)][RunEml]] | [[elisp:(delete-other-windows)][(1)]] | [[elisp:(progn (save-buffer) (kill-buffer))][S&Q]]  [[elisp:(save-buffer)][Save]]  [[elisp:(kill-buffer)][Quit]] [[elisp:(org-cycle)][| ]]
+** /Version Control/ ::  [[elisp:(call-interactively (quote cvs-update))][cvs-update]]  [[elisp:(vc-update)][vc-update]] | [[elisp:(bx:org:agenda:this-file-otherWin)][Agenda-List]]  [[elisp:(bx:org:todo:this-file-otherWin)][ToDo-List]]
+####+END:
+_CommentEnd_
 
-vis_help () {
-  cat  << _EOF_
+_CommentBegin_
+*      ================
+*  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]] CONTENTS-LIST ################
+*  [[elisp:(org-cycle)][| ]]  Notes         :: *[Current-Info:]*  Status, Notes (Tasks/Todo Lists, etc.) [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+
+function vis_moduleDescription {  cat  << _EOF_
+*  [[elisp:(org-cycle)][| ]]  Xrefs         :: *[Related/Xrefs:]*  <<Xref-Here->>  -- External Documents  [[elisp:(org-cycle)][| ]]
+**  [[elisp:(org-cycle)][| ]]  Panel        :: [[file:/libre/ByStar/InitialTemplates/activeDocs/bxServices/versionControl/fullUsagePanel-en.org::Xref-VersionControl][Panel Roadmap Documentation]] [[elisp:(org-cycle)][| ]]
+*  [[elisp:(org-cycle)][| ]]  Info          :: *[Module Description:]* [[elisp:(org-cycle)][| ]]
+
 Installs Persian Fonts
 
 TODO m17n -- chinese emacs menus needs this
 apt-get install -y ttf-arphic-uming
 
-
 _EOF_
   return 0
 }
+
+_CommentBegin_
+*  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *Seed Extensions*
+_CommentEnd_
+
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  Imports       :: Prefaces (Imports/Libraries) [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+
+
+# Import Libraries
 
 
 typeset -t bystarAcct="sa-20000"
@@ -31,7 +63,7 @@ typeset -t bystarAcct="sa-20000"
 . ${opBinBase}/distHook.libSh
 
 . ${opBinBase}/mmaLib.sh
-. ${opBinBase}/mmaBinsPrepLib.sh
+# . ${opBinBase}/mmaBinsPrepLib.sh
 
 binPublishToServer="www.bybinary.org"
 binObtainFromServer="www.bybinary.org"
@@ -135,7 +167,8 @@ function vis_xepersianLatexInstall {
 
 function vis_fontXbZarInstall {
     ANT_raw "Must Run As Root"
-    opDoExit cd ${opVarBase}/distPkgs/all
+    #opVarBase="/bisos/var/srcPkgs"
+    opDoExit cd /bisos/var/srcPkgs # ${opVarBase}/distPkgs/all
     
     #opDo wget -O XBZar.zip 'http://irmug.org/dl/index.php?name=Downloads&req=getit&lid=30'
     #opDo wget -O XBZar.zip 'http://wiki.irmug.com/index.php/X_Series_2#Download_fonts'
