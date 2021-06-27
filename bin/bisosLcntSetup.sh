@@ -178,6 +178,10 @@ noArgsHook() {
 }
 
 
+    # opDo lcaLaTexBinsPrep.sh -s all -a fullUpdate
+    # opDo lcaLaTexBinsPrep.sh -i extraInstall
+
+
 function vis_lcntBaseFullPrep {
     EH_assert [[ $# -eq 0 ]]
 
@@ -208,16 +212,45 @@ function vis_lcntBaseVcGet {
 }
 
 
+
+function vis_symLinkLcnt {
+  EH_assert [[ $# -eq 0 ]]
+  # developerVerify
+
+  FN_fileSymlinkUpdateKeep  ${currentLcntBase} /lcnt
+  opDo ls -ld /lcnt
+}
+
+
+function vis_symLinkContent {
+  EH_assert [[ $# -eq 0 ]]
+  developerVerify
+
+  FN_fileSymlinkUpdateKeep  /here/content/ /content
+  opDo ls -ld /content
+}
+
+
+
 function vis_lcntBaseSymLink {
     EH_assert [[ $# -eq 0 ]]
 
-    # RunAs Root ## NOTYET: This Should go into lpSysDevelopers.sh
+    lpDo mkdir /de/lcnt
+    lpDo sudo ln -s /de/lcnt /lcnt
 
-    opDo sudo ${opBinBase}/lpSysDevelopers.sh -h -v -n showRun -p developer=lsipusr -i symLinkLcnt
-    opDo sudo ln -s /lcnt/BIB /usr/local/lib/bib
+    local thisBxoHome=$(lpDo FN_absolutePathGet ~pip_lcntBases)
 
-    opDo mkdir -p /here/content
-    opDo sudo ${opBinBase}/lpSysDevelopers.sh -h -v -n showRun -p developer=lsipusr -i symLinkContent
+    # ~pip_lcntBases/REGISTRY
+    lpDo FN_fileSymlinkUpdate  ${thisBxoHome}/bxdpt /de/lcnt/bxdpt
+    lpDo FN_fileSymlinkUpdate  ${thisBxoHome}/BIB /de/lcnt/BIB
+    lpDo FN_fileSymlinkUpdate  ${thisBxoHome}/CENTRAL /de/lcnt/CENTRAL
+    lpDo FN_fileSymlinkUpdate  ${thisBxoHome}/REGISTRY /de/lcnt/REGISTRY    
+    
+    #opDo sudo ${opBinBase}/lpSysDevelopers.sh -h -v -n showRun -p developer=lsipusr -i symLinkLcnt
+    #opDo sudo ln -s /lcnt/BIB /usr/local/lib/bib
+
+    # opDo mkdir -p /here/content
+    # opDo sudo ${opBinBase}/lpSysDevelopers.sh -h -v -n showRun -p developer=lsipusr -i symLinkContent
 
 }
 
