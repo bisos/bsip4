@@ -268,6 +268,8 @@ _EOF_
     lpReturn
 }	
 
+bystarUid=""
+
 
 _CommentBegin_
 *  [[elisp:(org-cycle)][| ]] [[elisp:(org-show-subtree)][|=]] [[elisp:(show-children 10)][|V]] [[elisp:(blee:ppmm:org-mode-toggle)][|N]] [[elisp:(bx:orgm:indirectBufOther)][|>]] [[elisp:(bx:orgm:indirectBufMain)][|I]] [[elisp:(beginning-of-buffer)][|^]] [[elisp:(org-top-overview)][|O]] [[elisp:(progn (org-shifttab) (org-content))][|C]] [[elisp:(delete-other-windows)][|1]] || IIC       ::  vis_examples    [[elisp:(org-cycle)][| ]]
@@ -279,7 +281,7 @@ function vis_examples {
   #typeset extraInfo=""
   typeset oneDoc=`echo ${docsList} | cut -d ' ' -f 1 `
   typeset visLibExamples=`visLibExamplesOutput ${G_myName} ${extraInfo}`
-  bystarUid=${lcnt_bystarUid}
+  bystarUid=${lcnt_bystarUid:-}
   #typeset plpdNu=`cat ./LCNT-INFO/lcntNu`
   #typeset plpdCategory=`cat ./LCNT-INFO/pubCategory`
 
