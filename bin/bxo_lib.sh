@@ -1128,6 +1128,9 @@ function bxoAcctAnalyze {
 }
 
 function bxoIdPrepValidate {
+    if [ $# -eq 0 ] && [ -n ${bxoId} ] ; then
+       lpReturn
+    fi
     bxoCentralPrep $@
 }
 
