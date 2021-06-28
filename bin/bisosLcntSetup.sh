@@ -88,6 +88,9 @@ _CommentEnd_
 . ${opBinBase}/bystarLib.sh
 
 . ${opBinBase}/opAcctLib.sh
+. ${opBinBase}/opDoAtAsLib.sh
+. ${opBinBase}/lpParams.libSh
+. ${opBinBase}/lpReRunAs.libSh
 
 
 . ${opBinBase}/bxo_lib.sh
@@ -113,6 +116,9 @@ _CommentEnd_
 
 #. ${opBinBase}/bystarInfoBase.libSh
 
+. ${opBinBase}/usgBpos_lib.sh
+
+
 # PRE parameters
 typeset -t acctTypePrefix=""
 typeset -t bystarUid="MANDATORY"
@@ -135,9 +141,17 @@ function vis_examples {
  oneInListLcntNu="/lcnt/outputs/all/lists/nuBaseDir"
   typeset thisOneSaNu=${currentBystarUid:-}
 
- cat  << _EOF_
-EXAMPLES:
-${visLibExamples}
+     visLibExamplesOutput ${G_myName}
+
+  cat  << _EOF_
+$( examplesSeperatorTopLabel "${G_myName}" )
+$( examplesSeperatorChapter "Currents And BxO Management Information" )
+bisosCurrentsManage.sh
+bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId ${oneBxoId:-}
+$( examplesSeperatorSection "BISOS LCNT BinsPreps" )
+${G_myName} ${extraInfo} -i bisosLcntBinsPrep
+$( examplesSeperatorSection "BISOS LCNT BinsPreps" )
+${G_myName} ${extraInfo} -i usgBposLcntBasesSetup
 --- /lcnt Preparations ---
 ${G_myName} -p uid=lsipusr ${extraInfo} -i lcntBaseFullPrep     # Get + Prep + Build
 ${G_myName} -p uid=lsipusr ${extraInfo} -i lcntBaseGetPrep      # Get + Prep
@@ -176,14 +190,33 @@ noArgsHook() {
 }
 
 
-    # opDo lcaLaTexBinsPrep.sh -s all -a fullUpdate
-    # opDo lcaLaTexBinsPrep.sh -i extraInstall
+function vis_bisosLcntBinsPrep {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** After this we should have everything we need for lcnt activities.
+*** TODO Revisit buePersian is favor of a generalized fonts setup
+*** TODO Acroread needs to be added
+*** TODO Media processing needs to be added
+_EOF_
+		       }
+    EH_assert [[ $# -eq 0 ]]
+
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
+
+    lpDo lcaLaTexBinsPrep.sh -s all -a fullUpdate
+
+    lpDo lcaLaTexBinsPrep.sh -i extraInstall
+
+    lpDo buePersian.sh -v -n showRun -i persianFullInstall
+
+    lpDo buePersian.sh -v -n showRun -i fontXbZarInstall
+
+    lpDo nlcAcroreadBinsPrep.sh -v -n showRun -i fullUpdate 
+}
 
 
 function vis_lcntBaseFullPrep {
     EH_assert [[ $# -eq 0 ]]
-
-    # NOTYET  BaseGet needs to be root -- Rest needs to be lsipusr
 
     opDo vis_lcntBaseGet
     opDo vis_lcntBasePrep
@@ -204,19 +237,7 @@ function vis_lcntBaseGetPrep {
 function vis_lcntBaseVcGet {
     EH_assert [[ $# -eq 0 ]]
 
-    # RunAs Root ## NOTYET: This Should go into lpSysDevelopers.sh
-
     lpDo bxoActivate.sh -h -v -n showRun -p privacy="priv" -p bxoId="pip_lcntBases" -i bpoActivate
-}
-
-
-
-function vis_symLinkLcnt {
-  EH_assert [[ $# -eq 0 ]]
-  # developerVerify
-
-  FN_fileSymlinkUpdateKeep  ${currentLcntBase} /lcnt
-  opDo ls -ld /lcnt
 }
 
 
@@ -229,7 +250,6 @@ function vis_symLinkContent {
 }
 
 
-
 function vis_lcntBaseSymLink {
     EH_assert [[ $# -eq 0 ]]
 
@@ -238,26 +258,66 @@ function vis_lcntBaseSymLink {
 
     local thisBxoHome=$(lpDo FN_absolutePathGet ~pip_lcntBases)
 
+    EH_assert [ -d ${thisBxoHome}/bxdpt ]
+    
     # ~pip_lcntBases/REGISTRY
     lpDo FN_fileSymlinkUpdate  ${thisBxoHome}/bxdpt /de/lcnt/bxdpt
     lpDo FN_fileSymlinkUpdate  ${thisBxoHome}/BIB /de/lcnt/BIB
     lpDo FN_fileSymlinkUpdate  ${thisBxoHome}/CENTRAL /de/lcnt/CENTRAL
-    lpDo FN_fileSymlinkUpdate  ${thisBxoHome}/REGISTRY /de/lcnt/REGISTRY    
+    lpDo FN_fileSymlinkUpdate  ${thisBxoHome}/REGISTRY /de/lcnt/REGISTRY
+
+    local thisBxoHomeVarPath="${thisBxoHome}/var"
     
-    #opDo sudo ${opBinBase}/lpSysDevelopers.sh -h -v -n showRun -p developer=lsipusr -i symLinkLcnt
-    #opDo sudo ln -s /lcnt/BIB /usr/local/lib/bib
+    local varBaseDirBxoId="/bisos/var/bxoId/pip_lcntBases"
 
-    # opDo mkdir -p /here/content
-    # opDo sudo ${opBinBase}/lpSysDevelopers.sh -h -v -n showRun -p developer=lsipusr -i symLinkContent
+    lpDo FN_dirCreatePathIfNotThere ${varBaseDirBxoId}
+    
+    lpDo FN_fileSymlinkUpdate ${varBaseDirBxoId} ${thisBxoHomeVarPath}
 
+    lpDo mkdir -p  ${thisBxoHomeVarPath}/outputs/all/lists
+
+    lpDo FN_fileSymlinkUpdate  ${thisBxoHomeVarPath}/outputs /de/lcnt/outputs   
 }
 
 
-function vis_lcntBaseGet {
+function vis_bisosLcntBinsPrep {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** After this we should have everything we need for lcnt activities.
+*** TODO Revisit buePersian is favor of a generalized fonts setup
+*** TODO Acroread needs to be added
+*** TODO Media processing needs to be added
+_EOF_
+		       }
     EH_assert [[ $# -eq 0 ]]
 
-    opDo vis_lcntBaseVcGet
-    opDo vis_lcntBaseSymLink
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
+
+    lpDo lcaLaTexBinsPrep.sh -s all -a fullUpdate
+
+    lpDo lcaLaTexBinsPrep.sh -i extraInstall
+
+    lpDo buePersian.sh -v -n showRun -i persianFullInstall
+
+    lpDo buePersian.sh -v -n showRun -i fontXbZarInstall
+
+    lpDo nlcAcroreadBinsPrep.sh -v -n showRun -i fullUpdate 
+}
+
+
+function vis_usgBposLcntBasesSetup {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** After this we should have everything we need for lcnt activities.
+_EOF_
+		       }
+    EH_assert [[ $# -eq 0 ]]
+
+    local lcntBasesPath=$(lpDo vis_usgBpos_lcntBases_bxoPath)
+
+    EH_assert [ -d "${lcntBasesPath}" ]
+
+    lpDo FN_fileSymlinkUpdate ${lcntBasesPath}/lcnt/lgpc /de/lcnt/lgpc
 }
 
 

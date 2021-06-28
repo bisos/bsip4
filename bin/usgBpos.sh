@@ -166,6 +166,10 @@ ${G_myName} ${extraInfo} -i usgBpos_aais_byname_bxoId_fpRead
 ${G_myName} ${extraInfo} -i usgBpos_aais_byname_update ${oneAaipByname} # Main Entry -- Sets 
 ${G_myName} ${extraInfo} -i usgBpos_aais_byname_bxoPath # Main Entry -- Gets
 ${G_myName} ${extraInfo} -i usgBpos_aais_byname_bxoId
+$( examplesSeperatorSection "LCNT Bases BPOs -- LCNT (Libre-Halaal Content)  BPO" )
+${G_myName} ${extraInfo} -i usgBpos_lcntBases_update pip_credsSpecify # Main Entry -- Sets 
+${G_myName} ${extraInfo} -i usgBpos_lcntBases_bxoPath # Main Entry -- Gets
+${G_myName} ${extraInfo} -i usgBpos_lcntBases_bxoId
 $( examplesSeperatorSection "Credentials BPOs -- Credentials (External Accounts)  BPO" )
 ${G_myName} ${extraInfo} -i usgBpos_credentials_update pip_credsSpecify # Main Entry -- Sets 
 ${G_myName} ${extraInfo} -i usgBpos_credentials_bxoPath # Main Entry -- Gets

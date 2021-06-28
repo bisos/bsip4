@@ -17,13 +17,13 @@ __author__="
 
 ####+BEGIN: bx:bsip:bash:seed-spec :types "seedSubjectBinsPrepDist.sh"
 SEED="
-*  /[dblock]/ /Seed/ :: [[file:/opt/public/osmt/bin/seedSubjectBinsPrepDist.sh]] | 
+*  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedSubjectBinsPrepDist.sh]] | 
 "
 FILE="
-*  /This File/ :: /bisos/core/bsip/bin/nlcAcroreadBinsPrep.sh 
+*  /This File/ :: /bisos/bsip/bin/nlcAcroreadBinsPrep.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
-    /opt/public/osmt/bin/seedSubjectBinsPrepDist.sh -l $0 "$@" 
+    /bisos/core/bsip/bin/seedSubjectBinsPrepDist.sh -l $0 "$@" 
     exit $?
 fi
 ####+END:
@@ -68,7 +68,8 @@ _EOF_
 
     #  [[elisp:(lsip-local-run-command "apt-cache search something | egrep '^something'")][apt-cache search something | egrep '^something']]
 
-    itemOrderedList=( 
+    itemOrderedList=(
+	"acroreadIntsallPreps"
 	"libxml2:i386"
 	"libcanberra_gtk_module:i386"
 	"gtk2_engines_murrine:i386"
@@ -144,6 +145,22 @@ binsPrep_libatk_adaptor:i386_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "libatk-
 ####+END:
 
 
+
+item_acroreadIntsallPreps () {
+  distFamilyGenerationHookRun binsPrep_acroreadIntsallPreps
+}
+
+binsPrep_acroreadIntsallPreps_DEFAULT_DEFAULT () {
+    mmaThisPkgName="acroreadIntsallPreps"
+    mmaPkgDebianName="${mmaThisPkgName}"
+    mmaPkgDebianMethod="custom"  #  or "apt" no need for customInstallScript but with binsPrep_installPostHook
+    binsPrep_installPostHook=""
+
+    function customInstallScript {
+	lpDo sudo dpkg --add-architecture i386
+	lpDo sudo apt-get update
+    }
+}
 
 
 
