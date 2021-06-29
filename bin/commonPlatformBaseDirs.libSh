@@ -1,0 +1,1182 @@
+#!/bin/bash
+
+IimBriefDescription="MODULE ByStar Platforms Base Dirs Setup."
+
+ORIGIN="
+* Revision And Libre-Halaal CopyLeft
+"
+
+####+BEGIN: bx:dblock:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
+typeset RcsId="$Id: commonPlatformBaseDirs.libSh,v 1.1.1.1 2016-06-08 23:49:51 lsipusr Exp $"
+# *CopyLeft*
+# Copyright (c) 2011 Neda Communications, Inc. -- http://www.neda.com
+# See PLPC-120001 for restrictions.
+# This is a Halaal Poly-Existential intended to remain perpetually Halaal.
+####+END:
+
+__author__="
+* Authors: Mohsen BANAN, http://mohsen.banan.1.byname.net/contact
+"
+
+_CommentBegin_
+####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/libre/ByStar/InitialTemplates/software/plusOrg/dblock/inserts/topControls.org"
+*      ================
+*  /Controls/:  [[elisp:(org-cycle)][Fold]]  [[elisp:(show-all)][Show-All]]  [[elisp:(org-shifttab)][Overview]]  [[elisp:(progn (org-shifttab) (org-content))][Content]] | [[elisp:(bx:org:run-me)][RunMe]] | [[elisp:(delete-other-windows)][(1)]]  | [[elisp:(progn (save-buffer) (kill-buffer))][S&Q]]  [[elisp:(save-buffer)][Save]]  [[elisp:(kill-buffer)][Quit]] 
+** /Version Control/:  [[elisp:(call-interactively (quote cvs-update))][cvs-update]]  [[elisp:(vc-update)][vc-update]] | [[elisp:(bx:org:agenda:this-file-otherWin)][Agenda-List]]  [[elisp:(bx:org:todo:this-file-otherWin)][ToDo-List]] 
+
+####+END:
+_CommentEnd_
+
+
+
+_CommentBegin_
+*      ================
+*      ================ CONTENTS-LIST ================
+*      ================ *[Info]* Module Description, Notes (TODO Lists, etc.)
+_CommentEnd_
+function vis_describe {  cat  << _EOF_
+** <<Xref-Here->>
+**     ============ Essential Features TODO
+*** TODO ======== Absorb Everything From bystarPlatform.libSh
+_EOF_
+}
+
+
+function vis_describe {
+    cat  << _EOF_
+_EOF_
+}
+
+_CommentBegin_
+*      ################      *Platform Base Dirs (pbd) Lists -- PdbLists*
+_CommentEnd_
+
+
+_CommentBegin_
+*      ======[[elisp:(org-cycle)][Fold]]====== pbd List ddPrivScopeBases
+_CommentEnd_
+
+pbdList_ddPrivScopeBases=( 
+    "ddPrivScope/0"
+    "ddPrivScope/1"
+    "ddPrivScope/2"
+    "ddPrivScope/3"
+    "ddPrivScope/4"
+    "ddPrivScope/5"
+    "ddPrivScope/6"
+    "ddPrivScope/7"
+    "ddPrivScope/8"
+    "ddPrivScope/9"
+    "ddPrivScope/10"
+    "ddPrivScope/11"
+    "ddPrivScope/12"
+    "ddPrivScope/13"
+    "ddPrivScope/14"
+    "ddPrivScope/15"
+    "ddPrivScope/16"
+    "ddPrivScope/17"
+)
+
+
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  pbd List      ::  ddPrivScopeBases (0-2) Public   [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+
+pbdList_ddPrivScopeBases_Public=( 
+    "ddPrivScope/0"
+    "ddPrivScope/1"
+    "ddPrivScope/2"
+)
+
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  pbd List      ::  ddPrivScopeBases (3-5) Limited   [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+
+pbdList_ddPrivScopeBases_Limited=( 
+    "ddPrivScope/3"
+    "ddPrivScope/4"
+    "ddPrivScope/5"
+)
+
+
+_CommentBegin_
+*      ======[[elisp:(org-cycle)][Fold]]====== pbd List ddPrivScopeBases (6-8)   ExternalConfidential
+_CommentEnd_
+
+pbdList_ddPrivScopeBases_ExternalConfidential=( 
+    "ddPrivScope/6"
+    "ddPrivScope/7"
+    "ddPrivScope/8"
+)
+
+
+
+_CommentBegin_
+*      ======[[elisp:(org-cycle)][Fold]]====== pbd List ddPrivScopeBases (9-11)  ClientConfidential
+_CommentEnd_
+
+pbdList_ddPrivScopeBases_ClientConfidential=( 
+    "ddPrivScope/9"
+    "ddPrivScope/10"
+    "ddPrivScope/11"
+)
+
+
+_CommentBegin_
+*      ======[[elisp:(org-cycle)][Fold]]====== pbd List ddPrivScopeBases (12-14) ClusterConfidential
+_CommentEnd_
+
+pbdList_ddPrivScopeBases_ClusterConfidential=( 
+    "ddPrivScope/12"
+    "ddPrivScope/13"
+    "ddPrivScope/14"
+)
+
+
+_CommentBegin_
+*      ======[[elisp:(org-cycle)][Fold]]====== pbd List ddPrivScopeBases (15-17) PersonalConfidential
+_CommentEnd_
+
+pbdList_ddPrivScopeBases_PersonalConfidential=( 
+    "ddPrivScope/15"
+    "ddPrivScope/16"
+    "ddPrivScope/17"
+)
+
+
+_CommentBegin_
+*      ################
+_CommentEnd_
+
+
+_CommentBegin_
+*      ======[[elisp:(org-cycle)][Fold]]====== pbd List ddPrivScopeLinks ExternalConfidential
+_CommentEnd_
+
+pbdList_ddPrivScopeLinks_ExternalConfidential=( 
+    "ddPrivScope/ExternalConfidential"
+    "ddPrivScope/ArchiveExternalConfidential"
+    "ddPrivScope/BackupExternalConfidential"
+)
+
+
+_CommentBegin_
+*      ======[[elisp:(org-cycle)][Fold]]====== pbd List ddPrivScopeLinks ClientConfidential
+_CommentEnd_
+
+pbdList_ddPrivScopeLinks_ClientConfidential=( 
+    "ddPrivScope/ClientConfidential"
+    "ddPrivScope/ArchiveClientConfidential"
+    "ddPrivScope/BackupClientConfidential"
+)
+
+
+_CommentBegin_
+*      ======[[elisp:(org-cycle)][Fold]]====== pbd List ddPrivScopeLinks ClusterConfidential
+_CommentEnd_
+
+pbdList_ddPrivScopeLinks_ClusterConfidential=( 
+    "ddPrivScope/ClusterConfidential"
+    "ddPrivScope/ArchiveClusterConfidential"
+    "ddPrivScope/BackupClusterConfidential"
+)
+
+
+_CommentBegin_
+*      ======[[elisp:(org-cycle)][Fold]]====== pbd List ddPrivScopeLinks PersonalConfidential
+_CommentEnd_
+
+pbdList_ddPrivScopeLinks_ClusterConfidential=( 
+    "ddPrivScope/PersonalConfidential"
+    "ddPrivScope/ArchivePersonalConfidential"
+    "ddPrivScope/BackupPersonalConfidential"
+)
+
+
+
+_CommentBegin_
+*      ======[[elisp:(org-cycle)][Fold]]====== pbd List ddPrivScopeLinks
+_CommentEnd_
+
+pbdList_ddPrivScopeLinks=( 
+    "ddPrivScope/Public"
+    "ddPrivScope/ArchivePublic"
+    "ddPrivScope/BackupPublic"
+    "ddPrivScope/Limited"
+    "ddPrivScope/ArchiveLimited"
+    "ddPrivScope/BackupLimited"
+    "ddPrivScope/ExternalConfidential"
+    "ddPrivScope/ArchiveExternalConfidential"
+    "ddPrivScope/BackupExternalConfidential"
+    "ddPrivScope/ClientConfidential"
+    "ddPrivScope/ArchiveClientConfidential"
+    "ddPrivScope/BackupClientConfidential"
+    "ddPrivScope/ClusterConfidential"
+    "ddPrivScope/ArchiveClusterConfidential"
+    "ddPrivScope/BackupClusterConfidential"
+    "ddPrivScope/PersonalConfidential"
+    "ddPrivScope/ArchivePersonalConfidential"
+    "ddPrivScope/BackupPersonalConfidential"
+)
+
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== pbd List ddPrivScopeLinks Public
+_CommentEnd_
+
+pbdList_ddPrivScopeLinks_Public=( 
+    "ddPrivScope/Public"
+    "ddPrivScope/ArchivePublic"
+    "ddPrivScope/BackupPublic"
+)
+
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== pbd List ddPrivScopeLinks Limited
+_CommentEnd_
+
+pbdList_ddPrivScopeLinks_Limited=( 
+    "ddPrivScope/Limited"
+    "ddPrivScope/ArchiveLimited"
+    "ddPrivScope/BackupLimited"
+)
+
+
+_CommentBegin_
+*      ################
+_CommentEnd_
+
+_CommentBegin_
+*      ======[[elisp:(org-cycle)][Fold]]====== pbd List uniformRelMediaLinks
+_CommentEnd_
+
+pbdList_uniformRelMediaLinks=( 
+    "uniformRel/mediaTypeAudio"
+    "uniformRel/mediaTypeAudioBooks"
+    "uniformRel/mediaTypeVideo"
+    "uniformRel/mediaTypeDocuments"
+    "uniformRel/mediaTypeComics"
+    "uniformRel/mediaTypeVMs"
+    "uniformRel/mediaTypeVMs/Public"
+    "uniformRel/mediaTypeVMs/Limited"
+    "uniformRel/mediaTypeVMs/ClusterConfidential"
+)
+
+
+_CommentBegin_
+*      ################      *Platform Base Directory (pbd) Hierarchies*
+_CommentEnd_
+
+
+_CommentBegin_
+*      ======[[elisp:(org-cycle)][Fold]]====== ddPrivScopeBases
+_CommentEnd_
+
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScope/0
+_CommentEnd_
+
+typeset -A pbd_ddPrivScope_0=(
+    [type]=directory
+    [destPathBaseDefault]="/dd/this/a"
+    [destPathRel]="0"
+    [srcPath]=""
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=775
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScope/1
+_CommentEnd_
+
+typeset -A pbd_ddPrivScope_1=(
+    [type]=directory
+    [destPathBaseDefault]="/dd/this/a"
+    [destPathRel]="1"
+    [srcPath]=""
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=775
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScope/2
+_CommentEnd_
+
+typeset -A pbd_ddPrivScope_2=(
+    [type]=directory
+    [destPathBaseDefault]="/dd/this/a"
+    [destPathRel]="2"
+    [srcPath]=""
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=775
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScope/3
+_CommentEnd_
+
+typeset -A pbd_ddPrivScope_3=(
+    [type]=directory
+    [destPathBaseDefault]="/dd/this/a"
+    [destPathRel]="3"
+    [srcPath]=""
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=775
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScope/4
+_CommentEnd_
+
+typeset -A pbd_ddPrivScope_4=(
+    [type]=directory
+    [destPathBaseDefault]="/dd/this/a"
+    [destPathRel]="4"
+    [srcPath]=""
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=775
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScope/5
+_CommentEnd_
+
+typeset -A pbd_ddPrivScope_5=(
+    [type]=directory
+    [destPathBaseDefault]="/dd/this/a"
+    [destPathRel]="5"
+    [srcPath]=""
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=775
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScope/6
+_CommentEnd_
+
+typeset -A pbd_ddPrivScope_6=(
+    [type]=directory
+    [destPathBaseDefault]="/dd/this/a"
+    [destPathRel]="6"
+    [srcPath]=""
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=775
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScope/7
+_CommentEnd_
+
+typeset -A pbd_ddPrivScope_7=(
+    [type]=directory
+    [destPathBaseDefault]="/dd/this/a"
+    [destPathRel]="7"
+    [srcPath]=""
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=775
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScope/8
+_CommentEnd_
+
+typeset -A pbd_ddPrivScope_8=(
+    [type]=directory
+    [destPathBaseDefault]="/dd/this/a"
+    [destPathRel]="8"
+    [srcPath]=""
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=775
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScope/9
+_CommentEnd_
+
+typeset -A pbd_ddPrivScope_9=(
+    [type]=directory
+    [destPathBaseDefault]="/dd/this/a"
+    [destPathRel]="9"
+    [srcPath]=""
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=775
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScope/10
+_CommentEnd_
+
+typeset -A pbd_ddPrivScope_10=(
+    [type]=directory
+    [destPathBaseDefault]="/dd/this/a"
+    [destPathRel]="10"
+    [srcPath]=""
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=775
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScope/11
+_CommentEnd_
+
+typeset -A pbd_ddPrivScope_11=(
+    [type]=directory
+    [destPathBaseDefault]="/dd/this/a"
+    [destPathRel]="11"
+    [srcPath]=""
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=775
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScope/12
+_CommentEnd_
+
+typeset -A pbd_ddPrivScope_12=(
+    [type]=directory
+    [destPathBaseDefault]="/dd/this/a"
+    [destPathRel]="12"
+    [srcPath]=""
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=775
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScope/13
+_CommentEnd_
+
+typeset -A pbd_ddPrivScope_13=(
+    [type]=directory
+    [destPathBaseDefault]="/dd/this/a"
+    [destPathRel]="13"
+    [srcPath]=""
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=775
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScope/14
+_CommentEnd_
+
+typeset -A pbd_ddPrivScope_14=(
+    [type]=directory
+    [destPathBaseDefault]="/dd/this/a"
+    [destPathRel]="14"
+    [srcPath]=""
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=775
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScope/15
+_CommentEnd_
+
+typeset -A pbd_ddPrivScope_15=(
+    [type]=directory
+    [destPathBaseDefault]="/dd/this/a"
+    [destPathRel]="15"
+    [srcPath]=""
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=775
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScope/16
+_CommentEnd_
+
+typeset -A pbd_ddPrivScope_16=(
+    [type]=directory
+    [destPathBaseDefault]="/dd/this/a"
+    [destPathRel]="16"
+    [srcPath]=""
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=775
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScope/17
+_CommentEnd_
+
+typeset -A pbd_ddPrivScope_17=(
+    [type]=directory
+    [destPathBaseDefault]="/dd/this/a"
+    [destPathRel]="17"
+    [srcPath]=""
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=775
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+
+
+_CommentBegin_
+*      ======[[elisp:(org-cycle)][Fold]]====== ddPrivScopeLinks
+_CommentEnd_
+
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScope/Public
+_CommentEnd_
+
+typeset -A pbd_ddPrivScope_Public=(
+    [type]=directory
+    [destPathBaseDefault]="/dd/this/a"
+    [destPathRel]="Public"
+    [srcPath]="./0"  # SymLinkPath Relative to destPathBase
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=777
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScope/ArchivePublic
+_CommentEnd_
+
+typeset -A pbd_ddPrivScope_ArchivePublic=(
+    [type]=directory
+    [destPathBaseDefault]="/dd/this/a"
+    [destPathRel]="ArchivePublic"
+    [srcPath]="./1"  # SymLinkPath Relative to destPathBase
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=777
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScope/BackupPublic
+_CommentEnd_
+
+typeset -A pbd_ddPrivScope_BackupPublic=(
+    [type]=directory
+    [destPathBaseDefault]="/dd/this/a"
+    [destPathRel]="BackupPublic"
+    [srcPath]="./2"  # SymLinkPath Relative to destPathBase
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=777
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScope/Limited
+_CommentEnd_
+
+typeset -A pbd_ddPrivScope_Limited=(
+    [type]=directory
+    [destPathBaseDefault]="/dd/this/a"
+    [destPathRel]="Limited"
+    [srcPath]="./3"  # SymLinkPath Relative to destPathBase
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=777
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScope/ArchiveLimited
+_CommentEnd_
+
+typeset -A pbd_ddPrivScope_ArchiveLimited=(
+    [type]=directory
+    [destPathBaseDefault]="/dd/this/a"
+    [destPathRel]="ArchiveLimited"
+    [srcPath]="./4"  # SymLinkPath Relative to destPathBase
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=777
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScope/BackupLimited
+_CommentEnd_
+
+typeset -A pbd_ddPrivScope_BackupLimited=(
+    [type]=directory
+    [destPathBaseDefault]="/dd/this/a"
+    [destPathRel]="BackupLimited"
+    [srcPath]="./5"  # SymLinkPath Relative to destPathBase
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=777
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScope/ExternalConfidential
+_CommentEnd_
+
+typeset -A pbd_ddPrivScope_ExternalConfidential=(
+    [type]=directory
+    [destPathBaseDefault]="/dd/this/a"
+    [destPathRel]="ExternalConfidential"
+    [srcPath]="./6"  # SymLinkPath Relative to destPathBase
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=777
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScope/ArchiveExternalConfidential
+_CommentEnd_
+
+typeset -A pbd_ddPrivScope_ArchiveExternalConfidential=(
+    [type]=directory
+    [destPathBaseDefault]="/dd/this/a"
+    [destPathRel]="ArchiveExternalConfidential"
+    [srcPath]="./7"  # SymLinkPath Relative to destPathBase
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=777
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScope/BackupExternalConfidential
+_CommentEnd_
+
+typeset -A pbd_ddPrivScope_BackupExternalConfidential=(
+    [type]=directory
+    [destPathBaseDefault]="/dd/this/a"
+    [destPathRel]="BackupExternalConfidential"
+    [srcPath]="./8"  # SymLinkPath Relative to destPathBase
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=777
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScope/ClientConfidential
+_CommentEnd_
+
+typeset -A pbd_ddPrivScope_ClientConfidential=(
+    [type]=directory
+    [destPathBaseDefault]="/dd/this/a"
+    [destPathRel]="ClientConfidential"
+    [srcPath]="./9"  # SymLinkPath Relative to destPathBase
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=777
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScope/ArchiveClientConfidential
+_CommentEnd_
+
+typeset -A pbd_ddPrivScope_ArchiveClientConfidential=(
+    [type]=directory
+    [destPathBaseDefault]="/dd/this/a"
+    [destPathRel]="ArchiveClientConfidential"
+    [srcPath]="./10"  # SymLinkPath Relative to destPathBase
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=777
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScope/BackupClientConfidential
+_CommentEnd_
+
+typeset -A pbd_ddPrivScope_BackupClientConfidential=(
+    [type]=directory
+    [destPathBaseDefault]="/dd/this/a"
+    [destPathRel]="BackupClientConfidential"
+    [srcPath]="./11"  # SymLinkPath Relative to destPathBase
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=777
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScope/ClusterConfidential
+_CommentEnd_
+
+typeset -A pbd_ddPrivScope_ClusterConfidential=(
+    [type]=directory
+    [destPathBaseDefault]="/dd/this/a"
+    [destPathRel]="ClusterConfidential"
+    [srcPath]="./12"  # SymLinkPath Relative to destPathBase
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=777
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScope/ArchiveClusterConfidential
+_CommentEnd_
+
+typeset -A pbd_ddPrivScope_ArchiveClusterConfidential=(
+    [type]=directory
+    [destPathBaseDefault]="/dd/this/a"
+    [destPathRel]="ArchiveClusterConfidential"
+    [srcPath]="./13"  # SymLinkPath Relative to destPathBase
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=777
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScope/BackupClusterConfidential
+_CommentEnd_
+
+typeset -A pbd_ddPrivScope_BackupClusterConfidential=(
+    [type]=directory
+    [destPathBaseDefault]="/dd/this/a"
+    [destPathRel]="BackupClusterConfidential"
+    [srcPath]="./14"  # SymLinkPath Relative to destPathBase
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=777
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScope/PersonalConfidential
+_CommentEnd_
+
+typeset -A pbd_ddPrivScope_PersonalConfidential=(
+    [type]=directory
+    [destPathBaseDefault]="/dd/this/a"
+    [destPathRel]="PersonalConfidential"
+    [srcPath]="./15"  # SymLinkPath Relative to destPathBase
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=777
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScope/ArchivePersonalConfidential
+_CommentEnd_
+
+typeset -A pbd_ddPrivScope_ArchivePersonalConfidential=(
+    [type]=directory
+    [destPathBaseDefault]="/dd/this/a"
+    [destPathRel]="ArchivePersonalConfidential"
+    [srcPath]="./16"  # SymLinkPath Relative to destPathBase
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=777
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScope/BackupPersonalConfidential
+_CommentEnd_
+
+typeset -A pbd_ddPrivScope_BackupPersonalConfidential=(
+    [type]=directory
+    [destPathBaseDefault]="/dd/this/a"
+    [destPathRel]="BackupPersonalConfidential"
+    [srcPath]="./17"  # SymLinkPath Relative to destPathBase
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=777
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+
+_CommentBegin_
+*      ======[[elisp:(org-cycle)][Fold]]====== /uniform Links Relative mediaTypes
+_CommentEnd_
+
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== uniformRel/mediaTypeAudio  -- /uniform/Audio
+_CommentEnd_
+
+
+typeset -A pbd_uniformRel_mediaTypeAudio=(
+    [type]=directory
+    [destPathBaseDefault]="/uniform"
+    [destPathRel]="Audio"
+    [srcPath]="./3/Audio"  # SymLinkPath Relative to destPathBase
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=777
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== uniformRel/mediaTypeAudioBooks
+_CommentEnd_
+
+
+typeset -A pbd_uniformRel_mediaTypeAudioBooks=(
+    [type]=directory
+    [destPathBaseDefault]="/uniform"
+    [destPathRel]="AudioBooks"
+    [srcPath]="./3/AudioBooks"  # SymLinkPath Relative to destPathBase
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=777
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== uniformRel/mediaTypeVideo
+_CommentEnd_
+
+
+typeset -A pbd_uniformRel_mediaTypeVideo=(
+    [type]=directory
+    [destPathBaseDefault]="/uniform"
+    [destPathRel]="Video"
+    [srcPath]="./3/Video"  # SymLinkPath Relative to destPathBase
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=777
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== uniformRel/mediaTypeDocuments
+_CommentEnd_
+
+
+typeset -A pbd_uniformRel_mediaTypeDocuments=(
+    [type]=directory
+    [destPathBaseDefault]="/uniform"
+    [destPathRel]="Documents"
+    [srcPath]="./3/Documents"  # SymLinkPath Relative to destPathBase
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=777
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== uniformRel/mediaTypeComics
+_CommentEnd_
+
+typeset -A pbd_uniformRel_mediaTypeComics=(
+    [type]=directory
+    [destPathBaseDefault]="/uniform"
+    [destPathRel]="Comics"
+    [srcPath]="./3/Comics"  # SymLinkPath Relative to destPathBase
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=777
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== uniformRel/mediaTypeVMs
+_CommentEnd_
+
+typeset -A pbd_uniformRel_mediaTypeVMs=(
+    [type]=directory
+    [destPathBaseDefault]="/uniform"
+    [destPathRel]="VMs"
+    [srcPath]=""
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=775
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+
+_CommentBegin_
+***      ==[[elisp:(org-cycle)][Fold]]== uniformRel/mediaTypeVMs/Public
+_CommentEnd_
+
+typeset -A pbd_uniformRel_mediaTypeVMs_Public=(
+    [type]=directory
+    [destPathBaseDefault]="/uniform"
+    [destPathRel]="VMs/Public"
+    [srcPath]="./0/lh/bx1/vm"  # SymLinkPath Relative to destPathBase
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=777
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+_CommentBegin_
+***      ==[[elisp:(org-cycle)][Fold]]== uniformRel/mediaTypeVMs/Limited
+_CommentEnd_
+
+typeset -A pbd_uniformRel_mediaTypeVMs_Limited=(
+    [type]=directory
+    [destPathBaseDefault]="/uniform"
+    [destPathRel]="VMs/Limited"
+    [srcPath]="./3/lh/bx1/vm"  # SymLinkPath Relative to destPathBase
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=777
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+
+_CommentBegin_
+***      ==[[elisp:(org-cycle)][Fold]]== uniformRel/mediaTypeVMs/ClusterConfidential
+_CommentEnd_
+
+typeset -A pbd_uniformRel_mediaTypeVMs_ClusterConfidential=(
+    [type]=directory
+    [destPathBaseDefault]="/uniform"
+    [destPathRel]="VMs/ClusterConfidential"
+    [srcPath]="./12/lh/bx1/vm"  # SymLinkPath Relative to destPathBase
+    [owner]=lsipusr
+    [group]=employee
+    [permissions]=777
+    [basePrepFunc]=noOp
+    [baseCleanFunc]=noOp
+    [description]=""
+)
+
+_CommentBegin_
+*      ################
+_CommentEnd_
+
+_CommentBegin_
+*      ======[[elisp:(org-cycle)][Fold]]====== ddPrivScope Functions
+_CommentEnd_
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScopeBases (prepFuncs)
+_CommentEnd_
+
+function vis_ddPrivScopeBasesPrep {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -le 1 ]]
+
+    if [  $# -eq 1 ] ; then
+	baseDir="$1"
+    fi
+    #if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
+
+    opDo vis_pbdListUpdate  pbdList_ddPrivScopeBases
+
+    lpReturn
+}
+
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScopeLinks (prepFuncs)
+_CommentEnd_
+
+function vis_ddPrivScopeBasesPrep {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -le 1 ]]
+
+    if [  $# -eq 1 ] ; then
+	baseDir="$1"
+    fi
+    #if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
+
+    opDo vis_pbdListUpdate  pbdList_ddPrivScopeLinks
+
+    lpReturn
+}
+
+
+_CommentBegin_
+**      ====[[elisp:(org-cycle)][Fold]]==== ddPrivScopeBasesAndLinks
+_CommentEnd_
+
+function vis_ddPrivScopeBasesAndLinksPrep {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -le 1 ]]
+
+    if [  $# -eq 1 ] ; then
+	baseDir="$1"
+    fi
+    #if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
+
+    opDo vis_pbdListUpdate  pbdList_ddPrivScopeBases
+    opDo vis_pbdListUpdate  pbdList_ddPrivScopeLinks
+
+    lpReturn
+}
+
+
+_CommentBegin_
+*      ################      *End Of Editable Text*
+_CommentEnd_
+
+
+####+BEGIN: bx:dblock:bash:end-of-file :type "basic"
+_CommentBegin_
+*      ======[[elisp:(org-cycle)][Fold]]======  /[dblock] -- End-Of-File Controls/
+_CommentEnd_
+#+STARTUP: showall
+#local variables:
+#major-mode: sh-mode
+#fill-column: 90
+# end:
+####+END:
+
+
+
+
+
