@@ -160,7 +160,7 @@ $( examplesSeperatorSection "UsageEnv -- Full Use BPO" )
 ${G_myName} ${extraInfo} -i usgBpos_usageEnvs_fullUse_update ${oneFullUse} # Main Entry -- Sets 
 ${G_myName} ${extraInfo} -i usgBpos_usageEnvs_fullUse_bxoPath # Main Entry -- Gets
 ${G_myName} ${extraInfo} -i usgBpos_usageEnvs_fullUse_bxoId
-$( examplesSeperatorSection "AAIS BPOs -- Asserted  BPO" )
+$( examplesSeperatorSection "AAIS BPOs -- Asserted Autonomy Internet Services  BPO" )
 ${G_myName} ${extraInfo} -i usgBpos_aais_byname_bxoId_fpWrite ${oneAaipByname} # Low Level Function
 ${G_myName} ${extraInfo} -i usgBpos_aais_byname_bxoId_fpRead 
 ${G_myName} ${extraInfo} -i usgBpos_aais_byname_update ${oneAaipByname} # Main Entry -- Sets 
@@ -170,6 +170,10 @@ $( examplesSeperatorSection "LCNT Bases BPOs -- LCNT (Libre-Halaal Content)  BPO
 ${G_myName} ${extraInfo} -i usgBpos_lcntBases_update pip_credsSpecify # Main Entry -- Sets 
 ${G_myName} ${extraInfo} -i usgBpos_lcntBases_bxoPath # Main Entry -- Gets
 ${G_myName} ${extraInfo} -i usgBpos_lcntBases_bxoId
+$( examplesSeperatorSection "Site Configs BPOs -- Site Confihurations BPO" )
+${G_myName} ${extraInfo} -i usgBpos_siteConfigs_update pip_TBD # Main Entry -- Sets 
+${G_myName} ${extraInfo} -i usgBpos_siteConfigs_bxoPath # Main Entry -- Gets
+${G_myName} ${extraInfo} -i usgBpos_siteConfigs_bxoId
 $( examplesSeperatorSection "Credentials BPOs -- Credentials (External Accounts)  BPO" )
 ${G_myName} ${extraInfo} -i usgBpos_credentials_update pip_credsSpecify # Main Entry -- Sets 
 ${G_myName} ${extraInfo} -i usgBpos_credentials_bxoPath # Main Entry -- Gets
