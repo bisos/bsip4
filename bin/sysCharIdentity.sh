@@ -106,12 +106,13 @@ typeset -t bxoId=""
 # usg=""
 
 function G_postParamHook {
-    bxoIdPrepValidate    
-
     if [ ! -z "${bxoId}" ] ; then
-     	bxoHome=$( FN_absolutePathGet ~${bxoId} )
+	bxoIdPrepValidate    
+
+	if [ ! -z "${bxoId}" ] ; then
+     	    bxoHome=$( FN_absolutePathGet ~${bxoId} )
+	fi
     fi
-    
     bisosCurrentsGet
 }
 

@@ -48,7 +48,6 @@ _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
 _CommentEnd_
 
-
 function sansTargetName {
     echo $1 | sed -e 's/-p targetName=.* //' -e 's/-p targetName=.*$//'
 }
