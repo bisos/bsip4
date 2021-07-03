@@ -103,6 +103,7 @@ _EOF_
 
 function vis_moduleDescription {
   cat  << _EOF_
+On Android, from appstore get Kore.
 _EOF_
 }
 

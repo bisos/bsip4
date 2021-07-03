@@ -652,6 +652,84 @@ _EOF_
 }
 
 
+function vis_usgBpos_siteConfigs_bxoId_fpWrite {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** 
+_EOF_
+		      }
+    EH_assert [[ $# -eq 1 ]]
+    local bxoIdValue=$1
+
+    bxoIdValue=$(bxoIdPrep ${bxoIdValue})
+    EH_assert [ ! -z ${bxoIdValue} ]
+
+    local curUsgBposBase=$( vis_curUsgBposBase )
+    lpDo mkdir -p ${curUsgBposBase}/sites
+    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/sites siteConfigs.bpoFp ${bxoIdValue}
+}
+
+function vis_usgBpos_siteConfigs_bxoId_fpRead {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** returns on stdout: 
+_EOF_
+		      }
+    EH_assert [[ $# -eq 0 ]]
+
+    local curUsgBposBase=$( vis_curUsgBposBase )
+    
+    local resultBxoId=$( fileParamManage.py -i fileParamRead  ${curUsgBposBase}/sites siteConfigs.bpoFp )
+    EH_assert [ ! -z "${resultBxoId}" ]
+
+    echo ${resultBxoId}
+}
+
+
+function vis_usgBpos_siteConfigs_update {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 1 ]]
+   local bxoIdValue=$1
+
+   bxoIdValue=$(lpDo bxoIdPrep ${bxoIdValue})
+   EH_assert [ ! -z "${bxoIdValue}" ]
+
+   bxoPath=$(lpDo vis_bxoPathObtainForBxoId "${bxoIdValue}")
+   EH_assert [ ! -z "${bxoIdValue}" ]
+   
+   local curUsgBposBase=$(lpDo vis_curUsgBposBase)
+
+   lpDo vis_usgBpos_siteConfigs_bxoId_fpWrite ${bxoIdValue}
+   lpDo FN_fileSymlinkUpdate ${bxoPath} ${curUsgBposBase}/sites/siteConfigs
+}
+
+
+function vis_usgBpos_siteConfigs_bxoPath {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 0 ]]
+   local curUsgBposBase=$(lpDo vis_curUsgBposBase)   
+   EH_assert [ -e ${curUsgBposBase}/sites/siteConfigs ]
+   lpDo FN_absolutePathGet ${curUsgBposBase}/sites/siteConfigs
+}
+
+
+function vis_usgBpos_siteConfigs_bxoId {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 0 ]]
+   local bxoId=$(lpDo vis_usgBpos_siteConfigs_bxoId_fpRead)
+   echo ${bxoId}
+}
+
+
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*
