@@ -19,12 +19,15 @@ __author__="
 "
 
 
-####+BEGIN: bx:dblock:lsip:bash:seed-spec :types "seedPlatformBaseDirs.sh"
+####+BEGIN: bx:bsip:bash:seed-spec :types "seedPlatformBaseDirs.sh"
 SEED="
-*  /[dblock]/ /Seed/: [[file:/opt/public/osmt/bin/seedPlatformBaseDirs.sh]] | 
+*  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedPlatformBaseDirs.sh]] | 
+"
+FILE="
+*  /This File/ :: /bisos/bsip/bin/sitePlatformBaseDirs.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
-    /opt/public/osmt/bin/seedPlatformBaseDirs.sh -l $0 "$@" 
+    /bisos/core/bsip/bin/seedPlatformBaseDirs.sh -l $0 "$@" 
     exit $?
 fi
 ####+END:
@@ -875,6 +878,7 @@ _CommentBegin_
 
 _CommentEnd_
 
+remoteDirBase="NOTYET"
 #remoteDirBase="/dd/net/bisp0014"
 #remoteDirBase="/dd/net/bisp0017"
 

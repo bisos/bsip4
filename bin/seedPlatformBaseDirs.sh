@@ -19,15 +19,15 @@ __author__="
 "
 
 
-####+BEGIN: bx:dblock:lsip:bash:seed-spec :types "seedActions.bash"
+####+BEGIN: bx:bsip:bash:seed-spec :types "seedActions.bash"
 SEED="
-*  /[dblock]/ /Seed/ :: [[file:/opt/public/osmt/bin/seedActions.bash]] | 
+*  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
 "
 FILE="
-*  /This File/ :: /opt/public/osmt/bin/seedPlatformBaseDirs.sh 
+*  /This File/ :: /bisos/core/bsip/bin/seedPlatformBaseDirs.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
-    /opt/public/osmt/bin/seedActions.bash -l $0 "$@" 
+    /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
     exit $?
 fi
 ####+END:
@@ -267,7 +267,8 @@ _EOF_
     pbd_permissions=$( eval echo '$'{${thisItem}[permissions]} )
     pbd_basePrepFunc=$( eval echo '$'{${thisItem}[basePrepFunc]} )
     pbd_baseCleanFunc=$( eval echo '$'{${thisItem}[baseCleanFunc]} )
-    pbd_description=$( eval echo '$'{${thisItem}[urlDescription]} )
+    pbd_description=$( eval echo '$'{${thisItem}[description]} )
+    #pbd_description=$( eval echo '$'{${thisItem}[urlDescription]} )    
 
     lpReturn 0
 }

@@ -19,12 +19,15 @@ __author__="
 "
 
 
-####+BEGIN: bx:dblock:lsip:bash:seed-spec :types "seedSubjectBinsPrepDist.sh"
+####+BEGIN: bx:bsip:bash:seed-spec :types "seedSubjectBinsPrepDist.sh"
 SEED="
-* /[dblock]/--Seed/: /opt/public/osmt/bin/seedSubjectBinsPrepDist.sh
+*  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedSubjectBinsPrepDist.sh]] | 
+"
+FILE="
+*  /This File/ :: /bisos/bsip/bin/lcaKodiBinsPrep.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
-    /opt/public/osmt/bin/seedSubjectBinsPrepDist.sh -l $0 "$@" 
+    /bisos/core/bsip/bin/seedSubjectBinsPrepDist.sh -l $0 "$@" 
     exit $?
 fi
 ####+END:
@@ -72,7 +75,7 @@ _EOF_
     #  [[elisp:(lsip-local-run-command "apt-cache search something | egrep '^something'")][apt-cache search something | egrep '^something']]
 
     itemOrderedList=( 
-	"kodi_stableAddRepo" 
+	# "kodi_stableAddRepo" 
 	"kodi" 
 	"kodi_addOns" 
     )
@@ -154,7 +157,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    sudo apt-get install kodi-audioencoder-* kodi-pvr-*
+    sudo apt-get -y install kodi-audioencoder-* kodi-pvr-*
 
     lpReturn
 }
