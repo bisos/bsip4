@@ -174,7 +174,7 @@ _EOF_
     cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Site Container Bases" )
-${G_myName} ${extraInfo} -i scs_basicBxoRealize  # FULL ACTION -- PRIMARY COMMAND
+${G_myName} ${extraInfo} -i scs_basicBxoRealize _bxoName_  # FULL ACTION -- PRIMARY COMMAND
 ${G_myName} ${extraInfo} -i scs_fullBxoRealize
 _EOF_
 
