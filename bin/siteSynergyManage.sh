@@ -173,6 +173,7 @@ $( examplesSeperatorSection "INFORMATION" )
 ${G_myName} ${extraInfo} -i moduleDescription | emlVisit
 ls -l ~/.quicksynergy/quicksynergy.conf 
 ls -l ~/.quicksynergy/synergy.conf 
+synergys --config ~pip_clusterNeda-configs/synergy/servers/default/synergyScreensTopology.config --name center --debug INFO --log /tmp/synergys.log --no-daemon
 _EOF_
 }
 
