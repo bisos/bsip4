@@ -148,11 +148,11 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Site Information" )
 ${G_myName} ${extraInfo} -i siteConfigInfo
-$( examplesSeperatorChapter "Synergy Management Facilities" )
-$( examplesSeperatorSection "INFORMATION" )
-${G_myName} ${extraInfo} -i moduleDescription | emlVisit
-ls -l ~/.quicksynergy/quicksynergy.conf 
-ls -l ~/.quicksynergy/synergy.conf 
+${G_myName} ${extraInfo} -i siteClientConfigInfo      # Display Side -- Keyboards List
+${G_myName} ${extraInfo} -i siteDisplayConfigInfo     # Laptop/Keyboard Side -- Display Locations
+$( examplesSeperatorChapter "Synergy GUI" )
+synergy  # Only use it for creation/edition of config file
+$( examplesSeperatorChapter "On Display Side -- Run Synergy Clients" )
 $( examplesSeperatorSection "PROCESSS" )
 ps -ef | grep -i synergyc
 ps -fp \$( echo \$( pgrep synergyc) )
@@ -168,6 +168,11 @@ ${G_myName} ${extraInfo} -i synergycStart
 ${G_myName} ${extraInfo} -i synergycStop
 ${G_myName} ${extraInfo} -i synergycStatus
 ${G_myName} ${extraInfo} -i synergycLogs
+$( examplesSeperatorChapter "On Laptop/Keyboard Side -- Run Synergy Server" )
+$( examplesSeperatorSection "INFORMATION" )
+${G_myName} ${extraInfo} -i moduleDescription | emlVisit
+ls -l ~/.quicksynergy/quicksynergy.conf 
+ls -l ~/.quicksynergy/synergy.conf 
 _EOF_
 }
 
@@ -178,8 +183,6 @@ noArgsHook() {
 _CommentBegin_
 *      ======[[elisp:(org-cycle)][Fold]]====== Synergyc Start/Stop/Status/Logs
 _CommentEnd_
-
-
 
 
 function vis_siteConfigInfo {
@@ -193,7 +196,20 @@ _EOF_
     local siteConfigs_bxoId=$(lpDo vis_usgBpos_siteConfigs_bxoId)
 
     ANT_raw "usgBpos_siteConfigs_bxoPath=${siteConfigs_bxoPath}"
-    ANT_raw "usgBpos_siteConfigs_bxoId=${siteConfigs_bxoId}"    
+    ANT_raw "usgBpos_siteConfigs_bxoId=${siteConfigs_bxoId}"
+
+    EH_assert [ -n "${siteConfigs_bxoId}" ]
+    
+    local synergyBase="${siteConfigs_bxoPath}/synergy"
+
+    EH_assert [ -d "${synergyBase}" ]
+
+    local synergyDefaultServersConfigFile=${synergyBase}/servers/default/synergy.conf
+
+    EH_assert [ -f "${synergyServersConfigFile}" ]
+
+    local synergyClientsAvailableServers=${synergyBase}/clients/availableServers
+    
 }
 
 
