@@ -142,7 +142,7 @@ function vis_examples {
 $( examplesSeperatorChapter "Chrome OS Specific Facilities" )
 $( examplesSeperatorSection "Identify ChromeOs" )
 ${G_myName} ${extraInfo} -i runningInChromeOsContainer # are we running in ChromeOs
-${G_myName} ${extraInfo} -i runSshdAt3333
+${G_myName} ${extraInfo} -i sshd_runAt3333
 ssh -X -p 3333 bystar@localhost
 _EOF_
 
@@ -162,21 +162,38 @@ _EOF_
 		       }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert [ ! vis_runningInChromeOsContainer ]
+    EH_assert [ vis_runningInChromeOsContainer ]
 
     lpDo sudo apt-get -y install ssh
 
-    if [ -f /etc/ssh/sshd/ccc ] ; then
-	lpDo echo mv xxx
+
+    if [ -f /etc/ssh/sshd_not_to_be_run ] ; then
+	lpDo mv /etc/ssh/sshd_not_to_be_run /etc/ssh/sshd_not_to_be_run.orig
     else
-	ANT_raw "inplace, nothing done"
+	ANT_raw "/etc/ssh/sshd_not_to_be_run not found -- moving skipped"
     fi
 
-    echo line fix in sshd.config
+    local sshdConfigFile="/etc/ssh/sshd_config"
 
-    lpDo sudo service sshd restart
+    local port22=$(lpDo egrep '^#Port' "${sshdConfigFile}")
+    local restartNeeded=""
 
+    if [ -z "${port22}" ] ; then
+	ANT_raw "Port Nu Already Changed To:"
+	egrep '^Port' "${sshdConfigFile}"
+    else
+	lpDo cp "${sshdConfigFile}" "${sshdConfigFile}.orig"
+	lpDo FN_textReplace "^#Port .*" "Port 3333" "${sshdConfigFile}"
+	restartNeeded="true"
+    fi
+
+    if [ -n "${restartNeeded}" ] ; then
+	lpDo sudo echo service sshd restart
+    fi
+    
     lpDo sudo service sshd status
+
+    lpDo vis_sshd_portForwardTo3333
     
     lpReturn
 }
@@ -191,7 +208,7 @@ _EOF_
 		       }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert [ ! vis_runningInChromeOsContainer ]
+    EH_assert [ vis_runningInChromeOsContainer ]
 
     lpDo describeF
     
