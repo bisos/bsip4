@@ -197,7 +197,7 @@ sysCharPreps.sh -h -v -n showRun -i fullUpdate
 $( examplesSeperatorChapter "Pure Container Actions" )
 $( examplesSeperatorChapter "Manual BISOS Installation (Site Niched Below)" )
 ${G_myName} -i initialBisosBoxInstall
-${G_myName} -i androidGuestBisosInstall
+${G_myName} -i chromeOsDebianBisosInstall
 _EOF_
   
      vis_examplesNicheRun site
@@ -259,7 +259,7 @@ _EOF_
 }
 
 
-function vis_androidGuestBisosInstall {
+function vis_chromeOsDebianBisosInstall {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_

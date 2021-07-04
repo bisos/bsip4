@@ -135,7 +135,7 @@ ${G_myName} -i boxNuGetNext
 $( examplesSeperatorChapter "Common Facilities" )
 ${G_myName} -i boxNuToBoxId "$( vis_thisBoxFindNu )"
 $( examplesSeperatorChapter "Android Container Specific Facilities" )
-${G_myName} -v -i runningInAndroidContainer
+${G_myName} -v -i runningInChromeOsContainer
 ${G_myName} -i thisBoxUUID  # Should be based on Mac Address
 _EOF_
 }
