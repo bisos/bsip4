@@ -147,6 +147,7 @@ ${G_myName} ${extraInfo} -i sshd_runAt3333
 sudo service sshd restart
 sudo service sshd status
 ssh -X -p 3333 bystar@localhost
+${G_myName} ${extraInfo} -i functionKeys
 _EOF_
 
 }
@@ -211,7 +212,40 @@ _EOF_
 		       }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert [ vis_runningInChromeOsContainer ]
+    lpDo describeF
+    
+    lpReturn
+}
+
+
+function vis_sshd_portForwardTo3333 {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Function Keys
+
+If you have a need for F-keys, don’t fret, you can convert your Chromebook’s shortcut keys
+into F-keys by following these steps:
+
+*** Click the Settings panel in the bottom right corner of your Chromebook screen.
+
+*** In the resulting Settings menu, choose Settings.
+
+This loads your Chromebook settings into a Chrome browser window.
+
+*** Scroll down to the Device section and click Keyboard Settings.
+
+This loads the Keyboard Settings overlay.
+
+*** Check the Treat Top-Row Keys as Function Keys checkbox.
+
+*** Click OK.
+
+This disables the shortcut functionality of your Chromebook’s shortcut keys and enables
+their function as F-keys.
+
+_EOF_
+		       }
+    EH_assert [[ $# -eq 0 ]]
 
     lpDo describeF
     
