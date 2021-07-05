@@ -110,6 +110,7 @@ typeset -t correspondingBxo=""
 
 
 function G_postParamHook {
+    lpReturn
     bxoIdPrepValidate    
 
     if [ ! -z "${bxoId}" ] ; then
@@ -143,6 +144,8 @@ $( examplesSeperatorChapter "Chrome OS Specific Facilities" )
 $( examplesSeperatorSection "Identify ChromeOs" )
 ${G_myName} ${extraInfo} -i runningInChromeOsContainer # are we running in ChromeOs
 ${G_myName} ${extraInfo} -i sshd_runAt3333
+sudo service sshd restart
+sudo service sshd status
 ssh -X -p 3333 bystar@localhost
 _EOF_
 
@@ -188,7 +191,7 @@ _EOF_
     fi
 
     if [ -n "${restartNeeded}" ] ; then
-	lpDo sudo echo service sshd restart
+	lpDo sudo service sshd restart
     fi
     
     lpDo sudo service sshd status

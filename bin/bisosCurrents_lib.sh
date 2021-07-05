@@ -101,8 +101,10 @@ function lpCurrentsGet {
     typeset acctsList=$( bxoAcctsList )
 
     if [ -z "${acctsList}" ] ; then
-	EH_problem "Missing bxoAcctsList"
-	lpReturn 101
+	#EH_problem "Missing bxoAcctsList"
+	currentBxoId=""
+	#lpReturn 101
+	lpReturn
     fi
 
     if [ "${currentBxoId}" == "" ] ; then
