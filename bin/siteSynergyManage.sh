@@ -163,6 +163,7 @@ $( examplesSeperatorSection "DISPLAY CLIENT CONNECTS: (Each)" )
 /usr/bin/synergyc -f --name bisp0001 192.168.0.143  # Mohsen laptop
 /usr/bin/synergyc -f --name bisp0001 192.168.0.183  # Main Desktop
 /usr/bin/synergyc -f --name bue0010 192.168.0.183   # Main Desktop
+synergyc --debug INFO --log /tmp/synergyc.log --name dinningroom --no-daemon 192.168.0.81
 $( examplesSeperatorSection "DISPLAY CLIENT CONNECTS: (All Clients)" )
 ${G_myName} ${extraInfo} -i synergycStart
 ${G_myName} ${extraInfo} -i synergycStop
