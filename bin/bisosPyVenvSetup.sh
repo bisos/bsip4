@@ -80,6 +80,10 @@ ${G_myName} ${extraInfo} -i venvPy2_pipInstalls
 ${G_myName} ${extraInfo} -i venvPy3_pipInstalls
 ${G_myName} ${extraInfo} -i venvPy2Dev_pipInstalls
 ${G_myName} ${extraInfo} -i venvPy3Dev_pipInstalls
+${pdb_venv_py2Bisos3}/bin/pip2 list --outdated --format=freeze 
+${pdb_venv_py2Bisos3}/bin/pip2 list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 ${pdb_venv_py2Bisos3}/bin/pip2 install --upgrade
+pip2 list --outdated --format=freeze 
+pip list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
 _EOF_
 }
 
