@@ -842,8 +842,11 @@ _EOF_
 	local here=$(pwd)
 	local repoName=$@
 
-	EH_assert [ -d ./rbxe ] 
-	lpDo pushd ./rbxe > /dev/null
+	local oneExistingRepo=$(lpDo eval ls \| head -1)
+	EH_assert [ -n "${oneExistingRepo}" ]
+
+	EH_assert [ -d "${oneExistingRepo}" ] 
+	lpDo pushd "${oneExistingRepo}" > /dev/null
 	fetchUrl=$( git remote show origin | grep 'Fetch URL' | cut -d ':' -f 2-100 | xargs uriParseStdout.py )
 	remoteHostName=$( printf "${fetchUrl}" | grep -i hostname | cut -d '=' -f 2 )    
 	remoteGitPath=$( printf "${fetchUrl}" | grep -i path | cut -d '=' -f 2 )
@@ -921,8 +924,11 @@ _EOF_
 	local here=$(pwd)
 	local repoName=$@
 
-	EH_assert [ -d ./rbxe ] 
-	lpDo pushd ./rbxe > /dev/null
+	local oneExistingRepo=$(lpDo eval ls \| head -1)
+	EH_assert [ -n "${oneExistingRepo}" ]
+
+	EH_assert [ -d "${oneExistingRepo}" ] 
+	lpDo pushd "${oneExistingRepo}" > /dev/null
 	fetchUrl=$( git remote show origin | grep 'Fetch URL' | cut -d ':' -f 2-100 | xargs uriParseStdout.py )
 	remoteHostName=$( printf "${fetchUrl}" | grep -i hostname | cut -d '=' -f 2 )    
 	remoteGitPath=$( printf "${fetchUrl}" | grep -i path | cut -d '=' -f 2 )
