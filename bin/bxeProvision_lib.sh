@@ -865,9 +865,9 @@ _EOF_
     fi
 
     #local bxeDescRegFile=$( vis_startToPrivReg 2> /dev/null )
-    local bxeDescRegFile=$( vis_startToPrivReg )
+    local bxeDescRegFile=$(lpDo vis_startToPrivReg)
     
-    local bxeDescFile=$( bxeDescManage.sh ${G_commandOptions} -p bxeDesc="${bxeDescRegFile}" -i bxeDescStash )
+    local bxeDescFile=$(lpDo bxeDescManage.sh ${G_commandOptions} -p bxeDesc="${bxeDescRegFile}" -i bxeDescStash)
 
     lpDo bxeRealize.sh ${G_commandOptions} -p bxeDesc="${bxeDescFile}" -i fullRealize "${bxoRealizationScope}"
 }
