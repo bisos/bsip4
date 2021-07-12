@@ -1203,13 +1203,13 @@ _EOF_
 	    lpDo sysCharConveyInfoWrite securityMode "${cfpSecurityMode}"
 	fi
 
+	if [ ! -z "${cfpPrivA}" ] ; then
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} ipAddr_privA "${cfpPrivA}"
+	fi
+	if [ ! -z "${cfpPubA}" ] ; then
+	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} ipAddr_pubA "${cfpPubA}"
+	fi
 	
-	# if [ ! -z "${cfpPrivA}" ] ; then
-	#     lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} ipAddr_privA "${cfpPrivA}"
-	# fi
-	# if [ ! -z "${cfpPubA}" ] ; then
-	#     lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} ipAddr_pubA "${cfpPubA}"
-	# fi
 	# if [ ! -z "${cfpPrivGit}" ] ; then
 	#     lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} privGit "${privGit}"
 	# fi

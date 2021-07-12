@@ -143,16 +143,36 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
+    local oneServerBpo=$(vis_siteSynergyServersAvailable | head -1)
+    local oneClientBpo=$(vis_siteSynergyClientsAvailable | head -1)    
+
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
-$( examplesSeperatorChapter "Site Information" )
+$( examplesSeperatorChapter "Site Synergy Servers And Clients Information" )
 ${G_myName} ${extraInfo} -i siteConfigInfo
-${G_myName} ${extraInfo} -i siteClientConfigInfo      # Display Side -- Keyboards List
-${G_myName} ${extraInfo} -i siteDisplayConfigInfo     # Laptop/Keyboard Side -- Display Locations
+${G_myName} ${extraInfo} -i siteSynergyBase    # $(vis_siteSynergyBase)
+${G_myName} ${extraInfo} -i siteSynergyServersBase
+${G_myName} ${extraInfo} -i siteSynergyClientsBase
+${G_myName} -i siteSynergyServersAvailable   # Laptop/Keyboard Side -- Needs Display Locations
+${G_myName} -i siteSynergyClientsAvailable    # Display Side -- Needs Keyboards List
+$( examplesSeperatorChapter "Activate Synergy Servers And Clients BPOs" )
+${G_myName} -i siteSynergyServersAvailable | bxoActivate.sh -i bpoActivate
+${G_myName} -i siteSynergyClientsAvailable | bxoActivate.sh -i bpoActivate
 $( examplesSeperatorChapter "Synergy GUI" )
 synergy  # Only use it for creation/edition of config file
-$( examplesSeperatorChapter "On Display Side -- Run Synergy Clients" )
+$( examplesSeperatorChapter "BxContainer Synergy Features" )
+${G_myName} ${extraInfo} -p bxoId=${oneServerBpo} -i bxCntnr_synergy_featureBase
+${G_myName} ${extraInfo} -p bxoId=${oneServerBpo} -i bxCntnr_synergy_server_screensTopologyFile
+${G_myName} ${extraInfo} -p bxoId=${oneClientBpo} -i bxCntnr_synergy_client_screenName
+${G_myName} ${extraInfo} -p bxoId=${oneClientBpo} -i bxCntnr_synergy_client_serversBpos
+${G_myName} ${extraInfo} -p bxoId=${oneClientBpo} -i bxCntnr_synergy_client_serversIpAddrs
+${G_myName} ${extraInfo} -i listBposAtBaseSansAvailable ~pip_clusterNeda-configs/synergy/clients/available
+${G_myName} -p bxoId=${oneClientBpo} -i bxCntnr_synergy_client_serversBpos
+$( examplesSeperatorChapter "Container On Display Side -- Run Synergy Clients" )
+${G_myName} ${extraInfo} -p bxoId=sysChar -i containerStartUpStdout
+${G_myName} ${extraInfo} -p bxoId=${oneServerBpo} -i containerStartUpStdout
+${G_myName} ${extraInfo} -p bxoId=${oneClientBpo} -i containerStartUpStdout
 $( examplesSeperatorSection "PROCESSS" )
 ps -ef | grep -i synergyc
 ps -fp \$( echo \$( pgrep synergyc) )
@@ -206,14 +226,103 @@ _EOF_
 
     EH_assert [ -d "${synergyBase}" ]
 
-    local synergyDefaultServersConfigFile=${synergyBase}/servers/default/synergy.conf
+    # ~pip_clusterNeda-configs/synergy/servers/defaults/synergyScreensTopology.config
+    local synergyDefaultServersConfigFile=${synergyBase}/servers/defaults/synergyScreensTopology.config
 
-    EH_assert [ -f "${synergyServersConfigFile}" ]
+    EH_assert [ -f "${synergyDefaultServersConfigFile}" ]
+
+    ANT_raw "synergyDefaultServersConfigFile=${synergyDefaultServersConfigFile}"
 
     local synergyClientsAvailableServers=${synergyBase}/clients/availableServers
     
 }
 
+function vis_siteSynergyBase {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local siteConfigs_bxoPath=$(lpDo vis_usgBpos_siteConfigs_bxoPath)
+    local siteConfigs_bxoId=$(lpDo vis_usgBpos_siteConfigs_bxoId)
+
+    EH_assert [ -n "${siteConfigs_bxoId}" ]
+    
+    local synergyBase="${siteConfigs_bxoPath}/synergy"
+
+    EH_assert [ -d "${synergyBase}" ]
+
+    echo "${synergyBase}"
+}
+
+
+function vis_siteSynergyServersBase {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local synergyBase="$(vis_siteSynergyBase)"
+    EH_assert [ -d "${synergyBase}" ]
+
+    local synergyServersBase="${synergyBase}/servers"
+    EH_assert [ -d "${synergyServersBase}" ]    
+
+    echo "${synergyServersBase}"
+}
+
+function vis_siteSynergyClientsBase {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local synergyBase="$(vis_siteSynergyBase)"
+    EH_assert [ -d "${synergyBase}" ]
+
+    local synergyClientsBase="${synergyBase}/clients"
+    EH_assert [ -d "${synergyClientsBase}" ]    
+
+    echo "${synergyClientsBase}"
+}
+
+function vis_siteSynergyServersAvailable {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+** For example ~pip_clusterNeda-configs/synergy/servers/available
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local synergyServersBase="$(vis_siteSynergyServersBase)"
+    EH_assert [ -d "${synergyServersBase}" ]
+
+    local synergyServersAvailable="${synergyServersBase}/available"
+    EH_assert [ -d "${synergyServersAvailable}" ]    
+
+    inBaseDirDo ${synergyServersAvailable} ls -1
+}
+
+
+function vis_siteSynergyClientsAvailable {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+** For example ~pip_clusterNeda-configs/synergy/clients/available
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local synergyClientsBase="$(vis_siteSynergyClientsBase)"
+    EH_assert [ -d "${synergyClientsBase}" ]
+
+    local synergyClientsAvailable="${synergyClientsBase}/available"
+    EH_assert [ -d "${synergyClientsAvailable}" ]    
+
+    inBaseDirDo ${synergyClientsAvailable} ls -1
+}
 
 
 function vis_synergycStart {
@@ -281,6 +390,149 @@ _EOF_
 
     lpReturn
 }
+
+function vis_containerStartUpStdout {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert bxoIdPrep
+
+    echo ${bxoId}
+
+    lpReturn
+}
+
+
+function vis_bxCntnr_synergy_featureBase {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert bxoIdPrep
+
+    # echo ${bxoId} ${bxoHome}
+    local bxCntnrBase=${bxoHome}
+    EH_assert [ -d "${bxCntnrBase}" ]
+
+    local bxCntnrSvcsSpecBase=${bxoHome}/svcsSpec
+    EH_assert [ -d "${bxCntnrSvcsSpecBase}" ]
+
+    if [ -d "${bxCntnrSvcsSpecBase}/synergyServer" ] ; then
+	echo "${bxCntnrSvcsSpecBase}/synergyServer"
+    elif [ -d "${bxCntnrSvcsSpecBase}/synergyClient" ] ; then
+       	echo "${bxCntnrSvcsSpecBase}/synergyClient"
+    else
+	echo "synergyNone"
+    fi
+
+    lpReturn
+}
+
+function vis_bxCntnr_synergy_server_screensTopologyFile {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert bxoIdPrep
+
+    local synergyServerBase=$(lpDo vis_bxCntnr_synergy_featureBase)
+    EH_assert [ -d "${synergyServerBase}" ]
+
+    local screensTopologyFile=$(lpDo fileParamManage.py -v 30 -i fileParamRead  "${synergyServerBase}/screensTopology" siteDefault )
+    EH_assert [ -e "${screensTopologyFile}" ]
+
+    echo "${screensTopologyFile}"
+
+    lpReturn
+}
+
+function vis_bxCntnr_synergy_client_screenName {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert bxoIdPrep
+
+    local synergyClientBase=$(lpDo vis_bxCntnr_synergy_featureBase)
+    EH_assert [ -d "${synergyClientBase}" ]
+
+    local screenName=$(lpDo fileParamManage.py -v 30 -i fileParamRead  "${synergyClientBase}" screenName )
+
+    echo "${screenName}"
+
+    lpReturn
+}
+
+function vis_listBposAtBaseSansAvailable {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+    local baseDir=$1
+
+    local bposList=$(inBaseDirDo "${baseDir}" ls | grep -v available)
+
+    echo ${bposList}
+    
+    lpReturn
+}
+
+
+function vis_bxCntnr_synergy_client_serversBpos {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert bxoIdPrep
+
+    local synergyClientBase=$(lpDo vis_bxCntnr_synergy_featureBase)
+    EH_assert [ -d "${synergyClientBase}" ]
+
+    local synergyClientServersBase=${synergyClientBase}/servers
+    EH_assert [ -d "${synergyClientServersBase}" ]
+    
+    if [ -d "${synergyClientServersBase}/availableServers" ] ; then
+	local availableServers=$(lpDo fileParamManage.py -v 30 -i fileParamRead  "${synergyClientServersBase}" availableServers)
+	EH_assert [ -n "${availableServers}" ]
+	lpDo vis_listBposAtBaseSansAvailable "${availableServers}"
+    fi
+
+    lpDo vis_listBposAtBaseSansAvailable "${synergyClientServersBase}"
+
+    lpReturn
+}
+
+function vis_bxCntnr_synergy_client_serversIpAddrs {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert bxoIdPrep
+
+    local synergyClientBase=$(lpDo vis_bxCntnr_synergy_featureBase)
+    EH_assert [ -d "${synergyClientBase}" ]
+
+    local screenName=$(lpDo fileParamManage.py -v 30 -i fileParamRead  "${synergyClientBase}" screenName )
+
+    echo "${screenName}"
+
+    lpReturn
+}
+
 
 
 _CommentBegin_
