@@ -150,6 +150,7 @@ function vis_examples {
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Site Synergy Servers And Clients Information" )
+${G_myName} ${extraInfo} -i moduleDescription | emlVisit
 ${G_myName} ${extraInfo} -i siteConfigInfo
 ${G_myName} ${extraInfo} -i siteSynergyBase    # $(vis_siteSynergyBase)
 ${G_myName} ${extraInfo} -i siteSynergyServersBase
@@ -175,33 +176,31 @@ ${G_myName} ${extraInfo} -p bxoId=sysChar -i containerStartUpStdout  # Main Entr
 ${G_myName} ${extraInfo} -p bxoId=${oneServerBpo} -i containerStartUpStdout
 ${G_myName} ${extraInfo} -p bxoId=${oneClientBpo} -i containerStartUpStdout
 ${G_myName} ${extraInfo} -p bxoId=${oneServerBpo} -i serverStartUpStdout
-${G_myName} ${extraInfo} -p bxoId=${oneClientBpo} -i clientStartUpStdout
+${G_myName} ${extraInfo} -p bxoId=${oneClientBpo} -i clientsStartUpStdout
 ${G_myName} ${extraInfo} -p bxoId=${oneServerBpo} -i serverStartUpStdout | xargs -I {} sh -c "{}"
-${G_myName} ${extraInfo} -p bxoId=${oneClientBpo} -i clientStartUpStdout | xargs -I {} sh -c "{}"
+${G_myName} ${extraInfo} -p bxoId=${oneClientBpo} -i clientsStartUpStdout | xargs -I {} sh -c "{}"
 ${G_myName} ${extraInfo} -p bxoId=${oneServerBpo} -i containerStartUpRun  # Server
 ${G_myName} ${extraInfo} -p bxoId=${oneClientBpo} -i containerStartUpRun  # Client
 $( examplesSeperatorSection "PROCESSS" )
 ps -ef | grep -i synergyc
 ps -fp \$( echo \$( pgrep synergyc) )
-ps -fp $( echo $( pgrep synergyc) )
-ps -fp \$( pgrep synergys)
+ps -fp $( echo $( pgrep synergyc) ) | cat  # running clients processes details
+ps -fp \$( pgrep synergys) | cat   # running server process details
 $( examplesSeperatorSection "DISPLAY CLIENT CONNECTS: (Each)" )
-/usr/bin/synergyc -f --name bisp0001 192.168.0.139  # Darshi ASUS
-/usr/bin/synergyc -f --name bisp0001 192.168.0.143  # Mohsen laptop
-/usr/bin/synergyc -f --name bisp0001 192.168.0.183  # Main Desktop
-/usr/bin/synergyc -f --name bue0010 192.168.0.183   # Main Desktop
 synergyc --debug INFO --log /tmp/synergyc.log --name dinningroom --no-daemon 192.168.0.81
 $( examplesSeperatorSection "DISPLAY CLIENT CONNECTS: (All Clients)" )
-${G_myName} ${extraInfo} -i synergycStart
+${G_myName} ${extraInfo} -p bxoId=sysChar -i clientsStartUpStdout
+${G_myName} ${extraInfo} -p bxoId=sysChar -i clientsStartUpRun
 ${G_myName} ${extraInfo} -i synergycStop
 ${G_myName} ${extraInfo} -i synergycStatus
-${G_myName} ${extraInfo} -i synergycLogs
+${G_myName} ${extraInfo}  -p bxoId=sysChar -i synergycLogs
 $( examplesSeperatorChapter "On Laptop/Keyboard Side -- Run Synergy Server" )
-$( examplesSeperatorSection "INFORMATION" )
-${G_myName} ${extraInfo} -i moduleDescription | emlVisit
-ls -l ~/.quicksynergy/quicksynergy.conf 
-ls -l ~/.quicksynergy/synergy.conf 
 synergys --config ~pip_clusterNeda-configs/synergy/servers/default/synergyScreensTopology.config --name center --debug INFO --log /tmp/synergys.log --no-daemon
+${G_myName} ${extraInfo} -p bxoId=sysChar -i serverStartUpStdout
+${G_myName} ${extraInfo} -p bxoId=sysChar -i serverStartUpRun
+${G_myName} ${extraInfo} -i synergysStop
+${G_myName} ${extraInfo} -i synergysStatus
+${G_myName} ${extraInfo}  -p bxoId=sysChar -i synergysLogs
 _EOF_
 }
 
@@ -332,7 +331,7 @@ _EOF_
 }
 
 
-function vis_synergycStart {
+function vis_synergycStart%% {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -343,9 +342,8 @@ _EOF_
     #typeset pgrepResults=$(pgrep -x synergyc)
     while [ "$(pgrep -x synergyc)" ]; do sleep 0.1; done
 
+    # Old example
     #/usr/bin/synergyc -f --no-tray --debug NOTE --name bisp0014 192.168.0.149:24800
-    #/usr/bin/synergyc -f --no-tray --debug NOTE --name bisp0014 192.168.0.143:24800
-    #/usr/bin/synergyc -f --no-tray --debug NOTE --name bisp0014 192.168.0.193:24800
 
     opDo /usr/bin/synergyc -f --debug NOTE --name bisp0014 192.168.0.149:24800 >> ${bxSynergycLogFile} 2>&1 &
     opDo /usr/bin/synergyc -f --debug NOTE --name bisp0014 192.168.0.143:24800 >> ${bxSynergycLogFile} 2>&1 &
@@ -398,6 +396,48 @@ _EOF_
     lpReturn
 }
 
+
+function vis_synergysStop {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    opDo /usr/bin/killall synergys
+    #while [ $(pgrep -x synergys) ]; do sleep 0.1; done
+
+    lpReturn
+}
+
+
+function vis_synergysStatus {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    opDo ps -fp $( echo $( pgrep -x synergys) )
+
+    lpReturn
+}
+
+
+function vis_synergysLogs {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    ANT_raw "tail -10 ${bxSynergysLogFile}"
+    ANT_raw "grep 192.168.0.193 ${bxSynergysLogFile}"
+
+    lpReturn
+}
+
+
 function vis_containerStartUpRun {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -407,9 +447,17 @@ _EOF_
 
     EH_assert bxoIdPrep
 
-    lpDo eval vis_containerStartUpStdout \| xargs -I {} sh -c \"{}\"
+    local availableServersList=$(lpDo vis_siteSynergyServersAvailable)
+    local availableClientsList=$(lpDo vis_siteSynergyClientsAvailable)
 
-    lpDo pgrep synergy
+    if IS_inList ${bxoId} "${availableServersList}" ; then
+	lpDo vis_serverStartUpRun
+    elif IS_inList ${bxoId} "${availableClientsList}" ; then
+	lpDo vis_clientsStartUpRun
+    else
+	EH_problem "Not a client or a server ${bxoId}"
+	lpReturn 101
+    fi
 
     lpReturn
 }
@@ -430,7 +478,7 @@ _EOF_
     if IS_inList ${bxoId} "${availableServersList}" ; then
 	lpDo vis_serverStartUpStdout
     elif IS_inList ${bxoId} "${availableClientsList}" ; then
-	lpDo vis_clientStartUpStdout
+	lpDo vis_clientsStartUpStdout
     else
 	EH_problem "Not a client or a server ${bxoId}"
 	lpReturn 101
@@ -439,7 +487,33 @@ _EOF_
     lpReturn
 }
 
-function vis_clientStartUpStdout {
+function vis_clientsStartUpRun {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert bxoIdPrep
+
+    local availableClientsList=$(lpDo vis_siteSynergyClientsAvailable)
+
+    if ! IS_inList ${bxoId} "${availableClientsList}" ; then
+	EH_problem "not an available client -- ${bxoId}"
+	lpReturn 101
+    fi
+
+    opDo /usr/bin/killall synergyc
+    while [ "$(pgrep -x synergyc)" ]; do sleep 0.1; done
+
+    lpDo eval vis_clientsStartUpStdout \| xargs -I {} sh -c \"{}\"
+
+    lpDo pgrep synergyc
+    
+    lpReturn
+}
+
+function vis_clientsStartUpStdout {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -476,6 +550,34 @@ _EOF_
     
     lpReturn
 }
+
+
+function vis_serverStartUpRun {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert bxoIdPrep
+
+    local availableServersList=$(lpDo vis_siteSynergyServersAvailable)
+
+    if ! IS_inList ${bxoId} "${availableServersList}" ; then
+	EH_problem "not an available server -- ${bxoId}"
+	lpReturn 101
+    fi
+
+    opDo /usr/bin/killall synergys
+    while [ "$(pgrep -x synergys)" ]; do sleep 0.1; done
+
+    lpDo eval vis_serverStartUpStdout \| xargs -I {} sh -c \"{}\"
+
+    lpDo pgrep synergys
+    
+    lpReturn
+}
+
 
 function vis_serverStartUpStdout {
     G_funcEntry
