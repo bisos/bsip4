@@ -166,16 +166,20 @@ ${G_myName} ${extraInfo} -p bxoId=${oneServerBpo} -i bxCntnr_synergy_featureBase
 ${G_myName} ${extraInfo} -p bxoId=${oneServerBpo} -i bxCntnr_synergy_server_screensTopologyFile
 ${G_myName} ${extraInfo} -p bxoId=${oneClientBpo} -i bxCntnr_synergy_client_screenName
 ${G_myName} ${extraInfo} -p bxoId=${oneClientBpo} -i bxCntnr_synergy_client_serversBpos
-${G_myName} ${extraInfo} -p bxoId=${oneClientBpo} -i bxCntnr_synergy_client_serversIpAddrs
+${G_myName} ${extraInfo} -p bxoId=${oneClientBpo} -i bpoCntnr_ipAddr_get privA wifi
 ${G_myName} ${extraInfo} -i listBposAtBaseSansAvailable ~pip_clusterNeda-configs/synergy/clients/available
 ${G_myName} -p bxoId=${oneClientBpo} -i bxCntnr_synergy_client_serversBpos
 $( examplesSeperatorChapter "Container On Display Side -- Run Synergy Clients" )
+${G_myName} ${extraInfo} -p bxoId=sysChar -i containerStartUpRun
 ${G_myName} ${extraInfo} -p bxoId=sysChar -i containerStartUpStdout  # Main Entry Point
 ${G_myName} ${extraInfo} -p bxoId=${oneServerBpo} -i containerStartUpStdout
 ${G_myName} ${extraInfo} -p bxoId=${oneClientBpo} -i containerStartUpStdout
 ${G_myName} ${extraInfo} -p bxoId=${oneServerBpo} -i serverStartUpStdout
 ${G_myName} ${extraInfo} -p bxoId=${oneClientBpo} -i clientStartUpStdout
-
+${G_myName} ${extraInfo} -p bxoId=${oneServerBpo} -i serverStartUpStdout | xargs -I {} sh -c "{}"
+${G_myName} ${extraInfo} -p bxoId=${oneClientBpo} -i clientStartUpStdout | xargs -I {} sh -c "{}"
+${G_myName} ${extraInfo} -p bxoId=${oneServerBpo} -i containerStartUpRun  # Server
+${G_myName} ${extraInfo} -p bxoId=${oneClientBpo} -i containerStartUpRun  # Client
 $( examplesSeperatorSection "PROCESSS" )
 ps -ef | grep -i synergyc
 ps -fp \$( echo \$( pgrep synergyc) )
@@ -394,6 +398,23 @@ _EOF_
     lpReturn
 }
 
+function vis_containerStartUpRun {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert bxoIdPrep
+
+    lpDo eval vis_containerStartUpStdout \| xargs -I {} sh -c \"{}\"
+
+    lpDo pgrep synergy
+
+    lpReturn
+}
+
+
 function vis_containerStartUpStdout {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -411,7 +432,8 @@ _EOF_
     elif IS_inList ${bxoId} "${availableClientsList}" ; then
 	lpDo vis_clientStartUpStdout
     else
-	echo Not a client or a server ${bxoId}
+	EH_problem "Not a client or a server ${bxoId}"
+	lpReturn 101
     fi
 
     lpReturn
@@ -436,9 +458,20 @@ _EOF_
     local screenName=$(lpDo vis_bxCntnr_synergy_client_screenName)
 
     local availableServersList=$(lpDo vis_siteSynergyServersAvailable)
-
+    local serverIpAddr=""
+    
     for each in ${availableServersList} ; do
-	echo ${each} ${screenName}
+	bxoId=${each}
+	serverIpAddr=$(lpDo vis_bpoCntnr_ipAddr_get privA wifi)
+
+	if [ -z "${serverIpAddr}" ] ; then
+	    EH_problem "Missing serverIpAddr for ${each}"
+	    continue
+	fi
+	
+	cat  << _EOF_
+synergyc --debug INFO --log /tmp/synergyc-${each}.log --name ${screenName} ${serverIpAddr}
+_EOF_
     done
     
     lpReturn
@@ -580,21 +613,22 @@ _EOF_
     lpReturn
 }
 
-function vis_bxCntnr_synergy_client_serversIpAddrs {
+function vis_bpoCntnr_ipAddr_get {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
-    EH_assert [[ $# -eq 0 ]]
+    EH_assert [[ $# -eq 2 ]]
 
     EH_assert bxoIdPrep
 
-    local synergyClientBase=$(lpDo vis_bxCntnr_synergy_featureBase)
-    EH_assert [ -d "${synergyClientBase}" ]
+    local siteSynergyServersBase=$(lpDo vis_siteSynergyServersBase)
 
-    local screenName=$(lpDo fileParamManage.py -v 30 -i fileParamRead  "${synergyClientBase}" screenName )
+    local siteIpAddr=$(lpDo fileParamManage.py -v 30 -i fileParamRead  "${siteSynergyServersBase}/available/${bxoId}/ipv4" wifi )
 
-    echo "${screenName}"
+    EH_assert [ -n "${siteIpAddr}" ]
+
+    echo "${siteIpAddr}"
 
     lpReturn
 }
