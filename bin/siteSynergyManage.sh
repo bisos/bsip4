@@ -170,13 +170,13 @@ ${G_myName} ${extraInfo} -p bxoId=${oneClientBpo} -i bxCntnr_synergy_client_serv
 ${G_myName} ${extraInfo} -p bxoId=${oneClientBpo} -i bpoCntnr_ipAddr_get privA wifi
 ${G_myName} ${extraInfo} -i listBposAtBaseSansAvailable ~pip_clusterNeda-configs/synergy/clients/available
 ${G_myName} -p bxoId=${oneClientBpo} -i bxCntnr_synergy_client_serversBpos
-$( examplesSeperatorChapter "Container On Display Side -- Run Synergy Clients" )
+$( examplesSeperatorChapter "Container On Display Side -- Run Synergy Server And Clients" )
 ${G_myName} ${extraInfo} -p bxoId=sysChar -i containerStartUpRun
-${G_myName} ${extraInfo} -p bxoId=sysChar -i containerStartUpStdout  # Main Entry Point
-${G_myName} ${extraInfo} -p bxoId=${oneServerBpo} -i containerStartUpStdout
-${G_myName} ${extraInfo} -p bxoId=${oneClientBpo} -i containerStartUpStdout
-${G_myName} ${extraInfo} -p bxoId=${oneServerBpo} -i serverStartUpStdout
-${G_myName} ${extraInfo} -p bxoId=${oneClientBpo} -i clientsStartUpStdout
+${G_myName} -p bxoId=sysChar -i containerStartUpStdout  # Main Entry Point
+${G_myName} -p bxoId=${oneServerBpo} -i containerStartUpStdout
+${G_myName} -p bxoId=${oneClientBpo} -i containerStartUpStdout
+${G_myName} -p bxoId=${oneServerBpo} -i serverStartUpStdout
+${G_myName} -p bxoId=${oneClientBpo} -i clientsStartUpStdout
 ${G_myName} ${extraInfo} -p bxoId=${oneServerBpo} -i serverStartUpStdout | xargs -I {} sh -c "{}"
 ${G_myName} ${extraInfo} -p bxoId=${oneClientBpo} -i clientsStartUpStdout | xargs -I {} sh -c "{}"
 ${G_myName} ${extraInfo} -p bxoId=${oneServerBpo} -i containerStartUpRun  # Server
@@ -190,14 +190,14 @@ $( examplesSeperatorSection "DISPLAY CLIENT CONNECTS: (Each)" )
 synergyc --debug INFO --log /tmp/synergyc.log --name dinningroom --no-daemon 192.168.0.81
 $( examplesSeperatorSection "DISPLAY CLIENT CONNECTS: (All Clients)" )
 ${G_myName} ${extraInfo} -p bxoId=sysChar -i clientsStartUpStdout
-${G_myName} ${extraInfo} -p bxoId=sysChar -i clientsStartUpRun
+${G_myName} ${extraInfo} -p bxoId=sysChar -i clientsStartUpRun   # Main Entry Point
 ${G_myName} ${extraInfo} -i synergycStop
 ${G_myName} ${extraInfo} -i synergycStatus
 ${G_myName} ${extraInfo}  -p bxoId=sysChar -i synergycLogs
 $( examplesSeperatorChapter "On Laptop/Keyboard Side -- Run Synergy Server" )
 synergys --config ~pip_clusterNeda-configs/synergy/servers/default/synergyScreensTopology.config --name center --debug INFO --log /tmp/synergys.log --no-daemon
 ${G_myName} ${extraInfo} -p bxoId=sysChar -i serverStartUpStdout
-${G_myName} ${extraInfo} -p bxoId=sysChar -i serverStartUpRun
+${G_myName} ${extraInfo} -p bxoId=sysChar -i serverStartUpRun   # Main Entry Point
 ${G_myName} ${extraInfo} -i synergysStop
 ${G_myName} ${extraInfo} -i synergysStatus
 ${G_myName} ${extraInfo}  -p bxoId=sysChar -i synergysLogs
@@ -207,8 +207,8 @@ mkdir -p ~/.config/systemd/user/
 ls -l ~/.config/systemd/user/synergy.service
 ${G_myName} ${extraInfo} -p bxoId=sysChar -i synergySystemdSvcUpdate  # Main Entry Point
 ${G_myName} ${extraInfo} -p bxoId=sysChar -i synergySystemdSvcStdout
-${G_myName} ${extraInfo} -p bxoId=${oneServerBpo} -i synergySystemdSvcStdout  # For testing
-${G_myName} ${extraInfo} -p bxoId=${oneClientBpo} -i synergySystemdSvcStdout  # For testing
+${G_myName} ${extraInfo} -p bxoId=${oneServerBpo} -i synergySystemdSvcStdout  # For Server testing
+${G_myName} ${extraInfo} -p bxoId=${oneClientBpo} -i synergySystemdSvcStdout  # For Client testing
 systemctl --user status synergy.service
 systemctl --user start synergy.service
 _EOF_
@@ -387,7 +387,13 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    opDo ps -wwfp $( echo $( pgrep -x synergyc) )
+    local synergyPrcesses=$(echo $( pgrep -x synergyc))
+
+    if [ -z "${synergyPrcesses}" ] ; then
+	ANT_raw "No Synergy Client Processes"
+    else
+	opDo ps -wwfp "${synergyPrcesses}"
+    fi
 
     lpReturn
 }
@@ -428,7 +434,13 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    opDo ps -wwfp $( echo $( pgrep -x synergys) ) 
+    local synergyPrcesses=$(echo $( pgrep -x synergys))
+
+    if [ -z "${synergyPrcesses}" ] ; then
+	ANT_raw "No Synergy Server Processes"
+    else
+	opDo ps -wwfp "${synergyPrcesses}"
+    fi
 
     lpReturn
 }
