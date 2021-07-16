@@ -171,7 +171,7 @@ ${G_myName} ${extraInfo} -p bxoId=${oneClientBpo} -i bpoCntnr_ipAddr_get privA w
 ${G_myName} ${extraInfo} -i listBposAtBaseSansAvailable ~pip_clusterNeda-configs/synergy/clients/available
 ${G_myName} -p bxoId=${oneClientBpo} -i bxCntnr_synergy_client_serversBpos
 $( examplesSeperatorChapter "Container On Display Side -- Run Synergy Server And Clients" )
-${G_myName} ${extraInfo} -p bxoId=sysChar -i containerStartUpRun
+${G_myName} -p bxoId=sysChar -i containerStartUpRun  # Main/Primary Entry Point
 ${G_myName} -p bxoId=sysChar -i containerStartUpStdout  # Main Entry Point
 ${G_myName} -p bxoId=${oneServerBpo} -i containerStartUpStdout
 ${G_myName} -p bxoId=${oneClientBpo} -i containerStartUpStdout
@@ -426,7 +426,6 @@ _EOF_
     lpReturn
 }
 
-
 function vis_synergysStatus {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -590,12 +589,18 @@ _EOF_
 	lpReturn 101
     fi
 
+    ANT_raw "Killing existing synergys processes"
     opDo /usr/bin/killall synergys
-    while [ "$(pgrep -x synergys)" ]; do sleep 0.1; done
+    
+    local synergyProcesses="$(pgrep -x synergys 2> /dev/null)"
+    if [ -n "${synergyProcesses}" ] ; then
+	while [ "$(pgrep -x synergys)" ] ; do sleep 0.1; done
+    fi
 
+    ANT_raw "Starting Synergy Server Processes"
     lpDo eval vis_serverStartUpStdout \| xargs -I {} sh -c \"{}\"
 
-    lpDo pgrep synergys
+    vis_synergysStatus
     
     lpReturn
 }
@@ -620,9 +625,9 @@ _EOF_
     local screensTopologyFile=$(lpDo vis_bxCntnr_synergy_server_screensTopologyFile)
 
     cat  << _EOF_
-synergys --config ${screensTopologyFile} --name center --debug INFO --log /tmp/synergys.log
+synergys --config ${screensTopologyFile} --name center --debug DEBUG  --no-daemon >> /tmp/synergys.log 2>&1 &
 _EOF_
-    
+
     lpReturn
 }
 
