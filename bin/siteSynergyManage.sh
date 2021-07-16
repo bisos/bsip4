@@ -204,10 +204,13 @@ ${G_myName} ${extraInfo}  -p bxoId=sysChar -i synergysLogs
 $( examplesSeperatorChapter "Setup Systemd User Environment" )
 https://www.unixsysadmin.com/systemd-user-services/
 mkdir -p ~/.config/systemd/user/
+ls -l ~/.config/systemd/user/synergy.service
 ${G_myName} ${extraInfo} -p bxoId=sysChar -i synergySystemdSvcUpdate  # Main Entry Point
 ${G_myName} ${extraInfo} -p bxoId=sysChar -i synergySystemdSvcStdout
 ${G_myName} ${extraInfo} -p bxoId=${oneServerBpo} -i synergySystemdSvcStdout  # For testing
 ${G_myName} ${extraInfo} -p bxoId=${oneClientBpo} -i synergySystemdSvcStdout  # For testing
+systemctl --user status synergy.service
+systemctl --user start synergy.service
 _EOF_
 }
 
@@ -755,14 +758,26 @@ _EOF_
     local availableClientsList=$(lpDo vis_siteSynergyClientsAvailable)
 
     if IS_inList ${bxoId} "${availableServersList}" ; then
-	lpDo vis_serverStartUpStdout
+	lpDo doNothing
     elif IS_inList ${bxoId} "${availableClientsList}" ; then
-	lpDo vis_clientsStartUpStdout
+	lpDo doNothing
     else
 	EH_problem "Not a client or a server ${bxoId}"
 	lpReturn 101
     fi
 
+    local serviceBaseDir=$(echo ~/.config/systemd/user)
+
+    if [ ! -d "${serviceBaseDir}" ] ; then
+	lpDo mkdir -p "${serviceBaseDir}"
+    fi
+
+    local serviceFilePath="${serviceBaseDir}/synergy.service"
+
+    lpDo FN_fileSafeKeep "${serviceFilePath}"
+
+    lpDo eval vis_synergySystemdSvcStdout \> "${serviceFilePath}"
+    
     lpReturn
 }
 
@@ -780,10 +795,20 @@ _EOF_
     local availableServersList=$(lpDo vis_siteSynergyServersAvailable)
     local availableClientsList=$(lpDo vis_siteSynergyClientsAvailable)
 
+    function synergySystemdSvcSegment {
+	cat  << _EOF_
+[Service]
+ExecStart=/bisos/bsip/bin/siteSynergyManage.sh -p bxoId=${bxoId} -i containerStartUpRun
+WorkingDirectory=/tmp
+_EOF_
+    }
+
     if IS_inList ${bxoId} "${availableServersList}" ; then
-	lpDo vis_serverStartUpStdout
+	lpDo vis_serverSystemdSvcStdout
+	lpDo synergySystemdSvcSegment
     elif IS_inList ${bxoId} "${availableClientsList}" ; then
-	lpDo vis_clientsStartUpStdout
+	lpDo vis_clientsSystemdSvcStdout
+	lpDo synergySystemdSvcSegment	
     else
 	EH_problem "Not a client or a server ${bxoId}"
 	lpReturn 101
@@ -813,20 +838,13 @@ _EOF_
     local availableServersList=$(lpDo vis_siteSynergyServersAvailable)
     local serverIpAddr=""
     
-    for each in ${availableServersList} ; do
-	bxoId=${each}
-	serverIpAddr=$(lpDo vis_bpoCntnr_ipAddr_get privA wifi)
-
-	if [ -z "${serverIpAddr}" ] ; then
-	    EH_problem "Missing serverIpAddr for ${each}"
-	    continue
-	fi
 	
-	cat  << _EOF_
-synergyc --debug INFO --log /tmp/synergyc-${each}.log --name ${screenName} ${serverIpAddr}
+    cat  << _EOF_
+[Unit]
+Description=Synergy Client For  ${screenName}
+
 _EOF_
-    done
-    
+
     lpReturn
 }
 
@@ -850,7 +868,9 @@ _EOF_
     local screensTopologyFile=$(lpDo vis_bxCntnr_synergy_server_screensTopologyFile)
 
     cat  << _EOF_
-synergys --config ${screensTopologyFile} --name center --debug INFO --log /tmp/synergys.log
+[Unit]
+Description=Synergy Server
+
 _EOF_
     
     lpReturn
