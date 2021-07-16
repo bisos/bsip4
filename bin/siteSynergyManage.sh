@@ -182,10 +182,10 @@ ${G_myName} ${extraInfo} -p bxoId=${oneClientBpo} -i clientsStartUpStdout | xarg
 ${G_myName} ${extraInfo} -p bxoId=${oneServerBpo} -i containerStartUpRun  # Server
 ${G_myName} ${extraInfo} -p bxoId=${oneClientBpo} -i containerStartUpRun  # Client
 $( examplesSeperatorSection "PROCESSS" )
-ps -ef | grep -i synergyc
-ps -fp \$( echo \$( pgrep synergyc) )
-ps -fp $( echo $( pgrep synergyc) ) | cat  # running clients processes details
-ps -fp \$( pgrep synergys) | cat   # running server process details
+ps -wwef | grep -i synergyc
+ps -wwfp \$( echo \$( pgrep synergyc) )
+ps -wwfp $( echo $( pgrep synergyc) ) | cat  # running clients processes details
+ps -wwfp \$( pgrep synergys) | cat   # running server process details
 $( examplesSeperatorSection "DISPLAY CLIENT CONNECTS: (Each)" )
 synergyc --debug INFO --log /tmp/synergyc.log --name dinningroom --no-daemon 192.168.0.81
 $( examplesSeperatorSection "DISPLAY CLIENT CONNECTS: (All Clients)" )
@@ -387,7 +387,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    opDo ps -fp $( echo $( pgrep -x synergyc) )
+    opDo ps -wwfp $( echo $( pgrep -x synergyc) )
 
     lpReturn
 }
@@ -428,7 +428,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    opDo ps -fp $( echo $( pgrep -x synergys) )
+    opDo ps -wwfp $( echo $( pgrep -x synergys) ) 
 
     lpReturn
 }
