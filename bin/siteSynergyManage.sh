@@ -201,6 +201,13 @@ ${G_myName} ${extraInfo} -p bxoId=sysChar -i serverStartUpRun
 ${G_myName} ${extraInfo} -i synergysStop
 ${G_myName} ${extraInfo} -i synergysStatus
 ${G_myName} ${extraInfo}  -p bxoId=sysChar -i synergysLogs
+$( examplesSeperatorChapter "Setup Systemd User Environment" )
+https://www.unixsysadmin.com/systemd-user-services/
+mkdir -p ~/.config/systemd/user/
+${G_myName} ${extraInfo} -p bxoId=sysChar -i synergySystemdSvcUpdate  # Main Entry Point
+${G_myName} ${extraInfo} -p bxoId=sysChar -i synergySystemdSvcStdout
+${G_myName} ${extraInfo} -p bxoId=${oneServerBpo} -i synergySystemdSvcStdout  # For testing
+${G_myName} ${extraInfo} -p bxoId=${oneClientBpo} -i synergySystemdSvcStdout  # For testing
 _EOF_
 }
 
@@ -734,6 +741,122 @@ _EOF_
 
     lpReturn
 }
+
+function vis_synergySystemdSvcUpdate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert bxoIdPrep
+
+    local availableServersList=$(lpDo vis_siteSynergyServersAvailable)
+    local availableClientsList=$(lpDo vis_siteSynergyClientsAvailable)
+
+    if IS_inList ${bxoId} "${availableServersList}" ; then
+	lpDo vis_serverStartUpStdout
+    elif IS_inList ${bxoId} "${availableClientsList}" ; then
+	lpDo vis_clientsStartUpStdout
+    else
+	EH_problem "Not a client or a server ${bxoId}"
+	lpReturn 101
+    fi
+
+    lpReturn
+}
+
+
+
+function vis_synergySystemdSvcStdout {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert bxoIdPrep
+
+    local availableServersList=$(lpDo vis_siteSynergyServersAvailable)
+    local availableClientsList=$(lpDo vis_siteSynergyClientsAvailable)
+
+    if IS_inList ${bxoId} "${availableServersList}" ; then
+	lpDo vis_serverStartUpStdout
+    elif IS_inList ${bxoId} "${availableClientsList}" ; then
+	lpDo vis_clientsStartUpStdout
+    else
+	EH_problem "Not a client or a server ${bxoId}"
+	lpReturn 101
+    fi
+
+    lpReturn
+}
+
+function vis_clientsSystemdSvcStdout {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert bxoIdPrep
+
+    local availableClientsList=$(lpDo vis_siteSynergyClientsAvailable)
+
+    if ! IS_inList ${bxoId} "${availableClientsList}" ; then
+	EH_problem "not an available client -- ${bxoId}"
+	lpReturn 101
+    fi
+
+    local screenName=$(lpDo vis_bxCntnr_synergy_client_screenName)
+
+    local availableServersList=$(lpDo vis_siteSynergyServersAvailable)
+    local serverIpAddr=""
+    
+    for each in ${availableServersList} ; do
+	bxoId=${each}
+	serverIpAddr=$(lpDo vis_bpoCntnr_ipAddr_get privA wifi)
+
+	if [ -z "${serverIpAddr}" ] ; then
+	    EH_problem "Missing serverIpAddr for ${each}"
+	    continue
+	fi
+	
+	cat  << _EOF_
+synergyc --debug INFO --log /tmp/synergyc-${each}.log --name ${screenName} ${serverIpAddr}
+_EOF_
+    done
+    
+    lpReturn
+}
+
+
+function vis_serverSystemdSvcStdout {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert bxoIdPrep
+
+    local availableServersList=$(lpDo vis_siteSynergyServersAvailable)
+
+    if ! IS_inList ${bxoId} "${availableServersList}" ; then
+	EH_problem "not an available server -- ${bxoId}"
+	lpReturn 101
+    fi
+
+    local screensTopologyFile=$(lpDo vis_bxCntnr_synergy_server_screensTopologyFile)
+
+    cat  << _EOF_
+synergys --config ${screensTopologyFile} --name center --debug INFO --log /tmp/synergys.log
+_EOF_
+    
+    lpReturn
+}
+
+
 
 
 
