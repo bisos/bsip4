@@ -187,21 +187,22 @@ ${G_myName} ${extraInfo} -p bxoId=sysChar -i clientsStartUpStdout
 ${G_myName} ${extraInfo} -p bxoId=sysChar -i clientsStartUpRun   # Main Entry Point
 ${G_myName} ${extraInfo} -i synergycStop
 ${G_myName} ${extraInfo} -i synergycStatus
-${G_myName} ${extraInfo}  -p bxoId=sysChar -i synergycLogs
+${G_myName} -p bxoId=sysChar -i synergycLogs
 $( examplesSeperatorChapter "On Laptop/Keyboard Side -- Run Synergy Server" )
 synergys --config ~pip_clusterNeda-configs/synergy/servers/default/synergyScreensTopology.config --name center --debug INFO --log /tmp/synergys.log --no-daemon
 ${G_myName} ${extraInfo} -p bxoId=sysChar -i serverStartUpRun   # Main Entry Point
 ${G_myName} ${extraInfo} -i synergysStop
 ${G_myName} ${extraInfo} -i synergysStatus
-${G_myName} ${extraInfo}  -p bxoId=sysChar -i synergysLogs
+${G_myName} -p bxoId=sysChar -i synergysLogs
 $( examplesSeperatorChapter "Setup Systemd User Environment" )
 https://www.unixsysadmin.com/systemd-user-services/
 https://www.brendanlong.com/systemd-user-services-are-amazing.html
 mkdir -p ~/.config/systemd/user/
 ls -l ~/.config/systemd/user/synergy.service
-${G_myName} ${extraInfo} -p bxoId=sysChar -i synergySystemdSvcUpdate  # Main Entry Point
-${G_myName} ${extraInfo} -p bxoId=${oneServerBpo} -i synergySystemdSvcStdout  # For Server testing
-${G_myName} ${extraInfo} -p bxoId=${oneClientBpo} -i synergySystemdSvcStdout  # For Client testing
+${G_myName} -p bxoId=sysChar -i synergySystemdSvcUpdate  # Main Entry Point
+${G_myName} -p bxoId=${oneServerBpo} -i synergySystemdSvcStdout  # For Server testing
+${G_myName} -p bxoId=${oneClientBpo} -i clientsSystemdSvcStdout  # For Client testing
+${G_myName} -p bxoId=${oneServerBpo} -i serverSystemdSvcStdout   # For Server testing
 # initializations
 sudo loginctl enable-linger bystar
 systemd-analyze --user security synergy.service
@@ -232,22 +233,24 @@ function vis_logFilePath {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
-    EH_assert [[ $# -eq 0 ]]
-
-    EH_assert bxoIdPrep
-
-    local availableServersList=$(lpDo vis_siteSynergyServersAvailable)
-    local availableClientsList=$(lpDo vis_siteSynergyClientsAvailable)
+    EH_assert [[ $# -lt 2 ]]
 
     local logFilePath=""
     
-    if IS_inList ${bxoId} "${availableServersList}" ; then
-	logFilePath=${synergyLogsBaseDir}/server-${bxoId}.log
-    elif IS_inList ${bxoId} "${availableClientsList}" ; then
-	logFilePath=${synergyLogsBaseDir}/client-${bxoId}.log
+    if [ $# -eq 0 ] ; then
+	EH_assert bxoIdPrep
+
+	local availableServersList=$(lpDo vis_siteSynergyServersAvailable)
+	
+	if IS_inList ${bxoId} "${availableServersList}" ; then
+	    logFilePath=${synergyLogsBaseDir}/server-${bxoId}.log
+	else
+	    EH_problem "Not a server ${bxoId}"
+	    lpReturn 101
+	fi
     else
-	EH_problem "Not a client or a server ${bxoId}"
-	lpReturn 101
+	local destinationServer=$1
+	logFilePath=${synergyLogsBaseDir}/client-${destinationServer}.log
     fi
 
     echo ${logFilePath}
@@ -406,8 +409,6 @@ _EOF_
     #/usr/bin/synergyc -f --no-tray --debug NOTE --name bisp0014 192.168.0.149:24800
 
     opDo /usr/bin/synergyc -f --debug NOTE --name bisp0014 192.168.0.149:24800 >> ${bxSynergycLogFile} 2>&1 &
-    opDo /usr/bin/synergyc -f --debug NOTE --name bisp0014 192.168.0.143:24800 >> ${bxSynergycLogFile} 2>&1 &
-    opDo /usr/bin/synergyc -f --debug NOTE --name bisp0014 192.168.0.193:24800 >> ${bxSynergycLogFile} 2>&1 &
 
     opDo ls -ldt ${bxSynergycLogFile}
 
@@ -455,16 +456,21 @@ function vis_synergycLogs {
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert bxoIdPrep
     
-    local logFilePath=$(vis_logFilePath)
+    local availableServersList=$(lpDo vis_siteSynergyServersAvailable)
+    local serverIpAddr=""
+    local logFilePath=""
+    
+    for each in ${availableServersList} ; do
+	logFilePath=$(vis_logFilePath "${each}")
 
-    if [ -n "${logFilePath}" ] ; then
-	ANT_raw "tail -10 ${logFilePath}"
-    else
-	ANT_cooked "Missing logFilePath"
-    fi
-
+	if [ -n "${logFilePath}" ] ; then
+	    ANT_raw "tail -10 ${logFilePath}"
+	else
+	    ANT_cooked "Missing logFilePath"
+	fi
+    done
+  
     lpReturn
 }
 
@@ -581,9 +587,9 @@ _EOF_
 	    continue
 	fi
 
-	logFilePath=$(vis_logFilePath)
+	logFilePath=$(vis_logFilePath "${each}")
 	
-	lpDo synergyc --debug DEBUG --log ${logFilePath} --name ${screenName} ${serverIpAddr}
+	lpDo synergyc --daemon --debug DEBUG --log ${logFilePath} --name ${screenName} ${serverIpAddr}
     done
 
     lpDo pgrep synergyc
@@ -808,23 +814,10 @@ _EOF_
     local availableServersList=$(lpDo vis_siteSynergyServersAvailable)
     local availableClientsList=$(lpDo vis_siteSynergyClientsAvailable)
 
-    function synergySystemdSvcSegment {
-	cat  << _EOF_
-[Service]
-ExecStart=/bisos/bsip/bin/siteSynergyManage.sh -p bxoId=${bxoId} -i containerStartUpRun
-Restart=always
-
-[Install]
-WantedBy=default.target
-_EOF_
-    }
-
     if IS_inList ${bxoId} "${availableServersList}" ; then
 	lpDo vis_serverSystemdSvcStdout
-	lpDo synergySystemdSvcSegment
     elif IS_inList ${bxoId} "${availableClientsList}" ; then
 	lpDo vis_clientsSystemdSvcStdout
-	lpDo synergySystemdSvcSegment	
     else
 	EH_problem "Not a client or a server ${bxoId}"
 	lpReturn 101
@@ -857,8 +850,15 @@ _EOF_
 	
     cat  << _EOF_
 [Unit]
-Description=Synergy Client For  ${screenName}
+Description=Synergy Clients For ${screenName}
 
+[Service]
+Type=forking
+ExecStart=/bisos/bsip/bin/siteSynergyManage.sh -p bxoId=${bxoId} -i containerStartUpRun
+Restart=always
+
+[Install]
+WantedBy=default.target
 _EOF_
 
     lpReturn
@@ -887,6 +887,12 @@ _EOF_
 [Unit]
 Description=Synergy Server
 
+[Service]
+ExecStart=/bisos/bsip/bin/siteSynergyManage.sh -p bxoId=${bxoId} -i containerStartUpRun
+Restart=always
+
+[Install]
+WantedBy=default.target
 _EOF_
     
     lpReturn
