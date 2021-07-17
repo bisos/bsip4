@@ -183,7 +183,6 @@ ps -wwfp \$( pgrep synergys) | cat   # running server process details
 $( examplesSeperatorSection "DISPLAY CLIENT CONNECTS: (Each)" )
 synergyc --debug INFO --log /tmp/synergyc.log --name dinningroom --no-daemon 192.168.0.81
 $( examplesSeperatorSection "DISPLAY CLIENT CONNECTS: (All Clients)" )
-${G_myName} ${extraInfo} -p bxoId=sysChar -i clientsStartUpStdout
 ${G_myName} ${extraInfo} -p bxoId=sysChar -i clientsStartUpRun   # Main Entry Point
 ${G_myName} ${extraInfo} -i synergycStop
 ${G_myName} ${extraInfo} -i synergycStatus
@@ -213,7 +212,7 @@ systemctl --user start synergy.service
 systemctl --user stop synergy.service
 systemctl --user enable synergy.service
 journalctl --user
-journalctl --user-unit synergy.service
+journalctl --user-unit synergy.service | tail -100
 _EOF_
 }
 
@@ -470,7 +469,9 @@ _EOF_
 	    ANT_cooked "Missing logFilePath"
 	fi
     done
-  
+
+    ANT_raw "journalctl --user-unit synergy.service | tail -100"
+    
     lpReturn
 }
 
