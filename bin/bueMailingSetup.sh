@@ -100,6 +100,7 @@ $( examplesSeperatorSection "Start -- With Default Parameters" )
 ${G_myName} ${extraInfo} -i composeStart                    # Mailing Name Will Be Date Tagged
 ${G_myName} ${extraInfo} -i composeStart dated                   # Mailing Name Will Be Date Tagged
 ${G_myName} ${extraInfo} -i composeStart mailingName ""       # mailingName is specified
+${G_myName} ${extraInfo} -p base=. -i composeStart mailingName ""       # mailingName is specified
 ${G_myName} ${extraInfo} -p base=~/bxo/usageEnv/selected/mailings/compose -p template="/bisos/apps/defaults/mailing/compose/enFa/generic" -p header=~/bxo/usageEnv/selected/mailings/mohsenProfessional/consulting/lookingForProjs/2013/content.mail -i composeStart mailingName
 ${G_myName} ${extraInfo} -p base=~/bxo/usageEnv/selected/mailings/compose -p template="/bisos/apps/defaults/mailing/compose/enFa/generic" -p header=~/bxo/usageEnv/selected/mailings/mohsenProfessional/consulting/lookingForProjs/2013/content.mail -i composeStart mailingName ""
 ${G_myName} ${extraInfo} -p pdf=pdf -p base=~/bxo/usageEnv/selected/mailings/compose -p template="/bisos/apps/defaults/mailing/compose/enFa/generic" -p header=~/bxo/usageEnv/selected/mailings/mohsenProfessional/consulting/lookingForProjs/2013/content.mail -i composeStart mailingName "qualifier"
