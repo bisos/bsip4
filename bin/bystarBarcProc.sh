@@ -9,12 +9,15 @@ typeset RcsId="$Id: bystarBarcProc.sh,v 1.1.1.1 2016-06-08 23:49:52 lsipusr Exp 
 # This is a Halaal Poly-Existential intended to remain perpetually Halaal.
 ####+END:
 
-####+BEGIN: bx:dblock:lsip:bash:seed-spec :types "seedActions.bash"
+####+BEGIN: bx:bsip:bash:seed-spec :types "seedActions.bash"
 SEED="
-*  /[dblock]/ /Seed/: [[file:/opt/public/osmt/bin/seedActions.bash]] | 
+*  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
+"
+FILE="
+*  /This File/ :: /bisos/bsip/bin/bystarBarcProc.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
-    /opt/public/osmt/bin/seedActions.bash -l $0 "$@" 
+    /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
     exit $?
 fi
 ####+END:

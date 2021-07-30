@@ -10,13 +10,17 @@ typeset RcsId="$Id: bueGimpManage.sh,v 1.1.1.1 2016-06-08 23:49:51 lsipusr Exp $
 # Authors: Mohsen BANAN, http://mohsen.banan.1.byname.net/contact
 # }}} 
 
-####+BEGIN: bx:dblock:lsip:bash:seed-spec :types "seedActions.bash"
-# {{{ DBLOCK-seed-spec
-if [ "${loadFiles}X" == "X" ] ; then
-    /opt/public/osmt/bin/seedActions.bash -l $0 "$@" 
+####+BEGIN: bx:bsip:bash:seed-spec :types "seedActions.bash"
+SEED="
+*  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
+"
+FILE="
+*  /This File/ :: /bisos/bsip/bin/bueGimpManage.sh 
+"
+if [ "${loadFiles}" == "" ] ; then
+    /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
     exit $?
 fi
-# }}} DBLOCK-seed-spec
 ####+END:
 
 # {{{ Help/Info
