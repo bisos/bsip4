@@ -242,7 +242,7 @@ ${1} -i gotoPanel
 ${1} -i iifAuxInvoke describeF lsIifs
 ${1} -i lsIifs
 ${1} -i describe | emlVisit
-${1} -i examples | iimToEmlVisit
+${1} -i examples | emlOutFilter.sh
 _EOF_
 }
 
