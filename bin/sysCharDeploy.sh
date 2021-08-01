@@ -200,7 +200,7 @@ ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_aptSourcesPr
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_provisionBisos_sysBasePlatform # ManagerOnly -- intra user -- no bisos
 $( examplesSeperatorChapter "Site Setup -- bisosBasePlatform Actions" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_fullUpdate # onManager
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_siteSetup # onManager
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_siteSetup # onManager or below onTarget
 ${G_myName} ${extraInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -p siteBxoId=${siteBxoId}" -i bisosBasePlatform_siteSetup # onTarget
 $( examplesSeperatorChapter "SysChar Setup -- siteBasePlatform Actions" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_fullUpdate  # onManager
@@ -278,6 +278,10 @@ _EOF_
     EH_assert [ "${targetName}" != "localhost" ] # Must be invoked OnManger
 
     lpDo vis_distro_fullUpdate
+
+    lpDo vis_bisosBasePlatform_fullUpdate
+
+    # Needs abode ... # lpDo vis_siteBasePlatform_fullUpdate
 }
 
 function vis_distro_fullUpdate {    
