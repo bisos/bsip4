@@ -119,6 +119,8 @@ ${G_myName} ${extraInfo} -p vcMode=anon -i cachedLsRefresh
 ${G_myName} ${extraInfo} -p baseDir="/bisos/git/auth/bxRepos/bisos-pip" -p vcMode=auth -i cachedLsRefresh
 ${G_myName} ${extraInfo} -i cachedLs
 ${G_myName} ${extraInfo} -p vcMode=anon -i cachedLs
+${G_myName} ${extraInfo} -i cachedLsAtomsRefresh
+${G_myName} ${extraInfo} -i cachedLsAtoms
 $( examplesSeperatorSection "gitBaseIsCollection Git Repo Base Directories" )
 ${G_myName} -i gitBaseIsCollection ${oneRepoBaseDir}
 ${G_myName} -i cachedLs | ${G_myName} -i gitBaseIsCollection
@@ -219,6 +221,31 @@ _EOF_
 }	
 
 
+function vis_cachedLsAtomsFileName {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    if [ ! -d "/bisos/var/core/cached" ] ; then
+	lpDo mkdir -p /bisos/var/core/cached
+    fi
+
+    if [ "${vcMode}" == "auth" ] ; then
+	echo "/bisos/var/core/cached/bxReposList-atoms.auth"
+    elif [ "${vcMode}" == "anon" ] ; then
+	echo "/bisos/var/core/cached/bxReposList-atoms.anon"
+    else
+	EH_problem "vcMode=${vcMode} is neither auth nor anon"
+	EH_retOnFail
+    fi
+
+    lpReturn
+}	
+
+
+
 function vis_cachedLsRefresh {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -253,6 +280,44 @@ _EOF_
 
     lpReturn
 }	
+
+
+function vis_cachedLsAtomsRefresh {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local bxReposListFileName=$( vis_cachedLsAtomsFileName )
+    EH_assert [[ "${bxReposListFileName}X" != "X" ]]
+
+    ANT_cooked "Creating The Cache File at ${bxReposListFileName}:"
+    lpDo eval stdbuf -i0 -o0 -e0 ${G_myName} -h -v -n showRun -p baseDir="${baseDir}" -p vcMode=${vcMode} -i bxReposList \| vis_gitBaseIsCollection \| egrep -v '^COLLECTION:' \| cut -d : -f 2 \| tee "${bxReposListFileName}"
+
+    lpReturn
+}	
+
+function vis_cachedLsAtoms {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local bxReposListFileName=$( vis_cachedLsAtomsFileName )
+    EH_assert [[ "${bxReposListFileName}X" != "X" ]]
+
+    if [ -f "${bxReposListFileName}" ] ; then
+	lpDo cat "${bxReposListFileName}"
+    else
+	lpDo vis_cachedLsAtomsRefresh
+    fi
+
+    lpReturn
+}	
+
+
 
 
 _CommentBegin_

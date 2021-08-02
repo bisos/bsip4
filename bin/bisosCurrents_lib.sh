@@ -153,5 +153,37 @@ currentUsgUname=${currentUsgUname}
 _EOF_
 }
 
+function vis_bisosCurrentsList {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    cat /bisos/var/currents | sed -e 's/=.*$//'
+
+    lpReturn
+}	
+
+function vis_bisosCurrentsObtain {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    bisosCurrentsGet
+
+    local inVal="$1"
+    local cursList=$(lpDo vis_bisosCurrentsList)
+    
+    if LIST_isIn "${inVal}" "${cursList}" ; then	
+	eval "echo \${${inVal}}"
+    else
+	echo ${inVal}
+    fi
+
+    lpReturn
+}	
 
 

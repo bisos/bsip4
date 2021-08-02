@@ -562,11 +562,10 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     EH_assert [ ! -z "${targetName}" ]
+    targetName=$(lpDo vis_bisosCurrentsObtain "${targetName}")
     EH_assert [ "${targetName}" != "localhost" ] # Must be invoked OnManger
-	
 
     # NOTYET, commented part below should be absorbed in distro_fullUpdate after sudo addition.
-
     
     # local bisosAscertain=$( vis_distro_provisionBisos_ascertain )
     
@@ -593,6 +592,8 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     EH_assert [ ! -z "${targetName}" ]
+    targetName=$(lpDo vis_bisosCurrentsObtain "${targetName}")
+    EH_assert [ "${targetName}" != "localhost" ] # Must be invoked OnManger
 
     lpDo vis_boxSiteBasePlatform
 
