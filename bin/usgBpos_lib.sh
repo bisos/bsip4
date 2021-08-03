@@ -730,6 +730,25 @@ _EOF_
 }
 
 
+function vis_usgAcctWithUsgBpoAssociate {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+${G_myName}:${G_thisFunc}:
+Safe to run multiple times.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local usgEnvBxoPath=$(lpDo vis_usgBpos_usageEnvs_fullUse_bxoPath)
+
+    local curUsgAcctHome=$( vis_curUsgAcctHome )
+    
+    lpDo FN_fileSymlinkUpdate ${usgEnvBxoPath}/blee/bbdb/dotBbdbV9 ${curUsgAcctHome}/.bbdbV9
+    lpDo FN_fileSymlinkUpdate ${usgEnvBxoPath}/blee/diary/diary ${curUsgAcctHome}/.emacs.d/diary
+    lpDo FN_fileSymlinkUpdate ${usgEnvBxoPath}/blee/org ${curUsgAcctHome}/org
+}
+
+
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*

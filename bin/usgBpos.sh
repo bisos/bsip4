@@ -184,6 +184,8 @@ ${G_myName} ${extraInfo} -i usgBpos_controller_bxoId_fpRead
 ${G_myName} ${extraInfo} -i usgBpos_controller_update ${oneRealIndiv} # Main Entry -- Sets 
 ${G_myName} ${extraInfo} -i usgBpos_controller_bxoPath # Main Entry -- Gets
 ${G_myName} ${extraInfo} -i usgBpos_controller_bxoId
+$( examplesSeperatorChapter "Associate usgBpo With usgAcct" )
+${G_myName} ${extraInfo} -i usgAcctWithUsgBpoAssociate
 _EOF_
 
   cat  << _EOF_

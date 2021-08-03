@@ -199,14 +199,9 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     local bynameBxoPath=$(lpDo vis_usgBpos_aais_byname_bxoPath)
-    local usgEnvBxoPath=$(lpDo vis_usgBpos_usageEnvs_fullUse_bxoPath)
 
-    local curUsgAcctHome=$( vis_curUsgAcctHome )
+    # lpDo vis_usgAcctWithUsgBpoAssociate  # NOTYET, does this belong here
     
-    lpDo FN_fileSymlinkUpdate ${usgEnvBxoPath}/blee/bbdb/dotBbdbV9 ${curUsgAcctHome}/.bbdbV9
-    lpDo FN_fileSymlinkUpdate ${usgEnvBxoPath}/blee/diary/diary ${curUsgAcctHome}/.emacs.d/diary
-    lpDo FN_fileSymlinkUpdate ${usgEnvBxoPath}/blee/org ${curUsgAcctHome}/org
-
     # opDo bueMailManage.sh -p bystarUid=${bystarUid} -i mhonarcBasePrep
 
     opDo vis_authInfoUpdate
@@ -246,12 +241,9 @@ function prepedAcctPasswdGet {
     echo ${decryptedPasswd}
 }
 
-
-
 _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  IIFs        :: vis_offlineimapUpdate [[elisp:(org-cycle)][| ]]
 _CommentEnd_
-
 
 
 function vis_offlineimapUpdate {
