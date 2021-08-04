@@ -102,7 +102,7 @@ _EOF_
 item_synergy () {
   distFamilyGenerationHookRun binsPrep_synergy
 }
-
+hi
 binsPrep_synergy_DEFAULT_DEFAULT () {
     mmaThisPkgName="na"
     mmaPkgDebianName="${mmaThisPkgName}"
@@ -110,6 +110,11 @@ binsPrep_synergy_DEFAULT_DEFAULT () {
 
     function customInstallScript {
 	lpDo sudo apt-get install -y qtcreator qtbase5-dev qttools5-dev cmake make g++ xorg-dev libssl-dev libx11-dev libsodium-dev libgl1-mesa-glx libegl1-mesa libcurl4-openssl-dev libavahi-compat-libdnssd-dev qtdeclarative5-dev libqt5svg5-dev libsystemd-dev git build-essential
+
+	lpDo sudo apt-get -y install libqt5glib-2.0-0
+	lpDo sudo apt-get -y install libglib2.0-dev
+	lpDo sudo apt-get -y install libgdk-pixbuf-2.0-dev
+	lpDo sudo apt-get -y install libnotify-dev
 	
 	lpDo sudo apt-get install -y libavahi-compat-libdnssd1
 	

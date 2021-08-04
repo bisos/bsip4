@@ -87,8 +87,8 @@ typeset -t subjectFolder="INVALID"
 typeset -t destSpamFolder="INVALID"
 
 function G_postParamHook {
-    bystarUidHome=$( FN_absolutePathGet ~${bystarUid} )
-    lpCurrentsGet
+    # bystarUidHome=$( FN_absolutePathGet ~${bystarUid} )
+    # lpCurrentsGet
     lpReturn 0
 }
 
@@ -417,8 +417,8 @@ function vis_msgHtmlHook {
     
   inMsgFile=$( ls -t ${myHome}/News/drafts/drafts/* | head -1 )
 
-  browserHtml=/tmp/${G_progName}.browserHtml.$$
-  inlineHtml=/tmp/${G_progName}.inlineHtml.$$
+  browserHtml=/tmp/${G_progName}.browserHtml.$$.html
+  inlineHtml=/tmp/${G_progName}.inlineHtml.$$.html
 
   if [ ! -f ${inMsgFile} ] ; then 
       echo "${G_myName} mozStdin got an empty file. For now do a Post Forward to see it"
@@ -435,7 +435,10 @@ function vis_msgHtmlHook {
 
     opDo ls -l ${inMsgFile} ${browserHtml}
 
-    bx-browse-url.sh -i openUrlNewTab file://${browserHtml} #&
+    # lpDo bx-browse-url.sh -i openUrlNewTab file://${browserHtml} #&
+
+    lpDo google-chrome --new-window ${browserHtml} &
+    
     #firefox -remote "openurl(file://${browserHtml})" &
     ##lcaMozReplProc.sh -i mozUrlNewtabGoto  file://${browserHtml} &
 
@@ -487,9 +490,9 @@ function vis_mhonarcBasePrep {
   opDo mkdir -p ${myHome}/mhonarc/var/input
   opDo mkdir -p ${myHome}/mhonarc/var/attachments
 
-  vis_browserHtmlResourceStdout > ${myHome}/mhonarc/control/browserHtml.rc
+  lpDo eval vis_browserHtmlResourceStdout \> ${myHome}/mhonarc/control/browserHtml.rc
 
-  vis_inlineHtmlResourceStdout  > ${myHome}/mhonarc/control/inlineHtml.rc
+  lpDo eval vis_inlineHtmlResourceStdout  \> ${myHome}/mhonarc/control/inlineHtml.rc
 }
 
 function vis_browserHtmlResourceStdout {

@@ -115,6 +115,7 @@ $( examplesSeperatorChapter "FULL Site Deployment" )
 ${G_myName} ${extraInfo} -i fullUpdate  # currents + siteFullUpdate
 $( examplesSeperatorChapter "Interim Actions" )
 ${G_myName} ${extraInfo} -i gcipherPipInstall
+${G_myName} ${extraInfo} -i missingAptPkgsInstall
 _EOF_
 }
 
@@ -133,6 +134,8 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     lpDo vis_gcipherPipInstall
+
+    lpDo vis_missingAptPkgsInstall
 }
 
 
@@ -147,6 +150,23 @@ _EOF_
     lpDo /bisos/venv/py2/bisos3/bin/pip2 install --upgrade unisos.gcipher
 
     lpDo which -a gcipher
+    
+    lpReturn
+}
+
+
+function vis_missingAptPkgsInstall {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Missing apt packages to be sorted out and absorbed
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo sudo apt-get -y install w3m
+    lpDo sudo apt-get -y install mhonarc
+    #lpDo mkdir -p /bxo/r3/usg/bystar/mhonarc/var/attachments
+    lpDo bueMailManage.sh -h -v -n showRun -i mhonarcBasePrep
     
     lpReturn
 }
