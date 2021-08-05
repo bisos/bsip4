@@ -113,9 +113,11 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "FULL Site Deployment" )
 ${G_myName} ${extraInfo} -i fullUpdate  # currents + siteFullUpdate
-$( examplesSeperatorChapter "Interim Actions" )
+$( examplesSeperatorChapter "Interim Actions Of fullUpdate" )
 ${G_myName} ${extraInfo} -i gcipherPipInstall
 ${G_myName} ${extraInfo} -i missingAptPkgsInstall
+$( examplesSeperatorChapter "Optional Interim Actions" )
+${G_myName} ${extraInfo} -i libreInfoBaseAndInitialTemplates
 _EOF_
 }
 
@@ -167,6 +169,26 @@ _EOF_
     lpDo sudo apt-get -y install mhonarc
     #lpDo mkdir -p /bxo/r3/usg/bystar/mhonarc/var/attachments
     lpDo bueMailManage.sh -h -v -n showRun -i mhonarcBasePrep
+    
+    lpReturn
+}
+
+function vis_libreInfoBaseAndInitialTemplates {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Missing apt packages to be sorted out and absorbed
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo sudo mkdir /libre
+    lpDo sudo chown bisos:bisos /libre
+    lpDo sudo chmod 775 /libre
+
+    lpDo mkdir /libre/ByStar
+
+    lpDo scp -r bystar@192.168.0.151:/libre/ByStar/InfoBase /libre/ByStar
+    lpDo scp -r bystar@192.168.0.151:/libre/ByStar/InitialTemplates /libre/ByStar
     
     lpReturn
 }
