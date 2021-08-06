@@ -148,20 +148,22 @@ $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Currents And BxO Management Information" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId ${oneBxoId:-}
-$( examplesSeperatorSection "BISOS LCNT BinsPreps" )
-${G_myName} ${extraInfo} -i bisosLcntBinsPrep
-$( examplesSeperatorSection "BISOS LCNT BinsPreps" )
-${G_myName} ${extraInfo} -i usgBposLcntBasesSetup
---- /lcnt Preparations ---
+$( examplesSeperatorChapter "Full Actions" )
+${G_myName} ${extraInfo} -i lcntBasesFullSetup
+$( examplesSeperatorChapter "BISOS LCNT BinsPreps" )
+${G_myName} ${extraInfo} -i bisosLcntBinsPrep   # invokes lcaLaTexBinsPrep.sh and others
+$( examplesSeperatorChapter "LCNT Bases Setup" )
+${G_myName} ${extraInfo} -i lcntBaseVcGet # activate the public BISOS pip_lcntBases BPO
+${G_myName} ${extraInfo} -i lcntBasesSetup  # Uses pip_lcntBases BPO and creats links to /de/lcnt and /lcnt 
+${G_myName} ${extraInfo} -i usgBpos_lcntBases_bxoPath  # Passive -- BPO Path containing link to /de/lcnt/lgpc etc
+${G_myName} ${extraInfo} -i usgBposLcntBasesSetup # 
+$( examplesSeperatorChapter "/lcnt Preparations" )
 ${G_myName} -p uid=lsipusr ${extraInfo} -i lcntBaseFullPrep     # Get + Prep + Build
 ${G_myName} -p uid=lsipusr ${extraInfo} -i lcntBaseGetPrep      # Get + Prep
 ${G_myName} -p uid=root ${extraInfo} -i lcntBaseGet             # VC Get
 ${G_myName} -p uid=lsipusr ${extraInfo} -i lcntBasePrep         # Recreates /lcnt/outputs/
 ${G_myName} -p uid=lsipusr ${extraInfo} -i lcntBaseFullBuild    # Builds/Process all formats
 ${G_myName} -p uid=lsipusr ${extraInfo} -i lcntBaseFullUpdate   # fullBuild + localContentPrep
---- lcntBaseGet in pieces ---
-${G_myName} -p uid=lsipusr ${extraInfo} -i lcntBaseVcGet
-${G_myName} -p uid=root ${extraInfo} -i lcntBaseSymLink
 ---
 ${G_myName} -p uid=any ${extraInfo} -i lcntBasePlone3PublishDestUrls
 ${G_myName} -p uid=any ${extraInfo} -i lcntBaseClean
@@ -214,8 +216,21 @@ _EOF_
     lpDo nlcAcroreadBinsPrep.sh -v -n showRun -i fullUpdate 
 }
 
+function vis_lcntBasesFullSetup {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
 
-function vis_lcntBaseFullPrep {
+    lpDo vis_lcntBaseVcGet
+    lpDo vis_lcntBasesSetup
+    lpDo vis_usgBposLcntBasesSetup
+
+    lpReturn
+}	
+
+function vis_lcntBaseFullPrep%% {
     EH_assert [[ $# -eq 0 ]]
 
     opDo vis_lcntBaseGet
@@ -224,7 +239,7 @@ function vis_lcntBaseFullPrep {
 }
 
 
-function vis_lcntBaseGetPrep {
+function vis_lcntBaseGetPrep%% {
     EH_assert [[ $# -eq 0 ]]
 
     # NOTYET  BaseGet needs to be root -- Rest needs to be lsipusr
@@ -241,7 +256,7 @@ function vis_lcntBaseVcGet {
 }
 
 
-function vis_symLinkContent {
+function vis_symLinkContent%% {
   EH_assert [[ $# -eq 0 ]]
   developerVerify
 
@@ -250,12 +265,18 @@ function vis_symLinkContent {
 }
 
 
-function vis_lcntBaseSymLink {
+function vis_lcntBasesSetup {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Uses pip_lcntBases BPO and creats links to /de/lcnt and /lcnt
+_EOF_
+		       }
     EH_assert [[ $# -eq 0 ]]
 
     lpDo mkdir /de/lcnt
     lpDo sudo ln -s /de/lcnt /lcnt
 
+    # pip_lcntBases should become a public BPO
     local thisBxoHome=$(lpDo FN_absolutePathGet ~pip_lcntBases)
 
     EH_assert [ -d ${thisBxoHome}/bxdpt ]
@@ -309,7 +330,7 @@ _EOF_
 function vis_usgBposLcntBasesSetup {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** After this we should have everything we need for lcnt activities.
+** Creates symlinks using vis_usgBpos_lcntBases_bxoPath.
 _EOF_
 		       }
     EH_assert [[ $# -eq 0 ]]

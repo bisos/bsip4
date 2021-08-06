@@ -461,6 +461,7 @@ _CommentEnd_
 function vis_devExamples {
  typeset plpdNu=`cat ./LCNT-INFO/lcntNu`
  typeset plpdCategory=`cat ./LCNT-INFO/pubCategory`
+ local extraInfo=""
 
 cat  << _EOF_
 --- Step By Step for Developers  ---
