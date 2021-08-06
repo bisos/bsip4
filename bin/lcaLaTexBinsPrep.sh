@@ -172,10 +172,10 @@ function examplesHookPost {
     apt-get install arabtex
     apt-get install tex4ht
 
-    ln -s /opt/public/osmt/share/texmf/tex/extras /usr/share/texmf/tex/extras
+    ln -s  /bisos/apps/bxtex/tex/macros /usr/share/texmf/tex/extras	
 texhash
 or
-TEXINPUTS=.:/opt/public/osmt/share/texmf/tex/extras::
+TEXINPUTS=.://bisos/apps/bxtex/tex/macros::
 
 apt-get install latex2html
 apt-get install gv xpdf
@@ -186,7 +186,8 @@ _EOF_
 
 
 function vis_extraInstall {
-    opDo ln -s /opt/public/osmt/share/texmf/tex/extras /usr/share/texmf/tex/extras
+    #opDo ln -s /opt/public/osmt/share/texmf/tex/extras /usr/share/texmf/tex/extras
+    lpDo ln -s /bisos/apps/bxtex/tex/macros /usr/share/texmf/tex/extras
     opDo texhash
  
     # As an Alternative

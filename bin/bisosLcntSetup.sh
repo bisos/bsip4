@@ -293,7 +293,8 @@ _EOF_
 
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
 
-    lpDo lcaLaTexBinsPrep.sh -s all -a fullUpdate
+    # lpDo lcaLaTexBinsPrep.sh -s all -a fullUpdate
+    lpDo lcaLaTexBinsPrep.sh -i fullUpdate
 
     lpDo lcaLaTexBinsPrep.sh -i extraInstall
 
