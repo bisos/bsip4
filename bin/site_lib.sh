@@ -381,7 +381,7 @@ _EOF_
     siteBxoHome=$( FN_absolutePathGet ~${siteBxoId} )
 
     local resultBxoId=$( fileParamManage.py -i fileParamRead  ${siteBxoHome}/siteBpos domains.bpoFp )
-    EH_assert [ ! -z "${resultBxoId}" ]
+    # EH_assert [ ! -z "${resultBxoId}" ] # NOTYET, domains are not used yet. [2021-08-07 Sat 11:16]
 
     echo ${resultBxoId}
 }
