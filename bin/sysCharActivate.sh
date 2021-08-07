@@ -164,6 +164,9 @@ bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VAG-deb11_  # 
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VSG-deb11_  # Generic, Shielded, StaticIP
 $( examplesSeperatorChapter "SysChar Containers Info" )
 ${G_myName} -i containerReposList  # listAvaiableSysChars
+${G_myName} -i containerBposList  # grep -i pmp_ to bxoGitlab.py -i acctList
+$( examplesSeperatorChapter "SysChar Container Activate" )
+${G_myName} ${extraInfo}  -i activate_virtGenerics  # pmp_VAG-deb11_ pmp_VSG-deb11_
 $( examplesSeperatorChapter "SysChar Container Activate" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i activate_sysContainerBxo
 ${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i activate_sysContainerBxo

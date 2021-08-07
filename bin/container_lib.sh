@@ -229,6 +229,22 @@ _EOF_
    done
 }	
 
+function vis_activate_virtGenerics {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		      }
+   EH_assert [[ $# -eq 0 ]]
+
+   local containerReposList="pmp_VAG-deb11_ pmp_VSG-deb11_"
+       
+   for each in ${containerReposList} ; do
+       bxoId="${each}"
+       lpDo vis_activate_sysContainerBxo
+   done
+}	
+
+
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*

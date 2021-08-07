@@ -82,7 +82,8 @@ _EOF_
 	ubuntu_vm_builder
 	bridge_utils
 	virt_manager
-	libguestfs_tools	
+	libguestfs_tools
+	kvmExtraSetups
     )
 }
 
@@ -100,7 +101,8 @@ _EOF_
 	"$( itemNameFor libvirt-clients )"
 	"$( itemNameFor bridge-utils )"
 	virt_manager
-	libguestfs_tools	
+	libguestfs_tools
+	kvmExtraSetups
     )
 }
 
@@ -117,7 +119,8 @@ _EOF_
 	"$( itemNameFor libvirt-clients )"
 	"$( itemNameFor bridge-utils )"
 	virt_manager
-	libguestfs_tools	
+	libguestfs_tools
+	kvmExtraSetups
     )
 }
 
@@ -134,7 +137,8 @@ _EOF_
 	ubuntu_vm_builder
 	bridge_utils
 	virt_manager
-	libguestfs_tools	
+	libguestfs_tools
+	kvmExtraSetups
     )
 }
 
@@ -152,12 +156,14 @@ _EOF_
 	ubuntu_vm_builder
 	bridge_utils
 	virt_manager
-	libguestfs_tools	
+	libguestfs_tools
+	kvmExtraSetups
     )
 }
 
 
 distFamilyGenerationHookRun pkgsList
+
 
 
 _CommentBegin_
@@ -170,16 +176,27 @@ function examplesHookPost {
 ----- ADDITIONS -------
 dmesg | grep kvm   # Verify that virtualization has not been disabled in the bios
 kvm-ok
+${G_myName} -v -n showRun -i addKvmGroups
 ${G_myName} -v -n showRun -i fullUpdatePlus
 _EOF_
 }
 
 
-_CommentBegin_
-*      ======[[elisp:(org-cycle)][Fold]]====== fullUpdatePlus
-_CommentEnd_
+item_kvmExtraSetups () {
+  distFamilyGenerationHookRun binsPrep_kvmExtraSetups
+}
 
-function vis_fullUpdatePlus {
+binsPrep_kvmExtraSetups_DEFAULT_DEFAULT () {
+    mmaThisPkgName="kvmExtraSetups"
+    mmaPkgDebianName="${mmaThisPkgName}"
+    mmaPkgDebianMethod="custom"  #  or "apt" no need for customInstallScript but with binsPrep_installPostHook
+
+    function customInstallScript {
+	opDo vis_addKvmGroups
+    }
+}
+
+function vis_addKvmGroups {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -196,14 +213,30 @@ _EOF_
 
     local effectiveCurUser=$( id -un )
 
-    #if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
-
-    opDo lcaKvmBinsPrep.sh -v -n showRun -i fullUpdate
-
     #ANT_raw "Maybe This Is Broken, because libvirtd does not exist at that time"
     opDo sudo adduser ${effectiveCurUser} ${libvirtGroupName}
 
-    # opDo sudo adduser lsipusr ${libvirtGroupName}
+    # This needs to be revisited.
+    # initialInvokerUser=$( id -un )
+    # InitialInvokerUser should be passed as part of re-run as root.
+    opDo sudo adduser bystar ${libvirtGroupName}
+}
+
+
+_CommentBegin_
+*      ======[[elisp:(org-cycle)][Fold]]====== fullUpdatePlus
+_CommentEnd_
+
+function vis_fullUpdatePlus {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    opDo vis_fullUpdate
+
+    lpDo vis_addKvmGroups
 }
 
 

@@ -164,33 +164,6 @@ _EOF_
     fi
 }
 
-function vis_sysChar_containerPrep {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** Install sysChar specific packages.
-*** NOTYET, cleanly determine sysChar type.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    local virtualizationType=$( facter virtual )
-
-    if [ "${virtualizationType}" == "physical" ] ; then
-
-	# activate the aip_vagrantBaseBoxes BxO
-	lpDo bxoPubGithubManage.sh -h -v -n showRun -p privacy="allGithub" -p bxoId="aip_vagrantBaseBoxes" -i fullConstruct
-	
-	lpDo lcaVagrantBoxBuild.sh -h -v -n showRun -i bvdbb_deb11_desktopBuild
-	# If Pre-Release -- Weekly Build, the digest may not match.
-	# correct it by running:
-	# find /bxo/iso/aip_vagrantBaseBoxes/vagrants -type f -print | xargs grep -i oldDiget
-	# Then replace the old digest with the new digest in the .json file
-	#
-	
-    else
-	lpDo echo "This is a virtual machine and we need NOTYET"
-    fi
-}
 
 function vis_sysChar_containerPrep {
     G_funcEntry
