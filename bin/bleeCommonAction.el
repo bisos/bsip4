@@ -63,3 +63,20 @@
     )
   )
 
+(defun chemacs-profiles-alist ()
+  (with-temp-buffer
+    (insert-file-contents chemacs-profiles-path)
+    (goto-char (point-min))
+    (read (current-buffer))))
+
+;;; (chemacs-profiles-names-list "/tmp/t2")
+(defun chemacs-profiles-names-list (<fileName)
+  (save-excursion
+  (switch-to-buffer (find-file <fileName))
+  (dolist (item (chemacs-profiles-alist))
+    (insert (format "%s\n" (car item)))
+    (message (car item))
+    )
+  (save-buffer)
+  (kill-buffer)
+  ))

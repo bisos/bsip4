@@ -108,7 +108,7 @@ $( examplesSeperatorChapter "Common Panel Filter" )
 ${G_myName} ${extraInfo} -i panelActions fileName
 $( examplesSeperatorChapter "Misc" )
 ${G_myName} ${extraInfo} -i latexFix fileName
-
+${G_myName} ${extraInfo} -i chemacsProfilesNames
 _EOF_
 }
 
@@ -156,8 +156,6 @@ _EOF_
     lpReturn
 }
 
-
-
 function vis_latexFix {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -178,6 +176,29 @@ _EOF_
     
     bleeclient -h -v -n showRun -i run -- --eval \
 	       "(save-excursion (load-file \"${bleeCommonActionEl}\") (latexNewlineFixFile \"${fileName}\"))"
+
+    lpReturn
+}
+
+function vis_chemacsProfilesNames {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+save-excursion is needed, so that we visually remain in the current shell.
+NOTYET, Make it accept outFileName as arg1
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local fileName="$1"
+    local bleeCommonActionEl="${opBinBase}/bleeCommonAction.el"
+
+    if [ ! -f "${fileName}" ] ; then
+        ANT_cooked "Missing ${fileName} -- skipped"
+        lpReturn 101
+    fi
+
+    bleeclient -i run -- --eval \
+        "(save-excursion (load-file \"${bleeCommonActionEl}\") (chemacs-profiles-names-list \"${fileName}\"))"
 
     lpReturn
 }

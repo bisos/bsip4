@@ -96,6 +96,36 @@ function vis_examples {
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
+$( examplesSeperatorChapter "chemacs2 ~/.emacs-profiles.el" )
+${G_myName} ${extraInfo} -i emacsProfilesStdout
+${G_myName} ${extraInfo} -i emacsProfilesUpdate
+${G_myName} ${extraInfo} -f -i emacsProfilesUpdate
+${G_myName} ${extraInfo} -i emacsProfilesVerify
+ls -l $( vis_emacsProfilesFile  )
+$( examplesSeperatorChapter "chemacs2 Setup" )
+${G_myName} ${extraInfo} -i chemacs2FullUpdate # dotEmacsDeactivate+dotEmacsDirForChemacs2+emacsProfilesUpdate
+${G_myName} ${extraInfo} -i dotEmacsDeactivate
+${G_myName} ${extraInfo} -i dotEmacsDirForChemacs2
+$( examplesSeperatorChapter "Emacs Profiles List/Run" )
+${G_myName} ${extraInfo} -i chemacs2ProfilesNamesList
+${G_myName} ${extraInfo} -i chemacs2ProfilesNamesCache # $(vis_chemacs2ProfilesNamesCache)
+${G_myName} ${extraInfo} -i run default
+$( examplesSeperatorChapter "Development And Libraries And History" )
+$( vis_examples_bleeLibLine )
+${G_myName} ${extraInfo} -p acctName=bystar -i provisionSetup
+_EOF_
+}
+
+function vis_oldExamples {
+    typeset extraInfo="-h -v -n showRun"
+    #typeset extraInfo=""
+    typeset runInfo="-p ri=lsipusr:passive"
+
+    typeset examplesInfo="${extraInfo} ${runInfo}"
+
+    visLibExamplesOutput ${G_myName}
+  cat  << _EOF_
+$( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Blee Provisioing Setup" )
 ${G_myName} ${extraInfo} -p acctName=bystar -i provisionSetup
 $( examplesSeperatorChapter "Blee Prepare And Update Initialization Files" )
@@ -120,8 +150,206 @@ _CommentBegin_
 _CommentEnd_
 
 
+function vis_updateFileWithStdoutFunc {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** \$1 is updateStdoutFunc and \$2 is updateFileName. updateFileWithStdoutFunc is subject to force-mode.
+_EOF_
+    }
+    EH_assert [[ $# -eq 2 ]]
 
-function vis_provisionSetup {
+    local updateStdoutFunc=$1
+    local updateFileName=$2
+
+    typeset dirsPart=$( FN_dirsPart ${updateFileName} )
+    #opDoExit  FN_dirCreatePathIfNotThere ${dirsPart}
+
+    if [[ "${G_forceMode}" == "force" ]] ; then
+        FN_fileSafeKeep ${updateFileName}
+        ${updateStdoutFunc} > ${updateFileName} # 2> /dev/null
+    else
+        if [ -f ${updateFileName} ] ; then
+            ANT_raw "File: ${updateFileName} exists -- no action taken"
+        else
+            FN_fileSafeKeep ${updateFileName}
+            ${updateStdoutFunc} > ${updateFileName} # 2> /dev/null
+        fi
+    fi
+
+    # opDoComplain chmod ugo+x ${updateFileName}
+    opDoComplain ls -l ${updateFileName}
+}
+
+function vis_verifyFileWithStdoutFunc {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** \$1 is updateFileName and \$2 is updateStdoutFunc. Verify file with stdout function.
+_EOF_
+    }
+    EH_assert [[ $# -eq 2 ]]
+
+    local updateStdoutFunc=$1
+    local updateFileName=$2
+    local outcome=0
+
+    local tmpFile=$( FN_tempFile )
+
+    lpDo eval ${updateStdoutFunc}  \> ${tmpFile}
+
+    lpDo FN_fileCmpAndDiff ${updateFileName} ${tmpFile}
+    outcome=$?
+
+    lpDo FN_fileRmIfThere ${tmpFile}
+    lpReturn ${outcome}
+}
+
+function vis_emacsProfilesStdout {
+  cat  << _EOF_
+(
+ ("default" . ((user-emacs-directory . "/bisos/blee/blee-1-init")))       ;; Same as blee1
+ ("blee1" . ((user-emacs-directory . "/bisos/blee/blee-1-init")))         ;; Not based on doom
+ ("doom" . ((user-emacs-directory . "/bisos/blee/27f/doom-emacs-main") ;; Minimal doom for comparison
+           (env . (("DOOMDIR" . "/bisos/blee/doom-base")))))
+ ("blee2" . ((user-emacs-directory . "/bisos/blee/27f/doom-blee-main")    ;; blee2 on top of doom
+           (env . (("DOOMDIR" . "/bisos/blee/doom-blee-base")))))
+ )
+_EOF_
+
+##  ("doomDist" . ((user-emacs-directory . "~/doom-emacs")))                 ;; In homeDir using ~/.doom.d
+
+}
+
+function vis_emacsProfilesFile {
+  local updateFileName=$( echo ~/.emacs-profiles.el )
+  echo ${updateFileName}
+}
+
+function vis_emacsProfilesUpdate {
+  local updateFileName=$( vis_emacsProfilesFile  )
+  local updateStdoutFunc=vis_emacsProfilesStdout
+
+  lpDo vis_updateFileWithStdoutFunc ${updateStdoutFunc} ${updateFileName}
+}
+
+function vis_emacsProfilesVerify {
+  local updateFileName=$( vis_emacsProfilesFile  )
+  local updateStdoutFunc=vis_emacsProfilesStdout
+
+  lpDo vis_verifyFileWithStdoutFunc  ${updateStdoutFunc} ${updateFileName}
+}
+
+function vis_dotEmacsDeactivate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Get it out of the way. Save it.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local subjectFile=$( FN_absolutePathGet ~/.emacs )
+    if [ -f "${subjectFile}" ] ; then
+        lpDo FN_fileSafeKeep ${subjectFile}
+    else
+        ANT_raw "Safekeeping of ${subjectFile} skipped."
+    fi
+}
+
+
+function vis_dotEmacsDirForChemacs2 {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Safekeep .emacs.d. Gitclone chemacs2 in .emacs.d.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local home=$( FN_absolutePathGet ~ )
+    local subjectDir=$( FN_absolutePathGet ~/.emacs.d )
+    if [ -d "${subjectDir}" ] ; then
+        lpDo FN_dirSafeKeep ${subjectDir}
+    else
+        ANT_raw "Safekeeping of ${subjectDir} skipped."
+    fi
+
+    inBaseDirDo ${home} git clone https://github.com/plexus/chemacs2.git ${subjectDir}
+}
+
+function vis_chemacs2FullUpdate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Safekeep .emacs.d. Gitclone chemacs2 in .emacs.d.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo vis_dotEmacsDeactivate
+    lpDo vis_dotEmacsDirForChemacs2
+    lpDo vis_emacsProfilesUpdate
+}
+
+####+BEGIN: bx:shList/chemacsProfilesNames :noParams ""
+chemacsProfilesNamesCache=(
+default
+doom
+doomHome
+blee
+)
+
+####+END:
+
+function vis_chemacs2ProfilesNamesCache {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Safekeep .emacs.d. Gitclone chemacs2 in .emacs.d.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    echo ${chemacsProfilesNamesCache[@]}
+
+    lpReturn
+}
+
+function vis_chemacs2ProfilesNamesList {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Safekeep .emacs.d. Gitclone chemacs2 in .emacs.d.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local tmpFile=$( FN_tempFile )
+    lpDo touch ${tmpFile}
+
+    lpDo bleeCommonAction.sh -i chemacsProfilesNames ${tmpFile} > /dev/null
+
+    lpDo cat ${tmpFile}
+
+    lpDo rm ${tmpFile}
+}
+
+function vis_run {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** run ICM expects one or more chemacs2 profile names.
+Valid profile names are:
+$(vis_chemacs2ProfilesNamesCache)
+_EOF_
+    }
+    if [ $# -eq 0  ] ; then
+        ANT_raw "Usage: No arguments were specified."
+        lpDo describeF
+    fi
+
+    local emacsProg="emacs"
+
+    for each in $@ ; do
+        lpDo ${emacsProg} --with-profile ${each} &
+    done
+}
+
+
+function vis_provisionSetup%% {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 In acctName's (mandtaory) HOME, with vis_prepUpdateInit create emacs init files.
@@ -130,8 +358,8 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if [ -z "${acctName}" ] ; then
-	EH_problem "Missing acctName"
-	lpReturn 101
+        EH_problem "Missing acctName"
+        lpReturn 101
     fi
 
     # NOTYET, verify that acctName is valid (source needed lib)
@@ -140,7 +368,7 @@ _EOF_
 }
 
 
-function vis_prepUpdateInit {
+function vis_prepUpdateInit%% {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Emacs init files are in various different places and their role and behavior is different
@@ -191,23 +419,23 @@ _EOF_
     local templatesBaseDir="/bisos/blee/env/init/"
     
     if [ ! -d "${templatesBaseDir}" ] ; then
-	EH-problem "Missing ${templatesBaseDir}"
-	return 1
+        EH-problem "Missing ${templatesBaseDir}"
+        return 1
     fi
 
     local dotEmacs=$( FN_absolutePathGet "${HOME}/.emacs" )
     local dotEmacsEl=$( FN_absolutePathGet "${HOME}/.emacs.el" )   
 
     if [ -f "${dotEmacs}" ] ; then
-	opDo FN_fileSafeMove  "${dotEmacs}" "${dotEmacs}-$(DATE_nowTag)"
+        opDo FN_fileSafeMove  "${dotEmacs}" "${dotEmacs}-$(DATE_nowTag)"
     else
-	ANT_raw "No ${dotEmacs} -- elimination skipped"
+	    ANT_raw "No ${dotEmacs} -- elimination skipped"
     fi
 
     if [ -f "${dotEmacsEl}" ] ; then
-	opDo FN_fileSafeMove  "${dotEmacsEl}" "${dotEmacsEl}-$(DATE_nowTag)"
+        opDo FN_fileSafeMove  "${dotEmacsEl}" "${dotEmacsEl}-$(DATE_nowTag)"
     else
-	ANT_raw "No ${dotEmacsEl} -- elimination skipped"
+	    ANT_raw "No ${dotEmacsEl} -- elimination skipped"
     fi
 
     local dotEmacs_dBase=$( FN_absolutePathGet "${HOME}/.emacs.d" )

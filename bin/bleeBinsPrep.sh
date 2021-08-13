@@ -68,19 +68,21 @@ function pkgsList_DEFAULT_DEFAULT {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-    }
+                       }
 
     #  [[elisp:(lsip-local-run-command "apt-cache search something | egrep '^something'")][apt-cache search something | egrep '^something']]
 
     itemOrderedList=( 
 	"emacs"
 	"dict"
- 	"sqlite3"     # Used by: org-roam, 
+	"sqlite3"     # Used by: org-roam,
 	"graphviz"    # Used by: org-roam,
+	"ripgrep"     # Used by: doom,
+    "fd_find"     # Used by: doom,
     )
 
     itemOptionalOrderedList=(
-	"ripgrep"     # Used by: org-roam,
+	"ripgrep"     # Used by: doom,
     )
     itemLaterOrderedList=()
 }
@@ -147,6 +149,16 @@ _CommentEnd_
 item_ripgrep () { distFamilyGenerationHookRun binsPrep_ripgrep; }
 
 binsPrep_ripgrep_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "ripgrep"; }
+
+####+END:
+
+####+BEGIN: bx:dblock:lsip:binsprep:apt :module "fd-find"
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || Apt-Pkg       :: fd-find [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+item_fd_find () { distFamilyGenerationHookRun binsPrep_fd_find; }
+
+binsPrep_fd_find_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "fd-find"; }
 
 ####+END:
 
