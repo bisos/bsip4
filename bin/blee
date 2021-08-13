@@ -290,9 +290,9 @@ _EOF_
 ####+BEGIN: bx:shList/chemacsProfilesNames :noParams ""
 chemacsProfilesNamesCache=(
 default
+blee1
 doom
-doomHome
-blee
+blee2
 )
 
 ####+END:

@@ -114,7 +114,7 @@ $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "FULL Site Deployment" )
 ${G_myName} ${extraInfo} -i fullUpdate  # currents + siteFullUpdate
 $( examplesSeperatorChapter "Interim Actions Of fullUpdate" )
-${G_myName} ${extraInfo} -i gcipherPipInstall
+${G_myName} ${extraInfo} -i missingPipInstall
 ${G_myName} ${extraInfo} -i missingAptPkgsInstall
 $( examplesSeperatorChapter "Optional Interim Actions" )
 ${G_myName} ${extraInfo} -i libreInfoBaseAndInitialTemplates
@@ -135,24 +135,24 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo vis_gcipherPipInstall
+    lpDo vis_missingPipInstall
 
     lpDo vis_missingAptPkgsInstall
 }
 
 
-function vis_gcipherPipInstall {
+function vis_missingPipInstall {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** /bisos/venv/py2/bisos3/bin/gcipher
+** /bisos/venv/py2/bisos3/bin/missing
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo /bisos/venv/py2/bisos3/bin/pip2 install --upgrade unisos.gcipher
+    lpDo /bisos/venv/py2/bisos3/bin/pip2 install --upgrade unisos.missing
+    lpDo /bisos/venv/py2/bisos3/bin/pip2 install --upgrade twine
 
-    lpDo which -a gcipher
-    
+
     lpReturn
 }
 
