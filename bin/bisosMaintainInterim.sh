@@ -112,7 +112,9 @@ function vis_examples {
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "FULL Site Deployment" )
+${G_myName} ${extraInfo} -i fullUpdate # Run all the full ICMs
 ${G_myName} ${extraInfo} -i fullMissingUpdate  # missingPipInstals and missingAptPkgsInstall
+${G_myName} ${extraInfo} -i fullUpgrades
 $( examplesSeperatorChapter "Package Upgrades" )
 ${G_myName} ${extraInfo} -i pipUpgrades
 ${G_myName} ${extraInfo} -i aptUpgrades
@@ -129,6 +131,19 @@ noArgsHook() {
   vis_examples
 }
 
+function vis_fullUpdate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Run all missing packages interim commands.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo vis_pipUpgrades
+    lpDo vis_aptUpgrades
+
+}
+
 
 function vis_fullUpgrades {
     G_funcEntry
@@ -139,7 +154,7 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     lpDo vis_pipUpgrades
-
+    lpDo vis_aptUpgrades
 }
 
 
@@ -169,8 +184,6 @@ _EOF_
 
     lpReturn
 }
-
-
 
 function vis_pipUpgrades {
     G_funcEntry

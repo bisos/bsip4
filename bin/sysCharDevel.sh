@@ -153,9 +153,9 @@ ${G_myName} ${extraInfo} -i fullUpdate
 ${G_myName} ${extraInfo} -i vagrantBaseBoxesBuild
 ${G_myName} ${extraInfo} -i siteContainersAssignGenerics
 $( examplesSeperatorChapter "Developer Git Credentials Activate" )
-${G_myName} ${extraInfo} -i bisosDevBxo_fullSetup
-${G_myName} ${extraInfo} -i bisosDevBxo_activate
-${G_myName} ${extraInfo} -i bisosDevBxo_actuate
+${G_myName} ${extraInfo} -i bisosDevBxo_fullSetup  # activate bisosDevBxoId and actuate it
+${G_myName} ${extraInfo} -i bisosDevBxo_activate   # activate bisosDevBxoId
+${G_myName} ${extraInfo} -i bisosDevBxo_actuate    # clone  auth based bxRepos with bisosDev credentials
 $( examplesSeperatorChapter "Developer Git Credentials Deactivate" )
 ${G_myName} ${extraInfo} -i bisosDevBxo_delete
 $( examplesSeperatorChapter "Mode Selection" )
