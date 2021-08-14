@@ -80,7 +80,10 @@ ${G_myName} ${extraInfo} -i venvPy2_pipInstalls
 ${G_myName} ${extraInfo} -i venvPy3_pipInstalls
 ${G_myName} ${extraInfo} -i venvPy2Dev_pipInstalls
 ${G_myName} ${extraInfo} -i venvPy3Dev_pipInstalls
-${pdb_venv_py2Bisos3}/bin/pip2 list --outdated --format=freeze 
+$( examplesSeperatorChapter "BISOS Bases Initialization" )
+${G_myName} ${extraInfo} -i venvPy2_pipUpgrades
+$( examplesSeperatorChapter "Direct Examples" )
+${pdb_venv_py2Bisos3}/bin/pip2 list --outdated --format=freeze
 ${pdb_venv_py2Bisos3}/bin/pip2 list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 ${pdb_venv_py2Bisos3}/bin/pip2 install --upgrade
 pip2 list --outdated --format=freeze 
 pip list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
@@ -128,6 +131,32 @@ _EOF_
 _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
 _CommentEnd_
+
+
+function vis_venvPy2_pipUpgrades {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Upgrade py2 packages.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local upgradeSubjectPkgs=$(lpDo eval ${pdb_venv_py2Bisos3}/bin/pip2 list --outdated --format=freeze \| grep -v flufl.bounce)
+
+    if [ -z "${upgradeSubjectPkgs}" ] ; then
+        ANT_raw "No packages needed to be upgraded for ${pdb_venv_py2Bisos3}."
+        lpReturn
+    fi
+
+    ANT_raw "Upgrade Subject Packages For ${pdb_venv_py2Bisos3}:"
+    ANT_raw "${upgradeSubjectPkgs}"
+
+    lpDo eval echo ${upgradeSubjectPkgs} \| grep -v '^\-e' \| cut -d = -f 1  \| xargs -n1 ${pdb_venv_py2Bisos3}/bin/pip2 install --upgrade
+
+    lpReturn
+}
+
+
 
 function vis_venvPy2_pipInstalls {
     G_funcEntry

@@ -92,6 +92,7 @@ ${G_myName} ${extraInfo} -p profile=blee2 -i buildInstall
 ${G_myName} ${extraInfo} -p profile=blee2 -i doomSync
 ${G_myName} ${extraInfo} -p profile=blee2 -i unMain
 ${G_myName} ${extraInfo} -p profile=blee2 -i reBuild
+ls -l /bisos/blee/doom-blee-base/init.el
 emacs --debug-init --with-profile blee2 &
 $( examplesSeperatorChapter "Doom Main Deploy -- profile=sysDoom" )
 ${G_myName} ${extraInfo} -p profile=sysDoom -i buildInstall

@@ -112,12 +112,15 @@ function vis_examples {
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "FULL Site Deployment" )
-${G_myName} ${extraInfo} -i fullUpdate  # currents + siteFullUpdate
+${G_myName} ${extraInfo} -i fullMissingUpdate  # missingPipInstals and missingAptPkgsInstall
+$( examplesSeperatorChapter "Package Upgrades" )
+${G_myName} ${extraInfo} -i pipUpgrades
+${G_myName} ${extraInfo} -i aptUpgrades
 $( examplesSeperatorChapter "Interim Actions Of fullUpdate" )
 ${G_myName} ${extraInfo} -i missingPipInstall
 ${G_myName} ${extraInfo} -i missingAptPkgsInstall
 $( examplesSeperatorChapter "Optional Interim Actions" )
-${G_myName} ${extraInfo} -i libreInfoBaseAndInitialTemplates
+${G_myName} ${extraInfo} -i libreInfoBaseAndInitialTemplates # Bring over /libre/ByStar panels
 _EOF_
 }
 
@@ -127,10 +130,23 @@ noArgsHook() {
 }
 
 
-function vis_fullUpdate {    
+function vis_fullUpgrades {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Run all interim commands.
+** Run all missing packages interim commands.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo vis_pipUpgrades
+
+}
+
+
+function vis_fullMissingUpdate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Run all missing packages interim commands.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -138,6 +154,35 @@ _EOF_
     lpDo vis_missingPipInstall
 
     lpDo vis_missingAptPkgsInstall
+}
+
+function vis_aptUpgrades {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+**
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo sudo apt-get update
+    lpDo sudo apt-get -y upgrade
+
+    lpReturn
+}
+
+
+
+function vis_pipUpgrades {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** /bisos/venv/py2/bisos3/bin
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo bisosPyVenvSetup.sh -h -v -n showRun -i venvPy2_pipUpgrades
+
+    lpReturn
 }
 
 
