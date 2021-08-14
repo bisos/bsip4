@@ -114,13 +114,17 @@ $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "FULL Site Deployment" )
 ${G_myName} ${extraInfo} -i fullUpdate # Run all the full ICMs
 ${G_myName} ${extraInfo} -i fullMissingUpdate  # missingPipInstals and missingAptPkgsInstall
-${G_myName} ${extraInfo} -i fullUpgrades
+${G_myName} ${extraInfo} -i fullUpgrades # pip and apt
+${G_myName} ${extraInfo} -i fullBisosBasesUpdate # ReClone and GitPull
 $( examplesSeperatorChapter "Package Upgrades" )
 ${G_myName} ${extraInfo} -i pipUpgrades
 ${G_myName} ${extraInfo} -i aptUpgrades
-$( examplesSeperatorChapter "Interim Actions Of fullUpdate" )
+$( examplesSeperatorChapter "Missing Pip And Apt Packages" )
 ${G_myName} ${extraInfo} -i missingPipInstall
 ${G_myName} ${extraInfo} -i missingAptPkgsInstall
+$( examplesSeperatorChapter "Bisos Bases Update" )
+${G_myName} ${extraInfo} -i bisosBasesReClone
+${G_myName} ${extraInfo} -i bisosBasesPull
 $( examplesSeperatorChapter "Optional Interim Actions" )
 ${G_myName} ${extraInfo} -i libreInfoBaseAndInitialTemplates # Bring over /libre/ByStar panels
 _EOF_
@@ -134,13 +138,14 @@ noArgsHook() {
 function vis_fullUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Run all missing packages interim commands.
+** Run all the full ICMs in turn.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo vis_pipUpgrades
-    lpDo vis_aptUpgrades
+    lpDo vis_fullUpgrades
+    lpDo vis_fullMissingUpdate
+
 
 }
 
@@ -170,6 +175,49 @@ _EOF_
 
     lpDo vis_missingAptPkgsInstall
 }
+
+function vis_fullBisosBasesUpdate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Run all missing packages interim commands.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo vis_bisosBasesReClone
+
+    lpDo vis_bisosBasesPull
+}
+
+
+
+function vis_bisosBasesReClone {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** When Auth, use sysCharDevel.sh.
+***  TODO When Anon, use bisosBaseDirs.sh.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo sysCharDevel.sh -h -v -n showRun -i bisosDevBxo_fullSetup
+
+    lpReturn
+}
+
+function vis_bisosBasesPull {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Git pull all bases.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo eval bx-gitRepos -i cachedLs \| bx-gitRepos -i gitRemPull
+
+    lpReturn
+}
+
 
 function vis_aptUpgrades {
     G_funcEntry
