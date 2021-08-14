@@ -145,8 +145,7 @@ _EOF_
 
     lpDo vis_fullUpgrades
     lpDo vis_fullMissingUpdate
-
-
+    lpDo vis_fullBisosBasesUpdate
 }
 
 
@@ -196,11 +195,14 @@ function vis_bisosBasesReClone {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** When Auth, use sysCharDevel.sh.
 ***  TODO When Anon, use bisosBaseDirs.sh.
+*** TODO Recloning is being done from scratch for all, instead it should be incremental
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo sysCharDevel.sh -h -v -n showRun -i bisosDevBxo_fullSetup
+    ANT_raw "Run this only after you have pushed all your changes."
+    ANT_raw "Not automated as part of batch full update as it can be dangerous."
+    lpDo echo sysCharDevel.sh -h -v -n showRun -i bisosDevBxo_fullSetup
 
     lpReturn
 }
