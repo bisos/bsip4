@@ -109,7 +109,9 @@ ${G_myName} ${extraInfo} -i dotEmacsDirForChemacs2
 $( examplesSeperatorChapter "Emacs Profiles List/Run" )
 ${G_myName} ${extraInfo} -i chemacs2ProfilesNamesList
 ${G_myName} ${extraInfo} -i chemacs2ProfilesNamesCache # $(vis_chemacs2ProfilesNamesCache)
-${G_myName} ${extraInfo} -i run default
+${G_myName} ${extraInfo} -i run blee1
+${G_myName} ${extraInfo} -i run doom
+${G_myName} ${extraInfo} -i run blee2
 $( examplesSeperatorChapter "Development And Libraries And History" )
 $( vis_examples_bleeLibLine )
 ${G_myName} ${extraInfo} -p acctName=bystar -i provisionSetup
