@@ -123,8 +123,9 @@ $( examplesSeperatorChapter "Missing Pip And Apt Packages" )
 ${G_myName} ${extraInfo} -i missingPipInstall
 ${G_myName} ${extraInfo} -i missingAptPkgsInstall
 $( examplesSeperatorChapter "Bisos Bases Update" )
-${G_myName} ${extraInfo} -i bisosBasesReClone
-${G_myName} ${extraInfo} -i bisosBasesPull
+${G_myName} ${extraInfo} -i bisosBasesReClone  # with sysCharDevel.sh
+${G_myName} ${extraInfo} -i bisosBasesPull  # with bx-gitRepos
+${G_myName} ${extraInfo} -i bisosBasesReDirAndReLink # with bx-bases
 $( examplesSeperatorChapter "Optional Interim Actions" )
 ${G_myName} ${extraInfo} -i libreInfoBaseAndInitialTemplates # Bring over /libre/ByStar panels
 _EOF_
@@ -186,8 +187,22 @@ _EOF_
     lpDo vis_bisosBasesReClone
 
     lpDo vis_bisosBasesPull
+
+    lpDo vis_bisosBasesReDirAndReLink
 }
 
+function vis_bisosBasesReDirAndReLink {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Update directory and links in /bisos.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo bx-bases -v 20 --baseDir="/bisos" --pbdName="bleeRoot"  -i pbdUpdate all
+
+    lpReturn
+}
 
 
 function vis_bisosBasesReClone {
