@@ -92,6 +92,8 @@ ${G_myName} ${extraInfo} -p profile=blee2 -i buildInstall
 ${G_myName} ${extraInfo} -p profile=blee2 -i doomSync
 ${G_myName} ${extraInfo} -p profile=blee2 -i unMain
 ${G_myName} ${extraInfo} -p profile=blee2 -i reBuild
+${G_myName} ${extraInfo} -p profile=blee2 -i switchInitTo sansBlee
+${G_myName} ${extraInfo} -p profile=blee2 -i switchInitTo withBlee
 ls -l /bisos/blee/doom-blee-base/init.el
 emacs --debug-init --with-profile blee2 &
 $( examplesSeperatorChapter "Doom Main Deploy -- profile=sysDoom" )
@@ -176,6 +178,52 @@ _EOF_
     lpReturn
 }
 
+function vis_switchInitTo {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** This is temporary.
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    EH_assert profilePrep
+
+    local switchTo="$1"
+
+    case ${switchTo} in
+        sansBlee)
+            case $profile in
+                blee2)
+		    lpDo chmod ug+rw ${doomDirBase}/init.el
+	            # /bisos/blee/doom-blee-base/initSansBlee.el
+	            lpDo cp ${doomDirBase}/initSansBlee.el ${doomDirBase}/init.el
+		    lpDo chmod 444 ${doomDirBase}/init.el
+                    ;;
+                *)
+                    lpDo doNothing
+                    ;;
+            esac
+            ;;
+        withBlee)
+            case $profile in
+                blee2)
+		    lpDo chmod ug+rw ${doomDirBase}/init.el		    
+                    # /bisos/blee/doom-blee-base/initSansBlee.el
+	                # /bisos/blee/doom-blee-base/loadBlee.el
+	                lpDo eval cat ${doomDirBase}/initSansBlee.el ${doomDirBase}/loadBlee.el \> ${doomDirBase}/init.el
+                    lpDo chmod 444 ${doomDirBase}/init.el
+                    ;;
+                *)
+                    lpDo doNothing
+                    ;;
+            esac
+            ;;
+        *)
+            EH_problem "Bad Input: ${switchTo}"
+            ;;
+    esac
+}
+
 
 function vis_buildInstall {
    G_funcEntry
@@ -189,15 +237,7 @@ _EOF_
     export DOOMDIR="${doomDirBase}"
     export YES=y
 
-    case $profile in
-        blee2)
-	    # /bisos/blee/doom-blee-base/initSansBlee.el
-	    lpDo cp ${doomDirBase}/initSansBlee.el ${doomDirBase}/init.el
-            ;;
-        *)
-            lpDo doNothing
-            ;;
-    esac
+    lpDo vis_switchInitTo sansBlee
 
     lpDo mkdir ${doomMainBase}
 
@@ -208,17 +248,8 @@ _EOF_
 
     lpDo ${doomMainBase}/bin/doom install
 
-    case $profile in
-        blee2)
-	    # /bisos/blee/doom-blee-base/initSansBlee.el
-	    # /bisos/blee/doom-blee-base/loadBlee.el
-	    lpDo eval cat ${doomDirBase}/initSansBlee.el ${doomDirBase}/loadBlee.el \> ${doomDirBase}/init.el
-            ;;
-        *)
-            lpDo doNothing
-            ;;
-    esac
-    
+    lpDo vis_switchInitTo withBlee
+
     lpReturn
 }
 
@@ -233,7 +264,11 @@ _EOF_
 
     export DOOMDIR="${doomDirBase}"
 
+    lpDo vis_switchInitTo sansBlee
+
     lpDo ${doomMainBase}/bin/doom sync
+
+    lpDo vis_switchInitTo withBlee
 
     lpReturn
 }	
