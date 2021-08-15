@@ -330,6 +330,8 @@ _EOF_
     lpDo emacsDoomsManage.sh -h -v -n showRun -p profile=blee2 -i reBuild
     lpDo emacsDoomsManage.sh -h -v -n showRun -p profile=sysDoom -i reBuild
 
+    lpDo blee -h -v -n showRun -i blee1InitSetup
+
     lpDo blee -h -v -n showRun -i chemacs2FullUpdate    
     
     lpReturn
