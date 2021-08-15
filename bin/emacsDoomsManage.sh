@@ -189,6 +189,16 @@ _EOF_
     export DOOMDIR="${doomDirBase}"
     export YES=y
 
+    case $profile in
+        blee2)
+	    # /bisos/blee/doom-blee-base/initSansBlee.el
+	    lpDo cp ${doomDirBase}/initSansBlee.el ${doomDirBase}/init.el
+            ;;
+        *)
+            lpDo doNothing
+            ;;
+    esac
+
     lpDo mkdir ${doomMainBase}
 
     lpDo cp -r ${doomFrameworkBase}/* ${doomMainBase}
@@ -198,6 +208,17 @@ _EOF_
 
     lpDo ${doomMainBase}/bin/doom install
 
+    case $profile in
+        blee2)
+	    # /bisos/blee/doom-blee-base/initSansBlee.el
+	    # /bisos/blee/doom-blee-base/loadBlee.el
+	    lpDo eval cat ${doomDirBase}/initSansBlee.el ${doomDirBase}/loadBlee.el \> ${doomDirBase}/init.el
+            ;;
+        *)
+            lpDo doNothing
+            ;;
+    esac
+    
     lpReturn
 }
 
