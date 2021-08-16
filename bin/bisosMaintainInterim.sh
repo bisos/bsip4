@@ -113,6 +113,7 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "FULL Site Deployment" )
 ${G_myName} ${extraInfo} -i fullUpdate # Run all the full ICMs
+${G_myName} ${extraInfo} -i fullBeforeBisosBasesReClone
 ${G_myName} ${extraInfo} -i fullMissingUpdate  # missingPipInstals and missingAptPkgsInstall
 ${G_myName} ${extraInfo} -i fullUpgrades # pip and apt
 ${G_myName} ${extraInfo} -i fullBisosBasesUpdate # ReClone and GitPull
@@ -149,10 +150,24 @@ _EOF_
     lpDo vis_fullUpgrades
     lpDo vis_fullMissingUpdate
     lpDo vis_fullBisosBasesUpdate
+    lpDo vis_bleeUpgrade
+}
+
+function vis_fullUpdate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Run all the full ICMs in turn.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo vis_fullUpgrades
+    lpDo vis_fullMissingUpdate
 }
 
 
-function vis_fullUpgrades {
+
+function vis_fullBeforeBisosBasesReClone {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Run all missing packages interim commands.
