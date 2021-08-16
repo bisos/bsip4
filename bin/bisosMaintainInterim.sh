@@ -272,9 +272,8 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo /bisos/venv/py2/bisos3/bin/pip2 install --upgrade unisos.missing
+    lpDo /bisos/venv/py2/bisos3/bin/pip2 install --upgrade unisos.gcipher
     lpDo /bisos/venv/py2/bisos3/bin/pip2 install --upgrade twine
-
 
     lpReturn
 }
