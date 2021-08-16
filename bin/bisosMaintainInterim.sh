@@ -113,6 +113,7 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "FULL Site Deployment" )
 ${G_myName} ${extraInfo} -i fullUpdate # Run all the full ICMs
+${G_myName} ${extraInfo} -i fullBeforeBisosBasesReClone
 ${G_myName} ${extraInfo} -i fullMissingUpdate  # missingPipInstals and missingAptPkgsInstall
 ${G_myName} ${extraInfo} -i fullUpgrades # pip and apt
 ${G_myName} ${extraInfo} -i fullBisosBasesUpdate # ReClone and GitPull
@@ -126,6 +127,8 @@ $( examplesSeperatorChapter "Bisos Bases Update" )
 ${G_myName} ${extraInfo} -i bisosBasesReClone  # with sysCharDevel.sh
 ${G_myName} ${extraInfo} -i bisosBasesPull  # with bx-gitRepos
 ${G_myName} ${extraInfo} -i bisosBasesReDirAndReLink # with bx-bases
+$( examplesSeperatorChapter "Blee Upgrade" )
+${G_myName} ${extraInfo} -i bleeUpgrade
 $( examplesSeperatorChapter "Optional Interim Actions" )
 ${G_myName} ${extraInfo} -i libreInfoBaseAndInitialTemplates # Bring over /libre/ByStar panels
 _EOF_
@@ -147,10 +150,24 @@ _EOF_
     lpDo vis_fullUpgrades
     lpDo vis_fullMissingUpdate
     lpDo vis_fullBisosBasesUpdate
+    lpDo vis_bleeUpgrade
+}
+
+function vis_fullUpdate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Run all the full ICMs in turn.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo vis_fullUpgrades
+    lpDo vis_fullMissingUpdate
 }
 
 
-function vis_fullUpgrades {
+
+function vis_fullBeforeBisosBasesReClone {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Run all missing packages interim commands.
@@ -311,6 +328,25 @@ _EOF_
 
     lpDo scp -r bystar@192.168.0.151:/libre/ByStar/InfoBase /libre/ByStar
     lpDo scp -r bystar@192.168.0.151:/libre/ByStar/InitialTemplates /libre/ByStar
+    
+    lpReturn
+}
+
+
+function vis_bleeUpgrade {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Missing apt packages to be sorted out and absorbed
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo emacsDoomsManage.sh -h -v -n showRun -p profile=blee2 -i reBuild
+    lpDo emacsDoomsManage.sh -h -v -n showRun -p profile=sysDoom -i reBuild
+
+    lpDo blee -h -v -n showRun -i blee1InitSetup
+
+    lpDo blee -h -v -n showRun -i chemacs2FullUpdate    
     
     lpReturn
 }
