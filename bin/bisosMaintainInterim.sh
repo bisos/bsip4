@@ -89,7 +89,6 @@ typeset -t password=""
 
 
 function G_postParamHook {
-	
     return 0
 }
 
@@ -109,7 +108,7 @@ function vis_examples {
     local siteBxoId=$( sysCharRealize.sh -i selectedSiteBxoId )    
 
     visLibExamplesOutput ${G_myName} 
-  cat  << _EOF_
+    cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "FULL Site Deployment" )
 ${G_myName} ${extraInfo} -i fullUpdate # Run all the full ICMs
@@ -292,6 +291,7 @@ _EOF_
     lpDo /bisos/venv/py2/bisos3/bin/pip2 install --upgrade unisos.gcipher
     lpDo /bisos/venv/py2/bisos3/bin/pip2 install --upgrade twine
 
+    lpDo sudo apt-get install python3-venv  # needed for pipx
     lpDo /bisos/venv/py3/bisos3/bin/pip install --upgrade pipx
     # NOTYET, Run pipx --help and setup env vars in bashrc
 

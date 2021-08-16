@@ -204,8 +204,8 @@ _EOF_
     local py3ActivateFile="${pdb_venv_py3Bisos3}/bin/activate"
 
     if [ ! -f "${py3ActivateFile}" ] ; then
-	EH_problem "Missing ${py3ActivateFile} -- BISOS Provisioners venv pip installs aborted"
-	lpReturn 101
+	    EH_problem "Missing ${py3ActivateFile} -- BISOS Provisioners venv pip installs aborted"
+	    lpReturn 101
     fi
 
     lpDo sudo -u bisos ${pdb_venv_py3Bisos3}/bin/pip3 install --upgrade bisos.py3-all
@@ -238,8 +238,8 @@ _EOF_
     local py2ActivateFile="${pdb_venv_py2Bisos3Dev}/bin/activate"
 
     if [ ! -f "${py2ActivateFile}" ] ; then
-	EH_problem "Missing ${py2ActivateFile} -- BISOS Provisioners venv pip installs aborted"
-	lpReturn 101
+        EH_problem "Missing ${py2ActivateFile} -- BISOS Provisioners venv pip installs aborted"
+        lpReturn 101
     fi
 
     source ${py2ActivateFile}
