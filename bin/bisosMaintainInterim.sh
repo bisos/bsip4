@@ -292,6 +292,25 @@ _EOF_
     lpDo /bisos/venv/py2/bisos3/bin/pip2 install --upgrade unisos.gcipher
     lpDo /bisos/venv/py2/bisos3/bin/pip2 install --upgrade twine
 
+    lpDo /bisos/venv/py3/bisos3/bin/pip install --upgrade pipx
+    # NOTYET, Run pipx --help and setup env vars in bashrc
+
+    lpDo lcaJsBinsPrep.sh -v -n showRun -i fullUpdate
+
+    function toBeAbsorbedIn_bleeBinsPrep {
+        sudo npm install --global pyright
+
+        # See github.com/hlissner/doom-emacs/blob/develop/modules/lang/python/README.org
+        # For details
+        #
+        lpDo pipx install pytest
+        lpDo pipx install nose
+        lpDo pipx install black
+        lpDo pipx install isort
+    }
+    lpDo toBeAbsorbedIn_bleeBinsPrep
+
+
     lpReturn
 }
 
