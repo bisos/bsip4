@@ -131,6 +131,34 @@ _EOF_
     lpDo pwd
 }
 
+function vis_py2to3 {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Meant to run in /bisos/git/bxRepos/unisos-pip as: ftoProc.sh -i ftoWalkRunCmnd bisosTransitionInterim.sh -i py2to3
+*** Its execution is repeatable.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    if [ -d "./dev" ] ; then
+        lpDo mv ./dev/ ./py2
+        ANT_raw "Moving: mv ./dev/ ./py2"
+    else
+        ANT_raw "No ./dev -- skipped"
+    fi
+
+    if [ -d "./py2" ] ; then
+        if [ -d "./py3" ] ; then
+            ANT_raw "./py3 already exists. Copying skipped."
+        else
+            lpDo cp -r -p ./py2 ./py3
+            ANT_raw "Copying: cp -r -p ./py2 ./py3"
+        fi
+    else
+        ANT_raw "No ./py2 -- skipped"
+    fi
+}
+
 
 _CommentBegin_
 *      ################      *End Of Editable Text*
