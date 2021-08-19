@@ -327,6 +327,7 @@ _EOF_
     local emacsProg="emacs"
 
     for each in $@ ; do
+        # echo $PATH
         lpDo ${emacsProg} --with-profile ${each} &
     done
 }

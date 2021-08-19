@@ -112,6 +112,7 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "FULL Site Deployment" )
 ${G_myName} ${extraInfo} -i hereReport
+${G_myName} ${extraInfo} -i py2to3
 _EOF_
 }
 

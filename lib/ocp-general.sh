@@ -93,7 +93,8 @@ function opBasePathSet {
       export PATH="${PATH}:/bisos/venv/py3/dev/bisos3/bin:/bisos/venv/py3/bisos3/bin:/bisos/venv/py2/dev/bisos3/bin:/bisos/venv/py2/bisos3/bin"
       export PATH="${PATH}:/usr/local/bin:/usr/local/sbin"
       export PATH="${PATH}:/usr/5bin:/usr/ccs/bin:/usr/sbin:/bin:/sbin:/usr/bin"
-      export PATH="${PATH}:."
+      export PATH="${PATH}:${HOME}/.local/bin:$HOME/.poetry/bin"
+      export PATH=".:${PATH}"
       ;;
     'Windows_NT' | 'UWIN-NT' | CYGWIN_NT-*)
       export PATH="${opBase}/nedaBin"
