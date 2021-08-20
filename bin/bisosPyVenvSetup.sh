@@ -54,6 +54,11 @@ _CommentEnd_
 
 # Import Libraries
 
+. ${opBinBase}/opAcctLib.sh
+. ${opBinBase}/opDoAtAsLib.sh
+. ${opBinBase}/lpParams.libSh
+. ${opBinBase}/lpReRunAs.libSh
+
 # ./platformBases_lib.sh
 . ${opBinBase}/platformBases_lib.sh
 
@@ -73,15 +78,26 @@ function vis_examples {
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "BISOS Bases Initialization" )
+${G_myName} ${extraInfo} -i pyVenv_provisionSetup  # virtenvsPrep + venvPy3_pipInstalls etc
 $( examplesSeperatorSection "Create virtenvs and install packages" )
-${G_myName} ${extraInfo} -i pyVenv_provisionSetup
-${G_myName} ${extraInfo} -i virtenvsPrep
+${G_myName} ${extraInfo} -i virtenvsPrep py2
+${G_myName} ${extraInfo} -f -i virtenvsPrep py3
+$( examplesSeperatorSection "BISOS Install packages" )
 ${G_myName} ${extraInfo} -i venvPy2_pipInstalls
 ${G_myName} ${extraInfo} -i venvPy3_pipInstalls
 ${G_myName} ${extraInfo} -i venvPy2Dev_pipInstalls
 ${G_myName} ${extraInfo} -i venvPy3Dev_pipInstalls
-$( examplesSeperatorChapter "BISOS Bases Initialization" )
+$( examplesSeperatorSection "BISOS Uninstall packages" )
+${G_myName} ${extraInfo} -i venvPy3_bisosUninstalls
+$( examplesSeperatorChapter "BISOS Upgrade Packages" )
 ${G_myName} ${extraInfo} -i venvPy2_pipUpgrades
+${G_myName} ${extraInfo} -i venvPy3_pipUpgrades
+$( examplesSeperatorChapter "BISOS List Packages" )
+${G_myName} ${extraInfo} -f -i venvPip py3 install packages  # reinstall
+$( examplesSeperatorChapter "Venv Individual Packages" )
+${G_myName} ${extraInfo} -f -i venvPip py3/dev install packages
+${G_myName} ${extraInfo} -f -i venvPip py3 install packages  # reinstall
+${G_myName} ${extraInfo} -f -i venvPip py3 uninstall packages
 $( examplesSeperatorChapter "Direct Examples" )
 ${pdb_venv_py2Bisos3}/bin/pip2 list --outdated --format=freeze
 ${pdb_venv_py2Bisos3}/bin/pip2 list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 ${pdb_venv_py2Bisos3}/bin/pip2 install --upgrade
@@ -113,18 +129,119 @@ _EOF_
     lpReturn
 }
 
+function vis_venvDo  {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+**
+_EOF_
+    }
+    EH_assert [[ $# -gt 2 ]]
+    local virtenvLabel="$1"
+    # local cmndAndRest=$@  # unused
+
+    local bisosBaseDir="/bisos"
+
+    function venvCmnd {
+        EH_assert [[ $# -gt 3 ]]
+        local pythonVersion="$1"
+        local relBaseDir="$2"
+        shift ; shift
+        shift  # original label eg py3clean
+        local cmndName="$1" # original cmnd
+        shift
+
+        local absBaseDir=${bisosBaseDir}/${relBaseDir}
+        local venvPipProg=${absBaseDir}/bin/pip
+
+        case ${cmndName} in
+            reInstall)
+                lpDo ${venvPipProg}  install --no-cache-dir --force-reinstall --upgrade $@
+                ;;
+            unInstall)
+                lpDo ${venvPipProg} uninstall -y $@
+                ;;
+            pip)
+                lpDo ${venvPipProg} $@
+                ;;
+            *)
+                EH_problem "UnKnown cmndName=${cmndName}"
+                ;;
+        esac
+    }
+
+    case ${virtenvLabel} in
+        py2)
+            lpDo venvCmnd python2 venv/py2/bisos3 $@
+            ;;
+        py2/dev)
+            lpDo venvCmnd python2 venv/py2/dev/bisos3 $@
+            ;;
+        py3)
+            lpDo venvCmnd python3 venv/py3/bisos3 $@
+            ;;
+        py3/dev)
+            lpDo venvCmnd python3 venv/py3/dev/bisos3 $@
+            ;;
+        *)
+            EH_problem "UnKnown virtenvLabel=${virtenvLabel}"
+            ;;
+    esac
+}
+
 
 
 function vis_virtenvsPrep {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-echo someParam and args 
+** Installs or Reinstalls venv. virtenvLabel is one of py2 py2/dev py3 py3/dev.
 _EOF_
     }
-    EH_assert [[ $# -eq 0 ]]
+    EH_assert [[ $# -eq 1 ]]
+    local virtenvLabel="$1"
 
- 
-    lpReturn
+    local bisosBaseDir="/bisos"
+
+
+    function virtenvReInstall {
+        EH_assert [[ $# -eq 2 ]]
+        local pythonVersion="$1"
+        local relBaseDir="$2"
+
+        local absBaseDir=${bisosBaseDir}/${relBaseDir}
+
+        if [ "${G_forceMode}" != "force" ]  ; then
+	        if [ -d "${absBaseDir}" ] ; then
+                EH_problem "${absBaseDir} exists and forceMode not specified."
+                lpReturn
+	        fi
+        fi
+
+        if [ -d "${absBaseDir}" ] ; then
+            lpDo mv "${absBaseDir}" "${absBaseDir}.$(DATE_nowTag)"
+        fi
+
+        inBaseDirDo ${bisosBaseDir} virtualenv --python=${pythonVersion} "${relBaseDir}"
+
+        lpDo ${absBaseDir}/bin/python -m pip install --upgrade pip
+    }
+
+    case ${virtenvLabel} in
+        py2)
+            lpDo virtenvReInstall python2 venv/py2/bisos3
+            ;;
+        py2/dev)
+            lpDo virtenvReInstall python2 venv/py2/dev/bisos3
+            ;;
+        py3)
+            lpDo virtenvReInstall python3 venv/py3/bisos3
+            ;;
+        py3/dev)
+            lpDo virtenvReInstall python3 venv/py3/dev/bisos3
+            ;;
+        *)
+            EH_problem "UnKnown virtenvLabel=${virtenvLabel}"
+            ;;
+    esac
 }
 
 
@@ -156,6 +273,52 @@ _EOF_
     lpReturn
 }
 
+function vis_venvPy3_pipUpgrades {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Upgrade py2 packages.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local upgradeSubjectPkgs=$(lpDo eval ${pdb_venv_py3Bisos3}/bin/pip list --outdated --format=freeze \| grep -v flufl.bounce)
+
+    if [ -z "${upgradeSubjectPkgs}" ] ; then
+        ANT_raw "No packages needed to be upgraded for ${pdb_venv_py3Bisos3}."
+        lpReturn
+    fi
+
+    ANT_raw "Upgrade Subject Packages For ${pdb_venv_py3Bisos3}:"
+    ANT_raw "${upgradeSubjectPkgs}"
+
+    lpDo eval printf '%s\\n' ${upgradeSubjectPkgs} \| grep -v '^\-e' \| cut -d = -f 1  \| xargs -n1 ${pdb_venv_py3Bisos3}/bin/pip install --upgrade
+
+    lpReturn
+}
+
+function vis_venvPy3_bisosUninstalls {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Upgrade py2 packages.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local upgradeSubjectPkgs=$(lpDo eval ${pdb_venv_py3Bisos3}/bin/pip list --format=freeze \| egrep 'unisos\|bisos\|blee')
+
+    if [ -z "${upgradeSubjectPkgs}" ] ; then
+        ANT_raw "No packages needed to be upgraded for ${pdb_venv_py3Bisos3}."
+        lpReturn
+    fi
+
+    ANT_raw "Upgrade Subject Packages For ${pdb_venv_py3Bisos3}:"
+    ANT_raw "${upgradeSubjectPkgs}"
+
+    lpDo eval printf '%s\\n' ${upgradeSubjectPkgs} \| grep -v '^\-e' \| cut -d = -f 1  \| xargs -n1 ${pdb_venv_py3Bisos3}/bin/pip uninstall -y
+
+    lpReturn
+}
+
 
 
 function vis_venvPy2_pipInstalls {
@@ -174,20 +337,10 @@ _EOF_
 	lpReturn 101
     fi
 
-    lpDo sudo -u bisos ${pdb_venv_py2Bisos3}/bin/pip2 install --upgrade bisos.py2-all
+    lpDo sudo -u bisos ${pdb_venv_py2Bisos3}/bin/pip2 install --no-cache-dir --force-reinstall --upgrade bisos.py2-all
 
     lpDo sudo -u bisos ${pdb_venv_py2Bisos3}/bin/pip2 list 
 
-    lpReturn
-
-    source ${py2ActivateFile}
-
-    lpDo echo ${VIRTUAL_ENV}
-    
-    lpDo pip2 install --upgrade bisos.py2-all
-
-    lpDo pip2 list 
-    
     lpReturn
 }
 
@@ -208,21 +361,10 @@ _EOF_
 	    lpReturn 101
     fi
 
-    lpDo sudo -u bisos ${pdb_venv_py3Bisos3}/bin/pip3 install --upgrade bisos.py3-all
+    lpDo sudo -u bisos ${pdb_venv_py3Bisos3}/bin/pip3 install --no-cache-dir --force-reinstall --upgrade bisos.py3-all
 
     lpDo sudo -u bisos ${pdb_venv_py3Bisos3}/bin/pip3 list 
 
-    lpReturn
-
-    
-    source ${py3ActivateFile}
-
-    lpDo echo ${VIRTUAL_ENV}
-    
-    lpDo pip3 install --upgrade bisos.py3-all
-
-    lpDo pip3 list 
-    
     lpReturn
 }
 

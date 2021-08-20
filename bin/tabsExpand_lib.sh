@@ -56,7 +56,7 @@ _EOF_
     EH_assert [[ $# -eq 1 ]]
     local each="$1"
     local retVal=0
-    lpDo grep -q '\^I' "${each}"
+    lpDo grep -q -P "\t" "${each}"
     retVal=$?
     lpReturn ${retVal}
 }
@@ -72,7 +72,7 @@ _EOF_
     local tmpFile=$( FN_tempFile )
 
     if FILE_hasTabsEach_p "${each}" ; then
-        ANT_cooked "${each}: File has tabs. Being Processed."
+        ANT_cooked "${each}: ==FOUND==  File has tabs. Being Processed."
         lpDo FN_fileSafeCopy ${each} ${each}.tabs
         lpDo eval getfacl --absolute-names ${each} \> ${tmpFile}
         lpDo eval expand ${each}.tabs \> ${each}
@@ -96,6 +96,49 @@ _EOF_
     FILE_hasTabsEach_p "${each}"
     retVal=$?
     lpReturn ${retVal}
+}
+
+function vis_filesHaveTabsReport {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** argsOrStdin input pattern. Expand tabs and keep backup.
+_EOF_
+    }
+
+    local inputsList="$@"
+    local thisFunc=${G_thisFunc}
+
+    function processEach {
+        EH_assert [[ $# -eq 1 ]]
+        local each="$1"
+        if FILE_hasTabsEach_p "${each}" ; then
+            echo "${each}: ==FOUND== File has tabs."
+        else
+            echo "${each}: File has no tabs."
+        fi
+    }
+
+####+BEGIN: bx:bsip:bash/processEachArgsOrStdin
+    if [ $# -gt 0 ] ; then
+	local each=""
+	for each in ${inputsList} ; do
+	    lpDo processEach ${each}
+	done
+    else
+	local eachLine=""
+	while read -r -t 1 eachLine ; do
+	    if [ ! -z "${eachLine}" ] ; then
+		local each=""
+		for each in ${eachLine} ; do
+		    lpDo processEach ${each}
+		done
+	    fi
+	done
+    fi
+
+####+END:
+
+    lpReturn
 }
 
 

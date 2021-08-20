@@ -103,8 +103,12 @@ function vis_examples {
     visLibExamplesOutput ${G_myName}
     cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
-$( examplesSeperatorChapter "Expand Tabs" )
+$( examplesSeperatorChapter "Identify Tabs" )
 ${G_myName} ${extraInfo} -i fileHasTabs ${oneFile}; echo \$?
+ls | ${G_myName} -i filesHaveTabsReport
+ls | ${G_myName} -i filesHaveTabsReport | grep ==FOUND==
+${G_myName} -i filesHaveTabsReport \$(ls)
+$( examplesSeperatorChapter "Expand Tabs" )
 ${G_myName} ${extraInfo} -i expandTabs ${oneFile}
 echo ${oneFile} | ${G_myName} ${extraInfo} -i expandTabs
 _EOF_

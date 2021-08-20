@@ -122,6 +122,7 @@ ${G_myName} ${extraInfo} -i aptUpgrades
 $( examplesSeperatorChapter "Missing Pip And Apt Packages" )
 ${G_myName} ${extraInfo} -i missingPipInstall
 ${G_myName} ${extraInfo} -i missingAptPkgsInstall
+${G_myName} ${extraInfo} -i missingBxRepos
 $( examplesSeperatorChapter "Bisos Bases Update" )
 ${G_myName} ${extraInfo} -i bisosBasesReClone  # with sysCharDevel.sh
 ${G_myName} ${extraInfo} -i bisosBasesPull  # with bx-gitRepos
@@ -330,6 +331,20 @@ _EOF_
     
     lpReturn
 }
+
+function vis_missingBxRepos {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Missing apt packages to be sorted out and absorbed
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    inBaseDirDo  /bisos/git/auth/bxRepos/bisos-pip git clone git@mb1_github:bisos-pip/bxoGitlab.git
+
+    lpReturn
+}
+
 
 function vis_libreInfoBaseAndInitialTemplates {
     G_funcEntry
