@@ -73,6 +73,8 @@ function vis_examples {
     typeset runInfo="-p ri=lsipusr:passive"
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
+    local onePip3Pkg="unisos.icm"
+    local onePip2Pkg="unisos2.icm"
 
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
@@ -93,11 +95,13 @@ $( examplesSeperatorChapter "BISOS Upgrade Packages" )
 ${G_myName} ${extraInfo} -i venvPy2_pipUpgrades
 ${G_myName} ${extraInfo} -i venvPy3_pipUpgrades
 $( examplesSeperatorChapter "BISOS List Packages" )
-${G_myName} ${extraInfo} -f -i venvPip py3 install packages  # reinstall
-$( examplesSeperatorChapter "Venv Individual Packages" )
-${G_myName} ${extraInfo} -f -i venvPip py3/dev install packages
-${G_myName} ${extraInfo} -f -i venvPip py3 install packages  # reinstall
-${G_myName} ${extraInfo} -f -i venvPip py3 uninstall packages
+${G_myName} ${extraInfo} -f -i venvDo py3 pip list
+${G_myName} ${extraInfo} -f -i venvDo py3 pip list --outdated --format=freeze
+$( examplesSeperatorChapter "VenvDo -- Manage Packages" )
+${G_myName} ${extraInfo} -f -i venvDo py3/dev install ${onePip3Pkg}
+${G_myName} ${extraInfo} -f -i venvDo py3 reInstall ${onePip3Pkg}  # reinstall
+${G_myName} ${extraInfo} -f -i venvDo py3 unInstall ${onePip3Pkg}
+${G_myName} ${extraInfo} -f -i venvDo py3 pip list
 $( examplesSeperatorChapter "Direct Examples" )
 ${pdb_venv_py2Bisos3}/bin/pip2 list --outdated --format=freeze
 ${pdb_venv_py2Bisos3}/bin/pip2 list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 ${pdb_venv_py2Bisos3}/bin/pip2 install --upgrade
