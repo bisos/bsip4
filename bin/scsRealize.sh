@@ -113,7 +113,7 @@ function G_postParamHook {
     bxoIdPrepValidate    
 
     if [ ! -z "${bxoId}" ] ; then
-     	bxoHome=$( FN_absolutePathGet ~${bxoId} )
+        bxoHome=$( FN_absolutePathGet ~${bxoId} )
     fi
     
     bisosCurrentsGet
@@ -142,25 +142,25 @@ function vis_examples {
     oneBxoRepoScope="basePrep"
 
     function repoBaseCreateAndPushExamples {
-	EH_assert [[ $# -eq 2 ]]
-	local repoName=$1
-	local description=$2
-	cat  << _EOF_
+        EH_assert [[ $# -eq 2 ]]
+        local repoName=$1
+        local description=$2
+        cat  << _EOF_
 $( examplesSeperatorSubSection "${description}" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i scs_repoBaseCreate_${repoName}
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i bxoRealize_repoBasesPush ${repoName}
 _EOF_
-    }	
+    }   
 
     function nonRepoBaseCreateAndPushExamples {
-	EH_assert [[ $# -eq 2 ]]
-	local repoName=$1
-	local description=$2
-	cat  << _EOF_
+        EH_assert [[ $# -eq 2 ]]
+        local repoName=$1
+        local description=$2
+        cat  << _EOF_
 $( examplesSeperatorSubSection "${description}" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i scs_nonRepoBaseCreate_${repoName}
 _EOF_
-    }	
+    }   
 
     
     visLibExamplesOutput ${G_myName}

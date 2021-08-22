@@ -30,7 +30,7 @@ function lpSilentPopd {
 function lpPushd {                                                                   
     if (("$#" > 0)); then
         pushd "$@" > /dev/null
-	ANV_cooked "Pushded to $( pwd )"
+        ANV_cooked "Pushded to $( pwd )"
     else
         cd $HOME
     fi
@@ -38,7 +38,7 @@ function lpPushd {
 
 function lpPopd {                                                                   
         popd "$@" > /dev/null
-	ANV_cooked "Popded to $( pwd )"
+        ANV_cooked "Popded to $( pwd )"
 }
 
 
@@ -63,19 +63,19 @@ _EOF_
     typeset doCommand=$@
 
     if [ -d ${baseDir} ] ;  then
-	lpSilentPushd ${baseDir}
-	if [ -z "${G_recordMode}" ] ; then
-	    #printf  1>&2 "Missing ** -- In $( pwd ) Running: ${doCommand}\n"  
-	    ANV_cooked "In $( pwd ) Running: ${doCommand}"	    
-	else
-	    #printf  1>&2 "NOT Missing ** -- In $( pwd ) Running: ${doCommand}\n"  	    
-	    ANV_cooked "In $( pwd ) Running: ${doCommand}"	    
-	fi
-	${doCommand}
-	lpSilentPopd > /dev/null
+        lpSilentPushd ${baseDir}
+        if [ -z "${G_recordMode}" ] ; then
+            #printf  1>&2 "Missing ** -- In $( pwd ) Running: ${doCommand}\n"  
+            ANV_cooked "In $( pwd ) Running: ${doCommand}"          
+        else
+            #printf  1>&2 "NOT Missing ** -- In $( pwd ) Running: ${doCommand}\n"           
+            ANV_cooked "In $( pwd ) Running: ${doCommand}"          
+        fi
+        ${doCommand}
+        lpSilentPopd > /dev/null
     else
-	EH_problem "Missing ${baseDir} -- Skiping:  ${doCommand}"
-	lpReturn 101
+        EH_problem "Missing ${baseDir} -- Skiping:  ${doCommand}"
+        lpReturn 101
     fi
 
     lpReturn

@@ -120,20 +120,20 @@ _EOF_
 
 ####+BEGIN: bx:bsip:bash/processEachArgsOrStdin
     if [ $# -gt 0 ] ; then
-	local each=""
-	for each in ${inputsList} ; do
-	    lpDo processEach ${each}
-	done
+        local each=""
+        for each in ${inputsList} ; do
+            lpDo processEach ${each}
+        done
     else
-	local eachLine=""
-	while read -r -t 1 eachLine ; do
-	    if [ ! -z "${eachLine}" ] ; then
-		local each=""
-		for each in ${eachLine} ; do
-		    lpDo processEach ${each}
-		done
-	    fi
-	done
+        local eachLine=""
+        while read -r -t 1 eachLine ; do
+            if [ ! -z "${eachLine}" ] ; then
+                local each=""
+                for each in ${eachLine} ; do
+                    lpDo processEach ${each}
+                done
+            fi
+        done
     fi
 
 ####+END:
@@ -160,20 +160,20 @@ _EOF_
 
 ####+BEGIN: bx:bsip:bash/processEachArgsOrStdin
     if [ $# -gt 0 ] ; then
-	local each=""
-	for each in ${inputsList} ; do
-	    lpDo processEach ${each}
-	done
+        local each=""
+        for each in ${inputsList} ; do
+            lpDo processEach ${each}
+        done
     else
-	local eachLine=""
-	while read -r -t 1 eachLine ; do
-	    if [ ! -z "${eachLine}" ] ; then
-		local each=""
-		for each in ${eachLine} ; do
-		    lpDo processEach ${each}
-		done
-	    fi
-	done
+        local eachLine=""
+        while read -r -t 1 eachLine ; do
+            if [ ! -z "${eachLine}" ] ; then
+                local each=""
+                for each in ${eachLine} ; do
+                    lpDo processEach ${each}
+                done
+            fi
+        done
     fi
 
 ####+END:

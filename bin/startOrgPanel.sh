@@ -133,39 +133,39 @@ _EOF_
     local baseDir="$1"
 
     if [ ! -f "${baseDir}/_tree_" ] ; then
-	EH_problem "Missing ${baseDir}/_tree_  -- Processing Skipped"
-	lpReturn
+        EH_problem "Missing ${baseDir}/_tree_  -- Processing Skipped"
+        lpReturn
     fi
     
     local treeItem=$( cat "${baseDir}/_tree_")
-	 
+         
     case ${treeItem} in
-	"node")
-	    if [ -d "${baseDir}/_nodeBase_" ] ; then
-		lpDo vis_bleePanelBase ${treeItem} ${baseDir}		
-	    else
-		if vis_in_nodeBase_ ; then
-		    ANT_raw "In _nodeBase_ -- Updating Skipped"
-		else
-		    EH_problem "Not in _nodeBase_ and there is no _nodeBase_ here"
-		fi
-	    fi
-	    ;;
-	"auxNode")
-	    EH_problem ""
-	    ;;
-	"leaf")
-	    lpDo vis_bleePanelBase ${treeItem} ${baseDir}
-	    ;;
-	"auxLeaf")
-	    EH_problem ""
-	    ;;
-	"ignore")
-	    doNothing
-	    ;;
-	*)
-	    EH_problem ""
-	    ;;		
+        "node")
+            if [ -d "${baseDir}/_nodeBase_" ] ; then
+                lpDo vis_bleePanelBase ${treeItem} ${baseDir}           
+            else
+                if vis_in_nodeBase_ ; then
+                    ANT_raw "In _nodeBase_ -- Updating Skipped"
+                else
+                    EH_problem "Not in _nodeBase_ and there is no _nodeBase_ here"
+                fi
+            fi
+            ;;
+        "auxNode")
+            EH_problem ""
+            ;;
+        "leaf")
+            lpDo vis_bleePanelBase ${treeItem} ${baseDir}
+            ;;
+        "auxLeaf")
+            EH_problem ""
+            ;;
+        "ignore")
+            doNothing
+            ;;
+        *)
+            EH_problem ""
+            ;;          
     esac
 }
 
@@ -186,113 +186,113 @@ _EOF_
     local nodeBaseDirName="_nodeBase_"
 
     function commonFeatures {
-	EH_assert [[ $# -eq 1 ]]
-	local dstBaseDir=$1
-	if [ ! -f "${dstBaseDir}/foldDesc" ] ; then
-	    opDo touch "${dstBaseDir}/foldDesc"
-	fi
-	if [ ! -f "${dstBaseDir}/destDesc" ] ; then
-	    opDo touch "${dstBaseDir}/destDesc"
-	fi
-	if [ ! -f "${dstBaseDir}/bleePanelProc.sh" ] ; then
-	    opDo cp /bisos/apps/defaults/begin/bleePanel/start/bleePanelProc.sh ${dstBaseDir}/bleePanelProc.sh
-	fi
-    }	
-	    
+        EH_assert [[ $# -eq 1 ]]
+        local dstBaseDir=$1
+        if [ ! -f "${dstBaseDir}/foldDesc" ] ; then
+            opDo touch "${dstBaseDir}/foldDesc"
+        fi
+        if [ ! -f "${dstBaseDir}/destDesc" ] ; then
+            opDo touch "${dstBaseDir}/destDesc"
+        fi
+        if [ ! -f "${dstBaseDir}/bleePanelProc.sh" ] ; then
+            opDo cp /bisos/apps/defaults/begin/bleePanel/start/bleePanelProc.sh ${dstBaseDir}/bleePanelProc.sh
+        fi
+    }   
+            
 
     if [ ! -d ${baseDir} ] ; then
-	opDo mkdir -p ${baseDir}
+        opDo mkdir -p ${baseDir}
     fi
     
     case "${fileTreeItem}" in
-	"leaf")
-	    inBaseDirDo ${baseDir} vis_startFtoUpdate leaf
-	    
-	    inBaseDirDo ${baseDir} vis_objectTypeOverwrite "blee.org.fto.leaf"
-	    lpDo eval echo "bleePanelProc.sh" \> ${baseDir}/_treeProc_	    
-	    inBaseDirDo ${baseDir} rm Panel.org
+        "leaf")
+            inBaseDirDo ${baseDir} vis_startFtoUpdate leaf
+            
+            inBaseDirDo ${baseDir} vis_objectTypeOverwrite "blee.org.fto.leaf"
+            lpDo eval echo "bleePanelProc.sh" \> ${baseDir}/_treeProc_      
+            inBaseDirDo ${baseDir} rm Panel.org
 
-	    if [ -f "${baseDir}/${panelFileName}" ] ; then
-		ANT_raw "${baseDir}/${panelFileName} in place -- untouched"
-	    else		
-		inBaseDirDo ${baseDir} touch ${panelFileName}
+            if [ -f "${baseDir}/${panelFileName}" ] ; then
+                ANT_raw "${baseDir}/${panelFileName} in place -- untouched"
+            else                
+                inBaseDirDo ${baseDir} touch ${panelFileName}
 
-		bleeclient -h -v -n showRun -i run -- --eval \
-		"(progn (find-file \"${baseDir}/${panelFileName}\") (yas--expand-or-visit-from-menu 'bx-org-mode-begin \"Blee Leaf Panel\") (save-buffer) (kill-buffer))"
-	    
-		inBaseDirDo ${baseDir} bx-dblock -i dblockUpdateFiles ${panelFileName}
-	    fi
+                bleeclient -h -v -n showRun -i run -- --eval \
+                "(progn (find-file \"${baseDir}/${panelFileName}\") (yas--expand-or-visit-from-menu 'bx-org-mode-begin \"Blee Leaf Panel\") (save-buffer) (kill-buffer))"
+            
+                inBaseDirDo ${baseDir} bx-dblock -i dblockUpdateFiles ${panelFileName}
+            fi
 
-	    lpDo commonFeatures ${baseDir}
-	    ;;
+            lpDo commonFeatures ${baseDir}
+            ;;
 
-	"node")
-	    inBaseDirDo ${baseDir} vis_startFtoUpdate node
-	    
-	    inBaseDirDo ${baseDir} vis_objectTypeOverwrite "blee.org.fto.node"
-	    lpDo eval echo "bleePanelProc.sh" \> ${baseDir}/_treeProc_	    	    
-	    inBaseDirDo ${baseDir} rm Panel.org
+        "node")
+            inBaseDirDo ${baseDir} vis_startFtoUpdate node
+            
+            inBaseDirDo ${baseDir} vis_objectTypeOverwrite "blee.org.fto.node"
+            lpDo eval echo "bleePanelProc.sh" \> ${baseDir}/_treeProc_              
+            inBaseDirDo ${baseDir} rm Panel.org
 
-	    # if [ -f "${baseDir}/${sisterPanelsFileName}" ] ; then
-	    # 	ANT_raw "${baseDir}/${sisterPanelsFileName} in place -- untouched"
-	    # else
-	    # 	inBaseDirDo ${baseDir} touch ${sisterPanelsFileName}
+            # if [ -f "${baseDir}/${sisterPanelsFileName}" ] ; then
+            #   ANT_raw "${baseDir}/${sisterPanelsFileName} in place -- untouched"
+            # else
+            #   inBaseDirDo ${baseDir} touch ${sisterPanelsFileName}
 
-	    # 	bleeclient -h -v -n showRun -i run -- --eval \
-	    #    "(progn (interactive) (find-file \"${baseDir}/${sisterPanelsFileName}\") (yas--expand-or-visit-from-menu 'bx-org-mode-begin \"Blee Sister Panels\") (save-buffer) (kill-buffer))"
-	    
-	    # 	inBaseDirDo ${baseDir} bx-dblock -i dblockUpdateFiles ${sisterPanelsFileName}
-	    # fi
+            #   bleeclient -h -v -n showRun -i run -- --eval \
+            #    "(progn (interactive) (find-file \"${baseDir}/${sisterPanelsFileName}\") (yas--expand-or-visit-from-menu 'bx-org-mode-begin \"Blee Sister Panels\") (save-buffer) (kill-buffer))"
+            
+            #   inBaseDirDo ${baseDir} bx-dblock -i dblockUpdateFiles ${sisterPanelsFileName}
+            # fi
 
-	    if [ ! -f "${baseDir}/bleePanelProc.sh" ] ; then
-		opDo cp /bisos/apps/defaults/begin/bleePanel/start/bleePanelProc.sh ${baseDir}/bleePanelProc.sh
-	    fi
+            if [ ! -f "${baseDir}/bleePanelProc.sh" ] ; then
+                opDo cp /bisos/apps/defaults/begin/bleePanel/start/bleePanelProc.sh ${baseDir}/bleePanelProc.sh
+            fi
 
-	    if [ ! -d "${nodeBaseDirName}" ] ; then
-		inBaseDirDo ${baseDir} mkdir "${nodeBaseDirName}"
-	    else
-		ANT_raw "${nodeBaseDirName} exists but is being updated."
-	    fi
-		
-	    inBaseDirDo ${baseDir}/${nodeBaseDirName} vis_startFtoUpdate node
-	    
-	    inBaseDirDo ${baseDir}/${nodeBaseDirName} vis_objectTypeOverwrite "blee.org.fto.node"
-	    lpDo eval echo "bleePanelProc.sh" \> ${baseDir}/_treeProc_	    	    
-	    inBaseDirDo ${baseDir}/${nodeBaseDirName} rm Panel.org	    
-	    
-	    if [ -f "${baseDir}/${nodeBaseDirName}/${panelFileName}" ] ; then
-		ANT_raw "${baseDir}/${nodeBaseDirName}/${panelFileName} in place -- untouched"
-	    else
-		inBaseDirDo ${baseDir}/${nodeBaseDirName} touch ${panelFileName}
-		
-		bleeclient -h -v -n showRun -i run -- --eval \
-			   "(save-excursion (find-file \"${baseDir}/${nodeBaseDirName}/${panelFileName}\") (yas--expand-or-visit-from-menu 'bx-org-mode-begin \"Blee Branch Panel\") (save-buffer) (kill-buffer))"
-	    
-		inBaseDirDo ${baseDir}/${nodeBaseDirName} bx-dblock -i dblockUpdateFiles ${panelFileName}
-	    fi
+            if [ ! -d "${nodeBaseDirName}" ] ; then
+                inBaseDirDo ${baseDir} mkdir "${nodeBaseDirName}"
+            else
+                ANT_raw "${nodeBaseDirName} exists but is being updated."
+            fi
+                
+            inBaseDirDo ${baseDir}/${nodeBaseDirName} vis_startFtoUpdate node
+            
+            inBaseDirDo ${baseDir}/${nodeBaseDirName} vis_objectTypeOverwrite "blee.org.fto.node"
+            lpDo eval echo "bleePanelProc.sh" \> ${baseDir}/_treeProc_              
+            inBaseDirDo ${baseDir}/${nodeBaseDirName} rm Panel.org          
+            
+            if [ -f "${baseDir}/${nodeBaseDirName}/${panelFileName}" ] ; then
+                ANT_raw "${baseDir}/${nodeBaseDirName}/${panelFileName} in place -- untouched"
+            else
+                inBaseDirDo ${baseDir}/${nodeBaseDirName} touch ${panelFileName}
+                
+                bleeclient -h -v -n showRun -i run -- --eval \
+                           "(save-excursion (find-file \"${baseDir}/${nodeBaseDirName}/${panelFileName}\") (yas--expand-or-visit-from-menu 'bx-org-mode-begin \"Blee Branch Panel\") (save-buffer) (kill-buffer))"
+            
+                inBaseDirDo ${baseDir}/${nodeBaseDirName} bx-dblock -i dblockUpdateFiles ${panelFileName}
+            fi
 
-	    lpDo commonFeatures ${baseDir}/${nodeBaseDirName}
-	    
-	    if [ -L "${baseDir}/${panelFileName}" ] ; then	    
-		opDo rm "${baseDir}/${panelFileName}"
-	    fi
-	    ;;
-	
-	"auxNode")
-	    inBaseDirDo ${baseDir} vis_startFtoUpdate auxNode
-	    inBaseDirDo ${baseDir} vis_objectTypeOverwrite "blee.org.fto.auxNode"
-	    #opDo ftoProc.sh -v -n showRun -i pkgedPanelPreps
-	    ;;
-	
-	*)
-	    EH_problem "Unknown ${iimType}"
-	    lpReturn
+            lpDo commonFeatures ${baseDir}/${nodeBaseDirName}
+            
+            if [ -L "${baseDir}/${panelFileName}" ] ; then          
+                opDo rm "${baseDir}/${panelFileName}"
+            fi
+            ;;
+        
+        "auxNode")
+            inBaseDirDo ${baseDir} vis_startFtoUpdate auxNode
+            inBaseDirDo ${baseDir} vis_objectTypeOverwrite "blee.org.fto.auxNode"
+            #opDo ftoProc.sh -v -n showRun -i pkgedPanelPreps
+            ;;
+        
+        *)
+            EH_problem "Unknown ${iimType}"
+            lpReturn
     esac
 
     local cleanupList=$( inBaseDirDo ${baseDir} rm *~ )
 
     if [ ! -z "${cleanupList}" ] ; then
-	opDo rm "${cleanupList}"
+        opDo rm "${cleanupList}"
     fi
 
     ANT_raw "${baseDir}/${panelFileName} -- is ready to be developed"

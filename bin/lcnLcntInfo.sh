@@ -117,34 +117,34 @@ function vis_get {
 
   case ${1} in
       "description")
-	  echo "${lcnt_description}"
-	  ;;
+          echo "${lcnt_description}"
+          ;;
       "authorName")
-	  echo "${lcnt_author_name[$2]}"
-	  ;;
+          echo "${lcnt_author_name[$2]}"
+          ;;
       "authorUrl")
-	  echo "${lcnt_author_url[$2]}"
-	  ;;
+          echo "${lcnt_author_url[$2]}"
+          ;;
       "organization")
-	  echo "${lcnt_organization}"
-	  ;;
+          echo "${lcnt_organization}"
+          ;;
       "docSrcForms")
-	  echo "${lcnt_docSrcForms}"
-	  ;;
+          echo "${lcnt_docSrcForms}"
+          ;;
       "docSrcList")
-	  echo "${lcnt_docSrcList}"
-	  ;;
+          echo "${lcnt_docSrcList}"
+          ;;
 
       *)
-	  varName="lcnt_${1}"
-	  if ! varIsSetPredicate ${varName} ; then
-	      EH_problem "lcnt_${1} is unSet -- Unknown ${1}"
-	  else
-	      eval varVal=\$${varName}
-	      echo ${varVal}
-	  fi
+          varName="lcnt_${1}"
+          if ! varIsSetPredicate ${varName} ; then
+              EH_problem "lcnt_${1} is unSet -- Unknown ${1}"
+          else
+              eval varVal=\$${varName}
+              echo ${varVal}
+          fi
 
-	  return
+          return
   esac
 }
   

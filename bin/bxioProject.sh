@@ -99,7 +99,7 @@ function G_postParamHook {
     bxoIdPrepValidate    
 
     if [ ! -z "${bxoId}" ] ; then
-     	bxoHome=$( FN_absolutePathGet ~${bxoId} )
+        bxoHome=$( FN_absolutePathGet ~${bxoId} )
     fi
     
     bisosCurrentsGet
@@ -159,7 +159,7 @@ panel
 _EOF_
 
     lpReturn
-}	
+}       
 
 
 function vis_repoBaseCreate_placeHolder%% {
@@ -186,7 +186,7 @@ _EOF_
     lpDo bx-gitRepos -h -v -n showRun -i baseUpdateDotIgnore "${repoBase}"
 
     lpReturn
-}	
+}       
 
 
 

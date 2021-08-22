@@ -99,7 +99,7 @@ function G_postParamHook {
     bxoIdPrepValidate    
 
     if [ ! -z "${bxoId}" ] ; then
-     	bxoHome=$( FN_absolutePathGet ~${bxoId} )
+        bxoHome=$( FN_absolutePathGet ~${bxoId} )
     fi
     
     bisosCurrentsGet
@@ -164,7 +164,7 @@ _EOF_
 # bleeInfoBase    
 
     lpReturn
-}	
+}       
 
 
 function vis_repoBaseCreate_realmPanels {
@@ -191,7 +191,7 @@ _EOF_
     lpDo bx-gitRepos -h -v -n showRun -i baseUpdateDotIgnore "${repoBase}"
 
     lpReturn
-}	
+}       
 
 
 

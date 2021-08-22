@@ -80,15 +80,15 @@ _EOF_
     local sysVarPath="/bisos/var/bxe/regReq"
 
     if [ -d "${sitePath}" ] ; then
-	echo "${sitePath}"
+        echo "${sitePath}"
     elif [ -d "${sysVarPath}" ] ; then
-	echo "${sysVarPath}"
+        echo "${sysVarPath}"
     else
-	EH_problem "Missing ${sitePath} and ${sysVarPath}"
+        EH_problem "Missing ${sitePath} and ${sysVarPath}"
     fi
 
     lpReturn
-}	
+}       
 
 function vis_examplesRegReqBases {
     cat  << _EOF_
@@ -264,11 +264,11 @@ _EOF_
     bxeKindTypeHookParamsSet ${kind} ${type}
  
     if [ "${originationMethod}" == "" ] ; then
-	originationMethod="cmdLine"
+        originationMethod="cmdLine"
     fi
 
     if [ -z "${email}" ] ; then
-	email="NA"
+        email="NA"
     fi
     
  
@@ -306,8 +306,8 @@ regReqContainerStdoutSpecific_real_individual () {
     EH_assert [[ $# -eq 1 ]]
 
     if [ "$1" = "passive" ] ; then
-	regReqTag="${kind}_${type}_${lastName}_${firstName}"
-	return
+        regReqTag="${kind}_${type}_${lastName}_${firstName}"
+        return
     fi
 
     cat  << _EOF_
@@ -322,8 +322,8 @@ regReqContainerStdoutSpecific_real_corp () {
     EH_assert [[ $# -eq 1 ]]
 
     if [ "$1" = "passive" ] ; then
-	regReqTag="${kind}_${type}_${corpName}"
-	return
+        regReqTag="${kind}_${type}_${corpName}"
+        return
     fi
 
     cat  << _EOF_
@@ -338,8 +338,8 @@ regReqContainerStdoutSpecific_real_system () {
     EH_assert [[ $# -eq 1 ]]
 
     if [ "$1" = "passive" ] ; then
-	regReqTag="${kind}_${type}_${sysName}"
-	return
+        regReqTag="${kind}_${type}_${sysName}"
+        return
     fi
 
     cat  << _EOF_
@@ -353,8 +353,8 @@ regReqContainerStdoutSpecific_info_registrar () {
     EH_assert [[ $# -eq 1 ]]
 
     if [ "$1" = "passive" ] ; then
-	regReqTag="${kind}_${type}_${name}"
-	return
+        regReqTag="${kind}_${type}_${name}"
+        return
     fi
 
     cat  << _EOF_
@@ -368,8 +368,8 @@ regReqContainerStdoutSpecific_info_site () {
     EH_assert [[ $# -eq 1 ]]
 
     if [ "$1" = "passive" ] ; then
-	regReqTag="${kind}_${type}_${name}"
-	return
+        regReqTag="${kind}_${type}_${name}"
+        return
     fi
 
     cat  << _EOF_
@@ -383,8 +383,8 @@ regReqContainerStdoutSpecific_info_sysChar () {
     EH_assert [[ $# -eq 1 ]]
 
     if [ "$1" = "passive" ] ; then
-	regReqTag="${kind}_${type}_${name}"
-	return
+        regReqTag="${kind}_${type}_${name}"
+        return
     fi
 
     cat  << _EOF_
@@ -398,8 +398,8 @@ regReqContainerStdoutSpecific_info_aais () {
     EH_assert [[ $# -eq 1 ]]
 
     if [ "$1" = "passive" ] ; then
-	regReqTag="${kind}_${type}_${name}"
-	return
+        regReqTag="${kind}_${type}_${name}"
+        return
     fi
 
     cat  << _EOF_
@@ -414,8 +414,8 @@ regReqContainerStdoutSpecific_info_scs () {
     EH_assert [[ $# -eq 1 ]]
 
     if [ "$1" = "passive" ] ; then
-	regReqTag="${kind}_${type}_${name}"
-	return
+        regReqTag="${kind}_${type}_${name}"
+        return
     fi
 
     cat  << _EOF_
@@ -430,13 +430,13 @@ regReqContainerStdoutSpecific_info_usage () {
     EH_assert [[ $# -eq 1 ]]
 
     if [ "$1" = "passive" ] ; then
-	regReqTag="${kind}_${type}_${name}"
-	return
+        regReqTag="${kind}_${type}_${name}"
+        return
     fi
 
     cat  << _EOF_
     function regReqContainer_${kind}_${type} {
-      bc_name="${name}"		     
+      bc_name="${name}"              
     }
 _EOF_
 }
@@ -445,8 +445,8 @@ regReqContainerStdoutSpecific_info_project () {
     EH_assert [[ $# -eq 1 ]]
 
     if [ "$1" = "passive" ] ; then
-	regReqTag="${kind}_${type}_${name}"
-	return
+        regReqTag="${kind}_${type}_${name}"
+        return
     fi
 
     cat  << _EOF_
@@ -460,8 +460,8 @@ regReqContainerStdoutSpecific_info_virtGuest () {
     EH_assert [[ $# -eq 1 ]]
 
     if [ "$1" = "passive" ] ; then
-	regReqTag="${kind}_${type}_${name}"
-	return
+        regReqTag="${kind}_${type}_${name}"
+        return
     fi
 
     cat  << _EOF_
@@ -475,8 +475,8 @@ regReqContainerStdoutSpecific_svc_byname () {
     EH_assert [[ $# -eq 1 ]]
 
     if [ "$1" = "passive" ] ; then
-	regReqTag="${kind}_${type}_${name}"
-	return
+        regReqTag="${kind}_${type}_${name}"
+        return
     fi
 
     cat  << _EOF_
@@ -490,8 +490,8 @@ regReqContainerStdoutSpecific_svc_bysmb () {
     EH_assert [[ $# -eq 1 ]]
 
     if [ "$1" = "passive" ] ; then
-	regReqTag="${kind}_${type}_${name}"
-	return
+        regReqTag="${kind}_${type}_${name}"
+        return
     fi
 
     cat  << _EOF_
@@ -505,8 +505,8 @@ regReqContainerStdoutSpecific_container_exposed () {
     EH_assert [[ $# -eq 1 ]]
 
     if [ "$1" = "passive" ] ; then
-	regReqTag="${kind}_${type}_${name}"
-	return
+        regReqTag="${kind}_${type}_${name}"
+        return
     fi
 
     cat  << _EOF_
@@ -520,8 +520,8 @@ regReqContainerStdoutSpecific_container_intra () {
     EH_assert [[ $# -eq 1 ]]
 
     if [ "$1" = "passive" ] ; then
-	regReqTag="${kind}_${type}_${name}"
-	return
+        regReqTag="${kind}_${type}_${name}"
+        return
     fi
 
     cat  << _EOF_
@@ -535,8 +535,8 @@ regReqContainerStdoutSpecific_container_usage () {
     EH_assert [[ $# -eq 1 ]]
 
     if [ "$1" = "passive" ] ; then
-	regReqTag="${kind}_${type}_${name}"
-	return
+        regReqTag="${kind}_${type}_${name}"
+        return
     fi
 
     cat  << _EOF_
@@ -550,8 +550,8 @@ regReqContainerStdoutSpecific_container_dev () {
     EH_assert [[ $# -eq 1 ]]
 
     if [ "$1" = "passive" ] ; then
-	regReqTag="${kind}_${type}_${name}"
-	return
+        regReqTag="${kind}_${type}_${name}"
+        return
     fi
 
     cat  << _EOF_
@@ -566,8 +566,8 @@ regReqContainerStdoutSpecific_container_android () {
     EH_assert [[ $# -eq 1 ]]
 
     if [ "$1" = "passive" ] ; then
-	regReqTag="${kind}_${type}_${name}"
-	return
+        regReqTag="${kind}_${type}_${name}"
+        return
     fi
 
     cat  << _EOF_
@@ -581,8 +581,8 @@ regReqContainerStdoutSpecific_materialization_site () {
     EH_assert [[ $# -eq 1 ]]
 
     if [ "$1" = "passive" ] ; then
-	regReqTag="${kind}_${type}_${name}"
-	return
+        regReqTag="${kind}_${type}_${name}"
+        return
     fi
 
     cat  << _EOF_
@@ -596,8 +596,8 @@ regReqContainerStdoutSpecific_materialization_nets () {
     EH_assert [[ $# -eq 1 ]]
 
     if [ "$1" = "passive" ] ; then
-	regReqTag="${kind}_${type}_${name}"
-	return
+        regReqTag="${kind}_${type}_${name}"
+        return
     fi
 
     cat  << _EOF_
@@ -611,8 +611,8 @@ regReqContainerStdoutSpecific_materialization_domains () {
     EH_assert [[ $# -eq 1 ]]
 
     if [ "$1" = "passive" ] ; then
-	regReqTag="${kind}_${type}_${name}"
-	return
+        regReqTag="${kind}_${type}_${name}"
+        return
     fi
 
     cat  << _EOF_
@@ -626,8 +626,8 @@ regReqContainerStdoutSpecific_materialization_boxes () {
     EH_assert [[ $# -eq 1 ]]
 
     if [ "$1" = "passive" ] ; then
-	regReqTag="${kind}_${type}_${name}"
-	return
+        regReqTag="${kind}_${type}_${name}"
+        return
     fi
 
     cat  << _EOF_
@@ -641,8 +641,8 @@ regReqContainerStdoutSpecific_materialization_containers () {
     EH_assert [[ $# -eq 1 ]]
 
     if [ "$1" = "passive" ] ; then
-	regReqTag="${kind}_${type}_${name}"
-	return
+        regReqTag="${kind}_${type}_${name}"
+        return
     fi
 
     cat  << _EOF_
@@ -656,8 +656,8 @@ regReqContainerStdoutSpecific_materialization_sysChar () {
     EH_assert [[ $# -eq 1 ]]
 
     if [ "$1" = "passive" ] ; then
-	regReqTag="${kind}_${type}_${name}"
-	return
+        regReqTag="${kind}_${type}_${name}"
+        return
     fi
 
     cat  << _EOF_
@@ -671,8 +671,8 @@ regReqContainerStdoutSpecific_materialization_aais () {
     EH_assert [[ $# -eq 1 ]]
 
     if [ "$1" = "passive" ] ; then
-	regReqTag="${kind}_${type}_${name}"
-	return
+        regReqTag="${kind}_${type}_${name}"
+        return
     fi
 
     cat  << _EOF_
@@ -687,8 +687,8 @@ regReqContainerStdoutSpecific_materialization_scs () {
     EH_assert [[ $# -eq 1 ]]
 
     if [ "$1" = "passive" ] ; then
-	regReqTag="${kind}_${type}_${name}"
-	return
+        regReqTag="${kind}_${type}_${name}"
+        return
     fi
 
     cat  << _EOF_
@@ -712,27 +712,27 @@ _EOF_
     local regReqBaseDir=""    
 
     if [ -z "${parent}" ] ; then
-	local regReqInfoBasePath=$(vis_regReqInfoBasePath_obtain)
+        local regReqInfoBasePath=$(vis_regReqInfoBasePath_obtain)
     
-	opDo FN_dirCreatePathIfNotThere ${regReqInfoBasePath}
+        opDo FN_dirCreatePathIfNotThere ${regReqInfoBasePath}
 
-	regReqBaseDir="${regReqInfoBasePath}/${kind}/${type}"
+        regReqBaseDir="${regReqInfoBasePath}/${kind}/${type}"
     else
-	if ! unisosAccts.sh -i userAcctExists "${parent}" ; then
-	    EH_problem "Missing bxoId -- parent=${parent}"
-	    lpReturn 101
-	fi
-	bxoHome=$( FN_absolutePathGet ~${parent} )
-	if [ -z "${bxoHome}" ] ; then
-	    EH_problem "Missing bxoHome -- parent=${parent}"
-	    lpReturn 101
-	fi
-	bxeTreeDir="${bxoHome}/bxeTree"
-	if [ ! -d "${bxeTreeDir}" ] ; then
-	    EH_problem "Missing bxeTreeDir=${bxeTreeDir}"
-	    lpReturn 101
-	fi
-	regReqBaseDir="${bxeTreeDir}/regReq/${kind}/${type}"
+        if ! unisosAccts.sh -i userAcctExists "${parent}" ; then
+            EH_problem "Missing bxoId -- parent=${parent}"
+            lpReturn 101
+        fi
+        bxoHome=$( FN_absolutePathGet ~${parent} )
+        if [ -z "${bxoHome}" ] ; then
+            EH_problem "Missing bxoHome -- parent=${parent}"
+            lpReturn 101
+        fi
+        bxeTreeDir="${bxoHome}/bxeTree"
+        if [ ! -d "${bxeTreeDir}" ] ; then
+            EH_problem "Missing bxeTreeDir=${bxeTreeDir}"
+            lpReturn 101
+        fi
+        regReqBaseDir="${bxeTreeDir}/regReq/${kind}/${type}"
     fi
 
     echo ${regReqBaseDir}
@@ -753,27 +753,27 @@ _EOF_
     local regReqBaseDir=""    
 
     if [ -z "${parent}" ] ; then
-	local regReqInfoBasePath=$(vis_regReqInfoBasePath_obtain)
+        local regReqInfoBasePath=$(vis_regReqInfoBasePath_obtain)
     
-	lpDo FN_dirCreatePathIfNotThere ${regReqInfoBasePath}
+        lpDo FN_dirCreatePathIfNotThere ${regReqInfoBasePath}
 
-	regReqBaseDir="${regReqInfoBasePath}/${kind}/${type}"
+        regReqBaseDir="${regReqInfoBasePath}/${kind}/${type}"
     else
-	if ! unisosAccts.sh -i userAcctExists "${parent}" ; then
-	    EH_problem "Missing bxoId -- parent=${parent}"
-	    lpReturn 101
-	fi
-	bxoHome=$( FN_absolutePathGet ~${parent} )
-	if [ -z "${bxoHome}" ] ; then
-	    EH_problem "Missing bxoHome -- parent=${parent}"
-	    lpReturn 101
-	fi
-	bxeTreeDir="${bxoHome}/bxeTree"
-	if [ ! -d "${bxeTreeDir}" ] ; then
-	    EH_problem "Missing bxeTreeDir=${bxeTreeDir}"
-	    lpReturn 101
-	fi
-	regReqBaseDir="${bxeTreeDir}/regReq/${kind}/${type}"
+        if ! unisosAccts.sh -i userAcctExists "${parent}" ; then
+            EH_problem "Missing bxoId -- parent=${parent}"
+            lpReturn 101
+        fi
+        bxoHome=$( FN_absolutePathGet ~${parent} )
+        if [ -z "${bxoHome}" ] ; then
+            EH_problem "Missing bxoHome -- parent=${parent}"
+            lpReturn 101
+        fi
+        bxeTreeDir="${bxoHome}/bxeTree"
+        if [ ! -d "${bxeTreeDir}" ] ; then
+            EH_problem "Missing bxeTreeDir=${bxeTreeDir}"
+            lpReturn 101
+        fi
+        regReqBaseDir="${bxeTreeDir}/regReq/${kind}/${type}"
     fi
 
     bxeKindTypeHookParamsSet ${kind} ${type}
@@ -786,14 +786,14 @@ _EOF_
     local regReqFilePath=""
 
     if [ "${nameOrTag}" == "name" ] ; then
-	regReqFileName=${regReqTag}.${dateTag}.REGREQ
-	regReqFilePath="${regReqBaseDir}/${regReqFileName}"
+        regReqFileName=${regReqTag}.${dateTag}.REGREQ
+        regReqFilePath="${regReqBaseDir}/${regReqFileName}"
     elif [ "${nameOrTag}" == "tag" ] ; then
-	regReqFileName=${regReqTag}
-	regReqFilePath="${regReqBaseDir}/${regReqFileName}"
+        regReqFileName=${regReqTag}
+        regReqFilePath="${regReqBaseDir}/${regReqFileName}"
     else
-	EH_problem "Neither name nor tag -- nameOrTag=${nameOrTag}"
-	lpReturn 101
+        EH_problem "Neither name nor tag -- nameOrTag=${nameOrTag}"
+        lpReturn 101
     fi
     
     echo ${regReqFilePath}
@@ -816,26 +816,26 @@ _EOF_
     local diffResult=""
 
     if [ -z "${regReqFileNamePath}" ] ; then
-	EH_problem "Missing regReqFilePath=${regReqFileNamePath}"
-	lpReturn 101
+        EH_problem "Missing regReqFilePath=${regReqFileNamePath}"
+        lpReturn 101
     fi
 
     if [ "${G_forceMode}" != "force" ] ; then
-	if [ ! -z "${existingFile}" ] ; then
-	    lpDo eval vis_regReqStdout \| grep -v bc_originationDate= \> ${tmpFile}
-	    lpDo eval cat "${existingFile}" \| grep -v bc_originationDate= \| grep -v 'regReqFileName=' \| grep -v 'date=' \| grep -v 'BxeDesc='  \> ${tmpFile2}
-	    diffResult=$( diff ${tmpFile} ${tmpFile2} )
+        if [ ! -z "${existingFile}" ] ; then
+            lpDo eval vis_regReqStdout \| grep -v bc_originationDate= \> ${tmpFile}
+            lpDo eval cat "${existingFile}" \| grep -v bc_originationDate= \| grep -v 'regReqFileName=' \| grep -v 'date=' \| grep -v 'BxeDesc='  \> ${tmpFile2}
+            diffResult=$( diff ${tmpFile} ${tmpFile2} )
 
-	    if [ -z "${diffResult}" ] ; then
-		# The existing file is same this request, there is nothing to do.
-		lpDo rm ${tmpFile} ${tmpFile2}
-		echo ${existingFile}
-		lpReturn
-	    else
-		ANT_cooked "existingFile and This request are different"
-		lpDo diff ${tmpFile} ${tmpFile2}
-	    fi
-	fi
+            if [ -z "${diffResult}" ] ; then
+                # The existing file is same this request, there is nothing to do.
+                lpDo rm ${tmpFile} ${tmpFile2}
+                echo ${existingFile}
+                lpReturn
+            else
+                ANT_cooked "existingFile and This request are different"
+                lpDo diff ${tmpFile} ${tmpFile2}
+            fi
+        fi
     fi
     
     #

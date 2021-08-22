@@ -38,7 +38,7 @@ function binsPrepPkgInfoPre {
 
   if [ "${mmaThisPkgName}_" == "_" ] ; then
     if [[ "${mmaPkgDebianName}_" != "_" ]] ; then
-	mmaThisPkgName=$( echo ${mmaPkgDebianName} | sed -e "s/-/_/g" )
+        mmaThisPkgName=$( echo ${mmaPkgDebianName} | sed -e "s/-/_/g" )
     fi
   fi
 
@@ -133,7 +133,7 @@ function mmaCompAuto_verify {
 
   if [[ "${opRunOsType}_" == "Linux_" ]] ; then
     if [ "${mmaPkgDebianName}_" != "_" ] ; then
-	mmaPkgDebianVersion="noVersion"
+        mmaPkgDebianVersion="noVersion"
       mmaCompDebian_verify ${mmaPkgDebianName} ${mmaPkgDebianVersion}
     else
       EH_problem "mmaPkgDebianName is not defined."
@@ -187,9 +187,9 @@ function mmaCompDebian_verify {
     return 0
   else
       if [ "$2_" == "noVersion_" ] ; then
-	  ANT_raw "${1} ver: ${compVersion} found"
+          ANT_raw "${1} ver: ${compVersion} found"
       else
-	  ANT_raw "${1} ver: ${compVersion} needs to be updated to: ${2}"
+          ANT_raw "${1} ver: ${compVersion} needs to be updated to: ${2}"
       fi
       return 1
   fi
@@ -340,20 +340,20 @@ function mmaCompAuto_update {
     if [ ${mmaPkgDebianMethod}_ == "apt_" ] ; then
 
       if [ "${binsPrep_installPreHook}_" != "_" ] ; then
-	opDo ${binsPrep_installPreHook}
+        opDo ${binsPrep_installPreHook}
       fi
 
       opDoComplain apt-get -y --force-yes install ${mmaPkgDebianName}
 
       if [ "${binsPrep_installPostHook}_" != "_" ] ; then
-	opDo ${binsPrep_installPostHook}
+        opDo ${binsPrep_installPostHook}
       fi
 
       return 
     fi
     if [ ${mmaPkgDebianMethod}_ == "dpkg_" ] ; then
-	mmaPkgDebianVersion="noVersion"
-	mmaCompDebianDpkg_update "${mmaPkgDebianName}" "${mmaPkgDebianVersion}" "${mmaPkgDebianFile}"
+        mmaPkgDebianVersion="noVersion"
+        mmaCompDebianDpkg_update "${mmaPkgDebianName}" "${mmaPkgDebianVersion}" "${mmaPkgDebianFile}"
       return 
     fi
     if [ ${mmaPkgDebianMethod}_ == "custom_" ] ; then
@@ -363,7 +363,7 @@ function mmaCompAuto_update {
     
     # NOTYET, backwards compatibility, not using mmaPkgDebianMethod goes with Apt
     if [ "${mmaPkgDebianName}_" != "_"  -a "${mmaPkgDebianFile}_" != "_" ] ; then
-	mmaPkgDebianVersion="noVersion"
+        mmaPkgDebianVersion="noVersion"
       mmaCompDebian_update "${mmaPkgDebianName}" "${mmaPkgDebianVersion}" "${mmaPkgDebianFile}"
     else
       EH_problem "mmaPkgDebianName, mmaPkgDebianVersion, or mmaPkgDebianFile is not defined."
@@ -436,17 +436,17 @@ function mmaCompDebianDpkg_update {
 
     if [[ -e ${3} ]] ; then
       if [ "${binsPrep_installPreHook}_" == "_" ] ; then
-	ANT_raw "Empty ${binsPrep_installPreHook} -- skipped"
+        ANT_raw "Empty ${binsPrep_installPreHook} -- skipped"
       else
-	opDo ${binsPrep_installPreHook}
+        opDo ${binsPrep_installPreHook}
       fi
 
       opDoRet dpkg -i ${3} || return $?
 
       if [ "${binsPrep_installPostHook}_" == "_" ] ; then
-	ANT_raw "Empty ${binsPrep_installPostHook} -- skipped"
+        ANT_raw "Empty ${binsPrep_installPostHook} -- skipped"
       else
-	opDo ${binsPrep_installPostHook}
+        opDo ${binsPrep_installPostHook}
       fi
 
     else
@@ -662,29 +662,29 @@ function mmaPkgDebian_obtain {
 
   if [ "${mmaPkgDebianMethod}_" == "dpkg_" ] ; then
       if [ -f ${mmaPkgDebianFile} ] ; then
-	  ANT_raw "${mmaPkgDebianFile} Found -- Skipping Obtain"
+          ANT_raw "${mmaPkgDebianFile} Found -- Skipping Obtain"
       else
-	  if [ "${binsPrep_pkgObtainCmd}_" == "_" ] ; then
-	    EH_problem "Empty ${binsPrep_pkgObtainCmd}"
-	  else
-	    opDo ${binsPrep_pkgObtainCmd}
-	  fi
+          if [ "${binsPrep_pkgObtainCmd}_" == "_" ] ; then
+            EH_problem "Empty ${binsPrep_pkgObtainCmd}"
+          else
+            opDo ${binsPrep_pkgObtainCmd}
+          fi
       fi
   elif  [ "${mmaPkgDebianMethod}_" == "apt_" ]  ; then
       for thisOne in "$@" ; do
 
             if [ "${binsPrep_installPreHook}_" != "_" ] ; then
-	    	opDo ${binsPrep_installPreHook}
-            fi	
+                opDo ${binsPrep_installPreHook}
+            fi  
 
 
-	  opDoExit apt-get -y --force-yes -d install ${thisOne}
+          opDoExit apt-get -y --force-yes -d install ${thisOne}
       done
   elif  [ "${mmaPkgDebianMethod}_" == "custom_" ]  ; then
-  	  doNothing
+          doNothing
   else
       for thisOne in "$@" ; do
-	  opDoExit apt-get -y --force-yes -d install ${thisOne}
+          opDoExit apt-get -y --force-yes -d install ${thisOne}
       done
   fi
 }
@@ -787,7 +787,7 @@ function bootRcDisable {
   #EH_assert [[ $# -gt 0 ]]
 
  filesList="$@"
-	 
+         
  typeset thisOne=""
  for thisOne in ${filesList} ; do 
    typeset dirsPart=`FN_dirsPart ${thisOne}`

@@ -83,7 +83,7 @@ Based on these we now:
 - Brings platform to minimum bisos level
 
 _EOF_
-		      }
+                      }
 
 # Import Libraries
 
@@ -174,29 +174,29 @@ _EOF_
     local vcMode="$1"
 
     if [ -z "${bxp_bisosUserName}" ] ; then
-	EH_problem "Missing bisosUserName"
-	lpReturn 101
+        EH_problem "Missing bisosUserName"
+        lpReturn 101
     fi
 
     if [ -z "${bxp_bisosGroupName}" ] ; then
-	EH_problem "Missing bisosGroupName"
-	lpReturn 101
+        EH_problem "Missing bisosGroupName"
+        lpReturn 101
     fi
 
     local currentUser="${bxp_bisosUserName}"
     local currentUserGroup="${bxp_bisosGroupName}"
 
-    local bxGitReposBase=""	    
+    local bxGitReposBase=""         
     
     if [ "${vcMode}" == "auth" ] ; then
-	bxGitReposBase="${bxp_rootDir_bisos}/git/auth"
-	${G_myFullName} -h -v -n showRun -p vcMode=${vcMode} -i bxGitReposBasesReClone "${bxGitReposBase}"	
+        bxGitReposBase="${bxp_rootDir_bisos}/git/auth"
+        ${G_myFullName} -h -v -n showRun -p vcMode=${vcMode} -i bxGitReposBasesReClone "${bxGitReposBase}"      
     elif [ "${vcMode}" == "anon" ] ; then
-	bxGitReposBase="${bxp_rootDir_bisos}/git/anon"
-	lpDo sudo --set-home --user=${currentUser} ${G_myFullName} -h -v -n showRun -p vcMode=${vcMode} -i bxGitReposBasesReClone "${bxGitReposBase}"	
+        bxGitReposBase="${bxp_rootDir_bisos}/git/anon"
+        lpDo sudo --set-home --user=${currentUser} ${G_myFullName} -h -v -n showRun -p vcMode=${vcMode} -i bxGitReposBasesReClone "${bxGitReposBase}"   
     else
-	EH_problem "vcMode=${vcMode} is neither auth nor anon"
-	EH_retOnFail
+        EH_problem "vcMode=${vcMode} is neither auth nor anon"
+        EH_retOnFail
     fi
 }
 
@@ -213,20 +213,20 @@ _EOF_
     local baseDir=$1
 
     if [ "${vcMode}" == "auth" ] ; then
-	doNothing
+        doNothing
     elif [ "${vcMode}" == "anon" ] ; then
-	doNothing
+        doNothing
     else
-	EH_problem "vcMode=${vcMode} is neither auth nor anon"
-	EH_retOnFail
+        EH_problem "vcMode=${vcMode} is neither auth nor anon"
+        EH_retOnFail
     fi
 
     local py2ActivateFile="${pdb_venv_py2Bisos3}/bin/activate"
     local thisDateTag="${dateTag}"
 
     if [ ! -f "${py2ActivateFile}" ] ; then
-	EH_problem "Missing ${py2ActivateFile} -- BISOS Provisioners venv pip installs aborted"
-	lpReturn 101
+        EH_problem "Missing ${py2ActivateFile} -- BISOS Provisioners venv pip installs aborted"
+        lpReturn 101
     fi
 
     source ${py2ActivateFile}
@@ -234,17 +234,17 @@ _EOF_
     lpDo echo ${VIRTUAL_ENV}
 
     if [ -d "${baseDir}/bxRepos" ] ; then
-	lpDo mv "${baseDir}/bxRepos" "${baseDir}/bxRepos.${thisDateTag}"
+        lpDo mv "${baseDir}/bxRepos" "${baseDir}/bxRepos.${thisDateTag}"
     fi
 
     lpDo bx-gitReposBases -v 20 --baseDir="${baseDir}" --pbdName="bxReposCollection" --vcMode=${vcMode} --gitLabel="${gitLabel}" -i pbdUpdate all
 
     EH_assert [[ -d "${baseDir}/bxRepos" ]]
-	
+        
     lpDo bx-gitReposBases -v 20 --baseDir="${baseDir}/bxRepos" --pbdName="bxReposRoot" --vcMode=${vcMode} --gitLabel="${gitLabel}" -i pbdUpdate all
 
     if [ -d "${baseDir}/ext" ] ; then
-	lpDo mv "${baseDir}/ext" "${baseDir}/ext.${thisDateTag}"
+        lpDo mv "${baseDir}/ext" "${baseDir}/ext.${thisDateTag}"
     fi
 
     lpDo bx-gitReposBases -v 20 --baseDir="${baseDir}/ext" --pbdName="extRepos" --vcMode=${vcMode} --gitLabel="${gitLabel}" -i pbdUpdate all

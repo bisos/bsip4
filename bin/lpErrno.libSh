@@ -27,22 +27,22 @@ function errNuToName {
 
   case ${1} in
     '0')
-	echo "errnoSuccess"
-	;;		
+        echo "errnoSuccess"
+        ;;              
     '99')
-	echo "errnoSuccessFinish"
-	;;		
+        echo "errnoSuccessFinish"
+        ;;              
     '100')
-	echo "errnoFailHard"
-	;;		
+        echo "errnoFailHard"
+        ;;              
     '111')
-	echo "errnoFailTemp"
-	;;		
+        echo "errnoFailTemp"
+        ;;              
     *)
       EH_problem "Invalid lpErrno ${1}"
-      ;;	
+      ;;        
   esac
-}	
+}       
 
 
 
@@ -61,26 +61,26 @@ function uidIsAsExpected {
     # NOTYET, verify curUid is not empty
 
     if [[ "${uid}_" == "any_" ]] ; then
-	retVal=${retValSuccess}    
+        retVal=${retValSuccess}    
     elif [[ "${uid}_" == "${thisExpectedUid}_" ]] ; then
-	if [[ ${curUid}_ == "${thisExpectedUid}_"  ]] ; then
-	    retVal=${retValSuccess}
-	else
-	    EH_problem "uid=${uid} -- thisExpectedUid=${thisExpectedUid} -- curUid=${curUid}"
-	    retVal=${retValFail}
-	fi
+        if [[ ${curUid}_ == "${thisExpectedUid}_"  ]] ; then
+            retVal=${retValSuccess}
+        else
+            EH_problem "uid=${uid} -- thisExpectedUid=${thisExpectedUid} -- curUid=${curUid}"
+            retVal=${retValFail}
+        fi
     else
-	if [ "${uid}_" != "_" ] ; then 
-	    EH_problem "Warning: -p uid=${uid} mismatch -- thisExpectedUid=${thisExpectedUid} -- curUid=${curUid}"
-	fi
-	if [[ ${curUid}_ == "${thisExpectedUid}_"  ]] ; then
-	    retVal=${retValSuccess}
-	else
-	    # EH_problem "uid=${uid} -- thisExpectedUid=${thisExpectedUid} -- curUid=${curUid}"
-	    # retVal=${retValFail}
-	    # NOTYET, for now all are as expected -- We should check the group
-	    retVal=${retValSuccess}	    
-	fi
+        if [ "${uid}_" != "_" ] ; then 
+            EH_problem "Warning: -p uid=${uid} mismatch -- thisExpectedUid=${thisExpectedUid} -- curUid=${curUid}"
+        fi
+        if [[ ${curUid}_ == "${thisExpectedUid}_"  ]] ; then
+            retVal=${retValSuccess}
+        else
+            # EH_problem "uid=${uid} -- thisExpectedUid=${thisExpectedUid} -- curUid=${curUid}"
+            # retVal=${retValFail}
+            # NOTYET, for now all are as expected -- We should check the group
+            retVal=${retValSuccess}         
+        fi
     fi
 
     return ${retVal}

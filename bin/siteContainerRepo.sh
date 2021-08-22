@@ -150,7 +150,7 @@ function vis_containerRepoClone {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
 
    local containerAssignBase=$1
@@ -161,14 +161,14 @@ _EOF_
    lpDo vis_containerRepoNamedClone "${containerId}"
    
    lpReturn
-}	
+}       
 
 
 function vis_containerRepoNamedClone {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
 
    local containerId=$1
@@ -190,7 +190,7 @@ _EOF_
    else
        lpDo git clone git@bxoPriv_${containersBxoId}:${containersBxoId}/${containerId}.git
    fi
-}	
+}       
 
 
 function vis_containerRepoNamedCloneAll {
@@ -198,7 +198,7 @@ function vis_containerRepoNamedCloneAll {
    function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Clone all available repos.
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
 
    local containerReposList=$( vis_containerReposList )
@@ -206,7 +206,7 @@ _EOF_
    for each in ${containerReposList} ; do
        lpDo vis_containerRepoNamedClone ${each}
    done
-}	
+}       
 
    
 
@@ -214,7 +214,7 @@ function vis_containerRepoGenericsUpdate {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 2 ]]
 
    local examplesOrDoIt=$1
@@ -227,18 +227,18 @@ _EOF_
    
    for each in ${genericBasesList[@]} ;  do
        if [ "${examplesOrDoIt}" == "examples" ] ; then
-	   cat  << _EOF_
+           cat  << _EOF_
 ${G_myName} ${extraInfo} -i containerRepoUpdate ${bxoRealizationScope} ${each}
 _EOF_
        elif [ "${examplesOrDoIt}" == "doIt" ] ; then
-	   lpDo vis_containerRepoUpdate ${bxoRealizationScope} ${each}
+           lpDo vis_containerRepoUpdate ${bxoRealizationScope} ${each}
        else
-	   EH_problem "Bad Usage -- ${examplesOrDoIt}"
+           EH_problem "Bad Usage -- ${examplesOrDoIt}"
        fi
    done
    
    lpReturn
-}	
+}       
 
 
 function vis_containerRepoUpdate {
@@ -249,7 +249,7 @@ function vis_containerRepoUpdate {
 *** repoBase/assign sym links to containerAssignBase
 *** Based on model+abode+function repoBase/steady is populated.
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 2 ]]
 
    local bxoRealizationScope=$1
@@ -285,60 +285,60 @@ _EOF_
    
    case ${function} in
        Generic)
-	   # Generic applies to privA only
-	   case ${abode} in
-	       Auto)
-		   containerSteady_networkMode="auto"
-		   ;;
-	       Shield)
-		   containerSteady_networkMode="static"
-		   containerSteady_privA_addr="generic"
-		   ;;
-	       *)
-		   doNothing
-		   ;;
-	   esac
-	   ;;
+           # Generic applies to privA only
+           case ${abode} in
+               Auto)
+                   containerSteady_networkMode="auto"
+                   ;;
+               Shield)
+                   containerSteady_networkMode="static"
+                   containerSteady_privA_addr="generic"
+                   ;;
+               *)
+                   doNothing
+                   ;;
+           esac
+           ;;
        Server)
-	   case ${abode} in
-	       Auto|Mobile)
-		   containerSteady_networkMode="auto"
-		   ;;
-	       Shield|Internet|perim)
-		   containerSteady_networkMode="static"
-		   local applicableNets=$( vis_withAbodeGetApplicableNetsList "${containerAssign_abode}" )
-		   for eachNetName in ${applicableNets} ; do
-		       case ${model} in
-			   Host|Pure)
-			       # Host or Pure = containerBox
-			       lpDo siteNetworks.sh -i assignBoxAddr privA $(siteBoxAssign.sh -i thisBoxFindNu)
-			       ;;
-			   Virt)
-			       lpDo siteNetworks.sh -i assignVirtAddr privA ${containerNu}
-			       ;;
-			   *)
-			       EH_problem "Bad Usage -- invalid model=${model}"
-			       ;;
-		       esac
-		   done
-		   ;;
-	       *)
-		   doNothing
-		   ;;
-	   esac
-	   ;;
+           case ${abode} in
+               Auto|Mobile)
+                   containerSteady_networkMode="auto"
+                   ;;
+               Shield|Internet|perim)
+                   containerSteady_networkMode="static"
+                   local applicableNets=$( vis_withAbodeGetApplicableNetsList "${containerAssign_abode}" )
+                   for eachNetName in ${applicableNets} ; do
+                       case ${model} in
+                           Host|Pure)
+                               # Host or Pure = containerBox
+                               lpDo siteNetworks.sh -i assignBoxAddr privA $(siteBoxAssign.sh -i thisBoxFindNu)
+                               ;;
+                           Virt)
+                               lpDo siteNetworks.sh -i assignVirtAddr privA ${containerNu}
+                               ;;
+                           *)
+                               EH_problem "Bad Usage -- invalid model=${model}"
+                               ;;
+                       esac
+                   done
+                   ;;
+               *)
+                   doNothing
+                   ;;
+           esac
+           ;;
        LinuxU)
-	   case ${abode} in
-	       Auto|Mobile)
-		   containerSteady_networkMode="auto"
-		   ;;
-	       *)
-		   doNothing
-		   ;;
-	   esac
-	   ;;
+           case ${abode} in
+               Auto|Mobile)
+                   containerSteady_networkMode="auto"
+                   ;;
+               *)
+                   doNothing
+                   ;;
+           esac
+           ;;
        *)
-	   EH_problem "NOTYET -- unimplemented ${function}"
+           EH_problem "NOTYET -- unimplemented ${function}"
    esac
 
    lpDo vis_containerSteadyWrite "${containerSteadyBase}"
@@ -346,7 +346,7 @@ _EOF_
    lpDo vis_repoCreateAndPushBasedOnPathBasedOn_bxoRealizationScope "${bxoRealizationScope}" ${repoBase}
 
    lpReturn
-}	
+}       
 
 
 function vis_containerRepoBase {
@@ -355,7 +355,7 @@ function vis_containerRepoBase {
 ** \$1 is path to containerAssignBase
 *** Based on containerId FP of \$1=containerAssignBase, the repoBasePath is returned on stdout.
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
 
    local containerAssignBase=$1
@@ -368,7 +368,7 @@ _EOF_
    echo ${repoBasePath}
 
    lpReturn
-}	
+}       
 
 function vis_containerRepoBaseExistsP {
    G_funcEntry
@@ -376,7 +376,7 @@ function vis_containerRepoBaseExistsP {
 ** \$1 is path to containerAssignBase
 *** if \$( vis_containerRepoBase ${containerAssignBase} ) exists, return 0.
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
 
    local containerAssignBase=$1
@@ -390,7 +390,7 @@ _EOF_
    fi
 
    lpReturn
-}	
+}       
 
 
 
@@ -401,7 +401,7 @@ With $1=containerId (eg HSS-1001), update the repo at bxoId base.
 - record: model, abode, function.
 - Based on abode, determine, interfaces/nets and assign ipAddrs
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
    local containerAssignBase=$1
 
@@ -429,12 +429,12 @@ _EOF_
 
    case ${function} in
        Server)
-	   lpDo fileParamManage.py -i fileParamWrite ${platformInfoBase} vmGuestLeastSize "medium"
-	   lpDo fileParamManage.py -i fileParamWrite ${platformInfoBase} networkMode "fixed"	   
-	   ;;
+           lpDo fileParamManage.py -i fileParamWrite ${platformInfoBase} vmGuestLeastSize "medium"
+           lpDo fileParamManage.py -i fileParamWrite ${platformInfoBase} networkMode "fixed"       
+           ;;
 
        *)
-	   EH_problem "NOTYET -- unimplemented ${function}"
+           EH_problem "NOTYET -- unimplemented ${function}"
    esac
 
    lpDo mkdir -p ${netAttachmentsBase}/if1
@@ -455,5 +455,5 @@ _EOF_
    lpDo mkdir -p ${netAttachmentsBase}/if1/routes/route1.fps
    
    lpReturn
-}	
+}       
 

@@ -214,7 +214,7 @@ _EOF_
     local usgHome=$( FN_absolutePathGet ~${user} )
 
     if [ -z "${bxoPath}" ] ; then
-	local bxoPath=$( FN_absolutePathGet ~${bxo} )
+        local bxoPath=$( FN_absolutePathGet ~${bxo} )
     fi
 
     local usgGathererBase="${usgHome}/gatherer"
@@ -234,7 +234,7 @@ _EOF_
     local retVal=0
 
     if [ -z "${usg}" ] ; then
-	lpReturn 102
+        lpReturn 102
     fi
 
     bxoVerify ; retVal=$?
@@ -251,7 +251,7 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if [ -z "${bxo}" -a -z "${bxoPath}" ] ; then
-	lpReturn 101
+        lpReturn 101
     fi
 
     lpReturn 0

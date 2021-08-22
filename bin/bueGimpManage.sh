@@ -102,8 +102,8 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
     
     function myGimpBaseDir {
-	# ls -d ~/.gimp-2.*
-	ls -d ~/.config/GIMP/2.*
+        # ls -d ~/.gimp-2.*
+        ls -d ~/.config/GIMP/2.*
     }
 
     thisGimpBaseDir=$( myGimpBaseDir )
@@ -144,8 +144,8 @@ _EOF_
 
    for thisFile in ${inFilesList}; do
        if [ ! -f "${thisFile}" ] ; then
-	   EH_problem "Missing ${thisFile} -- Skipped"
-	   lpReturn 101
+           EH_problem "Missing ${thisFile} -- Skipped"
+           lpReturn 101
        fi
 
        typeset thisPrefix=$( FN_prefix ${thisFile} )
@@ -242,8 +242,8 @@ _EOF_
 
    for thisFile in ${inFilesList}; do
        if [ ! -f "${thisFile}" ] ; then
-	   EH_problem "Missing ${thisFile} -- Skipped"
-	   lpReturn 101
+           EH_problem "Missing ${thisFile} -- Skipped"
+           lpReturn 101
        fi
 
        typeset thisPrefix=$( FN_prefix ${thisFile} )
@@ -292,8 +292,8 @@ _EOF_
 
    for thisFile in ${inFilesList}; do
        if [ ! -f "${thisFile}" ] ; then
-	   EH_problem "Missing ${thisFile} -- Skipped"
-	   lpReturn 101
+           EH_problem "Missing ${thisFile} -- Skipped"
+           lpReturn 101
        fi
 
        typeset thisPrefix=$( FN_prefix ${thisFile} )
@@ -342,14 +342,14 @@ _EOF_
 
    for thisFile in ${inFilesList}; do
        if [ ! -f "${thisFile}" ] ; then
-	   EH_problem "Missing ${thisFile} -- Skipped"
-	   lpReturn 101
+           EH_problem "Missing ${thisFile} -- Skipped"
+           lpReturn 101
        fi
 
        typeset thisSavedFile="${thisFile}.orig"
 
        if [ ! -f "${thisSavedFile}" ] ; then
-	   opDo cp -p "${thisFile}" "${thisSavedFile}"
+           opDo cp -p "${thisFile}" "${thisSavedFile}"
        fi
 
        opDo eval gimp -i -b  "'(bx-batch-scale-height-to \"${thisFile}\" ${inHeight})'" -b  "'(gimp-quit 0)'"

@@ -75,15 +75,15 @@ _EOF_
     }
 
     itemOrderedList=(
-	linux_kvm
-	#qemu_system
-	#qemu_kvm
-	libvirt_bin
-	ubuntu_vm_builder
-	bridge_utils
-	virt_manager
-	libguestfs_tools
-	kvmExtraSetups
+        linux_kvm
+        #qemu_system
+        #qemu_kvm
+        libvirt_bin
+        ubuntu_vm_builder
+        bridge_utils
+        virt_manager
+        libguestfs_tools
+        kvmExtraSetups
     )
 }
 
@@ -96,13 +96,13 @@ _EOF_
     #qemu-system libvirt-clients libvirt-daemon-system
     
     itemOrderedList=(
-	qemu_kvm
-	"$( itemNameFor libvirt-daemon-system )"
-	"$( itemNameFor libvirt-clients )"
-	"$( itemNameFor bridge-utils )"
-	virt_manager
-	libguestfs_tools
-	kvmExtraSetups
+        qemu_kvm
+        "$( itemNameFor libvirt-daemon-system )"
+        "$( itemNameFor libvirt-clients )"
+        "$( itemNameFor bridge-utils )"
+        virt_manager
+        libguestfs_tools
+        kvmExtraSetups
     )
 }
 
@@ -114,13 +114,13 @@ _EOF_
     }
 
     itemOrderedList=(
-	qemu_kvm
-	"$( itemNameFor libvirt-daemon-system )"
-	"$( itemNameFor libvirt-clients )"
-	"$( itemNameFor bridge-utils )"
-	virt_manager
-	libguestfs_tools
-	kvmExtraSetups
+        qemu_kvm
+        "$( itemNameFor libvirt-daemon-system )"
+        "$( itemNameFor libvirt-clients )"
+        "$( itemNameFor bridge-utils )"
+        virt_manager
+        libguestfs_tools
+        kvmExtraSetups
     )
 }
 
@@ -132,13 +132,13 @@ _EOF_
     }
 
     itemOrderedList=(
-	qemu_kvm
-	libvirt_bin
-	ubuntu_vm_builder
-	bridge_utils
-	virt_manager
-	libguestfs_tools
-	kvmExtraSetups
+        qemu_kvm
+        libvirt_bin
+        ubuntu_vm_builder
+        bridge_utils
+        virt_manager
+        libguestfs_tools
+        kvmExtraSetups
     )
 }
 
@@ -149,15 +149,15 @@ _EOF_
     }
 
     itemOrderedList=(
-	kvm
-	#qemu_system
-	#qemu_kvm
-	libvirt_bin
-	ubuntu_vm_builder
-	bridge_utils
-	virt_manager
-	libguestfs_tools
-	kvmExtraSetups
+        kvm
+        #qemu_system
+        #qemu_kvm
+        libvirt_bin
+        ubuntu_vm_builder
+        bridge_utils
+        virt_manager
+        libguestfs_tools
+        kvmExtraSetups
     )
 }
 
@@ -192,7 +192,7 @@ binsPrep_kvmExtraSetups_DEFAULT_DEFAULT () {
     mmaPkgDebianMethod="custom"  #  or "apt" no need for customInstallScript but with binsPrep_installPostHook
 
     function customInstallScript {
-	opDo vis_addKvmGroups
+        opDo vis_addKvmGroups
     }
 }
 
@@ -206,9 +206,9 @@ _EOF_
     local libvirtGroupName="libvirt"
 
     if [ "${opRunDistFamily}" == "UBUNTU" ] ; then
-	if [ "${opRunDistGeneration}" == "1604" ] ; then
-	    libvirtGroupName="libvirtd"
-	fi
+        if [ "${opRunDistGeneration}" == "1604" ] ; then
+            libvirtGroupName="libvirtd"
+        fi
     fi
 
     local effectiveCurUser=$( id -un )

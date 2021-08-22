@@ -187,14 +187,14 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     pushd /bisos/git/auth/bxRepos > /dev/null \
-	&& \
-	stdbuf -i0 -o0 -e0  ftoProc.sh -v -n showRun -i treeRecurse gitStatusReport 2> /dev/null | \
-	    egrep '^GIT-DIGEST' \
-	&& \
-	popd > /dev/null
+        && \
+        stdbuf -i0 -o0 -e0  ftoProc.sh -v -n showRun -i treeRecurse gitStatusReport 2> /dev/null | \
+            egrep '^GIT-DIGEST' \
+        && \
+        popd > /dev/null
 
     lpReturn
-}	
+}       
 
 
 function vis_cachedLsFileName {
@@ -205,20 +205,20 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if [ ! -d "/bisos/var/core/cached" ] ; then
-	lpDo mkdir -p /bisos/var/core/cached
+        lpDo mkdir -p /bisos/var/core/cached
     fi
 
     if [ "${vcMode}" == "auth" ] ; then
-	echo "/bisos/var/core/cached/bxReposList.auth"
+        echo "/bisos/var/core/cached/bxReposList.auth"
     elif [ "${vcMode}" == "anon" ] ; then
-	echo "/bisos/var/core/cached/bxReposList.anon"
+        echo "/bisos/var/core/cached/bxReposList.anon"
     else
-	EH_problem "vcMode=${vcMode} is neither auth nor anon"
-	EH_retOnFail
+        EH_problem "vcMode=${vcMode} is neither auth nor anon"
+        EH_retOnFail
     fi
 
     lpReturn
-}	
+}       
 
 
 function vis_cachedLsAtomsFileName {
@@ -229,20 +229,20 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if [ ! -d "/bisos/var/core/cached" ] ; then
-	lpDo mkdir -p /bisos/var/core/cached
+        lpDo mkdir -p /bisos/var/core/cached
     fi
 
     if [ "${vcMode}" == "auth" ] ; then
-	echo "/bisos/var/core/cached/bxReposList-atoms.auth"
+        echo "/bisos/var/core/cached/bxReposList-atoms.auth"
     elif [ "${vcMode}" == "anon" ] ; then
-	echo "/bisos/var/core/cached/bxReposList-atoms.anon"
+        echo "/bisos/var/core/cached/bxReposList-atoms.anon"
     else
-	EH_problem "vcMode=${vcMode} is neither auth nor anon"
-	EH_retOnFail
+        EH_problem "vcMode=${vcMode} is neither auth nor anon"
+        EH_retOnFail
     fi
 
     lpReturn
-}	
+}       
 
 
 
@@ -260,7 +260,7 @@ _EOF_
     lpDo stdbuf -i0 -o0 -e0 ${G_myName} -h -v -n showRun -p baseDir="${baseDir}" -p vcMode=${vcMode} -i bxReposList | tee "${bxReposListFileName}"
 
     lpReturn
-}	
+}       
 
 function vis_cachedLs {
    G_funcEntry
@@ -273,13 +273,13 @@ _EOF_
     EH_assert [[ "${bxReposListFileName}X" != "X" ]]
 
     if [ -f "${bxReposListFileName}" ] ; then
-	lpDo cat "${bxReposListFileName}"
+        lpDo cat "${bxReposListFileName}"
     else
-	lpDo vis_cachedLsRefresh
+        lpDo vis_cachedLsRefresh
     fi
 
     lpReturn
-}	
+}       
 
 
 function vis_cachedLsAtomsRefresh {
@@ -296,7 +296,7 @@ _EOF_
     lpDo eval stdbuf -i0 -o0 -e0 ${G_myName} -h -v -n showRun -p baseDir="${baseDir}" -p vcMode=${vcMode} -i bxReposList \| vis_gitBaseIsCollection \| egrep -v '^COLLECTION:' \| cut -d : -f 2 \| tee "${bxReposListFileName}"
 
     lpReturn
-}	
+}       
 
 function vis_cachedLsAtoms {
    G_funcEntry
@@ -309,13 +309,13 @@ _EOF_
     EH_assert [[ "${bxReposListFileName}X" != "X" ]]
 
     if [ -f "${bxReposListFileName}" ] ; then
-	lpDo cat "${bxReposListFileName}"
+        lpDo cat "${bxReposListFileName}"
     else
-	lpDo vis_cachedLsAtomsRefresh
+        lpDo vis_cachedLsAtomsRefresh
     fi
 
     lpReturn
-}	
+}       
 
 
 
@@ -333,20 +333,20 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if [ -z "${baseDir}" ] ; then
-	if [ "${vcMode}" == "auth" ] ; then
-	    baseDir="/bisos/git/auth/bxRepos"
-	elif [ "${vcMode}" == "anon" ] ; then
-	    baseDir="/bisos/git/anon/bxRepos"
-	else
-	    EH_problem "vcMode=${vcMode} is neither auth nor anon"
-	    EH_retOnFail
-	fi
+        if [ "${vcMode}" == "auth" ] ; then
+            baseDir="/bisos/git/auth/bxRepos"
+        elif [ "${vcMode}" == "anon" ] ; then
+            baseDir="/bisos/git/anon/bxRepos"
+        else
+            EH_problem "vcMode=${vcMode} is neither auth nor anon"
+            EH_retOnFail
+        fi
     fi
 
     echo "${baseDir}"
     
     lpReturn
-}	
+}       
 
 
 function vis_bxReposList {
@@ -361,15 +361,15 @@ _EOF_
     EH_assert [[ "${baseDir}X" != "X" ]]
     
     lpDo pushd "${baseDir}" > /dev/null \
-	&& \
-	stdbuf -i0 -o0 -e0  ftoProc.sh -v -n showRun -i treeRecurse gitReposList 2> /dev/null | \
-	    egrep '^GitRepo' | \
-	    cut -d ':' -f 2 \
-	&& \
-	lpDo popd > /dev/null
+        && \
+        stdbuf -i0 -o0 -e0  ftoProc.sh -v -n showRun -i treeRecurse gitReposList 2> /dev/null | \
+            egrep '^GitRepo' | \
+            cut -d ':' -f 2 \
+        && \
+        lpDo popd > /dev/null
 
     lpReturn
-}	
+}       
 
 
 
@@ -409,16 +409,16 @@ _EOF_
     #echo $LOCAL  $REMOTE $BASE
 
     if [ $LOCAL = $REMOTE ]; then
-	echo "Up-to-date:${here}"
+        echo "Up-to-date:${here}"
     elif [ $LOCAL = $BASE ]; then
-	echo "Need to pull":${here}
+        echo "Need to pull":${here}
     elif [ $REMOTE = $BASE ]; then
-	echo "Need to push:${here}"
+        echo "Need to push:${here}"
     else
-	echo "Diverged:${here}"
+        echo "Diverged:${here}"
     fi
 
-}	
+}       
 
 
 _CommentBegin_
@@ -438,7 +438,7 @@ _EOF_
     lpDo echo "git pull in ${here}"
 
     lpDo git pull origin master
-}	
+}       
 
 
 
@@ -452,46 +452,46 @@ function vis_gitRemPull {
 If there are any args, process those.
 If there are no args, process stdin.
 _EOF_
-		       }
+                       }
 
     function hereDo {
-	EH_assert [[ $# -eq 0 ]]
-	local here=$(pwd)
+        EH_assert [[ $# -eq 0 ]]
+        local here=$(pwd)
 
-	lpDo gitRemPull
+        lpDo gitRemPull
     }
 
     function processEach {
-	EH_assert [[ $# -eq 1 ]]
-	local thisOne="$1"
+        EH_assert [[ $# -eq 1 ]]
+        local thisOne="$1"
 
-	inBaseDirDo \
-	    ${thisOne} \
-	    hereDo
+        inBaseDirDo \
+            ${thisOne} \
+            hereDo
     }
 
 ####+BEGIN: bx:bsip:bash/processArgsAndStdin 
      function processArgsAndStdin {
-	local effectiveArgs=( "$@" )
-	local stdinArgs
-	local each
-	if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
-	    readarray stdinArgs < /dev/stdin
-	    effectiveArgs=( "$@" "${stdinArgs[@]}" )
-	fi
-	if [ ${#effectiveArgs[@]} -eq 0 ] ; then
-	    ANT_raw "No Args And Stdin Is Empty"
-	    lpReturn
-	fi
-	for each in "${effectiveArgs[@]}"; do
-	    lpDo processEach "${each%$'\n'}"
-	done
+        local effectiveArgs=( "$@" )
+        local stdinArgs
+        local each
+        if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
+            readarray stdinArgs < /dev/stdin
+            effectiveArgs=( "$@" "${stdinArgs[@]}" )
+        fi
+        if [ ${#effectiveArgs[@]} -eq 0 ] ; then
+            ANT_raw "No Args And Stdin Is Empty"
+            lpReturn
+        fi
+        for each in "${effectiveArgs[@]}"; do
+            lpDo processEach "${each%$'\n'}"
+        done
     }
     lpDo processArgsAndStdin "$@"
 ####+END:
     
     lpReturn
-}	
+}       
 
 
 _CommentBegin_
@@ -502,53 +502,53 @@ function vis_gitBaseConfig {
     G_funcEntry
     function describeF {  cat  << _EOF_
 _EOF_
-		       }
+                       }
 
     function hereDo {
-	EH_assert [[ $# -eq 0 ]]
-	local here=$(pwd)
+        EH_assert [[ $# -eq 0 ]]
+        local here=$(pwd)
 
-	local gitUrl=$( vis_gitUrlAtBase ${here} )
-	local gitHostname=$( vis_parseGitUrl_getHostname ${gitUrl} )
+        local gitUrl=$( vis_gitUrlAtBase ${here} )
+        local gitHostname=$( vis_parseGitUrl_getHostname ${gitUrl} )
 
-	local userName=$( usgBxoSshManage.sh -p usg=$(id -u -n) -i usgAcctCustomGitInfoRead ${gitHostname} userName )
-	local userEmail=$( usgBxoSshManage.sh -p usg=$(id -u -n) -i usgAcctCustomGitInfoRead ${gitHostname} userEmail )
+        local userName=$( usgBxoSshManage.sh -p usg=$(id -u -n) -i usgAcctCustomGitInfoRead ${gitHostname} userName )
+        local userEmail=$( usgBxoSshManage.sh -p usg=$(id -u -n) -i usgAcctCustomGitInfoRead ${gitHostname} userEmail )
 
-	lpDo git config user.name "${userName}"
-	lpDo git config user.email "${userEmail}" 	
+        lpDo git config user.name "${userName}"
+        lpDo git config user.email "${userEmail}"       
     }
 
     function processEach {
-	EH_assert [[ $# -eq 1 ]]
-	local thisOne="$1"
+        EH_assert [[ $# -eq 1 ]]
+        local thisOne="$1"
 
-	inBaseDirDo \
-	    ${thisOne} \
-	    hereDo
+        inBaseDirDo \
+            ${thisOne} \
+            hereDo
     }
 
 ####+BEGIN: bx:bsip:bash/processArgsAndStdin 
      function processArgsAndStdin {
-	local effectiveArgs=( "$@" )
-	local stdinArgs
-	local each
-	if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
-	    readarray stdinArgs < /dev/stdin
-	    effectiveArgs=( "$@" "${stdinArgs[@]}" )
-	fi
-	if [ ${#effectiveArgs[@]} -eq 0 ] ; then
-	    ANT_raw "No Args And Stdin Is Empty"
-	    lpReturn
-	fi
-	for each in "${effectiveArgs[@]}"; do
-	    lpDo processEach "${each%$'\n'}"
-	done
+        local effectiveArgs=( "$@" )
+        local stdinArgs
+        local each
+        if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
+            readarray stdinArgs < /dev/stdin
+            effectiveArgs=( "$@" "${stdinArgs[@]}" )
+        fi
+        if [ ${#effectiveArgs[@]} -eq 0 ] ; then
+            ANT_raw "No Args And Stdin Is Empty"
+            lpReturn
+        fi
+        for each in "${effectiveArgs[@]}"; do
+            lpDo processEach "${each%$'\n'}"
+        done
     }
     lpDo processArgsAndStdin "$@"
 ####+END:
     
     lpReturn
-}	
+}       
 
 
 
@@ -567,29 +567,29 @@ _EOF_
     local gitOutput=""
 
     if gitStatusReport loc rem ; then
-	echo "Nothing to add-commit-push"
-	lpReturn
+        echo "Nothing to add-commit-push"
+        lpReturn
     fi
 
     echo "Something to add-commit-push -- message=${message}"
 
     if [ "${addCommitPushClout}" == "modifieds" ] ; then
-	lpDo git add --update .
-	EH_retOnFail
+        lpDo git add --update .
+        EH_retOnFail
     elif [ "${addCommitPushClout}" == "all" ] ; then
-	if gitBaseIsCollection ; then
-	    ANT_raw "In A Collection, only updating modifieds"		
-	    lpDo git add --update .
-	    EH_retOnFail
-	else
-	    lpDo git add --all .
-	    EH_retOnFail
-	fi
+        if gitBaseIsCollection ; then
+            ANT_raw "In A Collection, only updating modifieds"          
+            lpDo git add --update .
+            EH_retOnFail
+        else
+            lpDo git add --all .
+            EH_retOnFail
+        fi
     else
-	EH_problem "Unknown addCommitPushClout=${addCommitPushClout}"
-	EH_retOnFail
+        EH_problem "Unknown addCommitPushClout=${addCommitPushClout}"
+        EH_retOnFail
     fi
-	
+        
     # In -m below, space failed. Changed to _ for that reason
     lpDo git commit -m "${message}"
     EH_retOnFail
@@ -598,7 +598,7 @@ _EOF_
     EH_retOnFail
 
     lpReturn
-}	
+}       
 
 
 _CommentBegin_
@@ -611,45 +611,45 @@ function vis_addCommitPush {
 If there are any args, process those.
 If there are no args, process stdin.
 _EOF_
-		       }
+                       }
 
     function hereDo {
-	EH_assert [[ $# -eq 1 ]]
-	local here=$(pwd)
+        EH_assert [[ $# -eq 1 ]]
+        local here=$(pwd)
 
-	lpDo addCommitPush "$@"
+        lpDo addCommitPush "$@"
     }
 
     function processEach {
-	EH_assert [[ $# -gt 1 ]]
-	local each="$1"
-	shift 
+        EH_assert [[ $# -gt 1 ]]
+        local each="$1"
+        shift 
 
-	inBaseDirDo \
-	    ${each} \
-	    hereDo "$@"
+        inBaseDirDo \
+            ${each} \
+            hereDo "$@"
     }
 
 ####+BEGIN: bx:bsip:bash/processStdinWithArgs 
     function processStdinWithArgs {
-	local stdinArgs
-	local each
-	if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
-	    readarray stdinArgs < /dev/stdin
-	fi
-	if [ ${#stdinArgs[@]} -eq 0 ] ; then
-	    ANT_raw "No StdinArgs -- Processing Skipped"
-	    lpReturn
-	fi
-	for each in "${stdinArgs[@]}"; do
-	    lpDo processEach "${each%$'\n'}" "$@"
-	done
+        local stdinArgs
+        local each
+        if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
+            readarray stdinArgs < /dev/stdin
+        fi
+        if [ ${#stdinArgs[@]} -eq 0 ] ; then
+            ANT_raw "No StdinArgs -- Processing Skipped"
+            lpReturn
+        fi
+        for each in "${stdinArgs[@]}"; do
+            lpDo processEach "${each%$'\n'}" "$@"
+        done
     }
     lpDo processStdinWithArgs "$@"
 ####+END:
     
     lpReturn
-}	
+}       
 
 
 _CommentBegin_
@@ -670,29 +670,29 @@ _EOF_
     local fetchUrl=""
     
     if [ $# -eq 1 ] ; then
-	remoteGitName="$1"
+        remoteGitName="$1"
     else
-	fetchUrl=$( git remote show origin | grep 'Fetch URL' | cut -d ':' -f 2-100 | xargs uriParseStdout.py )        
-	remoteGitPath=$( printf "${fetchUrl}" | grep -i path | cut -d '=' -f 2 )
-	remoteGitName=$( basename "${remoteGitPath}" )
+        fetchUrl=$( git remote show origin | grep 'Fetch URL' | cut -d ':' -f 2-100 | xargs uriParseStdout.py )        
+        remoteGitPath=$( printf "${fetchUrl}" | grep -i path | cut -d '=' -f 2 )
+        remoteGitName=$( basename "${remoteGitPath}" )
     fi
     
     local retVal=0
 
     if [ "${remoteGitName}" == "base.git" ] ; then
-	retVal=0
+        retVal=0
     elif [ "${remoteGitName}" == "bxReposBase.git" ] ; then
-	retVal=0
+        retVal=0
     elif [ "${remoteGitName}" == "mohsenBananBase.git" ] ; then
-	retVal=0
+        retVal=0
     else
-	retVal=1
+        retVal=1
     fi
 
     TM_trace 9 "remoteGitPath=${remoteGitPath} -- remoteGitName=${remoteGitName} -- retVal=${retVal}"
     
     lpReturn ${retVal}
-}	
+}       
 
 
 
@@ -706,50 +706,50 @@ function vis_gitBaseIsCollection {
 If there are any args, process those.
 If there are no args, process stdin.
 _EOF_
-		       }
+                       }
 
     function hereDo {
-	EH_assert [[ $# -eq 0 ]]
-	local here=$(pwd)
+        EH_assert [[ $# -eq 0 ]]
+        local here=$(pwd)
 
-	if gitBaseIsCollection ; then
-	    echo "COLLECTION:${here}"
-	else
-	    echo "REPO-ATOM:${here}"
-	fi
+        if gitBaseIsCollection ; then
+            echo "COLLECTION:${here}"
+        else
+            echo "REPO-ATOM:${here}"
+        fi
     }
 
     function processEach {
-	EH_assert [[ $# -eq 1 ]]
-	local thisOne="$1"
+        EH_assert [[ $# -eq 1 ]]
+        local thisOne="$1"
 
-	inBaseDirDo \
-	    ${thisOne} \
-	    hereDo
+        inBaseDirDo \
+            ${thisOne} \
+            hereDo
     }
 
 ####+BEGIN: bx:bsip:bash/processArgsAndStdin 
      function processArgsAndStdin {
-	local effectiveArgs=( "$@" )
-	local stdinArgs
-	local each
-	if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
-	    readarray stdinArgs < /dev/stdin
-	    effectiveArgs=( "$@" "${stdinArgs[@]}" )
-	fi
-	if [ ${#effectiveArgs[@]} -eq 0 ] ; then
-	    ANT_raw "No Args And Stdin Is Empty"
-	    lpReturn
-	fi
-	for each in "${effectiveArgs[@]}"; do
-	    lpDo processEach "${each%$'\n'}"
-	done
+        local effectiveArgs=( "$@" )
+        local stdinArgs
+        local each
+        if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
+            readarray stdinArgs < /dev/stdin
+            effectiveArgs=( "$@" "${stdinArgs[@]}" )
+        fi
+        if [ ${#effectiveArgs[@]} -eq 0 ] ; then
+            ANT_raw "No Args And Stdin Is Empty"
+            lpReturn
+        fi
+        for each in "${effectiveArgs[@]}"; do
+            lpDo processEach "${each%$'\n'}"
+        done
     }
     lpDo processArgsAndStdin "$@"
 ####+END:
 
     lpReturn
-}	
+}       
 
 
 
@@ -766,20 +766,20 @@ _EOF_
     local each=""
 
     for each in "$@" ; do
-	if [ "${each}" == "loc" ] ; then
-	    localReport=1
-	    if (( ${remoteReport} != 0 )) ; then
-		locRemReport=1
-	    fi
-	elif [ "${each}" == "rem" ] ; then
-	    remoteReport=1
-	    if (( ${localReport} != 0 )) ; then
-		locRemReport=1
-	    fi
-	else
-	    EH_problem "Bad usage -- expected loc or rem, got: ${each}"
-	    EH_retOnFail
-	fi
+        if [ "${each}" == "loc" ] ; then
+            localReport=1
+            if (( ${remoteReport} != 0 )) ; then
+                locRemReport=1
+            fi
+        elif [ "${each}" == "rem" ] ; then
+            remoteReport=1
+            if (( ${localReport} != 0 )) ; then
+                locRemReport=1
+            fi
+        else
+            EH_problem "Bad usage -- expected loc or rem, got: ${each}"
+            EH_retOnFail
+        fi
     done
 
     local remoteGitPath=""
@@ -802,92 +802,92 @@ _EOF_
     local gitRemStatusOutput=""
     
     function gitDigest {    
-	EH_assert [[ $# -eq 3 ]]
+        EH_assert [[ $# -eq 3 ]]
 
-	local locRetVal=$1
-	local remRetVal=$2
-	local collectionOrAtom=$3
+        local locRetVal=$1
+        local remRetVal=$2
+        local collectionOrAtom=$3
 
-	if (( ${locRemReport} != 0 )) ; then
-	    if (( "${locRetVal}" == 0 )) ; then
-		printf "LOC+REM:${collectionOrAtom}:current:"
-	    else
-		printf "LOC+REM:${collectionOrAtom}:CHANGED:"
-	    fi
-	    if (( "${remRetVal}" == 0 )) ; then
-		printf ":same:"
-	    else
-		printf ":FETCH:"
-	    fi
-	elif (( ${localReport} != 0 )) ; then
-	    if (( "${locRetVal}" == 0 )) ; then
-		printf "LOC:${collectionOrAtom}:current:"
-	    else
-		printf "LOC:${collectionOrAtom}:CHANGED:"
-	    fi
-	elif (( ${remoteReport} != 0 )) ; then
-	    if (( "${remRetVal}" == 0 )) ; then
-		printf "REM:${collectionOrAtom}:same:"
-	    else
-		printf "REM:${collectionOrAtom}:FETCH:"
-	    fi
-	else
-	    EH_problem "OOPS"
-	    EH_retOnFail
-	fi
+        if (( ${locRemReport} != 0 )) ; then
+            if (( "${locRetVal}" == 0 )) ; then
+                printf "LOC+REM:${collectionOrAtom}:current:"
+            else
+                printf "LOC+REM:${collectionOrAtom}:CHANGED:"
+            fi
+            if (( "${remRetVal}" == 0 )) ; then
+                printf ":same:"
+            else
+                printf ":FETCH:"
+            fi
+        elif (( ${localReport} != 0 )) ; then
+            if (( "${locRetVal}" == 0 )) ; then
+                printf "LOC:${collectionOrAtom}:current:"
+            else
+                printf "LOC:${collectionOrAtom}:CHANGED:"
+            fi
+        elif (( ${remoteReport} != 0 )) ; then
+            if (( "${remRetVal}" == 0 )) ; then
+                printf "REM:${collectionOrAtom}:same:"
+            else
+                printf "REM:${collectionOrAtom}:FETCH:"
+            fi
+        else
+            EH_problem "OOPS"
+            EH_retOnFail
+        fi
 
-	printf  " ${here} ::${remoteHostName}:${remoteGitPath}\n"
+        printf  " ${here} ::${remoteHostName}:${remoteGitPath}\n"
 
-	lpReturn
+        lpReturn
     }
     
     if (( ${remoteReport} != 0 )) || (( ${locRemReport} != 0 )) ; then
-	gitRemStatusOutput=$( git fetch --dry-run 2>&1 )
-	if [ -z "${gitRemStatusOutput}" ] ; then
-	    remRetVal=0
-	else
-	    remRetVal=1
-	fi
+        gitRemStatusOutput=$( git fetch --dry-run 2>&1 )
+        if [ -z "${gitRemStatusOutput}" ] ; then
+            remRetVal=0
+        else
+            remRetVal=1
+        fi
     fi
 
     if (( ${localReport} != 0 )) || (( ${locRemReport} != 0 )) ; then    
-	gitLocStatusOutput=$( git status  --porcelain )
-	# git status does not return a proper exit code
+        gitLocStatusOutput=$( git status  --porcelain )
+        # git status does not return a proper exit code
 
-	if [ -z "${gitLocStatusOutput}" ] ; then
-	    locRetVal=0
-	else
-	    locRetVal=1
-	fi
+        if [ -z "${gitLocStatusOutput}" ] ; then
+            locRetVal=0
+        else
+            locRetVal=1
+        fi
     fi
 
     if gitBaseIsCollection "${remoteGitName}" ; then
-	if [ $locRetVal != 0 ] ; then
-	    gitLocStatusOutput=$( git status --untracked-files=no --porcelain )
-	    if [ -z "${gitLocStatusOutput}" ] ; then
-		# In a collection and no modified files.
-		locRetVal=0
-		lpDo gitDigest ${locRetVal} ${remRetVal} "COLLECTION"
-	    else
-		lpDo gitDigest ${locRetVal} ${remRetVal} "COLLECTION"		
-		lpDo echo "${gitLocStatusOutput}"
-	    fi
-	else
-	    lpDo gitDigest ${locRetVal} ${remRetVal} "COLLECTION"
-	fi
+        if [ $locRetVal != 0 ] ; then
+            gitLocStatusOutput=$( git status --untracked-files=no --porcelain )
+            if [ -z "${gitLocStatusOutput}" ] ; then
+                # In a collection and no modified files.
+                locRetVal=0
+                lpDo gitDigest ${locRetVal} ${remRetVal} "COLLECTION"
+            else
+                lpDo gitDigest ${locRetVal} ${remRetVal} "COLLECTION"           
+                lpDo echo "${gitLocStatusOutput}"
+            fi
+        else
+            lpDo gitDigest ${locRetVal} ${remRetVal} "COLLECTION"
+        fi
     else
-	lpDo gitDigest ${locRetVal} ${remRetVal} "REPO-ATOM"
-	if [ $locRetVal != 0 ] ; then
-	   lpDo echo "${gitLocStatusOutput}"
-	fi
+        lpDo gitDigest ${locRetVal} ${remRetVal} "REPO-ATOM"
+        if [ $locRetVal != 0 ] ; then
+           lpDo echo "${gitLocStatusOutput}"
+        fi
     fi
     
     if (( $remRetVal != 0 )) ; then
-	lpDo echo "${gitRemStatusOutput}"
+        lpDo echo "${gitRemStatusOutput}"
     fi
     
     lpReturn ${locRetVal}
-}	
+}       
 
 
 
@@ -901,81 +901,81 @@ function vis_gitRemPullAndCloneWhenMissing {
     function describeF {  cat  << _EOF_
 Apply args to each line of stdin.
 _EOF_
-		       }
+                       }
 
     function hereMissingDo {
-	local here=$(pwd)
-	local repoName=$@
+        local here=$(pwd)
+        local repoName=$@
 
-	local oneExistingRepo=$(lpDo eval ls \| head -1)
-	EH_assert [ -n "${oneExistingRepo}" ]
+        local oneExistingRepo=$(lpDo eval ls \| head -1)
+        EH_assert [ -n "${oneExistingRepo}" ]
 
-	EH_assert [ -d "${oneExistingRepo}" ] 
-	lpDo pushd "${oneExistingRepo}" > /dev/null
-	fetchUrl=$( git remote show origin | grep 'Fetch URL' | cut -d ':' -f 2-100 | xargs uriParseStdout.py )
-	remoteHostName=$( printf "${fetchUrl}" | grep -i hostname | cut -d '=' -f 2 )    
-	remoteGitPath=$( printf "${fetchUrl}" | grep -i path | cut -d '=' -f 2 )
-	remoteGitName=$( FN_dirsPart "${remoteGitPath}" )
-	lpDo popd > /dev/null
-	
-	ANT_raw "${here}/${repoName} is missing -- cloning from: ${remoteGitName}/${repoName}.git"
-	ANT_raw "Running: git clone ${remoteGitName}/$@.git"
+        EH_assert [ -d "${oneExistingRepo}" ] 
+        lpDo pushd "${oneExistingRepo}" > /dev/null
+        fetchUrl=$( git remote show origin | grep 'Fetch URL' | cut -d ':' -f 2-100 | xargs uriParseStdout.py )
+        remoteHostName=$( printf "${fetchUrl}" | grep -i hostname | cut -d '=' -f 2 )    
+        remoteGitPath=$( printf "${fetchUrl}" | grep -i path | cut -d '=' -f 2 )
+        remoteGitName=$( FN_dirsPart "${remoteGitPath}" )
+        lpDo popd > /dev/null
+        
+        ANT_raw "${here}/${repoName} is missing -- cloning from: ${remoteGitName}/${repoName}.git"
+        ANT_raw "Running: git clone ${remoteGitName}/$@.git"
 
-	lpDo git clone ${remoteGitName}/$@.git
+        lpDo git clone ${remoteGitName}/$@.git
     }
 
     function hereInPlaceReport {
-	local here=$(pwd)
+        local here=$(pwd)
 
-	# fetchUrl=$( git remote show origin | grep 'Fetch URL' | cut -d ':' -f 2-100 | xargs uriParseStdout.py )
-	# remoteHostName=$( printf "${fetchUrl}" | grep -i hostname | cut -d '=' -f 2 )    
-	# remoteGitPath=$( printf "${fetchUrl}" | grep -i path | cut -d '=' -f 2 )
-	# remoteGitName=$( FN_dirsPart "${remoteGitPath}" )
+        # fetchUrl=$( git remote show origin | grep 'Fetch URL' | cut -d ':' -f 2-100 | xargs uriParseStdout.py )
+        # remoteHostName=$( printf "${fetchUrl}" | grep -i hostname | cut -d '=' -f 2 )    
+        # remoteGitPath=$( printf "${fetchUrl}" | grep -i path | cut -d '=' -f 2 )
+        # remoteGitName=$( FN_dirsPart "${remoteGitPath}" )
 
-	#ANT_raw "${here} is in place -- Pulling if needed"
-	
-	lpDo gitRemPull
+        #ANT_raw "${here} is in place -- Pulling if needed"
+        
+        lpDo gitRemPull
     }
 
     function processEach {
-	EH_assert [[ $# -eq 1 ]]
-	local each="$1"
-	local repoName=$(basename "${each}")
-	shift
+        EH_assert [[ $# -eq 1 ]]
+        local each="$1"
+        local repoName=$(basename "${each}")
+        shift
 
-	if [ -d "${each}" ] ; then
-	    inBaseDirDo \
-		${each} \
-		hereInPlaceReport
-	else
-	    each=$(FN_dirsPart "${each}")
-	
-	    inBaseDirDo \
-		${each} \
-		hereMissingDo "${repoName}"
-	fi
+        if [ -d "${each}" ] ; then
+            inBaseDirDo \
+                ${each} \
+                hereInPlaceReport
+        else
+            each=$(FN_dirsPart "${each}")
+        
+            inBaseDirDo \
+                ${each} \
+                hereMissingDo "${repoName}"
+        fi
     }
 
 ####+BEGIN: bx:bsip:bash/processStdinWithArgs 
     function processStdinWithArgs {
-	local stdinArgs
-	local each
-	if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
-	    readarray stdinArgs < /dev/stdin
-	fi
-	if [ ${#stdinArgs[@]} -eq 0 ] ; then
-	    ANT_raw "No StdinArgs -- Processing Skipped"
-	    lpReturn
-	fi
-	for each in "${stdinArgs[@]}"; do
-	    lpDo processEach "${each%$'\n'}" "$@"
-	done
+        local stdinArgs
+        local each
+        if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
+            readarray stdinArgs < /dev/stdin
+        fi
+        if [ ${#stdinArgs[@]} -eq 0 ] ; then
+            ANT_raw "No StdinArgs -- Processing Skipped"
+            lpReturn
+        fi
+        for each in "${stdinArgs[@]}"; do
+            lpDo processEach "${each%$'\n'}" "$@"
+        done
     }
     lpDo processStdinWithArgs "$@"
 ####+END:
     
     lpReturn
-}	
+}       
 
 
 function vis_cloneWhenMissing {
@@ -983,79 +983,79 @@ function vis_cloneWhenMissing {
     function describeF {  cat  << _EOF_
 Apply args to each line of stdin.
 _EOF_
-		       }
+                       }
 
     function hereMissingDo {
-	local here=$(pwd)
-	local repoName=$@
+        local here=$(pwd)
+        local repoName=$@
 
-	local oneExistingRepo=$(lpDo eval ls \| head -1)
-	EH_assert [ -n "${oneExistingRepo}" ]
+        local oneExistingRepo=$(lpDo eval ls \| head -1)
+        EH_assert [ -n "${oneExistingRepo}" ]
 
-	EH_assert [ -d "${oneExistingRepo}" ] 
-	lpDo pushd "${oneExistingRepo}" > /dev/null
-	fetchUrl=$( git remote show origin | grep 'Fetch URL' | cut -d ':' -f 2-100 | xargs uriParseStdout.py )
-	remoteHostName=$( printf "${fetchUrl}" | grep -i hostname | cut -d '=' -f 2 )    
-	remoteGitPath=$( printf "${fetchUrl}" | grep -i path | cut -d '=' -f 2 )
-	remoteGitName=$( FN_dirsPart "${remoteGitPath}" )
-	lpDo popd > /dev/null
-	
-	ANT_raw "${here}/${repoName} is missing -- cloning from: ${remoteGitName}/${repoName}.git"
-	ANT_raw "Running: git clone ${remoteGitName}/$@.git"
+        EH_assert [ -d "${oneExistingRepo}" ] 
+        lpDo pushd "${oneExistingRepo}" > /dev/null
+        fetchUrl=$( git remote show origin | grep 'Fetch URL' | cut -d ':' -f 2-100 | xargs uriParseStdout.py )
+        remoteHostName=$( printf "${fetchUrl}" | grep -i hostname | cut -d '=' -f 2 )    
+        remoteGitPath=$( printf "${fetchUrl}" | grep -i path | cut -d '=' -f 2 )
+        remoteGitName=$( FN_dirsPart "${remoteGitPath}" )
+        lpDo popd > /dev/null
+        
+        ANT_raw "${here}/${repoName} is missing -- cloning from: ${remoteGitName}/${repoName}.git"
+        ANT_raw "Running: git clone ${remoteGitName}/$@.git"
 
-	lpDo git clone ${remoteGitName}/$@.git
+        lpDo git clone ${remoteGitName}/$@.git
     }
 
     function hereInPlaceReport {
-	local here=$(pwd)
+        local here=$(pwd)
 
-	fetchUrl=$( git remote show origin | grep 'Fetch URL' | cut -d ':' -f 2-100 | xargs uriParseStdout.py )
-	remoteHostName=$( printf "${fetchUrl}" | grep -i hostname | cut -d '=' -f 2 )    
-	remoteGitPath=$( printf "${fetchUrl}" | grep -i path | cut -d '=' -f 2 )
-	remoteGitName=$( FN_dirsPart "${remoteGitPath}" )
+        fetchUrl=$( git remote show origin | grep 'Fetch URL' | cut -d ':' -f 2-100 | xargs uriParseStdout.py )
+        remoteHostName=$( printf "${fetchUrl}" | grep -i hostname | cut -d '=' -f 2 )    
+        remoteGitPath=$( printf "${fetchUrl}" | grep -i path | cut -d '=' -f 2 )
+        remoteGitName=$( FN_dirsPart "${remoteGitPath}" )
 
-	ANT_raw "${here} is in place -- no need to clone -- remoteGit=${remoteGitPath}"
+        ANT_raw "${here} is in place -- no need to clone -- remoteGit=${remoteGitPath}"
     }
 
     function processEach {
-	EH_assert [[ $# -eq 1 ]]
-	local each="$1"
-	local repoName=$(basename "${each}")
-	shift
+        EH_assert [[ $# -eq 1 ]]
+        local each="$1"
+        local repoName=$(basename "${each}")
+        shift
 
-	if [ -d "${each}" ] ; then
-	    inBaseDirDo \
-		${each} \
-		hereInPlaceReport
-	else
-	    each=$(FN_dirsPart "${each}")
-	
-	    inBaseDirDo \
-		${each} \
-		hereMissingDo "${repoName}"
-	fi
+        if [ -d "${each}" ] ; then
+            inBaseDirDo \
+                ${each} \
+                hereInPlaceReport
+        else
+            each=$(FN_dirsPart "${each}")
+        
+            inBaseDirDo \
+                ${each} \
+                hereMissingDo "${repoName}"
+        fi
     }
 
 ####+BEGIN: bx:bsip:bash/processStdinWithArgs 
     function processStdinWithArgs {
-	local stdinArgs
-	local each
-	if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
-	    readarray stdinArgs < /dev/stdin
-	fi
-	if [ ${#stdinArgs[@]} -eq 0 ] ; then
-	    ANT_raw "No StdinArgs -- Processing Skipped"
-	    lpReturn
-	fi
-	for each in "${stdinArgs[@]}"; do
-	    lpDo processEach "${each%$'\n'}" "$@"
-	done
+        local stdinArgs
+        local each
+        if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
+            readarray stdinArgs < /dev/stdin
+        fi
+        if [ ${#stdinArgs[@]} -eq 0 ] ; then
+            ANT_raw "No StdinArgs -- Processing Skipped"
+            lpReturn
+        fi
+        for each in "${stdinArgs[@]}"; do
+            lpDo processEach "${each%$'\n'}" "$@"
+        done
     }
     lpDo processStdinWithArgs "$@"
 ####+END:
     
     lpReturn
-}	
+}       
 
 
 
@@ -1064,44 +1064,44 @@ function vis_status {
     function describeF {  cat  << _EOF_
 Apply args to each line of stdin.
 _EOF_
-		       }
+                       }
 
     function hereDo {
-	local here=$(pwd)
-	
-	lpDo gitStatusReport "$@"
+        local here=$(pwd)
+        
+        lpDo gitStatusReport "$@"
     }
 
     function processEach {
-	EH_assert [[ $# -gt 1 ]]
-	local each="$1"
-	shift 
+        EH_assert [[ $# -gt 1 ]]
+        local each="$1"
+        shift 
 
-	inBaseDirDo \
-	    ${each} \
-	    hereDo "$@"
+        inBaseDirDo \
+            ${each} \
+            hereDo "$@"
     }
 
 ####+BEGIN: bx:bsip:bash/processStdinWithArgs 
     function processStdinWithArgs {
-	local stdinArgs
-	local each
-	if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
-	    readarray stdinArgs < /dev/stdin
-	fi
-	if [ ${#stdinArgs[@]} -eq 0 ] ; then
-	    ANT_raw "No StdinArgs -- Processing Skipped"
-	    lpReturn
-	fi
-	for each in "${stdinArgs[@]}"; do
-	    lpDo processEach "${each%$'\n'}" "$@"
-	done
+        local stdinArgs
+        local each
+        if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
+            readarray stdinArgs < /dev/stdin
+        fi
+        if [ ${#stdinArgs[@]} -eq 0 ] ; then
+            ANT_raw "No StdinArgs -- Processing Skipped"
+            lpReturn
+        fi
+        for each in "${stdinArgs[@]}"; do
+            lpDo processEach "${each%$'\n'}" "$@"
+        done
     }
     lpDo processStdinWithArgs "$@"
 ####+END:
     
     lpReturn
-}	
+}       
 
 _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || IIF       ::  vis_baseUpdateDotIgnore  [[elisp:(org-cycle)][| ]]
@@ -1113,70 +1113,70 @@ function vis_baseUpdateDotIgnore {
 If there are any args, process those.
 If there are no args, process stdin.
 _EOF_
-		       }
+                       }
 
     function hereDo {
-	EH_assert [[ $# -eq 0 ]]
-	local here=$(pwd)
+        EH_assert [[ $# -eq 0 ]]
+        local here=$(pwd)
 
-	# if gitBaseIsCollection ; then
-	#     echo "COLLECTION:${here}"
-	#     if [ -f .gitignore ] ; then
-	# 	lpDo echo rm ${here}/.gitignore	    
-	#     fi
+        # if gitBaseIsCollection ; then
+        #     echo "COLLECTION:${here}"
+        #     if [ -f .gitignore ] ; then
+        #       lpDo echo rm ${here}/.gitignore     
+        #     fi
 
-	#     if [ -f .gitattributes ] ; then
-	# 	lpDo echo rm ${here}/.gitattributes    	    
-	#     fi
+        #     if [ -f .gitattributes ] ; then
+        #       lpDo echo rm ${here}/.gitattributes         
+        #     fi
 
-	# else
-	    echo "REPO-ATOM:${here}"
-	    if [ ! -f .gitignore ] ; then
-		lpDo cp /bisos/apps/defaults/begin/templates/moded/git/gitignore/emacs+py .gitignore
-	    else
-		echo "${here}/.gitignore in place -- updating skipped"
-	    fi
+        # else
+            echo "REPO-ATOM:${here}"
+            if [ ! -f .gitignore ] ; then
+                lpDo cp /bisos/apps/defaults/begin/templates/moded/git/gitignore/emacs+py .gitignore
+            else
+                echo "${here}/.gitignore in place -- updating skipped"
+            fi
 
-	    if [ ! -f .gitattributes ] ; then
-		lpDo cp /bisos/apps/defaults/begin/templates/moded/git/gitattributes/py .gitattributes
-	    else
-		echo "${here}/.gitattributes in place -- updating skipped"
-	    fi
-	# fi
+            if [ ! -f .gitattributes ] ; then
+                lpDo cp /bisos/apps/defaults/begin/templates/moded/git/gitattributes/py .gitattributes
+            else
+                echo "${here}/.gitattributes in place -- updating skipped"
+            fi
+        # fi
 
     }
 
     function processEach {
-	EH_assert [[ $# -eq 1 ]]
-	local thisOne="$1"
+        EH_assert [[ $# -eq 1 ]]
+        local thisOne="$1"
 
-	inBaseDirDo \
-	    ${thisOne} \
-	    hereDo
+        inBaseDirDo \
+            ${thisOne} \
+            hereDo
     }
 
 ####+BEGIN: bx:bsip:bash/processArgsAndStdin 
      function processArgsAndStdin {
-	local effectiveArgs=( "$@" )
-	local stdinArgs
-	local each
-	if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
-	    readarray stdinArgs < /dev/stdin
-	    effectiveArgs=( "$@" "${stdinArgs[@]}" )
-	fi
-	if [ ${#effectiveArgs[@]} -eq 0 ] ; then
-	    ANT_raw "No Args And Stdin Is Empty"
-	    lpReturn
-	fi
-	for each in "${effectiveArgs[@]}"; do
-	    lpDo processEach "${each%$'\n'}"
-	done
+        local effectiveArgs=( "$@" )
+        local stdinArgs
+        local each
+        if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
+            readarray stdinArgs < /dev/stdin
+            effectiveArgs=( "$@" "${stdinArgs[@]}" )
+        fi
+        if [ ${#effectiveArgs[@]} -eq 0 ] ; then
+            ANT_raw "No Args And Stdin Is Empty"
+            lpReturn
+        fi
+        for each in "${effectiveArgs[@]}"; do
+            lpDo processEach "${each%$'\n'}"
+        done
     }
     lpDo processArgsAndStdin "$@"
 ####+END:
 
     lpReturn
-}	
+}       
 
 
 _CommentBegin_
@@ -1189,60 +1189,60 @@ function vis_baseVerifyDotIgnore {
 If there are any args, process those.
 If there are no args, process stdin.
 _EOF_
-		       }
+                       }
 
     function hereDo {
-	EH_assert [[ $# -eq 0 ]]
-	local here=$(pwd)
+        EH_assert [[ $# -eq 0 ]]
+        local here=$(pwd)
 
-	if [ ! -f .gitignore ] ; then
-	    ANT_raw "Missing ${here}/.gitignore"
-	else
-	    ANT_raw "Verified ${here}/.gitignore"
-	fi
-	if [ ! -f .gitattributes ] ; then
-	    ANT_raw "Missing ${here}/.gitattributes"
-	else
-	    ANT_raw "Verified ${here}/.gitattributes"
-	fi
-	
+        if [ ! -f .gitignore ] ; then
+            ANT_raw "Missing ${here}/.gitignore"
+        else
+            ANT_raw "Verified ${here}/.gitignore"
+        fi
+        if [ ! -f .gitattributes ] ; then
+            ANT_raw "Missing ${here}/.gitattributes"
+        else
+            ANT_raw "Verified ${here}/.gitattributes"
+        fi
+        
     }
 
     function processEach {
-	EH_assert [[ $# -eq 1 ]]
-	local thisOne="$1"
+        EH_assert [[ $# -eq 1 ]]
+        local thisOne="$1"
 
-	# lpDo cp /bisos/apps/defaults/begin/templates/moded/git/gitignore/emacs+py .gitignore
+        # lpDo cp /bisos/apps/defaults/begin/templates/moded/git/gitignore/emacs+py .gitignore
 
-	# lpDo cp /bisos/apps/defaults/begin/templates/moded/git/gitattributes/py .gitattributes    
+        # lpDo cp /bisos/apps/defaults/begin/templates/moded/git/gitattributes/py .gitattributes    
 
-	inBaseDirDo \
-	    ${thisOne} \
-	    hereDo
+        inBaseDirDo \
+            ${thisOne} \
+            hereDo
     }
 
 ####+BEGIN: bx:bsip:bash/processArgsAndStdin 
      function processArgsAndStdin {
-	local effectiveArgs=( "$@" )
-	local stdinArgs
-	local each
-	if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
-	    readarray stdinArgs < /dev/stdin
-	    effectiveArgs=( "$@" "${stdinArgs[@]}" )
-	fi
-	if [ ${#effectiveArgs[@]} -eq 0 ] ; then
-	    ANT_raw "No Args And Stdin Is Empty"
-	    lpReturn
-	fi
-	for each in "${effectiveArgs[@]}"; do
-	    lpDo processEach "${each%$'\n'}"
-	done
+        local effectiveArgs=( "$@" )
+        local stdinArgs
+        local each
+        if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
+            readarray stdinArgs < /dev/stdin
+            effectiveArgs=( "$@" "${stdinArgs[@]}" )
+        fi
+        if [ ${#effectiveArgs[@]} -eq 0 ] ; then
+            ANT_raw "No Args And Stdin Is Empty"
+            lpReturn
+        fi
+        for each in "${effectiveArgs[@]}"; do
+            lpDo processEach "${each%$'\n'}"
+        done
     }
     lpDo processArgsAndStdin "$@"
 ####+END:
     
     lpReturn
-}	
+}       
 
 
 
@@ -1255,7 +1255,7 @@ function vis_gitUrlAtBase {
     function describeF {  cat  << _EOF_
 Given a fileDirBasePath get its gitUrl.
 _EOF_
-		       }
+                       }
 
     EH_assert [[ $# -eq 1 ]]
 
@@ -1267,7 +1267,7 @@ _EOF_
     opDo popd > /dev/null
     
     if [ -z "${remoteGitPath}" ] ; then
-	EH_problem "Empty remoteGitPath"
+        EH_problem "Empty remoteGitPath"
     fi
     echo "${remoteGitPath}"
 }
@@ -1297,7 +1297,7 @@ Explaination (see it in action on regex101):
 This if far from perfect, as something like https@github.com:some-user/my-repo.git would
 match, but I think it's fine enough for extraction.
 _EOF_
-		       }
+                       }
 
     EH_assert [[ $# -eq 1 ]]
 
@@ -1311,17 +1311,17 @@ _EOF_
     local repo=""
     
     if [[ $remoteUrl =~ $re ]] ; then    
-	protocol=${BASH_REMATCH[1]}
-	separator=${BASH_REMATCH[2]}
-	hostname=${BASH_REMATCH[3]}
-	user=${BASH_REMATCH[4]}
-	repo=${BASH_REMATCH[5]}
+        protocol=${BASH_REMATCH[1]}
+        separator=${BASH_REMATCH[2]}
+        hostname=${BASH_REMATCH[3]}
+        user=${BASH_REMATCH[4]}
+        repo=${BASH_REMATCH[5]}
     else
-	EH_problem "Badly formed gitUrl"
+        EH_problem "Badly formed gitUrl"
     fi
 
     if [ -z "${hostname}" ] ; then
-	EH_problem "Empty hostname"
+        EH_problem "Empty hostname"
     fi
     echo "${hostname}"
 }

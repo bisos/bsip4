@@ -110,7 +110,7 @@ function G_postParamHook {
     bxoIdPrepValidate    
 
     if [ ! -z "${bxoId}" ] ; then
-     	bxoHome=$( FN_absolutePathGet ~${bxoId} )
+        bxoHome=$( FN_absolutePathGet ~${bxoId} )
     fi
     
     bisosCurrentsGet
@@ -180,7 +180,7 @@ _EOF_
     lpDo vis_siteContainersAssignGenerics
     
     lpReturn
-}	
+}       
 
 function vis_vagrantBaseBoxesBuild {
     G_funcEntry
@@ -192,7 +192,7 @@ _EOF_
     lpDo echo run lcaVagrantBoxRun.sh
     
     lpReturn
-}	
+}       
 
 function vis_siteContainersAssignGenerics {
     G_funcEntry
@@ -206,7 +206,7 @@ _EOF_
     lpDo siteContainerRepo.sh -h -v -n showRun -i containerRepoGenericsUpdate full    
     
     lpReturn
-}	
+}       
 
 function vis_bisosDevBxo_fullSetup {    
     G_funcEntry
@@ -234,14 +234,14 @@ _EOF_
 
     # Activate bisosDev usage env bpo
     lpDo bxoManage.sh ${G_commandPrefs} \
-	 -p privacy=priv -p bxoId=${bisosDevBxoId} \
-	 -i fullConstruct
+         -p privacy=priv -p bxoId=${bisosDevBxoId} \
+         -i fullConstruct
 
     local bisosDevBxoHome=$( FN_absolutePathGet ~${bisosDevBxoId} )
     
     # record the activated bpo as bisosDev
     lpDo usgBpos.sh ${G_commandPrefs} \
-	 -i usgBposUsageEnvs_bisosDev_update ${bisosDevBxoHome}
+         -i usgBposUsageEnvs_bisosDev_update ${bisosDevBxoHome}
 }
 
 
@@ -260,7 +260,7 @@ _EOF_
     # auth clone using bisosDev credentials
     # switch to auth based bxRepos 
     lpDo ${bisosDevBxoHome}/sys/bin/bxoSysSetup.sh ${G_commandPrefs} \
-	 -i developerMode
+         -i developerMode
 }
 
 
@@ -274,22 +274,22 @@ _EOF_
     local secMode="$1"
 
     case ${secMode} in
-	developer)
-	    lpDo bisosBaseDirs.sh ${G_commandPrefs} -i bxReposAuthSet
-	    lpDo vis_sysCharConveyInfoWrite securityMode developer
-	    ;;
-	stable)
-	    lpDo bisosBaseDirs.sh ${G_commandPrefs} -i bxReposAnonSet
-	    lpDo vis_sysCharConveyInfoWrite securityMode stable    
-	    ;;
-	sealed)
-	    EH_problem "NOTYET"
-	    ;;
-	*)
-	    EH_problem "Bad Usage -- ${secMode}"
-	    ;;
+        developer)
+            lpDo bisosBaseDirs.sh ${G_commandPrefs} -i bxReposAuthSet
+            lpDo vis_sysCharConveyInfoWrite securityMode developer
+            ;;
+        stable)
+            lpDo bisosBaseDirs.sh ${G_commandPrefs} -i bxReposAnonSet
+            lpDo vis_sysCharConveyInfoWrite securityMode stable    
+            ;;
+        sealed)
+            EH_problem "NOTYET"
+            ;;
+        *)
+            EH_problem "Bad Usage -- ${secMode}"
+            ;;
     esac
-	
+        
     lpReturn
 }
 

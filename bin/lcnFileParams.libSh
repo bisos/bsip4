@@ -77,7 +77,7 @@ function fileParamsCodeGenOutput {
   if [[ -d ${paramsFileBaseDir} ]] ; then 
    if  ! cd ${paramsFileBaseDir}  ; then
       EH_problem "Failed:  ${paramsFileBaseDir}"
-	exit 101
+        exit 101
    fi
   else
       EH_problem "Missing ${paramsFileBaseDir} Directory"
@@ -94,7 +94,7 @@ function ${funcName} {
 
    if  ! cd ${paramsFileBaseDir}  ; then
       EH_problem "Failed:  ${paramsFileBaseDir}"
-	exit 101
+        exit 101
    fi
 
 _EOF_
@@ -143,8 +143,8 @@ function fileParamsLoadVarsFromBaseDir {
 
 
   #if [ ! -f ${paramsFileBaseDir}/${funcName}.sh ] ; then
-     fileParamsCodeGenToFile ${paramsFileBaseDir}	
-  #fi	
+     fileParamsCodeGenToFile ${paramsFileBaseDir}       
+  #fi   
 
   . ${paramsFileBaseDir}/${funcName}.sh
 
@@ -163,7 +163,7 @@ function fileParamsShow {
   paramsFileBaseDir=$1
 
   fileParamsCodeGenToFile ${paramsFileBaseDir}
-  fileParamsLoadVarsFromBaseDir	${paramsFileBaseDir}	
+  fileParamsLoadVarsFromBaseDir ${paramsFileBaseDir}    
   
   if [[ -d ${paramsFileBaseDir} ]] ; then 
       opDoExit cd ${paramsFileBaseDir}
@@ -219,7 +219,7 @@ function fileParamsWrite {
 
 
   fileParamsCodeGenToFile ${paramsFileBaseDir}
-  fileParamsLoadVarsFromBaseDir	${paramsFileBaseDir}	
+  fileParamsLoadVarsFromBaseDir ${paramsFileBaseDir}    
   
   if [[ -d ${paramsFileBaseDir} ]] ; then 
       opDoExit cd ${paramsFileBaseDir}

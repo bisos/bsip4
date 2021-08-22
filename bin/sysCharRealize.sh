@@ -115,7 +115,7 @@ function G_postParamHook {
     bxoIdPrepValidate    
 
     if [ ! -z "${bxoId}" ] ; then
-     	bxoHome=$( FN_absolutePathGet ~${bxoId} )
+        bxoHome=$( FN_absolutePathGet ~${bxoId} )
     fi
     
     bisosCurrentsGet
@@ -154,15 +154,15 @@ function vis_examples {
     
 
     function repoBaseCreateAndPushExamples {
-	EH_assert [[ $# -eq 2 ]]
-	local repoName=$1
-	local description=$2
-	cat  << _EOF_
+        EH_assert [[ $# -eq 2 ]]
+        local repoName=$1
+        local description=$2
+        cat  << _EOF_
 $( examplesSeperatorSection "${description}" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBaseCreate_${repoName}
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBasePush ${repoName}
 _EOF_
-    }	
+    }   
     
     visLibExamplesOutput ${G_myName}
 
@@ -231,7 +231,7 @@ function vis_containerAssignAndRepoAndSysCharRealize {
    function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Dispatches to BoxRealize or to VirtRealize.
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
 
    EH_assert [ ! -z "${model}" ]   
@@ -242,24 +242,24 @@ _EOF_
    
    case "${model}" in
        Host|host|HOST|Pure|pure|PURE)
-	   lpDo vis_containerBoxAssignAndRepo
-	   lpDo siteContainerAssign.sh -i forThisSysContainerAssignBasePush
-	   lpDo vis_sysCharContainerBoxRealize
-	   ;;
+           lpDo vis_containerBoxAssignAndRepo
+           lpDo siteContainerAssign.sh -i forThisSysContainerAssignBasePush
+           lpDo vis_sysCharContainerBoxRealize
+           ;;
        Virt|virt|VIRT)
-	   siteContainerAssignBase=$( vis_containerAssignBase )
-	   EH_assert [ ! -z "${siteContainerAssignBase}" ]
-	   
-	   lpDo eval echo ${siteContainerAssignBase} \| bx-gitRepos -i addCommitPush all
-	   
-	   lpDo vis_containerVirtAssignAndRepo "${siteContainerAssignBase}"
-	   
-	   lpDo vis_sysCharContainerVirtRealize "${siteContainerAssignBase}"
-	   ;;
+           siteContainerAssignBase=$( vis_containerAssignBase )
+           EH_assert [ ! -z "${siteContainerAssignBase}" ]
+           
+           lpDo eval echo ${siteContainerAssignBase} \| bx-gitRepos -i addCommitPush all
+           
+           lpDo vis_containerVirtAssignAndRepo "${siteContainerAssignBase}"
+           
+           lpDo vis_sysCharContainerVirtRealize "${siteContainerAssignBase}"
+           ;;
        *)
-	   EH_problem "Bad Usage -- model=${model}"
+           EH_problem "Bad Usage -- model=${model}"
    esac
-}	
+}       
 
 
 function vis_sysCharContainerBoxRealize {
@@ -267,7 +267,7 @@ function vis_sysCharContainerBoxRealize {
    function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Assigns a site container to box (if needed), invokes sysCharContainerRealize full
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
 
    EH_assert [ ! -z "${model}" ]   
@@ -279,29 +279,29 @@ _EOF_
    
    local containerRepoBase=$( siteContainerRepo.sh -i containerRepoBase "${containerAssignBase}" )
    EH_assert [ -d "${containerRepoBase}" ]
-			      
+                              
    lpDo vis_sysCharContainerRealize full ${containerAssignBase}
-}	
+}       
 
 
 function vis_sysCharContainerVirtRealize {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
 
    local siteContainerAssignBase=$1
-			      
+                              
    lpDo vis_sysCharContainerRealize full ${siteContainerAssignBase}
-}	
+}       
 
 
 function vis_containerBoxAssignAndRepo {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
 
    EH_assert [ ! -z "${model}" ]   
@@ -337,7 +337,7 @@ _EOF_
    fi
 
    EH_assert [ -d "${containerRepoBase}" ]
-}	
+}       
 
 
 function vis_containerAssignBase {
@@ -346,7 +346,7 @@ function vis_containerAssignBase {
 ** Returns site container assign base.
 *** something like:  /server/1001
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
 
    EH_assert [ ! -z "${model}" ]   
@@ -364,7 +364,7 @@ _EOF_
    EH_assert [ ! -z "${containerAssignBase}" ]
  
    echo "${containerAssignBase}"
-}	
+}       
 
 
 function vis_containerVirtAssignAndRepo {
@@ -372,7 +372,7 @@ function vis_containerVirtAssignAndRepo {
    function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Returns site container assign base.
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
 
    EH_assert [ ! -z "${model}" ]   
@@ -391,7 +391,7 @@ _EOF_
    fi
 
    EH_assert [ -d "${containerRepoBase}" ]
-}	
+}       
 
 
 
@@ -400,7 +400,7 @@ function vis_sysCharContainersGenericsRealize {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 2 ]]
    local examplesOrDoIt=$1
    local bxoRealizationScope=$2   
@@ -412,18 +412,18 @@ _EOF_
    
    for each in ${genericBasesList[@]} ;  do
        if [ "${examplesOrDoIt}" == "examples" ] ; then
-	   cat  << _EOF_
+           cat  << _EOF_
 ${G_myName} ${extraInfo} -i sysCharContainerRealize ${bxoRealizationScope} ${each}
 _EOF_
        elif [ "${examplesOrDoIt}" == "doIt" ] ; then
-	   lpDo vis_sysCharContainerRealize ${bxoRealizationScope} ${each}
+           lpDo vis_sysCharContainerRealize ${bxoRealizationScope} ${each}
        else
-	   EH_problem "Bad Usage -- ${examplesOrDoIt}"
+           EH_problem "Bad Usage -- ${examplesOrDoIt}"
        fi
    done
    
    lpReturn
-}	
+}       
 
 
 function vis_sysCharContainerRealize {
@@ -434,7 +434,7 @@ function vis_sysCharContainerRealize {
 *** Typical usage is on box \$2=siteContainerAssignBase is base 
     of this system obtained from siteContainerAssign.sh -i forThisSysFindContainerBase
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 2 ]]
 
    local bxoRealizationScope=$1   
@@ -498,7 +498,7 @@ function vis_baseCreate_var {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Create /bisos/var/bxoId/${bxoId} and symlink to it.
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
     EH_assert [ ! -z "${bxoId}" ]
 
@@ -514,7 +514,7 @@ _EOF_
     lpDo FN_fileSymlinkUpdate ${bisosVarBaseDir} ${basePath}
 
     lpReturn
-}	
+}       
 
 
 
@@ -523,7 +523,7 @@ function vis_baseCreate_siteContainersRepo {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Symlink to site containers.
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
     EH_assert [ ! -z "${bxoId}" ]
 
@@ -539,25 +539,25 @@ _EOF_
     lpDo FN_fileSymlinkUpdate "${containersRepoPath}" "${basePath}"
 
     lpReturn
-}	
+}       
 
 function vis_basesFullCreate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Creates bases (eg var) based on vis_basesList.
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
     EH_assert [ ! -z "${bxoId}" ]
 
     EH_assert vis_bxoAcctVerify "${bxoId}"
 
     for each in $(vis_basesList) ; do
-	lpDo vis_baseCreate_${each}
+        lpDo vis_baseCreate_${each}
     done
 
     lpReturn
-}	
+}       
 
 
 
@@ -565,7 +565,7 @@ function vis_repoBaseCreate_deploymentRecords {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
     EH_assert [ ! -z "${bxoId}" ]
 
@@ -584,14 +584,14 @@ _EOF_
     lpDo bx-gitRepos -h -v -n showRun -i baseUpdateDotIgnore "${repoBase}"
 
     lpReturn
-}	
+}       
 
 
 function vis_repoBaseCreate_svcsSpec {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
     EH_assert bxoIdPrep
 
@@ -611,14 +611,14 @@ _EOF_
     lpDo bx-gitRepos -h -v -n showRun -i baseUpdateDotIgnore "${repoBase}"
 
     lpReturn
-}	
+}       
 
 
 function vis_repoBaseCreate_sysChar {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
     EH_assert bxoIdPrep
 
@@ -641,7 +641,7 @@ _EOF_
     lpDo bx-gitRepos -h -v -n showRun -i baseUpdateDotIgnore "${repoBase}"
 
     lpReturn
-}	
+}       
 
 
 _CommentBegin_

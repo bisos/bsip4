@@ -93,9 +93,9 @@ _EOF_
     local virtualizationType=$( facter virtual )
 
     if [ "${virtualizationType}" == "physical" ] ; then
-	opDo echo lcaVirtualboxBinsPrep.sh -v -n showRun -i fullUpdate
+        opDo echo lcaVirtualboxBinsPrep.sh -v -n showRun -i fullUpdate
     else
-	EH_problem "This function only applies to physical -- virtualizationType=${virtualizationType}"
+        EH_problem "This function only applies to physical -- virtualizationType=${virtualizationType}"
     fi
     
     lpReturn

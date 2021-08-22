@@ -31,7 +31,7 @@ _EOF_
     }
 
     lpReturn
-}	
+}       
 
 
 _CommentBegin_
@@ -70,23 +70,23 @@ _EOF_
     opDo FN_dirCreatePathIfNotThere "${parPath}"
     
     function processOneItem {
-	EH_assert [[ $# -eq 1 ]]
-	declare thisItem="$1"
-	inBaseDirDo "${parPath}" eval touch -- \"${thisItem}\"
+        EH_assert [[ $# -eq 1 ]]
+        declare thisItem="$1"
+        inBaseDirDo "${parPath}" eval touch -- \"${thisItem}\"
     }
 
     if [ $# -gt 0 ] ; then
-	typeset thisOne=""
-	for thisOne in ${@} ; do
-	    processOneItem "${thisOne}"
-	done
+        typeset thisOne=""
+        for thisOne in ${@} ; do
+            processOneItem "${thisOne}"
+        done
     else
-	typeset thisLine=""
-	while read thisLine ; do
-	    if [ "${thisLine}" != "" ] ; then
-		processOneItem "${thisLine}"
-	    fi
-	done
+        typeset thisLine=""
+        while read thisLine ; do
+            if [ "${thisLine}" != "" ] ; then
+                processOneItem "${thisLine}"
+            fi
+        done
     fi
    
     lpReturn

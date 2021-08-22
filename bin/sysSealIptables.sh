@@ -136,9 +136,9 @@ _EOF_
     }
     
     itemOrderedWhiteList=(
-	"127.0.0.0/8"
-	"192.168.0.0/24"
-	"198.62.92.0/24"
+        "127.0.0.0/8"
+        "192.168.0.0/24"
+        "198.62.92.0/24"
     )
 }
 
@@ -149,21 +149,21 @@ _EOF_
     }
     
     tcp_privatePorts=(
-	"telnet"
-	"ssh"              # 22
-	"sunrpc"
-	"loc-srv"          # tcp-135
-	"netbios-ssn"      # tcp-139
-	"microsoft-ds"     # tcp-445
+        "telnet"
+        "ssh"              # 22
+        "sunrpc"
+        "loc-srv"          # tcp-135
+        "netbios-ssn"      # tcp-139
+        "microsoft-ds"     # tcp-445
     )
     
     udp_privatePorts=( 
-	"sunrpc"
-	"loc-srv"          # udp-135
-	"netbios-ns"       # tcp-137
-	"netbios-dgm"      # tcp-138	
-	"microsoft-ds"     # tcp-445
-	
+        "sunrpc"
+        "loc-srv"          # udp-135
+        "netbios-ns"       # tcp-137
+        "netbios-dgm"      # tcp-138    
+        "microsoft-ds"     # tcp-445
+        
     )
 }
 
@@ -174,10 +174,10 @@ _EOF_
     }
     
     tcp_privatePorts=(
-	"110"             # pop3 not encrypted
-	"995"             # pop3 encrypted
-	"143"             # IMAP non-encrypted port
-	"993"             # Secure IMAP
+        "110"             # pop3 not encrypted
+        "995"             # pop3 encrypted
+        "143"             # IMAP non-encrypted port
+        "993"             # Secure IMAP
     )
     
     udp_privatePorts=( 
@@ -192,13 +192,13 @@ _EOF_
     }
     
     tcp_privatePorts=(
-	"smtp"            # tcp-25
-	"submission"      # tcp-587
-	"smtps"           # 465
-	"110"             # pop3 not encrypted
-	"995"             # pop3 encrypted
-	"143"             # IMAP non-encrypted port
-	"993"             # Secure IMAP
+        "smtp"            # tcp-25
+        "submission"      # tcp-587
+        "smtps"           # 465
+        "110"             # pop3 not encrypted
+        "995"             # pop3 encrypted
+        "143"             # IMAP non-encrypted port
+        "993"             # Secure IMAP
     )
     
     udp_privatePorts=( 
@@ -212,9 +212,9 @@ _EOF_
     }
     
     tcp_privatePorts=(
-	"http"            # tcp-80
-	"https"           # tcp-443
-	"8080"            # tcp-8080
+        "http"            # tcp-80
+        "https"           # tcp-443
+        "8080"            # tcp-8080
     )
     
     udp_privatePorts=( 
@@ -230,9 +230,9 @@ _EOF_
     }
 
     tcpUdp_portsListSpec=( 
-	"tcpUdp_commonPrivatePorts"
-	"tcpUdp_mailPrivatePorts"
-	"tcpUdp_webPrivatePorts"
+        "tcpUdp_commonPrivatePorts"
+        "tcpUdp_mailPrivatePorts"
+        "tcpUdp_webPrivatePorts"
     )
 }
 
@@ -244,8 +244,8 @@ _EOF_
     }
 
     tcpUdp_portsListSpec=( 
-	"tcpUdp_commonPrivatePorts"
-	"tcpUdp_webPrivatePorts"	
+        "tcpUdp_commonPrivatePorts"
+        "tcpUdp_webPrivatePorts"        
     )
 }
 
@@ -257,8 +257,8 @@ _EOF_
     }
 
     tcpUdp_portsListSpec=( 
-	"tcpUdp_commonPrivatePorts"
-	"tcpUdp_mailPrivatePorts"	
+        "tcpUdp_commonPrivatePorts"
+        "tcpUdp_mailPrivatePorts"       
     )
 }
 
@@ -270,7 +270,7 @@ _EOF_
     }
 
     tcpUdp_portsListSpec=( 
-	"tcpUdp_commonPrivatePorts"
+        "tcpUdp_commonPrivatePorts"
     )
 }
 
@@ -295,15 +295,15 @@ _EOF_
     sysTypeFuncName=$( ListFuncs | egrep "^sysType_${sysType}$" )
 
     if [ -z "${sysTypeFuncName}" ] ; then
-	EH_problem "Did not find sysType_${sysType} -- No action taken"
-	lpReturn
+        EH_problem "Did not find sysType_${sysType} -- No action taken"
+        lpReturn
     fi
 
     lpDo ${sysTypeFuncName}
 
     local eachTcpUdpPortsListSpec=""
     for eachTcpUdpPortsListSpec in ${tcpUdp_portsListSpec[@]} ; do
-	lpDo vis_applyWhiteListTo ${eachTcpUdpPortsListSpec}
+        lpDo vis_applyWhiteListTo ${eachTcpUdpPortsListSpec}
     done
     
     lpReturn
@@ -330,15 +330,15 @@ _EOF_
     sysTypeFuncName=$( ListFuncs | egrep "^sysType_${sysType}$" )
 
     if [ -z "${sysTypeFuncName}" ] ; then
-	EH_problem "Did not find sysType_${sysType} -- No action taken"
-	lpReturn
+        EH_problem "Did not find sysType_${sysType} -- No action taken"
+        lpReturn
     fi
 
     lpDo ${sysTypeFuncName}
 
     local eachTcpUdpPortsListSpec=""
     for eachTcpUdpPortsListSpec in ${tcpUdp_portsListSpec[@]} ; do
-	lpDo vis_deleteWhiteListTo ${eachTcpUdpPortsListSpec}
+        lpDo vis_deleteWhiteListTo ${eachTcpUdpPortsListSpec}
     done
     
     lpReturn
@@ -358,12 +358,12 @@ _EOF_
     IFS='_' read -ra eachPortsListParts <<< "${portsListSpecFunc}"
     local tcpOrUdp="${eachPortsListParts[0]}"
     case ${tcpOrUdp} in
-	tcp|udp )
+        tcp|udp )
             doNothing
             ;;
-	* )
-	    EH_problem "Neither tcp, nor udp"
-	    tcpOrUdp=""
+        * )
+            EH_problem "Neither tcp, nor udp"
+            tcpOrUdp=""
     esac
     echo ${tcpOrUdp}
 }
@@ -387,18 +387,18 @@ _EOF_
     lpDo whiteListAddrs    
 
     for eachPortsListSpecFunc in ${args} ; do
-	
-	lpDo ${eachPortsListSpecFunc}  # the function specified as arg
+        
+        lpDo ${eachPortsListSpecFunc}  # the function specified as arg
 
-	local eachPrivatePort=""
-	
-	for eachPrivatePort in ${tcp_privatePorts[@]} ; do
-	    lpDo vis_applyPrivatePortExceptions "tcp" "${eachPrivatePort}" ${itemOrderedWhiteList[@]}
-	done
+        local eachPrivatePort=""
+        
+        for eachPrivatePort in ${tcp_privatePorts[@]} ; do
+            lpDo vis_applyPrivatePortExceptions "tcp" "${eachPrivatePort}" ${itemOrderedWhiteList[@]}
+        done
 
-	for eachPrivatePort in ${udp_privatePorts[@]} ; do
-	    lpDo vis_applyPrivatePortExceptions "udp" "${eachPrivatePort}" ${itemOrderedWhiteList[@]}
-	done
+        for eachPrivatePort in ${udp_privatePorts[@]} ; do
+            lpDo vis_applyPrivatePortExceptions "udp" "${eachPrivatePort}" ${itemOrderedWhiteList[@]}
+        done
     done
     
     lpReturn
@@ -424,18 +424,18 @@ _EOF_
     lpDo whiteListAddrs    
 
     for eachPortsListSpecFunc in ${args} ; do
-	
-	lpDo ${eachPortsListSpecFunc}  # the function specified as arg
+        
+        lpDo ${eachPortsListSpecFunc}  # the function specified as arg
 
-	local eachPrivatePort=""
-	
-	for eachPrivatePort in ${tcp_privatePorts[@]} ; do
-	    lpDo vis_deletePrivatePortExceptions "tcp" "${eachPrivatePort}" ${itemOrderedWhiteList[@]}
-	done
+        local eachPrivatePort=""
+        
+        for eachPrivatePort in ${tcp_privatePorts[@]} ; do
+            lpDo vis_deletePrivatePortExceptions "tcp" "${eachPrivatePort}" ${itemOrderedWhiteList[@]}
+        done
 
-	for eachPrivatePort in ${udp_privatePorts[@]} ; do
-	    lpDo vis_deletePrivatePortExceptions "udp" "${eachPrivatePort}" ${itemOrderedWhiteList[@]}
-	done
+        for eachPrivatePort in ${udp_privatePorts[@]} ; do
+            lpDo vis_deletePrivatePortExceptions "udp" "${eachPrivatePort}" ${itemOrderedWhiteList[@]}
+        done
     done
     
     lpReturn
@@ -461,7 +461,7 @@ _EOF_
     local eachExceptionAddr=""
 
     for eachExceptionAddr in ${exceptionsAddrList} ; do
-	lpDo sudo iptables -A INPUT -p ${tcpOrUdp} -s ${eachExceptionAddr} --dport ${portNu} -j ACCEPT
+        lpDo sudo iptables -A INPUT -p ${tcpOrUdp} -s ${eachExceptionAddr} --dport ${portNu} -j ACCEPT
     done
 
     lpDo sudo iptables -A INPUT -p ${tcpOrUdp} --dport ${portNu} -j DROP
@@ -490,7 +490,7 @@ _EOF_
     lpDo sudo iptables -D INPUT -p ${tcpOrUdp} --dport ${portNu} -j DROP
     
     for eachExceptionAddr in ${exceptionsAddrList} ; do
-	lpDo sudo iptables -D INPUT -p ${tcpOrUdp} -s ${eachExceptionAddr} --dport ${portNu} -j ACCEPT
+        lpDo sudo iptables -D INPUT -p ${tcpOrUdp} -s ${eachExceptionAddr} --dport ${portNu} -j ACCEPT
     done
 
     lpReturn

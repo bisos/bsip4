@@ -145,7 +145,7 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     for this in ${itemsOrderedList[@]} ; do
-	echo ${this}
+        echo ${this}
     done
 
     lpReturn
@@ -159,7 +159,7 @@ _EOF_
     EH_assert [[ $# -gt 0 ]]
 
     for this in ${itemsOrderedList[@]} ; do
-	opDo eval "${this}" " " $@
+        opDo eval "${this}" " " $@
     done
 
     lpReturn
@@ -234,44 +234,44 @@ _EOF_
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn 1; fi;
 
     case ${opRunHostFamily} in
-	"BACS"|"BISP"|"BUE")
+        "BACS"|"BISP"|"BUE")
 
-	    # Stop Everything
-	    opDoAfterPause lcaQmailHosts.sh -h -v -n showRun -s ${opRunHostName} -a servicesStop all
+            # Stop Everything
+            opDoAfterPause lcaQmailHosts.sh -h -v -n showRun -s ${opRunHostName} -a servicesStop all
 
-	    # Disable Everything
-	    opDoAfterPause lcaQmailHosts.sh -h -v -n showRun -i servicesDisable inNetSmtp
-	    opDoAfterPause lcaQmailHosts.sh -h -v -n showRun -i servicesDisable inNetVerify
-	    opDoAfterPause lcaQmailHosts.sh -h -v -n showRun -i servicesDisable outNetSmtp
+            # Disable Everything
+            opDoAfterPause lcaQmailHosts.sh -h -v -n showRun -i servicesDisable inNetSmtp
+            opDoAfterPause lcaQmailHosts.sh -h -v -n showRun -i servicesDisable inNetVerify
+            opDoAfterPause lcaQmailHosts.sh -h -v -n showRun -i servicesDisable outNetSmtp
 
-	    # Configure Everything
-	    opDoAfterPause lcaQmailHosts.sh -h -v -n showRun -s ${opRunHostName} -a servicesConfig all
-	    #opDoAfterPause mmaQmailHosts.sh -h -v -n showRun -s ${opRunHostName} -a configFilestransition
+            # Configure Everything
+            opDoAfterPause lcaQmailHosts.sh -h -v -n showRun -s ${opRunHostName} -a servicesConfig all
+            #opDoAfterPause mmaQmailHosts.sh -h -v -n showRun -s ${opRunHostName} -a configFilestransition
 
-	    # Configure Everything For mailfront usage
-	    opDoAfterPause lcaQmailHosts.sh -h -v -n showRun -s ${opRunHostName} -a configFilesRenew
+            # Configure Everything For mailfront usage
+            opDoAfterPause lcaQmailHosts.sh -h -v -n showRun -s ${opRunHostName} -a configFilesRenew
 
-	    # Is this the right place to do this?
-	    opDoAfterPause mmaQmailAddrs.sh -h -v -n showRun -p acctName=alias -i acctUpdate
-	    opDoAfterPause mmaQmailAddrs.sh -h -v -n showRun  -f -s qmailAcct_alias -a acctAddrsUpdate
+            # Is this the right place to do this?
+            opDoAfterPause mmaQmailAddrs.sh -h -v -n showRun -p acctName=alias -i acctUpdate
+            opDoAfterPause mmaQmailAddrs.sh -h -v -n showRun  -f -s qmailAcct_alias -a acctAddrsUpdate
 
-	    # Enable qmail-send daemon
-	    opDoAfterPause lcaQmailHosts.sh -h -v -n showRun -i servicesEnable  outNetSmtp 
+            # Enable qmail-send daemon
+            opDoAfterPause lcaQmailHosts.sh -h -v -n showRun -i servicesEnable  outNetSmtp 
 
-	    # Enable lcaSpamAAdmin.sh
-	    opDoAfterPause lcaSpamAAdmin.sh -h -v -n showRun -i daemonEnable
-	    opDoAfterPause lcaSpamAAdmin.sh -h -v -n showRun -i fullUpdate                 # serverConfigUpdate + daemonRestart
+            # Enable lcaSpamAAdmin.sh
+            opDoAfterPause lcaSpamAAdmin.sh -h -v -n showRun -i daemonEnable
+            opDoAfterPause lcaSpamAAdmin.sh -h -v -n showRun -i fullUpdate                 # serverConfigUpdate + daemonRestart
 
-	    ;;
+            ;;
 
-	"OTHER")
-	    ANT_raw "$0 Does Not Apply -- Skipped for opRunHostFamily=${opRunHostFamily}"
-	    ;;
+        "OTHER")
+            ANT_raw "$0 Does Not Apply -- Skipped for opRunHostFamily=${opRunHostFamily}"
+            ;;
 
-	*)
-	    EH_problem "Unknown: opRunHostFamily=${opRunHostFamily}"
-	    return
-	    ;;
+        *)
+            EH_problem "Unknown: opRunHostFamily=${opRunHostFamily}"
+            return
+            ;;
     esac
 }
 
@@ -292,32 +292,32 @@ _EOF_
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn 1; fi;
 
     case ${opRunHostFamily} in
-	"BACS"|"BISP"|"BUE")
+        "BACS"|"BISP"|"BUE")
 
-	    # - Configure and Run lcaCvmHosts.sh 
-	    opDoAfterPause lcaCvmHosts.sh -h -v -n showRun -s ${opRunHostName} -a fullUpdate
+            # - Configure and Run lcaCvmHosts.sh 
+            opDoAfterPause lcaCvmHosts.sh -h -v -n showRun -s ${opRunHostName} -a fullUpdate
 
-	    # - Take care of additional binspreps
-	    opDoAfterPause lcaMailfrontHosts.sh -h -v -n showRun -i sslKeysGen
+            # - Take care of additional binspreps
+            opDoAfterPause lcaMailfrontHosts.sh -h -v -n showRun -i sslKeysGen
 
-	    # - Configure and Run lcaMailfrontHosts.sh 
-	    opDoAfterPause lcaMailfrontHosts.sh -h -v -n showRun -s ${opRunHostName} -a fullUpdate
+            # - Configure and Run lcaMailfrontHosts.sh 
+            opDoAfterPause lcaMailfrontHosts.sh -h -v -n showRun -s ${opRunHostName} -a fullUpdate
 
-	    # - Restart Qmail
-	    #opDoAfterPause lcaQmailHosts.sh -h -v -n showRun -s ${opRunHostName} -a servicesStart all
+            # - Restart Qmail
+            #opDoAfterPause lcaQmailHosts.sh -h -v -n showRun -s ${opRunHostName} -a servicesStart all
 
-	    opDoAfterPause lcaDaemontoolsAdmin.sh -h -v -n showRun -i fullReport
+            opDoAfterPause lcaDaemontoolsAdmin.sh -h -v -n showRun -i fullReport
 
-	    # 5- Test badaddr for qmail backscatter, good addr and authsmtp
+            # 5- Test badaddr for qmail backscatter, good addr and authsmtp
 
-	    ;;
-	"OTHER")
-	    ANT_raw "$0 Does Not Apply -- Skipped for opRunHostFamily=${opRunHostFamily}"
-	    ;;
-	*)
-	    EH_problem "Unknown: opRunHostFamily=${opRunHostFamily}"
-	    return
-	    ;;
+            ;;
+        "OTHER")
+            ANT_raw "$0 Does Not Apply -- Skipped for opRunHostFamily=${opRunHostFamily}"
+            ;;
+        *)
+            EH_problem "Unknown: opRunHostFamily=${opRunHostFamily}"
+            return
+            ;;
     esac
 }
 
@@ -337,27 +337,27 @@ _EOF_
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn 1; fi;
 
     case ${opRunHostFamily} in
-	"BACS"|"BISP"|"BUE")
-	    ANT_raw "Supervision Reports"
-	    ANT_raw "Qmail Supervision Reports"
-	    #opDo lcaQmailHosts.sh -h -v -n showRun -s ${opRunHostName} -a servicesShow all
-	    opDo lcaQmailHosts.sh  -s ${opRunHostName} -a servicesShow all
-	    ANT_raw "Mailfront Supervision Reports"
-	    #opDo lcaMailfrontHosts.sh -h -v -n showRun -s ${opRunHostName} -a servicesShow all
-	    opDo lcaMailfrontHosts.sh  -s ${opRunHostName} -a servicesShow all	    
-	    ANT_raw "CVM Supervision Reports"
-	    #opDo lcaCvmHosts.sh -h -v -n showRun -s ${opRunHostName} -a servicesShow all
-	    opDo lcaCvmHosts.sh  -s ${opRunHostName} -a servicesShow all
-	    
-	    ANT_raw "Process Reports"
-	    ;;
-	"OTHER")
-	    ANT_raw "$0 Does Not Apply -- Skipped for opRunHostFamily=${opRunHostFamily}"
-	    ;;
-	*)
-	    EH_problem "Unknown: opRunHostFamily=${opRunHostFamily}"
-	    return
-	    ;;
+        "BACS"|"BISP"|"BUE")
+            ANT_raw "Supervision Reports"
+            ANT_raw "Qmail Supervision Reports"
+            #opDo lcaQmailHosts.sh -h -v -n showRun -s ${opRunHostName} -a servicesShow all
+            opDo lcaQmailHosts.sh  -s ${opRunHostName} -a servicesShow all
+            ANT_raw "Mailfront Supervision Reports"
+            #opDo lcaMailfrontHosts.sh -h -v -n showRun -s ${opRunHostName} -a servicesShow all
+            opDo lcaMailfrontHosts.sh  -s ${opRunHostName} -a servicesShow all      
+            ANT_raw "CVM Supervision Reports"
+            #opDo lcaCvmHosts.sh -h -v -n showRun -s ${opRunHostName} -a servicesShow all
+            opDo lcaCvmHosts.sh  -s ${opRunHostName} -a servicesShow all
+            
+            ANT_raw "Process Reports"
+            ;;
+        "OTHER")
+            ANT_raw "$0 Does Not Apply -- Skipped for opRunHostFamily=${opRunHostFamily}"
+            ;;
+        *)
+            EH_problem "Unknown: opRunHostFamily=${opRunHostFamily}"
+            return
+            ;;
     esac
 }
 
@@ -372,25 +372,25 @@ _EOF_
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn 1; fi;
 
     case ${opRunHostFamily} in
-	"BACS"|"BISP"|"BUE")
-	    ANT_raw "Supervision Reports"
-	    ANT_raw "Qmail Supervision Reports"
-	    opDo lcaQmailHosts.sh -h -v -n showRun -s ${opRunHostName} -a servicesStop all
-	    ANT_raw "Mailfront Supervision Reports"
-	    opDo lcaMailfrontHosts.sh -h -v -n showRun -s ${opRunHostName} -a servicesStop all
-	    ANT_raw "CVM Supervision Reports"
-	    opDo lcaCvmHosts.sh -h -v -n showRun -s ${opRunHostName} -a servicesStop all
-	    
-	    ANT_raw "Process Reports"
+        "BACS"|"BISP"|"BUE")
+            ANT_raw "Supervision Reports"
+            ANT_raw "Qmail Supervision Reports"
+            opDo lcaQmailHosts.sh -h -v -n showRun -s ${opRunHostName} -a servicesStop all
+            ANT_raw "Mailfront Supervision Reports"
+            opDo lcaMailfrontHosts.sh -h -v -n showRun -s ${opRunHostName} -a servicesStop all
+            ANT_raw "CVM Supervision Reports"
+            opDo lcaCvmHosts.sh -h -v -n showRun -s ${opRunHostName} -a servicesStop all
+            
+            ANT_raw "Process Reports"
 
-	    ;;
-	"OTHER")
-	    ANT_raw "$0 Does Not Apply -- Skipped for opRunHostFamily=${opRunHostFamily}"
-	    ;;
-	*)
-	    EH_problem "Unknown: opRunHostFamily=${opRunHostFamily}"
-	    return
-	    ;;
+            ;;
+        "OTHER")
+            ANT_raw "$0 Does Not Apply -- Skipped for opRunHostFamily=${opRunHostFamily}"
+            ;;
+        *)
+            EH_problem "Unknown: opRunHostFamily=${opRunHostFamily}"
+            return
+            ;;
     esac
 }
 
@@ -405,25 +405,25 @@ _EOF_
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn 1; fi;
 
     case ${opRunHostFamily} in
-	"BACS"|"BISP"|"BUE")
-	    ANT_raw "Supervision Reports"
-	    ANT_raw "Qmail Supervision Reports"
-	    opDo lcaQmailHosts.sh -h -v -n showRun -s ${opRunHostName} -a servicesStart all
-	    ANT_raw "Mailfront Supervision Reports"
-	    opDo lcaMailfrontHosts.sh -h -v -n showRun -s ${opRunHostName} -a servicesStart all
-	    ANT_raw "CVM Supervision Reports"
-	    opDo lcaCvmHosts.sh -h -v -n showRun -s ${opRunHostName} -a servicesStart all
-	    
-	    ANT_raw "Process Reports"
+        "BACS"|"BISP"|"BUE")
+            ANT_raw "Supervision Reports"
+            ANT_raw "Qmail Supervision Reports"
+            opDo lcaQmailHosts.sh -h -v -n showRun -s ${opRunHostName} -a servicesStart all
+            ANT_raw "Mailfront Supervision Reports"
+            opDo lcaMailfrontHosts.sh -h -v -n showRun -s ${opRunHostName} -a servicesStart all
+            ANT_raw "CVM Supervision Reports"
+            opDo lcaCvmHosts.sh -h -v -n showRun -s ${opRunHostName} -a servicesStart all
+            
+            ANT_raw "Process Reports"
 
-	    ;;
-	"OTHER")
-	    ANT_raw "$0 Does Not Apply -- Skipped for opRunHostFamily=${opRunHostFamily}"
-	    ;;
-	*)
-	    EH_problem "Unknown: opRunHostFamily=${opRunHostFamily}"
-	    return
-	    ;;
+            ;;
+        "OTHER")
+            ANT_raw "$0 Does Not Apply -- Skipped for opRunHostFamily=${opRunHostFamily}"
+            ;;
+        *)
+            EH_problem "Unknown: opRunHostFamily=${opRunHostFamily}"
+            return
+            ;;
     esac
 }
 
@@ -441,22 +441,22 @@ _EOF_
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn 1; fi;
 
     case ${opRunHostFamily} in
-	"BACS")
-	    ANT_raw "Supervision Logs"
+        "BACS")
+            ANT_raw "Supervision Logs"
 
-	    ANT_raw "Process Logs"
+            ANT_raw "Process Logs"
 
-	    ;;
-	"BISP")
-	    ANT_raw "$0 Does Not Apply -- Skipped for opRunHostFamily=${opRunHostFamily}"
-	    ;;
-	"BUE")
-	    ANT_raw "$0 Does Not Apply -- Skipped for opRunHostFamily=${opRunHostFamily}"
-	    ;;
-	*)
-	    EH_problem "Unknown: opRunHostFamily=${opRunHostFamily}"
-	    return
-	    ;;
+            ;;
+        "BISP")
+            ANT_raw "$0 Does Not Apply -- Skipped for opRunHostFamily=${opRunHostFamily}"
+            ;;
+        "BUE")
+            ANT_raw "$0 Does Not Apply -- Skipped for opRunHostFamily=${opRunHostFamily}"
+            ;;
+        *)
+            EH_problem "Unknown: opRunHostFamily=${opRunHostFamily}"
+            return
+            ;;
     esac
 }
 
@@ -476,48 +476,48 @@ _EOF_
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn 1; fi;
 
     case ${opRunHostFamily} in
-	"BACS")
-	    # 0- Take care of additional binspreps
+        "BACS")
+            # 0- Take care of additional binspreps
 
-	    opDoAfterPause lcaMailfrontHosts.sh -h -v -n showRun -i sslKeysGen
+            opDoAfterPause lcaMailfrontHosts.sh -h -v -n showRun -i sslKeysGen
 
-	    # 1- Fixup Qmail Config Files
+            # 1- Fixup Qmail Config Files
 
-	    opDoAfterPause lcaQmailHosts.sh -h -v -n showRun -s ${opRunHostName} -a servicesStop all
+            opDoAfterPause lcaQmailHosts.sh -h -v -n showRun -s ${opRunHostName} -a servicesStop all
 
-	    opDoAfterPause lcaQmailHosts.sh -h -v -n showRun -s ${opRunHostName} -a configFilesRenew
+            opDoAfterPause lcaQmailHosts.sh -h -v -n showRun -s ${opRunHostName} -a configFilesRenew
 
-	    # 2- Disable qmail-smtpd
+            # 2- Disable qmail-smtpd
 
-	    opDoAfterPause lcaQmailHosts.sh -h -v -n showRun -i servicesDisable inNetSmtp 
+            opDoAfterPause lcaQmailHosts.sh -h -v -n showRun -i servicesDisable inNetSmtp 
 
-	    # 3- Configure and Run lcaCvmHosts.sh 
+            # 3- Configure and Run lcaCvmHosts.sh 
 
-	    opDoAfterPause lcaCvmHosts.sh -h -v -n showRun -s ${opRunHostName} -a fullUpdate
+            opDoAfterPause lcaCvmHosts.sh -h -v -n showRun -s ${opRunHostName} -a fullUpdate
 
-	    # 4- Configure and Run lcaMailfrontHosts.sh 
+            # 4- Configure and Run lcaMailfrontHosts.sh 
 
-	    opDoAfterPause lcaMailfrontHosts.sh -h -v -n showRun -s ${opRunHostName} -a fullUpdate
+            opDoAfterPause lcaMailfrontHosts.sh -h -v -n showRun -s ${opRunHostName} -a fullUpdate
 
-	    # 5- Restart Qmail
+            # 5- Restart Qmail
 
-	    opDoAfterPause lcaQmailHosts.sh -h -v -n showRun -s ${opRunHostName} -a servicesStart all
+            opDoAfterPause lcaQmailHosts.sh -h -v -n showRun -s ${opRunHostName} -a servicesStart all
 
-	    opDoAfterPause lcaDaemontoolsAdmin.sh -h -v -n showRun -i fullReport
+            opDoAfterPause lcaDaemontoolsAdmin.sh -h -v -n showRun -i fullReport
 
-	    # 5- Test badaddr for qmail backscatter, good addr and authsmtp
+            # 5- Test badaddr for qmail backscatter, good addr and authsmtp
 
-	    ;;
-	"BISP")
-	    ANT_raw "$0 Does Not Apply -- Skipped for opRunHostFamily=${opRunHostFamily}"
-	    ;;
-	"BUE")
-	    ANT_raw "$0 Does Not Apply -- Skipped for opRunHostFamily=${opRunHostFamily}"
-	    ;;
-	*)
-	    EH_problem "Unknown: opRunHostFamily=${opRunHostFamily}"
-	    return
-	    ;;
+            ;;
+        "BISP")
+            ANT_raw "$0 Does Not Apply -- Skipped for opRunHostFamily=${opRunHostFamily}"
+            ;;
+        "BUE")
+            ANT_raw "$0 Does Not Apply -- Skipped for opRunHostFamily=${opRunHostFamily}"
+            ;;
+        *)
+            EH_problem "Unknown: opRunHostFamily=${opRunHostFamily}"
+            return
+            ;;
     esac
 }
 

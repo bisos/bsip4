@@ -74,17 +74,17 @@ _EOF_
     #  [[elisp:(lsip-local-run-command "apt-cache search something | egrep '^something'")][apt-cache search something | egrep '^something']]
 
     itemOrderedList=(
-	"debconf_utils"     # needed for pre-seeding
-	"postfixCustom"     # because various packages install postfix
-	"ruby"              # needed by facter	
-	"facter"
-	"build_essential"
-	"dkms"
-	"sshpass"
-	# Network Client Tools
-	"net_tools"
-	# Perhaps not available on all revs, hence coming last
-	"linux_headers_generic"
+        "debconf_utils"     # needed for pre-seeding
+        "postfixCustom"     # because various packages install postfix
+        "ruby"              # needed by facter  
+        "facter"
+        "build_essential"
+        "dkms"
+        "sshpass"
+        # Network Client Tools
+        "net_tools"
+        # Perhaps not available on all revs, hence coming last
+        "linux_headers_generic"
     )
 
     itemOptionalOrderedList=()
@@ -120,19 +120,19 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     case ${opRunDistFamily} in
-	"UBUNTU")
-	    if [ "${opRunDistGeneration}" == "2004" ] ; then
-		doNothing
-	    fi
-	    ;;
-	"DEBIAN")
-	    lpDo sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
-	    ;;
-	*)
-	    opRunDistGeneration="UNSUPPORTED"
-	    EH_oops ;
-	    return
-	    ;;
+        "UBUNTU")
+            if [ "${opRunDistGeneration}" == "2004" ] ; then
+                doNothing
+            fi
+            ;;
+        "DEBIAN")
+            lpDo sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
+            ;;
+        *)
+            opRunDistGeneration="UNSUPPORTED"
+            EH_oops ;
+            return
+            ;;
     esac
     
     lpReturn
@@ -238,12 +238,12 @@ binsPrep_postfixCustom_DEFAULT_DEFAULT () {
     binsPrep_installPostHook="postfix_installPost"
 
     function customInstallScript {
-	ANT_raw "Selecting postfix postfix/main_mailer_type string 'No configuration' with debconf-set-selections"
-	echo "postfix postfix/main_mailer_type string 'No configuration'" | sudo  debconf-set-selections
-	ANT_raw "Selecting postfix postfix/mailname string bisos.net with debconf-set-selections"	
-	echo "postfix postfix/mailname string bisos.net" | sudo  debconf-set-selections
+        ANT_raw "Selecting postfix postfix/main_mailer_type string 'No configuration' with debconf-set-selections"
+        echo "postfix postfix/main_mailer_type string 'No configuration'" | sudo  debconf-set-selections
+        ANT_raw "Selecting postfix postfix/mailname string bisos.net with debconf-set-selections"       
+        echo "postfix postfix/mailname string bisos.net" | sudo  debconf-set-selections
 
-	opDo sudo apt-get -y install postfix
+        opDo sudo apt-get -y install postfix
     }
 }
 

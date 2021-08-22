@@ -34,9 +34,9 @@ _EOF_
     typeset filesList=$( find ${here} -maxdepth 1 -print | egrep "\.[0-9][0-9]*$" )
 
     if [ ! -z "${filesList}" ] ; then
-	opDo /bin/rm ${filesList}
+        opDo /bin/rm ${filesList}
     else
-	ANT_raw "Nothing to clean in ${here}"
+        ANT_raw "Nothing to clean in ${here}"
     fi
 
     lpReturn
@@ -54,9 +54,9 @@ _EOF_
     typeset filesList=$( find ${here} -print | egrep "\.[0-9][0-9]*$" )
 
     if [ ! -z "${filesList}" ] ; then
-	opDo /bin/rm ${filesList}
+        opDo /bin/rm ${filesList}
     else
-	ANT_raw "Nothing to clean in ${here}"
+        ANT_raw "Nothing to clean in ${here}"
     fi
 
     lpReturn
@@ -84,9 +84,9 @@ _EOF_
 
     typeset thisDir=""
     for thisDir in $@ ; do
-	if [ -d "${thisDir}" ] ; then
-	    opDo /bin/rm -r -f "${thisDir}"
-	fi
+        if [ -d "${thisDir}" ] ; then
+            opDo /bin/rm -r -f "${thisDir}"
+        fi
     done
     lpReturn
 }
@@ -134,10 +134,10 @@ _EOF_
     EH_assert [[ $# -eq 1 ]]
 
     if [ -f $1 ] ; then
-	lpReturn 0
+        lpReturn 0
     else
-	EH_problem "Missing $1"
-	lpReturn 101
+        EH_problem "Missing $1"
+        lpReturn 101
     fi
 }
 

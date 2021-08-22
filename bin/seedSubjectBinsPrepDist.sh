@@ -78,9 +78,9 @@ function noArgsHook {
 firstSubjectHook() {
   case ${action} in
     "summary")
-	       typeset -L25 f1="PkgName" f2="Version"
-	       print "$f1$f2"
-	       echo "----------------------------------------------------"
+               typeset -L25 f1="PkgName" f2="Version"
+               print "$f1$f2"
+               echo "----------------------------------------------------"
        ;;
     *)
        return
@@ -92,7 +92,7 @@ firstSubjectHook() {
 lastSubjectHook() {
   case ${action} in
     "summary")
-	       echo "----------------------------------------------------"
+               echo "----------------------------------------------------"
        ;;
     *)
        return

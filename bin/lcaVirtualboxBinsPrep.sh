@@ -73,8 +73,8 @@ _EOF_
     #  [[elisp:(lsip-local-run-command "apt-cache search virtualbox | egrep '^virtualbox'")][apt-cache search virtualbox | egrep '^virtualbox']]
 
     itemOrderedList=( 
-	"virtualbox_repoAdd"
-	"virtualbox6_1"
+        "virtualbox_repoAdd"
+        "virtualbox6_1"
     )
 
     itemOptionalOrderedList=()
@@ -141,7 +141,7 @@ binsPrep_virtualbox_repoAdd_DEFAULT_DEFAULT () {
     mmaPkgDebianMethod="custom"  #  or "apt" no need for customInstallScript but with binsPrep_installPostHook
 
     function customInstallScript {
-	opDo vis_repositoryAdd
+        opDo vis_repositoryAdd
     }
 }
 

@@ -83,7 +83,7 @@ function G_postParamHook {
     # lpCurrentsGet
 
     if [ ! -z "${regReqFile}" ] ; then
-	regReqFile=$( FN_absolutePathGet ${regReqFile} )
+        regReqFile=$( FN_absolutePathGet ${regReqFile} )
     fi
     lpReturn 0
 }
@@ -111,8 +111,8 @@ function vis_examples {
     local oneRegReqFile="$( ls ${regReqInfoBasePath}/real/system/real_system_bisos.2*.REGREQ | head -1 )"
     
     if [ -z "${oneRegReqFile}" ] ; then
-	oneRegReqFile="Missing"
-	EH_problem "Missing oneRegReqFile"
+        oneRegReqFile="Missing"
+        EH_problem "Missing oneRegReqFile"
     fi
     
     visLibExamplesOutput ${G_myName} 
@@ -143,22 +143,22 @@ _EOF_
     local bxoHome=""
     
     if ! unisosAccts.sh -i userAcctExists "${privRegistrarBxoId}" ; then
-	# Missing bxoId
-	# Before creation of privRegistrarBxoId, /bisos/var/init is used.
-	echo "/bisos/var/init/privRegistrar"
-	lpReturn 
+        # Missing bxoId
+        # Before creation of privRegistrarBxoId, /bisos/var/init is used.
+        echo "/bisos/var/init/privRegistrar"
+        lpReturn 
     else
-	bxoHome=$( FN_absolutePathGet ~${privRegistrarBxoId} )
-	if [ -z "${bxoHome}" ] ; then
-	    EH_problem "Missing bxoHome -- privRegistrarBxoId=${privRegistrarBxoId}"
-	    lpReturn 101
-	fi
-	bxePrivRegBase="${bxoHome}/regBxe"
-	if [ ! -d "${bxePrivRegBase}" ] ; then
-	    lpDo mkdir "${bxePrivRegBase}"
-	    lpDo eval echo 102 \> ${bxePrivRegBase}
-	fi
-	echo "${bxePrivRegBase}"
+        bxoHome=$( FN_absolutePathGet ~${privRegistrarBxoId} )
+        if [ -z "${bxoHome}" ] ; then
+            EH_problem "Missing bxoHome -- privRegistrarBxoId=${privRegistrarBxoId}"
+            lpReturn 101
+        fi
+        bxePrivRegBase="${bxoHome}/regBxe"
+        if [ ! -d "${bxePrivRegBase}" ] ; then
+            lpDo mkdir "${bxePrivRegBase}"
+            lpDo eval echo 102 \> ${bxePrivRegBase}
+        fi
+        echo "${bxePrivRegBase}"
     fi
 }
     
@@ -175,23 +175,23 @@ _EOF_
     local regReqBaseDir=""
 
     if [ -z "${parent}" ] ; then
-	lpDo cat $(registrarBaseGet)/registrar.roid    
+        lpDo cat $(registrarBaseGet)/registrar.roid    
     else
-	if ! unisosAccts.sh -i userAcctExists "${parent}" ; then
-	    EH_problem "Missing bxoId -- parent=${parent}"
-	    lpReturn 101
-	fi
-	bxoHome=$( FN_absolutePathGet ~${parent} )
-	if [ -z "${bxoHome}" ] ; then
-	    EH_problem "Missing bxoHome -- parent=${parent}"
-	    lpReturn 101
-	fi
-	bxeDescDir="${bxoHome}/rbxe/bxeDesc"
-	if [ ! -d "${bxeDescDir}" ] ; then
-	    EH_problem "Missing bxeDescDir=${bxeDescDir}"
-	    lpReturn 101
-	fi
-	lpDo fileParamManage.py  -i fileParamRead  ${bxeDescDir} bxeOid
+        if ! unisosAccts.sh -i userAcctExists "${parent}" ; then
+            EH_problem "Missing bxoId -- parent=${parent}"
+            lpReturn 101
+        fi
+        bxoHome=$( FN_absolutePathGet ~${parent} )
+        if [ -z "${bxoHome}" ] ; then
+            EH_problem "Missing bxoHome -- parent=${parent}"
+            lpReturn 101
+        fi
+        bxeDescDir="${bxoHome}/rbxe/bxeDesc"
+        if [ ! -d "${bxeDescDir}" ] ; then
+            EH_problem "Missing bxeDescDir=${bxeDescDir}"
+            lpReturn 101
+        fi
+        lpDo fileParamManage.py  -i fileParamRead  ${bxeDescDir} bxeOid
     fi
 }
     
@@ -221,10 +221,10 @@ _EOF_
     local bxeTypeROid=$2
     
     if [ ! -d "${baseDir}" ] ; then    
-	opDo mkdir -p "${baseDir}"
+        opDo mkdir -p "${baseDir}"
     fi
     if [ ! -f ${baseDir}/bxeType.roid ] ; then
-	lpDo eval echo ${bxeTypeROid} \> ${baseDir}/bxeType.roid
+        lpDo eval echo ${bxeTypeROid} \> ${baseDir}/bxeType.roid
     fi
 }
 
@@ -302,7 +302,7 @@ _EOF_
 
     echo ${bxeOid}
     lpReturn
-}	
+}       
 
 bxeDescParamInitSpecific_real_individual () {
     EH_assert [[ $# -eq 1 ]]
@@ -321,9 +321,9 @@ bxeDescParamInitSpecific_real_individual () {
     lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} lastName "${bc_lastName}"    
 
     if (( selectorNu == 1 )) ; then
-	rdnSelectorTag=""
+        rdnSelectorTag=""
     else
-	rdnSelectorTag="_${selectorNu}"
+        rdnSelectorTag="_${selectorNu}"
     fi
 
     lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} rdn "${bc_firstName}_${bc_lastName}${rdnSelectorTag}"
@@ -345,9 +345,9 @@ bxeDescParamInitSpecific_real_system () {
     lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} sysName "${bc_sysName}"
 
     if (( selectorNu == 1 )) ; then
-	rdnSelectorTag=""
+        rdnSelectorTag=""
     else
-	rdnSelectorTag="_${selectorNu}"
+        rdnSelectorTag="_${selectorNu}"
     fi
 
     lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} rdn "${bc_sysName}${rdnSelectorTag}"
@@ -369,9 +369,9 @@ bxeDescParamInitSpecific_real_corp () {
     lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} sysName "${bc_corpName}"
 
     if (( selectorNu == 1 )) ; then
-	rdnSelectorTag=""
+        rdnSelectorTag=""
     else
-	rdnSelectorTag="_${selectorNu}"
+        rdnSelectorTag="_${selectorNu}"
     fi
 
     lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} rdn "${bc_corpName}${rdnSelectorTag}"
@@ -395,9 +395,9 @@ bxeDescParamInitSpecific_DEFAULT_DEFAULT () {
     lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} name "${bc_name}"
 
     if (( selectorNu == 1 )) ; then
-	rdnSelectorTag=""
+        rdnSelectorTag=""
     else
-	rdnSelectorTag="_${selectorNu}"
+        rdnSelectorTag="_${selectorNu}"
     fi
 
     lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} rdn "${bc_name}${rdnSelectorTag}"
@@ -420,10 +420,10 @@ bxeDescCheckDuplicateSpecificCommon () {
     
     thisregReqFileName=$( FN_absolutePathGet ${cp_regReqFileName} )
     if [ "${thisregReqFileName}" == "${regReqFile}" ] ; then
-	ANT_cooked "DUPLICATE regReqFile=${regReqFile}"
-	return 0
+        ANT_cooked "DUPLICATE regReqFile=${regReqFile}"
+        return 0
     else
-	return 101
+        return 101
     fi
 }
 
@@ -440,8 +440,8 @@ bxeDescCheckDuplicateSpecific_real_individual () {
     local cp_lastName=$( fileParamManage.py  -i fileParamRead  ${thisPath} lastName )
     
     if [ "${bc_firstName}" == "${cp_firstName}" ] && [ "${bc_lastName}" == "${cp_lastName}" ] ; then
-	ANT_cooked "$1: DUPLICATE, ${selectorNu}"
-	selectorNu=$( expr ${selectorNu} +  1 )
+        ANT_cooked "$1: DUPLICATE, ${selectorNu}"
+        selectorNu=$( expr ${selectorNu} +  1 )
     fi
 
     lpReturn ${retVal}
@@ -460,8 +460,8 @@ bxeDescCheckDuplicateSpecific_real_system () {
     local cp_sysName=$( fileParamManage.py  -i fileParamRead  ${thisPath} sysName )    
     
     if [ "${bc_sysName}" == "${cp_sysName}" ] ; then
-	ANT_cooked "$1: DUPLICATE, ${selectorNu}"
-	selectorNu=$( expr ${selectorNu} +  1 )
+        ANT_cooked "$1: DUPLICATE, ${selectorNu}"
+        selectorNu=$( expr ${selectorNu} +  1 )
     fi
 
     lpReturn ${retVal}
@@ -480,8 +480,8 @@ bxeDescCheckDuplicateSpecific_real_corp () {
     local cp_corpName=$( fileParamManage.py  -i fileParamRead  ${thisPath} corpName )    
     
     if [ "${bc_corpName}" == "${cp_corpName}" ] ; then
-	ANT_cooked "$1: DUPLICATE, ${selectorNu}"
-	selectorNu=$( expr ${selectorNu} +  1 )
+        ANT_cooked "$1: DUPLICATE, ${selectorNu}"
+        selectorNu=$( expr ${selectorNu} +  1 )
     fi
 
     lpReturn ${retVal}
@@ -500,8 +500,8 @@ bxeDescCheckDuplicateSpecific_DEFAULT_DEFAULT () {
     local cp_name=$( fileParamManage.py  -i fileParamRead  ${thisPath} name )    
     
     if [ "${bc_name}" == "${cp_name}" ] ; then
-	ANT_cooked "$1: DUPLICATE, ${selectorNu}"
-	selectorNu=$( expr ${selectorNu} +  1 )
+        ANT_cooked "$1: DUPLICATE, ${selectorNu}"
+        selectorNu=$( expr ${selectorNu} +  1 )
     fi
 
     lpReturn ${retVal}
@@ -530,17 +530,17 @@ vis_bxeDescCreate () {
     opDoExit cd ${privRegAcctTypeBxeDescBase}
 
     BxeDescList=$( ls | grep -v CVS | grep -v bxeType.roid | sort -n)
-	
+        
     selectorNu=1
     
     for thisDir in ${BxeDescList} ; do
-	# bxeDescCheckDuplicateSpecific increments selectorNu for RDN if needed
-	if bxeDescCheckDuplicateSpecific ${thisDir} ; then
-	    ANT_cooked "duplicate Detected -- ${thisDir}"
-	    ANT_cooked "$(pwd)/${thisDir}/regReqFileName/value  is same as -p regReqFileName"
-	    echo $(pwd)/${thisDir}
-	    lpReturn
-	fi
+        # bxeDescCheckDuplicateSpecific increments selectorNu for RDN if needed
+        if bxeDescCheckDuplicateSpecific ${thisDir} ; then
+            ANT_cooked "duplicate Detected -- ${thisDir}"
+            ANT_cooked "$(pwd)/${thisDir}/regReqFileName/value  is same as -p regReqFileName"
+            echo $(pwd)/${thisDir}
+            lpReturn
+        fi
     done
 
     nextNu=$( expr ${thisDir} +  1 )

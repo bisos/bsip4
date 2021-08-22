@@ -86,55 +86,55 @@ Get a snapshot for the specified bxoId.
 Setup the ~usg/.ssh/config.
 Clone the repos in bxoHome or where specified.
 _EOF_
-		       }
+                       }
 
     local inputsList="$@"
     local thisFunc=${G_thisFunc}
 
     function processEach {
-	EH_assert [[ $# -eq 1 ]]
-	bxoId=$1
+        EH_assert [[ $# -eq 1 ]]
+        bxoId=$1
 
-	if [ "${G_verbose}_" == "verbose_" ] ; then
-	    ANT_raw "Activating bxoId=${bxoId}"
-	fi
+        if [ "${G_verbose}_" == "verbose_" ] ; then
+            ANT_raw "Activating bxoId=${bxoId}"
+        fi
     
-	if vis_userAcctExists "${bxoId}" ; then
-	    ANT_raw "${bxoId} account already exists."
-	    lpReturn 101
-	fi
+        if vis_userAcctExists "${bxoId}" ; then
+            ANT_raw "${bxoId} account already exists."
+            lpReturn 101
+        fi
 
-	lpDo vis_obtainRepoSnapshot rbxe
+        lpDo vis_obtainRepoSnapshot rbxe
 
-	lpDo vis_usgSshConfigUpdate
+        lpDo vis_usgSshConfigUpdate
 
-	lpDo vis_bxoAcctCreate
+        lpDo vis_bxoAcctCreate
 
-	lpDo vis_initialReposClone
-	
-	lpReturn
+        lpDo vis_initialReposClone
+        
+        lpReturn
     }
 
     if [ ! -z "${bxoId}" ] ; then
-	processEach "${bxoId}"
+        processEach "${bxoId}"
     fi
 
 ####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
     if [ $# -gt 0 ] ; then
-	local each=""
-	for each in ${inputsList} ; do
-	    lpDo processEach ${each}
-	done
+        local each=""
+        for each in ${inputsList} ; do
+            lpDo processEach ${each}
+        done
     else
-	local eachLine=""
-	while read -r -t 1 eachLine ; do
-	    if [ ! -z "${eachLine}" ] ; then
-		local each=""
-		for each in ${eachLine} ; do
-		    lpDo processEach ${each}
-		done
-	    fi
-	done
+        local eachLine=""
+        while read -r -t 1 eachLine ; do
+            if [ ! -z "${eachLine}" ] ; then
+                local each=""
+                for each in ${eachLine} ; do
+                    lpDo processEach ${each}
+                done
+            fi
+        done
     fi
 
 ####+END:
@@ -156,8 +156,8 @@ _EOF_
     # EH_assert [ ! -z "${privacy}" ]
 
     if vis_userAcctExists "${bxoId}" ; then
-	ANT_raw "${bxoId} account already exists."
-	lpReturn 101
+        ANT_raw "${bxoId} account already exists."
+        lpReturn 101
     fi
 
 
@@ -168,18 +168,18 @@ _EOF_
     lpDo vis_usgSshConfigUpdate
 
     if [ $# -eq 0 ] ; then
-	lpDo vis_bxoAcctCreate
+        lpDo vis_bxoAcctCreate
 
-	lpDo vis_initialReposClone
-	
+        lpDo vis_initialReposClone
+        
     elif [ $# -eq 1 ] ; then
-	gitCloneDest=$1
+        gitCloneDest=$1
 
-	lpDo vis_initialReposClone ${gitCloneDest}	
-	
+        lpDo vis_initialReposClone ${gitCloneDest}      
+        
     else
-	EH_oops ""
-	lpReturn
+        EH_oops ""
+        lpReturn
     fi
 
     
@@ -200,7 +200,7 @@ _EOF_
     #EH_assert [ ! -z "${privacy}" ]
 
     if ! vis_userAcctExists "${bxoId}" ; then
-	ANT_raw "${bxoId} account is not valid." ; lpReturn 101
+        ANT_raw "${bxoId} account is not valid." ; lpReturn 101
     fi
 
     local gitCloneDest=""
@@ -208,16 +208,16 @@ _EOF_
     lpDo usgBxoSshManage.sh ${G_commandOptions}  -p bxoId=${bxoId} -i usgBxoFullDelete
     
     if [ $# -eq 0 ] ; then
-	lpDo echo NOTYET instead of vis_initialReposClone
-	
+        lpDo echo NOTYET instead of vis_initialReposClone
+        
     elif [ $# -eq 1 ] ; then
-	gitCloneDest=$1
+        gitCloneDest=$1
 
-	lpDo echo NOTYET instead of vis_initialReposClone ${gitCloneDest}	
-	
+        lpDo echo NOTYET instead of vis_initialReposClone ${gitCloneDest}       
+        
     else
-	EH_oops ""
-	lpReturn
+        EH_oops ""
+        lpReturn
     fi
 
     lpDo vis_userHomeAcctsDelete "${bxoId}"    
@@ -239,7 +239,7 @@ _EOF_
     #EH_assert [ ! -z "${privacy}" ]
 
     if ! vis_userAcctExists "${bxoId}" ; then
-	ANT_raw "${bxoId} account is not valid." ; lpReturn 101
+        ANT_raw "${bxoId} account is not valid." ; lpReturn 101
     fi
 
     lpDo vis_fullRemove $@
@@ -263,7 +263,7 @@ _EOF_
     local each=""
 
     for each in ${reposList} ; do
-	lpDo bxoGitlab.py -v 20 --bxoId="${bxoId}" -i reposDelete ${each}
+        lpDo bxoGitlab.py -v 20 --bxoId="${bxoId}" -i reposDelete ${each}
     done
     
     lpReturn
@@ -283,7 +283,7 @@ _EOF_
     local each=""
 
     for each in ${keysList} ; do
-	lpDo bxoGitlab.py -v 20 --bxoId="${bxoId}" --keyName="${each}" -i pubkeyDelete 
+        lpDo bxoGitlab.py -v 20 --bxoId="${bxoId}" --keyName="${each}" -i pubkeyDelete 
     done
     
     lpReturn
@@ -320,15 +320,15 @@ _EOF_
     local bxeTreeBase="${bxoHome}/bxeTree"
     
     if [ ! -d "${bxeTreeBase}" ] ; then
-	EH_problem "Missing ${bxeTreeBase}"
-	lpReturn
+        EH_problem "Missing ${bxeTreeBase}"
+        lpReturn
     fi
 
     local bxeDescBase="${bxeTreeBase}/bxeDesc"
     
     if [ ! -d "${bxeDescBase}" ] ; then
-	EH_problem "Missing ${bxeDescBase}"
-	lpReturn
+        EH_problem "Missing ${bxeDescBase}"
+        lpReturn
     fi
 
     local descendantsList=$( inBaseDirDo ${bxeDescBase} ls 2> /dev/null | grep -v node)

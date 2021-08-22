@@ -107,11 +107,11 @@ typeset -t bxoId=""
 
 function G_postParamHook {
     if [ ! -z "${bxoId}" ] ; then
-	bxoIdPrepValidate    
+        bxoIdPrepValidate    
 
-	if [ ! -z "${bxoId}" ] ; then
-     	    bxoHome=$( FN_absolutePathGet ~${bxoId} )
-	fi
+        if [ ! -z "${bxoId}" ] ; then
+            bxoHome=$( FN_absolutePathGet ~${bxoId} )
+        fi
     fi
     bisosCurrentsGet
 }
@@ -191,7 +191,7 @@ function vis_recordDeployment {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Use the sysChar BxO to record that the VM was deployed.
 _EOF_
-		       }
+                       }
     local thisDescribeF=$(describeF)
     EH_assert [[ $# -eq 0 ]]
     EH_assert [ ! -z "${bxoId}" ]
@@ -201,7 +201,7 @@ _EOF_
     lpDo printf ${thisDescribeF}
     
     lpReturn
-}	
+}       
 
 
 
@@ -249,12 +249,12 @@ _EOF_
     typeset dateTag=$( DATE_nowTag )    
 
     if [ ! -f "${originalFile}" ] ; then
-	EH_problem "Missing ${originalFile}"
-	lpReturn 101
+        EH_problem "Missing ${originalFile}"
+        lpReturn 101
     fi
 
     if [ -f "${originalFileDotDist}" ] ; then
-	originalFileDotDist="${originalFile}"."${dateTag}"
+        originalFileDotDist="${originalFile}"."${dateTag}"
     fi
 
     lpDo sudo cp -p "${originalFile}" "${originalFileDotDist}"
@@ -282,23 +282,23 @@ _EOF_
     EH_assert [ ! -z "${containerAssign_abode}" ]
 
     case ${containerAssign_abode} in
-	Shield|Auto|Mobile|Perim)
-	    doNothing
-	    ;;
-	Internet)
-	    opDo vis_fileDotDistOrDateTagKeep /etc/motd 
-	    cat << _EOF_ | sudo tee /etc/motd > /dev/null
+        Shield|Auto|Mobile|Perim)
+            doNothing
+            ;;
+        Internet)
+            opDo vis_fileDotDistOrDateTagKeep /etc/motd 
+            cat << _EOF_ | sudo tee /etc/motd > /dev/null
 
 Private ByStar Machine -- This service is restricted to authorized users only. 
 _EOF_
 
-	    ANT_raw "/etc/motd now reads:"
-	    cat /etc/motd
-	    ;;
+            ANT_raw "/etc/motd now reads:"
+            cat /etc/motd
+            ;;
 
-	*)
-	    ANT_raw "Unsupprted -- containerAssign_abode=${containerAssign_abode}"
-	    ;;
+        *)
+            ANT_raw "Unsupprted -- containerAssign_abode=${containerAssign_abode}"
+            ;;
     esac
 
     lpReturn 0
@@ -320,14 +320,14 @@ _EOF_
     local hostName=$( cat /etc/hostname )
 
     if [ "${hostName}" == "intra" ] ; then
-	ANT_raw "sysChar Identity Has Not Been Set"
+        ANT_raw "sysChar Identity Has Not Been Set"
     else
-	if [ -e /bisos/var/bxoId/sysChar.fp/value ] ; then
-	    lpDo cat /bisos/var/bxoId/sysChar.fp/value
-	else
-	    EH_problem "Missing /bisos/var/bxoId/sysChar.fp/value"
-	    echo "unknown"
-	fi
+        if [ -e /bisos/var/bxoId/sysChar.fp/value ] ; then
+            lpDo cat /bisos/var/bxoId/sysChar.fp/value
+        else
+            EH_problem "Missing /bisos/var/bxoId/sysChar.fp/value"
+            echo "unknown"
+        fi
     fi
 }
 
@@ -351,9 +351,9 @@ _EOF_
     local hostCntnr=$(echo ${sysChar_conveyInfo_hostCntnr} | sed -e 's/pmp_//' )
 
     if [ -z "${hostCntnr}" ] ; then
-	opDo eval "echo ${containerAssign_containerId}-${sysChar_conveyInfo_vmNameQualifier} | sed -e s/_// -e 's/-$//' | sudo tee /etc/hostname"
+        opDo eval "echo ${containerAssign_containerId}-${sysChar_conveyInfo_vmNameQualifier} | sed -e s/_// -e 's/-$//' | sudo tee /etc/hostname"
     else
-	opDo eval "echo ${containerAssign_containerId}-${sysChar_conveyInfo_vmNameQualifier}-${hostCntnr} | sed -e s/_// -e 's/-$//' | sudo tee /etc/hostname"
+        opDo eval "echo ${containerAssign_containerId}-${sysChar_conveyInfo_vmNameQualifier}-${hostCntnr} | sed -e s/_// -e 's/-$//' | sudo tee /etc/hostname"
     fi
     
     opDo sudo chmod 444 /etc/hostname
@@ -443,8 +443,8 @@ _EOF_
     local filePath="/etc/network/interfaces.d/ifc-lookback.conf"
 
     if [ ! -d "${interfacesBaseDir}" ] ; then
-	EH_problem "Missing ${interfacesBaseDir}"
-	lpReturn
+        EH_problem "Missing ${interfacesBaseDir}"
+        lpReturn
     fi
 
     lpDo eval vis_loopback_stdout \> "${filePath}"
@@ -464,8 +464,8 @@ _EOF_
     local filePath="/etc/network/interfaces.d/ifc-${netName}.conf"
 
     if [ ! -d "${interfacesBaseDir}" ] ; then
-	EH_problem "Missing ${interfacesBaseDir}"
-	lpReturn
+        EH_problem "Missing ${interfacesBaseDir}"
+        lpReturn
     fi
 
     lpDo eval vis_${netName}_stdout \| sudo tee "${filePath}" \> /dev/null
@@ -514,7 +514,7 @@ _EOF_
 
    function getNetIfAsArgs { netIf=$1; netIfControl=$2; }
     
-   lpDo getNetIfAsArgs	$(vis_cntnr_netName_interfaceObtain privA)
+   lpDo getNetIfAsArgs  $(vis_cntnr_netName_interfaceObtain privA)
    EH_assert [ ! -z "${netIf}" ]
     
    if [ "${netIfControl}" != "enabled" ] ; then
@@ -570,12 +570,12 @@ _EOF_
 
     function getNetIfAsArgs { netIf=$1; netIfControl=$2; }
     
-    lpDo getNetIfAsArgs	$(vis_cntnr_netName_interfaceObtain perimA)
+    lpDo getNetIfAsArgs $(vis_cntnr_netName_interfaceObtain perimA)
     EH_assert [ ! -z "${netIf}" ]
 
     if [ "${netIfControl}" != "enabled" ] ; then
-	lpDo vis_netName_control_stdout perimA "${netIfControl}" "${netIf}"
-	lpReturn
+        lpDo vis_netName_control_stdout perimA "${netIfControl}" "${netIf}"
+        lpReturn
     fi
     
     local ipAddr=$(vis_cntnr_netName_ipAddr perimA)
@@ -595,7 +595,7 @@ _EOF_
     perimA_pubA_routerFpsBase=$(vis_site_srcDestNetName_routerFpsBase perimA pubA)
 
     if [ ! -d "${perimA_pubA_routerFpsBase}" ] ; then
-	lpReturn
+        lpReturn
     fi
 
     perimA_pubA_router=$( fileParamManage.py -i fileParamRead  ${perimA_pubA_routerFpsBase} router )
@@ -626,12 +626,12 @@ _EOF_
 
     function getNetIfAsArgs { netIf=$1; netIfControl=$2; }
     
-    lpDo getNetIfAsArgs	$(vis_cntnr_netName_interfaceObtain pubA)
+    lpDo getNetIfAsArgs $(vis_cntnr_netName_interfaceObtain pubA)
     EH_assert [ ! -z "${netIf}" ]
 
     if [ "${netIfControl}" != "enabled" ] ; then
-	lpDo vis_netName_control_stdout pubA "${netIfControl}" "${netIf}"
-	lpReturn
+        lpDo vis_netName_control_stdout pubA "${netIfControl}" "${netIf}"
+        lpReturn
     fi
     
     local ipAddr=$(vis_cntnr_netName_ipAddr pubA)
@@ -651,7 +651,7 @@ _EOF_
     pubA_perimA_routerFpsBase=$(vis_site_srcDestNetName_routerFpsBase pubA perimA)
 
     if [ ! -d "${pubA_perimA_routerFpsBase}" ] ; then
-	lpReturn
+        lpReturn
     fi
 
     pubA_perimA_router=$( fileParamManage.py -i fileParamRead  ${pubA_perimA_routerFpsBase} router )
@@ -683,12 +683,12 @@ _EOF_
 
     function getNetIfAsArgs { netIf=$1; netIfControl=$2; }
     
-    lpDo getNetIfAsArgs	$(vis_cntnr_netName_interfaceObtain pubB)
+    lpDo getNetIfAsArgs $(vis_cntnr_netName_interfaceObtain pubB)
     EH_assert [ ! -z "${netIf}" ]
 
     if [ "${netIfControl}" != "enabled" ] ; then
-	lpDo vis_netName_control_stdout pubB "${netIfControl}" "${netIf}"
-	lpReturn
+        lpDo vis_netName_control_stdout pubB "${netIfControl}" "${netIf}"
+        lpReturn
     fi
     
     local ipAddr=$(vis_cntnr_netName_ipAddr pubB)
@@ -708,7 +708,7 @@ _EOF_
     pubB_perimA_routerFpsBase=$(vis_site_srcDestNetName_routerFpsBase pubB perimA)
 
     if [ ! -d "${pubB_perimA_routerFpsBase}" ] ; then
-	lpReturn
+        lpReturn
     fi
 
     pubB_perimA_router=$( fileParamManage.py -i fileParamRead  ${pubB_perimA_routerFpsBase} router )
@@ -762,8 +762,8 @@ _EOF_
     local filePath="/etc/network/interfaces"
 
     if [ ! -d "${etcNetBaseDir}" ] ; then
-	EH_problem "Missing ${etcNetBaseDir}"
-	lpReturn
+        EH_problem "Missing ${etcNetBaseDir}"
+        lpReturn
     fi
 
     lpDo vis_fileDotDistOrDateTagKeep "${filePath}"
@@ -798,7 +798,7 @@ _EOF_
     
     local eachNet
     for eachNet in ${applicableNets} ; do
-	lpDo vis_${eachNet}_update
+        lpDo vis_${eachNet}_update
     done
     
     lpDo vis_interface_update
@@ -832,7 +832,7 @@ _EOF_
     
     local eachNet
     for eachNet in ${applicableNets} ; do
-	lpDo vis_${eachNet}_stdout
+        lpDo vis_${eachNet}_stdout
     done
 
     return 0

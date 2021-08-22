@@ -13,7 +13,7 @@ function vis_runningInChromeOsContainer {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
 
    EH_assert [[ $# -eq 0 ]]
 
@@ -22,9 +22,9 @@ _EOF_
    
    if [ "${G_verbose}" == "verbose" ] ; then
        if [ ${retVal} == 0 ] ; then
-	   ANT_raw "Running In A ChromeOs Container"
+           ANT_raw "Running In A ChromeOs Container"
        else
-	   ANT_raw "Not Running In A ChromeOs Container"
+           ANT_raw "Not Running In A ChromeOs Container"
        fi
    fi
    
@@ -37,7 +37,7 @@ function vis_thisBoxUUID {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
 
    EH_assert [[ $# -eq 0 ]]
     

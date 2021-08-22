@@ -200,7 +200,7 @@ function vis_bisosLcntBinsPrep {
 *** TODO Acroread needs to be added
 *** TODO Media processing needs to be added
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
 
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
@@ -228,7 +228,7 @@ _EOF_
     lpDo vis_usgBposLcntBasesSetup
 
     lpReturn
-}	
+}       
 
 function vis_lcntBaseFullPrep%% {
     EH_assert [[ $# -eq 0 ]]
@@ -270,7 +270,7 @@ function vis_lcntBasesSetup {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Uses pip_lcntBases BPO and creats links to /de/lcnt and /lcnt
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
 
     lpDo mkdir /de/lcnt
@@ -309,7 +309,7 @@ function vis_bisosLcntBinsPrep {
 *** TODO Acroread needs to be added
 *** TODO Media processing needs to be added
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
 
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
@@ -332,7 +332,7 @@ function vis_usgBposLcntBasesSetup {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Creates symlinks using vis_usgBpos_lcntBases_bxoPath.
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
 
     local lcntBasesPath=$(lpDo vis_usgBpos_lcntBases_bxoPath)
@@ -349,9 +349,9 @@ function vis_lcntBasePrep {
     # runAs lsipusr
 
     if [ -d  /lcnt/outputs/all/lists ] ; then
-	opDoExit pushd /lcnt/outputs/all/lists
-	opDo rm nuBaseDir*
-	opDoExit popd
+        opDoExit pushd /lcnt/outputs/all/lists
+        opDo rm nuBaseDir*
+        opDoExit popd
     fi
 
     opDo lcnLcntOutputs.sh -n showRun  -p outFile=/lcnt/outputs/all/lists/nuBaseDir -i nuBaseDirFullUpdate
@@ -412,8 +412,8 @@ function vis_plone3Upload {
     opDo getLcntNuBase ${oneDocEntry}
     typeset this_cntntRawHome="${cntntRawHome}"
     if [ "${this_cntntRawHome}" =  "" ] ; then
-	EH_problem "Missing cntntRawHome -- ${oneDocEntry}"
-	continue
+        EH_problem "Missing cntntRawHome -- ${oneDocEntry}"
+        continue
     fi
 
     lcntInfoPrep ${this_cntntRawHome}
@@ -446,8 +446,8 @@ function vis_plone3EntriesVerify {
     getLcntNuBase ${oneDocEntry}
     typeset this_cntntRawHome="${cntntRawHome}"
     if [ "${this_cntntRawHome}" =  "" ] ; then
-	EH_problem "Missing cntntRawHome -- ${oneDocEntry}"
-	continue
+        EH_problem "Missing cntntRawHome -- ${oneDocEntry}"
+        continue
     fi
 
     #ANT_raw "Verified: ${oneDocEntry}"
@@ -596,8 +596,8 @@ _EOF_
     EH_retOnFail
 
     if [ ! -f ${bystarUidHome}/lcaPlone/ContentTree/lcntList ] ; then
-	EH_problem "Missing ${bystarUidHome}/lcaPlone/ContentTree/lcntList"
-	lpReturn 101
+        EH_problem "Missing ${bystarUidHome}/lcaPlone/ContentTree/lcntList"
+        lpReturn 101
     fi
 
     opDo ${G_myName} -p bystarUid=${bystarUid} -p inListLcntNu="${bystarUidHome}/lcaPlone/ContentTree/lcntList" -i plone3Upload all

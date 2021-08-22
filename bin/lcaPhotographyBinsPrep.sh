@@ -76,16 +76,16 @@ _EOF_
     #  [[elisp:(lsip-local-run-command "apt-cache search something | egrep '^something'")][apt-cache search something | egrep '^something']]
 
     itemOrderedList=( 
-	"geeqie"
-	"shotwell"
-	"darktable"
-	"gimp"
-	"$( itemNameFor  rapid-photo-downloader)"
-	"$( itemNameFor  gnome-color-manager)" # The run it with gcm-viewer &
+        "geeqie"
+        "shotwell"
+        "darktable"
+        "gimp"
+        "$( itemNameFor  rapid-photo-downloader)"
+        "$( itemNameFor  gnome-color-manager)" # The run it with gcm-viewer &
     )
 
     itemOptionalOrderedList=(
-	"digikam"
+        "digikam"
     )
     itemLaterOrderedList=()
 }

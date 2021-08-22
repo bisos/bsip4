@@ -209,20 +209,20 @@ function vis_daemonEnabledStatus {
 
 function daemonPrep {
     if [ "${daemonControlScript}_" == "_" ] ; then
-	EH_problem "Missing Parameter: daemonControlScript"
-	return 1
+        EH_problem "Missing Parameter: daemonControlScript"
+        return 1
     fi
     if [ "${serviceDefaultFile}_" == "_" ] ; then
-	EH_problem "Missing Parameter: serviceDefaultFile"
-	return 1
+        EH_problem "Missing Parameter: serviceDefaultFile"
+        return 1
     fi
 }
 
 
 function serverConfigPrep {
     if [ "${daemonConfigFile}_" == "_" ] ; then
-	EH_problem "Missing Parameter: daemonControlScript"
-	return 1
+        EH_problem "Missing Parameter: daemonControlScript"
+        return 1
     fi
 }
 
@@ -334,8 +334,8 @@ _EOF_
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
 
     if [ -z "${daemonConfigFile}" ] ; then
-	ANT_raw "Blank daemonConfigFile -- No Configuration Performed"
-	return
+        ANT_raw "Blank daemonConfigFile -- No Configuration Performed"
+        return
     fi
 
     EH_assert daemonPrep
@@ -401,11 +401,11 @@ function vis_logGrep {
 
   if [ -z "${daemonLogTag}" ] ; then
       if [ "${daemonLogFile}_" != "_" -a ! -z ${daemonName} ] ; then 
-	  opDo grep -i ${daemonName} ${daemonLogFile} 
+          opDo grep -i ${daemonName} ${daemonLogFile} 
       fi
   else
       if [ ! -z "${daemonLogFile}"  ] ; then 
-	  opDo grep -i ${daemonLogTag} ${daemonLogFile} 
+          opDo grep -i ${daemonLogTag} ${daemonLogFile} 
       fi
   fi
 }
@@ -424,11 +424,11 @@ function vis_logErrGrep {
 
   if [ -z "${daemonLogTag}" ] ; then
       if [ "${daemonLogErrFile}_" != "_" -a ! -z ${daemonName} ] ; then 
-	  opDo grep -i ${daemonName} ${daemonLogErrFile} 
+          opDo grep -i ${daemonName} ${daemonLogErrFile} 
       fi
   else
       if [ ! -z "${daemonLogErrFile}"  ] ; then 
-	  opDo grep -i ${daemonLogTag} ${daemonLogErrFile} 
+          opDo grep -i ${daemonLogTag} ${daemonLogErrFile} 
       fi
   fi
 }

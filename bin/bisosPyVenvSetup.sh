@@ -214,10 +214,10 @@ _EOF_
         local absBaseDir=${bisosBaseDir}/${relBaseDir}
 
         if [ "${G_forceMode}" != "force" ]  ; then
-	        if [ -d "${absBaseDir}" ] ; then
+                if [ -d "${absBaseDir}" ] ; then
                 EH_problem "${absBaseDir} exists and forceMode not specified."
                 lpReturn
-	        fi
+                fi
         fi
 
         if [ -d "${absBaseDir}" ] ; then
@@ -337,8 +337,8 @@ _EOF_
     local py2ActivateFile="${pdb_venv_py2Bisos3}/bin/activate"
 
     if [ ! -f "${py2ActivateFile}" ] ; then
-	EH_problem "Missing ${py2ActivateFile} -- BISOS Provisioners venv pip installs aborted"
-	lpReturn 101
+        EH_problem "Missing ${py2ActivateFile} -- BISOS Provisioners venv pip installs aborted"
+        lpReturn 101
     fi
 
     lpDo sudo -u bisos ${pdb_venv_py2Bisos3}/bin/pip2 install --no-cache-dir --force-reinstall --upgrade bisos.py2-all
@@ -361,8 +361,8 @@ _EOF_
     local py3ActivateFile="${pdb_venv_py3Bisos3}/bin/activate"
 
     if [ ! -f "${py3ActivateFile}" ] ; then
-	    EH_problem "Missing ${py3ActivateFile} -- BISOS Provisioners venv pip installs aborted"
-	    lpReturn 101
+            EH_problem "Missing ${py3ActivateFile} -- BISOS Provisioners venv pip installs aborted"
+            lpReturn 101
     fi
 
     lpDo sudo -u bisos ${pdb_venv_py3Bisos3}/bin/pip3 install --no-cache-dir --force-reinstall --upgrade bisos.py3-all
@@ -411,8 +411,8 @@ _EOF_
     local py3ActivateFile="${pdb_venv_py3Bisos3Dev}/bin/activate"
 
     if [ ! -f "${py3ActivateFile}" ] ; then
-	EH_problem "Missing ${py3ActivateFile} -- BISOS Provisioners venv pip installs aborted"
-	lpReturn 101
+        EH_problem "Missing ${py3ActivateFile} -- BISOS Provisioners venv pip installs aborted"
+        lpReturn 101
     fi
 
     source ${py3ActivateFile}

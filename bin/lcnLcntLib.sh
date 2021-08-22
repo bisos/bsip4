@@ -72,11 +72,11 @@ function fvValueRead {
     EH_assert [[ $# -eq 1 ]]
     local fvNamePath=$1
     local fvValue=""
-	
+        
     if [ -f "${fvNamePath}" ] ; then
-	fvValue=$( head -1 "${fvNamePath}" )
+        fvValue=$( head -1 "${fvNamePath}" )
     else
-	fvValue=""
+        fvValue=""
     fi
     echo ${fvValue}
 }
@@ -92,9 +92,9 @@ function fvValuesListRead {
     local fvValuesList=""
     
     if [ -f "${fvNamePath}" ] ; then
-	fvValuesList=$( cat "${fvNamePath}" )
+        fvValuesList=$( cat "${fvNamePath}" )
     else
-	fvValuesList=""
+        fvValuesList=""
     fi
     echo ${fvValuesList}
 }
@@ -417,11 +417,11 @@ _EOF_
 
   case ${lcntAttrGenPub} in 
     "lgcc"|"lgpc"|"lpxc"|"sw")
-	 doNothing
-	 ;;
+         doNothing
+         ;;
     "externalLimited"|"externalConfidential"|"externalLibre"|"externalPublic"|"mohsenConfidential")
-	 doNothing
-	 ;;
+         doNothing
+         ;;
     *)
        EH_problem "Unknown lcntAttrGenPub: ${lcntAttrGenPub}"
        return 1
@@ -456,20 +456,20 @@ _EOF_
 
    case ${lcntAttrPermanence} in 
      "draft"|"permanent"|"record"|"repub")
-					   doNothing
-					   ;;
+                                           doNothing
+                                           ;;
      *)
-	lcntAttrPermanence=$2
-	case ${lcntAttrPermanence} in 
-	    "draft"|"permanent"|"record"|"repub")
-		doNothing
-		;;
-	    *)
-		EH_problem "Unknown lcntAttrPermanence: ${lcntAttrPermanence}"
-		return 1
-		;;
-	esac
-	;;
+        lcntAttrPermanence=$2
+        case ${lcntAttrPermanence} in 
+            "draft"|"permanent"|"record"|"repub")
+                doNothing
+                ;;
+            *)
+                EH_problem "Unknown lcntAttrPermanence: ${lcntAttrPermanence}"
+                return 1
+                ;;
+        esac
+        ;;
    esac
  fi
 
@@ -534,18 +534,18 @@ function goThroughList {
   typeset gotFirst="false"
   for this in ${varedThisList} ; do
       if [ "${gotFirst}" == "false" ] ;  then
-	  first=${this}
-	  gotFirst="true"
-	  continue;
+          first=${this}
+          gotFirst="true"
+          continue;
       else
-	  second=${this}
-	  gotFirst="false"
+          second=${this}
+          gotFirst="false"
 
-	  #ANT_raw "goThroughList -- read ${first} ${second}"
+          #ANT_raw "goThroughList -- read ${first} ${second}"
           #typeset thisLcntNu=`echo ${this_line} | cut -d ":" -f1`
-	  thisLcntNu=$( echo ${first} | cut -d ":" -f1 )
-	  ${G_myName} -p bystarUid=${bystarUid} -p urlFormat=${urlFormat}  -p inListLcntNu=${thisList} -p outFile=${outFile} -i ${thisFuncName} ${thisLcntNu}
-	  ANT_raw "goThroughList -- processed ${first} ${second}"
+          thisLcntNu=$( echo ${first} | cut -d ":" -f1 )
+          ${G_myName} -p bystarUid=${bystarUid} -p urlFormat=${urlFormat}  -p inListLcntNu=${thisList} -p outFile=${outFile} -i ${thisFuncName} ${thisLcntNu}
+          ANT_raw "goThroughList -- processed ${first} ${second}"
       fi
   done
 }
@@ -594,8 +594,8 @@ function vis_determineSrcType {
 Puts type on stdout. -- Type is one of "article", "presentation", "presArt" or ""
 
 ** TODO NOTYET A more relaibale way of doing this can be: 
-		    if egrep 'documentclass.*beamer' ${this_docSrcList}.ttytex ; then
-			ANT_raw "Skipping: obtainPLPCFiles of ${this_docSrcList}"
+                    if egrep 'documentclass.*beamer' ${this_docSrcList}.ttytex ; then
+                        ANT_raw "Skipping: obtainPLPCFiles of ${this_docSrcList}"
 
 _EOF_
     }
@@ -607,28 +607,28 @@ _EOF_
     
     case ${lcntSrcFileName} in
 
-	"article"|"articleEnFa"|"articleFaEn")
-	    lcntSrcType="article"
-	    ;;
+        "article"|"articleEnFa"|"articleFaEn")
+            lcntSrcType="article"
+            ;;
 
-	"mailLcnt")
-	    lcntSrcType="article"
-	    ;;
-	
-	"presentation"|"presentationEnFa"|"presentationFaEn")
-	    lcntSrcType="presentation"
-	    ;;
-	
-	"presArt"|"presArtEnFa"|"presArtFaEn"|"artPres"|"artPresEnFa"|"presArtFaEn")
-	    lcntSrcType="presArt"
-	    ;;
-	
-	*)
-	    EH_problem "UnKnown Type: ${lcntSrcFileName}"
-	    ;;
+        "mailLcnt")
+            lcntSrcType="article"
+            ;;
+        
+        "presentation"|"presentationEnFa"|"presentationFaEn")
+            lcntSrcType="presentation"
+            ;;
+        
+        "presArt"|"presArtEnFa"|"presArtFaEn"|"artPres"|"artPresEnFa"|"presArtFaEn")
+            lcntSrcType="presArt"
+            ;;
+        
+        *)
+            EH_problem "UnKnown Type: ${lcntSrcFileName}"
+            ;;
     esac
 
     echo ${lcntSrcType}
 
     lpReturn
-}	
+}       

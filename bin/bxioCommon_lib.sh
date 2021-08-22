@@ -76,19 +76,19 @@ _EOF_
     EH_assert vis_bxoAcctVerify "${bxoId}"
 
     case ${bxoRealizationScope} in
-	full)
-	    lpDo vis_kindTypeRealizeRepoBasesCreate
-	    lpDo vis_kindTypeRealizeRepoBasesPush	    
-	    ;;
-	basePrep)
-	    lpDo vis_kindTypeRealizeRepoBasesCreate
-	    ;;
-	realize)
-	    lpDo vis_kindTypeRealizeRepoBasesPush
+        full)
+            lpDo vis_kindTypeRealizeRepoBasesCreate
+            lpDo vis_kindTypeRealizeRepoBasesPush           
             ;;
-	*)
-	    EH_problem "Bad Usage"
-	    ;;
+        basePrep)
+            lpDo vis_kindTypeRealizeRepoBasesCreate
+            ;;
+        realize)
+            lpDo vis_kindTypeRealizeRepoBasesPush
+            ;;
+        *)
+            EH_problem "Bad Usage"
+            ;;
     esac
 
     lpReturn
@@ -114,7 +114,7 @@ _EOF_
     lpDo vis_repoCreateAndPushBasedOnPath "${repoBase}"
     
     lpReturn
-}	
+}       
 
 function vis_bxoRealize_repoBasesPush {
     G_funcEntry
@@ -125,39 +125,39 @@ function vis_bxoRealize_repoBasesPush {
       ${G_myName} -i ${G_thisFunc} arg1 arg2
       printf "stdinArg1\nstdin2\n" | ${G_myName} -i ${G_thisFunc} arg1 arg2
 _EOF_
-		       }
+                       }
     local thisFunc=${G_thisFunc}
     EH_assert bxoIdPrep
 
 
     function processEach {
-	EH_assert [[ $# -eq 1 ]]
-	local repoName=$1
+        EH_assert [[ $# -eq 1 ]]
+        local repoName=$1
 
-	# For example, par_live will become par.live
-	repoName=$(lpDo eval  echo ${repoName} \|  sed -e 's/_/./g')
+        # For example, par_live will become par.live
+        repoName=$(lpDo eval  echo ${repoName} \|  sed -e 's/_/./g')
 
-	local repoBase="${bxoHome}/${repoName}"
+        local repoBase="${bxoHome}/${repoName}"
 
-	lpDo vis_repoCreateAndPushBasedOnPath "${repoBase}"
+        lpDo vis_repoCreateAndPushBasedOnPath "${repoBase}"
     }
 
 ####+BEGIN: bx:bsip:bash/processArgsAndStdin  
      function processArgsAndStdin {
-	local effectiveArgs=( "$@" )
-	local stdinArgs=()
-	local each
-	if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
-	    readarray stdinArgs < /dev/stdin
-	    effectiveArgs=( "$@" "${stdinArgs[@]}" )
-	fi
-	if [ ${#effectiveArgs[@]} -eq 0 ] ; then
-	    ANT_raw "No Args And Stdin Is Empty"
-	    lpReturn
-	fi
-	for each in "${effectiveArgs[@]}"; do
-	    lpDo processEach "${each%$'\n'}"
-	done
+        local effectiveArgs=( "$@" )
+        local stdinArgs=()
+        local each
+        if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
+            readarray stdinArgs < /dev/stdin
+            effectiveArgs=( "$@" "${stdinArgs[@]}" )
+        fi
+        if [ ${#effectiveArgs[@]} -eq 0 ] ; then
+            ANT_raw "No Args And Stdin Is Empty"
+            lpReturn
+        fi
+        for each in "${effectiveArgs[@]}"; do
+            lpDo processEach "${each%$'\n'}"
+        done
     }
     lpDo processArgsAndStdin "$@"
 ####+END:
@@ -172,7 +172,7 @@ function vis_bxoRealize_repoBasesCreate {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** 
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 1 ]]
     EH_assert bxoIdPrep
 
@@ -181,29 +181,29 @@ _EOF_
     local thisFunc=${G_thisFunc}
 
     function processEach {
-	EH_assert [[ $# -gt 1 ]]
-	local eachRepoName=$1
-	local moduleName=$2
-	if [ "${G_verbose}_" == "verbose_" ] ; then
-	    ANT_raw "For each=${eachRepoName} running vis_${moduleName}_repoBaseCreate_${eachRepoName}"
-	fi
-	lpDo vis_${moduleName}_repoBaseCreate_${eachRepoName}
+        EH_assert [[ $# -gt 1 ]]
+        local eachRepoName=$1
+        local moduleName=$2
+        if [ "${G_verbose}_" == "verbose_" ] ; then
+            ANT_raw "For each=${eachRepoName} running vis_${moduleName}_repoBaseCreate_${eachRepoName}"
+        fi
+        lpDo vis_${moduleName}_repoBaseCreate_${eachRepoName}
     }
 
 ####+BEGIN: bx:bsip:bash/processStdinWithArgs 
     function processStdinWithArgs {
-	local stdinArgs=()
-	local each
-	if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
-	    readarray stdinArgs < /dev/stdin
-	fi
-	if [ ${#stdinArgs[@]} -eq 0 ] ; then
-	    ANT_raw "No StdinArgs -- Processing Skipped"
-	    lpReturn
-	fi
-	for each in "${stdinArgs[@]}"; do
-	    lpDo processEach "${each%$'\n'}" "$@"
-	done
+        local stdinArgs=()
+        local each
+        if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
+            readarray stdinArgs < /dev/stdin
+        fi
+        if [ ${#stdinArgs[@]} -eq 0 ] ; then
+            ANT_raw "No StdinArgs -- Processing Skipped"
+            lpReturn
+        fi
+        for each in "${stdinArgs[@]}"; do
+            lpDo processEach "${each%$'\n'}" "$@"
+        done
     }
     lpDo processStdinWithArgs "$@"
 ####+END:
@@ -215,36 +215,36 @@ function vis_bxoRealize_nonRepoBasesCreate {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** 
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 1 ]]
     EH_assert bxoIdPrep
     
     local thisFunc=${G_thisFunc}
 
     function processEach {
-	EH_assert [[ $# -gt 1 ]]
-	local eachRepoName=$1
-	local moduleName=$2
-	if [ "${G_verbose}_" == "verbose_" ] ; then
-	    ANT_raw "For each=${eachRepoName} running vis_${moduleName}_nonRepoBaseCreate_${eachRepoName}"
-	fi
-	lpDo vis_${moduleName}_nonRepoBaseCreate_${eachRepoName}
+        EH_assert [[ $# -gt 1 ]]
+        local eachRepoName=$1
+        local moduleName=$2
+        if [ "${G_verbose}_" == "verbose_" ] ; then
+            ANT_raw "For each=${eachRepoName} running vis_${moduleName}_nonRepoBaseCreate_${eachRepoName}"
+        fi
+        lpDo vis_${moduleName}_nonRepoBaseCreate_${eachRepoName}
     }
 
 ####+BEGIN: bx:bsip:bash/processStdinWithArgs 
     function processStdinWithArgs {
-	local stdinArgs=()
-	local each
-	if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
-	    readarray stdinArgs < /dev/stdin
-	fi
-	if [ ${#stdinArgs[@]} -eq 0 ] ; then
-	    ANT_raw "No StdinArgs -- Processing Skipped"
-	    lpReturn
-	fi
-	for each in "${stdinArgs[@]}"; do
-	    lpDo processEach "${each%$'\n'}" "$@"
-	done
+        local stdinArgs=()
+        local each
+        if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
+            readarray stdinArgs < /dev/stdin
+        fi
+        if [ ${#stdinArgs[@]} -eq 0 ] ; then
+            ANT_raw "No StdinArgs -- Processing Skipped"
+            lpReturn
+        fi
+        for each in "${stdinArgs[@]}"; do
+            lpDo processEach "${each%$'\n'}" "$@"
+        done
     }
     lpDo processStdinWithArgs "$@"
 ####+END:
@@ -263,7 +263,7 @@ _EOF_
     EH_assert  vis_userAcctExists "${bxoId}"
 
     for each in $(vis_repoBasesList) ; do
-	lpDo vis_repoBaseCreate_${each}
+        lpDo vis_repoBaseCreate_${each}
     done
 
     lpReturn
@@ -281,11 +281,11 @@ _EOF_
     EH_assert  vis_userAcctExists "${bxoId}"
 
     for each in $(vis_repoBasesList) ; do
-	inBaseDirDo ${bxoHome} vis_repoCreateAndPushBasedOnPath ${each}
+        inBaseDirDo ${bxoHome} vis_repoCreateAndPushBasedOnPath ${each}
     done
 
     lpReturn
-}	
+}       
 
 function vis_repoBasePush {
    G_funcEntry
@@ -305,7 +305,7 @@ _EOF_
     lpDo vis_repoCreateAndPushBasedOnPath "${repoBase}"
     
     lpReturn
-}	
+}       
 
 
 function vis_repoBaseCreate_panel {
@@ -321,8 +321,8 @@ _EOF_
     local repoBase="${bxoHome}/panel"
 
     if [ -d "${repoBase}" ] ; then
-	EH_problem "${repoBase} already exists -- creation skipped"
-	lpReturn 101
+        EH_problem "${repoBase} already exists -- creation skipped"
+        lpReturn 101
     fi
 
     lpDo FN_dirCreatePathIfNotThere "${repoBase}"
@@ -336,7 +336,7 @@ _EOF_
     lpDo startOrgPanel.sh -h -v -n showRun -i bleePanelBase node "${repoBase}"
     
     lpReturn
-}	
+}       
 
 
 
@@ -394,26 +394,26 @@ _EOF_
     bxoHome=$( FN_absolutePathGet ~${bxoId} )
 
     function doThis {
-	lpDo mkdir ${bxoHome}/bxeTree
-	if [ "${node}" == "leaf" ] ; then
-	    lpDo fileParamManage.py -i fileParamWrite ${bxoHome}/bxeTree node leaf
-	elif [ "${node}" == "branch" ] ; then
-	    lpDo fileParamManage.py -i fileParamWrite ${bxoHome}/bxeTree node branch
-	    lpDo mkdir ${bxoHome}/bxeTree/regReq
-	    lpDo mkdir ${bxoHome}/bxeTree/bxeDesc
-	else
-	    EH_problem ""
-	fi
+        lpDo mkdir ${bxoHome}/bxeTree
+        if [ "${node}" == "leaf" ] ; then
+            lpDo fileParamManage.py -i fileParamWrite ${bxoHome}/bxeTree node leaf
+        elif [ "${node}" == "branch" ] ; then
+            lpDo fileParamManage.py -i fileParamWrite ${bxoHome}/bxeTree node branch
+            lpDo mkdir ${bxoHome}/bxeTree/regReq
+            lpDo mkdir ${bxoHome}/bxeTree/bxeDesc
+        else
+            EH_problem ""
+        fi
     }
 
     if [ -d "${bxoHome}/bxeTree" ] ; then
-	if [ "${G_forceMode}" == "force" ] ; then
-	    lpDo doThis
-	else
-	    ANT_raw "${bxoHome}/bxeTree exists and forceMode is not specified."
-	fi
+        if [ "${G_forceMode}" == "force" ] ; then
+            lpDo doThis
+        else
+            ANT_raw "${bxoHome}/bxeTree exists and forceMode is not specified."
+        fi
     else
-	lpDo doThis
+        lpDo doThis
     fi
     
     lpReturn
@@ -435,19 +435,19 @@ _EOF_
     bxoHome=$( FN_absolutePathGet ~${bxoId} )
 
     function doThis {
-	lpDo FN_dirCreatePathIfNotThere ${bxoHome}/${bxoRepoBase}
+        lpDo FN_dirCreatePathIfNotThere ${bxoHome}/${bxoRepoBase}
 
-	lpDo FN_FileCreateIfNotThere ${bxoHome}/${bxoRepoBase}/fullMap.sh
+        lpDo FN_FileCreateIfNotThere ${bxoHome}/${bxoRepoBase}/fullMap.sh
     }
 
     if [ -d "${bxoHome}/${bxoRepoBase}" ] ; then
-	if [ "${G_forceMode}" == "force" ] ; then
-	    lpDo doThis
-	else
-	    ANT_raw "${bxoHome}/${bxoRepoBase} exists and forceMode is not specified."
-	fi
+        if [ "${G_forceMode}" == "force" ] ; then
+            lpDo doThis
+        else
+            ANT_raw "${bxoHome}/${bxoRepoBase} exists and forceMode is not specified."
+        fi
     else
-	lpDo doThis
+        lpDo doThis
     fi
     
     lpReturn
@@ -469,41 +469,41 @@ _EOF_
     bxoHome=$( FN_absolutePathGet ~${bxoId} )
 
     function file_bxoPathsExtend.sh {
-	EH_assert [[ $# -eq 1 ]]
-	cat  << _EOF_  > "$1"
+        EH_assert [[ $# -eq 1 ]]
+        cat  << _EOF_  > "$1"
 # To Be Sourced
 #
 export PATH=$PATH:$(dirname ${BASH_SOURCE[${#BASH_SOURCE[@]} - 1]})
 _EOF_
-	chmod 775 "$1"
+        chmod 775 "$1"
     }
 
     function file_placeHolder {
-	EH_assert [[ $# -eq 1 ]]
-	cat  << _EOF_  > "$1"
+        EH_assert [[ $# -eq 1 ]]
+        cat  << _EOF_  > "$1"
 # Place Holder
 _EOF_
-	chmod 775 "$1"
+        chmod 775 "$1"
     }
     
     function doThis {
-	lpDo FN_dirCreatePathIfNotThere ${bxoHome}/${bxoRepoBase}
+        lpDo FN_dirCreatePathIfNotThere ${bxoHome}/${bxoRepoBase}
 
-	lpDo FN_dirCreatePathIfNotThere ${bxoHome}/${bxoRepoBase}/bin	
+        lpDo FN_dirCreatePathIfNotThere ${bxoHome}/${bxoRepoBase}/bin   
 
-	lpDo file_bxoPathsExtend.sh ${bxoHome}/${bxoRepoBase}/bin/bxoPathsExtend.sh
-	lpDo file_placeHolder ${bxoHome}/${bxoRepoBase}/bin/bxoSetup.sh
-	lpDo file_placeHolder ${bxoHome}/${bxoRepoBase}/bin/mapFull.sh		
+        lpDo file_bxoPathsExtend.sh ${bxoHome}/${bxoRepoBase}/bin/bxoPathsExtend.sh
+        lpDo file_placeHolder ${bxoHome}/${bxoRepoBase}/bin/bxoSetup.sh
+        lpDo file_placeHolder ${bxoHome}/${bxoRepoBase}/bin/mapFull.sh          
     }
 
     if [ -d "${bxoHome}/${bxoRepoBase}" ] ; then
-	if [ "${G_forceMode}" == "force" ] ; then
-	    lpDo doThis
-	else
-	    ANT_raw "${bxoHome}/${bxoRepoBase} exists and forceMode is not specified."
-	fi
+        if [ "${G_forceMode}" == "force" ] ; then
+            lpDo doThis
+        else
+            ANT_raw "${bxoHome}/${bxoRepoBase} exists and forceMode is not specified."
+        fi
     else
-	lpDo doThis
+        lpDo doThis
     fi
     
     lpReturn

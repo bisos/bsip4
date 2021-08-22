@@ -138,37 +138,37 @@ _EOF_
     local thisFunc=${G_thisFunc}
 
     function processEach {
-	EH_assert [[ $# -eq 1 ]]
-	local each="$1"
+        EH_assert [[ $# -eq 1 ]]
+        local each="$1"
 
-	echo "Processing ${thisFunc}:: ${each}"
+        echo "Processing ${thisFunc}:: ${each}"
 
-	lpDo egrep "^IimBriefDescription=" ${each}
-	lpDo egrep "^\#\!/bin/osmtKsh" ${each}
-	lpDo egrep bx:dblock:lsip:bash:seed-spec ${each}
-	lpDo egrep bx:dblock:bash:top-of-file ${each}
-	lpDo egrep lpCurrents.libSh ${each}
-	lpDo egrep bystarLib.sh ${each}	
+        lpDo egrep "^IimBriefDescription=" ${each}
+        lpDo egrep "^\#\!/bin/osmtKsh" ${each}
+        lpDo egrep bx:dblock:lsip:bash:seed-spec ${each}
+        lpDo egrep bx:dblock:bash:top-of-file ${each}
+        lpDo egrep lpCurrents.libSh ${each}
+        lpDo egrep bystarLib.sh ${each} 
 
-	lpReturn 0
+        lpReturn 0
     }
 
 ####+BEGIN: bx:bsip:bash/processArgsAndStdin 
      function processArgsAndStdin {
-	local effectiveArgs=( "$@" )
-	local stdinArgs
-	local each
-	if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
-	    readarray stdinArgs < /dev/stdin
-	    effectiveArgs=( "$@" "${stdinArgs[@]}" )
-	fi
-	if [ ${#effectiveArgs[@]} -eq 0 ] ; then
-	    ANT_raw "No Args And Stdin Is Empty"
-	    lpReturn
-	fi
-	for each in "${effectiveArgs[@]}"; do
-	    lpDo processEach "${each%$'\n'}"
-	done
+        local effectiveArgs=( "$@" )
+        local stdinArgs
+        local each
+        if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
+            readarray stdinArgs < /dev/stdin
+            effectiveArgs=( "$@" "${stdinArgs[@]}" )
+        fi
+        if [ ${#effectiveArgs[@]} -eq 0 ] ; then
+            ANT_raw "No Args And Stdin Is Empty"
+            lpReturn
+        fi
+        for each in "${effectiveArgs[@]}"; do
+            lpDo processEach "${each%$'\n'}"
+        done
     }
     lpDo processArgsAndStdin "$@"
 ####+END:
@@ -190,40 +190,40 @@ _EOF_
     local thisFunc=${G_thisFunc}
 
     function processEach {
-	EH_assert [[ $# -eq 1 ]]
-	local each="$1"
-	local eachDateTag="${dateTag}"
+        EH_assert [[ $# -eq 1 ]]
+        local each="$1"
+        local eachDateTag="${dateTag}"
 
-	#echo "${thisFunc}" "${each}"	
-	lpDo FN_fileSafeCopy "${each}" "${each}.${eachDateTag}"
+        #echo "${thisFunc}" "${each}"   
+        lpDo FN_fileSafeCopy "${each}" "${each}.${eachDateTag}"
 
-	cat ${each}.${eachDateTag} | \
-	    sed -e "s@\#\!/bin/osmtKsh@#!/bin/bash@g" \
-		-e "s@IimBriefDescription=@IcmBriefDescription=@g" \
-		-e "s@bx:dblock:lsip:bash:seed-spec@bx:bsip:bash:seed-spec@g" \
-		-e "s@lpCurrents.libSh@bisosCurrents_lib.sh@g" \
-		-e "s@bystarLib.sh@bxo_lib.sh@g" \
-		-e "s@bx:dblock:bash:top-of-file@bx:bash:top-of-file@g"  > ${each}
-	
-	lpReturn 0
+        cat ${each}.${eachDateTag} | \
+            sed -e "s@\#\!/bin/osmtKsh@#!/bin/bash@g" \
+                -e "s@IimBriefDescription=@IcmBriefDescription=@g" \
+                -e "s@bx:dblock:lsip:bash:seed-spec@bx:bsip:bash:seed-spec@g" \
+                -e "s@lpCurrents.libSh@bisosCurrents_lib.sh@g" \
+                -e "s@bystarLib.sh@bxo_lib.sh@g" \
+                -e "s@bx:dblock:bash:top-of-file@bx:bash:top-of-file@g"  > ${each}
+        
+        lpReturn 0
     }
 
 ####+BEGIN: bx:bsip:bash/processArgsAndStdin 
      function processArgsAndStdin {
-	local effectiveArgs=( "$@" )
-	local stdinArgs
-	local each
-	if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
-	    readarray stdinArgs < /dev/stdin
-	    effectiveArgs=( "$@" "${stdinArgs[@]}" )
-	fi
-	if [ ${#effectiveArgs[@]} -eq 0 ] ; then
-	    ANT_raw "No Args And Stdin Is Empty"
-	    lpReturn
-	fi
-	for each in "${effectiveArgs[@]}"; do
-	    lpDo processEach "${each%$'\n'}"
-	done
+        local effectiveArgs=( "$@" )
+        local stdinArgs
+        local each
+        if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
+            readarray stdinArgs < /dev/stdin
+            effectiveArgs=( "$@" "${stdinArgs[@]}" )
+        fi
+        if [ ${#effectiveArgs[@]} -eq 0 ] ; then
+            ANT_raw "No Args And Stdin Is Empty"
+            lpReturn
+        fi
+        for each in "${effectiveArgs[@]}"; do
+            lpDo processEach "${each%$'\n'}"
+        done
     }
     lpDo processArgsAndStdin "$@"
 ####+END:
@@ -245,35 +245,35 @@ _EOF_
     local thisFunc=${G_thisFunc}
 
     function processEach {
-	EH_assert [[ $# -eq 1 ]]
-	local each="$1"
-	local eachDateTag="${dateTag}"
+        EH_assert [[ $# -eq 1 ]]
+        local each="$1"
+        local eachDateTag="${dateTag}"
 
-	#echo "${thisFunc}" "${each}"	
-	lpDo FN_fileSafeCopy "${each}" "${each}.${eachDateTag}"
+        #echo "${thisFunc}" "${each}"   
+        lpDo FN_fileSafeCopy "${each}" "${each}.${eachDateTag}"
 
-	cat ${each}.${eachDateTag} | \
-	    sed -e "s@subBxe@bxeTree@g" > ${each}
-	
-	lpReturn 0
+        cat ${each}.${eachDateTag} | \
+            sed -e "s@subBxe@bxeTree@g" > ${each}
+        
+        lpReturn 0
     }
 
 ####+BEGIN: bx:bsip:bash/processArgsAndStdin 
      function processArgsAndStdin {
-	local effectiveArgs=( "$@" )
-	local stdinArgs
-	local each
-	if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
-	    readarray stdinArgs < /dev/stdin
-	    effectiveArgs=( "$@" "${stdinArgs[@]}" )
-	fi
-	if [ ${#effectiveArgs[@]} -eq 0 ] ; then
-	    ANT_raw "No Args And Stdin Is Empty"
-	    lpReturn
-	fi
-	for each in "${effectiveArgs[@]}"; do
-	    lpDo processEach "${each%$'\n'}"
-	done
+        local effectiveArgs=( "$@" )
+        local stdinArgs
+        local each
+        if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
+            readarray stdinArgs < /dev/stdin
+            effectiveArgs=( "$@" "${stdinArgs[@]}" )
+        fi
+        if [ ${#effectiveArgs[@]} -eq 0 ] ; then
+            ANT_raw "No Args And Stdin Is Empty"
+            lpReturn
+        fi
+        for each in "${effectiveArgs[@]}"; do
+            lpDo processEach "${each%$'\n'}"
+        done
     }
     lpDo processArgsAndStdin "$@"
 ####+END:

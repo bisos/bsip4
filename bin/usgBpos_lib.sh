@@ -59,7 +59,7 @@ function vis_usgBposInit {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
 
    lpDo vis_usgBposFpsPrep
@@ -78,7 +78,7 @@ function vis_usgBposFpsPrep {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
 
    local curUsgBposBase=$( vis_curUsgBposBase )
@@ -99,7 +99,7 @@ function vis_usgBposUsageEnvs_bisosDevBxoId_write {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** 
 _EOF_
-		      }
+                      }
     EH_assert [[ $# -eq 1 ]]
     local bxoIdValue=$1
 
@@ -119,7 +119,7 @@ function vis_usgBposUsageEnvs_bisosDevBxoId_read {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** returns on stdout: 
 _EOF_
-		      }
+                      }
     EH_assert [[ $# -eq 0 ]]
 
     local curUsgBposBase=$( vis_curUsgBposBase )
@@ -135,7 +135,7 @@ function vis_usgBposUsageEnvs_bisosDev_update {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
 
    local bisosDevBpoPath="$1"
@@ -153,7 +153,7 @@ function vis_usgBposUsageEnvs_bisosDev_bxoPath {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
 
    local curUsgBposBase=$( vis_curUsgBposBase )   
@@ -167,7 +167,7 @@ function vis_usgBposUsageEnvs_bisosDev_bxoId {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
 
    local bxoId=$( vis_bxoIdObtainForPath $( vis_usgBposUsageEnvs_bisosDev_bxoPath ) )
@@ -181,7 +181,7 @@ function vis_usgBpos_real_indivBxoId_write {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** 
 _EOF_
-		      }
+                      }
     EH_assert [[ $# -eq 1 ]]
     local bxoIdValue=$1
 
@@ -199,7 +199,7 @@ function vis_usgBpos_real_indivBxoId_read {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** returns on stdout: 
 _EOF_
-		      }
+                      }
     EH_assert [[ $# -eq 0 ]]
 
     local curUsgBposBase=$( vis_curUsgBposBase )
@@ -215,7 +215,7 @@ function vis_usgBpos_real_indiv_update {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
    local bxoIdValue=$1
 
@@ -236,7 +236,7 @@ function vis_usgBpos_real_indiv_bxoPath {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
    local curUsgBposBase=$(lpDo vis_curUsgBposBase)   
    EH_assert [ -e ${curUsgBposBase}/real/realIndiv ]
@@ -248,7 +248,7 @@ function vis_usgBpos_real_indiv_bxoId {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
    local bxoId=$(lpDo vis_usgBpos_real_indivBxoId_read)
    echo ${bxoId}
@@ -260,7 +260,7 @@ function vis_usgBpos_usageEnvs_fullUse_write {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** 
 _EOF_
-		      }
+                      }
     EH_assert [[ $# -eq 1 ]]
     local bxoIdValue=$1
 
@@ -278,7 +278,7 @@ function vis_usgBpos_usageEnvs_fullUse_read {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** returns on stdout: 
 _EOF_
-		      }
+                      }
     EH_assert [[ $# -eq 0 ]]
 
     local curUsgBposBase=$( vis_curUsgBposBase )
@@ -294,7 +294,7 @@ function vis_usgBpos_usageEnvs_fullUse_update {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
    local bxoIdValue=$1
 
@@ -319,7 +319,7 @@ function vis_usgBpos_usageEnvs_fullUse_bxoPath {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
    local curUsgBposBase=$(lpDo vis_curUsgBposBase)   
    EH_assert [ -e ${curUsgBposBase}/usageEnvs/fullUse ]
@@ -331,7 +331,7 @@ function vis_usgBpos_usageEnvs_fullUse_bxoId {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
    local bxoId=$(lpDo vis_usgBpos_usageEnvs_fullUse_read)
    echo ${bxoId}
@@ -344,7 +344,7 @@ function vis_usgBpos_aais_byname_bxoId_fpWrite {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** 
 _EOF_
-		      }
+                      }
     EH_assert [[ $# -eq 1 ]]
     local bxoIdValue=$1
 
@@ -362,7 +362,7 @@ function vis_usgBpos_aais_byname_bxoId_fpRead {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** returns on stdout: 
 _EOF_
-		      }
+                      }
     EH_assert [[ $# -eq 0 ]]
 
     local curUsgBposBase=$( vis_curUsgBposBase )
@@ -378,7 +378,7 @@ function vis_usgBpos_aais_byname_update {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
    local bxoIdValue=$1
 
@@ -399,7 +399,7 @@ function vis_usgBpos_aais_byname_bxoPath {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
    local curUsgBposBase=$(lpDo vis_curUsgBposBase)   
    EH_assert [ -e ${curUsgBposBase}/aais/byname ]
@@ -411,7 +411,7 @@ function vis_usgBpos_aais_byname_bxoId {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
    local bxoId=$(lpDo vis_usgBpos_aais_byname_bxoId_fpRead)
    echo ${bxoId}
@@ -423,7 +423,7 @@ function vis_usgBpos_controller_bxoId_fpWrite {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** 
 _EOF_
-		      }
+                      }
     EH_assert [[ $# -eq 1 ]]
     local bxoIdValue=$1
 
@@ -440,7 +440,7 @@ function vis_usgBpos_controller_bxoId_fpRead {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** returns on stdout: 
 _EOF_
-		      }
+                      }
     EH_assert [[ $# -eq 0 ]]
 
     local curUsgBposBase=$( vis_curUsgBposBase )
@@ -456,7 +456,7 @@ function vis_usgBpos_controller_update {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
    local bxoIdValue=$1
 
@@ -477,7 +477,7 @@ function vis_usgBpos_controller_bxoPath {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
    local curUsgBposBase=$(lpDo vis_curUsgBposBase)   
    EH_assert [ -e ${curUsgBposBase}/controller/controller ]
@@ -489,7 +489,7 @@ function vis_usgBpos_controller_bxoId {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
    local bxoId=$(lpDo vis_usgBpos_controller_bxoId_fpRead)
    echo ${bxoId}
@@ -501,7 +501,7 @@ function vis_usgBpos_credentials_bxoId_fpWrite {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** 
 _EOF_
-		      }
+                      }
     EH_assert [[ $# -eq 1 ]]
     local bxoIdValue=$1
 
@@ -518,7 +518,7 @@ function vis_usgBpos_credentials_bxoId_fpRead {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** returns on stdout: 
 _EOF_
-		      }
+                      }
     EH_assert [[ $# -eq 0 ]]
 
     local curUsgBposBase=$( vis_curUsgBposBase )
@@ -534,7 +534,7 @@ function vis_usgBpos_credentials_update {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
    local bxoIdValue=$1
 
@@ -555,7 +555,7 @@ function vis_usgBpos_credentials_bxoPath {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
    local curUsgBposBase=$(lpDo vis_curUsgBposBase)   
    EH_assert [ -e ${curUsgBposBase}/credentials/credentials ]
@@ -567,7 +567,7 @@ function vis_usgBpos_credentials_bxoId {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
    local bxoId=$(lpDo vis_usgBpos_credentials_bxoId_fpRead)
    echo ${bxoId}
@@ -579,7 +579,7 @@ function vis_usgBpos_lcntBases_bxoId_fpWrite {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** 
 _EOF_
-		      }
+                      }
     EH_assert [[ $# -eq 1 ]]
     local bxoIdValue=$1
 
@@ -596,7 +596,7 @@ function vis_usgBpos_lcntBases_bxoId_fpRead {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** returns on stdout: 
 _EOF_
-		      }
+                      }
     EH_assert [[ $# -eq 0 ]]
 
     local curUsgBposBase=$( vis_curUsgBposBase )
@@ -612,7 +612,7 @@ function vis_usgBpos_lcntBases_update {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
    local bxoIdValue=$1
 
@@ -633,7 +633,7 @@ function vis_usgBpos_lcntBases_bxoPath {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
    local curUsgBposBase=$(lpDo vis_curUsgBposBase)   
    EH_assert [ -e ${curUsgBposBase}/lcntBases/lcntBases ]
@@ -645,7 +645,7 @@ function vis_usgBpos_lcntBases_bxoId {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
    local bxoId=$(lpDo vis_usgBpos_lcntBases_bxoId_fpRead)
    echo ${bxoId}
@@ -657,7 +657,7 @@ function vis_usgBpos_siteConfigs_bxoId_fpWrite {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** 
 _EOF_
-		      }
+                      }
     EH_assert [[ $# -eq 1 ]]
     local bxoIdValue=$1
 
@@ -674,7 +674,7 @@ function vis_usgBpos_siteConfigs_bxoId_fpRead {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** returns on stdout: 
 _EOF_
-		      }
+                      }
     EH_assert [[ $# -eq 0 ]]
 
     local curUsgBposBase=$( vis_curUsgBposBase )
@@ -690,7 +690,7 @@ function vis_usgBpos_siteConfigs_update {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
    local bxoIdValue=$1
 
@@ -711,7 +711,7 @@ function vis_usgBpos_siteConfigs_bxoPath {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
    local curUsgBposBase=$(lpDo vis_curUsgBposBase)   
    EH_assert [ -e ${curUsgBposBase}/sites/siteConfigs ]
@@ -723,7 +723,7 @@ function vis_usgBpos_siteConfigs_bxoId {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
    local bxoId=$(lpDo vis_usgBpos_siteConfigs_bxoId_fpRead)
    echo ${bxoId}

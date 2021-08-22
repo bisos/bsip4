@@ -147,7 +147,7 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     for each in ${boxNamesList[@]} ; do
-	vis_examples_boxName ${each}
+        vis_examples_boxName ${each}
     done
 }
 
@@ -166,7 +166,7 @@ function vis_forBoxGetHostname {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Output a vagrantfile using the sysChar BxO.
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 1 ]]
 
     EH_assert [ ! -z "${box}" ]    
@@ -180,30 +180,30 @@ _EOF_
     set ${pathArray[@]}
 
     function nameSpace {
-	if [ "$1" == "bxDistro" ] ; then
-	    echo "dist"
-	else
-	    echo $1
-	fi
+        if [ "$1" == "bxDistro" ] ; then
+            echo "dist"
+        else
+            echo $1
+        fi
     }
 
     function distroName {
-	if [ "$1" == "debian-10.8" ] ; then
-	    echo "deb108"
-	elif [ "$1" == "debian-11.pre" ] ; then
-	    echo "deb11pre"	    
-	elif [ "$1" == "ubuntu-20.04" ] ; then
-	    echo "ub2004"	    
-	else
-	    EH_problem "Unknown Distr=$1"
-	    echo ""
-	fi
+        if [ "$1" == "debian-10.8" ] ; then
+            echo "deb108"
+        elif [ "$1" == "debian-11.pre" ] ; then
+            echo "deb11pre"         
+        elif [ "$1" == "ubuntu-20.04" ] ; then
+            echo "ub2004"           
+        else
+            EH_problem "Unknown Distr=$1"
+            echo ""
+        fi
     }
 
     if [ ${#pathArray[@]} -eq 2 ] ; then
-	hostname=$( nameSpace "${pathArray[0]}" )-$( distroName "${pathArray[1]}" )-"${vmNameQualifier}"
+        hostname=$( nameSpace "${pathArray[0]}" )-$( distroName "${pathArray[1]}" )-"${vmNameQualifier}"
     else
-	hostname=$( nameSpace "${pathArray[0]}" )-$( distroName "${pathArray[1]}" )-${pathArray[2]}-"${vmNameQualifier}"
+        hostname=$( nameSpace "${pathArray[0]}" )-$( distroName "${pathArray[1]}" )-${pathArray[2]}-"${vmNameQualifier}"
     fi
 
     echo ${hostname}
@@ -217,7 +217,7 @@ function vis_vagrantFile_stdout {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Output a vagrantfile using the sysChar BxO.
 _EOF_
-		       }
+                       }
     local thisFunc=${G_thisFunc}
     EH_assert [[ $# -lt 2 ]]
 
@@ -226,10 +226,10 @@ _EOF_
     local vmNameQualifier=""
     
     if [ $# -eq 0 ] ; then
-	vmNameQualifier=""
+        vmNameQualifier=""
     else
-	vmNameQualifier="$1"
-	shift
+        vmNameQualifier="$1"
+        shift
     fi
 
     local dateTag=$( date +%Y%m%d%H%M%S )
@@ -279,7 +279,7 @@ function vis_vagrantFile_bottomPart {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Output a vagrantfile using the sysChar BxO.
 _EOF_
-		       }
+                       }
     local thisFunc=${G_thisFunc}
     EH_assert [[ $# -eq 1 ]]
 
@@ -332,7 +332,7 @@ _EOF_
 
     echo ${vmsDirsList}
     for thisDir in ${vmsDirsList} ; do
-	echo $(pwd)/${thisDir}
+        echo $(pwd)/${thisDir}
     done
 
     nextNu=$( expr ${thisDir} +  1 )
@@ -348,7 +348,7 @@ _EOF_
     lpDo vagrant up
     
     lpReturn
-}	
+}       
 
 
 function vis_vagrantBoxesBasePathCreate {
@@ -363,8 +363,8 @@ _EOF_
     local vagrantBoxesBasePath="/var/vagrantBoxesBase"
     
     if [ -d "${vagrantBoxesBasePath}" ] ; then
-	echo "/var/vagrantBoxesBase"
-	lpReturn
+        echo "/var/vagrantBoxesBase"
+        lpReturn
     fi
 
      if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;    
@@ -376,7 +376,7 @@ _EOF_
     echo "/var/vagrantBoxesBase"
     
     lpReturn
-}	
+}       
 
 
 function vis_vagrantFile_path {
@@ -397,9 +397,9 @@ _EOF_
     lpDo FN_dirCreatePathIfNotThere "${thisBoxBasePath}"
 
     echo ${thisBoxBasePath}/Vagrantfile
-						    
+                                                    
     lpReturn
-}	
+}       
 
 
 function vis_vagrantFile_run {
@@ -408,7 +408,7 @@ function vis_vagrantFile_run {
 Based on the Vagrantfile, create a VM image.
 NAT + genesis target.
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
 
     EH_assert [ ! -z "${box}" ]
@@ -423,7 +423,7 @@ _EOF_
 
     echo ${vmsDirsList}
     for thisDir in ${vmsDirsList} ; do
-	echo $(pwd)/${thisDir}
+        echo $(pwd)/${thisDir}
     done
 
     nextNu=$( expr ${thisDir} +  1 )
@@ -439,7 +439,7 @@ _EOF_
     lpDo vagrant up
     
     lpReturn
-}	
+}       
 
 
 

@@ -405,28 +405,28 @@ _EOF_
     if [ -f "${dotEmacs}" ] ; then
         opDo FN_fileSafeMove  "${dotEmacs}" "${dotEmacs}-$(DATE_nowTag)"
     else
-	    ANT_raw "No ${dotEmacs} -- elimination skipped"
+            ANT_raw "No ${dotEmacs} -- elimination skipped"
     fi
 
     if [ -f "${dotEmacsEl}" ] ; then
         opDo FN_fileSafeMove  "${dotEmacsEl}" "${dotEmacsEl}-$(DATE_nowTag)"
     else
-	    ANT_raw "No ${dotEmacsEl} -- elimination skipped"
+            ANT_raw "No ${dotEmacsEl} -- elimination skipped"
     fi
 
     local dotEmacs_dBase=$( FN_absolutePathGet "${HOME}/.emacs.d" )
 
     if [ -d "${dotEmacs_dBase}" ] ; then
-	ANT_raw "${dotEmacs_dBase} directory exists -- creation skipped"
+        ANT_raw "${dotEmacs_dBase} directory exists -- creation skipped"
     else
-	lpDo mkdir "${dotEmacs_dBase}"
+        lpDo mkdir "${dotEmacs_dBase}"
     fi
 
     local dotEmacs_dInit=$( FN_absolutePathGet "${HOME}/.emacs.d/init.el" )
     local dotEmacs_dEarly=$( FN_absolutePathGet "${HOME}/.emacs.d/early-init.el" )    
 
     if [ -f "${dotEmacs_dInit}" ] ; then
-	opDo FN_fileSafeMove  "${dotEmacs_dInit}" "${dotEmacs_dInit}-$(DATE_nowTag)"
+        opDo FN_fileSafeMove  "${dotEmacs_dInit}" "${dotEmacs_dInit}-$(DATE_nowTag)"
     fi
 
     opDo cp "${templatesBaseDir}/dotEmacs_dInit" "${dotEmacs_dInit}"
@@ -434,30 +434,30 @@ _EOF_
     
     local dotConfig_emacs_init=""
     if [ -d "~/.config/emacs" ] ; then
-	dotConfig_emacs_init=$( FN_absolutePathGet "~/.config/emacs/init")
+        dotConfig_emacs_init=$( FN_absolutePathGet "~/.config/emacs/init")
     fi
     
     case ${emacsVer} in
-	"25f" | "26f")
-	    doNothing
-	    ;;
-	
-	"27f")
-	    if [ -f "${dotConfig_emacs_init}" ] ; then
-		opDo FN_fileSafeMove  "${dotConfig_emacs_init}" "${dotConfig_emacs_init}-$(DATE_nowTag)"
-	    fi
-	    # if ${dotConfig_emacs_init} exists, it gets used, but we want ${dotEmacs_dInit} instead -- so it should be deactivated
+        "25f" | "26f")
+            doNothing
+            ;;
+        
+        "27f")
+            if [ -f "${dotConfig_emacs_init}" ] ; then
+                opDo FN_fileSafeMove  "${dotConfig_emacs_init}" "${dotConfig_emacs_init}-$(DATE_nowTag)"
+            fi
+            # if ${dotConfig_emacs_init} exists, it gets used, but we want ${dotEmacs_dInit} instead -- so it should be deactivated
 
-	    if [ -f "${dotEmacs_dEarly}" ] ; then
-		opDo FN_fileSafeMove  "${dotEmacs_dEarly}" "${dotEmacs_dEarly}-$(DATE_nowTag)"
-	    fi
+            if [ -f "${dotEmacs_dEarly}" ] ; then
+                opDo FN_fileSafeMove  "${dotEmacs_dEarly}" "${dotEmacs_dEarly}-$(DATE_nowTag)"
+            fi
 
-	    opDo cp "${templatesBaseDir}/early-init.el" "${dotEmacs_dEarly}"
-	    
-	    ;;
-	*)
-	    EH_problem "Unsupported ${emacsVer}"
-	    ;;
+            opDo cp "${templatesBaseDir}/early-init.el" "${dotEmacs_dEarly}"
+            
+            ;;
+        *)
+            EH_problem "Unsupported ${emacsVer}"
+            ;;
     esac
 
     lpReturn

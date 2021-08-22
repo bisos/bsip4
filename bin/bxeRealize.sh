@@ -101,10 +101,10 @@ function G_postParamHook {
     bxoIdPrepValidate    
 
     if [ ! -z "${bxeDesc}" ] ; then
-     	bxeDesc=$( FN_absolutePathGet ${bxeDesc} )
+        bxeDesc=$( FN_absolutePathGet ${bxeDesc} )
     fi
     if [ ! -z "${bxoId}" ] ; then
-     	bxoHome=$( FN_absolutePathGet ~${bxoId} )
+        bxoHome=$( FN_absolutePathGet ~${bxoId} )
     fi
 
     local siteGitServerInfoBaseDir=$( bisosSiteGitServer.sh -i gitServerInfoBaseDir )
@@ -196,7 +196,7 @@ function vis_fullRealize {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -lt 2 ]]
     
     EH_assert [ ! -z "${bxeDesc}" ]
@@ -204,9 +204,9 @@ _EOF_
     local bxoRealizationScope=""  
     
     if [ $# -eq 0 ] ; then
-	bxoRealizationScope="full"
+        bxoRealizationScope="full"
     else
-	bxoRealizationScope=$1
+        bxoRealizationScope=$1
     fi
 
     lpDo vis_acctRbxeRealize ${bxoRealizationScope}
@@ -220,7 +220,7 @@ function vis_acctRbxeRealize {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -lt 2 ]]
 
     EH_assert [ ! -z "${bxeDesc}" ]
@@ -228,47 +228,47 @@ _EOF_
     local bxoRealizationScope=""  
     
     if [ $# -eq 0 ] ; then
-	bxoRealizationScope="full"
+        bxoRealizationScope="full"
     else
-	bxoRealizationScope=$1
+        bxoRealizationScope=$1
     fi
     
     case ${bxoRealizationScope} in
-	basePrep|full)
-	    lpDo vis_bxoAcctCreate    # creates ~bxoId
+        basePrep|full)
+            lpDo vis_bxoAcctCreate    # creates ~bxoId
 
-	    lpDo vis_rbxeSetup        # bxoBxeDescCopy + bxoCredentialsUpdate + bxoGitServerDescUpdate
+            lpDo vis_rbxeSetup        # bxoBxeDescCopy + bxoCredentialsUpdate + bxoGitServerDescUpdate
 
-	    # local cp_bxePrefix=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxePrefix )
-	    # local cp_rdn=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} rdn )
-	    # bxoId="${cp_bxePrefix}-${cp_rdn}"
-	    ;;
-	realize)
-	    doNothing
+            # local cp_bxePrefix=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxePrefix )
+            # local cp_rdn=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} rdn )
+            # bxoId="${cp_bxePrefix}-${cp_rdn}"
             ;;
-	*)
-	    EH_problem "Bad Usage -- ${bxoRealizationScope}"
-	    ;;
+        realize)
+            doNothing
+            ;;
+        *)
+            EH_problem "Bad Usage -- ${bxoRealizationScope}"
+            ;;
     esac
 
     bxoId="$( vis_bxoIdFromBxeDesc ${bxeDesc} )"
     
     case ${bxoRealizationScope} in
-	realize|full)
-	    lpDo vis_gitServerBxoAcctCreate
+        realize|full)
+            lpDo vis_gitServerBxoAcctCreate
 
-	    lpDo vis_gitServerBxoPubkeyUpload
+            lpDo vis_gitServerBxoPubkeyUpload
     
-	    lpDo vis_sshConfigUpdate
+            lpDo vis_sshConfigUpdate
 
-	    lpDo vis_rbxeRepoCreateAndPush
-	    ;;
-	basePrep)
-	    doNothing
-	    ;;
-	*)
-	    EH_problem "Bad Usage -- ${bxoRealizationScope}"
-	    ;;
+            lpDo vis_rbxeRepoCreateAndPush
+            ;;
+        basePrep)
+            doNothing
+            ;;
+        *)
+            EH_problem "Bad Usage -- ${bxoRealizationScope}"
+            ;;
     esac
     
     lpReturn
@@ -297,9 +297,9 @@ _EOF_
     local bxeType=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxeType )
 
     if [ "${bxeKind}" == "info" ] && [ "${bxeType}" == "usgAcct" ] ; then
-	EH_problem "NOTYET, usgAcct realization has not been implemented yet."
+        EH_problem "NOTYET, usgAcct realization has not been implemented yet."
     else
-	lpDo bxoAcctManage.sh -h -v -n showRun -p acctComment="${bxeOidComment}" -i bxoAcctCreate ${bxeLocalName}
+        lpDo bxoAcctManage.sh -h -v -n showRun -p acctComment="${bxeOidComment}" -i bxoAcctCreate ${bxeLocalName}
     fi
     
     lpReturn
@@ -316,7 +316,7 @@ _EOF_
     EH_assert [ ! -z "${bxoId}" ]
 
     if ! vis_userAcctExists "${bxoId}" ; then
-	ANT_raw "${bxoId} account is not valid." ; lpReturn 101
+        ANT_raw "${bxoId} account is not valid." ; lpReturn 101
     fi
 
     lpDo vis_rbxeSetup
@@ -340,29 +340,29 @@ _EOF_
     bxoId="$(vis_bxoIdFromBxeDesc ${bxeDesc})"
 
     if ! vis_userAcctExists "${bxoId}" ; then
-	ANT_raw "${bxoId} account is not valid." ; lpReturn 101
+        ANT_raw "${bxoId} account is not valid." ; lpReturn 101
     fi
 
     bxoHome=$( FN_absolutePathGet ~${bxoId} )
 
     function doIt {
-	lpDo sudo -u ${bxoId} mkdir ${bxoHome}/rbxe
+        lpDo sudo -u ${bxoId} mkdir ${bxoHome}/rbxe
 
-	lpDo vis_bxoBxeDescCopy
+        lpDo vis_bxoBxeDescCopy
 
-	lpDo vis_bxoCredentialsUpdate
+        lpDo vis_bxoCredentialsUpdate
 
-	lpDo vis_bxoGitServerDescUpdate
+        lpDo vis_bxoGitServerDescUpdate
     }
 
     if [ -d "${bxoHome}/rbxe" ] ; then
-	if [ "${G_forceMode}" == "force" ] ; then
-	    lpDo doIt
-	else
-	    ANT_raw "${bxoHome}/rbxe exists and forceMode is not specified."
-	fi
+        if [ "${G_forceMode}" == "force" ] ; then
+            lpDo doIt
+        else
+            ANT_raw "${bxoHome}/rbxe exists and forceMode is not specified."
+        fi
     else
-	lpDo doIt
+        lpDo doIt
     fi
     
     lpReturn
@@ -383,7 +383,7 @@ _EOF_
     bxoHome=$( FN_absolutePathGet ~${bxeLocalName} )
 
     if [ ! -d ${bxoHome}/rbxe ] ; then
-	lpDo mkdir ${bxoHome}/rbxe
+        lpDo mkdir ${bxoHome}/rbxe
     fi
     
     lpDo cp -r ${bxeDesc} ${bxoHome}/rbxe/bxeDesc
@@ -401,18 +401,18 @@ _EOF_
     EH_assert [[ ! -z "${bxoId}" ]]
 
     function bxoCredentialsUpdate {
-	lpDo vis_bxoSshKeyUpdate    # in bxo_lib.sh which calls lcaSshAdmin.sh
+        lpDo vis_bxoSshKeyUpdate    # in bxo_lib.sh which calls lcaSshAdmin.sh
     }
 
     if vis_bxoSshAcctKeyVerify ; then
-	if [ "${G_forceMode}" == "force" ] ; then
-	    ANT_raw "Re-Creating -- $(rbxeSshBase) and forceMode is specified."	    
-	    lpDo bxoCredentialsUpdate
-	else
-	    ANT_raw "$(rbxeSshBase) and forceMode is not specified."
-	fi
+        if [ "${G_forceMode}" == "force" ] ; then
+            ANT_raw "Re-Creating -- $(rbxeSshBase) and forceMode is specified."     
+            lpDo bxoCredentialsUpdate
+        else
+            ANT_raw "$(rbxeSshBase) and forceMode is not specified."
+        fi
     else
-	lpDo bxoCredentialsUpdate
+        lpDo bxoCredentialsUpdate
     fi
     
     lpReturn
@@ -458,8 +458,8 @@ _EOF_
     local keyName="$(bxoGitServerSshKeyName $(bxoGitServerPrivTag) ${bxoId} rsa)"
 
     if [ ! -f "${priv_pubkeyPath}" ] ; then
-	EH_problem "Missing ${priv_pubkeyPath}"
-	lpReturn 1
+        EH_problem "Missing ${priv_pubkeyPath}"
+        lpReturn 1
     fi
 
     local gotKeyTmpFile=$(mktemp).sshKey
@@ -467,21 +467,21 @@ _EOF_
     lpDo eval bxoGitlab.py --bxoId="${bxoId}" --keyName="${keyName}" -i pubkeyObtain \> ${gotKeyTmpFile}
 
     if [ ! -s "${gotKeyTmpFile}" ] ; then
-	ANT_raw "No pubkey Found for bxoId=${bxoId} keyName=${keyName}"
-	lpDo rm ${gotKeyTmpFile}
-	retVal=1
-	lpReturn ${retVal}
+        ANT_raw "No pubkey Found for bxoId=${bxoId} keyName=${keyName}"
+        lpDo rm ${gotKeyTmpFile}
+        retVal=1
+        lpReturn ${retVal}
     fi
 
     local local_fingerPrint=$( ssh-keygen -l -f ${priv_pubkeyPath} | cut -d ' ' -f 2 )
     local gitlab_fingerPrint=$( ssh-keygen -l -f ${gotKeyTmpFile} | cut -d ' ' -f 2 )
 
     if [ "${local_fingerPrint}" == "${gitlab_fingerPrint}" ] ; then
-	ANT_raw "Key finger prints match -- ${gitlab_fingerPrint}"
-	retVal=0
+        ANT_raw "Key finger prints match -- ${gitlab_fingerPrint}"
+        retVal=0
     else
-	ANT_raw "Key finger prints do not match -- ${gitlab_fingerPrint} -- ${local_fingerPrint}"
-	retVal=1
+        ANT_raw "Key finger prints do not match -- ${gitlab_fingerPrint} -- ${local_fingerPrint}"
+        retVal=1
     fi
 
     lpDo rm ${gotKeyTmpFile}
@@ -503,15 +503,15 @@ _EOF_
     local keyName="$(bxoGitServerSshKeyName $(bxoGitServerPrivTag) ${bxoId} rsa)"
 
     if vis_gitServerBxoPubkeyVerify ; then
-	ANT_raw "Same keys -- Uploading skipped"
-	lpReturn
+        ANT_raw "Same keys -- Uploading skipped"
+        lpReturn
     fi
 
     if [ -f "${priv_pubkeyPath}" ] ; then
-	lpDo bxoGitlab.py -v 20 --bxoId="${bxoId}" --keyName="${keyName}" -i pubkeyUpload ${priv_pubkeyPath}
+        lpDo bxoGitlab.py -v 20 --bxoId="${bxoId}" --keyName="${keyName}" -i pubkeyUpload ${priv_pubkeyPath}
     else
-	EH_problem "Missing ${priv_pubkeyPath}"
-    fi	
+        EH_problem "Missing ${priv_pubkeyPath}"
+    fi  
 
     lpReturn
 }
@@ -552,7 +552,7 @@ function vis_initialReposCreateAndPush {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -lt 2 ]]
     
     EH_assert [[ ! -z "${bxoId}" ]]
@@ -560,9 +560,9 @@ _EOF_
     local bxoRealizationScope=""  
     
     if [ $# -eq 0 ] ; then
-	bxoRealizationScope="full"
+        bxoRealizationScope="full"
     else
-	bxoRealizationScope=$1
+        bxoRealizationScope=$1
     fi
 
     lpDo vis_initialCommonReposCreateAndPush ${bxoRealizationScope}
@@ -576,7 +576,7 @@ function vis_initialCommonReposCreateAndPush {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -lt 2 ]]
 
     EH_assert [ ! -z "${bxoId}" ]
@@ -584,25 +584,25 @@ _EOF_
     local bxoRealizationScope=$1   
     
     if [ $# -eq 0 ] ; then
-	bxoRealizationScope="full"
+        bxoRealizationScope="full"
     else
-	bxoRealizationScope=$1
+        bxoRealizationScope=$1
     fi
     
     case ${bxoRealizationScope} in
-	full)
-	    lpDo bxioCommon.sh ${G_commandOptions} -p bxoId="${bxoId}" -i assembleInitialBxoCommonRepoBases
-	    lpDo bxioCommon.sh ${G_commandOptions} -p bxoId="${bxoId}" -i pushInitialBxoCommonRepoBases
-	    ;;
-	basePrep)
-	    lpDo bxioCommon.sh ${G_commandOptions} -p bxoId="${bxoId}" -i assembleInitialBxoCommonRepoBases	    
-	    ;;
-	realize)
-	    lpDo bxioCommon.sh ${G_commandOptions} -p bxoId="${bxoId}" -i pushInitialBxoCommonRepoBases	    
+        full)
+            lpDo bxioCommon.sh ${G_commandOptions} -p bxoId="${bxoId}" -i assembleInitialBxoCommonRepoBases
+            lpDo bxioCommon.sh ${G_commandOptions} -p bxoId="${bxoId}" -i pushInitialBxoCommonRepoBases
             ;;
-	*)
-	    EH_problem "Bad Usage"
-	    ;;
+        basePrep)
+            lpDo bxioCommon.sh ${G_commandOptions} -p bxoId="${bxoId}" -i assembleInitialBxoCommonRepoBases         
+            ;;
+        realize)
+            lpDo bxioCommon.sh ${G_commandOptions} -p bxoId="${bxoId}" -i pushInitialBxoCommonRepoBases     
+            ;;
+        *)
+            EH_problem "Bad Usage"
+            ;;
     esac
     
     lpReturn
@@ -614,7 +614,7 @@ function vis_initialSpecificReposCreateAndPush {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 At this point we have kind and type available. So we invoke kindType.sh -i initRealize.sh
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -lt 2 ]]
 
     EH_assert [ ! -z "${bxoId}" ]
@@ -622,16 +622,16 @@ _EOF_
     local bxoRealizationScope=""  
     
     if [ $# -eq 0 ] ; then
-	bxoRealizationScope="full"
+        bxoRealizationScope="full"
     else
-	bxoRealizationScope=$1
+        bxoRealizationScope=$1
     fi
 
     local scriptName=$( vis_bxoKindTypeFacility )
 
     if ! type "${scriptName}" > /dev/null; then
-	EH_problem "Missing scriptName=${scriptName}"
-	lpReturn 101
+        EH_problem "Missing scriptName=${scriptName}"
+        lpReturn 101
     fi
 
     lpDo ${scriptName} ${G_commandOptions} -p bxoId="${bxoId}" -i kindTypeRealizeRepoBasesCreate

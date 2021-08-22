@@ -75,8 +75,8 @@ _EOF_
     #  [[elisp:(lsip-local-run-command "apt-cache search something | egrep '^something'")][apt-cache search something | egrep '^something']]
 
     itemOrderedList=( 
-	"google_chrome_stableAddRepo" 
-	"google_chrome_stable" 
+        "google_chrome_stableAddRepo" 
+        "google_chrome_stable" 
     )
 
     itemOptionalOrderedList=()
@@ -139,7 +139,7 @@ binsPrep_google_chrome_stableAddRepo_DEFAULT_DEFAULT () {
     mmaPkgDebianMethod="custom"  #  or "apt" no need for customInstallScript but with binsPrep_installPostHook
 
     function customInstallScript {
-	opDo vis_repositoryAdd
+        opDo vis_repositoryAdd
     }
 }
 

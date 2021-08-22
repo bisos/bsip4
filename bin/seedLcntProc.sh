@@ -131,30 +131,30 @@ function G_postParamHook {
   if  ! isDirsProcessor  ; then 
       lcntNuBaseVerifyAndFix `pwd`
       case ${lcnt_contentSrcFormat} in
-	  "odp")
-	      formatsStr="genHtml+pdf"
-	      docPublishLine=""
-	      typeset thisDoc
-	      for thisDoc in ${lcnt_docSrcList} ; do
-		  docPublishLine="${docPublishLine} ${thisDoc}:${formatsStr}"
-	      done
-	      ;;
-	  "ttytex")
-	   #formatsStr="html+pdf+ps"
-	      formatsStr="${lcnt_pubFormats}"
-	      docPublishLine=""
-	      typeset thisDoc
-	      for thisDoc in ${lcnt_docSrcList} ; do
-		  docPublishLine="${docPublishLine} ${thisDoc}:${formatsStr}"
-	      done
-	      ;;
-	  "pdf"|"tar")
-	      doNothing
-	      ;;
-	  *)
-	      EH_problem "${lcnt_contentSrcFormat} -- Unexpected"
-	      return
-	      ;;
+          "odp")
+              formatsStr="genHtml+pdf"
+              docPublishLine=""
+              typeset thisDoc
+              for thisDoc in ${lcnt_docSrcList} ; do
+                  docPublishLine="${docPublishLine} ${thisDoc}:${formatsStr}"
+              done
+              ;;
+          "ttytex")
+           #formatsStr="html+pdf+ps"
+              formatsStr="${lcnt_pubFormats}"
+              docPublishLine=""
+              typeset thisDoc
+              for thisDoc in ${lcnt_docSrcList} ; do
+                  docPublishLine="${docPublishLine} ${thisDoc}:${formatsStr}"
+              done
+              ;;
+          "pdf"|"tar")
+              doNothing
+              ;;
+          *)
+              EH_problem "${lcnt_contentSrcFormat} -- Unexpected"
+              return
+              ;;
       esac
   fi
 
@@ -171,42 +171,42 @@ function noArgsHook {
     local eachArg=""
 
     if [ -z "${args}" ] ; then
-	vis_groupingExamples
+        vis_groupingExamples
     fi
 
     for eachArg in ${args} ; do
-	case ${eachArg} in
-	    common|seed)
-		visLibExamplesOutput ${G_myName} ${extraInfo}
-		;;
-	    build)         # Build, release, export
-		vis_buildExamples
-		;;
-	    maintenance|maintain)	    
-		vis_maintenanceExamples
-		;;
-	    convert)	    
-		vis_convertExamples
-		;;
-	    "export")         # Build, release, export
-		vis_exportExamples
-		;;
-	    examples)         # Build, release, export
-		vis_examples
-		;;
-	    refresh|config|init|renew)   # initial dblock, LCNT-INFO editing
-		vis_configExamples
-		;;
-	    dev)           # build and clean-up and 
-		vis_devExamples
-		;;
-	    mm)            # Multi-Media
-		vis_buildExamples
-		;;
-	    *)
-		EH_problem "unknown examples grouping -- arg: ${eachArg}"
-		#vis_examples		
-	esac
+        case ${eachArg} in
+            common|seed)
+                visLibExamplesOutput ${G_myName} ${extraInfo}
+                ;;
+            build)         # Build, release, export
+                vis_buildExamples
+                ;;
+            maintenance|maintain)           
+                vis_maintenanceExamples
+                ;;
+            convert)        
+                vis_convertExamples
+                ;;
+            "export")         # Build, release, export
+                vis_exportExamples
+                ;;
+            examples)         # Build, release, export
+                vis_examples
+                ;;
+            refresh|config|init|renew)   # initial dblock, LCNT-INFO editing
+                vis_configExamples
+                ;;
+            dev)           # build and clean-up and 
+                vis_devExamples
+                ;;
+            mm)            # Multi-Media
+                vis_buildExamples
+                ;;
+            *)
+                EH_problem "unknown examples grouping -- arg: ${eachArg}"
+                #vis_examples           
+        esac
     done
     hookRun "examplesHookPost"
 }
@@ -266,7 +266,7 @@ ${G_myName} export
 _EOF_
 
     lpReturn
-}	
+}       
 
 bystarUid=""
 
@@ -445,7 +445,7 @@ _CommentEnd_
 
 function reActivateExample {
     if ( lcntGetActivation > /dev/null 2> /dev/null ) ; then
-	lpReturn
+        lpReturn
     fi
 
 cat  << _EOF_
@@ -505,7 +505,7 @@ function vis_maintenanceExamples {
     G_funcEntry
     function describeF {  cat  << _EOF_
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
     
     extraInfo="-v -n showRun"
@@ -529,7 +529,7 @@ function vis_convertExamples {
     G_funcEntry
     function describeF {  cat  << _EOF_
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
     
     extraInfo="-v -n showRun"
@@ -557,7 +557,7 @@ function vis_configExamples {
     G_funcEntry
     function describeF {  cat  << _EOF_
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
     
     local extraInfo="-v -n showRun"
@@ -604,7 +604,7 @@ function listLcntBuildCommands {
     #inFilesList=$( vis_enabledBuildsDirsList )
     inFilesList=$( vis_buildsDirsList )
     for inFile in ${inFilesList}; do
-	echo ${G_myName} ${extraInfo} -p extent=${specifiedExtent} -i lcntBuild ${inFile}
+        echo ${G_myName} ${extraInfo} -p extent=${specifiedExtent} -i lcntBuild ${inFile}
     done
 }
 
@@ -617,7 +617,7 @@ function listLcntBuildCommands {
     #inFilesList=$( vis_enabledBuildsDirsList )
     inFilesList=$( vis_buildsDirsList )
     for inFile in ${inFilesList}; do
-	echo ${G_myName} ${extraInfo} -p extent=${specifiedExtent} -i lcntBuild ${inFile}
+        echo ${G_myName} ${extraInfo} -p extent=${specifiedExtent} -i lcntBuild ${inFile}
     done
 }
 
@@ -628,7 +628,7 @@ function listLcntBuildSetCur {
     #inFilesList=$( vis_enabledBuildsDirsList )
     inFilesList=$( vis_buildsDirsList )
     for inFile in ${inFilesList}; do
-	echo ${G_myName} ${extraInfo} -i lcntBuildSetCur ${inFile}
+        echo ${G_myName} ${extraInfo} -i lcntBuildSetCur ${inFile}
     done
 }
 
@@ -641,7 +641,7 @@ function vis_buildExamples {
     G_funcEntry
     function describeF {  cat  << _EOF_
 _EOF_
-		       }
+                       }
     local extraInfo="-v -n showRun"
     local inFilesList=""
     local inFile=""
@@ -691,11 +691,11 @@ function listLcntExportSetCur {
     #inFilesList=$( vis_enabledExportsDirsList )
     inFilesList=$( vis_exportsDirsList )
     if [ -z "${inFilesList}" ] ; then
-	EH_problem "Missing results from vis_exportsDirsList -- consider running lcnLcntGens.sh -i lcntExportInfoGens"
-	lpReturn
+        EH_problem "Missing results from vis_exportsDirsList -- consider running lcnLcntGens.sh -i lcntExportInfoGens"
+        lpReturn
     fi
     for inFile in ${inFilesList}; do
-	echo ${G_myName} ${extraInfo} -i lcntExportSetCur ${inFile}
+        echo ${G_myName} ${extraInfo} -i lcntExportSetCur ${inFile}
     done
 }
 
@@ -708,49 +708,49 @@ function vis_exportExamples {
     G_funcEntry
     function describeF {  cat  << _EOF_
 _EOF_
-		       }
+                       }
     extraInfo="-v -n showRun"
     local inFilesList=""
     local inFile=""
 
     function listLcntBuildCommands {
-	EH_assert [[ $# -eq 1 ]]
-	local specifiedExtent=$1
-	#inFilesList=$( vis_enabledBuildsDirsList )
-	inFilesList=$( vis_buildsDirsList )
-	for inFile in ${inFilesList}; do
-	    echo ${G_myName} ${extraInfo} -p extent=${specifiedExtent} -i lcntBuild ${inFile}
-	done
+        EH_assert [[ $# -eq 1 ]]
+        local specifiedExtent=$1
+        #inFilesList=$( vis_enabledBuildsDirsList )
+        inFilesList=$( vis_buildsDirsList )
+        for inFile in ${inFilesList}; do
+            echo ${G_myName} ${extraInfo} -p extent=${specifiedExtent} -i lcntBuild ${inFile}
+        done
     }
 
     function listLcntBuildSetCur {
-	#inFilesList=$( vis_enabledBuildsDirsList )
-	inFilesList=$( vis_buildsDirsList )
-	for inFile in ${inFilesList}; do
-	    echo ${G_myName} ${extraInfo} -i lcntBuildSetCur ${inFile}
-	done
+        #inFilesList=$( vis_enabledBuildsDirsList )
+        inFilesList=$( vis_buildsDirsList )
+        for inFile in ${inFilesList}; do
+            echo ${G_myName} ${extraInfo} -i lcntBuildSetCur ${inFile}
+        done
     }
 
     
     function listLcntExportCommands {
-	EH_assert [[ $# -eq 1 ]]
-	local specifiedExtent=$1
-	inFilesList=$( vis_buildsDirsList )
-	for inFile in ${inFilesList}; do
-	    echo ${G_myName} ${extraInfo} -p extent=${specifiedExtent} -i lcntExport ${inFile}
-	done
+        EH_assert [[ $# -eq 1 ]]
+        local specifiedExtent=$1
+        inFilesList=$( vis_buildsDirsList )
+        for inFile in ${inFilesList}; do
+            echo ${G_myName} ${extraInfo} -p extent=${specifiedExtent} -i lcntExport ${inFile}
+        done
     }
 
     function listLcntExportSetCur {
-	#inFilesList=$( vis_enabledExportsDirsList )
-	inFilesList=$( vis_exportsDirsList )
-	if [ -z "${inFilesList}" ] ; then
-	    EH_problem "Missing results from vis_exportsDirsList -- consider running lcnLcntGens.sh -i lcntExportInfoGens"
-	    lpReturn
-	fi
-	for inFile in ${inFilesList}; do
-	    echo ${G_myName} ${extraInfo} -i lcntExportSetCur ${inFile}
-	done
+        #inFilesList=$( vis_enabledExportsDirsList )
+        inFilesList=$( vis_exportsDirsList )
+        if [ -z "${inFilesList}" ] ; then
+            EH_problem "Missing results from vis_exportsDirsList -- consider running lcnLcntGens.sh -i lcntExportInfoGens"
+            lpReturn
+        fi
+        for inFile in ${inFilesList}; do
+            echo ${G_myName} ${extraInfo} -i lcntExportSetCur ${inFile}
+        done
     }
 
     
@@ -827,11 +827,11 @@ function vis_lcntInfoFullRenew {
     G_funcEntry
     function describeF {  cat  << _EOF_
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
 
     if [ -z "${cntntRawHome}" ] ; then
-	cntntRawHome=.
+        cntntRawHome=.
     fi
 
     opDo lcnLcntGens.sh -n showRun -p cntntRawHome="${cntntRawHome}" -i lcntInfoRenew 
@@ -841,11 +841,11 @@ _EOF_
     opDo vis_lcntExportInfoGens
 
     if [ -d ./LCNT-INFO/Builds/art-8.5x11 ] ; then
-	opDo vis_lcntBuildSetCur ./LCNT-INFO/Builds/art-8.5x11
-    elif [ -d ./LCNT-INFO/Builds/presPdf ] ; then	
-	opDo vis_lcntBuildSetCur ./LCNT-INFO/Builds/presPdf
+        opDo vis_lcntBuildSetCur ./LCNT-INFO/Builds/art-8.5x11
+    elif [ -d ./LCNT-INFO/Builds/presPdf ] ; then       
+        opDo vis_lcntBuildSetCur ./LCNT-INFO/Builds/presPdf
     else
-	EH_problem "Missing  presPdf or art-8.5x11 in ./LCNT-INFO/Builds"
+        EH_problem "Missing  presPdf or art-8.5x11 in ./LCNT-INFO/Builds"
     fi
 
     opDo vis_lcntExportSetCur ./LCNT-INFO/Exports/ploneProc       
@@ -883,7 +883,7 @@ articleBodyEnFa.tex
 
   for thisOne in ${expectedFiles} ; do
       if [ -f ${thisOne} ] ; then
-	  echo "${thisOne}"
+          echo "${thisOne}"
       fi
   done
 }
@@ -905,8 +905,8 @@ _EOF_
     activation=$( lcntGetActivation )
 
     if [ "${activation}" == "private" -o "${activation}" == "doNotPublish" ] ; then
-	ANT_raw "LCNT IS NOT PUBLISHABLE: ${G_myName}:${G_thisFunc}:$LINENO"
-	retVal=1
+        ANT_raw "LCNT IS NOT PUBLISHABLE: ${G_myName}:${G_thisFunc}:$LINENO"
+        retVal=1
     fi
 
     lpReturn ${retVal}
@@ -929,8 +929,8 @@ _EOF_
     activation=$( lcntGetActivation )
 
     if [ "${activation}" == "private" ] ; then
-	ANT_raw "LCNT IS PRIVATE (NOT PUBLISHABLE): ${G_myName}:${G_thisFunc}:$LINENO"
-	retVal=1
+        ANT_raw "LCNT IS PRIVATE (NOT PUBLISHABLE): ${G_myName}:${G_thisFunc}:$LINENO"
+        retVal=1
     fi
 
     lpReturn ${retVal}
@@ -951,30 +951,30 @@ _EOF_
     typeset retVal=0
 
     if [ -f "./LCNT-INFO/activation" ] ; then
-	typeset activation=$( cat ./LCNT-INFO/activation )
-	case ${activation} in
-	    "deactivated")       # Don't do anything
-		ANT_raw "DeActivated: ${G_myName}:${G_thisFunc}:$LINENO"
-		retVal=1
-		;;
-	    "activated")
-		retVal=0
-		;;
-	    "doNotPublish")       # Don't push to website
-		retVal=0
-		;;
-	    "private")            # Only Build. Don't copy to ReadyRoom
-		retVal=0
-		;;
-	    *)
-		EH_problem "Unexpected Value: activation=${activation}"
-		activation="bad"
-		retVal=101
-		;;
-	esac
+        typeset activation=$( cat ./LCNT-INFO/activation )
+        case ${activation} in
+            "deactivated")       # Don't do anything
+                ANT_raw "DeActivated: ${G_myName}:${G_thisFunc}:$LINENO"
+                retVal=1
+                ;;
+            "activated")
+                retVal=0
+                ;;
+            "doNotPublish")       # Don't push to website
+                retVal=0
+                ;;
+            "private")            # Only Build. Don't copy to ReadyRoom
+                retVal=0
+                ;;
+            *)
+                EH_problem "Unexpected Value: activation=${activation}"
+                activation="bad"
+                retVal=101
+                ;;
+        esac
     else
-	activation="activated"
-	retVal=0
+        activation="activated"
+        retVal=0
     fi
 
     echo "${activation}"
@@ -1002,20 +1002,20 @@ _EOF_
 
     case ${dispositionType} in 
       "oneSlideDispose")    # For pdf printing
-	   doNothing
-	   ;;
+           doNothing
+           ;;
       
       "slidesDispose")      # For Recording 
-	  doNothing
-	  ;;
+          doNothing
+          ;;
 
       "videoedDispose")     # For Reveal.js final publication
-	  doNothing
-	  ;;
+          doNothing
+          ;;
 
       *)
-	  EH_problem "Bad Disposition Type -- ${dispositionType}"
-	  ;;
+          EH_problem "Bad Disposition Type -- ${dispositionType}"
+          ;;
     esac
 
     echo "(setq bx:dblock:lcnt:slidesDisposition \"${dispositionType}\")" > bx:dblock:lcnt:slidesDisposition.el
@@ -1024,15 +1024,15 @@ _EOF_
 
     local grepResults=""
     for each in ${filesList} ; do
-	grepResults=$( grep videoed-begin ${each} )
-	if [ -z "${grepResults}" ] ; then
-	    continue
-	fi
-	opDo vis_dblockUpdateFile ${each}
+        grepResults=$( grep videoed-begin ${each} )
+        if [ -z "${grepResults}" ] ; then
+            continue
+        fi
+        opDo vis_dblockUpdateFile ${each}
     done
     
     lpReturn
-}	
+}       
 
 
 _CommentBegin_
@@ -1052,13 +1052,13 @@ _EOF_
 
     local eachFile
     for eachFile in ${inFilesList}; do
-	if [ ! -f "./frameBody-${eachFile}" ] ; then
-	    opDo touch "./frameBody-${eachFile}"
-	fi
+        if [ ! -f "./frameBody-${eachFile}" ] ; then
+            opDo touch "./frameBody-${eachFile}"
+        fi
     done
     
     lpReturn
-}	
+}       
 
 
 
@@ -1095,14 +1095,14 @@ function docsListBuildLines {
   for thisOne in ${docsList} ; do
     case ${thisOne##*.} in 
       "ttytex")
-	  ANT_raw "${G_myName} ${extraInfo} -i build  ${thisOne}"
-	  ;;
+          ANT_raw "${G_myName} ${extraInfo} -i build  ${thisOne}"
+          ;;
       "fm5")
-	  doNothing
-	  ;;
+          doNothing
+          ;;
       *)
-	 return 1
-	 ;;
+         return 1
+         ;;
     esac
   done
 }
@@ -1119,16 +1119,16 @@ function docsListCmdLines {
   for thisOne in ${docsList} ; do
     case ${thisOne##*.} in 
       "ttytex")
-	  #ANT_raw "lcnLcntInputProc.sh -p inFormat=${lcnt_docSrcProcessor} -p outputs=ps -i buildDocs  ${thisOne}"
-	  ANT_raw "lcnLcntInputProc.sh -p inFormat=${lcnt_docSrcProcessor} -p outputs=pdf -i buildDocs  ${thisOne}"
-	  #ANT_raw "lcnLcntInputProc.sh -p inFormat=${lcnt_docSrcProcessor} -p outputs=tex4ht -i buildDocs  ${thisOne}"
-	  #ANT_raw "lcnLcntInputProc.sh -p inFormat=${lcnt_docSrcProcessor} -p outputs=onehtml -i buildDocs  ${thisOne}"
-	  ANT_raw "lcnLcntInputProc.sh -p inFormat=${lcnt_docSrcProcessor} -p outputs=heveaHtml -i buildDocs  ${thisOne}"
-	  ANT_raw "lcnLcntInputProc.sh -p inFormat=${lcnt_docSrcProcessor} -p outputs=all -i buildDocs  ${thisOne}"
-	  ;;
+          #ANT_raw "lcnLcntInputProc.sh -p inFormat=${lcnt_docSrcProcessor} -p outputs=ps -i buildDocs  ${thisOne}"
+          ANT_raw "lcnLcntInputProc.sh -p inFormat=${lcnt_docSrcProcessor} -p outputs=pdf -i buildDocs  ${thisOne}"
+          #ANT_raw "lcnLcntInputProc.sh -p inFormat=${lcnt_docSrcProcessor} -p outputs=tex4ht -i buildDocs  ${thisOne}"
+          #ANT_raw "lcnLcntInputProc.sh -p inFormat=${lcnt_docSrcProcessor} -p outputs=onehtml -i buildDocs  ${thisOne}"
+          ANT_raw "lcnLcntInputProc.sh -p inFormat=${lcnt_docSrcProcessor} -p outputs=heveaHtml -i buildDocs  ${thisOne}"
+          ANT_raw "lcnLcntInputProc.sh -p inFormat=${lcnt_docSrcProcessor} -p outputs=all -i buildDocs  ${thisOne}"
+          ;;
       *)
-	 return 1
-	 ;;
+         return 1
+         ;;
     esac
   done
 }
@@ -1215,39 +1215,39 @@ _EOF_
   case ${lcnt_docSrcProcessor} in 
    "latex"|"")
            attachList="${lcnt_pubFormats}"
-	   ;;
+           ;;
    "xelatex")
            attachList="pdf heveaHtml"
-	  ;;
+          ;;
       *)
-	 return 1
-	 ;;
+         return 1
+         ;;
     esac
 
   for thisOne in ${@} ; do
     case ${thisOne##*.} in 
       "ttytex")
           for thisFormat in ${attachList} ; do
-	    if [ "${thisFormat}_" == "html_" ] ; then
-		thisFormat="tex4ht"
-	    fi
-	    if [ "${thisFormat}" == "heveaHtml" ] ; then
-		if egrep 'documentclass.*beamer' ${thisOne} ; then
-		    ANT_raw "Skipping: lcnLcntInputProc.sh -p inFormat=${lcnt_docSrcProcessor} -p outputs=${thisFormat} -i buildDocs  ${thisOne}"
-		else
-		    opDoComplain lcnLcntInputProc.sh -p inFormat=${lcnt_docSrcProcessor} -p outputs=${thisFormat} -i buildDocs  ${thisOne}
-		fi
-	    else
-		opDoComplain lcnLcntInputProc.sh -p inFormat=${lcnt_docSrcProcessor} -p outputs=${thisFormat} -i buildDocs  ${thisOne}
-	    fi
-	  done
-	  ;;
+            if [ "${thisFormat}_" == "html_" ] ; then
+                thisFormat="tex4ht"
+            fi
+            if [ "${thisFormat}" == "heveaHtml" ] ; then
+                if egrep 'documentclass.*beamer' ${thisOne} ; then
+                    ANT_raw "Skipping: lcnLcntInputProc.sh -p inFormat=${lcnt_docSrcProcessor} -p outputs=${thisFormat} -i buildDocs  ${thisOne}"
+                else
+                    opDoComplain lcnLcntInputProc.sh -p inFormat=${lcnt_docSrcProcessor} -p outputs=${thisFormat} -i buildDocs  ${thisOne}
+                fi
+            else
+                opDoComplain lcnLcntInputProc.sh -p inFormat=${lcnt_docSrcProcessor} -p outputs=${thisFormat} -i buildDocs  ${thisOne}
+            fi
+          done
+          ;;
       "fm5")
-	  opDoComplain lcnLcntInputProc.sh -p currentBase=`pwd` -p outputs=all -i buildDocs  ${thisOne}
-	  ;;
+          opDoComplain lcnLcntInputProc.sh -p currentBase=`pwd` -p outputs=all -i buildDocs  ${thisOne}
+          ;;
       *)
-	 return 1
-	 ;;
+         return 1
+         ;;
     esac
   done
 
@@ -1292,12 +1292,12 @@ _EOF_
 
     typeset thisPrefix=$( FN_prefix ${thisOne} )
     typeset thisExtension=$( FN_extension ${thisOne} )
-	
+        
     typeset cmndResult=$( echo ${thisOne} | egrep 'pres' )
     if [ -z ${cmndResult} ] ; then 
-	lpReturn 101
+        lpReturn 101
     else
-	lpReturn 0
+        lpReturn 0
     fi
 }
 
@@ -1328,8 +1328,8 @@ function vis_docsList {
     typeset thisOne=""
 
     for thisOne in ${docsList} ; do
-	opDo echo  ${thisOne}
-	
+        opDo echo  ${thisOne}
+        
     done
 }
 
@@ -1351,8 +1351,8 @@ function vis_fullBuild {
     typeset thisOne=""
 
     for thisOne in ${docsList} ; do
-	vis_build ${thisOne}
-	
+        vis_build ${thisOne}
+        
     done
     hookRun "fullUpdateHookPost"
 }
@@ -1369,14 +1369,14 @@ function vis_fullFast {
   for thisOne in ${docsList} ; do
     case ${thisOne##*.} in 
       "ttytex")
-	  opDoComplain lcnLcntInputProc.sh -p outputs=pdf -i buildDocs  ${thisOne}
-	  ;;
+          opDoComplain lcnLcntInputProc.sh -p outputs=pdf -i buildDocs  ${thisOne}
+          ;;
       "fm5")
-	  opDoComplain lcnLcntInputProc.sh -p currentBase=`pwd` -p outputs=pdf -i buildDocs  ${thisOne}
-	  ;;
+          opDoComplain lcnLcntInputProc.sh -p currentBase=`pwd` -p outputs=pdf -i buildDocs  ${thisOne}
+          ;;
       *)
-	 return 1
-	 ;;
+         return 1
+         ;;
     esac
   done
 }
@@ -1395,36 +1395,36 @@ function vis_fullClean {
 
     hookRun "fullCleanHookPre"
     if [[ -L figures ]] ; then
-	/bin/rm figures
+        /bin/rm figures
     fi
 
     if [[ -L tables ]] ; then
-	/bin/rm tables
+        /bin/rm tables
     fi
 
     if [[ -L seedDesc ]] ; then
-	/bin/rm seedDesc
+        /bin/rm seedDesc
     fi
 
     for thisOne in ${docsList} ; do
-	case ${thisOne##*.} in 
-	    "ttytex")
-		opDoComplain lcnLcntInputProc.sh -p cleanType=realclean -i clean ${thisOne}
-		opDo FN_dirDeleteIfThere ./revealJsBase
-		opDo FN_dirDeleteIfThere ./auto
-		;;
-	    "odp")
-		ANT_raw "Skipping cleaning for .odp"
-		;;
-	    *)
-		EH_problem "${thisOne}: Unknown Type"
-		return 1
-		;;
-	esac
+        case ${thisOne##*.} in 
+            "ttytex")
+                opDoComplain lcnLcntInputProc.sh -p cleanType=realclean -i clean ${thisOne}
+                opDo FN_dirDeleteIfThere ./revealJsBase
+                opDo FN_dirDeleteIfThere ./auto
+                ;;
+            "odp")
+                ANT_raw "Skipping cleaning for .odp"
+                ;;
+            *)
+                EH_problem "${thisOne}: Unknown Type"
+                return 1
+                ;;
+        esac
     done
 
     if [ -x ./presDispose.sh ] ; then
-	opDo ./presDispose.sh -i fullClean
+        opDo ./presDispose.sh -i fullClean
     fi
 
     #opDo lcnLcntGens.sh -n showRun -p cntntRawHome=`pwd` -i lcntEntryClean
@@ -1741,8 +1741,8 @@ function vis_plone3AccessPagePublish {
     EH_assert [[ "${bystarUid}_" != "MANDATORY_" ]]
 
     if ! hereBxAcctExists ; then
-	EH_problem "Skipping Publication -- Create BxO=${bystarUid} first"
-	lpReturn 1
+        EH_problem "Skipping Publication -- Create BxO=${bystarUid} first"
+        lpReturn 1
     fi
   
     opDo bystarLcntUpload.sh ${extraInfo} -p bystarUid=${bystarUid} -p cntntRawHome=. -i plone3AccessPagePublish
@@ -1760,8 +1760,8 @@ function vis_plone3Publish {
     EH_assert [[ "${bystarUid}_" != "MANDATORY_" ]]
 
     if ! hereBxAcctExists ; then
-	EH_problem "Skipping Publication -- Create BxO=${bystarUid} first"
-	lpReturn 1
+        EH_problem "Skipping Publication -- Create BxO=${bystarUid} first"
+        lpReturn 1
     fi
     
 
@@ -1779,10 +1779,10 @@ function hereBxAcctExists {
     EH_assert [[ "${bystarUid}_" != "MANDATORY_" ]]
 
     if bystarAcctInfo.sh -i acctHereShortInfo "${bystarUid}" 2> /dev/null 1> /dev/null ; then
-	return 0
+        return 0
     else
-	EH_problem "Missing Acct ${bystarUid}"
-	return 1
+        EH_problem "Missing Acct ${bystarUid}"
+        return 1
     fi
 }
 
@@ -1798,8 +1798,8 @@ function vis_accessPageBxoGen {
     EH_assert [[ "${bystarUid}_" != "MANDATORY_" ]]
 
     if ! hereBxAcctExists ; then
-	EH_problem "Skipping Publication -- Create BxO=${bystarUid} first"
-	lpReturn 1
+        EH_problem "Skipping Publication -- Create BxO=${bystarUid} first"
+        lpReturn 1
     fi
 
     typeset plpdNu=`cat ./LCNT-INFO/lcntNu`
@@ -1822,8 +1822,8 @@ function vis_plone3ApacheFullPublish {
     EH_assert [[ "${bystarUid}_" != "MANDATORY_" ]]
 
     if ! hereBxAcctExists ; then
-	EH_problem "Skipping Publication -- Create BxO=${bystarUid} first"
-	lpReturn 1
+        EH_problem "Skipping Publication -- Create BxO=${bystarUid} first"
+        lpReturn 1
     fi
 
     typeset plpdNu=`cat ./LCNT-INFO/lcntNu`
@@ -1855,8 +1855,8 @@ function vis_plone3FullPublish {
     EH_assert [[ "${bystarUid}_" != "MANDATORY_" ]]
 
     if ! hereBxAcctExists ; then
-	EH_problem "Skipping Publication -- Create BxO=${bystarUid} first"
-	lpReturn 1
+        EH_problem "Skipping Publication -- Create BxO=${bystarUid} first"
+        lpReturn 1
     fi
     
     opDo ${G_myName} ${extraInfo} -i fullUpdate
@@ -1882,8 +1882,8 @@ function vis_apachePublish {
     typeset plpdCategory=`cat ./LCNT-INFO/pubCategory`
 
     if ! hereBxAcctExists ; then
-	EH_problem "Skipping Publication -- Create BxO=${bystarUid} first"
-	lpReturn 1
+        EH_problem "Skipping Publication -- Create BxO=${bystarUid} first"
+        lpReturn 1
     fi
 
     opDo ${G_myName} ${extraInfo} -i fullUpdate
@@ -2003,9 +2003,9 @@ function vis_editLcntInfo {
     typeset thisOne=""
 
     for thisOne in ${*} ; do
-	#( emacsclient -e "(find-file \"LCNT-INFO/${thisOne}\")"  & 	wait $! )
-	#emacsclient "LCNT-INFO/${thisOne}"
-	bleeclient "LCNT-INFO/${thisOne}"
+        #( emacsclient -e "(find-file \"LCNT-INFO/${thisOne}\")"  &     wait $! )
+        #emacsclient "LCNT-INFO/${thisOne}"
+        bleeclient "LCNT-INFO/${thisOne}"
     done
 }
 
@@ -2016,18 +2016,18 @@ _CommentEnd_
 function vis_dblockUpdateFile {
     g_myInit ; retIfFail 2> /dev/null
     if [  $# -eq  0 ] ; then
-	typeset foundFiles=$( echo $( vis_dblockApplicableFiles ) )
-	if [ -z "${foundFiles}" ] ; then
-	    ANT_raw "No Files To Dblock Expand -- Skipped"
-	    lpReturn
-	fi
-	opDo vis_dblockUpdateFile "${foundFiles}"
+        typeset foundFiles=$( echo $( vis_dblockApplicableFiles ) )
+        if [ -z "${foundFiles}" ] ; then
+            ANT_raw "No Files To Dblock Expand -- Skipped"
+            lpReturn
+        fi
+        opDo vis_dblockUpdateFile "${foundFiles}"
     fi
 
     #typeset thisOne=""
 
     # for thisOne in ${*} ; do
-    # 	emacsclient -e "(org-dblock-update-file-bx \"${thisOne}\")"
+    #   emacsclient -e "(org-dblock-update-file-bx \"${thisOne}\")"
     # done
 
     # Must be $* -- $@ does not work
@@ -2048,9 +2048,9 @@ _EOF_
     heveaHtmlBasedir=heveaHtml-${1%.*}
 
     if [ -z "${lcntAttrSource:-}" ] ; then
-	lcntSourceTypeBaseDir="/lcnt/lgpc/bystar/permanent"
+        lcntSourceTypeBaseDir="/lcnt/lgpc/bystar/permanent"
     else
-	lcntSourceTypeBaseDir="${lcntBaseDir}${lcntAttrGenPub}/${lcntAttrSource}/${lcntAttrPermanence}"
+        lcntSourceTypeBaseDir="${lcntBaseDir}${lcntAttrGenPub}/${lcntAttrSource}/${lcntAttrPermanence}"
     fi
 
     if [[ ! -d figures ]] ; then ln -s ${lcntSourceTypeBaseDir}/common/figures figures; fi
@@ -2058,7 +2058,7 @@ _EOF_
 
     if [[ ! -d ${heveaHtmlBasedir}/figures ]] ; then opDo ln -s ${lcntSourceTypeBaseDir}/common/figures ${heveaHtmlBasedir}/figures; fi
     if [[ ! -d ${heveaHtmlBasedir}/tables ]] ; then opDo ln -s ${lcntSourceTypeBaseDir}/common/tables ${heveaHtmlBasedir}/tables; fi
-	
+        
     lpReturn
 }
 
@@ -2080,8 +2080,8 @@ _EOF_
     typeset fileBaseName="$1"
 
     if [ ! -f "${fileBaseName}".docx ] ; then
-	ANT_raw "Missing ${fileBaseName}.docx -- From libreoffice do a save as docx"
-	lpReturn
+        ANT_raw "Missing ${fileBaseName}.docx -- From libreoffice do a save as docx"
+        lpReturn
     fi
 
     opDo pandoc -f docx -t latex  -o "${fileBaseName}".tex "${fileBaseName}".docx 
@@ -2104,8 +2104,8 @@ _EOF_
     typeset fileBaseName="$1"
 
     if [ ! -f "${fileBaseName}".html ] ; then
-	ANT_raw "Missing ${fileBaseName}.html -- From libreoffice do an export to html first"
-	lpReturn
+        ANT_raw "Missing ${fileBaseName}.html -- From libreoffice do an export to html first"
+        lpReturn
     fi
 
     typeset tmpFile=$( FN_tempFile )
@@ -2137,8 +2137,8 @@ _EOF_
     typeset fileBaseName="$1"
 
     if [ ! -f "${fileBaseName}".ttytex ] ; then
-	ANT_raw "Missing ${fileBaseName}.ttytex"
-	lpReturn
+        ANT_raw "Missing ${fileBaseName}.ttytex"
+        lpReturn
     fi
 
     opDo pandoc -f latex -t odt --default-image-extension=png -s ${fileBaseName}.ttytex -o ${fileBaseName}.odt
@@ -2160,8 +2160,8 @@ _EOF_
     typeset fileBaseName="$1"
 
     if [ ! -f "${fileBaseName}".ttytex ] ; then
-	ANT_raw "Missing ${fileBaseName}.ttytex"
-	lpReturn
+        ANT_raw "Missing ${fileBaseName}.ttytex"
+        lpReturn
     fi
 
     opDo pandoc -f latex -t markdown --default-image-extension=png -s ${fileBaseName}.ttytex -o ${fileBaseName}.md
@@ -2211,9 +2211,9 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if [[ "${G_forceMode}" != "force" ]] ; then
-	if [ -d ./revealJsBase ] ; then
-	    lpReturn
-	fi
+        if [ -d ./revealJsBase ] ; then
+            lpReturn
+        fi
     fi
 
     opDo FN_dirCreatePathIfNotThere ./revealJsBase
@@ -2296,9 +2296,9 @@ _EOF_
     typeset thisOne=""
 
     for thisOne in ${docsList} ; do
-	#vis_build ${thisOne}
-	opDo vis_buildHtmlPreview ${thisOne}
-	opDo vis_buildPdfPreview ${thisOne}	
+        #vis_build ${thisOne}
+        opDo vis_buildHtmlPreview ${thisOne}
+        opDo vis_buildPdfPreview ${thisOne}     
     done
     
     hookRun "fullUpdateHookPost"
@@ -2325,20 +2325,20 @@ _EOF_
     typeset inFilesList=$@
 
     if [ -z "${extent}" ] ; then
-	extent="build+view"
+        extent="build+view"
     fi
 
     if [ $# -eq 0 ] ; then
-	inFilesList=$( lcntProc.sh -i  docsList )
+        inFilesList=$( lcntProc.sh -i  docsList )
     fi
 
     if [ $# -eq 1 ] ; then
-	typeset lcntDocsList=$( lcntProc.sh -i  docsList )
-	typeset isInList=$( echo "${lcntDocsList}" | grep -i "${1}" )
-	if [[ -z "${isInList}" ]] ; then
-	    ANT_raw "Specified inFile ($1) not in ${lcntDocsList} -- Applying To ALL"
-	    inFilesList=${lcntDocsList}
-	fi
+        typeset lcntDocsList=$( lcntProc.sh -i  docsList )
+        typeset isInList=$( echo "${lcntDocsList}" | grep -i "${1}" )
+        if [[ -z "${isInList}" ]] ; then
+            ANT_raw "Specified inFile ($1) not in ${lcntDocsList} -- Applying To ALL"
+            inFilesList=${lcntDocsList}
+        fi
     fi
 
     opDo lcntProc.sh -i buildPre
@@ -2347,57 +2347,57 @@ _EOF_
     typeset thisExtension
 
     for inFile in ${inFilesList}; do
-	inFilePrefix=$( FN_prefix ${inFile} )
-	#thisExtension=$( FN_extension ${inFile} )	
+        inFilePrefix=$( FN_prefix ${inFile} )
+        #thisExtension=$( FN_extension ${inFile} )      
 
-	if [ "${extent}" == "build" -o "${extent}" == "build+view" ] ; then
-	    opDo lcnLcntInputProc.sh -p inFormat=xelatex -p outputs=heveaHtml -i buildDocs ${inFile}
+        if [ "${extent}" == "build" -o "${extent}" == "build+view" ] ; then
+            opDo lcnLcntInputProc.sh -p inFormat=xelatex -p outputs=heveaHtml -i buildDocs ${inFile}
 
-	    if [ "${inFile}" == "$(vis_getPresentationSrcFile .)" ] ; then
-		opDo vis_heveaRevealFixups ${inFilePrefix}
+            if [ "${inFile}" == "$(vis_getPresentationSrcFile .)" ] ; then
+                opDo vis_heveaRevealFixups ${inFilePrefix}
 
-		opDo vis_revealJsBasePrep
+                opDo vis_revealJsBasePrep
 
-		typeset  heveaBase="./heveaHtml-${inFilePrefix}"
-		
-		outFileName="./heveaHtml-${fileBaseName}/revealSlides.html"
+                typeset  heveaBase="./heveaHtml-${inFilePrefix}"
+                
+                outFileName="./heveaHtml-${fileBaseName}/revealSlides.html"
 
-		opDo cp ${heveaBase}/revealSlides.html ./revealJsBase
+                opDo cp ${heveaBase}/revealSlides.html ./revealJsBase
 
-		typeset imagesList=$( ls ${heveaBase}/*.png )
+                typeset imagesList=$( ls ${heveaBase}/*.png )
 
-		if [ ! -z "${imagesList}" ] ; then
-		    opDo cp ${imagesList} ./revealJsBase
-		fi
-		
-		opDo cp /libre/ByStar/InitialTemplates/web/revealJs/begin/contentStart.html  ./revealJsBase/${inFilePrefix}.html
+                if [ ! -z "${imagesList}" ] ; then
+                    opDo cp ${imagesList} ./revealJsBase
+                fi
+                
+                opDo cp /libre/ByStar/InitialTemplates/web/revealJs/begin/contentStart.html  ./revealJsBase/${inFilePrefix}.html
 
-		opDo bx-dblock -h -v -n showRun -i dblockUpdateFiles  ./revealJsBase/${inFilePrefix}.html
-	    fi
-	fi
-	
-	if [ "${extent}" == "view" -o "${extent}" == "build+view" ] ; then
-	    
-	    if [ "${inFile}" == "$(vis_getPresentationSrcFile .)" ] ; then	    
-		if [ -s  ./heveaHtml-${inFilePrefix}/index.html ] ; then
-		    opDo echo eoe-browser ./heveaHtml-${inFilePrefix}/index.html
-		else
-		    EH_problem "Missing ./heveaHtml-${inFilePrefix}/index.html"
-		fi
-	    
-		if [ -s  ./revealJsBase/${inFilePrefix}.html ] ; then
-		    opDo eoe-browser ./revealJsBase/${inFilePrefix}.html 
-		else
-		    EH_problem "Missing ./revealJsBase/${inFilePrefix}.html "
-		fi
-	    else
-		if [ -s  ./heveaHtml-${inFilePrefix}/index.html ] ; then
-		    opDo eoe-browser ./heveaHtml-${inFilePrefix}/index.html
-		else
-		    EH_problem "Missing ./heveaHtml-${inFilePrefix}/index.html"
-		fi
-	    fi		
-	fi
+                opDo bx-dblock -h -v -n showRun -i dblockUpdateFiles  ./revealJsBase/${inFilePrefix}.html
+            fi
+        fi
+        
+        if [ "${extent}" == "view" -o "${extent}" == "build+view" ] ; then
+            
+            if [ "${inFile}" == "$(vis_getPresentationSrcFile .)" ] ; then          
+                if [ -s  ./heveaHtml-${inFilePrefix}/index.html ] ; then
+                    opDo echo eoe-browser ./heveaHtml-${inFilePrefix}/index.html
+                else
+                    EH_problem "Missing ./heveaHtml-${inFilePrefix}/index.html"
+                fi
+            
+                if [ -s  ./revealJsBase/${inFilePrefix}.html ] ; then
+                    opDo eoe-browser ./revealJsBase/${inFilePrefix}.html 
+                else
+                    EH_problem "Missing ./revealJsBase/${inFilePrefix}.html "
+                fi
+            else
+                if [ -s  ./heveaHtml-${inFilePrefix}/index.html ] ; then
+                    opDo eoe-browser ./heveaHtml-${inFilePrefix}/index.html
+                else
+                    EH_problem "Missing ./heveaHtml-${inFilePrefix}/index.html"
+                fi
+            fi          
+        fi
     done
 
     lpReturn
@@ -2423,20 +2423,20 @@ _EOF_
     typeset inFilesList=$@
 
     if [ -z "${extent}" ] ; then
-	extent="build+view"
+        extent="build+view"
     fi
 
     if [ $# -eq 0 ] ; then
-	inFilesList=$( lcntProc.sh -i  docsList )
+        inFilesList=$( lcntProc.sh -i  docsList )
     fi
 
     if [ $# -eq 1 ] ; then
-	typeset lcntDocsList=$( lcntProc.sh -i  docsList )
-	typeset isInList=$( echo "${lcntDocsList}" | grep -i "${1}" )
-	if [[ -z "${isInList}" ]] ; then
-	    ANT_raw "Specified inFile ($1) not in ${lcntDocsList} -- Applying To ALL"
-	    inFilesList=${lcntDocsList}
-	fi
+        typeset lcntDocsList=$( lcntProc.sh -i  docsList )
+        typeset isInList=$( echo "${lcntDocsList}" | grep -i "${1}" )
+        if [[ -z "${isInList}" ]] ; then
+            ANT_raw "Specified inFile ($1) not in ${lcntDocsList} -- Applying To ALL"
+            inFilesList=${lcntDocsList}
+        fi
     fi
     
     opDo lcntProc.sh -i buildPre
@@ -2445,19 +2445,19 @@ _EOF_
     typeset thisExtension
 
     for inFile in ${inFilesList}; do
-	thisPrefix=$( FN_prefix ${inFile} )
-	#thisExtension=$( FN_extension ${inFile} )	
+        thisPrefix=$( FN_prefix ${inFile} )
+        #thisExtension=$( FN_extension ${inFile} )      
 
-	if [ "${extent}" == "build" -o "${extent}" == "build+view" ] ; then
-	    opDo lcnLcntInputProc.sh -p inFormat=xelatex -p outputs=pdf -i buildDocs ${inFile}
-	fi
-	if [ "${extent}" == "view" -o "${extent}" == "build+view" ] ; then
-	    if [ -s  ./${thisPrefix}.pdf ] ; then    
-		opDo acroread ./${thisPrefix}.pdf &
-	    else
-		EH_problem "Missing ./${thisPrefix}.pdf"
-	    fi
-	fi
+        if [ "${extent}" == "build" -o "${extent}" == "build+view" ] ; then
+            opDo lcnLcntInputProc.sh -p inFormat=xelatex -p outputs=pdf -i buildDocs ${inFile}
+        fi
+        if [ "${extent}" == "view" -o "${extent}" == "build+view" ] ; then
+            if [ -s  ./${thisPrefix}.pdf ] ; then    
+                opDo acroread ./${thisPrefix}.pdf &
+            else
+                EH_problem "Missing ./${thisPrefix}.pdf"
+            fi
+        fi
     done
 
     lpReturn
@@ -2505,31 +2505,31 @@ _EOF_
     typeset presFileName=""
 
     presFileName=$( lcnLcntInfo.sh  -p cntntRawHome=. -i get presSrcFile )    
-	
+        
     if [ -z "${presFileName}" ] ; then
-	typeset docSrcForms=$(lcnLcntInfo.sh -p cntntRawHome=${baseDir} -i get docSrcForms)
+        typeset docSrcForms=$(lcnLcntInfo.sh -p cntntRawHome=${baseDir} -i get docSrcForms)
 
-	if [ "${docSrcForms}" == "pres+art" ] ; then
-	    presFileName=$( lcnLcntInfo.sh  -p cntntRawHome=. -i get docSrcList | head -1 )
-	    echo ${presFileName}.ttytex	    
-	elif [ "${docSrcForms}" == "art+pres" ] ; then
-	    presFileName=$( lcnLcntInfo.sh  -p cntntRawHome=. -i get docSrcList | head -2 | tail -1 )
-	    echo ${presFileName}.ttytex	    
-	elif [ "${docSrcForms}" == "art" ] ; then
-	    echo ""    	    
-	else
-	    EH_problem "${docSrcForms}"
-	    echo ""
-	fi
+        if [ "${docSrcForms}" == "pres+art" ] ; then
+            presFileName=$( lcnLcntInfo.sh  -p cntntRawHome=. -i get docSrcList | head -1 )
+            echo ${presFileName}.ttytex     
+        elif [ "${docSrcForms}" == "art+pres" ] ; then
+            presFileName=$( lcnLcntInfo.sh  -p cntntRawHome=. -i get docSrcList | head -2 | tail -1 )
+            echo ${presFileName}.ttytex     
+        elif [ "${docSrcForms}" == "art" ] ; then
+            echo ""         
+        else
+            EH_problem "${docSrcForms}"
+            echo ""
+        fi
     else
-	typeset thisPrefix=$( FN_prefix ${presFileName} )
-	typeset thisExtension=$( FN_extension ${presFileName} )
+        typeset thisPrefix=$( FN_prefix ${presFileName} )
+        typeset thisExtension=$( FN_extension ${presFileName} )
 
-	if [ -z "${thisExtension}" ] ; then
-	    echo ${presFileName}.ttytex
-	else
-	    echo ${presFileName}
-	fi
+        if [ -z "${thisExtension}" ] ; then
+            echo ${presFileName}.ttytex
+        else
+            echo ${presFileName}
+        fi
     fi
     
     lpReturn
@@ -2544,7 +2544,7 @@ function vis_getArticleSrcFile {
     function describeF {  cat  << _EOF_
 NOTYET, READ presSrcFile and artSrcFile
 _EOF_
-		       }
+                       }
 
     EH_assert [[ $# -eq 1 ]]    
     
@@ -2553,17 +2553,17 @@ _EOF_
 
 
     articleFileName=$( lcnLcntInfo.sh  -p cntntRawHome=${baseDir} -i get artSrcFile )    
-	
+        
     if [ -z "${artFileName}" ] ; then
-	typeset docSrcForms=$(lcnLcntInfo.sh -p cntntRawHome=${baseDir} -i get docSrcForms)
+        typeset docSrcForms=$(lcnLcntInfo.sh -p cntntRawHome=${baseDir} -i get docSrcForms)
 
-	if [ "${docSrcForms}" == "art+pres" ] ; then
-	    articleFileName=$( lcnLcntInfo.sh  -p cntntRawHome=${baseDir} -i get docSrcList | head -1 )
-	elif [ "${docSrcForms}" == "pres+art" ] ; then
-	    articleFileName=$( lcnLcntInfo.sh  -p cntntRawHome=${baseDir} -i get docSrcList | head -2 | tail -1 )
-	else
-	    EH_problem ""
-	fi
+        if [ "${docSrcForms}" == "art+pres" ] ; then
+            articleFileName=$( lcnLcntInfo.sh  -p cntntRawHome=${baseDir} -i get docSrcList | head -1 )
+        elif [ "${docSrcForms}" == "pres+art" ] ; then
+            articleFileName=$( lcnLcntInfo.sh  -p cntntRawHome=${baseDir} -i get docSrcList | head -2 | tail -1 )
+        else
+            EH_problem ""
+        fi
     fi
     echo ${articleFileName}.ttytex
     lpReturn
@@ -2579,30 +2579,30 @@ function vis_presProcStart {
     function describeF {  cat  << _EOF_
 Obsoleted By vis_mmUniteStart
 _EOF_
-		       }
+                       }
 
     describeF
     lpReturn
 
     if [[ "${G_forceMode}" != "force" ]] ; then
-	if [ -f ./presDispose.sh ] ; then
-	    ANT_raw "./presDispose.sh alread in place -- Update Skipped"	
-	else
-	    opDo cp /libre/ByStar/InitialTemplates/begin/templates/purposed/lcnt/bash/presProc.leaf.sh ./presDispose.sh
-	    opDo vis_dblockUpdateFile ./presDispose.sh
-	fi
-	if [ -f ./PresPanel.org ] ; then
-	    ANT_raw "./PresPanel.org alread in place -- Update Skipped"	
-	else
-	    opDo cp /libre/ByStar/InitialTemplates/begin/templates/purposed/lcnt/org/beginPresPanel.org ./PresPanel.org
-	    opDo vis_dblockUpdateFile ./PresPanel.org
-	fi
+        if [ -f ./presDispose.sh ] ; then
+            ANT_raw "./presDispose.sh alread in place -- Update Skipped"        
+        else
+            opDo cp /libre/ByStar/InitialTemplates/begin/templates/purposed/lcnt/bash/presProc.leaf.sh ./presDispose.sh
+            opDo vis_dblockUpdateFile ./presDispose.sh
+        fi
+        if [ -f ./PresPanel.org ] ; then
+            ANT_raw "./PresPanel.org alread in place -- Update Skipped" 
+        else
+            opDo cp /libre/ByStar/InitialTemplates/begin/templates/purposed/lcnt/org/beginPresPanel.org ./PresPanel.org
+            opDo vis_dblockUpdateFile ./PresPanel.org
+        fi
     else
-	opDo cp /libre/ByStar/InitialTemplates/begin/templates/purposed/lcnt/bash/presProc.leaf.sh ./presDispose.sh
-	opDo vis_dblockUpdateFile ./presDispose.sh
-	
-	opDo cp /libre/ByStar/InitialTemplates/begin/templates/purposed/lcnt/org/beginPresPanel.org ./PresPanel.org
-	opDo vis_dblockUpdateFile ./PresPanel.org
+        opDo cp /libre/ByStar/InitialTemplates/begin/templates/purposed/lcnt/bash/presProc.leaf.sh ./presDispose.sh
+        opDo vis_dblockUpdateFile ./presDispose.sh
+        
+        opDo cp /libre/ByStar/InitialTemplates/begin/templates/purposed/lcnt/org/beginPresPanel.org ./PresPanel.org
+        opDo vis_dblockUpdateFile ./PresPanel.org
     fi
 
     lpReturn
@@ -2653,23 +2653,23 @@ _EOF_
     local each
     local pngFile
     for each in ${latexFigsList} ; do
-	typeset thisPrefix=$( FN_prefix ${each} )
-	typeset thisExtension=$( FN_extension ${each} )
-	typeset dirsPart=$( FN_dirsPart ${each} )
+        typeset thisPrefix=$( FN_prefix ${each} )
+        typeset thisExtension=$( FN_extension ${each} )
+        typeset dirsPart=$( FN_dirsPart ${each} )
 
-	if [ ! -f "${each}" ] ; then
-	    EH_problem "Missing Latex Figure: ${each}"
-	    continue
-	fi
+        if [ ! -f "${each}" ] ; then
+            EH_problem "Missing Latex Figure: ${each}"
+            continue
+        fi
 
-	pngFile="${dirsPart}/${thisPrefix}.png"
+        pngFile="${dirsPart}/${thisPrefix}.png"
 
-	if [ ! -f "${pngFile}" ] ; then
-	    EH_problem "Missing PngFile: ${pngFile}"
-	    continue
-	fi
+        if [ ! -f "${pngFile}" ] ; then
+            EH_problem "Missing PngFile: ${pngFile}"
+            continue
+        fi
 
-	echo $(readlink -f "${pngFile}")
+        echo $(readlink -f "${pngFile}")
     done
     
     lpReturn
@@ -2688,24 +2688,24 @@ _EOF_
     }
 
     if [[ "${G_forceMode}" != "force" ]] ; then
-	if [ -f ./mmUnite.sh ] ; then
-	    ANT_raw "./mmUnite.sh alread in place -- Update Skipped"	
-	else
-	    opDo cp /libre/ByStar/InitialTemplates/begin/templates/purposed/lcnt/bash/mmUnite.leaf.sh ./mmUnite.sh
-	    opDo vis_dblockUpdateFile ./mmUnite.sh
-	fi
-	if [ -f ./MmUnitePanel.org ] ; then
-	    ANT_raw "./MmUnitePanel.org alread in place -- Update Skipped"	
-	else
-	    opDo cp /libre/ByStar/InitialTemplates/begin/templates/purposed/lcnt/org/beginMmUnitePanel.org ./MmUnitePanel.org
-	    opDo vis_dblockUpdateFile ./MmUnitePanel.org
-	fi
+        if [ -f ./mmUnite.sh ] ; then
+            ANT_raw "./mmUnite.sh alread in place -- Update Skipped"    
+        else
+            opDo cp /libre/ByStar/InitialTemplates/begin/templates/purposed/lcnt/bash/mmUnite.leaf.sh ./mmUnite.sh
+            opDo vis_dblockUpdateFile ./mmUnite.sh
+        fi
+        if [ -f ./MmUnitePanel.org ] ; then
+            ANT_raw "./MmUnitePanel.org alread in place -- Update Skipped"      
+        else
+            opDo cp /libre/ByStar/InitialTemplates/begin/templates/purposed/lcnt/org/beginMmUnitePanel.org ./MmUnitePanel.org
+            opDo vis_dblockUpdateFile ./MmUnitePanel.org
+        fi
     else
-	opDo cp /libre/ByStar/InitialTemplates/begin/templates/purposed/lcnt/bash/mmUnite.leaf.sh ./mmUnite.sh
-	opDo vis_dblockUpdateFile ./mmUnite.sh
-	
-	opDo cp /libre/ByStar/InitialTemplates/begin/templates/purposed/lcnt/org/beginMmUnitePanel.org ./MmUnitePanel.org
-	opDo vis_dblockUpdateFile ./MmUnitePanel.org
+        opDo cp /libre/ByStar/InitialTemplates/begin/templates/purposed/lcnt/bash/mmUnite.leaf.sh ./mmUnite.sh
+        opDo vis_dblockUpdateFile ./mmUnite.sh
+        
+        opDo cp /libre/ByStar/InitialTemplates/begin/templates/purposed/lcnt/org/beginMmUnitePanel.org ./MmUnitePanel.org
+        opDo vis_dblockUpdateFile ./MmUnitePanel.org
     fi
 
     lpReturn
@@ -2721,10 +2721,10 @@ function vis_mmUnitePrep {
     function describeF {  cat  << _EOF_
 Create the Mm Unite Environment
 _EOF_
-		       }
+                       }
 
     if [ ! -f mmUnite.sh ] ; then
-	opDo vis_mmUniteStart
+        opDo vis_mmUniteStart
     fi
 
     opDo ./mmUnite.sh -v -n showRun -i screenCastingFullUpdate
@@ -2742,12 +2742,12 @@ function vis_mmUniteGens {
     function describeF {  cat  << _EOF_
 Create the Mm Unite Environment
 _EOF_
-		       }
+                       }
 
     if [ -f mmUnite.sh ] ; then
-	opDo ./mmUnite.sh -v -n showRun -i screenCastingGens
+        opDo ./mmUnite.sh -v -n showRun -i screenCastingGens
     else
-	EH_problem "Missing mmUnite.sh -- Re-Run mmUniteGens after mmUnitePrep"
+        EH_problem "Missing mmUnite.sh -- Re-Run mmUniteGens after mmUnitePrep"
     fi
 
     lpReturn
@@ -2770,9 +2770,9 @@ _EOF_
     }
 
     if [ -f mmUnite.sh ] ; then
-	./mmUnite.sh -v -n showRun -i screenCastingFullClean
+        ./mmUnite.sh -v -n showRun -i screenCastingFullClean
     else
-	echo  "Missing mmUnite.sh -- Skipped"
+        echo  "Missing mmUnite.sh -- Skipped"
     fi
 
     lpReturn
@@ -2804,13 +2804,13 @@ _EOF_
     typeset inFilesList=$@
 
     if [ -z "${extent}" ] ; then
-	extent="build+release"
+        extent="build+release"
     fi
 
     if [ $# -eq 0 ] ; then
-	#typeset thisOne=$( lcntProc.sh -i  docsList | head -1 )
-	typeset thisOne=$( lcntProc.sh -i  docsList )	
-	inFilesList=${thisOne}
+        #typeset thisOne=$( lcntProc.sh -i  docsList | head -1 )
+        typeset thisOne=$( lcntProc.sh -i  docsList )   
+        inFilesList=${thisOne}
     fi
 
     typeset thisPrefix
@@ -2819,21 +2819,21 @@ _EOF_
     typeset thisExtent=${extent}
 
     for inFile in ${inFilesList}; do
-	thisPrefix=$( FN_prefix ${inFile} )
+        thisPrefix=$( FN_prefix ${inFile} )
 
-	if [ "${extent}" == "build" -o "${extent}" == "build+release" ] ; then
-	    extent="build"
-	    opDo vis_buildPdfPreview ${inFile}
-	    opDo vis_buildHtmlPreview ${inFile}
-	    extent=${thisExtent}
-	else
-	    EH_problem "Build Phase Is Being Skipped -- extent=${extent}"
-	fi
-	if [ "${extent}" == "release" -o "${extent}" == "build+release" ] ; then
-	    opDo vis_resultsRelease ${inFile}
-	else
-	    EH_problem "Release Phase Is Being Skipped -- extent=${extent}"
-	fi
+        if [ "${extent}" == "build" -o "${extent}" == "build+release" ] ; then
+            extent="build"
+            opDo vis_buildPdfPreview ${inFile}
+            opDo vis_buildHtmlPreview ${inFile}
+            extent=${thisExtent}
+        else
+            EH_problem "Build Phase Is Being Skipped -- extent=${extent}"
+        fi
+        if [ "${extent}" == "release" -o "${extent}" == "build+release" ] ; then
+            opDo vis_resultsRelease ${inFile}
+        else
+            EH_problem "Release Phase Is Being Skipped -- extent=${extent}"
+        fi
     done
 
     lpReturn
@@ -2859,39 +2859,39 @@ _EOF_
     typeset tagPostfix=""
 
     if [ "${tag}" == "date" ] ; then
-	tagPostfix="-"$( date +%Y%m%d%H%M%S )
+        tagPostfix="-"$( date +%Y%m%d%H%M%S )
     fi
 
     
     if [ $# -eq 0 ] ; then
-	typeset thisOne=$( lcntProc.sh -i  docsList )	
-	inFilesList=${thisOne}
+        typeset thisOne=$( lcntProc.sh -i  docsList )   
+        inFilesList=${thisOne}
     fi
 
     typeset thisPrefix
     typeset thisExtension
 
     if [ ! -d ./rel ] ; then
-	opDo mkdir -p ./rel
+        opDo mkdir -p ./rel
     fi
     
     for inFile in ${inFilesList}; do
-	thisPrefix=$( FN_prefix ${inFile} )
+        thisPrefix=$( FN_prefix ${inFile} )
 
-	if [ -s  ./${thisPrefix}.pdf ] ; then
-	    opDo cp ./${thisPrefix}.pdf ./rel/${thisPrefix}${tagPostfix}.pdf	    
-	else
-	    EH_problem "Missing ./${thisPrefix}.pdf -- Release Skipped"
-	fi
+        if [ -s  ./${thisPrefix}.pdf ] ; then
+            opDo cp ./${thisPrefix}.pdf ./rel/${thisPrefix}${tagPostfix}.pdf        
+        else
+            EH_problem "Missing ./${thisPrefix}.pdf -- Release Skipped"
+        fi
 
-	if [ -s  ./heveaHtml-${thisPrefix}/index.html ] ; then
-	    opDo mkdir -p ./rel/${thisPrefix}${tagPostfix}-html   
-	    opDo cp -r -p ./heveaHtml-${thisPrefix}/*  ./rel/${thisPrefix}${tagPostfix}-html
-	
-	    opDo /opt/public/osmt/bin/elispFilterHtml.sh -v -n showRun  -i deTitleCompletely ./rel/${thisPrefix}${tagPostfix}-html/index.html
-	else
-	    EH_problem "Missing ./heveaHtml-${thisPrefix}/index.html -- Release Skipped"
-	fi
+        if [ -s  ./heveaHtml-${thisPrefix}/index.html ] ; then
+            opDo mkdir -p ./rel/${thisPrefix}${tagPostfix}-html   
+            opDo cp -r -p ./heveaHtml-${thisPrefix}/*  ./rel/${thisPrefix}${tagPostfix}-html
+        
+            opDo /opt/public/osmt/bin/elispFilterHtml.sh -v -n showRun  -i deTitleCompletely ./rel/${thisPrefix}${tagPostfix}-html/index.html
+        else
+            EH_problem "Missing ./heveaHtml-${thisPrefix}/index.html -- Release Skipped"
+        fi
     done
 
     lpReturn
@@ -2914,7 +2914,7 @@ _EOF_
     ls -ld ./LCNT-INFO/Builds/*
 
     lpReturn
-}	
+}       
 
 
 
@@ -2931,7 +2931,7 @@ Get articleEnFa.ttytex name from curBuild.
 -p extent=build || extent=view || extent=build+view  (DEFAULT=build+view)
 -p extent=name
 _EOF_
-		       }
+                       }
 
     EH_assert [[ $# -gt 0 ]]
     
@@ -2952,19 +2952,19 @@ _EOF_
     local htmlIndexFile=""
 
     if [ -z "${extent}" ] ; then
-	extent="build"
+        extent="build"
     fi
 
     if [ "$1" == "all" ] ; then
-	inFilesList=$( vis_enabledBuildsDirsList )
+        inFilesList=$( vis_enabledBuildsDirsList )
     fi
 
     if [ "$1" == "cur" ] ; then
-	inFilesList="cur"
+        inFilesList="cur"
     fi
 
     if [ "$1" == "dev" ] ; then
-	inFilesList="dev"
+        inFilesList="dev"
     fi
 
     opDo lcntBuildsBaseFVsPrep
@@ -2972,285 +2972,285 @@ _EOF_
     local extentList=$( echo ${extent} | sed -e 's/+/ /g')
 
     if LIST_isIn "release" "${extentList}"  ; then
-	if [ -z "${lcntBuild_releaseBaseDir}" ] ; then
-	    EH_problem "Missing lcntBuild_releaseBaseDir"
-	    lpReturn 101
-	fi
-	#opDoComplain FN_dirCreatePathIfNotThere "${lcntBuild_releaseBaseDir}"
-	opDo FN_dirCreatePathIfNotThere "${lcntBuild_releaseBaseDir}"	
+        if [ -z "${lcntBuild_releaseBaseDir}" ] ; then
+            EH_problem "Missing lcntBuild_releaseBaseDir"
+            lpReturn 101
+        fi
+        #opDoComplain FN_dirCreatePathIfNotThere "${lcntBuild_releaseBaseDir}"
+        opDo FN_dirCreatePathIfNotThere "${lcntBuild_releaseBaseDir}"   
     fi
 
     #opDoComplain FN_dirCreatePathIfNotThere ./Results
     opDo FN_dirCreatePathIfNotThere ./Results
 
     function resultsDestinationPath {
-	EH_assert [[ $# -eq 1 ]]
-	local resultType="$1"
-	
-	case ${resultType} in
-	    "pdf")
-		echo ${lcntBuild_resultsBaseDir}/c-${lcntNu}-${lcntBuild_buildName}.${resultType}
-		;;
-	    "odt")
-		echo ${lcntBuild_resultsBaseDir}/c-${lcntNu}-${lcntBuild_buildName}.${resultType}
-		;;
-	    "markdown")
-		echo ${lcntBuild_resultsBaseDir}/c-${lcntNu}-${lcntBuild_buildName}.md
-		;;
-	    "html")
-		echo ${lcntBuild_resultsBaseDir}/c-${lcntNu}-${lcntBuild_buildName}-${resultType}
-		;;
-	    *)
-		EH_problem "Unknown ${eachResult}"
-		lpReturn
-	esac
+        EH_assert [[ $# -eq 1 ]]
+        local resultType="$1"
+        
+        case ${resultType} in
+            "pdf")
+                echo ${lcntBuild_resultsBaseDir}/c-${lcntNu}-${lcntBuild_buildName}.${resultType}
+                ;;
+            "odt")
+                echo ${lcntBuild_resultsBaseDir}/c-${lcntNu}-${lcntBuild_buildName}.${resultType}
+                ;;
+            "markdown")
+                echo ${lcntBuild_resultsBaseDir}/c-${lcntNu}-${lcntBuild_buildName}.md
+                ;;
+            "html")
+                echo ${lcntBuild_resultsBaseDir}/c-${lcntNu}-${lcntBuild_buildName}-${resultType}
+                ;;
+            *)
+                EH_problem "Unknown ${eachResult}"
+                lpReturn
+        esac
     }
 
     function releaseDestinationPath {
-	EH_assert [[ $# -eq 1 ]]
-	local resultType="$1"
-	
-	case ${resultType} in
-	    "pdf")
-	        #echo ${lcntBuild_releaseBaseDir}/c-${lcntNu}-${lcntBuild_buildName}-${lcntVersion}.${resultType}
-		echo ${lcntBuild_releaseBaseDir}/c-${lcntNu}-${lcntBuild_buildName}.${resultType}
-		;;
-	    "odt")
-		echo ${lcntBuild_releaseBaseDir}/c-${lcntNu}-${lcntBuild_buildName}.${resultType}
-		;;
-	    "markdown")
-		echo ${lcntBuild_releaseBaseDir}/c-${lcntNu}-${lcntBuild_buildName}.md
-		;;
-	    "html")
-		echo ${lcntBuild_releaseBaseDir}/c-${lcntNu}-${lcntBuild_buildName}-${resultType}
-		;;
-	    *)
-		EH_problem "Unknown ${eachResult}"
-		lpReturn
-	esac
+        EH_assert [[ $# -eq 1 ]]
+        local resultType="$1"
+        
+        case ${resultType} in
+            "pdf")
+                #echo ${lcntBuild_releaseBaseDir}/c-${lcntNu}-${lcntBuild_buildName}-${lcntVersion}.${resultType}
+                echo ${lcntBuild_releaseBaseDir}/c-${lcntNu}-${lcntBuild_buildName}.${resultType}
+                ;;
+            "odt")
+                echo ${lcntBuild_releaseBaseDir}/c-${lcntNu}-${lcntBuild_buildName}.${resultType}
+                ;;
+            "markdown")
+                echo ${lcntBuild_releaseBaseDir}/c-${lcntNu}-${lcntBuild_buildName}.md
+                ;;
+            "html")
+                echo ${lcntBuild_releaseBaseDir}/c-${lcntNu}-${lcntBuild_buildName}-${resultType}
+                ;;
+            *)
+                EH_problem "Unknown ${eachResult}"
+                lpReturn
+        esac
     }
 
     for inFile in ${inFilesList}; do
-	#opDo ls -l ${inFile}
-	#
-	# 1) Update symlink for curBuild
-	if [ "${inFile}" == "cur" ] ; then
-	    inFile=./curBuild
-	fi
-	if [ "${inFile}" == "dev" ] ; then
-	    inFile=./curBuild
-	fi
+        #opDo ls -l ${inFile}
+        #
+        # 1) Update symlink for curBuild
+        if [ "${inFile}" == "cur" ] ; then
+            inFile=./curBuild
+        fi
+        if [ "${inFile}" == "dev" ] ; then
+            inFile=./curBuild
+        fi
 
-	#
-	# curBuild is now properly set. We can use it.
-	#
-	
-	# Read in curBuild params
-	opDo lcntBuildInfoPrep "${inFile}"
+        #
+        # curBuild is now properly set. We can use it.
+        #
+        
+        # Read in curBuild params
+        opDo lcntBuildInfoPrep "${inFile}"
 
-	local docSrcPrefix=$(  FN_prefix ${lcntBuild_docSrc} )
-	local docSrcExtension=$( FN_extension ${lcntBuild_docSrc} )
-	
-	# 2) Runing dblock on all needed files -- For Dev we don't dblocks update
-	if [ "${1}" != "dev" ] ; then
-	    if ! LIST_isIn "name" "${extentList}"  ; then		    
-		opDo vis_dblockUpdateFile ${lcntBuild_docSrc}
-	    fi
-	    # NOTYET, also do other files that need to be dblocked.
-	fi
-	
-	# 3) for all of build forms, build results
-	for eachResult in ${lcntBuild_resultsList}; do
-	    case ${eachResult} in
-		"pdf")
-		    resultsFileDest=$( resultsDestinationPath pdf )
-		    if LIST_isIn "name" "${extentList}"  ; then		    
-			echo "${resultsFileDest}"
-			continue
-		    fi
-		    if LIST_isIn "build" "${extentList}"  ; then		    
-			opDo lcnLcntInputProc.sh -p inFormat=xelatex -p outputs=pdf -i buildDocs  ${lcntBuild_docSrc}
-			opDo mv ${docSrcPrefix}.pdf ${resultsFileDest}
-		    fi
-		    if LIST_isIn "view" "${extentList}"  ; then
-			opDo acroread ${resultsFileDest} &
-		    else
-			# When view was not specified, we still want the run line
-			if LIST_isIn "build" "${extentList}"  ; then		    					    
-		    	    echo acroread ${resultsFileDest}
-			fi
-		    fi
-		    
-		    releaseDestinationPath=$( releaseDestinationPath pdf )		    		    
-		    if LIST_isIn "release" "${extentList}"  ; then
-			if [ -f ${resultsFileDest} ] ; then
-			    # If the version exists, also date tag it.
-			    opDo cp -p ${resultsFileDest} ${releaseDestinationPath}
-			    opDo ls -l ${releaseDestinationPath}
-			    opDo FN_fileSymlinkUpdate ${releaseDestinationPath} $( FN_nonDirsPart ${releaseDestinationPath} )		    
-			else
-			    if LIST_isIn "build" "${extentList}"  ; then		    					    
-				opDo lcnLcntInputProc.sh -p inFormat=xelatex -p outputs=pdf -i buildDocs  ${lcntBuild_docSrc}
-				opDo mv ${docSrcPrefix}.pdf ${resultsFileDest}
-				
-				opDo cp -p ${resultsFileDest} ${releaseDestinationPath}
-				opDo ls -l ${releaseDestinationPath}
-				opDo FN_fileSymlinkUpdate ${releaseDestinationPath} $( FN_nonDirsPart ${releaseDestinationPath} )
-			    else
-				EH_problem "Missing  Results/c-${lcntNu}-${lcntBuild_buildName}.pdf"
-				lpReturn
-			    fi
-			fi
-		    fi
-		    ;;
-		"html")
-		    resultsPathDest=$( resultsDestinationPath html )
+        local docSrcPrefix=$(  FN_prefix ${lcntBuild_docSrc} )
+        local docSrcExtension=$( FN_extension ${lcntBuild_docSrc} )
+        
+        # 2) Runing dblock on all needed files -- For Dev we don't dblocks update
+        if [ "${1}" != "dev" ] ; then
+            if ! LIST_isIn "name" "${extentList}"  ; then                   
+                opDo vis_dblockUpdateFile ${lcntBuild_docSrc}
+            fi
+            # NOTYET, also do other files that need to be dblocked.
+        fi
+        
+        # 3) for all of build forms, build results
+        for eachResult in ${lcntBuild_resultsList}; do
+            case ${eachResult} in
+                "pdf")
+                    resultsFileDest=$( resultsDestinationPath pdf )
+                    if LIST_isIn "name" "${extentList}"  ; then             
+                        echo "${resultsFileDest}"
+                        continue
+                    fi
+                    if LIST_isIn "build" "${extentList}"  ; then                    
+                        opDo lcnLcntInputProc.sh -p inFormat=xelatex -p outputs=pdf -i buildDocs  ${lcntBuild_docSrc}
+                        opDo mv ${docSrcPrefix}.pdf ${resultsFileDest}
+                    fi
+                    if LIST_isIn "view" "${extentList}"  ; then
+                        opDo acroread ${resultsFileDest} &
+                    else
+                        # When view was not specified, we still want the run line
+                        if LIST_isIn "build" "${extentList}"  ; then                                                        
+                            echo acroread ${resultsFileDest}
+                        fi
+                    fi
+                    
+                    releaseDestinationPath=$( releaseDestinationPath pdf )                                  
+                    if LIST_isIn "release" "${extentList}"  ; then
+                        if [ -f ${resultsFileDest} ] ; then
+                            # If the version exists, also date tag it.
+                            opDo cp -p ${resultsFileDest} ${releaseDestinationPath}
+                            opDo ls -l ${releaseDestinationPath}
+                            opDo FN_fileSymlinkUpdate ${releaseDestinationPath} $( FN_nonDirsPart ${releaseDestinationPath} )               
+                        else
+                            if LIST_isIn "build" "${extentList}"  ; then                                                            
+                                opDo lcnLcntInputProc.sh -p inFormat=xelatex -p outputs=pdf -i buildDocs  ${lcntBuild_docSrc}
+                                opDo mv ${docSrcPrefix}.pdf ${resultsFileDest}
+                                
+                                opDo cp -p ${resultsFileDest} ${releaseDestinationPath}
+                                opDo ls -l ${releaseDestinationPath}
+                                opDo FN_fileSymlinkUpdate ${releaseDestinationPath} $( FN_nonDirsPart ${releaseDestinationPath} )
+                            else
+                                EH_problem "Missing  Results/c-${lcntNu}-${lcntBuild_buildName}.pdf"
+                                lpReturn
+                            fi
+                        fi
+                    fi
+                    ;;
+                "html")
+                    resultsPathDest=$( resultsDestinationPath html )
 
-		    if LIST_isIn "build" "${extentList}"  ; then		    
-			opDo lcnLcntInputProc.sh -p inFormat=xelatex -p outputs=heveaHtml -i buildDocs  ${lcntBuild_docSrc}
-			if [ -d "${resultsPathDest}" ] ; then
-			    opDo mv "${resultsPathDest}" "${resultsPathDest}"-${dateTag}
-			fi
-			opDo mv heveaHtml-${docSrcPrefix} "${resultsPathDest}"
-		    fi
+                    if LIST_isIn "build" "${extentList}"  ; then                    
+                        opDo lcnLcntInputProc.sh -p inFormat=xelatex -p outputs=heveaHtml -i buildDocs  ${lcntBuild_docSrc}
+                        if [ -d "${resultsPathDest}" ] ; then
+                            opDo mv "${resultsPathDest}" "${resultsPathDest}"-${dateTag}
+                        fi
+                        opDo mv heveaHtml-${docSrcPrefix} "${resultsPathDest}"
+                    fi
 
-		    htmlIndexFile="${resultsPathDest}/index.html"
+                    htmlIndexFile="${resultsPathDest}/index.html"
 
-		    if LIST_isIn "view" "${extentList}"  ; then
-			if [ "${lcntBuild_docSrc}" == "$(vis_getPresentationSrcFile .)" ] ; then	    
-	    		    if [ -s ${htmlIndexFile} ] ; then
-	    			opDo echo eoe-browser ${htmlIndexFile}
-	    		    else
-	    			EH_problem "Missing ${htmlIndexFile}"
-	    		    fi
-	    
-	    		    if [ -s  ./revealJsBase/${inFilePrefix}.html ] ; then
-	    			opDo eoe-browser ./revealJsBase/${inFilePrefix}.html 
-	    		    else
-	    			EH_problem "Missing ./revealJsBase/${inFilePrefix}.html "
-	    		    fi
-			else
-	    		    if [ -s ${htmlIndexFile} ] ; then
-	    			opDo eoe-browser ${htmlIndexFile}
-	    		    else
-	    			EH_problem "Missing ${htmlIndexFile}"
-	    		    fi
-			fi		
-		    else
-			# When view was not specified, we still want the run line
-			if LIST_isIn "build" "${extentList}"  ; then		    					    
-		    	    echo eoe-browser ${htmlIndexFile}
-			fi
-		    fi
-		    
-		    
-		    if LIST_isIn "release" "${extentList}"  ; then
-			#releaseDestinationPath=$( releaseDestinationPath html )
-			
-			if [ -d ${resultsPathDest} ] ; then
-			    # If the version exists, also date tag it.
-			    opDo cp -r -p ${resultsPathDest}  ${lcntBuild_releaseBaseDir}
-			    opDo ls -ld  ${lcntBuild_releaseBaseDir}
-			else
-			    if LIST_isIn "build" "${extentList}"  ; then
-				opDo lcnLcntInputProc.sh -p inFormat=xelatex -p outputs=heveaHtml -i buildDocs  ${lcntBuild_docSrc}
-				if [ -d "${resultsPathDest}" ] ; then
-				    opDo mv "${resultsPathDest}" "${resultsPathDest}"-${dateTag}
-				fi
-				opDo mv heveaHtml-${docSrcPrefix} "${resultsPathDest}"
-				opDo cp -r -p ${resultsPathDest}  ${lcntBuild_releaseBaseDir}
-				opDo ls -ld  ${lcntBuild_releaseBaseDir}
-			    else
-				EH_problem "Missing ${resultsPathDest}"
-				lpReturn
-			    fi
-			fi
-		    fi
-		    ;;
-		"odt")
-		    resultsFileDest=$( resultsDestinationPath odt )		    
-		    if LIST_isIn "build" "${extentList}"  ; then		    
-			opDo vis_latex2word  ${docSrcPrefix}
-			opDo mv ${docSrcPrefix}.odt ${resultsFileDest}
-		    fi
-		    if LIST_isIn "view" "${extentList}"  ; then
-			opDo libreoffice ${resultsFileDest}
-		    else
-			# When view was not specified, we still want the run line
-			if LIST_isIn "build" "${extentList}"  ; then		    					    
-		    	    echo libreoffice ${resultsFileDest}
-			fi
-		    fi
-		    
-		    releaseDestinationPath=$( releaseDestinationPath odt )		    		    
-		    if LIST_isIn "release" "${extentList}"  ; then
-			if [ -f ${resultsFileDest} ] ; then
-			    # If the version exists, also date tag it.
-			    opDo cp -p ${resultsFileDest} ${releaseDestinationPath}
-			    opDo ls -l ${releaseDestinationPath}
-			else
-			    if LIST_isIn "build" "${extentList}"  ; then		    					    
-				opDo vis_latex2word  ${docSrcPrefix}
-				opDo mv ${docSrcPrefix}.odt ${resultsFileDest}
+                    if LIST_isIn "view" "${extentList}"  ; then
+                        if [ "${lcntBuild_docSrc}" == "$(vis_getPresentationSrcFile .)" ] ; then            
+                            if [ -s ${htmlIndexFile} ] ; then
+                                opDo echo eoe-browser ${htmlIndexFile}
+                            else
+                                EH_problem "Missing ${htmlIndexFile}"
+                            fi
+            
+                            if [ -s  ./revealJsBase/${inFilePrefix}.html ] ; then
+                                opDo eoe-browser ./revealJsBase/${inFilePrefix}.html 
+                            else
+                                EH_problem "Missing ./revealJsBase/${inFilePrefix}.html "
+                            fi
+                        else
+                            if [ -s ${htmlIndexFile} ] ; then
+                                opDo eoe-browser ${htmlIndexFile}
+                            else
+                                EH_problem "Missing ${htmlIndexFile}"
+                            fi
+                        fi              
+                    else
+                        # When view was not specified, we still want the run line
+                        if LIST_isIn "build" "${extentList}"  ; then                                                        
+                            echo eoe-browser ${htmlIndexFile}
+                        fi
+                    fi
+                    
+                    
+                    if LIST_isIn "release" "${extentList}"  ; then
+                        #releaseDestinationPath=$( releaseDestinationPath html )
+                        
+                        if [ -d ${resultsPathDest} ] ; then
+                            # If the version exists, also date tag it.
+                            opDo cp -r -p ${resultsPathDest}  ${lcntBuild_releaseBaseDir}
+                            opDo ls -ld  ${lcntBuild_releaseBaseDir}
+                        else
+                            if LIST_isIn "build" "${extentList}"  ; then
+                                opDo lcnLcntInputProc.sh -p inFormat=xelatex -p outputs=heveaHtml -i buildDocs  ${lcntBuild_docSrc}
+                                if [ -d "${resultsPathDest}" ] ; then
+                                    opDo mv "${resultsPathDest}" "${resultsPathDest}"-${dateTag}
+                                fi
+                                opDo mv heveaHtml-${docSrcPrefix} "${resultsPathDest}"
+                                opDo cp -r -p ${resultsPathDest}  ${lcntBuild_releaseBaseDir}
+                                opDo ls -ld  ${lcntBuild_releaseBaseDir}
+                            else
+                                EH_problem "Missing ${resultsPathDest}"
+                                lpReturn
+                            fi
+                        fi
+                    fi
+                    ;;
+                "odt")
+                    resultsFileDest=$( resultsDestinationPath odt )                 
+                    if LIST_isIn "build" "${extentList}"  ; then                    
+                        opDo vis_latex2word  ${docSrcPrefix}
+                        opDo mv ${docSrcPrefix}.odt ${resultsFileDest}
+                    fi
+                    if LIST_isIn "view" "${extentList}"  ; then
+                        opDo libreoffice ${resultsFileDest}
+                    else
+                        # When view was not specified, we still want the run line
+                        if LIST_isIn "build" "${extentList}"  ; then                                                        
+                            echo libreoffice ${resultsFileDest}
+                        fi
+                    fi
+                    
+                    releaseDestinationPath=$( releaseDestinationPath odt )                                  
+                    if LIST_isIn "release" "${extentList}"  ; then
+                        if [ -f ${resultsFileDest} ] ; then
+                            # If the version exists, also date tag it.
+                            opDo cp -p ${resultsFileDest} ${releaseDestinationPath}
+                            opDo ls -l ${releaseDestinationPath}
+                        else
+                            if LIST_isIn "build" "${extentList}"  ; then                                                            
+                                opDo vis_latex2word  ${docSrcPrefix}
+                                opDo mv ${docSrcPrefix}.odt ${resultsFileDest}
 
-				opDo cp -p ${resultsFileDest} ${releaseDestinationPath}
-				opDo ls -l ${releaseDestinationPath}
-			    else
-				EH_problem "Missing  ${resultsPathDest}"
-				lpReturn
-			    fi
-			fi
-		    fi
-		    ;;
-		"markdown")
-		    resultsFileDest=$( resultsDestinationPath markdown )		    
-		    if LIST_isIn "build" "${extentList}"  ; then		    
-			opDo vis_latex2markdown  ${docSrcPrefix}
-			opDo mv ${docSrcPrefix}.md ${resultsFileDest}
-		    fi
-		    if LIST_isIn "view" "${extentList}"  ; then
-			opDo ls -l ${resultsFileDest}
-		    else
-			# When view was not specified, we still want the run line
-			if LIST_isIn "build" "${extentList}"  ; then		    					    
-		    	    echo ls -l ${resultsFileDest}
-			fi
-		    fi
-		    
-		    releaseDestinationPath=$( releaseDestinationPath markdown )		    		    
-		    if LIST_isIn "release" "${extentList}"  ; then
-			if [ -f ${resultsFileDest} ] ; then
-			    # If the version exists, also date tag it.
-			    opDo cp -p ${resultsFileDest} ${releaseDestinationPath}
-			    opDo ls -l ${releaseDestinationPath}
-			else
-			    if LIST_isIn "build" "${extentList}"  ; then		    					    
-				opDo vis_latex2markdown  ${docSrcPrefix}
-				opDo mv ${docSrcPrefix}.md ${resultsFileDest}
+                                opDo cp -p ${resultsFileDest} ${releaseDestinationPath}
+                                opDo ls -l ${releaseDestinationPath}
+                            else
+                                EH_problem "Missing  ${resultsPathDest}"
+                                lpReturn
+                            fi
+                        fi
+                    fi
+                    ;;
+                "markdown")
+                    resultsFileDest=$( resultsDestinationPath markdown )                    
+                    if LIST_isIn "build" "${extentList}"  ; then                    
+                        opDo vis_latex2markdown  ${docSrcPrefix}
+                        opDo mv ${docSrcPrefix}.md ${resultsFileDest}
+                    fi
+                    if LIST_isIn "view" "${extentList}"  ; then
+                        opDo ls -l ${resultsFileDest}
+                    else
+                        # When view was not specified, we still want the run line
+                        if LIST_isIn "build" "${extentList}"  ; then                                                        
+                            echo ls -l ${resultsFileDest}
+                        fi
+                    fi
+                    
+                    releaseDestinationPath=$( releaseDestinationPath markdown )                             
+                    if LIST_isIn "release" "${extentList}"  ; then
+                        if [ -f ${resultsFileDest} ] ; then
+                            # If the version exists, also date tag it.
+                            opDo cp -p ${resultsFileDest} ${releaseDestinationPath}
+                            opDo ls -l ${releaseDestinationPath}
+                        else
+                            if LIST_isIn "build" "${extentList}"  ; then                                                            
+                                opDo vis_latex2markdown  ${docSrcPrefix}
+                                opDo mv ${docSrcPrefix}.md ${resultsFileDest}
 
-				opDo cp -p ${resultsFileDest} ${releaseDestinationPath}
-				opDo ls -l ${releaseDestinationPath}
-			    else
-				EH_problem "Missing  ${resultsPathDest}"
-				lpReturn
-			    fi
-			fi
-		    fi
-		    ;;
-		*)
-		    EH_problem "Unknown ${eachResult}"
-		    lpReturn
-	    esac
-	done
+                                opDo cp -p ${resultsFileDest} ${releaseDestinationPath}
+                                opDo ls -l ${releaseDestinationPath}
+                            else
+                                EH_problem "Missing  ${resultsPathDest}"
+                                lpReturn
+                            fi
+                        fi
+                    fi
+                    ;;
+                *)
+                    EH_problem "Unknown ${eachResult}"
+                    lpReturn
+            esac
+        done
     done
 
     #
     # 4) Create accessPages for both html and md
     #
     if LIST_isIn "release" "${extentList}"  ; then
-	opDo lcnLcntOutputs.sh -n showRun -p outFile=./${lcntBuild_releaseBaseDir}/accessPage.html -i accessPageGen "PLPC-${lcnt_lcntNu}"
-	opDo lcnLcntOutputs.sh -n showRun -p outFile=./${lcntBuild_releaseBaseDir}/accessPage.md -i accessPageGen_md "PLPC-${lcnt_lcntNu}"
-	opDo lcnLcntOutputs.sh -n showRun -p outFile=./${lcntBuild_releaseBaseDir}/PLPC-${lcnt_lcntNu}.bib -i inListDotBibOut "PLPC-${lcnt_lcntNu}"		
+        opDo lcnLcntOutputs.sh -n showRun -p outFile=./${lcntBuild_releaseBaseDir}/accessPage.html -i accessPageGen "PLPC-${lcnt_lcntNu}"
+        opDo lcnLcntOutputs.sh -n showRun -p outFile=./${lcntBuild_releaseBaseDir}/accessPage.md -i accessPageGen_md "PLPC-${lcnt_lcntNu}"
+        opDo lcnLcntOutputs.sh -n showRun -p outFile=./${lcntBuild_releaseBaseDir}/PLPC-${lcnt_lcntNu}.bib -i inListDotBibOut "PLPC-${lcnt_lcntNu}"             
     fi
 
     lpReturn
@@ -3266,7 +3266,7 @@ function vis_lcntBuildSetCur {
     function describeF {  cat  << _EOF_
 
 _EOF_
-		       }
+                       }
 
     EH_assert [[ $# -eq 1 ]]
     local inFile="$1"
@@ -3285,27 +3285,27 @@ function vis_lcntBuildExamples {
     G_funcEntry
     function describeF {  cat  << _EOF_
 _EOF_
-		       }
+                       }
     extraInfo="-v -n showRun"
     local inFilesList=""
     local inFile=""
 
     function listLcntBuildCommands {
-	EH_assert [[ $# -eq 1 ]]
-	local specifiedExtent=$1
-	#inFilesList=$( vis_enabledBuildsDirsList )
-	inFilesList=$( vis_buildsDirsList )
-	for inFile in ${inFilesList}; do
-	    echo ${G_myName} ${extraInfo} -p extent=${specifiedExtent} -i lcntBuild ${inFile}
-	done
+        EH_assert [[ $# -eq 1 ]]
+        local specifiedExtent=$1
+        #inFilesList=$( vis_enabledBuildsDirsList )
+        inFilesList=$( vis_buildsDirsList )
+        for inFile in ${inFilesList}; do
+            echo ${G_myName} ${extraInfo} -p extent=${specifiedExtent} -i lcntBuild ${inFile}
+        done
     }
 
     function listLcntBuildSetCur {
-	#inFilesList=$( vis_enabledBuildsDirsList )
-	inFilesList=$( vis_buildsDirsList )
-	for inFile in ${inFilesList}; do
-	    echo ${G_myName} ${extraInfo} -i lcntBuildSetCur ${inFile}
-	done
+        #inFilesList=$( vis_enabledBuildsDirsList )
+        inFilesList=$( vis_buildsDirsList )
+        for inFile in ${inFilesList}; do
+            echo ${G_myName} ${extraInfo} -i lcntBuildSetCur ${inFile}
+        done
     }
 
     
@@ -3346,7 +3346,7 @@ function vis_lcntBuildDefaultCommand {
     G_funcEntry
     function describeF {  cat  << _EOF_
 _EOF_
-		       }
+                       }
     extraInfo="-v -n showRun"
     local inFilesList=""
     local inFile=""
@@ -3354,10 +3354,10 @@ _EOF_
 
     inFilesList=$( vis_enabledBuildsDirsList )
     for inFile in ${inFilesList}; do
-	defaultFile=$( echo ${inFile} | grep 8.5x11 )
-	if [ ! -z "${defaultFile}" ] ; then 
-	    echo ${G_myName} ${extraInfo} -i lcntBuild ${defaultFile}
-	fi
+        defaultFile=$( echo ${inFile} | grep 8.5x11 )
+        if [ ! -z "${defaultFile}" ] ; then 
+            echo ${G_myName} ${extraInfo} -i lcntBuild ${defaultFile}
+        fi
     done
 }
 
@@ -3384,7 +3384,7 @@ _EOF_
     ls -ld ./LCNT-INFO/Exports/*
 
     lpReturn
-}	
+}       
 
 
 _CommentBegin_
@@ -3398,12 +3398,12 @@ function vis_lcntExport {
 -p extent=build || extent=release || extent=build+release  (DEFAULT=build+release)
 -p extent=build || extent=view || extent=build+view  (DEFAULT=build+view)
 _EOF_
-		       }
+                       }
 
     EH_assert [[ $# -gt 0 ]]
 
     if [ -z "${cntntRawHome}" ] ; then
-	cntntRawHome="."
+        cntntRawHome="."
     fi
     lcntInfoPrep ${cntntRawHome}
     
@@ -3422,11 +3422,11 @@ _EOF_
     local dateTag=$( DATE_nowTag )
 
     if [ "$1" == "all" ] ; then
-	inFilesList=$( vis_enabledExportsDirsList )
+        inFilesList=$( vis_enabledExportsDirsList )
     fi
 
     if [ "$1" == "cur" ] ; then
-	inFilesList="cur"
+        inFilesList="cur"
     fi
 
     lcntInfoPrep ${cntntRawHome}
@@ -3434,88 +3434,88 @@ _EOF_
     opDo lcntBuildsBaseFVsPrep
 
     function gitLocalBasePathObtain {
-	EH_assert [[ $# -eq 0 ]]
-	local gitLocalBasePath=""
+        EH_assert [[ $# -eq 0 ]]
+        local gitLocalBasePath=""
 
-	gitLocalBasePath="${lcntExport_gitLocalBase}/${lcnt_pubCategory}/${lcnt_lcntNu}"
+        gitLocalBasePath="${lcntExport_gitLocalBase}/${lcnt_pubCategory}/${lcnt_lcntNu}"
 
-	if [ ! -d "${gitLocalBasePath}" ] ; then
-	    opDo mkdir -p "${gitLocalBasePath}"
-	fi
-	
-	echo ${gitLocalBasePath}
+        if [ ! -d "${gitLocalBasePath}" ] ; then
+            opDo mkdir -p "${gitLocalBasePath}"
+        fi
+        
+        echo ${gitLocalBasePath}
     }
 
     function methodExportGit {
-	EH_assert [[ $# -eq 0 ]]
-	local builtResultBase=""
-	local here=$(pwd)
-	local eachPath=""
-	local gitDest=""
+        EH_assert [[ $# -eq 0 ]]
+        local builtResultBase=""
+        local here=$(pwd)
+        local eachPath=""
+        local gitDest=""
 
-	opDo lcntBuildsBaseFVsPrep	
+        opDo lcntBuildsBaseFVsPrep      
 
-	gitDest=$( gitLocalBasePathObtain )
-	
-	for eachBuildSpec in ${lcntExport_buildSpecs}; do
-	    opDo lcntBuildInfoPrep  ${eachBuildSpec}
-		
-	    opDoRet pushd "${lcntBuild_releaseBaseDir}"
+        gitDest=$( gitLocalBasePathObtain )
+        
+        for eachBuildSpec in ${lcntExport_buildSpecs}; do
+            opDo lcntBuildInfoPrep  ${eachBuildSpec}
+                
+            opDoRet pushd "${lcntBuild_releaseBaseDir}"
 
-	    for eachPath in $(ls | grep -v CVS) ; do
-		if [ -d "${eachPath}" ] ; then
-		    opDo cp -r ${eachPath} ${gitDest}
-		elif [ -f "${eachPath}" ] ; then
-		    if [ "${eachPath}" == "accessPage.html" ] ; then
-			continue
-		    elif [ "${eachPath}" == "accessPage.md" ] ; then
-			opDo cp ${eachPath} ${gitDest}/readme.md
-			inBaseDirDo ${gitDest} git add ${gitDest}/readme.md
-		    fi
-	       	    opDo cp ${eachPath} ${gitDest}
-		fi
-		inBaseDirDo ${gitDest} git add ${gitDest}/$( FN_nonDirsPart ${eachPath} )
-	    done
-	    
-	    opDo popd
-	    
-	done
-	
-	inBaseDirDo ${gitDest} git commit -m triggered_by_lcntProc.sh_exports    # use _ instead of ' '
-	inBaseDirDo ${gitDest} git push
+            for eachPath in $(ls | grep -v CVS) ; do
+                if [ -d "${eachPath}" ] ; then
+                    opDo cp -r ${eachPath} ${gitDest}
+                elif [ -f "${eachPath}" ] ; then
+                    if [ "${eachPath}" == "accessPage.html" ] ; then
+                        continue
+                    elif [ "${eachPath}" == "accessPage.md" ] ; then
+                        opDo cp ${eachPath} ${gitDest}/readme.md
+                        inBaseDirDo ${gitDest} git add ${gitDest}/readme.md
+                    fi
+                    opDo cp ${eachPath} ${gitDest}
+                fi
+                inBaseDirDo ${gitDest} git add ${gitDest}/$( FN_nonDirsPart ${eachPath} )
+            done
+            
+            opDo popd
+            
+        done
+        
+        inBaseDirDo ${gitDest} git commit -m triggered_by_lcntProc.sh_exports    # use _ instead of ' '
+        inBaseDirDo ${gitDest} git push
     }
     
     
     for inFile in ${inFilesList}; do
 
-	# 1) Update symlink for curExport
-	if [ "${inFile}" == "cur" ] ; then
-	    inFile=./curExport
-	fi
+        # 1) Update symlink for curExport
+        if [ "${inFile}" == "cur" ] ; then
+            inFile=./curExport
+        fi
 
-	#
-	# curExport is now properly set. We can use it.
-	#
-	
-	# Read in curExport params
-	opDo lcntExportInfoPrep "${inFile}"
+        #
+        # curExport is now properly set. We can use it.
+        #
+        
+        # Read in curExport params
+        opDo lcntExportInfoPrep "${inFile}"
 
-	#opDo vis_lcntExportInfoReport "${inFile}"
+        #opDo vis_lcntExportInfoReport "${inFile}"
 
-	# 2) Based on lcntExport_exportSpecName for each do the export based on method
-	
-	case ${lcntExport_exportMethod} in
-	    "ploneProc")
-		methodExportPloneProc
-		;;
-	    "git")
-		methodExportGit
-		;;
-	    *)
-		EH_problem "Unknown exportMethod ${lcntExport_exportMethod}"
-		lpReturn
-	esac
-	
+        # 2) Based on lcntExport_exportSpecName for each do the export based on method
+        
+        case ${lcntExport_exportMethod} in
+            "ploneProc")
+                methodExportPloneProc
+                ;;
+            "git")
+                methodExportGit
+                ;;
+            *)
+                EH_problem "Unknown exportMethod ${lcntExport_exportMethod}"
+                lpReturn
+        esac
+        
     done
 
     lpReturn
@@ -3531,7 +3531,7 @@ function vis_lcntExportSetCur {
     function describeF {  cat  << _EOF_
 
 _EOF_
-		       }
+                       }
 
     EH_assert [[ $# -eq 1 ]]
     local inFile="$1"
@@ -3550,26 +3550,26 @@ function vis_lcntExportExamples {
     G_funcEntry
     function describeF {  cat  << _EOF_
 _EOF_
-		       }
+                       }
     extraInfo="-v -n showRun"
     local inFilesList=""
     local inFile=""
 
     function listLcntExportCommands {
-	EH_assert [[ $# -eq 1 ]]
-	local specifiedExtent=$1
-	inFilesList=$( vis_buildsDirsList )
-	for inFile in ${inFilesList}; do
-	    echo ${G_myName} ${extraInfo} -p extent=${specifiedExtent} -i lcntExport ${inFile}
-	done
+        EH_assert [[ $# -eq 1 ]]
+        local specifiedExtent=$1
+        inFilesList=$( vis_buildsDirsList )
+        for inFile in ${inFilesList}; do
+            echo ${G_myName} ${extraInfo} -p extent=${specifiedExtent} -i lcntExport ${inFile}
+        done
     }
 
     function listLcntExportSetCur {
-	#inFilesList=$( vis_enabledExportsDirsList )
-	inFilesList=$( vis_exportsDirsList )
-	for inFile in ${inFilesList}; do
-	    echo ${G_myName} ${extraInfo} -i lcntExportSetCur ${inFile}
-	done
+        #inFilesList=$( vis_enabledExportsDirsList )
+        inFilesList=$( vis_exportsDirsList )
+        for inFile in ${inFilesList}; do
+            echo ${G_myName} ${extraInfo} -i lcntExportSetCur ${inFile}
+        done
     }
 
     
@@ -3611,12 +3611,12 @@ function vis_lcntBuildAndExport {
 -p extent=build || extent=release || extent=build+release  (DEFAULT=build+release)
 -p extent=build || extent=view || extent=build+view  (DEFAULT=build+view)
 _EOF_
-		       }
+                       }
 
     EH_assert [[ $# -gt 0 ]]
 
     if [ -z "${cntntRawHome}" ] ; then
-	cntntRawHome="."
+        cntntRawHome="."
     fi
     lcntInfoPrep ${cntntRawHome}
     
@@ -3645,7 +3645,7 @@ function vis_lcntProcDevelopment {
     G_funcEntry
     function describeF {  cat  << _EOF_
 _EOF_
-		       }
+                       }
     cat  << _EOF_
 =====================================
 ---- EnFa - lcntProc.sh -- Initial Templates Development ----
@@ -3673,37 +3673,37 @@ function vis_lcntPrep {
     G_funcEntry
     function describeF {  cat  << _EOF_
 _EOF_
-		       }
+                       }
 
 
     function isObject_mailLcnt_P {
-	grep -q mailLcnt _objectType_
-	return $?
+        grep -q mailLcnt _objectType_
+        return $?
     }
 
     function mailLcntPreps {
-	if [ ! -d "./mailing" ] ; then
-	    opDo mkdir ./mailing
-	    inBaseDirDo ./mailing bxtStartMailing.sh -v -n showRun -i startObjectGen lcntHtml path
-	else
-	    ANT_raw "./mailing in place -- Creation Skipped"
-	fi
+        if [ ! -d "./mailing" ] ; then
+            opDo mkdir ./mailing
+            inBaseDirDo ./mailing bxtStartMailing.sh -v -n showRun -i startObjectGen lcntHtml path
+        else
+            ANT_raw "./mailing in place -- Creation Skipped"
+        fi
 
-	if [ ! -f ./headSectionInsert.html ] ; then
-	    opDo cp /libre/ByStar/InitialTemplates/mailing/starts/headSectionInsert.html .
-	fi
+        if [ ! -f ./headSectionInsert.html ] ; then
+            opDo cp /libre/ByStar/InitialTemplates/mailing/starts/headSectionInsert.html .
+        fi
     }
 
     function perhasAddMailLcnt {
-	if [ ! -f ./mailLcnt.ttytex ] ; then
-	    opDo cp /libre/ByStar/InitialTemplates/begin/templates/purposed/lcnt/latex/mailing00-mainEnFa.ttytex.begin ./mailLcnt.ttytex
-	    opDo echo "mailLcnt" >> ./LCNT-INFO/docSrcList
-	fi
+        if [ ! -f ./mailLcnt.ttytex ] ; then
+            opDo cp /libre/ByStar/InitialTemplates/begin/templates/purposed/lcnt/latex/mailing00-mainEnFa.ttytex.begin ./mailLcnt.ttytex
+            opDo echo "mailLcnt" >> ./LCNT-INFO/docSrcList
+        fi
     }
 
     if isObject_mailLcnt_P ; then
-	opDo mailLcntPreps
-	opDo perhasAddMailLcnt
+        opDo mailLcntPreps
+        opDo perhasAddMailLcnt
     fi
     
     lpReturn
@@ -3718,18 +3718,18 @@ function vis_templatesDevelopment {
     G_funcEntry
     function describeF {  cat  << _EOF_
 _EOF_
-		       }
+                       }
 
     if [ ! -d ./LCNT-INFO/templates ] ; then
-	vis_templatesDevelopmentPreModern
-	return
+        vis_templatesDevelopmentPreModern
+        return
     fi
 
     local filesList=$( inBaseDirDo ./LCNT-INFO/templates ls | grep -v CVS  )
 
     for each in ${filesList} ; do
-	cat  << _EOF_
-$( examplesSeperatorSubSection "${each}" )	
+        cat  << _EOF_
+$( examplesSeperatorSubSection "${each}" )      
 bx-dblock -i diffBlankedFiles ./${each} $(cat ./LCNT-INFO/templates/${each} )
 diff ./${each} $(cat ./LCNT-INFO/templates/${each} )
 cp ./${each} $(cat ./LCNT-INFO/templates/${each} )

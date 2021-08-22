@@ -71,7 +71,7 @@ _EOF_
     #  [[elisp:(lsip-local-run-command "apt-cache search something | egrep '^something'")][apt-cache search something | egrep '^something']]
 
     itemOrderedList=( 
-	"something" 
+        "something" 
     )
 
     itemOptionalOrderedList=()

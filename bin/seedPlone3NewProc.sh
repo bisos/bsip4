@@ -354,11 +354,11 @@ _EOF_
     fileVarName="$1"
 
     if [ -f "${fileVarName}" ] ; then
-	opDo cat "${fileVarName}"
-	lpReturn 0
+        opDo cat "${fileVarName}"
+        lpReturn 0
     else
-	ANV_cooked "Missing ${fileVarName}, should become objectType specific and detect defaults"
-	lpReturn 101
+        ANV_cooked "Missing ${fileVarName}, should become objectType specific and detect defaults"
+        lpReturn 101
     fi
     
     lpReturn
@@ -497,18 +497,18 @@ _EOF_
     bystarAcctPathAnalyze ${here}
   
     for thisAuxNode in $* ; do
-	cd ${here}
-	EH_retOnFail
-	#pwd
-	if [[ -d ${thisAuxNode} ]] ; then
-	    EH_problem "${thisAuxNode} Already exists"
-	    return 1
-	else 
-	    opDo mkdir ${thisAuxNode}
-	fi
-	opDo cd ${thisAuxNode}
+        cd ${here}
+        EH_retOnFail
+        #pwd
+        if [[ -d ${thisAuxNode} ]] ; then
+            EH_problem "${thisAuxNode} Already exists"
+            return 1
+        else 
+            opDo mkdir ${thisAuxNode}
+        fi
+        opDo cd ${thisAuxNode}
 
-	opDo vis_auxNode_method_startUpdate
+        opDo vis_auxNode_method_startUpdate
     done
 
     lpReturn
@@ -529,18 +529,18 @@ _EOF_
     vis_nodeThereTag ${cwd} "plone3Proc.sh"
 
     if [ -f plone3Proc.sh ] ; then
-	ANT_raw "plone3Proc.sh  Already exists -- Doing Nothing"
+        ANT_raw "plone3Proc.sh  Already exists -- Doing Nothing"
     else
-	opDo cp /libre/ByStar/InitialTemplates/lcaPlone/Starts/plone3NewProc.sh plone3Proc.sh
-	opDo vis_dblockUpdateFile plone3Proc.sh
-	opDo chmod 775 plone3Proc.sh
+        opDo cp /libre/ByStar/InitialTemplates/lcaPlone/Starts/plone3NewProc.sh plone3Proc.sh
+        opDo vis_dblockUpdateFile plone3Proc.sh
+        opDo chmod 775 plone3Proc.sh
     fi
 
     if [ -f ${poObjectTypeFileName} ] ; then
-	ANT_raw "${poObjectTypeFileName}  Already exists -- Doing Nothing"
+        ANT_raw "${poObjectTypeFileName}  Already exists -- Doing Nothing"
     else
-	thisObjectType=${poObjectTypeEnum[auxNode]}
-	opDo eval echo "${thisObjectType}" \> "${poObjectTypeFileName}"
+        thisObjectType=${poObjectTypeEnum[auxNode]}
+        opDo eval echo "${thisObjectType}" \> "${poObjectTypeFileName}"
     fi
 
     lpReturn
@@ -690,18 +690,18 @@ _EOF_
     bystarAcctPathAnalyze ${here}
   
     for thisAuxNode in $* ; do
-	cd ${here}
-	EH_retOnFail
-	#pwd
-	if [[ -d ${thisAuxNode} ]] ; then
-	    EH_problem "${thisAuxNode} Already exists"
-	    return 1
-	else 
-	    opDo mkdir ${thisAuxNode}
-	fi
-	opDo cd ${thisAuxNode}
+        cd ${here}
+        EH_retOnFail
+        #pwd
+        if [[ -d ${thisAuxNode} ]] ; then
+            EH_problem "${thisAuxNode} Already exists"
+            return 1
+        else 
+            opDo mkdir ${thisAuxNode}
+        fi
+        opDo cd ${thisAuxNode}
 
-	opDo vis_auxLeaf_method_startUpdate
+        opDo vis_auxLeaf_method_startUpdate
     done
 
     lpReturn
@@ -722,18 +722,18 @@ _EOF_
     vis_leafThereTag ${cwd} "plone3Proc.sh"
 
     if [ -f plone3Proc.sh ] ; then
-	ANT_raw "plone3Proc.sh  Already exists -- Doing Nothing"
+        ANT_raw "plone3Proc.sh  Already exists -- Doing Nothing"
     else
-	opDo cp /libre/ByStar/InitialTemplates/lcaPlone/Starts/plone3NewProc.sh plone3Proc.sh
-	opDo vis_dblockUpdateFile plone3Proc.sh
-	opDo chmod 775 plone3Proc.sh
+        opDo cp /libre/ByStar/InitialTemplates/lcaPlone/Starts/plone3NewProc.sh plone3Proc.sh
+        opDo vis_dblockUpdateFile plone3Proc.sh
+        opDo chmod 775 plone3Proc.sh
     fi
 
     if [ -f ${poObjectTypeFileName} ] ; then
-	ANT_raw "${poObjectTypeFileName}  Already exists -- Doing Nothing"
+        ANT_raw "${poObjectTypeFileName}  Already exists -- Doing Nothing"
     else
-	thisObjectType=${poObjectTypeEnum[auxLeaf]}
-	opDo eval echo "${thisObjectType}" \> "${poObjectTypeFileName}"
+        thisObjectType=${poObjectTypeEnum[auxLeaf]}
+        opDo eval echo "${thisObjectType}" \> "${poObjectTypeFileName}"
     fi
 
     lpReturn
@@ -899,22 +899,22 @@ _EOF_
     bystarAcctPathAnalyze ${here}
   
     for thisFolder in $* ; do
-	cd ${here}
-	EH_retOnFail
-	#pwd
-	if [[ -d ${thisFolder} ]] ; then
-	    EH_problem "${thisFolder} Already exists"
-	    return 1
-	else 
-	    opDo mkdir ${thisFolder}
-	fi
-	opDo cd ${thisFolder}
+        cd ${here}
+        EH_retOnFail
+        #pwd
+        if [[ -d ${thisFolder} ]] ; then
+            EH_problem "${thisFolder} Already exists"
+            return 1
+        else 
+            opDo mkdir ${thisFolder}
+        fi
+        opDo cd ${thisFolder}
 
-	opDo vis_page_method_startGen index_html
+        opDo vis_page_method_startGen index_html
 
-	opDo cd ${here}/${thisFolder}
+        opDo cd ${here}/${thisFolder}
 
-	opDo vis_folder_method_startUpdate
+        opDo vis_folder_method_startUpdate
     done
 
     lpReturn
@@ -935,46 +935,46 @@ _EOF_
     vis_nodeThereTag ${cwd} "plone3Proc.sh"
 
     if [ -f plone3Proc.sh ] ; then
-	ANT_raw "plone3Proc.sh  Already exists -- Doing Nothing"
+        ANT_raw "plone3Proc.sh  Already exists -- Doing Nothing"
     else
-	opDo cp /libre/ByStar/InitialTemplates/lcaPlone/Starts/plone3NewProc.sh plone3Proc.sh
-	opDo vis_dblockUpdateFile plone3Proc.sh
-	opDo chmod 775 plone3Proc.sh
+        opDo cp /libre/ByStar/InitialTemplates/lcaPlone/Starts/plone3NewProc.sh plone3Proc.sh
+        opDo vis_dblockUpdateFile plone3Proc.sh
+        opDo chmod 775 plone3Proc.sh
     fi
 
     if [ -f ${poObjectTypeFileName} ] ; then
-	ANT_raw "${poObjectTypeFileName}  Already exists -- Doing Nothing"
+        ANT_raw "${poObjectTypeFileName}  Already exists -- Doing Nothing"
     else
-	thisObjectType=${poObjectTypeEnum[folder]}
-	opDo eval echo "${thisObjectType}" \> "${poObjectTypeFileName}"
+        thisObjectType=${poObjectTypeEnum[folder]}
+        opDo eval echo "${thisObjectType}" \> "${poObjectTypeFileName}"
     fi
 
     if [ -f ${poPubStateFileName} ] ; then
-	ANT_raw "${poPubStateFileName} Already exists -- Doing Nothing"
+        ANT_raw "${poPubStateFileName} Already exists -- Doing Nothing"
     else
-	opDo eval echo "${poPubStateEnum[default]}" \> ${poPubStateFileName}
+        opDo eval echo "${poPubStateEnum[default]}" \> ${poPubStateFileName}
     fi
 
     if [ -f ${poExcludeFromNavFileName} ] ; then
-	ANT_raw "${poExcludeFromNavFileName} Already exists -- Doing Nothing"
+        ANT_raw "${poExcludeFromNavFileName} Already exists -- Doing Nothing"
     else
-	opDo eval echo "${poExcludeFromNavEnum[default]}" \> ${poExcludeFromNavFileName}
+        opDo eval echo "${poExcludeFromNavEnum[default]}" \> ${poExcludeFromNavFileName}
     fi
 
     if [ -f folderTitle ] ; then
-	ANT_raw "folderTitle Already exists -- Doing Nothing"
+        ANT_raw "folderTitle Already exists -- Doing Nothing"
     else
-	opDo eval echo "$( STR_toTitleCaseWords ${contentEndPath} )" \> folderTitle
+        opDo eval echo "$( STR_toTitleCaseWords ${contentEndPath} )" \> folderTitle
     fi
 
     if [ -f siteFolder ] ; then
-	ANT_raw "siteFolder Already exists -- Doing Nothing"
+        ANT_raw "siteFolder Already exists -- Doing Nothing"
     else
-	if [ "${plonePath}" = "/" ] ; then
-	    opDo eval echo "/${contentEndPath}" \> siteFolder
-	else
-	    opDo eval echo "${plonePath}/${contentEndPath}" \> siteFolder
-	fi
+        if [ "${plonePath}" = "/" ] ; then
+            opDo eval echo "/${contentEndPath}" \> siteFolder
+        else
+            opDo eval echo "${plonePath}/${contentEndPath}" \> siteFolder
+        fi
     fi
 
     lpReturn
@@ -990,34 +990,34 @@ _EOF_
     # First read from index_html vars, then perhaps overwrite.
 
     if [[ -d index_html ]] ; then
-	opDo lpSilentPushd index_html
-	opDo vis_page_method_varsPrep
-	opDo lpSilentPopd
+        opDo lpSilentPushd index_html
+        opDo vis_page_method_varsPrep
+        opDo lpSilentPopd
     else
-	EH_problem "Missing ${thisFile} -- skipped"
+        EH_problem "Missing ${thisFile} -- skipped"
     fi
 
     if [ -f excludeFromNav ] ; then
-	fv_excludeFromNav=$( cat excludeFromNav) 
+        fv_excludeFromNav=$( cat excludeFromNav) 
     else
-	fv_excludeFromNav="false"
+        fv_excludeFromNav="false"
     fi
 
     if [ -f pubState ] ; then
-	fv_pubState=$( cat pubState) 
+        fv_pubState=$( cat pubState) 
     else
-	fv_pubState="publish"
+        fv_pubState="publish"
     fi
 
     if [ -f folderTitle ] ; then
-	fv_folderTitleEnc="$( uriEncode.sh $( cat folderTitle) )"
+        fv_folderTitleEnc="$( uriEncode.sh $( cat folderTitle) )"
     else
-	fv_folderTitleEnc="$( uriEncode.sh ${pageTitle} )"
+        fv_folderTitleEnc="$( uriEncode.sh ${pageTitle} )"
     fi
 
     if [ -f siteFolder ] ; then
-	fv_siteFolder=$( cat siteFolder ) 
-	plonePath=${fv_siteFolder}
+        fv_siteFolder=$( cat siteFolder ) 
+        plonePath=${fv_siteFolder}
     fi
 
     lpReturn
@@ -1057,12 +1057,12 @@ _EOF_
     bystarAcctPathAnalyze ${here}
  
     if [[ -d index_html ]] ; then
-	opDo vis_folder_method_varsPrep
+        opDo vis_folder_method_varsPrep
 
-	#opDo bystarPlone3Commands.sh -p bystarUid=${bystarUid} -p siteFolder="${plonePath}"  -p title="${pageTitleEnc}"  -p description="${pageDescriptionEnc}" -i folderCreate
-	opDo bystarPlone3Commands.sh -p bystarUid=${bystarUid} -p siteFolder="${plonePath}"  -p title="${fv_folderTitleEnc}"  -p description="${pageDescriptionEnc}" -i folderCreate
+        #opDo bystarPlone3Commands.sh -p bystarUid=${bystarUid} -p siteFolder="${plonePath}"  -p title="${pageTitleEnc}"  -p description="${pageDescriptionEnc}" -i folderCreate
+        opDo bystarPlone3Commands.sh -p bystarUid=${bystarUid} -p siteFolder="${plonePath}"  -p title="${fv_folderTitleEnc}"  -p description="${pageDescriptionEnc}" -i folderCreate
     else
-	EH_problem "Missing ${thisFile} -- skipped"
+        EH_problem "Missing ${thisFile} -- skipped"
     fi
     
     lpReturn
@@ -1103,7 +1103,7 @@ _EOF_
     opDo vis_folder_method_varsPrep
 
     if [ ! -z "${fv_siteFolder}" ] ; then
-	plonePath=${fv_siteFolder}
+        plonePath=${fv_siteFolder}
     fi
 
     opDo setupExcludeFromNavigationWork
@@ -1158,12 +1158,12 @@ _EOF_
     opDo vis_folder_method_varsPrep
 
     if [ ! -z "${fv_siteFolder}" ] ; then
-	plonePath=${fv_siteFolder}
+        plonePath=${fv_siteFolder}
     fi
 
     if [ -z "${fv_pubState}" ] ; then
-	EH_problem "Missing pubState -- Ignored - No Action Taken"
-	lpReturn 101
+        EH_problem "Missing pubState -- Ignored - No Action Taken"
+        lpReturn 101
     fi
 
     opDo bystarPlone3Commands.sh -h -v -n showRun -p bystarUid=${bystarUid} -p siteFolder="${plonePath}" -i folderState ${fv_pubState}
@@ -1205,18 +1205,18 @@ _EOF_
     bystarAcctPathAnalyze ${here}
   
     for thisPage in $* ; do
-	opDo cd ${here}
-	if [[ -d ${thisPage} ]] ; then
-	    EH_problem "${thisPage} Already exists"
-	else 
-	    opDo mkdir ${thisPage}
-	fi
-	opDo cd ${thisPage}
+        opDo cd ${here}
+        if [[ -d ${thisPage} ]] ; then
+            EH_problem "${thisPage} Already exists"
+        else 
+            opDo mkdir ${thisPage}
+        fi
+        opDo cd ${thisPage}
 
-	opDo vis_page_method_startUpdate
+        opDo vis_page_method_startUpdate
 
-	opDo pwd
-	opDo ls -l 
+        opDo pwd
+        opDo ls -l 
     done
 
     lpReturn
@@ -1235,18 +1235,18 @@ _EOF_
     vis_leafThereTag ${cwd} "plone3Proc.sh"
 
     if [ -f plone3Proc.sh ] ; then
-	ANT_raw "plone3Proc.sh  Already exists -- Doing Nothing"
+        ANT_raw "plone3Proc.sh  Already exists -- Doing Nothing"
     else
-	opDo cp /libre/ByStar/InitialTemplates/lcaPlone/Starts/plone3NewProc.sh plone3Proc.sh
-	opDo vis_dblockUpdateFile plone3Proc.sh
-	opDo chmod 775 plone3Proc.sh
+        opDo cp /libre/ByStar/InitialTemplates/lcaPlone/Starts/plone3NewProc.sh plone3Proc.sh
+        opDo vis_dblockUpdateFile plone3Proc.sh
+        opDo chmod 775 plone3Proc.sh
     fi
 
     if [ -f ${poObjectTypeFileName} ] ; then
-	ANT_raw "${poObjectTypeFileName}  Already exists -- Doing Nothing"
+        ANT_raw "${poObjectTypeFileName}  Already exists -- Doing Nothing"
     else
-	thisObjectType=${poObjectTypeEnum[page]}
-	opDo eval echo "${thisObjectType}" \> "${poObjectTypeFileName}"
+        thisObjectType=${poObjectTypeEnum[page]}
+        opDo eval echo "${thisObjectType}" \> "${poObjectTypeFileName}"
     fi
 
     
@@ -1254,9 +1254,9 @@ _EOF_
       ANT_raw "pageTitle  Already exists -- Doing Nothing"
     else
       if [ "${thisPage}_" == "index_html_" ] ; then
-	echo ${contentEndPath} > pageTitle
+        echo ${contentEndPath} > pageTitle
       else
-	opDo eval echo ${thisPage} \>  pageTitle
+        opDo eval echo ${thisPage} \>  pageTitle
       fi
     fi
 
@@ -1267,49 +1267,49 @@ _EOF_
     fi
 
     if [ -f ${poPubStateFileName} ] ; then
-	ANT_raw "${poPubStateFileName} Already exists -- Doing Nothing"
+        ANT_raw "${poPubStateFileName} Already exists -- Doing Nothing"
     else
-	opDo eval echo "${poPubStateEnum[default]}" \> ${poPubStateFileName}
+        opDo eval echo "${poPubStateEnum[default]}" \> ${poPubStateFileName}
     fi
 
     if [ -f ${poExcludeFromNavFileName} ] ; then
-	ANT_raw "${poExcludeFromNavFileName} Already exists -- Doing Nothing"
+        ANT_raw "${poExcludeFromNavFileName} Already exists -- Doing Nothing"
     else
-	opDo eval echo "${poExcludeFromNavEnum[default]}" \> ${poExcludeFromNavFileName}
+        opDo eval echo "${poExcludeFromNavEnum[default]}" \> ${poExcludeFromNavFileName}
     fi
 
     if [ -f ${webLayoutLeftPortletsFileName} ] ; then
-	ANT_raw "${webLayoutLeftPortletsFileName} Already exists -- Doing Nothing"
+        ANT_raw "${webLayoutLeftPortletsFileName} Already exists -- Doing Nothing"
     else
-	opDo eval echo "${webLayoutLeftPortletsEnum[default]}" \> ${webLayoutLeftPortletsFileName}
+        opDo eval echo "${webLayoutLeftPortletsEnum[default]}" \> ${webLayoutLeftPortletsFileName}
     fi
 
     if [ -f ${webLayoutRightPortletsFileName} ] ; then
-	ANT_raw "${webLayoutRightPortletsFileName} Already exists -- Doing Nothing"
+        ANT_raw "${webLayoutRightPortletsFileName} Already exists -- Doing Nothing"
     else
-	opDo eval echo "${webLayoutRightPortletsEnum[default]}" \> ${webLayoutRightPortletsFileName}
+        opDo eval echo "${webLayoutRightPortletsEnum[default]}" \> ${webLayoutRightPortletsFileName}
     fi
 
     if [ -f contentType ] ; then
-	ANT_raw "contentType Already exists -- Doing Nothing"
+        ANT_raw "contentType Already exists -- Doing Nothing"
     else
-	opDo eval echo "html" \> contentType
+        opDo eval echo "html" \> contentType
     fi
 
     if [ -f contentProcessing ] ; then
-	ANT_raw "contentProcessing Already exists -- Doing Nothing"
+        ANT_raw "contentProcessing Already exists -- Doing Nothing"
     else
-	opDo eval echo "std" \> contentProcessing
+        opDo eval echo "std" \> contentProcessing
     fi
 
     if [ -f content.html ] ; then
-	ANT_raw "pageDescription  Already exists -- Doing Nothing"
+        ANT_raw "pageDescription  Already exists -- Doing Nothing"
     else
-	if [ "${thisPage}_" == "index_html_" ] ; then
-	    vis_initialIndexContentGen ${here} > content.html
-	else
-	    vis_initialPageContentGen ${here} > content.html
-	fi
+        if [ "${thisPage}_" == "index_html_" ] ; then
+            vis_initialIndexContentGen ${here} > content.html
+        else
+            vis_initialPageContentGen ${here} > content.html
+        fi
     fi
 
     lpReturn
@@ -1326,74 +1326,74 @@ _EOF_
     bystarAcctPathAnalyze ${here}
     
     if [ -f contentType ] ; then
-	pageContentType=`cat contentType`
+        pageContentType=`cat contentType`
     else
-	EH_problem "Missing contentType"
-	pageContentType="html"
+        EH_problem "Missing contentType"
+        pageContentType="html"
     fi
 
     pageName=${contentEndPath}
 
     if [ -f pageTitle ] ; then
       #pageTitle=`sed -e 's/ /+/g' pageTitle`
-	pageTitleEnc=$( uriEncode.sh $( cat pageTitle) )
+        pageTitleEnc=$( uriEncode.sh $( cat pageTitle) )
     else
       pageTitleEnc=${pageName}
     fi
 
     if [ -f pageDescription ] ; then
       #pageDescription=`sed -e 's/ /+/g' pageDescription`
-	pageDescriptionEnc=$( uriEncode.sh $( cat pageDescription) )
+        pageDescriptionEnc=$( uriEncode.sh $( cat pageDescription) )
     else
-	pageDescriptionEnc=""
+        pageDescriptionEnc=""
     fi
 
     if [ ! -f content.html ] ; then
-	ANT_raw "Missing content.html -- skipped"
-	# EH_problem ??
+        ANT_raw "Missing content.html -- skipped"
+        # EH_problem ??
     fi
 
     if [ -f contentPlus.html ] ; then 
-	pageContentFileName="contentPlus.html"
+        pageContentFileName="contentPlus.html"
     else
-	pageContentFileName="content.html"
+        pageContentFileName="content.html"
     fi
 
     if [ -f layoutLeftPortlets ] ; then
-	fv_layoutLeftPortlets=$( cat layoutLeftPortlets) 
+        fv_layoutLeftPortlets=$( cat layoutLeftPortlets) 
     else
-	fv_layoutLeftPortlets="all"
+        fv_layoutLeftPortlets="all"
     fi
 
     if [ -f layoutRightPortlets ] ; then
-	fv_layoutRightPortlets=$( cat layoutRightPortlets) 
+        fv_layoutRightPortlets=$( cat layoutRightPortlets) 
     else
-	fv_layoutRightPortlets="all"
+        fv_layoutRightPortlets="all"
     fi
 
     if [ -f excludeFromNav ] ; then
-	fv_excludeFromNav=$( cat excludeFromNav) 
+        fv_excludeFromNav=$( cat excludeFromNav) 
     else
-	fv_excludeFromNav="false"
+        fv_excludeFromNav="false"
     fi
 
     if [ -f pubState ] ; then
-	fv_pubState=$( cat pubState) 
+        fv_pubState=$( cat pubState) 
     else
-	fv_pubState="publish"
+        fv_pubState="publish"
     fi
 
     if [ -f contentProcessing ] ; then
-	fv_contentProcessing=$( cat contentProcessing) 
+        fv_contentProcessing=$( cat contentProcessing) 
     else
-	fv_contentProcessing="std"
+        fv_contentProcessing="std"
     fi
 
     # NOTYET -- To Be Verified
 
     if [ -f ../siteFolder ] ; then
-	fv_siteFolder=$( cat ../siteFolder ) 
-	plonePath=${fv_siteFolder}
+        fv_siteFolder=$( cat ../siteFolder ) 
+        plonePath=${fv_siteFolder}
     fi
 
     lpReturn
@@ -1454,23 +1454,23 @@ _EOF_
     if [ -f seeAlso.html ] ; then
       #htmlcat -o contentPlus seeAlso.html content
       if [ -f contentPlus.html ] ; then
-	cat  seeAlso.html content.html >> contentPlus.html
+        cat  seeAlso.html content.html >> contentPlus.html
       else
-	cat  seeAlso.html content.html > contentPlus.html
+        cat  seeAlso.html content.html > contentPlus.html
       fi
       pageContentFileName="contentPlus.html"
     else
       if [ -f contentPlus.html ] ; then
-	opDo eval "cat  content.html >> contentPlus.html"
+        opDo eval "cat  content.html >> contentPlus.html"
         pageContentFileName="contentPlus.html"
        else
-	  pageContentFileName="content.html"
+          pageContentFileName="content.html"
        fi
     fi
 
     if [ -f contentPlus.html ] ; then
-	opDo eval "tidy -utf8 contentPlus.html > contentPlus.tidy 2> /dev/null"
-	opDo mv contentPlus.tidy contentPlus.html
+        opDo eval "tidy -utf8 contentPlus.html > contentPlus.tidy 2> /dev/null"
+        opDo mv contentPlus.tidy contentPlus.html
     fi
     
     lpReturn
@@ -1492,17 +1492,17 @@ _EOF_
     opDo vis_page_method_varsPrep
 
     case "${fv_contentProcessing}" in
-	"none")
+        "none")
             ANV_cooked "contentProcessing=${fv_contentProcessing} -- Processing Skipped"
-	    lpReturn
-	    ;;
-	"std"|"lcnt")
-	    doNothing
-	    ;;
-	*)
-	    EH_problem "Unexpected contentProcessing=${fv_contentProcessing} -- Processing Skipped"
-	    lpReturn 1
-	    ;;
+            lpReturn
+            ;;
+        "std"|"lcnt")
+            doNothing
+            ;;
+        *)
+            EH_problem "Unexpected contentProcessing=${fv_contentProcessing} -- Processing Skipped"
+            lpReturn 1
+            ;;
     esac
 
 
@@ -1527,17 +1527,17 @@ _EOF_
     opDo vis_page_method_varsPrep
 
     case "${fv_contentProcessing}" in
-	"none")
+        "none")
             ANV_cooked "contentProcessing=${fv_contentProcessing} -- Processing Skipped"
-	    lpReturn
-	    ;;
-	"std"|"lcnt")
-	    doNothing
-	    ;;
-	*)
-	    EH_problem "Unexpected contentProcessing=${fv_contentProcessing} -- Processing Skipped"
-	    lpReturn 1
-	    ;;
+            lpReturn
+            ;;
+        "std"|"lcnt")
+            doNothing
+            ;;
+        *)
+            EH_problem "Unexpected contentProcessing=${fv_contentProcessing} -- Processing Skipped"
+            lpReturn 1
+            ;;
     esac
 
     opDo bystarPlone3Commands.sh -p bystarUid=${bystarUid} -p siteFolder="${plonePath}" -p sitePage="${pageName}" -p title="${pageTitleEnc}"  -p description="${pageDescriptionEnc}" -p inputFile="${pageContentFileName}" -i pageUploadHtmlAndPublish
@@ -1643,9 +1643,9 @@ _EOF_
 
     # Delete Later
     # if [ "$( echo contentBody.html.[0-9]* )" = "contentBody.html.[0-9]*" ] ; then
-    # 	ANT_raw "Skipped: Nothing to Clean"
+    #   ANT_raw "Skipped: Nothing to Clean"
     # else 
-    # 	opDo /bin/rm contentBody.html.[0-9]*
+    #   opDo /bin/rm contentBody.html.[0-9]*
     # fi
 }
 
@@ -1772,8 +1772,8 @@ _EOF_
     processedContent="./webPageLcnt/heveaHtml-webpage/index.html"
 
     if [ ! -s "${processedContent}" ] ; then 
-	EH_problem "Missing ${processedContent}"
-	lpReturn 101
+        EH_problem "Missing ${processedContent}"
+        lpReturn 101
     fi
 
     thisOutFile="./contentBody.html"
@@ -1783,25 +1783,25 @@ _EOF_
     opDo elispFilterHtml.sh -i deTitle ${thisOutFile}
 
     if [ -s ./contentPreface.html ] ; then
-	contentPreface="./contentPreface.html"
+        contentPreface="./contentPreface.html"
     else
-	contentPreface=""
+        contentPreface=""
     fi
 
     local contentAfterBody=""
 
     if [ -s ./contentAfterBody.html ] ; then
-	contentAfterBody="./contentAfterBody.html"
+        contentAfterBody="./contentAfterBody.html"
     else
-	contentAfterBody=""
+        contentAfterBody=""
     fi
 
     
     if [ -z "${ContentsReplacement}" ] ; then
-	#opDo eval "htmlcat  ${contentPreface} ${thisOutFile} ${contentAfterBody} > ./content.html"
-	opDo eval "cat  ${contentPreface} ${thisOutFile} ${contentAfterBody} > ./content.html"
+        #opDo eval "htmlcat  ${contentPreface} ${thisOutFile} ${contentAfterBody} > ./content.html"
+        opDo eval "cat  ${contentPreface} ${thisOutFile} ${contentAfterBody} > ./content.html"
     else
-	opDo eval "cat  ${contentPreface} ${thisOutFile} ${contentAfterBody} | sed  's:--SEC ANCHOR --.Contents./H2:--SEC ANCHOR -->${ContentsReplacement}</H2:' > ./content.html"
+        opDo eval "cat  ${contentPreface} ${thisOutFile} ${contentAfterBody} | sed  's:--SEC ANCHOR --.Contents./H2:--SEC ANCHOR -->${ContentsReplacement}</H2:' > ./content.html"
     fi
 
 
@@ -1923,24 +1923,24 @@ _EOF_
     typeset objectType=$( cat ./objectType )
 
     case ${objectType} in
-	"page")
-	    doNothing
-	    ;;
-	"pageLcnt")
-	    EH_problem "objectType=${objectType} -- Previously Processed -- Processing Skipped"
-	    lpReturn 1
-	    ;;
-	*)
-	    EH_problem "Unexpected objectType=${objectType} -- Processing Skipped"
-	    lpReturn 1
-	    ;;
+        "page")
+            doNothing
+            ;;
+        "pageLcnt")
+            EH_problem "objectType=${objectType} -- Previously Processed -- Processing Skipped"
+            lpReturn 1
+            ;;
+        *)
+            EH_problem "Unexpected objectType=${objectType} -- Processing Skipped"
+            lpReturn 1
+            ;;
     esac
 
     opDo eval "echo pageLcnt > ./objectType"
 
     if [ -d "${here}/webPageLcnt" ] ; then
-	EH_problem "Directory ${here}/webPageLcnt Exists -- Processing Skipped"
-	lpReturn 101
+        EH_problem "Directory ${here}/webPageLcnt Exists -- Processing Skipped"
+        lpReturn 101
     fi
 
     opDoExit mkdir "${here}/webPageLcnt"
@@ -1971,26 +1971,26 @@ _EOF_
     typeset objectType=$( cat ./objectType )
 
     case ${objectType} in
-	"pageLcnt")
-	    doNothing
-	    ;;
-	"page")
-	    EH_problem "objectType=${objectType} -- Previously Processed -- Processing Skipped"
-	    lpReturn 1
-	    ;;
-	*)
-	    EH_problem "Unexpected objectType=${objectType} -- Processing Skipped"
-	    lpReturn 1
-	    ;;
+        "pageLcnt")
+            doNothing
+            ;;
+        "page")
+            EH_problem "objectType=${objectType} -- Previously Processed -- Processing Skipped"
+            lpReturn 1
+            ;;
+        *)
+            EH_problem "Unexpected objectType=${objectType} -- Processing Skipped"
+            lpReturn 1
+            ;;
     esac
 
     opDo eval "echo page > ./objectType"
 
     if [ -d "${here}/webPageLcnt" ] ; then
-	FN_dirSafeKeep "${here}/webPageLcnt"
+        FN_dirSafeKeep "${here}/webPageLcnt"
     else
-	EH_problem "Missing Directory ${here}/webPageLcnt Exists -- Unexpected"
-	lpReturn 101
+        EH_problem "Missing Directory ${here}/webPageLcnt Exists -- Unexpected"
+        lpReturn 101
     fi
 
     lpReturn
@@ -2035,18 +2035,18 @@ _EOF_
     bystarAcctPathAnalyze ${here}
   
     for thisPage in $* ; do
-	opDo cd ${here}
-	if [[ -d ${thisPage} ]] ; then
-	    EH_problem "${thisPage} Already exists"
-	else 
-	    opDo mkdir ${thisPage}
-	fi
-	opDo cd ${thisPage}
+        opDo cd ${here}
+        if [[ -d ${thisPage} ]] ; then
+            EH_problem "${thisPage} Already exists"
+        else 
+            opDo mkdir ${thisPage}
+        fi
+        opDo cd ${thisPage}
 
-	opDo vis_files_method_startUpdate
+        opDo vis_files_method_startUpdate
 
-	opDo pwd
-	opDo ls -l 
+        opDo pwd
+        opDo ls -l 
     done
 
     lpReturn
@@ -2065,18 +2065,18 @@ _EOF_
     vis_leafThereTag ${cwd} "plone3Proc.sh"
 
     if [ -f plone3Proc.sh ] ; then
-	ANT_raw "plone3Proc.sh  Already exists -- Doing Nothing"
+        ANT_raw "plone3Proc.sh  Already exists -- Doing Nothing"
     else
-	opDo cp /libre/ByStar/InitialTemplates/lcaPlone/Starts/plone3NewProc.sh plone3Proc.sh
-	opDo vis_dblockUpdateFile plone3Proc.sh
-	opDo chmod 775 plone3Proc.sh
+        opDo cp /libre/ByStar/InitialTemplates/lcaPlone/Starts/plone3NewProc.sh plone3Proc.sh
+        opDo vis_dblockUpdateFile plone3Proc.sh
+        opDo chmod 775 plone3Proc.sh
     fi
 
     if [ -f ${poObjectTypeFileName} ] ; then
-	ANT_raw "${poObjectTypeFileName}  Already exists -- Doing Nothing"
+        ANT_raw "${poObjectTypeFileName}  Already exists -- Doing Nothing"
     else
-	thisObjectType=${poObjectTypeEnum[files]}
-	opDo eval echo "${thisObjectType}" \> "${poObjectTypeFileName}"
+        thisObjectType=${poObjectTypeEnum[files]}
+        opDo eval echo "${thisObjectType}" \> "${poObjectTypeFileName}"
     fi
 
     opDo cp ../siteFolder .
@@ -2097,14 +2097,14 @@ _EOF_
     bystarAcctPathAnalyze ${here}
 
     if [ -f ./siteFolder ] ; then
-	fv_siteFolder=$( cat ./siteFolder) 
-	plonePath=${fv_siteFolder}
+        fv_siteFolder=$( cat ./siteFolder) 
+        plonePath=${fv_siteFolder}
     elif  [ -f ../siteFolder ] ; then
-	fv_siteFolder=$( cat ../siteFolder ) 
-	plonePath=${fv_siteFolder}
+        fv_siteFolder=$( cat ../siteFolder ) 
+        plonePath=${fv_siteFolder}
     else
-	EH_problem "Missing siteFolder"
-	lpReturn 101
+        EH_problem "Missing siteFolder"
+        lpReturn 101
     fi
 
     lpReturn
@@ -2169,8 +2169,8 @@ _EOF_
     opDo vis_files_method_varsPrep
 
     if [ ! -f ./filesList ] ; then
-	EH_problem "Missing ${here}/filesList"
-	lpReturn 101
+        EH_problem "Missing ${here}/filesList"
+        lpReturn 101
     fi
 
     opDo vis_filesListUpload ./filesList
@@ -2193,19 +2193,19 @@ _EOF_
     opDo vis_files_method_varsPrep
 
     if [ ! -f "${thisFilesList}" ] ; then
-	EH_problem "Missing ${thisFilesList}"
-	lpReturn 101
+        EH_problem "Missing ${thisFilesList}"
+        lpReturn 101
     fi
 
     fv_thisFilesList=$( cat ${thisFilesList} )
 
     if [ -z "${fv_thisFilesList}" ] ; then
-	EH_problem "Empty ${thisFilesList} -- Skipped"
-	lpReturn 
+        EH_problem "Empty ${thisFilesList} -- Skipped"
+        lpReturn 
     fi
 
     for thisFile in ${fv_thisFilesList} ; do
-	opDo bystarPlone3Features.sh -p bystarUid=${bystarUid} -i uploadFileToFolder "${thisFile}" "${fv_siteFolder}"
+        opDo bystarPlone3Features.sh -p bystarUid=${bystarUid} -i uploadFileToFolder "${thisFile}" "${fv_siteFolder}"
     done
 }
 
@@ -2334,18 +2334,18 @@ _EOF_
     bystarAcctPathAnalyze ${here}
   
     for thisPage in $* ; do
-	opDo cd ${here}
-	if [[ -d ${thisPage} ]] ; then
-	    EH_problem "${thisPage} Already exists"
-	else 
-	    opDo mkdir ${thisPage}
-	fi
-	opDo cd ${thisPage}
+        opDo cd ${here}
+        if [[ -d ${thisPage} ]] ; then
+            EH_problem "${thisPage} Already exists"
+        else 
+            opDo mkdir ${thisPage}
+        fi
+        opDo cd ${thisPage}
 
-	opDo vis_rawFiles_method_startUpdate
+        opDo vis_rawFiles_method_startUpdate
 
-	opDo pwd
-	opDo ls -l 
+        opDo pwd
+        opDo ls -l 
     done
 
     lpReturn
@@ -2367,27 +2367,27 @@ _EOF_
 
     albumName=$( vis_galleriaAlbumNameGet )
     if [ -z "${albumName}" ] ; then
-	EH_problem "Missing albumName"
+        EH_problem "Missing albumName"
     else
-	albumName="noAlbum"
+        albumName="noAlbum"
     fi
 
     echo album=${albumName} bystarUid=${bystarUid}
 
 
     if [ -f plone3Proc.sh ] ; then
-	ANT_raw "plone3Proc.sh  Already exists -- Doing Nothing"
+        ANT_raw "plone3Proc.sh  Already exists -- Doing Nothing"
     else
-	opDo cp /libre/ByStar/InitialTemplates/lcaPlone/Starts/plone3NewProc.sh plone3Proc.sh
-	opDo vis_dblockUpdateFile plone3Proc.sh
-	opDo chmod 775 plone3Proc.sh
+        opDo cp /libre/ByStar/InitialTemplates/lcaPlone/Starts/plone3NewProc.sh plone3Proc.sh
+        opDo vis_dblockUpdateFile plone3Proc.sh
+        opDo chmod 775 plone3Proc.sh
     fi
 
     if [ -f ${poObjectTypeFileName} ] ; then
-	ANT_raw "${poObjectTypeFileName}  Already exists -- Doing Nothing"
+        ANT_raw "${poObjectTypeFileName}  Already exists -- Doing Nothing"
     else
-	thisObjectType=${poObjectTypeEnum[rawFiles]}
-	opDo eval echo "${thisObjectType}" \> "${poObjectTypeFileName}"
+        thisObjectType=${poObjectTypeEnum[rawFiles]}
+        opDo eval echo "${thisObjectType}" \> "${poObjectTypeFileName}"
     fi
 
     FN_fileSafeKeep  copyMethod
@@ -2478,15 +2478,15 @@ _EOF_
     opDo vis_rawFiles_method_varsPrep
 
     if [ ! -f ./rawFilesList ] ; then
-	EH_problem "Missing ${here}/fileList"
-	lpReturn 101
+        EH_problem "Missing ${here}/fileList"
+        lpReturn 101
     fi
 
     fv_rawFilesList=$( cat ./rawFilesList )
 
     if [ -z "${fv_rawFilesList}" ] ; then
-	EH_problem "Empty ./rawFilesList -- Skipped"
-	lpReturn 
+        EH_problem "Empty ./rawFilesList -- Skipped"
+        lpReturn 
     fi
 
     fv_copyMethod=$( cat ./copyMethod )
@@ -2494,69 +2494,69 @@ _EOF_
     fv_destDir=$( cat ./destDir )
 
     if [ -z "${fv_destDir}" ] ; then
-	EH_problem "Empty ./destDir -- Skipped"
-	lpReturn 
+        EH_problem "Empty ./destDir -- Skipped"
+        lpReturn 
     fi
 
     case "${fv_copyMethod}" in
-	""|"native")
+        ""|"native")
 
-	    # for thisFile in ${fv_rawFilesList} ; do
-	    # 	opDo echo cp ${thisFile} ${fv_destDir}
-	    # done
+            # for thisFile in ${fv_rawFilesList} ; do
+            #   opDo echo cp ${thisFile} ${fv_destDir}
+            # done
 
-	    opDo mkdir -p ${bystarAcctBase}/lcaApache2/web/htdocs${fv_destDir}
+            opDo mkdir -p ${bystarAcctBase}/lcaApache2/web/htdocs${fv_destDir}
 
-	    opDo cp ${fv_rawFilesList} ${bystarAcctBase}/lcaApache2/web/htdocs${fv_destDir}
-	    ;;
+            opDo cp ${fv_rawFilesList} ${bystarAcctBase}/lcaApache2/web/htdocs${fv_destDir}
+            ;;
 
-	"ssh")
-	    if [ -z "${fv_destHost}" ] ; then
-		EH_problem "Empty ./destHost -- Skipped"
-		lpReturn 
-	    fi
+        "ssh")
+            if [ -z "${fv_destHost}" ] ; then
+                EH_problem "Empty ./destHost -- Skipped"
+                lpReturn 
+            fi
 
-	    opDoComplain sudo -u lsipusr ssh lsipusr@${fv_destHost} mkdir -p  ${bystarAcctBase}/lcaApache2/web/htdocs${fv_destDir}
+            opDoComplain sudo -u lsipusr ssh lsipusr@${fv_destHost} mkdir -p  ${bystarAcctBase}/lcaApache2/web/htdocs${fv_destDir}
 
-	    #opDoComplain sudo -u lsipusr scp -q ${fv_rawFilesList}  ${fv_destHost}:${bystarAcctBase}/lcaApache2/web/htdocs${fv_destDir}
-	    opDoComplain sudo -u lsipusr scp -q ${fv_rawFilesList}  ${fv_destHost}:${bystarAcctBase}/lcaApache2/web/htdocs${fv_destDir}
+            #opDoComplain sudo -u lsipusr scp -q ${fv_rawFilesList}  ${fv_destHost}:${bystarAcctBase}/lcaApache2/web/htdocs${fv_destDir}
+            opDoComplain sudo -u lsipusr scp -q ${fv_rawFilesList}  ${fv_destHost}:${bystarAcctBase}/lcaApache2/web/htdocs${fv_destDir}
 
-	    opDoComplain sudo -u lsipusr ssh lsipusr@${fv_destHost} ls -lR  ${bystarAcctBase}/lcaApache2/web/htdocs${fv_destDir}
+            opDoComplain sudo -u lsipusr ssh lsipusr@${fv_destHost} ls -lR  ${bystarAcctBase}/lcaApache2/web/htdocs${fv_destDir}
 
-	    ;;
+            ;;
 
-	"rawNative")
+        "rawNative")
 
-	    # for thisFile in ${fv_rawFilesList} ; do
-	    # 	opDo echo cp ${thisFile} ${fv_destDir}
-	    # done
+            # for thisFile in ${fv_rawFilesList} ; do
+            #   opDo echo cp ${thisFile} ${fv_destDir}
+            # done
 
-	    opDo mkdir -p ${fv_destDir}
+            opDo mkdir -p ${fv_destDir}
 
-	    opDo cp ${fv_rawFilesList} ${fv_destDir}
-	    opDo ls -ldt ${fv_destDir}/*
-	    ;;
-
-
-	"rawSsh")
-	    if [ -z "${fv_destHost}" ] ; then
-		EH_problem "Empty ./destHost -- Skipped"
-		lpReturn 
-	    fi
-
-	    opDoComplain sudo -u lsipusr ssh lsipusr@${fv_destHost} mkdir -p  ${fv_destDir}
-
-	    opDoComplain sudo -u lsipusr scp -q ${fv_rawFilesList}  ${fv_destHost}:${fv_destDir}
-
-	    opDoComplain sudo -u lsipusr ssh lsipusr@${fv_destHost} ls -lR  ${fv_destDir}
-
-	    ;;
+            opDo cp ${fv_rawFilesList} ${fv_destDir}
+            opDo ls -ldt ${fv_destDir}/*
+            ;;
 
 
-	*)
-	    EH_problem "Unexpected copyMethod=${fv_copyMethod} -- Processing Skipped"
-	    lpReturn 1
-	    ;;
+        "rawSsh")
+            if [ -z "${fv_destHost}" ] ; then
+                EH_problem "Empty ./destHost -- Skipped"
+                lpReturn 
+            fi
+
+            opDoComplain sudo -u lsipusr ssh lsipusr@${fv_destHost} mkdir -p  ${fv_destDir}
+
+            opDoComplain sudo -u lsipusr scp -q ${fv_rawFilesList}  ${fv_destHost}:${fv_destDir}
+
+            opDoComplain sudo -u lsipusr ssh lsipusr@${fv_destHost} ls -lR  ${fv_destDir}
+
+            ;;
+
+
+        *)
+            EH_problem "Unexpected copyMethod=${fv_copyMethod} -- Processing Skipped"
+            lpReturn 1
+            ;;
     esac
     
     lpReturn
@@ -2710,9 +2710,9 @@ _EOF_
     bystarAcctPathAnalyze ${here}
 
     if [[ -d ${linkSrcPage} ]] ; then
-	EH_problem "${linkSrcPage} Already exists"
+        EH_problem "${linkSrcPage} Already exists"
     else 
-	opDo mkdir ${linkSrcPage}
+        opDo mkdir ${linkSrcPage}
     fi
     opDo cd ${linkSrcPage}
 
@@ -2737,43 +2737,43 @@ _EOF_
     vis_leafThereTag ${cwd} "plone3Proc.sh"
 
     if [ -f plone3Proc.sh ] ; then
-	ANT_raw "plone3Proc.sh  Already exists -- Doing Nothing"
+        ANT_raw "plone3Proc.sh  Already exists -- Doing Nothing"
     else
-	opDo cp /libre/ByStar/InitialTemplates/lcaPlone/Starts/plone3NewProc.sh plone3Proc.sh
-	opDo vis_dblockUpdateFile plone3Proc.sh
-	opDo chmod 775 plone3Proc.sh
+        opDo cp /libre/ByStar/InitialTemplates/lcaPlone/Starts/plone3NewProc.sh plone3Proc.sh
+        opDo vis_dblockUpdateFile plone3Proc.sh
+        opDo chmod 775 plone3Proc.sh
     fi
 
     if [ -f ${poObjectTypeFileName} ] ; then
-	ANT_raw "${poObjectTypeFileName}  Already exists -- Doing Nothing"
+        ANT_raw "${poObjectTypeFileName}  Already exists -- Doing Nothing"
     else
-	thisObjectType=${poObjectTypeEnum[redirector]}
-	opDo eval echo "${thisObjectType}" \> "${poObjectTypeFileName}"
+        thisObjectType=${poObjectTypeEnum[redirector]}
+        opDo eval echo "${thisObjectType}" \> "${poObjectTypeFileName}"
     fi
 
     fileName="linkSrcFolder"
     if [ -f ${fileName} ] ; then
-	ANT_raw "${fileName} Already exists -- Doing Nothing"
+        ANT_raw "${fileName} Already exists -- Doing Nothing"
     else
-	if [ -f ../siteFolder ] ; then 
-	   opDo eval cat ../siteFolder \> ${fileName} 
-	else
-	    opDo eval echo "${plonePath}" \> ${fileName}
-	fi
+        if [ -f ../siteFolder ] ; then 
+           opDo eval cat ../siteFolder \> ${fileName} 
+        else
+            opDo eval echo "${plonePath}" \> ${fileName}
+        fi
     fi
     
     fileName="linkSrcPage"
     if [ -f ${fileName} ] ; then
-	ANT_raw "${fileName} Already exists -- Doing Nothing"
+        ANT_raw "${fileName} Already exists -- Doing Nothing"
     else
-	opDo eval echo "${linkSrcPage}" \> ${fileName}
+        opDo eval echo "${linkSrcPage}" \> ${fileName}
     fi
     
     fileName="linkDstUrl"
     if [ -f ${fileName} ] ; then
-	ANT_raw "${fileName} Already exists -- Doing Nothing"
+        ANT_raw "${fileName} Already exists -- Doing Nothing"
     else
-	opDo eval echo "${linkDst}" \> ${fileName}
+        opDo eval echo "${linkDst}" \> ${fileName}
     fi
 
 
@@ -2790,26 +2790,26 @@ _EOF_
 
     fileName="linkSrcFolder"
     if [ -f ${fileName} ] ; then
-	fileNameContent=$( cat ${fileName} )
-	eval fv_${fileName}=${fileNameContent}
+        fileNameContent=$( cat ${fileName} )
+        eval fv_${fileName}=${fileNameContent}
     else
-	EH_problem "Missing File: ${cwd}/${fileName}"
+        EH_problem "Missing File: ${cwd}/${fileName}"
     fi
 
     fileName="linkSrcPage"
     if [ -f ${fileName} ] ; then
-	fileNameContent=$( cat ${fileName} )
-	eval fv_${fileName}=${fileNameContent}
+        fileNameContent=$( cat ${fileName} )
+        eval fv_${fileName}=${fileNameContent}
     else
-	EH_problem "Missing File: ${cwd}/${fileName}"
+        EH_problem "Missing File: ${cwd}/${fileName}"
     fi
 
     fileName="linkDstUrl"
     if [ -f ${fileName} ] ; then
-	fileNameContent=$( cat ${fileName} )
-	eval fv_${fileName}=${fileNameContent}
+        fileNameContent=$( cat ${fileName} )
+        eval fv_${fileName}=${fileNameContent}
     else
-	EH_problem "Missing File: ${cwd}/${fileName}"
+        EH_problem "Missing File: ${cwd}/${fileName}"
     fi
 
     lpReturn
@@ -2865,18 +2865,18 @@ _EOF_
   for thisPage in ${targetPages} ; do
       opDo cd ${here}
       if [[ -d ${thisPage} ]] ; then
-	  opDo prepObjectVarsThere ${thisPage} 2> /dev/null
-	  # NOTYET prep needs to become objectType aware and not require content as mandatory for link
-	  #EH_retOnFail
+          opDo prepObjectVarsThere ${thisPage} 2> /dev/null
+          # NOTYET prep needs to become objectType aware and not require content as mandatory for link
+          #EH_retOnFail
 
-	  opDo cd ${here}/${thisPage}
+          opDo cd ${here}/${thisPage}
 
-	  prepObjectVarsInCwd "${poObjectTypeEnum[redirector]}"
+          prepObjectVarsInCwd "${poObjectTypeEnum[redirector]}"
 
-	  opDo echo bystarPlone3Commands.sh -p bystarUid=${bystarUid} -p siteFolder="${fv_linkSrcFolder}" -p sitePage="${fv_linkSrcPage}" -p title="RedirectingTo${fv_linkDstUrl}"  -p description="" -p linkDest="${fv_linkDstUrl}" -i linkAddAndPublish
-	  EH_retOnFail
+          opDo echo bystarPlone3Commands.sh -p bystarUid=${bystarUid} -p siteFolder="${fv_linkSrcFolder}" -p sitePage="${fv_linkSrcPage}" -p title="RedirectingTo${fv_linkDstUrl}"  -p description="" -p linkDest="${fv_linkDstUrl}" -i linkAddAndPublish
+          EH_retOnFail
       else
-	  EH_problem "Missing ${thisPage} -- skipped"
+          EH_problem "Missing ${thisPage} -- skipped"
       fi
   done
 }
@@ -3013,10 +3013,10 @@ _EOF_
     bystarAcctPathAnalyze ${here}
 
     if [[ -d ${srcFolderName} ]] ; then
-	EH_problem "${srcFolderName} Already exists"
-	return 1
+        EH_problem "${srcFolderName} Already exists"
+        return 1
     else 
-	opDo mkdir ${srcFolderName}
+        opDo mkdir ${srcFolderName}
     fi
     opDo cd ${srcFolderName}
 
@@ -3044,7 +3044,7 @@ _EOF_
 
     fileName="./index_html/linkSrcFolder"
     if [ -f siteFolder ] ; then 
-	opDo eval cat ./siteFolder \> ${fileName} 
+        opDo eval cat ./siteFolder \> ${fileName} 
     fi
      
     lpReturn
@@ -3058,26 +3058,26 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if [ -f excludeFromNav ] ; then
-	fv_excludeFromNav=$( cat excludeFromNav) 
+        fv_excludeFromNav=$( cat excludeFromNav) 
     else
-	fv_excludeFromNav="false"
+        fv_excludeFromNav="false"
     fi
 
     if [ -f pubState ] ; then
-	fv_pubState=$( cat pubState) 
+        fv_pubState=$( cat pubState) 
     else
-	fv_pubState="publish"
+        fv_pubState="publish"
     fi
 
     if [ -f folderTitle ] ; then
-	fv_folderTitleEnc="$( uriEncode.sh $( cat folderTitle) )"
+        fv_folderTitleEnc="$( uriEncode.sh $( cat folderTitle) )"
     else
-	fv_folderTitleEnc="$( uriEncode.sh ${pageTitle} )"
+        fv_folderTitleEnc="$( uriEncode.sh ${pageTitle} )"
     fi
 
     if [ -f siteFolder ] ; then
-	fv_siteFolder=$( cat siteFolder ) 
-	plonePath=${fv_siteFolder}
+        fv_siteFolder=$( cat siteFolder ) 
+        plonePath=${fv_siteFolder}
     fi
 
     lpReturn
@@ -3122,12 +3122,12 @@ _EOF_
     opDo bystarAcctPathAnalyze ${here}
 
     if [[ -d index_html ]] ; then
-	opDo vis_folder_method_varsPrep
+        opDo vis_folder_method_varsPrep
 
-	#opDo bystarPlone3Commands.sh -p bystarUid=${bystarUid} -p siteFolder="${plonePath}"  -p title="${pageTitleEnc}"  -p description="${pageDescriptionEnc}" -i folderCreate
-	opDo bystarPlone3Commands.sh -p bystarUid=${bystarUid} -p siteFolder="${plonePath}"  -p title="${fv_folderTitleEnc}"  -p description="${pageDescriptionEnc}" -i folderCreate
+        #opDo bystarPlone3Commands.sh -p bystarUid=${bystarUid} -p siteFolder="${plonePath}"  -p title="${pageTitleEnc}"  -p description="${pageDescriptionEnc}" -i folderCreate
+        opDo bystarPlone3Commands.sh -p bystarUid=${bystarUid} -p siteFolder="${plonePath}"  -p title="${fv_folderTitleEnc}"  -p description="${pageDescriptionEnc}" -i folderCreate
     else
-	EH_problem "Missing ${thisFile} -- skipped"
+        EH_problem "Missing ${thisFile} -- skipped"
     fi
 
     lpReturn
@@ -3325,7 +3325,7 @@ function bystarAcctPathAnalyzeDo {
          "${thisElem}_" == "wgetRegen_" ||
          "${thisElem}_" == "SiteStyle_" || 
          "${thisElem}_" == "InitialSiteStyle_" ||
-	 "${thisElem}_" == "InitialBanners_"  ]] ; then
+         "${thisElem}_" == "InitialBanners_"  ]] ; then
      acctBaseIndex=${count}
      #echo ${relPath}
      bystarAcctBase=`FN_dirsPart ${relPath}`
@@ -3341,10 +3341,10 @@ function bystarAcctPathAnalyzeDo {
       plonePath=""
     else
       # if [ "${thisElem}_" == "index_html_" ] ; then 
-      # 	  doNothing
+      #           doNothing
       #elif [ "${thisElem}_" != "Home_" ] ; then 
       if [ "${thisElem}_" != "Home_" ] ; then 
-	  plonePath="${plonePath}/${thisElem}"
+          plonePath="${plonePath}/${thisElem}"
       fi
     fi
    fi
@@ -3372,15 +3372,15 @@ function bystarAcctPathAnalyzeDo {
     bystarServiceSupportHookParamsSet ${cp_ServiceType} ${cp_ServiceSupportType}
 
     function acctBasePasswdGet {
-	# DUPLICATES bystarAcctAdmin.sh should stay in sync
+        # DUPLICATES bystarAcctAdmin.sh should stay in sync
         # bystarPasswd=$( bystarAcctAdmin.sh -p bystarUid="${bystarUid}" -i acctPasswdGet )
-	EH_assert [[ $# -eq 0 ]]
+        EH_assert [[ $# -eq 0 ]]
 
-	thisKey=$( STR_toLower ${cp_ServiceType} )
+        thisKey=$( STR_toLower ${cp_ServiceType} )
         #ANT_raw decryptedPasswd=$(  echo ${cp_currentPasswd}  | gcipher -C Vigenere -k ${thisKey} - )
-	decryptedPasswd=$(  echo ${cp_currentPasswd}  | gcipher -C Vigenere -k ${thisKey} - )
+        decryptedPasswd=$(  echo ${cp_currentPasswd}  | gcipher -C Vigenere -k ${thisKey} - )
 
-	echo ${decryptedPasswd}
+        echo ${decryptedPasswd}
     }
 
     #bystarPasswd=$( bystarDevelopers.sh -p bystarUid="${bystarUid}" -i acctPasswdGet )
@@ -3405,22 +3405,22 @@ _EOF_
     bystarAcctPathAnalyze $( pwd )
 
     if [ $#  -eq 1 ] ; then 
-	typeset thisParam=$1
-	
-	eval echo '$'${thisParam}
+        typeset thisParam=$1
+        
+        eval echo '$'${thisParam}
     else
-	echo contentEndPath=${contentEndPath}
-	if [ "${plonePath}_" == "_" ] ; then
-	    echo plonePath="/ -- ROOT"
-	else
-	    echo plonePath=${plonePath}
-	fi
-	echo bystarAcctBase=${bystarAcctBase}
-	echo bystarUid=${bystarUid}
-	echo bystarPasswd=${bystarPasswd}
-	echo bystarAcctType=${bystarAcctType}
+        echo contentEndPath=${contentEndPath}
+        if [ "${plonePath}_" == "_" ] ; then
+            echo plonePath="/ -- ROOT"
+        else
+            echo plonePath=${plonePath}
+        fi
+        echo bystarAcctBase=${bystarAcctBase}
+        echo bystarUid=${bystarUid}
+        echo bystarPasswd=${bystarPasswd}
+        echo bystarAcctType=${bystarAcctType}
 
-	echo bystarSiteFqdn=${bystarSiteFqdn}
+        echo bystarSiteFqdn=${bystarSiteFqdn}
     fi
 }
 
@@ -3495,7 +3495,7 @@ _EOF_
       typeset thisDescription=`cat ${thisFolder}/index_html/pageDescription`
     
       if [ "${thisDescription}_" = "_" ] ; then
-	thisDescription=${thisTitle}
+        thisDescription=${thisTitle}
       fi
 
       cat   << _EOF_
@@ -3555,24 +3555,24 @@ _EOF_
     seeAlsoHtmlHead
 
     if [ -s ./seeAlso.info ] ; then
-	cat  ./seeAlso.info |
-	while read thisLine ; do
+        cat  ./seeAlso.info |
+        while read thisLine ; do
 
-	    thisTitle=`echo ${thisLine} | cut -d '&' -f 1`
-	    thisDescription=`echo ${thisLine} | cut -d '&' -f 2`
-	    thisUrl=`echo ${thisLine} | cut -d '&' -f 3`
-	  
-	    if [ "${thisDescription}_" = "_" ] ; then
-		thisDescription=${thisTitle}
-	    fi
+            thisTitle=`echo ${thisLine} | cut -d '&' -f 1`
+            thisDescription=`echo ${thisLine} | cut -d '&' -f 2`
+            thisUrl=`echo ${thisLine} | cut -d '&' -f 3`
+          
+            if [ "${thisDescription}_" = "_" ] ; then
+                thisDescription=${thisTitle}
+            fi
 
-	    cat   << _EOF_
+            cat   << _EOF_
   <li><a href="${thisUrl}" title="${thisTitle}"><span>${thisDescription}</span></a></li>
 _EOF_
 
-	done
+        done
     else
-	EH_problem "Missing ./seeAlso.info -- Skipped"
+        EH_problem "Missing ./seeAlso.info -- Skipped"
     fi
     
     seeAlsoHtmlTail
@@ -3614,8 +3614,8 @@ _EOF_
     # Validate specified objectType
     thisEnumObjectType="${poObjectTypeEnum[${thisObjectType}]}"
     if [ -z "${thisEnumObjectType}" ] ; then
-	EH_problem "Invalid objectType=${thisObjectType}"
-	lpReturn
+        EH_problem "Invalid objectType=${thisObjectType}"
+        lpReturn
     fi
     
     startGenFunc=$( eval echo '$'{object_${thisObjectType}[startGen]} )
@@ -3645,24 +3645,24 @@ _EOF_
     bystarAcctPathAnalyze ${here}
 
     if [ $# -eq 1 ] ; then
-	thisObjectType=$1
+        thisObjectType=$1
 
-	if [ -f ${poObjectTypeFileName} ] ; then
-	    currentObjectType=$( cat ${poObjectTypeFileName} )
-	    if [ "${thisObjectType}" != "${currentObjectType}" ] ; then
-		EH_problem "objectType Mis-Match -- ${thisObjectType} != ${currentObjectType}"
-		EH_retOnFail
-	    fi
-	else
-	    opDo eval echo "${thisObjectType}" \> "${poObjectTypeFileName}"
-	fi
+        if [ -f ${poObjectTypeFileName} ] ; then
+            currentObjectType=$( cat ${poObjectTypeFileName} )
+            if [ "${thisObjectType}" != "${currentObjectType}" ] ; then
+                EH_problem "objectType Mis-Match -- ${thisObjectType} != ${currentObjectType}"
+                EH_retOnFail
+            fi
+        else
+            opDo eval echo "${thisObjectType}" \> "${poObjectTypeFileName}"
+        fi
     else
-	if [ -f ${poObjectTypeFileName} ] ; then
-	    thisObjectType=$( cat ${poObjectTypeFileName} )
-	else
-	    thisObjectType=$( vis_objectTypeInCwdGuess )
-	    opDo eval echo "${thisObjectType}" \> "${poObjectTypeFileName}"
-	fi
+        if [ -f ${poObjectTypeFileName} ] ; then
+            thisObjectType=$( cat ${poObjectTypeFileName} )
+        else
+            thisObjectType=$( vis_objectTypeInCwdGuess )
+            opDo eval echo "${thisObjectType}" \> "${poObjectTypeFileName}"
+        fi
     fi
 
     startUpdateFunc=$( eval echo '$'{object_${thisObjectType}[startUpdate]} )
@@ -3692,7 +3692,7 @@ _EOF_
 
     # NOTYET -- Try to better determine
     if [ -d  "index_html" ] ; then
-	thisObjectType=${poObjectTypeEnum[folder]}
+        thisObjectType=${poObjectTypeEnum[folder]}
     fi
 
     echo ${thisObjectType}
@@ -3727,9 +3727,9 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if grep "seedPlone3NewProc.sh" ./plone3Proc.sh ; then
-	ANT_raw "Skipped: ./plone3Proc.sh is already based on seedPlone3NewProc.sh."
+        ANT_raw "Skipped: ./plone3Proc.sh is already based on seedPlone3NewProc.sh."
     else
-	opDo vis_plone3ProcRenew
+        opDo vis_plone3ProcRenew
     fi
 }
 
@@ -3771,8 +3771,8 @@ _EOF_
     # Validate specified objectType
     thisEnumObjectType="${poObjectTypeEnum[${thisObjectType}]}"
     if [ -z "${thisEnumObjectType}" ] ; then
-	EH_problem "Invalid objectType=$1"
-	lpReturn
+        EH_problem "Invalid objectType=$1"
+        lpReturn
     fi
     
     updateFunc=$( eval echo '$'{object_${thisObjectType}[update]} )
@@ -3800,8 +3800,8 @@ _EOF_
     # Validate specified objectType
     thisEnumObjectType="${poObjectTypeEnum[${thisObjectType}]}"
     if [ -z "${thisEnumObjectType}" ] ; then
-	EH_problem "Invalid objectType=$1"
-	lpReturn
+        EH_problem "Invalid objectType=$1"
+        lpReturn
     fi
     
     updateFunc=$( eval echo '$'{object_${thisObjectType}[dispositions]} )
@@ -3829,8 +3829,8 @@ _EOF_
     # Validate specified objectType
     thisEnumObjectType="${poObjectTypeEnum[${thisObjectType}]}"
     if [ -z "${thisEnumObjectType}" ] ; then
-	EH_problem "Invalid objectType=$1"
-	lpReturn
+        EH_problem "Invalid objectType=$1"
+        lpReturn
     fi
     
     updateFunc=$( eval echo '$'{object_${thisObjectType}[examplesMenu]} )
@@ -3857,8 +3857,8 @@ _EOF_
     # Validate specified objectType
     thisEnumObjectType="${poObjectTypeEnum[${thisObjectType}]}"
     if [ -z "${thisEnumObjectType}" ] ; then
-	EH_problem "Invalid objectType=$1"
-	lpReturn
+        EH_problem "Invalid objectType=$1"
+        lpReturn
     fi
     
     updateFunc=$( eval echo '$'{object_${thisObjectType}[validate]} )
@@ -3887,8 +3887,8 @@ _EOF_
     # Validate specified objectType
     thisEnumObjectType="${poObjectTypeEnum[${thisObjectType}]}"
     if [ -z "${thisEnumObjectType}" ] ; then
-	EH_problem "Invalid objectType=$1"
-	lpReturn
+        EH_problem "Invalid objectType=$1"
+        lpReturn
     fi
     
     updateFunc=$( eval echo '$'{object_${thisObjectType}[export]} )
@@ -3932,22 +3932,22 @@ _EOF_
     EH_assert [[ $# -le 1 ]]
 
     if [ $# -eq 1 ] ; then
-	thisObjectType=$1
+        thisObjectType=$1
 
-	if [ -f ${poObjectTypeFileName} ] ; then
-	    currentObjectType=$( cat ${poObjectTypeFileName} )
-	    if [ "${thisObjectType}" != "${currentObjectType}" ] ; then
-		EH_problem "objectType Mis-Match -- ${thisObjectType} != ${currentObjectType}"
-		EH_retOnFail
-	    fi
-	fi
+        if [ -f ${poObjectTypeFileName} ] ; then
+            currentObjectType=$( cat ${poObjectTypeFileName} )
+            if [ "${thisObjectType}" != "${currentObjectType}" ] ; then
+                EH_problem "objectType Mis-Match -- ${thisObjectType} != ${currentObjectType}"
+                EH_retOnFail
+            fi
+        fi
     else
-	if [ -f ${poObjectTypeFileName} ] ; then
-	    thisObjectType=$( cat ${poObjectTypeFileName} )
-	else
-	    EH_problem "Missing ${poObjectTypeFileName}"
-	    EH_retOnFail
-	fi
+        if [ -f ${poObjectTypeFileName} ] ; then
+            thisObjectType=$( cat ${poObjectTypeFileName} )
+        else
+            EH_problem "Missing ${poObjectTypeFileName}"
+            EH_retOnFail
+        fi
     fi
 
     varsPrepFunc=$( eval echo '$'{object_${thisObjectType}[varsPrep]} ) 
@@ -3985,25 +3985,25 @@ _EOF_
     bystarAcctPathAnalyze ${here}
 
     if [ $# -eq 1 ] ; then
-	thisObjectType=$1
+        thisObjectType=$1
 
-	if [ -f ${poObjectTypeFileName} ] ; then
-	    currentObjectType=$( cat ${poObjectTypeFileName} )
-	    if [ "${thisObjectType}" != "${currentObjectType}" ] ; then
-		EH_problem "objectType Mis-Match -- ${thisObjectType} != ${currentObjectType}"
-		EH_retOnFail
-	    fi
-	else
-	    opDo eval echo "${thisObjectType}" \> "${poObjectTypeFileName}"
-	fi
+        if [ -f ${poObjectTypeFileName} ] ; then
+            currentObjectType=$( cat ${poObjectTypeFileName} )
+            if [ "${thisObjectType}" != "${currentObjectType}" ] ; then
+                EH_problem "objectType Mis-Match -- ${thisObjectType} != ${currentObjectType}"
+                EH_retOnFail
+            fi
+        else
+            opDo eval echo "${thisObjectType}" \> "${poObjectTypeFileName}"
+        fi
     else
-	if [ -f ${poObjectTypeFileName} ] ; then
-	    thisObjectType=$( cat ${poObjectTypeFileName} )
-	else
-	    # NOTYET -- Try to better determine
-	    thisObjectType=${poObjectTypeEnum[page]}
-	    opDo eval echo "${thisObjectType}" \> "${poObjectTypeFileName}"
-	fi
+        if [ -f ${poObjectTypeFileName} ] ; then
+            thisObjectType=$( cat ${poObjectTypeFileName} )
+        else
+            # NOTYET -- Try to better determine
+            thisObjectType=${poObjectTypeEnum[page]}
+            opDo eval echo "${thisObjectType}" \> "${poObjectTypeFileName}"
+        fi
     fi
 
     infoFunc=$( eval echo '$'{object_${thisObjectType}[info]} )
@@ -4029,8 +4029,8 @@ function vis_objectLocalPrep {
     # Validate specified objectType
     thisEnumObjectType="${poObjectTypeEnum[${thisObjectType}]}"
     if [ -z "${thisEnumObjectType}" ] ; then
-	EH_problem "Invalid objectType=${thisObjectType}"
-	lpReturn
+        EH_problem "Invalid objectType=${thisObjectType}"
+        lpReturn
     fi
     
     prepFunc=$( eval echo '$'{object_${thisObjectType}[prep]} )
@@ -4055,10 +4055,10 @@ _EOF_
     # print "%%%%% ${currentDir} %%%%%"
 
     for thisOne in $( vis_effectiveSitePages ) ; do
-	opDoComplain cd ${currentDir}/${thisOne} || continue
-	print "%%%%%% ${currentDir}/${thisOne} %%%%%"
+        opDoComplain cd ${currentDir}/${thisOne} || continue
+        print "%%%%%% ${currentDir}/${thisOne} %%%%%"
     
-	opDo vis_startObjectUpdateInCwd
+        opDo vis_startObjectUpdateInCwd
     done
 }
 
@@ -4074,12 +4074,12 @@ function vis_initialPageContentGen {
 
   case ${contentEndPath} in 
     "Resume")
-	      cat   << _EOF_
+              cat   << _EOF_
    My Resume ;;; Is This and That
 _EOF_
          ;;
       *)
-	cat  << _EOF_
+        cat  << _EOF_
 <html>
 <head>
 <title>${pageName}</title>
@@ -4092,7 +4092,7 @@ Non Specific Initial Page Content. To be edited.
 </body>
 </html>
 _EOF_
-	 ;;
+         ;;
     esac
 }
 
@@ -4108,12 +4108,12 @@ function vis_initialIndexContentGen {
 
   case ${contentEndPath} in 
     "Resume")
-	      cat   << _EOF_
+              cat   << _EOF_
    My Resume ;;; Is This and That
 _EOF_
          ;;
       *)
-	cat  << _EOF_
+        cat  << _EOF_
 <html>
 <head>
 <title>${pageName}</title>
@@ -4126,7 +4126,7 @@ Non Specific Initial Index Content. To be edited.
 </body>
 </html>
 _EOF_
-	 ;;
+         ;;
     esac
 }
 
@@ -4301,20 +4301,20 @@ _EOF_
 
 
     if [ "${fv_layoutLeftPortlets}" == "${webLayoutLeftPortletsEnum[none]}" ] ; then
-	portletStatus="${poLeftPortletPresenceEnum[absent]}"
+        portletStatus="${poLeftPortletPresenceEnum[absent]}"
     elif [ "${fv_layoutLeftPortlets}" == "${webLayoutLeftPortletsEnum[all]}" ] ; then
-	portletStatus="${poLeftPortletPresenceEnum[present]}"
+        portletStatus="${poLeftPortletPresenceEnum[present]}"
     else
-	EH_problem "Bad fv_layoutLeftPortlets -- ${fv_layoutLeftPortlets}"
+        EH_problem "Bad fv_layoutLeftPortlets -- ${fv_layoutLeftPortlets}"
     fi
 
     if [[ "${portletStatus}_" == "present_" ]] ; then
-	opDo bystarPlone3Portlets.sh -p bystarUid=${bystarUid} -p siteFolder="${plonePath}" -i ploneManagePortletsLeft ${portletStatus}
+        opDo bystarPlone3Portlets.sh -p bystarUid=${bystarUid} -p siteFolder="${plonePath}" -i ploneManagePortletsLeft ${portletStatus}
     elif [[ "${portletStatus}_" == "absent_" ]] ; then
-	opDo bystarPlone3Portlets.sh -p bystarUid=${bystarUid} -p siteFolder="${plonePath}" -i ploneManagePortletsLeft ${portletStatus}
+        opDo bystarPlone3Portlets.sh -p bystarUid=${bystarUid} -p siteFolder="${plonePath}" -i ploneManagePortletsLeft ${portletStatus}
     else
-	EH_problem "Bad portletStatus -- ${portletStatus}"
-	EH_retOnFail
+        EH_problem "Bad portletStatus -- ${portletStatus}"
+        EH_retOnFail
     fi
 }
 
@@ -4344,20 +4344,20 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if [ "${fv_layoutRightPortlets}" == "${webLayoutRightPortletsEnum[none]}" ] ; then
-	portletStatus="absent"
+        portletStatus="absent"
     elif [ "${fv_layoutRightPortlets}" == "${webLayoutRightPortletsEnum[all]}" ] ; then
-	portletStatus="present"
+        portletStatus="present"
     else
-	EH_problem "Bad fv_layoutRightPortlets -- ${fv_layoutRightPortlets}"
+        EH_problem "Bad fv_layoutRightPortlets -- ${fv_layoutRightPortlets}"
     fi
 
     if [[ "${portletStatus}_" == "present_" ]] ; then
-	opDo bystarPlone3Portlets.sh -p bystarUid=${bystarUid} -p siteFolder="${plonePath}" -i ploneManagePortletsRight ${portletStatus}
+        opDo bystarPlone3Portlets.sh -p bystarUid=${bystarUid} -p siteFolder="${plonePath}" -i ploneManagePortletsRight ${portletStatus}
     elif [[ "${portletStatus}_" == "absent_" ]] ; then
-	opDo bystarPlone3Portlets.sh -p bystarUid=${bystarUid} -p siteFolder="${plonePath}" -i ploneManagePortletsRight ${portletStatus}
+        opDo bystarPlone3Portlets.sh -p bystarUid=${bystarUid} -p siteFolder="${plonePath}" -i ploneManagePortletsRight ${portletStatus}
     else
-	EH_problem "Bad portletStatus -- ${portletStatus}"
-	EH_retOnFail
+        EH_problem "Bad portletStatus -- ${portletStatus}"
+        EH_retOnFail
     fi
 }
 
@@ -4390,14 +4390,14 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
     
     if [ "${fv_excludeFromNav}" == "true" ] ; then
-	ANT_raw "TODO  true excludeFromNav for ${thisPage}"
-	opDo bystarPlone3Commands.sh -p bystarUid=${bystarUid} -p siteFolder="${plonePath}"  -p title="${pageTitleEnc}"  -p description="${pageDescriptionEnc}" -i folderExcludeFromNav true
+        ANT_raw "TODO  true excludeFromNav for ${thisPage}"
+        opDo bystarPlone3Commands.sh -p bystarUid=${bystarUid} -p siteFolder="${plonePath}"  -p title="${pageTitleEnc}"  -p description="${pageDescriptionEnc}" -i folderExcludeFromNav true
             #bystarPlone3Commands.sh -h -v -n showRun -p bystarUid=ea-59002 -p siteFolder="Gallery"  -p title="images"  -p description="images" -i folderExcludeFromNav false
     elif [ "${fv_excludeFromNav}" == "false" ] ; then
-	ANT_raw "NOT excludeFromNav for ${thisPage} -- Reason=false"
-	opDo bystarPlone3Commands.sh -p bystarUid=${bystarUid} -p siteFolder="${plonePath}"  -p title="${pageTitleEnc}"  -p description="${pageDescriptionEnc}" -i folderExcludeFromNav false
+        ANT_raw "NOT excludeFromNav for ${thisPage} -- Reason=false"
+        opDo bystarPlone3Commands.sh -p bystarUid=${bystarUid} -p siteFolder="${plonePath}"  -p title="${pageTitleEnc}"  -p description="${pageDescriptionEnc}" -i folderExcludeFromNav false
     else
-	ANT_raw "NOT excludeFromNav for ${thisPage} -- excludeFromNav=${fv_excludeFromNav}"
+        ANT_raw "NOT excludeFromNav for ${thisPage} -- excludeFromNav=${fv_excludeFromNav}"
     fi
 
     lpReturn
@@ -4426,8 +4426,8 @@ _EOF_
     # NOTYET, make the following lines become  Error based on Invalid arrayName[name]
     # EH_verifyAssocArray  arrayName  arrayTag ; EH_retOnFail 
     if [ -z "${poPubStateEnum[${pubState}]}" ] ; then
-	EH_problem "Invalid pubState=$1"
-	lpReturn
+        EH_problem "Invalid pubState=$1"
+        lpReturn
     fi
  
     pubStateFunc=$( eval echo '$'{object_${thisObjectType}[pubState]} )
@@ -4452,8 +4452,8 @@ _EOF_
     typeset pubState=$1
 
     if [ -z "${poPubStateEnum[${pubState}]}" ] ; then
-	EH_problem "Invalid pubState=$1"
-	lpReturn
+        EH_problem "Invalid pubState=$1"
+        lpReturn
     fi
 
     typeset here=$( pwd )
@@ -4485,8 +4485,8 @@ function vis_emacsClientFiles {
     typeset thisOne=""
 
     for thisOne in ${*} ; do
-	#( emacsclient -e "(find-file \"LCNT-INFO/${thisOne}\")"  & 	wait $! )
-	emacsclient "${thisOne}"
+        #( emacsclient -e "(find-file \"LCNT-INFO/${thisOne}\")"  &     wait $! )
+        emacsclient "${thisOne}"
     done
 }
 
@@ -4497,7 +4497,7 @@ function vis_dblockUpdateFile {  # NOTYET, to be obsoleted by bx-dblock -i dbloc
     typeset thisOne=""
 
     for thisOne in ${*} ; do
-	emacsclient -e "(org-dblock-update-file-bx \"${thisOne}\")"
+        emacsclient -e "(org-dblock-update-file-bx \"${thisOne}\")"
     done
 }
 
@@ -4530,10 +4530,10 @@ function vis_linkToInitialSiteStyle {
 #declare -A ZafarRizbi; ZafarRizbi[First]=Zafar; ZafarRizbi[Last]=Rizbi;
 
 #    if [[ $# -eq 0 ]] ; then
-#	firstName=$( eval echo '$'{$bystarName[First]} )
-#	lastName=$( eval echo '$'{$bystarName[Last]} )
-#   else	firstName=$( eval echo '$'{$1[First]} )
-#	lastName=$( eval echo '$'{$1[Last]} )
+#       firstName=$( eval echo '$'{$bystarName[First]} )
+#       lastName=$( eval echo '$'{$bystarName[Last]} )
+#   else        firstName=$( eval echo '$'{$1[First]} )
+#       lastName=$( eval echo '$'{$1[Last]} )
 #   fi
 
 
@@ -4602,8 +4602,8 @@ _EOF_
     opDoExit  pushd ${here}
     
     if [[ -d ${thisFolder} ]] ; then
-	EH_problem "${thisFolder} Already exists"
-	lpReturn 101
+        EH_problem "${thisFolder} Already exists"
+        lpReturn 101
     fi
 
     opDo vis_startObjectGen folder ${thisFolder}

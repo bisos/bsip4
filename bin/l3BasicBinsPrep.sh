@@ -75,9 +75,9 @@ _EOF_
     #  [[elisp:(lsip-local-run-command "apt-cache search something | egrep '^something'")][apt-cache search something | egrep '^something']]
 
     itemOrderedList=(
-	"ifupdown"
-	"ifupdown_extra"
-	"netplanDeactivate"  # purges netplan.io
+        "ifupdown"
+        "ifupdown_extra"
+        "netplanDeactivate"  # purges netplan.io
     )
 
     itemOptionalOrderedList=()
@@ -150,7 +150,7 @@ binsPrep_netplanDeactivate_DEFAULT_DEFAULT () {
     mmaPkgDebianMethod="custom"  #  or "apt" no need for customInstallScript but with binsPrep_installPostHook
 
     function customInstallScript {
-	opDo vis_netplanDeactivate
+        opDo vis_netplanDeactivate
     }
 }
 

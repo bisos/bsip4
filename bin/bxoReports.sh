@@ -87,7 +87,7 @@ function G_postParamHook {
     # lpCurrentsGet
 
     if [ ! -z "${bxoId}" ] ; then
-     	bxoHome=$( FN_absolutePathGet ~${bxoId} )
+        bxoHome=$( FN_absolutePathGet ~${bxoId} )
     fi
 
     lpCurrentsGet
@@ -106,20 +106,20 @@ _EOF_
     echo /bisos/var/bxo/construct/${privacy}
 
     lpReturn
-}	
+}       
 
 function noArgsHook {
     if [ $# -eq 0 ] ; then
-	vis_examples
+        vis_examples
     else
-	if [ "$1" == "list" ] ; then
-	    vis_bxoIdsList
-	elif [ "$1" == "there" ] ; then
-	    vis_bxoIdsListExamples
-	else
-	    # No other feature supported yet.
-	    vis_bxoIdsListExamples
-	fi
+        if [ "$1" == "list" ] ; then
+            vis_bxoIdsList
+        elif [ "$1" == "there" ] ; then
+            vis_bxoIdsListExamples
+        else
+            # No other feature supported yet.
+            vis_bxoIdsListExamples
+        fi
     fi
 }
 
@@ -182,8 +182,8 @@ _EOF_
     EH_assert [ ! -z "${bxoId}" ]
 
     if ! vis_userAcctExists "${bxoId}" ; then
-	EH_problem "Missing ${bxoId}."
-	lpReturn 101
+        EH_problem "Missing ${bxoId}."
+        lpReturn 101
     fi
 
     bxoHome=$( FN_absolutePathGet ~${bxoId} )
@@ -191,8 +191,8 @@ _EOF_
     local rbxeBase="${bxoHome}/rbxe"
 
     if [ ! -d "${rbxeBase}" ] ; then
-	EH_problem "Missing ${rbxeBase}"
-	lpReturn 101
+        EH_problem "Missing ${rbxeBase}"
+        lpReturn 101
     fi
 
     ANT_raw "RBXE File Params:"
@@ -201,8 +201,8 @@ _EOF_
     local bxeTreeBase="${bxoHome}/bxeTree"
 
     if [ ! -d "${bxeTreeBase}" ] ; then
-	EH_problem "Missing ${bxeTreeBase}"
-	lpReturn 101
+        EH_problem "Missing ${bxeTreeBase}"
+        lpReturn 101
     fi
 
     ANT_raw "bxeTree File Params:"

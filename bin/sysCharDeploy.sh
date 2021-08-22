@@ -143,7 +143,7 @@ function G_postParamHook {
     bxoIdPrepValidate    
 
     if [ ! -z "${bxoId}" ] ; then
-     	bxoHome=$( FN_absolutePathGet ~${bxoId} )
+        bxoHome=$( FN_absolutePathGet ~${bxoId} )
     fi
     
 }
@@ -319,10 +319,10 @@ _EOF_
     local intraLine=$( sshpass -p intra ${sshCmnd} intra@"${targetName}" "echo intra | su - root -c 'egrep ^intra /etc/sudoers'" 2> /dev/null )
 
     if [ -z "${intraLine}" ] ; then
-	lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-	     "echo intra | su - root -c 'echo intra ALL=\(ALL\) NOPASSWD: ALL >> /etc/sudoers'"
+        lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+             "echo intra | su - root -c 'echo intra ALL=\(ALL\) NOPASSWD: ALL >> /etc/sudoers'"
     else
-	ANT_raw "intra is already in /etc/sudoers -- skipped"
+        ANT_raw "intra is already in /etc/sudoers -- skipped"
     fi
 }
 
@@ -342,21 +342,21 @@ _EOF_
     local lsOrig=$( sshpass -p intra ${sshCmnd} intra@"${targetName}" sudo ls /etc/apt/sources.list.orig 2> /dev/null )
 
     if [ -z "${lsOrig}" ] ; then
-	lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-	     sudo cp -p /etc/apt/sources.list /etc/apt/sources.list.orig
+        lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+             sudo cp -p /etc/apt/sources.list /etc/apt/sources.list.orig
     else
-	ANT_raw "/etc/apt/sources.list.orig exists -- copying skipped"
+        ANT_raw "/etc/apt/sources.list.orig exists -- copying skipped"
     fi
 
     # In "''" "" is consumed by lpDo
     lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-	 grep -v "'^deb cdrom:'" /etc/apt/sources.list \> /tmp/sources.list
+         grep -v "'^deb cdrom:'" /etc/apt/sources.list \> /tmp/sources.list
 
     lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-	 sudo mv /tmp/sources.list /etc/apt/sources.list
+         sudo mv /tmp/sources.list /etc/apt/sources.list
 
     lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-	 sudo apt-get update
+         sudo apt-get update
 }
 
 function vis_distro_provisionBisos_ascertain {    
@@ -371,7 +371,7 @@ _EOF_
     EH_assert [ ! -z "${targetName}" ]
 
     lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-	 sudo ls -l /bisos/core/bsip
+         sudo ls -l /bisos/core/bsip
 
 }
 
@@ -388,19 +388,19 @@ _EOF_
     EH_assert [ ! -z "${targetName}" ]
 
     lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-	 sudo apt-get update
+         sudo apt-get update
 
     lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-	 sudo apt-get -y upgrade
+         sudo apt-get -y upgrade
 
     lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-	 sudo apt-get install -y python3-pip
+         sudo apt-get install -y python3-pip
     
     lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-	 sudo pip3 install --upgrade bisos.provision
+         sudo pip3 install --upgrade bisos.provision
 
     lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-	 sudo provisionBisos.sh ${G_commandPrefs} -i sysBasePlatform
+         sudo provisionBisos.sh ${G_commandPrefs} -i sysBasePlatform
 }
 
 function vis_bisosBasePlatform_fullUpdate {    
@@ -427,36 +427,36 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     function onManagerRun {
-	if [ -z "${registrar}" ] ; then
-	    registrar=$( vis_registrarHostName )
-	fi
-	if [ -z "${id}" ] ; then
-	    id=$( vis_registrarUserName )
-	fi
-	if [ -z "${password}" ] ; then	
-	    password=$( vis_registrarUserPassword )
-	fi
-	if [ -z "${siteBxoId}" ] ; then	
-	    siteBxoId=$( sysCharRealize.sh -i selectedSiteBxoId )
-	fi
+        if [ -z "${registrar}" ] ; then
+            registrar=$( vis_registrarHostName )
+        fi
+        if [ -z "${id}" ] ; then
+            id=$( vis_registrarUserName )
+        fi
+        if [ -z "${password}" ] ; then  
+            password=$( vis_registrarUserPassword )
+        fi
+        if [ -z "${siteBxoId}" ] ; then 
+            siteBxoId=$( sysCharRealize.sh -i selectedSiteBxoId )
+        fi
     }
 
     function onTargetRun {
-	
-	# NOTYET, perhaps this should be done even sooner
-	lpDo bisosCurrentsManage.sh ${G_commandPrefs} -i currentsFileCreate
-	
-	lpDo bisosSiteSetup.sh ${G_commandPrefs} \
-	     -p registrar="${registrar}" -p id="${id}" -p password="${password}" \
-	     -i fullUpdate
+        
+        # NOTYET, perhaps this should be done even sooner
+        lpDo bisosCurrentsManage.sh ${G_commandPrefs} -i currentsFileCreate
+        
+        lpDo bisosSiteSetup.sh ${G_commandPrefs} \
+             -p registrar="${registrar}" -p id="${id}" -p password="${password}" \
+             -i fullUpdate
 
-	lpDo bisosSiteSetup.sh ${G_commandPrefs} \
-	     -p bxoId="${siteBxoId}" \
-	     -i activate_siteBxoPlusAndSelect 
+        lpDo bisosSiteSetup.sh ${G_commandPrefs} \
+             -p bxoId="${siteBxoId}" \
+             -i activate_siteBxoPlusAndSelect 
     }
 
     if [ "${targetName}" != "onTargetRun" ] && [ ! -z "${targetName}" ] ; then
-	lpDo onManagerRun
+        lpDo onManagerRun
     fi
 
     EH_assert [ ! -z "${registrar}" ]
@@ -468,14 +468,14 @@ _EOF_
     
 ####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" :cmndOption t
     if [ "${targetName}" == "onTargetRun" ] ; then
-	lpDo onTargetRun
+        lpDo onTargetRun
     elif [ -z "${targetName}" ] ; then
-	lpDo onTargetRun
+        lpDo onTargetRun
     else
-	local commandName=${FUNCNAME##vis_}		
-	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-	     $(which ${G_myName}) ${G_commandPrefs} \
-	     -p targetName=onTargetRun ${G_paramCmndOption} -i ${commandName}
+        local commandName=${FUNCNAME##vis_}             
+        lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+             $(which ${G_myName}) ${G_commandPrefs} \
+             -p targetName=onTargetRun ${G_paramCmndOption} -i ${commandName}
     fi
 ####+END:
 }
@@ -507,23 +507,23 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     function onManagerRun {
-	if [ -z "${bxoId}" ] ; then
-	    EH_problem "Missing bxoId"
-	    lpReturn
-	fi
+        if [ -z "${bxoId}" ] ; then
+            EH_problem "Missing bxoId"
+            lpReturn
+        fi
     }
 
     function onTargetRun {
-	lpDo sysCharActivate.sh ${G_commandPrefs} \
-	     -p bxoId="${bxoId}" \
-	     -i activate_sysContainerBxo
+        lpDo sysCharActivate.sh ${G_commandPrefs} \
+             -p bxoId="${bxoId}" \
+             -i activate_sysContainerBxo
 
-	lpDo sysCharActivate.sh ${G_commandPrefs} \
-	     -i bisosContainerSelect "${bxoId}"
+        lpDo sysCharActivate.sh ${G_commandPrefs} \
+             -i bisosContainerSelect "${bxoId}"
     }
 
     if [ "${targetName}" != "onTargetRun" ] && [ ! -z "${targetName}" ] ; then
-	lpDo onManagerRun
+        lpDo onManagerRun
     fi
 
     EH_assert [ ! -z "${bxoId}" ]
@@ -532,14 +532,14 @@ _EOF_
     
 ####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" :cmndOption t
     if [ "${targetName}" == "onTargetRun" ] ; then
-	lpDo onTargetRun
+        lpDo onTargetRun
     elif [ -z "${targetName}" ] ; then
-	lpDo onTargetRun
+        lpDo onTargetRun
     else
-	local commandName=${FUNCNAME##vis_}		
-	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-	     $(which ${G_myName}) ${G_commandPrefs} \
-	     -p targetName=onTargetRun ${G_paramCmndOption} -i ${commandName}
+        local commandName=${FUNCNAME##vis_}             
+        lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+             $(which ${G_myName}) ${G_commandPrefs} \
+             -p targetName=onTargetRun ${G_paramCmndOption} -i ${commandName}
     fi
 ####+END:
 }
@@ -570,9 +570,9 @@ _EOF_
     # local bisosAscertain=$( vis_distro_provisionBisos_ascertain )
     
     # if [ -z "${bisosAscertain}" ] ; then
-    # 	lpDo vis_distro_fullUpdate
+    #   lpDo vis_distro_fullUpdate
     # else
-    # 	ANT_cooked "BISOS has already been installed -- ${bisosAscertain}"
+    #   ANT_cooked "BISOS has already been installed -- ${bisosAscertain}"
     # fi
 
     lpDo vis_distro_fullUpdate    
@@ -612,26 +612,26 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     function onTargetRun {
-	local boxBpoId=$( vis_containerBoxBpoId )
+        local boxBpoId=$( vis_containerBoxBpoId )
 
-	if [ -z "${boxBpoId}" ] ; then
-	    EH_problem "Box Must Have Been Realized To Be Activated."
-	    lpReturn 101
-	fi
+        if [ -z "${boxBpoId}" ] ; then
+            EH_problem "Box Must Have Been Realized To Be Activated."
+            lpReturn 101
+        fi
 
-	lpDo vis_boxRealizeOrActivateOnTarget 
+        lpDo vis_boxRealizeOrActivateOnTarget 
     }
 
 ####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" 
     if [ "${targetName}" == "onTargetRun" ] ; then
-	lpDo onTargetRun
+        lpDo onTargetRun
     elif [ -z "${targetName}" ] ; then
-	lpDo onTargetRun
+        lpDo onTargetRun
     else
-	local commandName=${FUNCNAME##vis_}		
-	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-	     $(which ${G_myName}) ${G_commandPrefs} \
-	     -p targetName=onTargetRun -i ${commandName}
+        local commandName=${FUNCNAME##vis_}             
+        lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+             $(which ${G_myName}) ${G_commandPrefs} \
+             -p targetName=onTargetRun -i ${commandName}
     fi
 ####+END:
 }
@@ -656,49 +656,49 @@ _EOF_
     local siteBoxNu=$( vis_siteBasePlatform_newBoxAscertain )
 
     if [ -z "${siteBoxNu}" ] ; then
-	lpDo vis_siteBasePlatform_newBoxAssign
+        lpDo vis_siteBasePlatform_newBoxAssign
     else
-	ANT_cooked "siteBoxNu=${siteBoxNu} has already been assined"
+        ANT_cooked "siteBoxNu=${siteBoxNu} has already been assined"
     fi
 
     local siteBoxContainer=$( vis_siteBasePlatform_containerBoxRepoAscertain )
 
     if [ -z "${siteBoxContainer}" ] ; then
-	EH_assert [ ! -z "${model}" ]
-	EH_assert [ ! -z "${abode}" ]
-	EH_assert [ ! -z "${function}" ]
+        EH_assert [ ! -z "${model}" ]
+        EH_assert [ ! -z "${abode}" ]
+        EH_assert [ ! -z "${function}" ]
 
-	lpDo vis_siteBasePlatform_containerBoxAssignAndRepo
+        lpDo vis_siteBasePlatform_containerBoxAssignAndRepo
     else
-	ANT_cooked "siteBoxContainer=${siteBoxContainer} has already been assined"
+        ANT_cooked "siteBoxContainer=${siteBoxContainer} has already been assined"
     fi
 
     local boxBpoId=$( vis_containerBoxBpoId )
     EH_assert [ ! -z "${boxBpoId}" ]
 
     if vis_bxoNameExists "${boxBpoId}" ; then
-	bxoId="${boxBpoId}"
-	ANT_cooked "boxBpoId=${boxBpoId} -- bxoId=${bxoId} has already been Realized, it can be Activated."
-	
-	lpDo sysCharActivate.sh ${G_commandPrefs} \
-	     -p bxoId="${bxoId}" -i activate_sysContainerBxo
-    else	
-	EH_assert [ ! -z "${model}" ]
-	EH_assert [ ! -z "${abode}" ]
-	EH_assert [ ! -z "${function}" ]
+        bxoId="${boxBpoId}"
+        ANT_cooked "boxBpoId=${boxBpoId} -- bxoId=${bxoId} has already been Realized, it can be Activated."
+        
+        lpDo sysCharActivate.sh ${G_commandPrefs} \
+             -p bxoId="${bxoId}" -i activate_sysContainerBxo
+    else        
+        EH_assert [ ! -z "${model}" ]
+        EH_assert [ ! -z "${abode}" ]
+        EH_assert [ ! -z "${function}" ]
 
-	lpDo vis_siteBasePlatform_sysCharContainerBoxRealize
-	bxoId=$( vis_containerBoxBpoId )
+        lpDo vis_siteBasePlatform_sysCharContainerBoxRealize
+        bxoId=$( vis_containerBoxBpoId )
     fi
 
     lpDo sysCharActivate.sh ${G_commandPrefs} \
-	 -i bisosContainerSelect "${bxoId}"
+         -i bisosContainerSelect "${bxoId}"
 
     local identityIsSet=$( sysCharIdentity.sh -i identitySetAscertain )
     if [ -z "${identityIsSet}" ] ; then
-	lpDo vis_deployWithSysCharConveyInfo
+        lpDo vis_deployWithSysCharConveyInfo
     else
-	ANT_cooked "SysChar Identity Is Already Set -- identityIsSet=${identityIsSet}"
+        ANT_cooked "SysChar Identity Is Already Set -- identityIsSet=${identityIsSet}"
     fi
 }
 
@@ -712,25 +712,25 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     function onTargetRun {
-	local boxNu=$( siteBoxAssign.sh -i thisBoxFindNu )
+        local boxNu=$( siteBoxAssign.sh -i thisBoxFindNu )
 
-	if [ -z "${boxNu}" ] ; then
-	    ANT_raw "This box has NOT been registered -- Needs to be added"
-	else
-	    ANT_raw "This box (${boxNu}) has already been registered -- addition skipped"
-	fi
+        if [ -z "${boxNu}" ] ; then
+            ANT_raw "This box has NOT been registered -- Needs to be added"
+        else
+            ANT_raw "This box (${boxNu}) has already been registered -- addition skipped"
+        fi
     }
 
 ####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" 
     if [ "${targetName}" == "onTargetRun" ] ; then
-	lpDo onTargetRun
+        lpDo onTargetRun
     elif [ -z "${targetName}" ] ; then
-	lpDo onTargetRun
+        lpDo onTargetRun
     else
-	local commandName=${FUNCNAME##vis_}		
-	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-	     $(which ${G_myName}) ${G_commandPrefs} \
-	     -p targetName=onTargetRun -i ${commandName}
+        local commandName=${FUNCNAME##vis_}             
+        lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+             $(which ${G_myName}) ${G_commandPrefs} \
+             -p targetName=onTargetRun -i ${commandName}
     fi
 ####+END:
 }
@@ -746,31 +746,31 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     function onTargetRun {
-	local boxNu=$( siteBoxAssign.sh -i thisBoxFindNu )
+        local boxNu=$( siteBoxAssign.sh -i thisBoxFindNu )
 
-	if [ -z "${boxNu}" ] ; then
-	    lpDo siteBoxAssign.sh ${G_commandPrefs} -i thisBoxAddAndPush
-	else
-	    ANT_raw "This box (${boxNu}) has already been registered -- addition skipped"
-	fi
+        if [ -z "${boxNu}" ] ; then
+            lpDo siteBoxAssign.sh ${G_commandPrefs} -i thisBoxAddAndPush
+        else
+            ANT_raw "This box (${boxNu}) has already been registered -- addition skipped"
+        fi
     }
 
 ####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" 
     if [ "${targetName}" == "onTargetRun" ] ; then
-	lpDo onTargetRun
+        lpDo onTargetRun
     elif [ -z "${targetName}" ] ; then
-	lpDo onTargetRun
+        lpDo onTargetRun
     else
-	local commandName=${FUNCNAME##vis_}		
-	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-	     $(which ${G_myName}) ${G_commandPrefs} \
-	     -p targetName=onTargetRun -i ${commandName}
+        local commandName=${FUNCNAME##vis_}             
+        lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+             $(which ${G_myName}) ${G_commandPrefs} \
+             -p targetName=onTargetRun -i ${commandName}
     fi
 ####+END:
     
     # Manager Run
     if [ "${targetName}" != "onTargetRun" ] ; then
-	lpDo siteBoxAssign.sh ${G_commandPrefs} -i boxesGitPull
+        lpDo siteBoxAssign.sh ${G_commandPrefs} -i boxesGitPull
     fi
 }
 
@@ -788,12 +788,12 @@ _EOF_
     EH_assert [ ! -z "${function}" ]
 
     if [ -z "${targetName}" ] ; then
-	lpDo sysCharRealize.sh ${G_commandPrefs} \
-	     -p model=${model} -p abode=${abode} -p function=${function} -i containerBoxAssignAndRepo
+        lpDo sysCharRealize.sh ${G_commandPrefs} \
+             -p model=${model} -p abode=${abode} -p function=${function} -i containerBoxAssignAndRepo
     else
-	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-	     $(which sysCharRealize.sh) ${G_commandPrefs} \
-	     -p model=${model} -p abode=${abode} -p function=${function} -i containerBoxAssignAndRepo
+        lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+             $(which sysCharRealize.sh) ${G_commandPrefs} \
+             -p model=${model} -p abode=${abode} -p function=${function} -i containerBoxAssignAndRepo
     fi
 }
 
@@ -807,14 +807,14 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if [ -z "${targetName}" ] ; then
-	lpDo sysCharRealize.sh ${G_commandPrefs} \
-	     -p model=${model} -p abode=${abode} -p function=${function} \
-	     -i sysCharContainerBoxRealize
+        lpDo sysCharRealize.sh ${G_commandPrefs} \
+             -p model=${model} -p abode=${abode} -p function=${function} \
+             -i sysCharContainerBoxRealize
     else    
-	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-	     $(which sysCharRealize.sh) ${G_commandPrefs} \
-	     -p model=${model} -p abode=${abode} -p function=${function} \
-	     -i sysCharContainerBoxRealize
+        lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+             $(which sysCharRealize.sh) ${G_commandPrefs} \
+             -p model=${model} -p abode=${abode} -p function=${function} \
+             -i sysCharContainerBoxRealize
     fi
 }
 
@@ -829,33 +829,33 @@ _EOF_
     # sysCharRealize.sh -h -v -n showRun -i sysCharContainerBxoIdName
 
     function onTargetRun {
-	local containerAssignBase=""
-	local containerRepoBase=""
+        local containerAssignBase=""
+        local containerRepoBase=""
 
-	containerAssignBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
-	if [ -z "${containerAssignBase}" ] ; then
-	    ANT_raw "Missing containerAssignBase"
-	    lpReturn
-	fi
+        containerAssignBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
+        if [ -z "${containerAssignBase}" ] ; then
+            ANT_raw "Missing containerAssignBase"
+            lpReturn
+        fi
 
-	echo "containerAssignBase=${containerAssignBase}"	
+        echo "containerAssignBase=${containerAssignBase}"       
 
-	containerRepoBase=$( siteContainerRepo.sh -i containerRepoBase "${containerAssignBase}" )
-	EH_assert [ -d "${containerRepoBase}" ]
+        containerRepoBase=$( siteContainerRepo.sh -i containerRepoBase "${containerAssignBase}" )
+        EH_assert [ -d "${containerRepoBase}" ]
 
-	echo "containerRepoBase=${containerRepoBase}"
+        echo "containerRepoBase=${containerRepoBase}"
     }
 
 ####+BEGIN: bx:bsip:bash/onTargetRun 
     if [ "${targetName}" == "onTargetRun" ] ; then
-	lpDo onTargetRun
+        lpDo onTargetRun
     elif [ -z "${targetName}" ] ; then
-	lpDo onTargetRun
+        lpDo onTargetRun
     else
-	local commandName=${FUNCNAME##vis_}		
-	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-	     $(which ${G_myName}) ${G_commandPrefs} \
-	     -p targetName=onTargetRun -i ${commandName}
+        local commandName=${FUNCNAME##vis_}             
+        lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+             $(which ${G_myName}) ${G_commandPrefs} \
+             -p targetName=onTargetRun -i ${commandName}
     fi
 ####+END:
 }
@@ -872,28 +872,28 @@ _EOF_
     # sysCharRealize.sh -h -v -n showRun -i sysCharContainerBxoIdName
 
     function onTargetRun {
-	local containerAssignBase=""
+        local containerAssignBase=""
 
-	containerAssignBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
-	if [ -z "${containerAssignBase}" ] ; then
-	    ANT_raw "Missing containerAssignBase"
-	    lpReturn
-	fi
+        containerAssignBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
+        if [ -z "${containerAssignBase}" ] ; then
+            ANT_raw "Missing containerAssignBase"
+            lpReturn
+        fi
 
-	local sysCharContainerBpoId=$( vis_sysCharContainerBxoIdName ${containerAssignBase} )
-	echo ${sysCharContainerBpoId}
+        local sysCharContainerBpoId=$( vis_sysCharContainerBxoIdName ${containerAssignBase} )
+        echo ${sysCharContainerBpoId}
     }
 
 ####+BEGIN: bx:bsip:bash/onTargetRun 
     if [ "${targetName}" == "onTargetRun" ] ; then
-	lpDo onTargetRun
+        lpDo onTargetRun
     elif [ -z "${targetName}" ] ; then
-	lpDo onTargetRun
+        lpDo onTargetRun
     else
-	local commandName=${FUNCNAME##vis_}		
-	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-	     $(which ${G_myName}) ${G_commandPrefs} \
-	     -p targetName=onTargetRun -i ${commandName}
+        local commandName=${FUNCNAME##vis_}             
+        lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+             $(which ${G_myName}) ${G_commandPrefs} \
+             -p targetName=onTargetRun -i ${commandName}
     fi
 ####+END:
 }
@@ -910,36 +910,36 @@ _EOF_
     # sysCharRealize.sh -h -v -n showRun -i sysCharContainerBxoIdName
 
     function onTargetRun {
-	local containerAssignBase=""
+        local containerAssignBase=""
 
-	containerAssignBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
-	if [ -z "${containerAssignBase}" ] ; then
-	    ANT_raw "Missing containerAssignBase"
-	    lpReturn
-	fi
+        containerAssignBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
+        if [ -z "${containerAssignBase}" ] ; then
+            ANT_raw "Missing containerAssignBase"
+            lpReturn
+        fi
 
-	local sysCharContainerBpoId=$( vis_sysCharContainerBxoIdName ${containerAssignBase} )
-	local bxoHome=""
-	
-	if vis_userAcctExists ${sysCharContainerBpoId} ; then
-	    bxoHome=$( FN_absolutePathGet ~${sysCharContainerBpoId} )
-	else
-	    EH_problem "${sysCharContainerBpoId} Account Does Not Exist"
-	fi
-	echo ${bxoHome}
+        local sysCharContainerBpoId=$( vis_sysCharContainerBxoIdName ${containerAssignBase} )
+        local bxoHome=""
+        
+        if vis_userAcctExists ${sysCharContainerBpoId} ; then
+            bxoHome=$( FN_absolutePathGet ~${sysCharContainerBpoId} )
+        else
+            EH_problem "${sysCharContainerBpoId} Account Does Not Exist"
+        fi
+        echo ${bxoHome}
 
     }
 
 ####+BEGIN: bx:bsip:bash/onTargetRun 
     if [ "${targetName}" == "onTargetRun" ] ; then
-	lpDo onTargetRun
+        lpDo onTargetRun
     elif [ -z "${targetName}" ] ; then
-	lpDo onTargetRun
+        lpDo onTargetRun
     else
-	local commandName=${FUNCNAME##vis_}		
-	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-	     $(which ${G_myName}) ${G_commandPrefs} \
-	     -p targetName=onTargetRun -i ${commandName}
+        local commandName=${FUNCNAME##vis_}             
+        lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+             $(which ${G_myName}) ${G_commandPrefs} \
+             -p targetName=onTargetRun -i ${commandName}
     fi
 ####+END:
 }
@@ -958,9 +958,9 @@ _EOF_
     function onManagerRun { doNothing; }
 
     function onTargetRun {
-	EH_assert bxoIdPrep
+        EH_assert bxoIdPrep
 
-	lpDo vis_deploySysChar_identitySet
+        lpDo vis_deploySysChar_identitySet
     }
 
     if [ "${targetName}" != "onTargetRun" ] && [ ! -z "${targetName}" ] ; then lpDo onManagerRun; fi
@@ -969,14 +969,14 @@ _EOF_
     
 ####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" :cmndOption t
     if [ "${targetName}" == "onTargetRun" ] ; then
-	lpDo onTargetRun
+        lpDo onTargetRun
     elif [ -z "${targetName}" ] ; then
-	lpDo onTargetRun
+        lpDo onTargetRun
     else
-	local commandName=${FUNCNAME##vis_}		
-	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-	     $(which ${G_myName}) ${G_commandPrefs} \
-	     -p targetName=onTargetRun ${G_paramCmndOption} -i ${commandName}
+        local commandName=${FUNCNAME##vis_}             
+        lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+             $(which ${G_myName}) ${G_commandPrefs} \
+             -p targetName=onTargetRun ${G_paramCmndOption} -i ${commandName}
     fi
 ####+END:
 }
@@ -993,11 +993,11 @@ _EOF_
     function onManagerRun { doNothing; }
 
     function onTargetRun {
-	EH_assert bxoIdPrep
+        EH_assert bxoIdPrep
 
-	lpDo sysCharIdentity.sh ${G_commandPrefs} \
-	     -p bxoId="${bxoId}" -i identityUpdate
-	# sysCharIdentity.sh: Sets up motdSet, hostname, netL3Interface, netEtcHosts
+        lpDo sysCharIdentity.sh ${G_commandPrefs} \
+             -p bxoId="${bxoId}" -i identityUpdate
+        # sysCharIdentity.sh: Sets up motdSet, hostname, netL3Interface, netEtcHosts
     }
 
     if [ "${targetName}" != "onTargetRun" ] && [ ! -z "${targetName}" ] ; then lpDo onManagerRun; fi
@@ -1006,14 +1006,14 @@ _EOF_
     
 ####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" :cmndOption t
     if [ "${targetName}" == "onTargetRun" ] ; then
-	lpDo onTargetRun
+        lpDo onTargetRun
     elif [ -z "${targetName}" ] ; then
-	lpDo onTargetRun
+        lpDo onTargetRun
     else
-	local commandName=${FUNCNAME##vis_}		
-	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-	     $(which ${G_myName}) ${G_commandPrefs} \
-	     -p targetName=onTargetRun ${G_paramCmndOption} -i ${commandName}
+        local commandName=${FUNCNAME##vis_}             
+        lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+             $(which ${G_myName}) ${G_commandPrefs} \
+             -p targetName=onTargetRun ${G_paramCmndOption} -i ${commandName}
     fi
 ####+END:
 }
@@ -1034,32 +1034,32 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     function onTargetRun {
-	# determin bxoId for box
+        # determin bxoId for box
 
-	local containerBase=$( vis_forThisSysFindContainerBase )
-	EH_assert [ ! -z "${containerBase}" ]
+        local containerBase=$( vis_forThisSysFindContainerBase )
+        EH_assert [ ! -z "${containerBase}" ]
 
-	vis_containerAssignRead "${containerBase}"
-	EH_assert [ ! -z "${containerAssign_containerId}" ]
+        vis_containerAssignRead "${containerBase}"
+        EH_assert [ ! -z "${containerAssign_containerId}" ]
 
-	local hostContainerId="${containerAssign_containerId}"
+        local hostContainerId="${containerAssign_containerId}"
     
-	bxoId=$( withContainerIdGetBxoId ${hostContainerId} )
-	EH_assert vis_bxoAcctVerify "${bxoId}"
+        bxoId=$( withContainerIdGetBxoId ${hostContainerId} )
+        EH_assert vis_bxoAcctVerify "${bxoId}"
 
-	lpDo vis_deployWithSysCharConveyInfo
+        lpDo vis_deployWithSysCharConveyInfo
     }
 
 ####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" :cmndOption nil
     if [ "${targetName}" == "onTargetRun" ] ; then
-	lpDo onTargetRun
+        lpDo onTargetRun
     elif [ -z "${targetName}" ] ; then
-	lpDo onTargetRun
+        lpDo onTargetRun
     else
-	local commandName=${FUNCNAME##vis_}		
-	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-	     $(which ${G_myName}) ${G_commandPrefs} \
-	     -p targetName=onTargetRun  -i ${commandName}
+        local commandName=${FUNCNAME##vis_}             
+        lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+             $(which ${G_myName}) ${G_commandPrefs} \
+             -p targetName=onTargetRun  -i ${commandName}
     fi
 ####+END:
 }
@@ -1074,22 +1074,22 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     function onTargetRun {
-	EH_assert bxoIdPrep
+        EH_assert bxoIdPrep
 
-	${bxoHome}/sys/bin/bxoSysSetup.sh ${G_commandPrefs} \
-		  -i setup
+        ${bxoHome}/sys/bin/bxoSysSetup.sh ${G_commandPrefs} \
+                  -i setup
     }
 
 ####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" :cmndOption t
     if [ "${targetName}" == "onTargetRun" ] ; then
-	lpDo onTargetRun
+        lpDo onTargetRun
     elif [ -z "${targetName}" ] ; then
-	lpDo onTargetRun
+        lpDo onTargetRun
     else
-	local commandName=${FUNCNAME##vis_}		
-	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-	     $(which ${G_myName}) ${G_commandPrefs} \
-	     -p targetName=onTargetRun $(sansTargetName "${G_paramCmndOption}") \
+        local commandName=${FUNCNAME##vis_}             
+        lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+             $(which ${G_myName}) ${G_commandPrefs} \
+             -p targetName=onTargetRun $(sansTargetName "${G_paramCmndOption}") \
              -i ${commandName}
     fi
 ####+END:
@@ -1117,9 +1117,9 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if [ -z "${targetName}" ] ; then
-	lpDo echo bisosSiteSetup.sh NOTYET
+        lpDo echo bisosSiteSetup.sh NOTYET
     else
-	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" echo bisosSiteSetup.sh NOTYET
+        lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" echo bisosSiteSetup.sh NOTYET
     fi
 }
 
@@ -1132,9 +1132,9 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if [ -z "${targetName}" ] ; then
-	lpDo echo bisosSiteSetup.sh NOTYET
+        lpDo echo bisosSiteSetup.sh NOTYET
     else
-	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" echo bisosSiteSetup.sh NOTYET
+        lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" echo bisosSiteSetup.sh NOTYET
     fi
 }
 
@@ -1148,20 +1148,20 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     function onTargetRun {
-	lpDo sysCharRealize.sh ${G_commandPrefs} \
-	     -i containerBoxSysCharReport
+        lpDo sysCharRealize.sh ${G_commandPrefs} \
+             -i containerBoxSysCharReport
     }
 
 ####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" 
     if [ "${targetName}" == "onTargetRun" ] ; then
-	lpDo onTargetRun
+        lpDo onTargetRun
     elif [ -z "${targetName}" ] ; then
-	lpDo onTargetRun
+        lpDo onTargetRun
     else
-	local commandName=${FUNCNAME##vis_}		
-	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-	     $(which ${G_myName}) ${G_commandPrefs} \
-	     -p targetName=onTargetRun -i ${commandName}
+        local commandName=${FUNCNAME##vis_}             
+        lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+             $(which ${G_myName}) ${G_commandPrefs} \
+             -p targetName=onTargetRun -i ${commandName}
     fi
 ####+END:
 }
@@ -1174,57 +1174,57 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     function onManagerRun {
-	if [ -z "${cfpPrivA}" ] ; then
-	    lpDo echo "prompt"
-	fi
-	if [ -z "${cfpPubA}" ] ; then
-	    lpDo echo "prompt"
-	fi
-	# if [ -z "${cfpPrivGit}" ] ; then
-	#     lpDo echo "prompt"
-	# fi
-	# if [ -z "${cfpPubGit}" ] ; then
-	#     lpDo echo "prompt"
-	# fi
-	if [ -z "${cfpSecurityMode}" ] ; then
-	    lpDo echo "prompt"
-	fi
+        if [ -z "${cfpPrivA}" ] ; then
+            lpDo echo "prompt"
+        fi
+        if [ -z "${cfpPubA}" ] ; then
+            lpDo echo "prompt"
+        fi
+        # if [ -z "${cfpPrivGit}" ] ; then
+        #     lpDo echo "prompt"
+        # fi
+        # if [ -z "${cfpPubGit}" ] ; then
+        #     lpDo echo "prompt"
+        # fi
+        if [ -z "${cfpSecurityMode}" ] ; then
+            lpDo echo "prompt"
+        fi
     }
 
     function onTargetRun {
-	EH_assert bxoIdPrep
+        EH_assert bxoIdPrep
 
-	local sysCharConveyInfoBase="${bxoHome}/var/sysCharConveyInfo"
+        local sysCharConveyInfoBase="${bxoHome}/var/sysCharConveyInfo"
 
-	lpDo FN_dirCreatePathIfNotThere ${sysCharConveyInfoBase}
+        lpDo FN_dirCreatePathIfNotThere ${sysCharConveyInfoBase}
 
-	if [ ! -z "${cfpVmNameQualifier}" ] ; then
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} vmNameQualifier "${cfpVmNameQualifier}"
-	fi
-	if [ ! -z "${cfpHostCntnr}" ] ; then
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} hostCntnr "${cfpHostCntnr}"
-	fi
-	if [ ! -z "${cfpSecurityMode}" ] ; then
-	    lpDo sysCharConveyInfoWrite securityMode "${cfpSecurityMode}"
-	fi
+        if [ ! -z "${cfpVmNameQualifier}" ] ; then
+            lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} vmNameQualifier "${cfpVmNameQualifier}"
+        fi
+        if [ ! -z "${cfpHostCntnr}" ] ; then
+            lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} hostCntnr "${cfpHostCntnr}"
+        fi
+        if [ ! -z "${cfpSecurityMode}" ] ; then
+            lpDo sysCharConveyInfoWrite securityMode "${cfpSecurityMode}"
+        fi
 
-	if [ ! -z "${cfpPrivA}" ] ; then
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} ipAddr_privA "${cfpPrivA}"
-	fi
-	if [ ! -z "${cfpPubA}" ] ; then
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} ipAddr_pubA "${cfpPubA}"
-	fi
-	
-	# if [ ! -z "${cfpPrivGit}" ] ; then
-	#     lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} privGit "${privGit}"
-	# fi
-	# if [ ! -z "${cfpPubGit}" ] ; then
-	#     lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} pubGit "${pubGit}"
-	# fi
+        if [ ! -z "${cfpPrivA}" ] ; then
+            lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} ipAddr_privA "${cfpPrivA}"
+        fi
+        if [ ! -z "${cfpPubA}" ] ; then
+            lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} ipAddr_pubA "${cfpPubA}"
+        fi
+        
+        # if [ ! -z "${cfpPrivGit}" ] ; then
+        #     lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} privGit "${privGit}"
+        # fi
+        # if [ ! -z "${cfpPubGit}" ] ; then
+        #     lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} pubGit "${pubGit}"
+        # fi
     }
 
     if [ "${targetName}" != "onTargetRun" ] && [ ! -z "${targetName}" ] ; then
-	lpDo onManagerRun
+        lpDo onManagerRun
     fi
 
     # Empty values are passed along
@@ -1234,14 +1234,14 @@ _EOF_
     
 ####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" :cmndOption t
     if [ "${targetName}" == "onTargetRun" ] ; then
-	lpDo onTargetRun
+        lpDo onTargetRun
     elif [ -z "${targetName}" ] ; then
-	lpDo onTargetRun
+        lpDo onTargetRun
     else
-	local commandName=${FUNCNAME##vis_}		
-	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-	     $(which ${G_myName}) ${G_commandPrefs} \
-	     -p targetName=onTargetRun ${G_paramCmndOption} -i ${commandName}
+        local commandName=${FUNCNAME##vis_}             
+        lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+             $(which ${G_myName}) ${G_commandPrefs} \
+             -p targetName=onTargetRun ${G_paramCmndOption} -i ${commandName}
     fi
 ####+END:
 }
@@ -1257,33 +1257,33 @@ _EOF_
     local netName="$1"
 
     function onManagerRun {
-	lpDo doNothing
+        lpDo doNothing
     }
 
     function onTargetRun {
-	EH_assert bxoIdPrep
-	local netName="$1"
-	
-	local sysCharConveyNetInfoBase="${bxoHome}/var/sysCharConveyInfo/netIfs"
+        EH_assert bxoIdPrep
+        local netName="$1"
+        
+        local sysCharConveyNetInfoBase="${bxoHome}/var/sysCharConveyInfo/netIfs"
 
-	lpDo FN_dirCreatePathIfNotThere ${sysCharConveyNetInfoBase}
+        lpDo FN_dirCreatePathIfNotThere ${sysCharConveyNetInfoBase}
 
-	if [ ! -z "${cfpNetIf}" ] ; then
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyNetInfoBase} ${netName} "${cfpNetIf}"
-	fi
-	if [ ! -z "${cfpNetIfControl}" ] ; then
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyNetInfoBase} ${netName}-control "${cfpNetIfControl}"
-	fi
-	if [ ! -z "${cfpHostNetIf}" ] ; then
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyNetInfoBase} ${netName}-host "${cfpHostNetIf}"
-	fi
-	if [ ! -z "${cfpNetAddr}" ] ; then
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyNetInfoBase} ${netName}-ipv4Addr "${cfpNetAddr}"
-	fi
+        if [ ! -z "${cfpNetIf}" ] ; then
+            lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyNetInfoBase} ${netName} "${cfpNetIf}"
+        fi
+        if [ ! -z "${cfpNetIfControl}" ] ; then
+            lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyNetInfoBase} ${netName}-control "${cfpNetIfControl}"
+        fi
+        if [ ! -z "${cfpHostNetIf}" ] ; then
+            lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyNetInfoBase} ${netName}-host "${cfpHostNetIf}"
+        fi
+        if [ ! -z "${cfpNetAddr}" ] ; then
+            lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyNetInfoBase} ${netName}-ipv4Addr "${cfpNetAddr}"
+        fi
     }
 
     if [ "${targetName}" != "onTargetRun" ] && [ ! -z "${targetName}" ] ; then
-	lpDo onManagerRun
+        lpDo onManagerRun
     fi
 
     # Empty values are passed along
@@ -1294,14 +1294,14 @@ _EOF_
     
 ####+BEGINNOT: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" :cmndOption t
     if [ "${targetName}" == "onTargetRun" ] ; then
-	lpDo onTargetRun ${g_args}
+        lpDo onTargetRun ${g_args}
     elif [ -z "${targetName}" ] ; then
-	lpDo onTargetRun ${g_args}
+        lpDo onTargetRun ${g_args}
     else
-	local commandName=${FUNCNAME##vis_}		
-	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-	     $(which ${G_myName}) ${G_commandPrefs} \
-	     -p targetName=onTargetRun ${G_paramCmndOption} -i ${commandName} ${g_args}
+        local commandName=${FUNCNAME##vis_}             
+        lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+             $(which ${G_myName}) ${G_commandPrefs} \
+             -p targetName=onTargetRun ${G_paramCmndOption} -i ${commandName} ${g_args}
     fi
 ####+END:
 }
@@ -1317,11 +1317,11 @@ _EOF_
     function onManagerRun { doNothing; }
 
     function onTargetRun {
-	EH_assert bxoIdPrep
+        EH_assert bxoIdPrep
 
-	local sysCharConveyInfoBase="${bxoHome}/var/sysCharConveyInfo"
+        local sysCharConveyInfoBase="${bxoHome}/var/sysCharConveyInfo"
 
-	lpDo  fileParamManage.py -i fileParamDictReadDeep ${sysCharConveyInfoBase}
+        lpDo  fileParamManage.py -i fileParamDictReadDeep ${sysCharConveyInfoBase}
     }
 
     if [ "${targetName}" != "onTargetRun" ] && [ ! -z "${targetName}" ] ; then lpDo onManagerRun; fi
@@ -1330,14 +1330,14 @@ _EOF_
     
 ####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" :cmndOption t
     if [ "${targetName}" == "onTargetRun" ] ; then
-	lpDo onTargetRun
+        lpDo onTargetRun
     elif [ -z "${targetName}" ] ; then
-	lpDo onTargetRun
+        lpDo onTargetRun
     else
-	local commandName=${FUNCNAME##vis_}		
-	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-	     $(which ${G_myName}) ${G_commandPrefs} \
-	     -p targetName=onTargetRun ${G_paramCmndOption} -i ${commandName}
+        local commandName=${FUNCNAME##vis_}             
+        lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+             $(which ${G_myName}) ${G_commandPrefs} \
+             -p targetName=onTargetRun ${G_paramCmndOption} -i ${commandName}
     fi
 ####+END:
 }
@@ -1348,7 +1348,7 @@ function vis_recordDeployment {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Use the sysChar BxO to record that the VM was deployed.
 _EOF_
-		       }
+                       }
     local thisDescribeF=$(describeF)
     EH_assert [[ $# -eq 0 ]]
     EH_assert [ ! -z "${bxoId}" ]
@@ -1358,7 +1358,7 @@ _EOF_
     lpDo printf ${thisDescribeF}
     
     lpReturn
-}	
+}       
 
 
 function vis_usgConvey_bisosDeveloper {
@@ -1370,19 +1370,19 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     function onManagerRun {
-	if [ -z "${bisosDevBxoId}" ] ; then
-	    bisosDevBxoId=$( vis_usgBposUsageEnvs_bisosDevBxoId_read )
-	    EH_assert [ ! -z "${bisosDevBxoId}" ]
-	fi
+        if [ -z "${bisosDevBxoId}" ] ; then
+            bisosDevBxoId=$( vis_usgBposUsageEnvs_bisosDevBxoId_read )
+            EH_assert [ ! -z "${bisosDevBxoId}" ]
+        fi
     }
 
     function onTargetRun {
-	lpDo usgBpos.sh ${G_commandPrefs} \
-	 -i usgBposUsageEnvs_bisosDevBxoId_write ${bisosDevBxoId}
+        lpDo usgBpos.sh ${G_commandPrefs} \
+         -i usgBposUsageEnvs_bisosDevBxoId_write ${bisosDevBxoId}
     }
 
     if [ "${targetName}" != "onTargetRun" ] && [ ! -z "${targetName}" ] ; then
-	lpDo onManagerRun
+        lpDo onManagerRun
     fi
 
     EH_assert [ ! -z "${bisosDevBxoId}" ]
@@ -1391,14 +1391,14 @@ _EOF_
     
 ####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" :cmndOption t
     if [ "${targetName}" == "onTargetRun" ] ; then
-	lpDo onTargetRun
+        lpDo onTargetRun
     elif [ -z "${targetName}" ] ; then
-	lpDo onTargetRun
+        lpDo onTargetRun
     else
-	local commandName=${FUNCNAME##vis_}		
-	lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-	     $(which ${G_myName}) ${G_commandPrefs} \
-	     -p targetName=onTargetRun ${G_paramCmndOption} -i ${commandName}
+        local commandName=${FUNCNAME##vis_}             
+        lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+             $(which ${G_myName}) ${G_commandPrefs} \
+             -p targetName=onTargetRun ${G_paramCmndOption} -i ${commandName}
     fi
 ####+END:
 }

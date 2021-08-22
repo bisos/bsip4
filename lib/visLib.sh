@@ -43,7 +43,7 @@ function vis_moduleDescription {  cat  << _EOF_
 *  [[elisp:(org-cycle)][| ]]  Info          :: *[Module Description:]* [[elisp:(org-cycle)][| ]]
 
 _EOF_
-			       }
+                               }
 
 
 
@@ -76,45 +76,45 @@ _CommentEnd_
 
 function _iifAuxInvocation {
     if [ "${G_isRealInvokationP}" != "false" ] ; then
-	return 1
+        return 1
     fi
     case "${G_auxAction}" in
-	describeF)
-	    describeF
-	    ;;
-	funcEntryShow)
-	    G_funcEntryShow
-	    ;;
-	paramsMandatory)
-	    echo NOTYET
-	    ;;
-	paramsMandatory)
-	    echo NOTYET
-	    ;;
-	paramsOptional)
-	    echo NOTYET
-	    ;;
-	argsLen)
-	    echo NOTYET
-	    ;;
-	argsDesc)
-	    echo NOTYET
-	    ;;
-	users)
-	    echo NOTYET
-	    ;;
-	groups)
-	    echo NOTYET
-	    ;;
-	impact)
-	    echo NOTYET
-	    ;;
-	visibility)
-	    echo NOTYET
-	    ;;
-	*)
-	    EH_problem "Invalid G_auxAction=${G_auxAction}"
-	    ;;
+        describeF)
+            describeF
+            ;;
+        funcEntryShow)
+            G_funcEntryShow
+            ;;
+        paramsMandatory)
+            echo NOTYET
+            ;;
+        paramsMandatory)
+            echo NOTYET
+            ;;
+        paramsOptional)
+            echo NOTYET
+            ;;
+        argsLen)
+            echo NOTYET
+            ;;
+        argsDesc)
+            echo NOTYET
+            ;;
+        users)
+            echo NOTYET
+            ;;
+        groups)
+            echo NOTYET
+            ;;
+        impact)
+            echo NOTYET
+            ;;
+        visibility)
+            echo NOTYET
+            ;;
+        *)
+            EH_problem "Invalid G_auxAction=${G_auxAction}"
+            ;;
     esac
     return 0
 }
@@ -157,12 +157,12 @@ _CommentEnd_
 function vis_iimBriefDescription {
     # $1=callingsName
     if [ "${iimPlayer}" = "blee" ] ; then
-	cat  << _EOF_
+        cat  << _EOF_
 ${IimBriefDescription}
 _EOF_
-	return
+        return
     fi
-	
+        
     cat  << _EOF_
 ${IimBriefDescription}
 _EOF_
@@ -204,10 +204,10 @@ _EOF_
     itemsList=$( typeset +f | egrep '^vis_' | grep ' ()' ) # BASH
     typeset thisItem=""
     for thisItem in  ${itemsList} ; do
-	# () shows up in bash
-	if [ ${thisItem} == "()" ] ; then  continue; fi
-	if [ ${thisItem} == "{" ] ; then  continue; fi
-	print -- ${thisItem##vis_} 
+        # () shows up in bash
+        if [ ${thisItem} == "()" ] ; then  continue; fi
+        if [ ${thisItem} == "{" ] ; then  continue; fi
+        print -- ${thisItem##vis_} 
     done
 }
 
@@ -227,12 +227,12 @@ iimPlayer=""
 function visLibExamplesOutput {
     # $1=callingsName
     if [ "${iimPlayer}" = "blee" ] ; then
-	cat  << _EOF_
+        cat  << _EOF_
 $1
 _EOF_
-	return
+        return
     fi
-	
+        
     cat  << _EOF_
 $( examplesSeperatorChapter "COMMON SEEDED EXAMPLES" )
 ${1} -i examplesCommonSeeded
@@ -349,7 +349,7 @@ function vis_myEnv {
     typeset outputBase="human"
     
     if  [ $# -eq 1 ] ; then
-	outputBase="$1"
+        outputBase="$1"
     fi
 
     myEnvParOutput ${outputBase} G_argsOrig "${G_argsOrig}"
@@ -365,7 +365,7 @@ function myEnvParOutput {
 #     G_funcEntry
 #     function describeF {  G_funcEntryShow; cat  << _EOF_
 # _EOF_
-# 		       }
+#                      }
 #     EH_assert [[ $# -eq 3 ]]
 
     typeset outputBase="$1"
@@ -374,9 +374,9 @@ function myEnvParOutput {
     
     
     if [ "${outputBase}" = "human" ] ; then
-	ANT_raw "${parmName}"="${parmValue}"
+        ANT_raw "${parmName}"="${parmValue}"
     else
-	fileParam_write "${outputBase}" "${parmName}" "${parmValue}"
+        fileParam_write "${outputBase}" "${parmName}" "${parmValue}"
     fi
 }
 
@@ -445,16 +445,16 @@ Tracing
 
             Trace Number Conventions:
 
-	    0: No Tracing
-	    1: Application Basic Info
-	    2: Application General Info
-	    3: Application Function Entry and Exit
-    	    4: Application Debugging
-	    5: Wrappers Library
-	    6: Seed Script
-	    7: Seed Supporting Libraries (eg, doLib.sh)
-	    8: ocp_library
-	    9: Quick Debug, usually temporary
+            0: No Tracing
+            1: Application Basic Info
+            2: Application General Info
+            3: Application Function Entry and Exit
+            4: Application Debugging
+            5: Wrappers Library
+            6: Seed Script
+            7: Seed Supporting Libraries (eg, doLib.sh)
+            8: ocp_library
+            9: Quick Debug, usually temporary
 
 Run Mode:
 =========
@@ -569,8 +569,8 @@ _CommentEnd_
 
 function vis_gotoPanel {
     if [ -z "${G_myPanel}" ] ; then
-	EH_problem "Missing G_myPanel Specification"
-	return 101
+        EH_problem "Missing G_myPanel Specification"
+        return 101
     fi
     
     #emlVisit -i gotoPanel /libre/ByStar/InitialTemplates/activeDocs/bxServices/versionControl/git
@@ -583,8 +583,8 @@ _CommentEnd_
 
 function vis_visit {
     if [ -z "${G_myFullName}" ] ; then
-	EH_problem "Missing G_myFullName Specification"
-	return 101
+        EH_problem "Missing G_myFullName Specification"
+        return 101
     fi
     
     emlVisit -v -n showRun -i gotoPanel "${G_myFullName}"
@@ -605,7 +605,7 @@ function vis_iimsInParamsUpdate {
 ** TODO Perhaps add a -f forceMode, which would overwrite
    existing vars.
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
 
     declare  fpNodeBase="./iimsIn/paramsFp"
@@ -617,16 +617,16 @@ _EOF_
 
     declare parsList=$( declare -t | sed -e s/"declare -At "// | grep -v iimControl_ | cut -d= -f1 )
     for thisParam in ${parsList} ; do
-	fpLeafParamName=$(dictRead ${thisParam} "name")
-	if [ -z "${fpLeafParamName}" ] ; then
-	    EH_problem "Missing fpLeafParamName param=${thisParam}"
-	    continue
-	fi
-	fpLeafParamValue=$(dictRead ${thisParam} "value")
-	if [ -z "${fpLeafParamValue}" ] ; then
-	    EH_problem "Missing fpLeafParamValue param=${thisParam}"
-	    continue
-	fi
+        fpLeafParamName=$(dictRead ${thisParam} "name")
+        if [ -z "${fpLeafParamName}" ] ; then
+            EH_problem "Missing fpLeafParamName param=${thisParam}"
+            continue
+        fi
+        fpLeafParamValue=$(dictRead ${thisParam} "value")
+        if [ -z "${fpLeafParamValue}" ] ; then
+            EH_problem "Missing fpLeafParamValue param=${thisParam}"
+            continue
+        fi
 
 _CommentBegin_
 ** TODO First Try A Read, If That Fails, Do The Write
@@ -638,11 +638,11 @@ _CommentEnd_
         iimParam_${thisParam} $(dictRead ${thisParam} "enums") | fileParam_writeEnums ${fpNodeBase} "${fpLeafParamName}"
 
         opDo fileParam_writeAttr ${fpNodeBase} "${fpLeafParamName}" "description" "$(dictRead ${thisParam} description)"
-	
+        
     done
 
     lpReturn
-}	
+}       
 
 
 _CommentBegin_
@@ -657,14 +657,14 @@ _CommentEnd_
 
 function iimControl_wrapper {
     if [ $# -eq 0 ] ; then    
-	IimParam iimControl_wrapper=(
-	    [name]="wrapper"
-	    [value]="None"
-	    [default]="None"
-	    [type]="string"
-	    [description]="Command Wrapping IIM Exec (e.g. echo, time)"
-	    [enums]="my_enums" 
-	)
+        IimParam iimControl_wrapper=(
+            [name]="wrapper"
+            [value]="None"
+            [default]="None"
+            [type]="string"
+            [description]="Command Wrapping IIM Exec (e.g. echo, time)"
+            [enums]="my_enums" 
+        )
     fi
 
     function my_enums { cat  << _EOF_
@@ -673,7 +673,7 @@ UserInput
 time
 echo
 _EOF_
-		      }
+                      }
 
     if [ $# -eq 1 ] ; then $1; lpReturn; fi
 }
@@ -685,21 +685,21 @@ _CommentEnd_
 
 function iimControl_iimName {
     if [ $# -eq 0 ] ; then    
-	IimParam iimControl_iimName=(
-	    [name]="iimName"
-	    [value]="${G_myName}"
-	    [default]="${G_myName}"	    
-	    [type]="string"
-	    [description]="Interactively Invokable Module (IIM)"
-	    [enums]="my_enums" 
-	)
+        IimParam iimControl_iimName=(
+            [name]="iimName"
+            [value]="${G_myName}"
+            [default]="${G_myName}"         
+            [type]="string"
+            [description]="Interactively Invokable Module (IIM)"
+            [enums]="my_enums" 
+        )
     fi
 
     function my_enums { cat  << _EOF_
 ${G_myName}
 UserInput
 _EOF_
-		      }
+                      }
 
     if [ $# -eq 1 ] ; then $1; lpReturn; fi
 }
@@ -711,21 +711,21 @@ _CommentEnd_
 
 function iimControl_iif {
     if [ $# -eq 0 ] ; then    
-	IimParam iimControl_iif=(
-	    [name]="iif"
-	    [value]="None"
-	    [default]="examples"	    
-	    [type]="string"
-	    [description]="IIF (-i iif)"
-	    [enums]="my_enums" 
-	)
+        IimParam iimControl_iif=(
+            [name]="iif"
+            [value]="None"
+            [default]="examples"            
+            [type]="string"
+            [description]="IIF (-i iif)"
+            [enums]="my_enums" 
+        )
     fi
 
     function my_enums { cat  << _EOF_
 None
 UserInput
 _EOF_
-		      }
+                      }
 
     if [ $# -eq 1 ] ; then $1; lpReturn; fi
 }
@@ -737,21 +737,21 @@ _CommentEnd_
 
 function iimControl_iifArgs {
     if [ $# -eq 0 ] ; then    
-	IimParam iimControl_iifArgs=(
-	    [name]="iifArgs"
-	    [value]="None"
-	    [default]="None"	    
-	    [type]="string"
-	    [description]="Command IIF Arguments ($@)"
-	    [enums]="my_enums" 
-	)
+        IimParam iimControl_iifArgs=(
+            [name]="iifArgs"
+            [value]="None"
+            [default]="None"        
+            [type]="string"
+            [description]="Command IIF Arguments ($@)"
+            [enums]="my_enums" 
+        )
     fi
 
     function my_enums { cat  << _EOF_
 None
 UserInput
 _EOF_
-		      }
+                      }
 
     if [ $# -eq 1 ] ; then $1; lpReturn; fi
 }
@@ -763,21 +763,21 @@ _CommentEnd_
 
 function iimControl_verbosity {
     if [ $# -eq 0 ] ; then    
-	IimParam iimControl_verbosity=(
-	    [name]="verbosity"
-	    [value]="-v"
-	    [default]="-v"	    
-	    [type]="string"
-	    [description]="Level Of Verbosity"
-	    [enums]="my_enums" 
-	)
+        IimParam iimControl_verbosity=(
+            [name]="verbosity"
+            [value]="-v"
+            [default]="-v"          
+            [type]="string"
+            [description]="Level Of Verbosity"
+            [enums]="my_enums" 
+        )
     fi
 
     function my_enums { cat  << _EOF_
 None
 -v
 _EOF_
-		      }
+                      }
 
     if [ $# -eq 1 ] ; then $1; lpReturn; fi
 }
@@ -789,21 +789,21 @@ _CommentEnd_
 
 function iimControl_forceMode {
     if [ $# -eq 0 ] ; then    
-	IimParam iimControl_forceMode=(
-	    [name]="forceMode"
-	    [value]="None"
-	    [default]="None"	    
-	    [type]="string"
-	    [description]="Force Mode"
-	    [enums]="my_enums" 
-	)
+        IimParam iimControl_forceMode=(
+            [name]="forceMode"
+            [value]="None"
+            [default]="None"        
+            [type]="string"
+            [description]="Force Mode"
+            [enums]="my_enums" 
+        )
     fi
 
     function my_enums { cat  << _EOF_
 None
 -f
 _EOF_
-		      }
+                      }
 
     if [ $# -eq 1 ] ; then $1; lpReturn; fi
 }
@@ -815,14 +815,14 @@ _CommentEnd_
 
 function iimControl_callTracking {
     if [ $# -eq 0 ] ; then    
-	IimParam iimControl_callTracking=(
-	    [name]="callTracking"
-	    [value]="-n showRun"
-	    [default]="-n showRun"	    
-	    [type]="string"
-	    [description]="Call Tracking"
-	    [enums]="my_enums" 
-	)
+        IimParam iimControl_callTracking=(
+            [name]="callTracking"
+            [value]="-n showRun"
+            [default]="-n showRun"          
+            [type]="string"
+            [description]="Call Tracking"
+            [enums]="my_enums" 
+        )
     fi
 
     function my_enums { cat  << _EOF_
@@ -834,7 +834,7 @@ None
 -n showProtected
 -n showRunProtected
 _EOF_
-		      }
+                      }
 
     if [ $# -eq 1 ] ; then $1; lpReturn; fi
 }
@@ -846,14 +846,14 @@ _CommentEnd_
 
 function iimControl_tracing {
     if [ $# -eq 0 ] ; then    
-	IimParam iimControl_tracing=(
-	    [name]="tracing"
-	    [value]="None"
-	    [default]="None"	    
-	    [type]="string"
-	    [description]="Trace Module (tracing level)"
-	    [enums]="my_enums" 
-	)
+        IimParam iimControl_tracing=(
+            [name]="tracing"
+            [value]="None"
+            [default]="None"        
+            [type]="string"
+            [description]="Trace Module (tracing level)"
+            [enums]="my_enums" 
+        )
     fi
 
     function my_enums { cat  << _EOF_
@@ -869,7 +869,7 @@ None
 -T 8
 -T 9
 _EOF_
-		      }
+                      }
 
     if [ $# -eq 1 ] ; then $1; lpReturn; fi
 }
@@ -881,21 +881,21 @@ _CommentEnd_
 
 function iimControl_recording {
     if [ $# -eq 0 ] ; then    
-	IimParam iimControl_recording=(
-	    [name]="recording"
-	    [value]="None"
-	    [default]="None"	    
-	    [type]="string"
-	    [description]="Results Recording Location"
-	    [enums]="my_enums" 
-	)
+        IimParam iimControl_recording=(
+            [name]="recording"
+            [value]="None"
+            [default]="None"        
+            [type]="string"
+            [description]="Results Recording Location"
+            [enums]="my_enums" 
+        )
     fi
 
     function my_enums { cat  << _EOF_
 None
 UserInput
 _EOF_
-		      }
+                      }
 
     if [ $# -eq 1 ] ; then $1; lpReturn; fi
 }
@@ -917,16 +917,16 @@ function vis_iimsInControlsUpdate {
 ** TODO Perhaps add a -f forceMode, which would overwrite
    existing vars.
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
 
 
     function iimParamFuncsInvoke {
-	EH_assert [[ $# -eq 0 ]]
-	declare iimParamFuncsList=$( declare -F | grep iimControl_ | sed -e s/"declare -f "// | cut -d= -f1 )
-	for thisFunc in ${iimParamFuncsList} ; do
-	    opDo ${thisFunc}
-	done
+        EH_assert [[ $# -eq 0 ]]
+        declare iimParamFuncsList=$( declare -F | grep iimControl_ | sed -e s/"declare -f "// | cut -d= -f1 )
+        for thisFunc in ${iimParamFuncsList} ; do
+            opDo ${thisFunc}
+        done
     }
 
     iimParamFuncsInvoke
@@ -940,23 +940,23 @@ _EOF_
 
     declare parsList=$( declare -t | sed -e s/"declare -At "// | grep iimControl_ | cut -d= -f1 )
     for thisParam in ${parsList} ; do
-	fpLeafParamName=$(dictRead ${thisParam} "name")
-	if [ -z "${fpLeafParamName}" ] ; then
-	    EH_problem "Missing fpLeafParamName param=${thisParam}"
-	    continue
-	fi
+        fpLeafParamName=$(dictRead ${thisParam} "name")
+        if [ -z "${fpLeafParamName}" ] ; then
+            EH_problem "Missing fpLeafParamName param=${thisParam}"
+            continue
+        fi
 
-	fpLeafParamDefault=$(dictRead ${thisParam} "default")
-	if [ -z "${fpLeafParamDefault}" ] ; then
-	    EH_problem "Missing fpLeafParamDefault param=${thisParam}"
-	    continue
-	fi
-	
-	fpLeafParamValue=$(dictRead ${thisParam} "value")
-	if [ -z "${fpLeafParamValue}" ] ; then
-	    EH_problem "Missing fpLeafParamValue param=${thisParam}"
-	    continue
-	fi
+        fpLeafParamDefault=$(dictRead ${thisParam} "default")
+        if [ -z "${fpLeafParamDefault}" ] ; then
+            EH_problem "Missing fpLeafParamDefault param=${thisParam}"
+            continue
+        fi
+        
+        fpLeafParamValue=$(dictRead ${thisParam} "value")
+        if [ -z "${fpLeafParamValue}" ] ; then
+            EH_problem "Missing fpLeafParamValue param=${thisParam}"
+            continue
+        fi
 
 _CommentBegin_
 ** TODO First Try A Read, If That Fails, Do The Write
@@ -977,12 +977,12 @@ _CommentEnd_
 
         opDo fileParam_writeAttr ${fpNodeBase} "${fpLeafParamName}" "description" "$(dictRead ${thisParam} description)"
 
-        opDo fileParam_writeAttr ${fpNodeBase} "${fpLeafParamName}" "default" "$(dictRead ${thisParam} default)"	
-	
+        opDo fileParam_writeAttr ${fpNodeBase} "${fpLeafParamName}" "default" "$(dictRead ${thisParam} default)"        
+        
     done
 
     lpReturn
-}	
+}       
 
 
 _CommentBegin_
@@ -991,14 +991,14 @@ _CommentEnd_
 
 function iimLine_mode {
     if [ $# -eq 0 ] ; then    
-	IimParam iimLine_mode=(
-	    [name]="mode"
-	    [value]="None"
-	    [default]="show"	    
-	    [type]="string"
-	    [description]="Chooses iimLine run mode."
-	    [enums]="my_enums" 
-	)
+        IimParam iimLine_mode=(
+            [name]="mode"
+            [value]="None"
+            [default]="show"        
+            [type]="string"
+            [description]="Chooses iimLine run mode."
+            [enums]="my_enums" 
+        )
     fi
 
     function my_enums { cat  << _EOF_
@@ -1006,7 +1006,7 @@ run
 echo
 show
 _EOF_
-		      }
+                      }
 
     if [ $# -eq 1 ] ; then $1; lpReturn; fi
 }
@@ -1022,15 +1022,15 @@ function vis_iimsLineModeUpdate {
 ** TODO Perhaps add a -f forceMode, which would overwrite
    existing vars.
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
 
     function iimParamFuncsInvoke {
-	EH_assert [[ $# -eq 0 ]]
-	declare iimParamFuncsList=$( declare -F | grep iimLine_ | sed -e s/"declare -f "// | cut -d= -f1 )
-	for thisFunc in ${iimParamFuncsList} ; do
-	    opDo ${thisFunc}
-	done
+        EH_assert [[ $# -eq 0 ]]
+        declare iimParamFuncsList=$( declare -F | grep iimLine_ | sed -e s/"declare -f "// | cut -d= -f1 )
+        for thisFunc in ${iimParamFuncsList} ; do
+            opDo ${thisFunc}
+        done
     }
 
     iimParamFuncsInvoke
@@ -1044,23 +1044,23 @@ _EOF_
 
     declare parsList=$( declare -t | sed -e s/"declare -At "// | grep iimLine_ | cut -d= -f1 )
     for thisParam in ${parsList} ; do
-	fpLeafParamName=$(dictRead ${thisParam} "name")
-	if [ -z "${fpLeafParamName}" ] ; then
-	    EH_problem "Missing fpLeafParamName param=${thisParam}"
-	    continue
-	fi
+        fpLeafParamName=$(dictRead ${thisParam} "name")
+        if [ -z "${fpLeafParamName}" ] ; then
+            EH_problem "Missing fpLeafParamName param=${thisParam}"
+            continue
+        fi
 
-	fpLeafParamDefault=$(dictRead ${thisParam} "default")
-	if [ -z "${fpLeafParamDefault}" ] ; then
-	    EH_problem "Missing fpLeafParamDefault param=${thisParam}"
-	    continue
-	fi
-	
-	fpLeafParamValue=$(dictRead ${thisParam} "value")
-	if [ -z "${fpLeafParamValue}" ] ; then
-	    EH_problem "Missing fpLeafParamValue param=${thisParam}"
-	    continue
-	fi
+        fpLeafParamDefault=$(dictRead ${thisParam} "default")
+        if [ -z "${fpLeafParamDefault}" ] ; then
+            EH_problem "Missing fpLeafParamDefault param=${thisParam}"
+            continue
+        fi
+        
+        fpLeafParamValue=$(dictRead ${thisParam} "value")
+        if [ -z "${fpLeafParamValue}" ] ; then
+            EH_problem "Missing fpLeafParamValue param=${thisParam}"
+            continue
+        fi
 
 _CommentBegin_
 ** TODO First Try A Read, If That Fails, Do The Write
@@ -1081,12 +1081,12 @@ _CommentEnd_
 
         opDo fileParam_writeAttr ${fpNodeBase} "${fpLeafParamName}" "description" "$(dictRead ${thisParam} description)"
 
-        opDo fileParam_writeAttr ${fpNodeBase} "${fpLeafParamName}" "default" "$(dictRead ${thisParam} default)"	
-	
+        opDo fileParam_writeAttr ${fpNodeBase} "${fpLeafParamName}" "default" "$(dictRead ${thisParam} default)"        
+        
     done
 
     lpReturn
-}	
+}       
 
 
 _CommentBegin_
@@ -1101,14 +1101,14 @@ _CommentEnd_
 function iimsPkg_label {
     iimsPkgLabel=$(FN_nonDirsPart $(FN_dirsPart ${G_myFullName}))
     if [ $# -eq 0 ] ; then    
-	IimParam iimsPkg_label=(
-	    [name]="label"
-	    [value]="${iimsPkgLabel}"
-	    [default]="${iimsPkgLabel}"	    
-	    [type]="string"
-	    [description]="A label for this iimsPkg"
-	    [enums]="my_enums" 
-	)
+        IimParam iimsPkg_label=(
+            [name]="label"
+            [value]="${iimsPkgLabel}"
+            [default]="${iimsPkgLabel}"     
+            [type]="string"
+            [description]="A label for this iimsPkg"
+            [enums]="my_enums" 
+        )
     fi
 
     function my_enums { cat  << _EOF_
@@ -1116,7 +1116,7 @@ ${iimsPkgLabel}
 None
 UserInput
 _EOF_
-		      }
+                      }
 
     if [ $# -eq 1 ] ; then $1; lpReturn; fi
 }
@@ -1128,14 +1128,14 @@ _CommentEnd_
 
 function iimsPkg_dateVer {
     if [ $# -eq 0 ] ; then    
-	IimParam iimsPkg_dateVer=(
-	    [name]="dateVer"
-	    [value]="uninitialized"
-	    [default]="uninitialized"	    
-	    [type]="string"
-	    [description]="A label for this iimsPkg"
-	    [enums]="my_enums" 
-	)
+        IimParam iimsPkg_dateVer=(
+            [name]="dateVer"
+            [value]="uninitialized"
+            [default]="uninitialized"       
+            [type]="string"
+            [description]="A label for this iimsPkg"
+            [enums]="my_enums" 
+        )
     fi
 
     function my_enums { cat  << _EOF_
@@ -1143,7 +1143,7 @@ uninitialized
 None
 UserInput
 _EOF_
-		      }
+                      }
 
     if [ $# -eq 1 ] ; then $1; lpReturn; fi
 }
@@ -1160,15 +1160,15 @@ function vis_iimsPkgUpdate {
 ** TODO Perhaps add a -f forceMode, which would overwrite
    existing vars.
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
 
     function iimParamFuncsInvoke {
-	EH_assert [[ $# -eq 0 ]]
-	declare iimParamFuncsList=$( declare -F | grep iimsPkg_ | sed -e s/"declare -f "// | cut -d= -f1 )
-	for thisFunc in ${iimParamFuncsList} ; do
-	    opDo ${thisFunc}
-	done
+        EH_assert [[ $# -eq 0 ]]
+        declare iimParamFuncsList=$( declare -F | grep iimsPkg_ | sed -e s/"declare -f "// | cut -d= -f1 )
+        for thisFunc in ${iimParamFuncsList} ; do
+            opDo ${thisFunc}
+        done
     }
     
     iimParamFuncsInvoke
@@ -1182,23 +1182,23 @@ _EOF_
 
     declare parsList=$( declare -t | sed -e s/"declare -At "// | grep iimsPkg_ | cut -d= -f1 )
     for thisParam in ${parsList} ; do
-	fpLeafParamName=$(dictRead ${thisParam} "name")
-	if [ -z "${fpLeafParamName}" ] ; then
-	    EH_problem "Missing fpLeafParamName param=${thisParam}"
-	    continue
-	fi
+        fpLeafParamName=$(dictRead ${thisParam} "name")
+        if [ -z "${fpLeafParamName}" ] ; then
+            EH_problem "Missing fpLeafParamName param=${thisParam}"
+            continue
+        fi
 
-	fpLeafParamDefault=$(dictRead ${thisParam} "default")
-	if [ -z "${fpLeafParamDefault}" ] ; then
-	    EH_problem "Missing fpLeafParamDefault param=${thisParam}"
-	    continue
-	fi
-	
-	fpLeafParamValue=$(dictRead ${thisParam} "value")
-	if [ -z "${fpLeafParamValue}" ] ; then
-	    EH_problem "Missing fpLeafParamValue param=${thisParam}"
-	    continue
-	fi
+        fpLeafParamDefault=$(dictRead ${thisParam} "default")
+        if [ -z "${fpLeafParamDefault}" ] ; then
+            EH_problem "Missing fpLeafParamDefault param=${thisParam}"
+            continue
+        fi
+        
+        fpLeafParamValue=$(dictRead ${thisParam} "value")
+        if [ -z "${fpLeafParamValue}" ] ; then
+            EH_problem "Missing fpLeafParamValue param=${thisParam}"
+            continue
+        fi
 
 _CommentBegin_
 ** TODO First Try A Read, If That Fails, Do The Write
@@ -1219,12 +1219,12 @@ _CommentEnd_
 
         opDo fileParam_writeAttr ${fpNodeBase} "${fpLeafParamName}" "description" "$(dictRead ${thisParam} description)"
 
-        opDo fileParam_writeAttr ${fpNodeBase} "${fpLeafParamName}" "default" "$(dictRead ${thisParam} default)"	
-	
+        opDo fileParam_writeAttr ${fpNodeBase} "${fpLeafParamName}" "default" "$(dictRead ${thisParam} default)"        
+        
     done
 
     lpReturn
-}	
+}       
 
 
 
@@ -1246,20 +1246,20 @@ function vis_groupedPanel {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** TODO Subject it to forcemode
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
     #ANT_cooked "KKKK"
     if [ ! -d /libre/var/bisos/iimGroupedPanels/${G_myName} ] ; then
-	#ANT_cooked "KKKK"
-	opDo vis_groupedPanelPreps
-	#ANT_cooked "KKKK"
+        #ANT_cooked "KKKK"
+        opDo vis_groupedPanelPreps
+        #ANT_cooked "KKKK"
     fi
 
     #ANT_cooked "KKKK"
     emlVisit -v -n showRun -i gotoPanel "/libre/var/bisos/iimGroupedPanels/${G_myName}/Panel.org"
 
     lpReturn
-}	
+}       
 
 _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || IIF       ::  vis_groupedPanelPreps    [[elisp:(org-cycle)][| ]]
@@ -1274,7 +1274,7 @@ function vis_groupedPanelPreps {
 ***  In BaseDir, create ./iimsIn/params and ./iimsIn/commonControl
 ***  Go to BaseDir/panel.org
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
 
     #if [ ! -d /libre/var/bisos/iimGroupedPanels/${G_myName} ] ; then
@@ -1302,7 +1302,7 @@ _EOF_
     echo MMMM
 
     lpReturn
-}	
+}       
 
 _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || IIF       ::  vis_groupedPanel    [[elisp:(org-cycle)][| ]]
@@ -1313,20 +1313,20 @@ function vis_groupedPanel {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** TODO Subject it to forcemode
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
     #ANT_cooked "KKKK"
     if [ ! -d /libre/var/bisos/iimGroupedPanels/${G_myName} ] ; then
-	#ANT_cooked "KKKK"
-	opDo vis_groupedPanelPreps
-	#ANT_cooked "KKKK"
+        #ANT_cooked "KKKK"
+        opDo vis_groupedPanelPreps
+        #ANT_cooked "KKKK"
     fi
 
     #ANT_cooked "KKKK"
     emlVisit -v -n showRun -i gotoPanel "/libre/var/bisos/iimGroupedPanels/${G_myName}/Panel.org"
 
     lpReturn
-}	
+}       
 
 
 _CommentBegin_
@@ -1352,17 +1352,17 @@ _EOF_
     typeset iimBaseDir="./var/${G_myName}"
     
     if [ ! -d "${iimBaseDir}" ] ; then
-	opDo mkdir -p "${iimBaseDir}"
+        opDo mkdir -p "${iimBaseDir}"
     fi
     
     if [ ! -d "${iimBaseDir}"/iimsIn/commonControlFp ] ; then
-	opDo vis_bxtPanelPreps
+        opDo vis_bxtPanelPreps
     fi
 
     #emlVisit -v -n showRun -i gotoPanel "./Panel.org"
 
     lpReturn
-}	
+}       
 
 _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || IIF       ::  vis_iimsPkgPreps    [[elisp:(org-cycle)][| ]]
@@ -1386,15 +1386,15 @@ _EOF_
     typeset panelFileName="${iimScriptPrefix}-Panel.org"
     
     if [ "${iimScriptPrefix}" == "iimsProc" ] ; then
-	panelFileName="Panel.org"
+        panelFileName="Panel.org"
     fi
 
     typeset iimBaseDir="./var/iimsPkg"
     
     if [ ! -d "${iimBaseDir}" ] ; then
-	opDo mkdir -p "${iimBaseDir}"
+        opDo mkdir -p "${iimBaseDir}"
     fi
-	
+        
     inBaseDirDo "${iimBaseDir}" vis_iimsPkgUpdate
 
     FN_fileSafeKeep  ${panelFileName}
@@ -1404,7 +1404,7 @@ _EOF_
     opDo  bx-dblock -i dblockUpdateFiles ${panelFileName}
 
     lpReturn
-}	
+}       
 
 
 _CommentBegin_
@@ -1430,9 +1430,9 @@ _EOF_
     typeset iimBaseDir="./var/${G_myName}"
     
     if [ ! -d "${iimBaseDir}" ] ; then
-	opDo mkdir -p "${iimBaseDir}"
+        opDo mkdir -p "${iimBaseDir}"
     fi
-	
+        
     inBaseDirDo  "${iimBaseDir}" vis_iimsInParamsUpdate
 
     inBaseDirDo  "${iimBaseDir}" vis_iimsInControlsUpdate
@@ -1447,7 +1447,7 @@ _EOF_
     #opDo bx-dblock -i dblockUpdateFiles ./Panel.org
 
     lpReturn
-}	
+}       
 
 typeset -A IimGroupingType=(  # One Of Choice
     [pkged]=pkged          # eg basicPkg, toiimPkg, empnaPkg
@@ -1501,7 +1501,7 @@ _EOF_
     echo ${G_iimGroupingType}
 
     lpReturn
-}	
+}       
 
 
 _CommentBegin_
@@ -1526,7 +1526,7 @@ _EOF_
     echo ${G_iimCmndParts}
 
     lpReturn
-}	
+}       
 
 _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || IIF-X     ::  vis_iimCmndPartIncludes    [[elisp:(org-cycle)][| ]]
@@ -1551,13 +1551,13 @@ _EOF_
     typeset retVal=1
 
     for thisPart in "$@" ; do
-	#echo "${thisPart}"
-	
-	if IS_inList "${thisPart}" "${G_iimCmndParts}" ; then
-	    lpReturn 0
-	else
-	    continue
-	fi
+        #echo "${thisPart}"
+        
+        if IS_inList "${thisPart}" "${G_iimCmndParts}" ; then
+            lpReturn 0
+        else
+            continue
+        fi
     done
     lpReturn ${retVal}
 }

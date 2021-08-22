@@ -189,7 +189,7 @@ function vis_modelAbodeFunctionBaseDirsCreate {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
 
    local containersBase=$( containersAssignBaseObtain )
@@ -197,9 +197,9 @@ _EOF_
 
    for eachModel in ${models[@]} ;  do
        for eachAbode in ${abodes[@]} ; do
-	   for eachFunction in ${functions[@]} ; do
-	       lpDo mkdir -p  ${containersBase}/${eachModel}/${eachAbode}/${eachFunction}
-	   done
+           for eachFunction in ${functions[@]} ; do
+               lpDo mkdir -p  ${containersBase}/${eachModel}/${eachAbode}/${eachFunction}
+           done
        done
    done
 
@@ -211,7 +211,7 @@ function vis_assignGenerics_auto {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
 
    local examplesOrDoIt=$1
@@ -228,17 +228,17 @@ _EOF_
        local thisAbode=$2
        local thisFunction=$3
        for eachDistro in ${distros[@]} ; do
-	   if [ "${examplesOrDoIt}" == "examples" ] ; then
-	       cat  << _EOF_
+           if [ "${examplesOrDoIt}" == "examples" ] ; then
+               cat  << _EOF_
 ${G_myName} -p model=${thisModel} -p abode=${thisAbode} -p function=${thisFunction} -i ${command} ${eachDistro}
 ${G_myName} -p model=${thisModel} -p abode=${thisAbode} -p function=${thisFunction} -i ${command} bx_${eachDistro}
 _EOF_
-	   elif [ "${examplesOrDoIt}" == "doIt" ] ; then
-	       lpDo vis_${command} ${eachDistro}
-	       lpDo vis_${command} bx_${eachDistro}
-	   else
-	       EH_problem "Bad Usage -- ${examplesOrDoIt}"
-	   fi
+           elif [ "${examplesOrDoIt}" == "doIt" ] ; then
+               lpDo vis_${command} ${eachDistro}
+               lpDo vis_${command} bx_${eachDistro}
+           else
+               EH_problem "Bad Usage -- ${examplesOrDoIt}"
+           fi
        done
    }
    
@@ -247,11 +247,11 @@ _EOF_
        local thisModel=$1
        local thisAbode=$2       
        if [ ! -z ${function} ] ; then
-	   outLine ${thisModel} ${thisAbode} ${function}
+           outLine ${thisModel} ${thisAbode} ${function}
        else
-	   for eachFunction in ${functions[@]} ; do
-	       outLine ${thisModel} ${thisAbode} ${eachFunction}
-	   done
+           for eachFunction in ${functions[@]} ; do
+               outLine ${thisModel} ${thisAbode} ${eachFunction}
+           done
        fi
    }
 
@@ -259,11 +259,11 @@ _EOF_
        EH_assert [[ $# -eq 1 ]]
        local thisModel=$1
        if [ ! -z ${abode} ] ; then
-	   functionsList ${thisModel} ${abode}
+           functionsList ${thisModel} ${abode}
        else
-	   for eachAbode in ${abodes[@]} ; do
-	       functionsList  ${thisModel} ${eachAbode}
-	   done
+           for eachAbode in ${abodes[@]} ; do
+               functionsList  ${thisModel} ${eachAbode}
+           done
        fi
    }
 
@@ -271,7 +271,7 @@ _EOF_
        abodesFunctionsList ${model}
    else
        for eachModel in ${models[@]} ;  do
-	   abodesFunctionsList ${eachModel}  
+           abodesFunctionsList ${eachModel}  
        done
    fi
 
@@ -283,7 +283,7 @@ function vis_assignGenerics_box {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
     EH_assert [[ $# -eq 1 ]]
 
     local examplesOrDoIt=$1
@@ -306,17 +306,17 @@ _EOF_
        local thisAbode=$2
        local thisFunction=$3
        for eachDistro in ${distros[@]} ; do
-	   if [ "${examplesOrDoIt}" == "examples" ] ; then
-	       cat  << _EOF_
+           if [ "${examplesOrDoIt}" == "examples" ] ; then
+               cat  << _EOF_
 ${G_myName} -p model=${thisModel} -p abode=${thisAbode} -p function=${thisFunction} -i ${command} ${eachDistro}
 ${G_myName} -p model=${thisModel} -p abode=${thisAbode} -p function=${thisFunction} -i ${command} bx_${eachDistro}
 _EOF_
-	   elif [ "${examplesOrDoIt}" == "doIt" ] ; then
-	       lpDo vis_${command} ${eachDistro}
-	       lpDo vis_${command} bx_${eachDistro}
-	   else
-	       EH_problem "Bad Usage -- ${examplesOrDoIt}"
-	   fi
+           elif [ "${examplesOrDoIt}" == "doIt" ] ; then
+               lpDo vis_${command} ${eachDistro}
+               lpDo vis_${command} bx_${eachDistro}
+           else
+               EH_problem "Bad Usage -- ${examplesOrDoIt}"
+           fi
        done
    }
    
@@ -325,11 +325,11 @@ _EOF_
        local thisModel=$1
        local thisAbode=$2       
        if [ ! -z ${function} ] ; then
-	   outLine ${thisModel} ${thisAbode} ${function}
+           outLine ${thisModel} ${thisAbode} ${function}
        else
-	   for eachFunction in ${functions[@]} ; do
-	       outLine ${thisModel} ${thisAbode} ${eachFunction}
-	   done
+           for eachFunction in ${functions[@]} ; do
+               outLine ${thisModel} ${thisAbode} ${eachFunction}
+           done
        fi
    }
 
@@ -337,11 +337,11 @@ _EOF_
        EH_assert [[ $# -eq 1 ]]
        local thisModel=$1
        if [ ! -z ${abode} ] ; then
-	   functionsList ${thisModel} ${abode}
+           functionsList ${thisModel} ${abode}
        else
-	   for eachAbode in ${abodes[@]} ; do
-	       functionsList  ${thisModel} ${eachAbode}
-	   done
+           for eachAbode in ${abodes[@]} ; do
+               functionsList  ${thisModel} ${eachAbode}
+           done
        fi
    }
 
@@ -349,7 +349,7 @@ _EOF_
        abodesFunctionsList ${model}
    else
        for eachModel in ${models[@]} ;  do
-	   abodesFunctionsList ${eachModel}  
+           abodesFunctionsList ${eachModel}  
        done
    fi
 
@@ -361,7 +361,7 @@ function vis_modelAbodeFunction_listExamples {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
 
    local command=$1
@@ -381,11 +381,11 @@ _EOF_
        local thisModel=$1
        local thisAbode=$2       
        if [ ! -z ${function} ] ; then
-	   outLine ${thisModel} ${thisAbode} ${function}
+           outLine ${thisModel} ${thisAbode} ${function}
        else
-	   for eachFunction in ${functions[@]} ; do
-	       outLine ${thisModel} ${thisAbode} ${eachFunction}
-	   done
+           for eachFunction in ${functions[@]} ; do
+               outLine ${thisModel} ${thisAbode} ${eachFunction}
+           done
        fi
    }
 
@@ -393,11 +393,11 @@ _EOF_
        EH_assert [[ $# -eq 1 ]]
        local thisModel=$1
        if [ ! -z ${abode} ] ; then
-	   functionsList ${thisModel} ${abode}
+           functionsList ${thisModel} ${abode}
        else
-	   for eachAbode in ${abodes[@]} ; do
-	       functionsList  ${thisModel} ${eachAbode}
-	   done
+           for eachAbode in ${abodes[@]} ; do
+               functionsList  ${thisModel} ${eachAbode}
+           done
        fi
    }
 
@@ -405,7 +405,7 @@ _EOF_
        abodesFunctionsList ${model}
    else
        for eachModel in ${models[@]} ;  do
-	   abodesFunctionsList ${eachModel}  
+           abodesFunctionsList ${eachModel}  
        done
    fi
 
@@ -416,23 +416,23 @@ function vis_withInitialGetModel {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
    local modelInitial=$1
    local result=""   
 
    case "${modelInitial}" in
        "H")
-	   result="Host"
-	   ;;
+           result="Host"
+           ;;
        "P")
-	   result="Pure"
-	   ;;
+           result="Pure"
+           ;;
        "V")
-	   result="Virt"
-	   ;;
+           result="Virt"
+           ;;
        *)
-	   EH_problem "Bad Usage -- modelInitial=${modelInitial}"
+           EH_problem "Bad Usage -- modelInitial=${modelInitial}"
    esac
    echo ${result}
 }
@@ -441,29 +441,29 @@ function vis_withInitialGetAbode {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
    local abodeInitial=$1
    local result=""
 
    case "${abodeInitial}" in
        "A")
-	   result="Auto"
-	   ;;
+           result="Auto"
+           ;;
        "M")
-	   result="Mobile"
-	   ;;
+           result="Mobile"
+           ;;
        "P")
-	   result="Perim"
-	   ;;
+           result="Perim"
+           ;;
        "S")
-	   result="Shield"
-	   ;;
+           result="Shield"
+           ;;
        "I")
-	   result="Internet"
-	   ;;
+           result="Internet"
+           ;;
        *)
-	   EH_problem "Bad Usage -- abodeInitial=${abodeInitial}"
+           EH_problem "Bad Usage -- abodeInitial=${abodeInitial}"
    esac
    echo ${result}
 }
@@ -473,29 +473,29 @@ function vis_withInitialGetFunction {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
    local functionInitial=$1
    local result=""
 
    case "${functionInitial}" in
        "L")
-	   result="LinuxU"
-	   ;;
+           result="LinuxU"
+           ;;
        "A")
-	   result="AndroidU"
-	   ;;
+           result="AndroidU"
+           ;;
        "S")
-	   result="Server"
-	   ;;
+           result="Server"
+           ;;
        "D")
-	   result="Devel"
-	   ;;
+           result="Devel"
+           ;;
        "G")
-	   result="Generic"
-	   ;;
+           result="Generic"
+           ;;
        *)
-	   EH_problem "Bad Usage -- functionInitial=${functionInitial}"
+           EH_problem "Bad Usage -- functionInitial=${functionInitial}"
    esac
    echo ${result}
 }
@@ -505,7 +505,7 @@ function vis_withContainerIdGetBase {
    function describeF {  G_funcEntryShow; cat  << _EOF_
 ContainerId is VAG-xxx
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
    local containerId=$1
 
@@ -535,7 +535,7 @@ function vis_assignedContainerBase {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
    local containerNu=$1
 
@@ -554,7 +554,7 @@ function vis_containerBoxAssignAndPush {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -lt 2 ]]
 
    EH_assert [ ! -z "${model}" ]   
@@ -569,13 +569,13 @@ _EOF_
 
    lpDo vis_forThisSysContainerBasePush
    
-}	
+}       
 
 function vis_forThisSysContainerAssignBasePush {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
 
    local thisContainerBase=$( vis_forThisSysFindContainerBase )
@@ -583,14 +583,14 @@ _EOF_
    EH_assert [ ! -z "${thisContainerBase}" ]
 
    lpDo eval echo ${thisContainerBase} \| bx-gitRepos -i addCommitPush all
-}	
+}       
 
 
 function vis_containersAssignBasePull {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
 
    EH_assert [[ $# -eq 0 ]]
 
@@ -613,7 +613,7 @@ Return on stdout, a containerId  such as HSS-1001.
 - If one does not exist, assign one (with vis_containerNuGetNext)
 - Then after vis_containerUpdate_atNu, return containerId
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -lt 2 ]]
 
    EH_assert [ ! -z "${model}" ]   
@@ -624,18 +624,18 @@ _EOF_
        lpDo vis_containerAssignGeneric "$1"
        lpReturn
    fi
-	  
+          
    case "${model}" in
        Host|host|HOST|Pure|pure|PURE)
-	   lpDo vis_containerBoxAssignNumbered	   
-	   ;;
+           lpDo vis_containerBoxAssignNumbered     
+           ;;
        Virt|virt|VIRT)
-	   lpDo vis_containerVirtAssignNumbered	   	   
-	   ;;
+           lpDo vis_containerVirtAssignNumbered            
+           ;;
        *)
-	   EH_problem "Bad Usage -- model=${model}"
+           EH_problem "Bad Usage -- model=${model}"
    esac
-}	
+}       
 
 
 
@@ -643,7 +643,7 @@ function vis_containerBoxUnAssign {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
 
    local boxId="$1"
@@ -664,7 +664,7 @@ function vis_containerBoxUnAssignAndPush {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
 
    local boxId="$1"
@@ -690,7 +690,7 @@ Return on stdout, a containerId  such as HSS-1001.
 - If one does not exist, assign one (with vis_containerNuGetNext)
 - Then after vis_containerUpdate_atNu, return containerId
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -lt 2 ]]
 
    EH_assert [ ! -z "${model}" ]   
@@ -702,7 +702,7 @@ _EOF_
    else
        vis_containerAssignGeneric "$1"
    fi
-}	
+}       
 
 
 function vis_containerAssignGeneric {
@@ -716,7 +716,7 @@ Return on stdout, a containerId  such as HSS-1001.
 - If one does not exist, assign one (with vis_containerNuGetNext)
 - Then after vis_containerUpdate_atNu, return containerId
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
 
    EH_assert [ ! -z "${model}" ]   
@@ -732,7 +732,7 @@ _EOF_
    lpDo fileParamManage.py -i fileParamRead  ${containerBase} containerId
 
    lpReturn
-}	
+}       
 
 
 function vis_containerBoxAssignNumbered {
@@ -746,7 +746,7 @@ Return on stdout, a containerId  such as HSS-1001.
 - If one does not exist, assign one (with vis_containerNuGetNext)
 - Then after vis_containerUpdate_atNu, return containerId
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
 
    EH_assert [ ! -z "${model}" ]   
@@ -781,7 +781,7 @@ _EOF_
    lpDo  fileParamManage.py -i fileParamRead  ${containerBase} containerId
 
    lpReturn
-}	
+}       
 
 
 
@@ -797,7 +797,7 @@ Return on stdout, a containerId  such as HSS-1001.
 - If one does not exist, assign one (with vis_containerNuGetNext)
 - Then after vis_containerUpdate_atNu, return containerId
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
 
    EH_assert [ ! -z "${model}" ]   
@@ -824,7 +824,7 @@ _EOF_
    echo "${containerNu}"
 
    lpReturn
-}	
+}       
 
 
 
@@ -832,7 +832,7 @@ function vis_containerNuGetNext {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
    EH_assert [ ! -z "${model}" ]
    EH_assert [ ! -z "${abode}" ]
@@ -861,7 +861,7 @@ function vis_thisMachineId {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
    cat /etc/machine-id
 }
@@ -871,7 +871,7 @@ function vis_withMachineIdFindContainerBase {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    
    EH_assert [[ $# -eq 1 ]]
    local boxId="$1"
@@ -889,17 +889,17 @@ _EOF_
        stored_boxId=$( fileParamManage.py -i fileParamReadPath ${eachBoxIdFp} )
 
        if [ -z "${stored_boxId}" ] ; then
-	   EH_problem "Missing boxId in ${eachBoxIdFp} -- continuing"
-	   continue
+           EH_problem "Missing boxId in ${eachBoxIdFp} -- continuing"
+           continue
        else
-	   if [ "${boxId}" == "${stored_boxId}" ] ; then
-	       if [ -z "${found}" ] ; then
-		   found=${eachBoxIdFp}
-	       else
-   		   ANT_raw "Also Found: ${eachBoxIdFp}"
-	       fi
-	       #break
-	   fi
+           if [ "${boxId}" == "${stored_boxId}" ] ; then
+               if [ -z "${found}" ] ; then
+                   found=${eachBoxIdFp}
+               else
+                   ANT_raw "Also Found: ${eachBoxIdFp}"
+               fi
+               #break
+           fi
        fi
    done
 
@@ -910,7 +910,7 @@ _EOF_
    fi
 
    lpReturn
-}	
+}       
 
 
 
@@ -918,7 +918,7 @@ function vis_containerUpdate_atNu {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
    local containerNu="$1"
 
@@ -949,12 +949,12 @@ _EOF_
        local stored_boxId=$( fileParamManage.py -i fileParamRead  ${containerBase} boxId )
 
        if [ -z "${stored_boxId}" ] ; then
-	   lpDo fileParamManage.py -i fileParamWrite ${containerBase} boxId "${boxId}"
+           lpDo fileParamManage.py -i fileParamWrite ${containerBase} boxId "${boxId}"
        else
-	   if [ "${boxId}" != "${stored_boxId}" ] ; then
-	       EH_problem "Expected ${boxId} -- got ${stored_boxId}"
-	       lpReturn 101
-	   fi
+           if [ "${boxId}" != "${stored_boxId}" ] ; then
+               EH_problem "Expected ${boxId} -- got ${stored_boxId}"
+               lpReturn 101
+           fi
        fi
    fi
 
@@ -965,10 +965,10 @@ _EOF_
        lpDo fileParamManage.py -i fileParamWrite ${containerBase} containerId "${containerId}"
    else
        if [ "${containerId}" != "${stored_containerId}" ] ; then
-	   EH_problem "Expected ${containerId} -- got ${stored_containerId} -- Updating it."
-	   lpDo fileParamManage.py -i fileParamWrite ${containerBase} containerId "${containerId}"
+           EH_problem "Expected ${containerId} -- got ${stored_containerId} -- Updating it."
+           lpDo fileParamManage.py -i fileParamWrite ${containerBase} containerId "${containerId}"
        else
-	   ANT_cooked "containerId=${containerId} -- No action taken"
+           ANT_cooked "containerId=${containerId} -- No action taken"
        fi
    fi
 
@@ -978,10 +978,10 @@ _EOF_
        lpDo fileParamManage.py -i fileParamWrite ${containerBase} containerNu "${containerNu}"
    else
        if [ "${containerNu}" != "${stored_containerNu}" ] ; then
-	   EH_problem "Expected ${containerNu} -- got ${stored_containerNu} -- Updating it."
-	   lpDo fileParamManage.py -i fileParamWrite ${containerBase} containerNu "${containerNu}"
+           EH_problem "Expected ${containerNu} -- got ${stored_containerNu} -- Updating it."
+           lpDo fileParamManage.py -i fileParamWrite ${containerBase} containerNu "${containerNu}"
        else
-	   ANT_cooked "containerNu=${containerNu} -- No action taken"
+           ANT_cooked "containerNu=${containerNu} -- No action taken"
        fi
    fi
    
@@ -990,14 +990,14 @@ _EOF_
    lpDo fileParamManage.py -i fileParamWrite ${containerBase} function "${function}"         
 
    lpReturn
-}	
+}       
 
 
 function vis_containerReport_atNu {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    
    EH_assert [[ $# -eq 1 ]]
    local containerNu="$1"
@@ -1018,13 +1018,13 @@ _EOF_
    lpDo vis_containerReport_atBase "${containerBase}"
 
    lpReturn
-}	
+}       
 
 function vis_containerReport_atBase {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    
    EH_assert [[ $# -eq 1 ]]
    local containerBase="$1"
@@ -1040,4 +1040,4 @@ _EOF_
    opDoExit popd > /dev/null
     
    lpReturn
-}	
+}       

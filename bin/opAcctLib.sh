@@ -22,11 +22,11 @@ _EOF_
 
     opDo id ${thisUser}
     if [ "$?" = "0" ]; then
-	ANT_raw "User '${thisUser}' already exists. Creation Skipped."
-	lpReturn 101
+        ANT_raw "User '${thisUser}' already exists. Creation Skipped."
+        lpReturn 101
     else
-	ANT_raw "Adding user account '${thisUser}' to system ..."
-	opDo useradd --system --shell /usr/sbin/nologin --home /nonexistent ${thisUser}
+        ANT_raw "Adding user account '${thisUser}' to system ..."
+        opDo useradd --system --shell /usr/sbin/nologin --home /nonexistent ${thisUser}
     fi
 
     lpReturn
@@ -144,7 +144,7 @@ function acctLogins {
   elif [ "X${opRunOsType}" == "XLinux" ] ; then
     cat /etc/passwd | egrep "^$*:"
   fi
-	
+        
 }
 
 function prUid {
@@ -157,7 +157,7 @@ function prUid {
   elif [ "X${opRunOsType}" == "XLinux" ] ; then
     cat /etc/passwd | egrep "^$*:" | cut -d: -f1
   fi
-	
+        
 }
 
 function opAcctUidGidAnalyze {

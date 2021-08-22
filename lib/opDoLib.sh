@@ -71,25 +71,25 @@ function dashExampleN {
 
 function dashH {
     if [ "${G_humanUser}" != "TRUE" ] ; then
-	echo ""
+        echo ""
     else
-	echo "-h "
+        echo "-h "
     fi
 }
 
 function dashV {
     if [ "${G_humanUser}" != "verbose" ] ; then
-	echo ""
+        echo ""
     else
-	echo "-v "
+        echo "-v "
     fi
 }
 
 function dashN {
     if [ -z "${G_runMode}" ] ; then
-	echo ""
+        echo ""
     else
-	echo "-n ${G_runMode} "
+        echo "-n ${G_runMode} "
     fi
 }
 
@@ -106,21 +106,21 @@ function iimRecordBegin {
     typeset recordingBaseDir="/tmp"
 
     if [ -z "${G_recordMode}" ] ; then
-	EH_problem "Blank G_recordMode -- Should Not Happen"
-	exit 1
+        EH_problem "Blank G_recordMode -- Should Not Happen"
+        exit 1
     fi
 
     if [ "${G_recordMode}" == "basic" ] ; then
-	if [[ -d "/var/log/bisos/iim/bash" ]] ; then
-	    recordingBaseDir="/var/log/bisos/iim/bash"
-	fi
+        if [[ -d "/var/log/bisos/iim/bash" ]] ; then
+            recordingBaseDir="/var/log/bisos/iim/bash"
+        fi
     else
-	mkdir -p ${G_recordMode}
-	recordingBaseDir=$( FN_absolutePathGet ${G_recordMode} )
-	if [[ ! -d "${recordingBaseDir}" ]] ; then
-	    #opDo mkdir ${recordingBaseDir}
-	    mkdir -p ${recordingBaseDir}	    
-	fi
+        mkdir -p ${G_recordMode}
+        recordingBaseDir=$( FN_absolutePathGet ${G_recordMode} )
+        if [[ ! -d "${recordingBaseDir}" ]] ; then
+            #opDo mkdir ${recordingBaseDir}
+            mkdir -p ${recordingBaseDir}            
+        fi
     fi
 
     logFile=${recordingBaseDir}/${userIdTag}-${G_myName}-${dateTag}-log.org
@@ -261,16 +261,16 @@ fi
 function opDoProtectedBegin {
     if [[ -z "${__withinCritical}" ]] ; then
       # NOTYET, When all modernized and consistent, export not needed
-	export __opDo_withinCritical=1
+        export __opDo_withinCritical=1
     else
-	let __opDo_withinCritical=__opDo_withinCritical+1
+        let __opDo_withinCritical=__opDo_withinCritical+1
     fi
 }
 function opDoProtectedEnd {
     if [[ -z "${__opDo_withinCritical}" ]] ; then
-	export __opDo_withinCritical=0
+        export __opDo_withinCritical=0
     else
-	let __opDo_withinCritical=__opDo_withinCritical
+        let __opDo_withinCritical=__opDo_withinCritical
     fi
 }
 function opDoProtected {
@@ -298,7 +298,7 @@ function _opPrependedDoRunOnly {
     #echo ZZ
 
     if [[ "${1}" == "JUST_DO" ]] ; then
-	#echo AA
+        #echo AA
     shift; shift; shift;
     runStdPrepend  "$@" || err=$?
     return $err
@@ -312,7 +312,7 @@ function _opPrependedDoRunOnly {
     if [[ $err -ne 0 ]] ; then
       EH_problem "$failedMsg" "$err"
       if [[ "${mode}X" == "EXITX" ]] ; then
-	exit $err
+        exit $err
       fi
       return $err
     fi
@@ -340,7 +340,7 @@ function _opDoRunOnly {
     if [[ $err -ne 0 ]] ; then
       EH_problem "$failedMsg" "$err"
       if [[ "${mode}X" == "EXITX" ]] ; then
-	exit $err
+        exit $err
       fi
       return $err
     fi
@@ -354,10 +354,10 @@ function _opDoShowOnly {
   # $3: failed msg
   # $4-: command
     if [[ "${BASH_VERSION}X" != "X" ]] ; then
-	#echo -e ${2} 1>&2
-	printf  1>&2 "%b \n" "${2}"
+        #echo -e ${2} 1>&2
+        printf  1>&2 "%b \n" "${2}"
     else
-	print -u2 "${2}"
+        print -u2 "${2}"
     fi
 }
 
@@ -424,95 +424,95 @@ function _opDo {
     #printf 1>&2 " XX ${bashSrc} XX "
 
     if [[ -z "${__opDo_prevScriptName}" ]] ; then
-	export __opDo_prevScriptName=""
+        export __opDo_prevScriptName=""
     fi
     if [[ -z "${__opDo_prevFunctionName}" ]] ; then
-	export __opDo_prevFunctionName=""
+        export __opDo_prevFunctionName=""
     fi
     if [[ "${__opDo_prevScriptName}X" == "${scriptName}X" ]] ; then
-	scriptName=""
+        scriptName=""
     else
-	__opDo_prevScriptName="${scriptName}"
-	scriptName="${scriptName}::"
+        __opDo_prevScriptName="${scriptName}"
+        scriptName="${scriptName}::"
     fi
     if [[ "${__opDo_prevFunctionName}" == "${functionName}" ]] ; then
-	functionName=""
+        functionName=""
     else
-	__opDo_prevFunctionName="${functionName}"
+        __opDo_prevFunctionName="${functionName}"
     fi
     
     if [ -z "${G_recordMode}" ] ; then
-	lineNumberTag="** [${lineNumber}]"
+        lineNumberTag="** [${lineNumber}]"
     else
-	lineNumberTag="** [[file:${bashSrc}::${lineNumber}][${lineNumber}]]"	
+        lineNumberTag="** [[file:${bashSrc}::${lineNumber}][${lineNumber}]]"    
     fi
 
     if [ -z "${G_recordMode}" ] ; then
-	scriptFuncName="* ${bashSrc}::[${lineNumber}] -- ${origScriptName}${functionName}"	
+        scriptFuncName="* ${bashSrc}::[${lineNumber}] -- ${origScriptName}${functionName}"      
     else
-	scriptFuncName="* [[file:${bashSrc}::${lineNumber}][${origScriptName}:${bashSrcSansDirs}:${functionName}]]"		
+        scriptFuncName="* [[file:${bashSrc}::${lineNumber}][${origScriptName}:${bashSrcSansDirs}:${functionName}]]"             
     fi
 
     typeset msg
     typeset failedMsg
     dateTag=$( date +%Y%m%d%H%M%S%N )
     case "${G_verbose}" in
-	"verbose")
-	    if [ "${scriptName}" == "" ] ; then
-		if [ "${functionName}" == "" ] ; then
-		   msg="${lineNumberTag}: $@"
-		else
-		    #msg="* ${scriptName}${functionName} -- ${dateTag}\n${lineNumber}: $@"
-		    msg="${scriptFuncName} -- ${dateTag}\n${lineNumberTag}: $@"
-		fi 
-	    else
-		#msg="* ${scriptName}${functionName} -- ${dateTag}\n${lineNumber}: $@"
-		msg="${scriptFuncName} -- ${dateTag}\n${lineNumberTag}: $@"		
-	    fi
-	    failedMsg="FAILED: ${scriptName}${functionName}${lineNumber}: $@ [ErrCode]="
-	    ;;
-	*)
-	    msg="$@"
-	    failedMsg="FAILED: $@ [ErrCode]="
-	    ;;
+        "verbose")
+            if [ "${scriptName}" == "" ] ; then
+                if [ "${functionName}" == "" ] ; then
+                   msg="${lineNumberTag}: $@"
+                else
+                    #msg="* ${scriptName}${functionName} -- ${dateTag}\n${lineNumber}: $@"
+                    msg="${scriptFuncName} -- ${dateTag}\n${lineNumberTag}: $@"
+                fi 
+            else
+                #msg="* ${scriptName}${functionName} -- ${dateTag}\n${lineNumber}: $@"
+                msg="${scriptFuncName} -- ${dateTag}\n${lineNumberTag}: $@"             
+            fi
+            failedMsg="FAILED: ${scriptName}${functionName}${lineNumber}: $@ [ErrCode]="
+            ;;
+        *)
+            msg="$@"
+            failedMsg="FAILED: $@ [ErrCode]="
+            ;;
     esac
     case "${G_runMode}" in
-	"runOnly")
-	    _opDoRunOnly "$mode" "$msg" "$failedMsg" "$@" || return $?
-	    ;;
-	"showOnly")
-	    _opDoShowOnly "$mode" "$msg" "$failedMsg" "$@" || return
-	    ;;
-	"showRun")
-	    _opDoShowRun "$mode" "$msg" "$failedMsg" "$@" || return
-	    ;;
-	"seeRun")
-	    _opDoSeeRun "$mode" "$msg" "$failedMsg" "$@" || return
-	    ;;
-	"runSafe")
-	    #runSafe = unprotected: showRun, protected: show
-	    if [[ ${__opDo_withinCritical} -eq 0 ]] ; then
-		_opDoShowRun "$mode" "$msg" "$failedMsg" "$@" || return
-	    else
-		_opDoShowOnly "$mode" "$msg" "$failedMsg" "$@" || return
-	    fi
-	    ;;
-	"showCritical"|"showProtected")
-	    #showCritical    = unprotected: run,     protected: show
-	    if [[ ${__opDo_withinCritical} -eq 0 ]] ; then
-		_opDoRunOnly "$mode" "$msg" "$failedMsg" "$@" || return
-	    else
-		_opDoShowOnly "$mode" "$msg" "$failedMsg" "$@" || return
-	    fi
-	    ;;
-	"showRunCritical"|"showRunProtected")
-	    #showRunCritical = unprotected: run,     protected: showRun 
-	    if [[ ${__opDo_withinCritical} -eq 0 ]] ; then
-		_opDoRunOnly "$mode" "$msg" "$failedMsg" "$@" || return
-	    else
-		_opDoShowRun "$mode" "$msg" "$failedMsg" "$@" || return
-	    fi
-	    ;;
+        "runOnly")
+            _opDoRunOnly "$mode" "$msg" "$failedMsg" "$@" || return $?
+            ;;
+        "showOnly")
+            _opDoShowOnly "$mode" "$msg" "$failedMsg" "$@" || return
+            ;;
+        "showRun")
+            _opDoShowRun "$mode" "$msg" "$failedMsg" "$@" || return
+            ;;
+        "seeRun")
+            _opDoSeeRun "$mode" "$msg" "$failedMsg" "$@" || return
+            ;;
+        "runSafe")
+            #runSafe = unprotected: showRun, protected: show
+            if [[ ${__opDo_withinCritical} -eq 0 ]] ; then
+                _opDoShowRun "$mode" "$msg" "$failedMsg" "$@" || return
+            else
+                _opDoShowOnly "$mode" "$msg" "$failedMsg" "$@" || return
+            fi
+            ;;
+        "showCritical"|"showProtected")
+            #showCritical    = unprotected: run,     protected: show
+            if [[ ${__opDo_withinCritical} -eq 0 ]] ; then
+                _opDoRunOnly "$mode" "$msg" "$failedMsg" "$@" || return
+            else
+                _opDoShowOnly "$mode" "$msg" "$failedMsg" "$@" || return
+            fi
+            ;;
+        "showRunCritical"|"showRunProtected")
+            #showRunCritical = unprotected: run,     protected: showRun 
+            if [[ ${__opDo_withinCritical} -eq 0 ]] ; then
+                _opDoRunOnly "$mode" "$msg" "$failedMsg" "$@" || return
+            else
+                _opDoShowRun "$mode" "$msg" "$failedMsg" "$@" || return
+            fi
+            ;;
     esac
     return $err
 }
@@ -527,8 +527,8 @@ function _opDoAssert {
     typeset failedMsg="ASSERTION FAILED: ${scriptName}${functionName}${lineNumber}: $@ [ErrCode]="
     "$@" || err=$?
     if [[ $err -ne 0 ]] ; then
-	EH_problem "$failedMsg" "$err"
-	exit $err
+        EH_problem "$failedMsg" "$err"
+        exit $err
     fi
 }
 
@@ -542,8 +542,8 @@ function _opDoAssertContinue {
     typeset failedMsg="ASSERTION FAILED: ${scriptName}${functionName}${lineNumber}: $@ [ErrCode]="
     "$@" || err=$?
     if [[ $err -ne 0 ]] ; then
-	EH_problem "$failedMsg" "$err"
-	return $err
+        EH_problem "$failedMsg" "$err"
+        return $err
     fi
 }
 
@@ -584,30 +584,30 @@ alias continueAfterThis='print -u2 "${G_myName}::$0:$LINENO"; _continueAfterThis
 function _continueAfterThis {
     #
     if [[ "${G_humanUser}_" == "FALSE_" ]] ; then
-	return
+        return
     fi
 
     #echo "About to: $*"
     /bin/echo -n "\"SKIP\" to skip, \"EXIT\" to exit,  Hit [Enter] to continue ...  : "
     skipIt=false
     while read line ; do
-	if [[ "${line}_" == "SKIP_"  || "${line}_" == "skip_" ]] ; then
-	echo "Skipped: $*"
-	    skipIt=true
-	    break
-	fi
+        if [[ "${line}_" == "SKIP_"  || "${line}_" == "skip_" ]] ; then
+        echo "Skipped: $*"
+            skipIt=true
+            break
+        fi
 
-	if [[ "${line}_" == "EXIT_"  || "${line}_" == "exit_" ]] ; then
-	    exit
-	fi
+        if [[ "${line}_" == "EXIT_"  || "${line}_" == "exit_" ]] ; then
+            exit
+        fi
 
-	if [[ "${line}_" == "_" ]] ; then
-	    #echo "Continuing ...."
-	    break
-	fi
+        if [[ "${line}_" == "_" ]] ; then
+            #echo "Continuing ...."
+            break
+        fi
 
-	echo "HA! -- You Said ${line} -- Say Again"
-	/bin/echo -n "\"SKIP\" to skip, \"EXIT\" to exit,  Hit [Enter] to continue ...  : "
+        echo "HA! -- You Said ${line} -- Say Again"
+        /bin/echo -n "\"SKIP\" to skip, \"EXIT\" to exit,  Hit [Enter] to continue ...  : "
     done
 }
 
@@ -617,28 +617,28 @@ alias pauseForVerification='if [ "${G_verbose}_" == "verbose_" ] ; then echo "${
 function _pauseForVerification {
     #
     if [[ "${G_humanUser}_" == "FALSE_" ]] ; then
-	return
+        return
     fi
 
     #echo "About to: $*"
     /bin/echo -n "---- Pausing For You To Confirm/Verify. Hit [Enter] to continue ...  : "
     skipIt=false
     while read line ; do
-	if [[ "${line}_" == "SKIP_"  || "${line}_" == "skip_" ]] ; then
-	echo "Skipped: $*"
-	    skipIt=true
-	    break
-	fi
+        if [[ "${line}_" == "SKIP_"  || "${line}_" == "skip_" ]] ; then
+        echo "Skipped: $*"
+            skipIt=true
+            break
+        fi
 
-	if [[ "${line}_" == "EXIT_"  || "${line}_" == "exit_" ]] ; then
-	    exit
-	fi
+        if [[ "${line}_" == "EXIT_"  || "${line}_" == "exit_" ]] ; then
+            exit
+        fi
 
-	if [[ "${line}_" == "_" ]] ; then
-	    #echo "Continuing ...."
-	    break
-	fi
-	break
+        if [[ "${line}_" == "_" ]] ; then
+            #echo "Continuing ...."
+            break
+        fi
+        break
     done
 }
 
@@ -647,30 +647,30 @@ alias getConfirmation='echo "${G_myName}::$0:$LINENO"; _getConfirmation ; if [[ 
 function _getConfirmation {
     #
     if [[ "${G_nonHumanUser}_" == "TRUE_" ]] ; then
-	return
+        return
     fi
 
     #echo "About to: $*"
     /bin/echo -n "Do you want to continue? \"NO\" to skip, \"EXIT\" to exit, [YES] to continue ...  : "
     skipIt=false
     while read line ; do
-	if [[ "${line}_" == "NO_"  || "${line}_" == "no_" ]] ; then
-	echo "Skipped: $*"
-	    skipIt=true
-	    break
-	fi
+        if [[ "${line}_" == "NO_"  || "${line}_" == "no_" ]] ; then
+        echo "Skipped: $*"
+            skipIt=true
+            break
+        fi
 
-	if [[ "${line}_" == "EXIT_"  || "${line}_" == "exit_" ]] ; then
-	    exit
-	fi
+        if [[ "${line}_" == "EXIT_"  || "${line}_" == "exit_" ]] ; then
+            exit
+        fi
 
-	if [[ "${line}_" == "YES_"  || "${line}_" == "yes_" ]] ; then
-	    #echo "Continuing ...."
-	    break
-	fi
+        if [[ "${line}_" == "YES_"  || "${line}_" == "yes_" ]] ; then
+            #echo "Continuing ...."
+            break
+        fi
 
-	echo "HA! -- You Said ${line} -- Say Again"
-	/bin/echo -n "Do you want to continue? \"NO\" to skip, \"EXIT\" to exit, [YES] to continue ...  : "
+        echo "HA! -- You Said ${line} -- Say Again"
+        /bin/echo -n "Do you want to continue? \"NO\" to skip, \"EXIT\" to exit, [YES] to continue ...  : "
     done
 }
 
@@ -680,19 +680,19 @@ alias getInput='echo "${G_myName}::$0:$LINENO"; _getInput ;'
 function _getInput {
     #
     if [[ "${G_nonHumanUser}_" == "TRUE_" ]] ; then
-	return
+        return
     fi
     read line 
-	if [[ "${line}_" == "EXIT_"  || "${line}_" == "exit_" ]] ; then
-	    exit
-	fi
+        if [[ "${line}_" == "EXIT_"  || "${line}_" == "exit_" ]] ; then
+            exit
+        fi
 
-	if [[ "${line}_" == "_"  ]] ; then
-	    getInputResult=${getInputDefault}
-	    return
-	fi
+        if [[ "${line}_" == "_"  ]] ; then
+            getInputResult=${getInputDefault}
+            return
+        fi
 
-	getInputResult=${line}
+        getInputResult=${line}
 
 }
 
@@ -703,8 +703,8 @@ function lpErrTrapProc {
     # NOTYET, make it subject to verbose
     #ANT_raw "From: $FUNCNAME, lpLastRetFunc=${lpLastRetFunc} with: retVal=${trigRetVal}"
     if [[ "${lpErrTrapHook}_" != "_" ]] ; then
-	${lpErrTrapHook}
-	lpErrTrapHook=""
+        ${lpErrTrapHook}
+        lpErrTrapHook=""
     fi
     return ${trigRetVal}
 }

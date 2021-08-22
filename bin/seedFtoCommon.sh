@@ -275,59 +275,59 @@ _EOF_
     local mainPanelFile="Panel.org"
 
     if [ -f ${ftpProcFile} ] ; then
-	ANT_raw "${ftpProcFile}  Already exists -- Doing Nothing"
+        ANT_raw "${ftpProcFile}  Already exists -- Doing Nothing"
     else
-	case ${treeItem} in
-	    "node"|"auxNode")
-		opDo cp /bisos/apps/defaults/update/fto/start/commonProc/anyFtoItem/ftoProcNode.sh ${ftpProcFile}
-		;;
-	    "leaf"|"auxLeaf")
-		opDo cp /bisos/apps/defaults/update/fto/start/commonProc/anyFtoItem/ftoProcLeaf.sh ${ftpProcFile}
-		;;
-	    "ignore")
-		doNothing
-		;;
-	    *)
-		EH_problem ""
-		;;		
-	esac
+        case ${treeItem} in
+            "node"|"auxNode")
+                opDo cp /bisos/apps/defaults/update/fto/start/commonProc/anyFtoItem/ftoProcNode.sh ${ftpProcFile}
+                ;;
+            "leaf"|"auxLeaf")
+                opDo cp /bisos/apps/defaults/update/fto/start/commonProc/anyFtoItem/ftoProcLeaf.sh ${ftpProcFile}
+                ;;
+            "ignore")
+                doNothing
+                ;;
+            *)
+                EH_problem ""
+                ;;              
+        esac
 
-	#
-	# 20181116 -- MB -- Should pkgedPanelPreps be optional?
-	#
-	
-	#opDo ${ftpProcFile} -v -n showRun -i pkgedPanelPreps
-	
-	opDo bx-dblock -i dblockUpdateFiles ${ftpProcFile}
-	opDo chmod 775 ${ftpProcFile}
+        #
+        # 20181116 -- MB -- Should pkgedPanelPreps be optional?
+        #
+        
+        #opDo ${ftpProcFile} -v -n showRun -i pkgedPanelPreps
+        
+        opDo bx-dblock -i dblockUpdateFiles ${ftpProcFile}
+        opDo chmod 775 ${ftpProcFile}
     fi
 
     if [ -f ${mainPanelFile} ] ; then
-	ANT_raw "${mainPanelFile}  Already exists -- Doing Nothing"
+        ANT_raw "${mainPanelFile}  Already exists -- Doing Nothing"
     else
-	case ${treeItem} in
-	    "node"|"auxNode")
-		opDo cp /bisos/apps/defaults/update/fto/start/commonProc/anyFtoItem/mainPanel.org ${mainPanelFile}		
-		;;
-	    "leaf"|"auxLeaf")
-		opDo cp /bisos/apps/defaults/update/fto/start/commonProc/anyFtoItem/mainPanel.org ${mainPanelFile}				
-		;;
-	    "ignore")
-		doNothing
-		;;
-	    *)
-		EH_problem ""
-		;;		
-	esac
-	opDo bx-dblock -i dblockUpdateFiles ${mainPanelFile}
-	opDo chmod 664 ${mainPanelFile}
+        case ${treeItem} in
+            "node"|"auxNode")
+                opDo cp /bisos/apps/defaults/update/fto/start/commonProc/anyFtoItem/mainPanel.org ${mainPanelFile}              
+                ;;
+            "leaf"|"auxLeaf")
+                opDo cp /bisos/apps/defaults/update/fto/start/commonProc/anyFtoItem/mainPanel.org ${mainPanelFile}                              
+                ;;
+            "ignore")
+                doNothing
+                ;;
+            *)
+                EH_problem ""
+                ;;              
+        esac
+        opDo bx-dblock -i dblockUpdateFiles ${mainPanelFile}
+        opDo chmod 664 ${mainPanelFile}
     fi
 
     if [ -f ${commonObjectTypeFileName} ] ; then
-	ANT_raw "${commonObjectTypeFileName}  Already exists -- Doing Nothing"
+        ANT_raw "${commonObjectTypeFileName}  Already exists -- Doing Nothing"
     else
-	thisObjectType=${commonObjectTypeEnum[${treeItem}]}
-	opDo eval echo "${thisObjectType}" \> "${commonObjectTypeFileName}"
+        thisObjectType=${commonObjectTypeEnum[${treeItem}]}
+        opDo eval echo "${thisObjectType}" \> "${commonObjectTypeFileName}"
     fi
 
     lpReturn
@@ -795,14 +795,14 @@ _EOF_
     # Validate specified objectType
     thisEnumObjectType="${commonObjectTypeEnum[${thisObjectType}]}"
     if [ -z "${thisEnumObjectType}" ] ; then
-	EH_problem "Invalid objectType=${thisObjectType}"
-	lpReturn
+        EH_problem "Invalid objectType=${thisObjectType}"
+        lpReturn
     fi
 
     runFunc=$( eval echo '$'{object_${thisObjectType}[${actionName}]} )
 
     if [ -z "${runFunc}" ] ; then
-	EH_problem "Missing processor function -- thisObjectType=${thisObjectType} action=${actionName}"
+        EH_problem "Missing processor function -- thisObjectType=${thisObjectType} action=${actionName}"
     fi
 
     opDo ${runFunc} ${@}
@@ -851,24 +851,24 @@ _EOF_
     #bystarAcctPathAnalyze ${here}
 
     if [ $# -eq 1 ] ; then
-	thisObjectType=$1
+        thisObjectType=$1
 
-	if [ -f ${commonObjectTypeFileName} ] ; then
-	    currentObjectType=$( cat ${commonObjectTypeFileName} )
-	    if [ "${thisObjectType}" != "${currentObjectType}" ] ; then
-		EH_problem "objectType Mis-Match -- ${thisObjectType} != ${currentObjectType}"
-		EH_retOnFail
-	    fi
-	else
-	    opDo eval echo "${thisObjectType}" \> "${commonObjectTypeFileName}"
-	fi
+        if [ -f ${commonObjectTypeFileName} ] ; then
+            currentObjectType=$( cat ${commonObjectTypeFileName} )
+            if [ "${thisObjectType}" != "${currentObjectType}" ] ; then
+                EH_problem "objectType Mis-Match -- ${thisObjectType} != ${currentObjectType}"
+                EH_retOnFail
+            fi
+        else
+            opDo eval echo "${thisObjectType}" \> "${commonObjectTypeFileName}"
+        fi
     else
-	if [ -f ${commonObjectTypeFileName} ] ; then
-	    thisObjectType=$( cat ${commonObjectTypeFileName} )
-	else
-	    thisObjectType=$( vis_objectTypeInCwdGuess )
-	    opDo eval echo "${thisObjectType}" \> "${commonObjectTypeFileName}"
-	fi
+        if [ -f ${commonObjectTypeFileName} ] ; then
+            thisObjectType=$( cat ${commonObjectTypeFileName} )
+        else
+            thisObjectType=$( vis_objectTypeInCwdGuess )
+            opDo eval echo "${thisObjectType}" \> "${commonObjectTypeFileName}"
+        fi
     fi
     
     opDo vis_anyTreeItemProcessor "startUpdate" $@
@@ -895,7 +895,7 @@ _EOF_
     thisObjectType=$( cat ./_tree_)
 
     if [ -z "${thisObjectType}" ] ; then
-	thisObjectType="auxNode"
+        thisObjectType="auxNode"
     fi
 
     opDo vis_anyTreeItemProcessor "startRemove" "${thisObjectType}"
@@ -913,7 +913,7 @@ _EOF_
 
 
     if [ -f ${commonObjectTypeFileName} ] ; then
-	opDo eval echo "${1}" \> "${commonObjectTypeFileName}"
+        opDo eval echo "${1}" \> "${commonObjectTypeFileName}"
     fi
 
     lpReturn
@@ -956,7 +956,7 @@ _EOF_
     local thisObjectType=$( cat ./_tree_)
 
     if [ -z "${thisObjectType}" ] ; then
-	thisObjectType="auxNode"
+        thisObjectType="auxNode"
     fi
 
     opDo vis_anyTreeItemProcessor "info" "${thisObjectType}" $@
@@ -1012,7 +1012,7 @@ _EOF_
     local thisObjectType=$( cat ./_tree_)
 
     if [ -z "${thisObjectType}" ] ; then
-	thisObjectType="auxNode"
+        thisObjectType="auxNode"
     fi
 
     local here=$(pwd)
@@ -1024,63 +1024,63 @@ _EOF_
     local exitCode=0
 
     if [ -f /tmp/globalCurRepoRoot ] ; then
-	globalCurRepoRoot=$(cat /tmp/globalCurRepoRoot)
+        globalCurRepoRoot=$(cat /tmp/globalCurRepoRoot)
     else
-	globalCurRepoRoot=""
+        globalCurRepoRoot=""
     fi
 
     function gitDigest {    
-	EH_assert [[ $# -eq 1 ]]
+        EH_assert [[ $# -eq 1 ]]
 
-	local exitCode=$1
+        local exitCode=$1
 
-	if [ "${exitCode}" = "1" ] ; then
-	    # grep for Changes was empty
-	    echo  "GIT-DIGEST:current: ${here} ::${remoteHostName}:${remoteGitPath}"
-	else
-	    echo  "GIT-DIGEST:-CHANGED-: ${here} ::${remoteHostName}:${remoteGitPath}"	    
-	fi
+        if [ "${exitCode}" = "1" ] ; then
+            # grep for Changes was empty
+            echo  "GIT-DIGEST:current: ${here} ::${remoteHostName}:${remoteGitPath}"
+        else
+            echo  "GIT-DIGEST:-CHANGED-: ${here} ::${remoteHostName}:${remoteGitPath}"      
+        fi
 
     }
 
     curRepoRoot=$( git rev-parse --show-toplevel 2> /dev/null )
 
     if [ "${curRepoRoot}" == "${globalCurRepoRoot}" ] ; then
-	# Already dealt with
-	# lpDo echo "Same Value ${curRepoRoot}"
-	lpReturn
+        # Already dealt with
+        # lpDo echo "Same Value ${curRepoRoot}"
+        lpReturn
     else
-	# So, this is new
+        # So, this is new
 
-	#
-	# Get repoName at origin
-	#
+        #
+        # Get repoName at origin
+        #
 
-	remoteHostName=$( git remote show origin | grep 'Fetch URL' | cut -d ':' -f 2-100 | xargs uriParseStdout.py | grep -i hostname | cut -d '=' -f 2 )
-	remoteGitPath=$( git remote show origin | grep 'Fetch URL' | cut -d ':' -f 2-100 | xargs uriParseStdout.py | grep -i path | cut -d '=' -f 2 )
-	remoteGitName=$( basename "${remoteGitPath}" )	
+        remoteHostName=$( git remote show origin | grep 'Fetch URL' | cut -d ':' -f 2-100 | xargs uriParseStdout.py | grep -i hostname | cut -d '=' -f 2 )
+        remoteGitPath=$( git remote show origin | grep 'Fetch URL' | cut -d ':' -f 2-100 | xargs uriParseStdout.py | grep -i path | cut -d '=' -f 2 )
+        remoteGitName=$( basename "${remoteGitPath}" )  
 
-	if [ "${remoteGitName}" == "base" ] ; then
-	    #git status --untracked-files=no | grep -i Changes > /dev/null
-	    git status  --porcelain | egrep -v '/$' > /dev/null	    
-	    exitCode=$?
-	    gitDigest "${exitCode}"
-	elif [ "${remoteGitName}" == "bxReposBase" ] ; then
-	    git status  --porcelain | egrep -v '/$' > /dev/null	    
-	    exitCode=$?
-	    gitDigest "${exitCode}"
-	else
-	    #git status | grep -i Changes > /dev/null
-	    if [ -z "$(git status --porcelain)" ] ; then
-		exitCode=1
-	    else
-		exitCode=0
-	    fi
-	    gitDigest "${exitCode}"
-	fi
+        if [ "${remoteGitName}" == "base" ] ; then
+            #git status --untracked-files=no | grep -i Changes > /dev/null
+            git status  --porcelain | egrep -v '/$' > /dev/null     
+            exitCode=$?
+            gitDigest "${exitCode}"
+        elif [ "${remoteGitName}" == "bxReposBase" ] ; then
+            git status  --porcelain | egrep -v '/$' > /dev/null     
+            exitCode=$?
+            gitDigest "${exitCode}"
+        else
+            #git status | grep -i Changes > /dev/null
+            if [ -z "$(git status --porcelain)" ] ; then
+                exitCode=1
+            else
+                exitCode=0
+            fi
+            gitDigest "${exitCode}"
+        fi
 
-	globalCurRepoRoot=${curRepoRoot}
-	echo "${globalCurRepoRoot}" > /tmp/globalCurRepoRoot	
+        globalCurRepoRoot=${curRepoRoot}
+        echo "${globalCurRepoRoot}" > /tmp/globalCurRepoRoot    
     fi
 
 
@@ -1106,7 +1106,7 @@ _EOF_
     local thisObjectType=$( cat ./_tree_)
 
     if [ -z "${thisObjectType}" ] ; then
-	thisObjectType="auxNode"
+        thisObjectType="auxNode"
     fi
 
     local here=$(pwd)
@@ -1118,38 +1118,38 @@ _EOF_
     local exitCode=0
 
     if [ -f /tmp/globalCurRepoRoot ] ; then
-	globalCurRepoRoot=$(cat /tmp/globalCurRepoRoot)
+        globalCurRepoRoot=$(cat /tmp/globalCurRepoRoot)
     else
-	globalCurRepoRoot=""
+        globalCurRepoRoot=""
     fi
 
     function gitDigest {    
-	EH_assert [[ $# -eq 0 ]]
+        EH_assert [[ $# -eq 0 ]]
 
-	echo  "GitRepo:${here}:${remoteHostName}:${remoteGitPath}"
+        echo  "GitRepo:${here}:${remoteHostName}:${remoteGitPath}"
     }
 
     curRepoRoot=$( git rev-parse --show-toplevel 2> /dev/null )
 
     if [ "${curRepoRoot}" == "${globalCurRepoRoot}" ] ; then
-	# Already dealt with
-	# lpDo echo "Same Value ${curRepoRoot}"
-	lpReturn
+        # Already dealt with
+        # lpDo echo "Same Value ${curRepoRoot}"
+        lpReturn
     else
-	# So, this is new
+        # So, this is new
 
-	#
-	# Get repoName at origin
-	#
+        #
+        # Get repoName at origin
+        #
 
-	remoteHostName=$( git remote show origin | grep 'Fetch URL' | cut -d ':' -f 2-100 | xargs uriParseStdout.py | grep -i hostname | cut -d '=' -f 2 )
-	remoteGitPath=$( git remote show origin | grep 'Fetch URL' | cut -d ':' -f 2-100 | xargs uriParseStdout.py | grep -i path | cut -d '=' -f 2 )
-	remoteGitName=$( basename "${remoteGitPath}" )
+        remoteHostName=$( git remote show origin | grep 'Fetch URL' | cut -d ':' -f 2-100 | xargs uriParseStdout.py | grep -i hostname | cut -d '=' -f 2 )
+        remoteGitPath=$( git remote show origin | grep 'Fetch URL' | cut -d ':' -f 2-100 | xargs uriParseStdout.py | grep -i path | cut -d '=' -f 2 )
+        remoteGitName=$( basename "${remoteGitPath}" )
 
-	gitDigest
+        gitDigest
 
-	globalCurRepoRoot=${curRepoRoot}
-	echo "${globalCurRepoRoot}" > /tmp/globalCurRepoRoot	
+        globalCurRepoRoot=${curRepoRoot}
+        echo "${globalCurRepoRoot}" > /tmp/globalCurRepoRoot    
     fi
 
 
@@ -1170,15 +1170,15 @@ _EOF_
     local underFilesName="$2"
 
     if [ ! -f "${updateToFile}" ] ; then
-	EH_problem "Bad Usage Missing ${updateToFile}"
-	lpReturn
+        EH_problem "Bad Usage Missing ${updateToFile}"
+        lpReturn
     fi
 
     local underFilesList=$(find . -type f -print | egrep "/${underFilesName}"'$')
 
     for each in ${underFilesList} ; do
-	opDo cp ${updateToFile} ${each} 
-	opDo bx-dblock -i dblockUpdateFile ${each}
+        opDo cp ${updateToFile} ${each} 
+        opDo bx-dblock -i dblockUpdateFile ${each}
     done
 
     lpReturn

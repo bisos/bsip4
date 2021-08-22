@@ -64,7 +64,7 @@ _EOF_
     echo "${registrarBxoPath}"
 
     lpReturn
-}	
+}       
 
 function vis_aabis_registrarAssignBaseObtain {
    G_funcEntry
@@ -81,7 +81,7 @@ _EOF_
     echo "${registrarBxoPath}/assign"
 
     lpReturn
-}	
+}       
 
 
 function vis_aabis_withServiceTypeGetServiceLetter {
@@ -90,23 +90,23 @@ function vis_aabis_withServiceTypeGetServiceLetter {
 ** With \$1 as N B F etc return ServiceType
 *** Status: functional
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
    local thisServiceType=$1
    local result=""   
 
    case "${thisServiceType}" in
        "ByName")
-	   result="N"
-	   ;;
+           result="N"
+           ;;
        "BySmb")
-	   result="B"
-	   ;;
+           result="B"
+           ;;
        "ByFamily")
-	   result="F"
-	   ;;
+           result="F"
+           ;;
        *)
-	   EH_problem "Bad Usage -- serviceType=${thisServiceType}"
+           EH_problem "Bad Usage -- serviceType=${thisServiceType}"
    esac
    echo ${result}
 }
@@ -118,23 +118,23 @@ function vis_aabis_withServiceLetterGetServiceType {
 ** With \$1 as N B F etc return ServiceType
 *** Status: functional
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
    local letter=$1
    local result=""   
 
    case "${letter}" in
        "N")
-	   result="ByName"
-	   ;;
+           result="ByName"
+           ;;
        "B")
-	   result="BySmb"
-	   ;;
+           result="BySmb"
+           ;;
        "F")
-	   result="ByFamily"
-	   ;;
+           result="ByFamily"
+           ;;
        *)
-	   EH_problem "Bad Usage -- serviceLetter=${letter}"
+           EH_problem "Bad Usage -- serviceLetter=${letter}"
    esac
    echo ${result}
 }
@@ -146,7 +146,7 @@ function vis_aabis_withNuGetId {
 ** This is just string manipulation based on naming rules.
 *** Status: functional
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
    local aabisNu="$1"
 
@@ -169,7 +169,7 @@ function vis_aabis_withIdGetAssignedBase {
 ** aabisId is something like BN-1001
 *** Status: untested
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
    local aabisId=$1
 
@@ -199,7 +199,7 @@ function vis_aabis_withNuGetAssignedBase {
 ** With aabisNu, get assigned base.
 *** Status: untested
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
    local aabisNu=$1
 
@@ -216,7 +216,7 @@ function vis_aabis_serviceTypeAssignToCorrespondingBxoAndPush {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
 
    EH_assert [ ! -z "${serviceType}" ]   
@@ -226,13 +226,13 @@ _EOF_
    EH_assert [ ! -z "${aabisBase}" ]
 
    lpDo vis_aabis_assignedServiceIdPush ${aabisBase}
-}	
+}       
 
 function vis_aabis_assignedServiceIdPush {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
    local aabisBase="$1"
    EH_assert [ ! -z "${aabisBase}" ]
@@ -240,14 +240,14 @@ _EOF_
    lpReturn
    
    lpDo eval echo ${aabisBase} \| bx-gitRepos -i addCommitPush all
-}	
+}       
 
 
 function vis_aabis_assignBasePull {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
 
    EH_assert [[ $# -eq 0 ]]
    
@@ -263,7 +263,7 @@ function vis_aabis_UnAssign {
    function describeF {  G_funcEntryShow; cat  << _EOF_
 ** NOTYET, mark correspondingBxo as unassigned -- When to be used?
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
 
    local aabisBase="$1"
@@ -282,7 +282,7 @@ function vis_aabis_unAssignAndPush {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
    local aabisBase="$1"
    EH_assert [ ! -z "${aabisBase}" ]
@@ -297,7 +297,7 @@ function vis_aabis_serviceTypeAssignCorrespondingBxo {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
    EH_assert [ ! -z "${serviceType}" ]   
    EH_assert [ ! -z "${correspondingBxo}" ]
@@ -306,10 +306,10 @@ _EOF_
 
    if [ ! -z "${existingBase}" ] ; then
        if [ "${G_forceMode}" == "force" ] ; then
-	   ANT_raw "assignBase exists but forceMode is specified -- ${existingBase}"
+           ANT_raw "assignBase exists but forceMode is specified -- ${existingBase}"
        else
-	   echo "${existingBase}"
-	   lpReturn
+           echo "${existingBase}"
+           lpReturn
        fi
    fi
    
@@ -322,7 +322,7 @@ _EOF_
    echo "${aabisBase}"
 
    lpReturn
-}	
+}       
 
 
 function vis_aabis_assignNuGetNext {
@@ -331,7 +331,7 @@ function vis_aabis_assignNuGetNext {
 ** LastId +1
 *** Status: Functional
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
    EH_assert [ ! -z "${serviceType}" ]
 
@@ -357,7 +357,7 @@ function vis_aabis_forCorrespondingBxoFindAssignBase {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    
    EH_assert [[ $# -eq 1 ]]
    local correspondingBxo="$1"
@@ -375,17 +375,17 @@ _EOF_
        stored_correspondingBxoId=$( fileParamManage.py -i fileParamReadPath ${eachCorrespondingBxoIdFp} )
 
        if [ -z "${stored_correspondingBxoId}" ] ; then
-	   EH_problem "Missing correspondingBxoId in ${eachCorrespondingBxoIdFp} -- continuing"
-	   continue
+           EH_problem "Missing correspondingBxoId in ${eachCorrespondingBxoIdFp} -- continuing"
+           continue
        else
-	   if [ "${correspondingBxo}" == "${stored_correspondingBxoId}" ] ; then
-	       if [ -z "${found}" ] ; then
-		   found=${eachCorrespondingBxoIdFp}
-	       else
-   		   ANT_raw "Also Found: ${eachCorrespondingBxoIdFp}"
-	       fi
-	       #break
-	   fi
+           if [ "${correspondingBxo}" == "${stored_correspondingBxoId}" ] ; then
+               if [ -z "${found}" ] ; then
+                   found=${eachCorrespondingBxoIdFp}
+               else
+                   ANT_raw "Also Found: ${eachCorrespondingBxoIdFp}"
+               fi
+               #break
+           fi
        fi
    done
 
@@ -396,7 +396,7 @@ _EOF_
    fi
 
    lpReturn
-}	
+}       
 
 
 
@@ -404,7 +404,7 @@ function vis_aabis_assignUpdate_atNu {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
    local aabisNu="$1"
 
@@ -434,10 +434,10 @@ _EOF_
        lpDo fileParamManage.py -i fileParamWrite ${aabisBase} aabisId "${aabisId}"
    else
        if [ "${aabisId}" != "${stored_aabisId}" ] ; then
-	   EH_problem "Expected ${aabisId} -- got ${stored_aabisId} -- Updating it."
-	   lpDo fileParamManage.py -i fileParamWrite ${aabisBase} aabisId "${aabisId}"
+           EH_problem "Expected ${aabisId} -- got ${stored_aabisId} -- Updating it."
+           lpDo fileParamManage.py -i fileParamWrite ${aabisBase} aabisId "${aabisId}"
        else
-	   ANT_cooked "aabisId=${aabisId} -- No action taken"
+           ANT_cooked "aabisId=${aabisId} -- No action taken"
        fi
    fi
 
@@ -447,10 +447,10 @@ _EOF_
        lpDo fileParamManage.py -i fileParamWrite ${aabisBase} aabisNu "${aabisNu}"
    else
        if [ "${aabisNu}" != "${stored_aabisNu}" ] ; then
-	   EH_problem "Expected ${aabisNu} -- got ${stored_aabisNu} -- Updating it."
-	   lpDo fileParamManage.py -i fileParamWrite ${aabisBase} aabisNu "${aabisNu}"
+           EH_problem "Expected ${aabisNu} -- got ${stored_aabisNu} -- Updating it."
+           lpDo fileParamManage.py -i fileParamWrite ${aabisBase} aabisNu "${aabisNu}"
        else
-	   ANT_cooked "aabisNu=${aabisNu} -- No action taken"
+           ANT_cooked "aabisNu=${aabisNu} -- No action taken"
        fi
    fi
    
@@ -460,13 +460,13 @@ _EOF_
    echo ${aabisBase}
 
    lpReturn
-}	
+}       
 
 function vis_aabis_withAssignBaseReadFileParam {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    
    EH_assert [[ $# -eq 2 ]]
    local assignBase="$1"
@@ -476,12 +476,12 @@ _EOF_
 
    case "${paramName}" in
        correspondingBxo|serviceType|aabisNu|aabisId)
-	   result=$(lpDo fileParamManage.py -i fileParamRead ${assignBase} "${paramName}")
-	   EH_assert [ ! -z "${result}" ]
-	   ;;
+           result=$(lpDo fileParamManage.py -i fileParamRead ${assignBase} "${paramName}")
+           EH_assert [ ! -z "${result}" ]
+           ;;
        *)
-	   EH_problem "Bad Usage -- paramName=${paramName}"
-	   ;;
+           EH_problem "Bad Usage -- paramName=${paramName}"
+           ;;
    esac
 
    lpDo echo "${result}"
@@ -491,7 +491,7 @@ function vis_aabis_withAssignBaseGet_correspondingBxo {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
    local assignBase="$1"
    local paramName=${FUNCNAME##vis_aabis_withAssignBaseGet_}
@@ -502,7 +502,7 @@ function vis_aabis_withAssignBaseGet_serviceType {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
    local assignBase="$1"
    local paramName=${FUNCNAME##vis_aabis_withAssignBaseGet_}
@@ -513,7 +513,7 @@ function vis_aabis_withAssignBaseGet_aabisNu {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
    local assignBase="$1"
    local paramName=${FUNCNAME##vis_aabis_withAssignBaseGet_}
@@ -524,7 +524,7 @@ function vis_aabis_withAssignBaseGet_aabisId {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
    local assignBase="$1"
    local paramName=${FUNCNAME##vis_aabis_withAssignBaseGet_}
@@ -535,7 +535,7 @@ function vis_aabis_withAssignBaseReport {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
    local assignBase="$1"
 
@@ -550,4 +550,4 @@ _EOF_
    opDoExit popd > /dev/null
     
    lpReturn
-}	
+}       

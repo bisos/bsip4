@@ -443,7 +443,7 @@ function vis_msgHtmlHook {
     ##lcaMozReplProc.sh -i mozUrlNewtabGoto  file://${browserHtml} &
 
     if [ "${opRunDistGeneration}" == "SQUEEZE" ] ; then
-	opDo lcaWmctrlManage.sh -h -v -n showRun -p host=$( hostname ) -p app=emacs -p win=Summary  -i hostAppWindowRaise
+        opDo lcaWmctrlManage.sh -h -v -n showRun -p host=$( hostname ) -p app=emacs -p win=Summary  -i hostAppWindowRaise
     fi
 }
 
@@ -598,24 +598,24 @@ xref
 
 
 <MIMEFilters>
-application/octet-stream;  m2h_external::filter;	mhexternal.pl
-application/*;		   m2h_external::filter;	mhexternal.pl
-application/x-patch;	   m2h_text_plain::filter;	mhtxtplain.pl
-audio/*;		   m2h_external::filter;	mhexternal.pl
-chemical/*;		   m2h_external::filter;	mhexternal.pl
-model/*;		   m2h_external::filter;	mhexternal.pl
-message/delivery-status;   m2h_text_plain::filter;	mhtxtplain.pl
-message/external-body;     m2h_msg_extbody::filter;	mhmsgextbody.pl
-message/partial;	   m2h_text_plain::filter;	mhtxtplain.pl
-text/*;			   m2h_text_plain::filter;	mhtxtplain.pl
-text/enriched;		   m2h_text_enriched::filter;	mhtxtenrich.pl
-text/html;		   m2h_text_html::filter;	mhtxthtml.pl
-text/plain;		   m2h_text_plain::filter;	mhtxtplain.pl
-text/richtext;		   m2h_text_enriched::filter;	mhtxtenrich.pl
-text/tab-separated-values; m2h_text_tsv::filter;	mhtxttsv.pl
-text/x-html;		   m2h_text_html::filter;	mhtxthtml.pl
-video/*;		   m2h_external::filter;	mhexternal.pl
-x-sun-attachment;	   m2h_text_plain::filter;	mhtxtplain.pl
+application/octet-stream;  m2h_external::filter;        mhexternal.pl
+application/*;             m2h_external::filter;        mhexternal.pl
+application/x-patch;       m2h_text_plain::filter;      mhtxtplain.pl
+audio/*;                   m2h_external::filter;        mhexternal.pl
+chemical/*;                m2h_external::filter;        mhexternal.pl
+model/*;                   m2h_external::filter;        mhexternal.pl
+message/delivery-status;   m2h_text_plain::filter;      mhtxtplain.pl
+message/external-body;     m2h_msg_extbody::filter;     mhmsgextbody.pl
+message/partial;           m2h_text_plain::filter;      mhtxtplain.pl
+text/*;                    m2h_text_plain::filter;      mhtxtplain.pl
+text/enriched;             m2h_text_enriched::filter;   mhtxtenrich.pl
+text/html;                 m2h_text_html::filter;       mhtxthtml.pl
+text/plain;                m2h_text_plain::filter;      mhtxtplain.pl
+text/richtext;             m2h_text_enriched::filter;   mhtxtenrich.pl
+text/tab-separated-values; m2h_text_tsv::filter;        mhtxttsv.pl
+text/x-html;               m2h_text_html::filter;       mhtxthtml.pl
+video/*;                   m2h_external::filter;        mhexternal.pl
+x-sun-attachment;          m2h_text_plain::filter;      mhtxtplain.pl
 </MIMEFilters>
 
 
@@ -716,7 +716,7 @@ function vis_bueDespam {
   opDo fileParamsCodeGenToFile  ${infoBaseAcctBase} 2> /dev/null
   opDo fileParamsLoadVarsFromBaseDir  ${infoBaseAcctBase} 2> /dev/null
 
-  opDoComplain isbg.py --imaphost imap.${cp_acctMainBaseDomain} --imapuser ${cp_acctUid} --imappassword	${cp_currentPasswd} 
+  opDoComplain isbg.py --imaphost imap.${cp_acctMainBaseDomain} --imapuser ${cp_acctUid} --imappassword ${cp_currentPasswd} 
 
 #isbg.py --imaphost imap.mohsen.1.banan.byname.net --imapuser sa-20000 --imappassword mb2neda --imapinbox INBOX.job --spaminbox INBOX.spam.one --delete --expunge --verbose --spamc --flag
 }

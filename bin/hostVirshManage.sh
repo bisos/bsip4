@@ -260,13 +260,13 @@ _EOF_
     typeset vmHostUri="qemu+ssh://${vmHost}/system"
 
     for vmName in $@ ; do
-	
-	echo "======= ${G_myName} vmInfo ============"
-	echo "vmHost: ${vmHost}"
-	echo "vmTitle: $(virsh --connect ${vmHostUri} desc ${vmName} --title)"
-	echo "=============virsh dominfo ============"	
-	opDo virsh --connect ${vmHostUri} dominfo ${vmName}
-	echo "======================================="
+        
+        echo "======= ${G_myName} vmInfo ============"
+        echo "vmHost: ${vmHost}"
+        echo "vmTitle: $(virsh --connect ${vmHostUri} desc ${vmName} --title)"
+        echo "=============virsh dominfo ============"  
+        opDo virsh --connect ${vmHostUri} dominfo ${vmName}
+        echo "======================================="
     done
     
     lpReturn
@@ -287,9 +287,9 @@ _EOF_
     typeset vmHostUri
     
     for kvmHost in $@ ; do
-	vmHostUri="qemu+ssh://${kvmHost}/system"	
-	vmDefinedNames=$( virsh --connect ${vmHostUri} list --all --name )	
-	opDo vis_vmInfo ${kvmHost} ${vmDefinedNames}
+        vmHostUri="qemu+ssh://${kvmHost}/system"        
+        vmDefinedNames=$( virsh --connect ${vmHostUri} list --all --name )      
+        opDo vis_vmInfo ${kvmHost} ${vmDefinedNames}
     done
     
     lpReturn
@@ -315,26 +315,26 @@ _EOF_
 
     for vmName in $@ ; do    
 
-	typeset vmDefinedNames=$( virsh --connect ${vmHostUri} list --all --name )
+        typeset vmDefinedNames=$( virsh --connect ${vmHostUri} list --all --name )
 
-	if LIST_isIn ${vmName} "${vmDefinedNames}" ; then
-	    opDo virsh --connect ${vmHostUri} destroy ${vmName}
-	    opDo virsh --connect ${vmHostUri} undefine ${vmName}
-	else
-	    EH_problem "${vmName} is not defined, undefine skipped"
-	fi
+        if LIST_isIn ${vmName} "${vmDefinedNames}" ; then
+            opDo virsh --connect ${vmHostUri} destroy ${vmName}
+            opDo virsh --connect ${vmHostUri} undefine ${vmName}
+        else
+            EH_problem "${vmName} is not defined, undefine skipped"
+        fi
 
-	if [ "${vmHost}" != "localhost" ] ; then
-	    EH_problem "Not on localhost -- Image deletion skipped"
-	else
-	    typeset vmDisksList=$( sudo ls  /var/lib/libvirt/images )
-	    
-	    if LIST_isIn ${vmName}.qcow2 "${vmDisksList}" ; then
-		opDo sudo /bin/rm /var/lib/libvirt/images/${vmName}.qcow2
-	    else
-		EH_problem "${vmName} image does not exist, deletion skipped"
-	    fi
-	fi
+        if [ "${vmHost}" != "localhost" ] ; then
+            EH_problem "Not on localhost -- Image deletion skipped"
+        else
+            typeset vmDisksList=$( sudo ls  /var/lib/libvirt/images )
+            
+            if LIST_isIn ${vmName}.qcow2 "${vmDisksList}" ; then
+                opDo sudo /bin/rm /var/lib/libvirt/images/${vmName}.qcow2
+            else
+                EH_problem "${vmName} image does not exist, deletion skipped"
+            fi
+        fi
     done
     
     lpReturn
@@ -380,7 +380,7 @@ function vis_getCurNuForVmTemplate {
   for thisName in ${vmDefinedNames}; do
       thisUsedNu=${thisName#${nameTemplate}}
       if [ ${thisUsedNu} -ge ${lastUsedNu} ] ; then
-	  lastUsedNu=${thisUsedNu}
+          lastUsedNu=${thisUsedNu}
       fi
   done
   echo ${lastUsedNu}
@@ -448,13 +448,13 @@ _EOF_
     typeset vmDefinedNames=$( virsh --connect qemu:///system list --all --name )
 
     if LIST_isIn ${vmNameExp} "${vmDefinedNames}" ; then
-	#opDo virsh destroy ${vmNameExp}
-	opDo virsh undefine ${vmNameExp}
+        #opDo virsh destroy ${vmNameExp}
+        opDo virsh undefine ${vmNameExp}
     fi
 
     if [ -f ${destBasePath}/${vmNameExp}.qcow2 ] ; then
-	# NOTYET, subject it to forceMode
-	opDo /bin/rm ${destBasePath}/${vmNameExp}.qcow2
+        # NOTYET, subject it to forceMode
+        opDo /bin/rm ${destBasePath}/${vmNameExp}.qcow2
     fi
 
     opDo virt-clone --original ${vmName} --name ${vmNameExp} --file ${destBasePath}/${vmNameExp}.qcow2
@@ -467,8 +467,8 @@ _EOF_
     #opDo fileParamManage.py -i fileParamWrite ${destBasePath} vmName "${vmName}"
 
     if LIST_isIn ${vmNameExp} "${vmDefinedNames}" ; then
-	#opDo virsh destroy ${vmNameExp}
-	opDo virsh undefine ${vmNameExp}
+        #opDo virsh destroy ${vmNameExp}
+        opDo virsh undefine ${vmNameExp}
     fi
 
     opDo ls -ldt  ${destBasePath}/*
@@ -489,7 +489,7 @@ _EOF_
     EH_assert [[ $# -gt 0 ]]
 
     for thisHost in $@; do    
-	opDo virsh --connect qemu+ssh://bystar@${thisHost}/system list --all --title
+        opDo virsh --connect qemu+ssh://bystar@${thisHost}/system list --all --title
     done
     lpReturn
 }
@@ -517,8 +517,8 @@ _EOF_
     typeset vmDefinedNames=$( virsh --connect qemu:///system list --all --name )
 
     if LIST_isIn ${vmNameClone} "${vmDefinedNames}" ; then
-	#opDo virsh destroy ${vmNameClone}
-	opDo virsh undefine ${vmNameClone}
+        #opDo virsh destroy ${vmNameClone}
+        opDo virsh undefine ${vmNameClone}
     fi
 
     opDo virt-clone --original ${vmName} --name ${vmNameClone} --auto-clone
@@ -563,14 +563,14 @@ _EOF_
     typeset vmDefinedNames=$( virsh --connect qemu:///system list --all --name )
 
     if LIST_isIn ${vmName} "${vmDefinedNames}" ; then
-	EH_problem "${vmName} Already Exists"
-	echo "virsh undefine ${vmName}"
-	lpReturn
+        EH_problem "${vmName} Already Exists"
+        echo "virsh undefine ${vmName}"
+        lpReturn
     fi
 
     if [ ! -f ${sourceBasePath}/${vmNameExp}.qcow2 ] ; then
-	EH_problem "${sourceBasePath}/${vmNameExp}.qcow2 is Missing"
-	lpReturn
+        EH_problem "${sourceBasePath}/${vmNameExp}.qcow2 is Missing"
+        lpReturn
     fi
 
     id
@@ -585,9 +585,9 @@ _EOF_
     vmDefinedNames=$( virsh --connect qemu:///system list --all --name )    
 
     if LIST_isIn ${vmName} "${vmDefinedNames}" ; then
-	ANT_raw "${vmName} Is Ready"
+        ANT_raw "${vmName} Is Ready"
     else
-	EH_problem "Missing ${vmName}"
+        EH_problem "Missing ${vmName}"
     fi
 
     opDo ls -ldt  /var/lib/libvirt/images/${vmName}.qcow2

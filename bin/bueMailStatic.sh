@@ -149,7 +149,7 @@ _EOF_
     # Output base directory
     typeset baseDir="$( FN_absolutePathGet ~/BUE/mailings/statics )"
     if [ ! -z "${base}" ] ; then
-	baseDir="$( FN_absolutePathGet ${base} )"
+        baseDir="$( FN_absolutePathGet ${base} )"
     fi
 
     # mailingName and mailingBaseDir
@@ -157,56 +157,56 @@ _EOF_
     typeset mailingName
     typeset dateTag=$( DATE_nowTag ) 
     if [ $# -gt  0 ] ; then
-	mailingName=$1
-	if [ -z mailingName ] ; then
-	    mailingName=${dateTag}
-	    mailingBaseDir=${baseDir}/${mailingName}
-	else
-	    mailingBaseDir=${baseDir}/${mailingName}-${dateTag}  # The specified name is also date tagged.
-	fi
+        mailingName=$1
+        if [ -z mailingName ] ; then
+            mailingName=${dateTag}
+            mailingBaseDir=${baseDir}/${mailingName}
+        else
+            mailingBaseDir=${baseDir}/${mailingName}-${dateTag}  # The specified name is also date tagged.
+        fi
     else  # Which means $# == 0
-	mailingName=${dateTag}
-	mailingBaseDir=${baseDir}/${mailingName}
+        mailingName=${dateTag}
+        mailingBaseDir=${baseDir}/${mailingName}
     fi
 
     if [ $# == 2 ] ; then
-	if [ -z "$2" ] ; then
-	    mailingBaseDir=${baseDir}/${mailingName}
-	else
-	    mailingBaseDir=${baseDir}/${mailingName}-${2}
-	fi
+        if [ -z "$2" ] ; then
+            mailingBaseDir=${baseDir}/${mailingName}
+        else
+            mailingBaseDir=${baseDir}/${mailingName}-${2}
+        fi
     fi
 
     if [ -d  ${mailingBaseDir} ] ; then
-	EH_problem "${mailingBaseDir} Already In Place -- Will Not Overwrite, Force It With:"
-	ANT_raw "rm -r -f ${mailingBaseDir}"
-	lpReturn
+        EH_problem "${mailingBaseDir} Already In Place -- Will Not Overwrite, Force It With:"
+        ANT_raw "rm -r -f ${mailingBaseDir}"
+        lpReturn
     else
-	opDoRet mkdir -p ${mailingBaseDir}
+        opDoRet mkdir -p ${mailingBaseDir}
     fi
 
     ### Mailing Template
 
     typeset templateBaseDir="/libre/ByStar/InitialTemplates/mailing/staticMailing/enFa/generic"
     if [ ! -z "${template}" ] ; then
-	templateBaseDir=${template}
+        templateBaseDir=${template}
     fi
 
     if [ ! -d ${templateBaseDir} ] ; then
-	EH_problem "Missing Template BaseDir: ${templateBaseDir}"
-	lpReturn 101
+        EH_problem "Missing Template BaseDir: ${templateBaseDir}"
+        lpReturn 101
     fi
 
     ### headerFile
 
     typeset headerFile="$( FN_absolutePathGet /libre/ByStar/InitialTemplates/mailing/staticMailing/headers/blank.mail )"
     if [ ! -z "${header}" ] ; then
-	headerFile="$( FN_absolutePathGet ${header} )"
+        headerFile="$( FN_absolutePathGet ${header} )"
     fi
 
     if [ ! -f ${headerFile} ] ; then
-	EH_problem "Missing Header File: ${headerFile}"
-	lpReturn 101
+        EH_problem "Missing Header File: ${headerFile}"
+        lpReturn 101
     fi
 
     ls -ldt ${mailingBaseDir}
@@ -233,7 +233,7 @@ _EOF_
 _EOF_
 
     if [ "${pdf}" == "pdf" ] ; then
-	cat  << _EOF_ >> ${mailingBaseDir}/mailingStatic/content.mail
+        cat  << _EOF_ >> ${mailingBaseDir}/mailingStatic/content.mail
 <#part type="application/pdf" filename="../rel/${mailingName}.pdf" disposition=attachment description="Pdf File">
 <#/part>
 _EOF_

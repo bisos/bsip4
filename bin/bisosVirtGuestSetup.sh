@@ -86,13 +86,13 @@ _EOF_
     local virtualizationType=$( facter virtual )
 
     if [ "${virtualizationType}" == "physical" ] ; then
-	EH_problem "This function only applies to Guests -- virtualizationType=${virtualizationType}"
+        EH_problem "This function only applies to Guests -- virtualizationType=${virtualizationType}"
     elif [ "${virtualizationType}" == "virtualbox" ] ; then
-	lpDo sudo rcvboxadd setup
+        lpDo sudo rcvboxadd setup
     elif [ "${virtualizationType}" == "kvm" ] ; then
-	lpDo echo "Nothing specific needed for kvm guests"
+        lpDo echo "Nothing specific needed for kvm guests"
     else
-	EH_problem "Unknown Guest virtualization -- virtualizationType=${virtualizationType}"
+        EH_problem "Unknown Guest virtualization -- virtualizationType=${virtualizationType}"
     fi
     
     lpReturn

@@ -93,8 +93,8 @@ _EOF_
 
 noArgsHook() {
     if [[ $# -gt 0 ]] ; then
-	${G_myName} $*
-	return
+        ${G_myName} $*
+        return
     fi
 
     G_runMode="showRun"
@@ -171,11 +171,11 @@ _EOF_
     local thisEmacsClient=$( vis_thisEmacsClient )
 
     if [ -d "$1" ] ; then
-	opDo ${thisEmacsClient} -n --eval "(blee:bnsm:panel-goto \"$1\")"
+        opDo ${thisEmacsClient} -n --eval "(blee:bnsm:panel-goto \"$1\")"
     elif [ -f "$1" ] ; then
-	opDo ${thisEmacsClient} -n --eval "(find-file \"$1\")"
+        opDo ${thisEmacsClient} -n --eval "(find-file \"$1\")"
     else
-	EH_problem ""
+        EH_problem ""
     fi
 
     lpReturn

@@ -114,7 +114,7 @@ function G_postParamHook {
     bxoIdPrepValidate    
 
     if [ ! -z "${bxoId}" ] ; then
-     	bxoHome=$( FN_absolutePathGet ~${bxoId} )
+        bxoHome=$( FN_absolutePathGet ~${bxoId} )
     fi
     
     bisosCurrentsGet
@@ -208,7 +208,7 @@ function vis_containerSteadyWrite {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
    local containerSteadyBase="$1"
    # typically something like: /bxo/r3/iso/pmc_siteName-containers/VAG-deb10_/steady/
@@ -235,7 +235,7 @@ function vis_firstBisosBoxInstall {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
 
    cat  << _EOF_
@@ -263,7 +263,7 @@ function vis_chromeOsDebianBisosInstall {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
 
    cat  << _EOF_

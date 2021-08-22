@@ -97,7 +97,7 @@ function vis_examples {
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
     if [ "${currentBxoUname}" == "" ] ; then
-	currentBxoUname="ea-59043"
+        currentBxoUname="ea-59043"
     fi
 
     visLibExamplesOutput ${G_myName} 

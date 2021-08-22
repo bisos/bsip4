@@ -284,27 +284,27 @@ vis_fontPkgsLocalVerify () {
     
     opDo wget --spider http://${binObtainFromServer}:/republish/${cononDistFamily}/${cononDistGeneration}/all/${thisPkgName} ;     retVal=$?
     if [[ ${retVal} -ne 0 ]] ; then
-	EH_problem "Missing http://${binObtainFromServer}:/republish/${cononDistFamily}/${cononDistGeneration}/all/${thisPkgName}
+        EH_problem "Missing http://${binObtainFromServer}:/republish/${cononDistFamily}/${cononDistGeneration}/all/${thisPkgName}
     else
-	ANT_raw "In Place: http://${binObtainFromServer}:/republish/${cononDistFamily}/${cononDistGeneration}/all/${thisPkgName}
+        ANT_raw "In Place: http://${binObtainFromServer}:/republish/${cononDistFamily}/${cononDistGeneration}/all/${thisPkgName}
     fi 
 
     thisPkgName=tahoma.tar.gz
     
     opDo wget --spider http://${binObtainFromServer}:/republish/${cononDistFamily}/${cononDistGeneration}/all/${thisPkgName} ;     retVal=$?
     if [[ ${retVal} -ne 0 ]] ; then
-	EH_problem "Missing http://${binObtainFromServer}:/republish/${cononDistFamily}/${cononDistGeneration}/all/${thisPkgName}
+        EH_problem "Missing http://${binObtainFromServer}:/republish/${cononDistFamily}/${cononDistGeneration}/all/${thisPkgName}
     else
-	ANT_raw "In Place: http://${binObtainFromServer}:/republish/${cononDistFamily}/${cononDistGeneration}/all/${thisPkgName}
+        ANT_raw "In Place: http://${binObtainFromServer}:/republish/${cononDistFamily}/${cononDistGeneration}/all/${thisPkgName}
     fi 
 
     thisPkgName=bfonts.tar.gz
     
     opDo wget --spider http://${binObtainFromServer}:/republish/${cononDistFamily}/${cononDistGeneration}/all/${thisPkgName} ;     retVal=$?
     if [[ ${retVal} -ne 0 ]] ; then
-	EH_problem "Missing http://${binObtainFromServer}:/republish/${cononDistFamily}/${cononDistGeneration}/all/${thisPkgName}
+        EH_problem "Missing http://${binObtainFromServer}:/republish/${cononDistFamily}/${cononDistGeneration}/all/${thisPkgName}
     else
-	ANT_raw "In Place: http://${binObtainFromServer}:/republish/${cononDistFamily}/${cononDistGeneration}/all/${thisPkgName}
+        ANT_raw "In Place: http://${binObtainFromServer}:/republish/${cononDistFamily}/${cononDistGeneration}/all/${thisPkgName}
     fi 
     
     return ${retVal}

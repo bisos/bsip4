@@ -30,18 +30,18 @@ _EOF_
     local networksBxoId=""
 
     if [ -d "${selectedNetworksPath}" ] ; then
-	networksBxoId=$( fileParamManage.py -i fileParamReadPath ${selectedNetworksPath} )
-	if [ -z "${networksBxoId}" ] ; then
-	    EH_problem "Missing networksBxoId"
-	    lpReturn 101
-	fi
-	if ! vis_bxoAcctVerify "${networksBxoId}" ; then
-	    EH_problem "Missing networksBxoId"
-	    lpReturn 101
-	fi
+        networksBxoId=$( fileParamManage.py -i fileParamReadPath ${selectedNetworksPath} )
+        if [ -z "${networksBxoId}" ] ; then
+            EH_problem "Missing networksBxoId"
+            lpReturn 101
+        fi
+        if ! vis_bxoAcctVerify "${networksBxoId}" ; then
+            EH_problem "Missing networksBxoId"
+            lpReturn 101
+        fi
      else
-	EH_problem "Missing ${selectedNetworksPath}"
-	lpReturn 101
+        EH_problem "Missing ${selectedNetworksPath}"
+        lpReturn 101
     fi
 
     # 
@@ -51,7 +51,7 @@ _EOF_
     echo "${networksBxoIdHome}"
 
     lpReturn
-}	
+}       
 
 function networksBaseObtain {
     G_funcEntry
@@ -69,13 +69,13 @@ _EOF_
     echo "${networksBase}"
 
     lpReturn
-}	
+}       
 
 function vis_netsReport {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    
    EH_assert [[ $# -eq 0 ]]
 
@@ -94,7 +94,7 @@ function vis_withAbodeGetApplicableNetsList {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Based on Abode get applicableNetsList
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 1 ]]
 
     local abode=$1
@@ -102,31 +102,31 @@ _EOF_
     local applicableNetsList=()
 
     case "${abode}" in
-	"Auto")
-	    applicableNetsList=("nat")
-	    ;;
-	"Mobile")
-	    applicableNetsList=("nat")
-	    ;;
-	"Perim")
-	    applicableNetsList=("perimA")
-	    ;;
-	"Shield")
-	    applicableNetsList=("privA")
-	    ;;
-	"Internet")
-	    applicableNetsList=("pubA" "pubB" "perimA")
-	    ;;
-	*)
-	    EH_problem "Bad Usage -- abodeInitial=${abodeInitial}"
+        "Auto")
+            applicableNetsList=("nat")
+            ;;
+        "Mobile")
+            applicableNetsList=("nat")
+            ;;
+        "Perim")
+            applicableNetsList=("perimA")
+            ;;
+        "Shield")
+            applicableNetsList=("privA")
+            ;;
+        "Internet")
+            applicableNetsList=("pubA" "pubB" "perimA")
+            ;;
+        *)
+            EH_problem "Bad Usage -- abodeInitial=${abodeInitial}"
     esac
 
     local result=""
     
     local eachNet=""
     for eachNet in ${applicableNetsList[@]} ; do
-	# result+=$( echo -n "${eachNet} " )
-	echo "${eachNet}"
+        # result+=$( echo -n "${eachNet} " )
+        echo "${eachNet}"
     done
 
     #echo ${result}
@@ -138,7 +138,7 @@ function vis_forNetName_getNetAddrPrefix {
    function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Full implementation will use python and ipaddr library.
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
 
    local netName="$1"
@@ -167,7 +167,7 @@ function vis_site_netNameAddr {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
 
    local netName="$1"
@@ -188,7 +188,7 @@ function vis_site_netNameNetmask {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    
    EH_assert [[ $# -eq 1 ]]
 
@@ -209,7 +209,7 @@ function vis_site_netName_routerDefault {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
 
    local netName="$1"
@@ -229,7 +229,7 @@ function vis_netSiteFpsPath {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
 
    local netName="$1"
@@ -247,7 +247,7 @@ function vis_routerSiteFpsPath {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 2 ]]
 
    local srcNetName="$1"
@@ -266,7 +266,7 @@ function vis_site_srcDestNetName_routerFpsBase {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 2 ]]
 
    lpDo vis_routerSiteFpsPath $@
@@ -278,7 +278,7 @@ function vis_containerIpAddrObtain_privA {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** If generic, one way, if not anotherway
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 2 ]]
 
     local containerBxoId=$1
@@ -303,7 +303,7 @@ function vis_assignNextAddr {
 *** addrType=\$2 is generic, assign, containerBoxes, etc.
 *** addrPool i referenced by $( networksBaseObtain )/${netName}/addrs/${addrType}
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 2 ]]
 
     local netName=$1
@@ -327,19 +327,19 @@ _EOF_
     local assignmentCandidate=""
     local i=0
     for (( i=${minAddr}; i<=${maxAddr}; i++ )) ; do
-	assignmentCandidate=${assignedBase}/$i
-	if [ -d "${assignmentCandidate}" ] ; then
-	    doNothing
-	else
-	    lpDo mkdir -p "${assignmentCandidate}"
-	    nextAddr="${netAddrPrefix}.$i"
-	    break
-	fi
+        assignmentCandidate=${assignedBase}/$i
+        if [ -d "${assignmentCandidate}" ] ; then
+            doNothing
+        else
+            lpDo mkdir -p "${assignmentCandidate}"
+            nextAddr="${netAddrPrefix}.$i"
+            break
+        fi
     done
 
     if (( i > ${maxAddr} )) ; then
-	EH_problem "All available Addrs Have Already Been Assigned"
-	nextAddr=""
+        EH_problem "All available Addrs Have Already Been Assigned"
+        nextAddr=""
     fi
 
     echo ${nextAddr}
@@ -354,7 +354,7 @@ function vis_assignBoxAddr {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Similar to vis_assignNextAddr but uses different pool and indexes based on boxNu.
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 2 ]]
 
     local netName=$1
@@ -389,7 +389,7 @@ function vis_assignVirtAddr {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** 
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 2 ]]
 
     local netName=$1
@@ -423,7 +423,7 @@ function vis_cntnr_netName_ipAddr {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Analyze sysCharBxoId, list applicable netNames based on abode.
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 1 ]]
 
     EH_assert bxoIdPrep
@@ -432,8 +432,8 @@ _EOF_
     EH_assert [ ! -z "${netName}" ]
 
     if [ "${netName}" == "nat" ] ; then
-	ANT_raw "netName=nat requires no processing"
-	lpReturn
+        ANT_raw "netName=nat requires no processing"
+        lpReturn
     fi
      
     # Generics one way, auto one way, assigned one way
@@ -464,34 +464,34 @@ _EOF_
     local result=""
     
     case ${function} in
-	Generic)
-	    result=$(lpDo fileParamManage.py -i fileParamRead ${sysCharConveyInfoBase}/netIfs ${netName}-ipv4Addr)
-	    EH_assert [ ! -z "${result}" ]
-	    lpDo echo ${result}
-	    lpReturn 
-	    ;;
-	Server)
-	    doNothing
-	    ;;
-	*)
-	    EH_problem "NOTYET -- unimplemented ${function}"
-	    ;;
+        Generic)
+            result=$(lpDo fileParamManage.py -i fileParamRead ${sysCharConveyInfoBase}/netIfs ${netName}-ipv4Addr)
+            EH_assert [ ! -z "${result}" ]
+            lpDo echo ${result}
+            lpReturn 
+            ;;
+        Server)
+            doNothing
+            ;;
+        *)
+            EH_problem "NOTYET -- unimplemented ${function}"
+            ;;
     esac
 
     case ${model} in
-	Virt)
-	    local containerNu=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} containerNu )
-	    result=$(vis_getVirtAddr ${netName} "${containerNu}")
-	    ;;
-	Host|Pure)
-	    # /bxo/r3/iso/pmp_HIS-1001/siteContainersRepo/assign/boxId/
-	    local boxId=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} boxId )
-	    local boxNu=$( echo "${boxId}" | sed -e 's:box::' )
-	    result=$(vis_getBoxAddr ${netName} ${boxNu})
-	    ;;
-	*)
-	    EH_problem "Bad Usage model=${model}"
-	    ;;
+        Virt)
+            local containerNu=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} containerNu )
+            result=$(vis_getVirtAddr ${netName} "${containerNu}")
+            ;;
+        Host|Pure)
+            # /bxo/r3/iso/pmp_HIS-1001/siteContainersRepo/assign/boxId/
+            local boxId=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} boxId )
+            local boxNu=$( echo "${boxId}" | sed -e 's:box::' )
+            result=$(vis_getBoxAddr ${netName} ${boxNu})
+            ;;
+        *)
+            EH_problem "Bad Usage model=${model}"
+            ;;
     esac
 
     echo "${result}"
@@ -503,7 +503,7 @@ function vis_getVirtAddr {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** 
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 2 ]]
 
     local netName=$1
@@ -537,7 +537,7 @@ function vis_getBoxAddr {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Similar to vis_assignNextAddr but uses different pool and indexes based on boxNu.
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 2 ]]
 
     local netName=$1

@@ -82,23 +82,23 @@ _EOF_
 
 function vis_siteUsgBase {
     G_funcEntry; function describeF {  G_funcEntryShow;
-				       cat  << _docStringEnd_
+                                       cat  << _docStringEnd_
 ** Defaults to ~/bisos/sites
 _docStringEnd_
-				    }
+                                    }
 
     EH_assert [[ $# -lt 2 ]]
     local usgHome=""
     
     if [ $# -eq 0 ] ; then
-	usgHome=$( FN_absolutePathGet ~ )
+        usgHome=$( FN_absolutePathGet ~ )
     else
-	usgHome="$1"
+        usgHome="$1"
     fi
 
     if [ ! -d "${usgHome}/bisos/sites" ] ; then
-	# to avoid verbose messages and for efficiency
-	lpDo FN_dirCreatePathIfNotThere ${usgHome}/bisos/sites
+        # to avoid verbose messages and for efficiency
+        lpDo FN_dirCreatePathIfNotThere ${usgHome}/bisos/sites
     fi
      
     echo ${usgHome}/bisos/sites
@@ -109,7 +109,7 @@ function vis_siteUsgAdd {
     G_funcEntry; function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Activate the specified bxoId 
 _EOF_
-				    }
+                                    }
     EH_assert [[ $# -eq 1 ]]
     local siteBxoId=$1
     
@@ -124,7 +124,7 @@ function vis_siteUsgSelect {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Activate the specified bxoId 
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 1 ]]
     local siteBxoId=$1
     
@@ -148,24 +148,24 @@ _EOF_
     local selectedSitePath="$( vis_siteUsgBase ${usgHome} )/selected"
 
     if [ ! -e "${selectedSitePath}" ] ; then
-	selectedSitePath="$( vis_siteBisosBase )/selected"
-	if [ ! -e "${selectedSitePath}" ] ; then
-	    EH_problem "Missing selectedSitePath=${selectedSitePath}"
-	    lpReturn 101
-	fi
+        selectedSitePath="$( vis_siteBisosBase )/selected"
+        if [ ! -e "${selectedSitePath}" ] ; then
+            EH_problem "Missing selectedSitePath=${selectedSitePath}"
+            lpReturn 101
+        fi
     fi
     
     local selectedSiteBxoId="$( FN_nonDirsPart $( readlink -f ${selectedSitePath} ) )"
 
     if ! vis_bxoAcctVerify "${selectedSiteBxoId}" ; then
-	EH_problem "Missing selectedSiteBxoId"
-	lpReturn 101
+        EH_problem "Missing selectedSiteBxoId"
+        lpReturn 101
     fi
 
     echo "${selectedSiteBxoId}"
 
     lpReturn
-}	
+}       
 
 
 function vis_selectedSiteBxoPath {
@@ -181,11 +181,11 @@ _EOF_
     local selectedSitePath="$( vis_siteUsgBase ${usgHome} )/selected"
 
     if [ ! -e "${selectedSitePath}" ] ; then
-	selectedSitePath="$( vis_siteBisosBase )/selected"
-	if [ ! -e "${selectedSitePath}" ] ; then
-	    EH_problem "Missing selectedSitePath=${selectedSitePath}"
-	    lpReturn 101
-	fi
+        selectedSitePath="$( vis_siteBisosBase )/selected"
+        if [ ! -e "${selectedSitePath}" ] ; then
+            EH_problem "Missing selectedSitePath=${selectedSitePath}"
+            lpReturn 101
+        fi
     fi
     
     local selectedSiteBxoPath="$( readlink -f ${selectedSitePath} )"
@@ -193,7 +193,7 @@ _EOF_
     echo "${selectedSiteBxoPath}"
 
     lpReturn
-}	
+}       
 
 
 function vis_activate_siteBxoPlus {
@@ -207,9 +207,9 @@ _EOF_
     local siteBxoId=$1
 
     if vis_bxoAcctVerify "${siteBxoId}" ; then
-	ANT_cooked "WARNING: Did not expect ${siteBxoId} to exist -- Activation skipped"
+        ANT_cooked "WARNING: Did not expect ${siteBxoId} to exist -- Activation skipped"
     else
-	lpDo bxoManage.sh -p bxoId="${siteBxoId}" -i fullConstruct
+        lpDo bxoManage.sh -p bxoId="${siteBxoId}" -i fullConstruct
     fi
 
     EH_assert vis_bxoAcctVerify "${siteBxoId}"
@@ -218,25 +218,25 @@ _EOF_
     local boxesBxoId=$( vis_fromSiteBxoIdGet_boxesBxoId "${siteBxoId}")
     EH_assert [ ! -z "${boxesBxoId}" ]
     if vis_bxoAcctVerify "${boxesBxoId}" ; then
-	ANT_cooked "WARNING: Did not expect ${boxesBxoId} to exist -- Activation skipped"
+        ANT_cooked "WARNING: Did not expect ${boxesBxoId} to exist -- Activation skipped"
     else
-	lpDo bxoManage.sh -p bxoId="${boxesBxoId}" -i fullConstruct
+        lpDo bxoManage.sh -p bxoId="${boxesBxoId}" -i fullConstruct
     fi
 
     local containersBxoId=$( vis_fromSiteBxoIdGet_containersBxoId "${siteBxoId}")
     EH_assert [ ! -z "${containersBxoId}" ]
     if vis_bxoAcctVerify "${containersBxoId}" ; then
-	ANT_cooked "WARNING: Did not expect ${containersBxoId} to exist -- Activation skipped"
+        ANT_cooked "WARNING: Did not expect ${containersBxoId} to exist -- Activation skipped"
     else
-	lpDo bxoManage.sh -p bxoId="${containersBxoId}" -i fullConstruct
+        lpDo bxoManage.sh -p bxoId="${containersBxoId}" -i fullConstruct
     fi
 
     local networksBxoId=$( vis_fromSiteBxoIdGet_networksBxoId "${siteBxoId}")
     EH_assert [ ! -z "${networksBxoId}" ]
     if vis_bxoAcctVerify "${networksBxoId}" ; then
-	ANT_cooked "WARNING: Did not expect ${networksBxoId} to exist -- Activation skipped"
+        ANT_cooked "WARNING: Did not expect ${networksBxoId} to exist -- Activation skipped"
     else
-	lpDo bxoManage.sh -p bxoId="${networksBxoId}" -i fullConstruct
+        lpDo bxoManage.sh -p bxoId="${networksBxoId}" -i fullConstruct
     fi
 
     local domainsBxoId=$( vis_fromSiteBxoIdGet_domainsBxoId "${siteBxoId}")
@@ -251,7 +251,7 @@ function vis_withSiteBxoId_write_boxesBxoId {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** returns on stdout: 
 _EOF_
-		      }
+                      }
     EH_assert [[ $# -eq 2 ]]
     local siteBxoId=$1
     local bxoIdValue=$2
@@ -268,7 +268,7 @@ function vis_withSiteBxoId_write_containersBxoId {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** returns on stdout: 
 _EOF_
-		      }
+                      }
     EH_assert [[ $# -eq 2 ]]
     local siteBxoId=$1
     local bxoIdValue=$2
@@ -284,7 +284,7 @@ function vis_withSiteBxoId_write_networksBxoId {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** returns on stdout: 
 _EOF_
-		      }
+                      }
     EH_assert [[ $# -eq 2 ]]
     local siteBxoId=$1
     local bxoIdValue=$2        
@@ -300,7 +300,7 @@ function vis_withSiteBxoId_write_domainsBxoId {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** returns on stdout: 
 _EOF_
-		      }
+                      }
     EH_assert [[ $# -eq 2 ]]
     local siteBxoId=$1
     local bxoIdValue=$2            
@@ -317,7 +317,7 @@ function vis_fromSiteBxoIdGet_boxesBxoId {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** returns on stdout: 
 _EOF_
-		      }
+                      }
     EH_assert [[ $# -eq 1 ]]
     local siteBxoId=$1
 
@@ -336,7 +336,7 @@ function vis_fromSiteBxoIdGet_containersBxoId {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** returns on stdout: 
 _EOF_
-		      }
+                      }
     EH_assert [[ $# -eq 1 ]]
     local siteBxoId=$1
 
@@ -355,7 +355,7 @@ function vis_fromSiteBxoIdGet_networksBxoId {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** returns on stdout: 
 _EOF_
-		      }
+                      }
     EH_assert [[ $# -eq 1 ]]
     local siteBxoId=$1
 
@@ -373,7 +373,7 @@ function vis_fromSiteBxoIdGet_domainsBxoId {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** returns on stdout: 
 _EOF_
-		      }
+                      }
     EH_assert [[ $# -eq 1 ]]
     local siteBxoId=$1
 
@@ -397,7 +397,7 @@ function vis_sysCharContainerBxoIdName {
 *** The sysCharContainerBxoId is just a bxoId derived from containerId assignment. It may or may not exist
 *** The sysCharContainerBxoId may or may not have been realized or activated.
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
    local containerAssignBase=$1
    local containerId=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} containerId )
@@ -412,7 +412,7 @@ function withContainerIdGetBxoId {
 ** returns on stdout, bxoId of container corresponding to \$1 as containerId
 *** The sysCharContainerBxoId may or may not have been realized or activated.
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
    local containerId=$1
 
@@ -437,18 +437,18 @@ _EOF_
     local containersBxoId=""
 
     if [ -d "${selectedContainersPath}" ] ; then
-	containersBxoId=$( fileParamManage.py -i fileParamReadPath ${selectedContainersPath} )
-	if [ -z "${containersBxoId}" ] ; then
-	    EH_problem "Missing containersBxoId"
-	    lpReturn 101
-	fi
-	if ! vis_bxoAcctVerify "${containersBxoId}" ; then
-	    EH_problem "Missing containersBxoId"
-	    lpReturn 101
-	fi
+        containersBxoId=$( fileParamManage.py -i fileParamReadPath ${selectedContainersPath} )
+        if [ -z "${containersBxoId}" ] ; then
+            EH_problem "Missing containersBxoId"
+            lpReturn 101
+        fi
+        if ! vis_bxoAcctVerify "${containersBxoId}" ; then
+            EH_problem "Missing containersBxoId"
+            lpReturn 101
+        fi
      else
-	EH_problem "Missing ${selectedContainersPath}"
-	lpReturn 101
+        EH_problem "Missing ${selectedContainersPath}"
+        lpReturn 101
     fi
 
     local containersBase=$( FN_absolutePathGet ~${containersBxoId} )
@@ -457,7 +457,7 @@ _EOF_
     echo "${containersBase}"
 
     lpReturn
-}	
+}       
 
 
 function vis_containersAssignBaseObtain {
@@ -480,18 +480,18 @@ _EOF_
     local containersBxoId=""
 
     if [ -d "${selectedContainersPath}" ] ; then
-	containersBxoId=$( fileParamManage.py -i fileParamReadPath ${selectedContainersPath} )
-	if [ -z "${containersBxoId}" ] ; then
-	    EH_problem "Missing containersBxoId"
-	    lpReturn 101
-	fi
-	if ! vis_bxoAcctVerify "${containersBxoId}" ; then
-	    EH_problem "Missing containersBxoId"
-	    lpReturn 101
-	fi
+        containersBxoId=$( fileParamManage.py -i fileParamReadPath ${selectedContainersPath} )
+        if [ -z "${containersBxoId}" ] ; then
+            EH_problem "Missing containersBxoId"
+            lpReturn 101
+        fi
+        if ! vis_bxoAcctVerify "${containersBxoId}" ; then
+            EH_problem "Missing containersBxoId"
+            lpReturn 101
+        fi
      else
-	EH_problem "Missing ${selectedContainersPath}"
-	lpReturn 101
+        EH_problem "Missing ${selectedContainersPath}"
+        lpReturn 101
     fi
 
     local containersBase=$( FN_absolutePathGet ~${containersBxoId} )/assign
@@ -500,13 +500,13 @@ _EOF_
     echo "${containersBase}"
 
     lpReturn
-}	
+}       
 
 function container_modelAbodeFunctionBase {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
 
    local containersBase=$( containersAssignBaseObtain )
@@ -526,7 +526,7 @@ function vis_containersGenericsAssignList {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
 
    local containersBase=$( containersBaseObtain )
@@ -539,7 +539,7 @@ _EOF_
    done
    
    lpReturn
-}	
+}       
 
 
 _CommentBegin_

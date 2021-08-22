@@ -111,9 +111,9 @@ function opItem_isAvailable {
       retVal=0
       opItem_isWithinClusterScope || retVal=$?
       if [ "${retVal}" == 0 ] ; then
-	retVal=0
+        retVal=0
       else
-	TM_trace 5 "${iv_itemName} is not within cluster scope of ${opRunClusterName}."
+        TM_trace 5 "${iv_itemName} is not within cluster scope of ${opRunClusterName}."
       fi
 
     #elif [ "${opRunHostMode}_" = "standalone_" -a "${opRunParamStandalone}_" == "clustered_" ] ; then 
@@ -122,9 +122,9 @@ function opItem_isAvailable {
       retVal=0
       opItem_isWithinClusterScope || retVal=$?
       if [ "${retVal}" == 0 ] ; then
-	retVal=0
+        retVal=0
       else
-	TM_trace 5 "${iv_itemName} is not within cluster scope of ${opRunClusterName}."
+        TM_trace 5 "${iv_itemName} is not within cluster scope of ${opRunClusterName}."
       fi
 
     else
@@ -160,44 +160,44 @@ function opItem_isAvailableToHostMode {
   for this in ${iv_itemAvailableToHostModes} ; do
     case ${this} in
       "clustered")
-		   if [ "${this}_" == "${opRunHostMode}_" ] ; then
-		     return 0
-		   fi
-		   ;;
-		     
+                   if [ "${this}_" == "${opRunHostMode}_" ] ; then
+                     return 0
+                   fi
+                   ;;
+                     
       "standalone")
-		    if [ "${this}_" == "${opRunHostMode}_" -o  "${opRunHostMode}_" == "unnet_" ] ; then
+                    if [ "${this}_" == "${opRunHostMode}_" -o  "${opRunHostMode}_" == "unnet_" ] ; then
 
-		      # NOTYET, Backwards compatibility
-		      #if [ "X${iv_itemStandaloneHostName}" == "X" ] ; then
-		      #return 0
-		      #fi
+                      # NOTYET, Backwards compatibility
+                      #if [ "X${iv_itemStandaloneHostName}" == "X" ] ; then
+                      #return 0
+                      #fi
 
-		      if [ "X${iv_itemStandaloneHostName}" == "Xall" ] ; then
-			return 0
-		      fi
-		      
-		      if [ "X${iv_itemStandaloneHostName}" != "X${opRunHostName}" ] ; then
-			return 3
-		      else
-			return 0
-		      fi
-		    fi
-		    ;;
-		    
+                      if [ "X${iv_itemStandaloneHostName}" == "Xall" ] ; then
+                        return 0
+                      fi
+                      
+                      if [ "X${iv_itemStandaloneHostName}" != "X${opRunHostName}" ] ; then
+                        return 3
+                      else
+                        return 0
+                      fi
+                    fi
+                    ;;
+                    
       "unnet")
-	       if [ "${this}_" == "${opRunHostMode}_" ] ; then
-		 return 0
-	       fi
-	       ;;
+               if [ "${this}_" == "${opRunHostMode}_" ] ; then
+                 return 0
+               fi
+               ;;
 
       "all")
-	     return 0
-	     ;;
+             return 0
+             ;;
       *)
-	 EH_oops
-	 return 4
-	 ;;
+         EH_oops
+         return 4
+         ;;
     esac
   done
   return 2
@@ -272,13 +272,13 @@ function opItem_isWithinClusterScope {
     if [ "X${curVisCluster}" == "X${opRunClusterName}" -o "X${curVisCluster}" == "Xall" ] ; then
       TM_trace 7 "Yes in  ${opRunClusterName}"
       for thisHiddenHost in ${iv_itemScopeHiddenHosts} ; do
-	if [ "X${thisHiddenHost}" == "X${opRunHostName}" ] ; then
-	  return 1
-	fi
+        if [ "X${thisHiddenHost}" == "X${opRunHostName}" ] ; then
+          return 1
+        fi
 
-	if [ "X${thisHiddenHost}" == "Xall" ] ; then
-	  return 1
-	fi
+        if [ "X${thisHiddenHost}" == "Xall" ] ; then
+          return 1
+        fi
 
       done
       return 0

@@ -112,8 +112,8 @@ _EOF_
 
 function noArgsHook {
     if [ "" == "$*" ] ; then
-	EH_problem  "Missing Args:: run -- ${G_myName} -i examples -- to see available common features."
-	lpReturn 1
+        EH_problem  "Missing Args:: run -- ${G_myName} -i examples -- to see available common features."
+        lpReturn 1
     fi
 
     opDo vis_here "$@"
@@ -136,9 +136,9 @@ _EOF_
     local thisEmacsClient=$( vis_defaultEmacsClient )
 
     if [ -z "${thisEmacsClient}" ] ; then
-	EH_problem "Missing emacs client"
+        EH_problem "Missing emacs client"
     else
-	opDo ${thisEmacsClient} "$@"
+        opDo ${thisEmacsClient} "$@"
     fi
 
     lpReturn
@@ -171,9 +171,9 @@ _EOF_
     local thisEmacsClient=$( vis_thisEmacsClient )
 
     if [ -f "$1" ] ; then
-	opDo ${thisEmacsClient} -n --eval "(see-file-other-window \"$1\")"
+        opDo ${thisEmacsClient} -n --eval "(see-file-other-window \"$1\")"
     else
-	EH_problem "Missing File -- $1"
+        EH_problem "Missing File -- $1"
     fi
 
     lpReturn
@@ -190,9 +190,9 @@ _EOF_
     local thisEmacsClient=$( vis_thisEmacsClient )
 
     if [ -f "$1" ] ; then
-	opDo ${thisEmacsClient} -n --eval "(find-file-other-window \"$1\")"
+        opDo ${thisEmacsClient} -n --eval "(find-file-other-window \"$1\")"
     else
-	EH_problem "Missing File -- $1"
+        EH_problem "Missing File -- $1"
     fi
 
     lpReturn
@@ -208,9 +208,9 @@ _EOF_
     local thisEmacsClient=$( vis_thisEmacsClient )
 
     if [ -f "$1" ] ; then
-	opDo ${thisEmacsClient} -n --eval "(find-file \"$1\")"
+        opDo ${thisEmacsClient} -n --eval "(find-file \"$1\")"
     else
-	opDo ${thisEmacsClient} "$1"
+        opDo ${thisEmacsClient} "$1"
     fi
 
     lpReturn

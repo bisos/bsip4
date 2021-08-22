@@ -99,7 +99,7 @@ function G_postParamHook {
     bxoIdPrepValidate    
 
     if [ ! -z "${bxoId}" ] ; then
-     	bxoHome=$( FN_absolutePathGet ~${bxoId} )
+        bxoHome=$( FN_absolutePathGet ~${bxoId} )
     fi
     
     bisosCurrentsGet
@@ -129,15 +129,15 @@ function vis_examples {
     oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )
 
     function repoBaseCreateAndPushExamples {
-	EH_assert [[ $# -eq 2 ]]
-	local repoName=$1
-	local description=$2
-	cat  << _EOF_
+        EH_assert [[ $# -eq 2 ]]
+        local repoName=$1
+        local description=$2
+        cat  << _EOF_
 $( examplesSeperatorSection "${description}" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBaseCreate_${repoName}
 ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBasePush ${repoName}
 _EOF_
-    }	
+    }   
     
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
@@ -188,7 +188,7 @@ function vis_basesFullCreate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
     EH_assert [ ! -z "${bxoId}" ]
 
@@ -197,18 +197,18 @@ _EOF_
     local each
 
     for each in $(vis_basesList) ; do
-	lpDo vis_baseCreate_${each}
+        lpDo vis_baseCreate_${each}
     done
 
 
     lpReturn
-}	
+}       
 
 function vis_repoBaseCreate_containerSpec {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
     EH_assert [ ! -z "${bxoId}" ]
 
@@ -267,7 +267,7 @@ _EOF_
     lpDo bx-gitRepos -h -v -n showRun -i baseUpdateDotIgnore "${repoBase}"
 
     lpReturn
-}	
+}       
 
 
 

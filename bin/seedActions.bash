@@ -40,7 +40,7 @@ if [ "${OSMTROOT}X" != "X" ] ; then
     fi
 else
     if [ -f `dirname $0`/opConfig.sh ] ; then
-	.  `dirname $0`/opConfig.sh
+        .  `dirname $0`/opConfig.sh
     else
       echo "OSMTROOT not set and `dirname $0`/opConfig.sh not found.\n"
       exit 1
@@ -111,19 +111,19 @@ while getopts e:T:c:i:p:l:u?n:r:vfh c
 do
     case $c in
     T)
-	case $OPTARG in
-	*[!0-9]* )
-	    echo "$0: -T requires a numeric option"
- 	    badUsage=TRUE
-	    ;;
+        case $OPTARG in
+        *[!0-9]* )
+            echo "$0: -T requires a numeric option"
+            badUsage=TRUE
+            ;;
         [0-9]* )
-	    traceLevel=$OPTARG
-	    ;;
-	esac
-	;;
+            traceLevel=$OPTARG
+            ;;
+        esac
+        ;;
     i)
         visibleFunction="${OPTARG}"   # rest of argv is passed to visibleFunction
-	;;
+        ;;
     p)
        leftSide=`ATTR_leftSide "${OPTARG}"`
        rightSide=`ATTR_rightSide "${OPTARG}"`
@@ -133,89 +133,89 @@ do
        G_paramCmndOption=" -p ${OPTARG} ${G_paramCmndOption}"
        ;;
     l)
-	loadFiles="${loadFiles} ${OPTARG}"
-	G_myName=`FN_nonDirsPart ${OPTARG}`
+        loadFiles="${loadFiles} ${OPTARG}"
+        G_myName=`FN_nonDirsPart ${OPTARG}`
         G_myInvokedName=${OPTARG}
-	;;
+        ;;
 
     c)
-	G_checkMode="${OPTARG}"
-	G_checkCmndOption=" -c "
-	;;
+        G_checkMode="${OPTARG}"
+        G_checkCmndOption=" -c "
+        ;;
 
     e)
-	# Elaboration Text SimplyIgnored
+        # Elaboration Text SimplyIgnored
         elaborationTextSimplyIgnored="${OPTARG}"
-	;;
+        ;;
 
     n)
-	case ${OPTARG} in 
-	    "runOnly")
-		G_runMode="runOnly"
-   	        G_runModeCmndOption=" -n runOnly "
-		;;
-	    "showOnly")
-		G_runMode="showOnly"
-   	        G_runModeCmndOption=" -n showOnly "
-		;;
-	    "seeRun")
-		G_runMode="seeRun"
-   	        G_runModeCmndOption=" -n seeRun "
-		;;
-	    "showRun")
-		G_runMode="showRun"
-   	        G_runModeCmndOption=" -n showRun "
-		;;
-	    "runSafe")
-		G_runMode="runSafe"
-   	        G_runModeCmndOption=" -n runSafe "
-		;;
-	    "showProtected")
-		G_runMode="showProtected"
-   	        G_runModeCmndOption=" -n showProtected "
-		;;
-	    "showRunProtected")
-		G_runMode="showRunProtected"
-   	        G_runModeCmndOption=" -n showRunProtected "
-		;;
-	    *)
-		badUsage=TRUE
-		;;
-	esac
-	;;
+        case ${OPTARG} in 
+            "runOnly")
+                G_runMode="runOnly"
+                G_runModeCmndOption=" -n runOnly "
+                ;;
+            "showOnly")
+                G_runMode="showOnly"
+                G_runModeCmndOption=" -n showOnly "
+                ;;
+            "seeRun")
+                G_runMode="seeRun"
+                G_runModeCmndOption=" -n seeRun "
+                ;;
+            "showRun")
+                G_runMode="showRun"
+                G_runModeCmndOption=" -n showRun "
+                ;;
+            "runSafe")
+                G_runMode="runSafe"
+                G_runModeCmndOption=" -n runSafe "
+                ;;
+            "showProtected")
+                G_runMode="showProtected"
+                G_runModeCmndOption=" -n showProtected "
+                ;;
+            "showRunProtected")
+                G_runMode="showRunProtected"
+                G_runModeCmndOption=" -n showRunProtected "
+                ;;
+            *)
+                badUsage=TRUE
+                ;;
+        esac
+        ;;
 
     r)
-	case ${OPTARG} in 
-	    "basic")
-		G_recordMode="basic"
-   	        G_recordModeCmndOption=" -r basic "
-		;;
-	    *)
-		G_recordMode="${OPTARG}"
-   	        G_recordModeCmndOption=" -r ${OPTARG} "
-		##badUsage=TRUE
-		;;
-	esac
-	;;
+        case ${OPTARG} in 
+            "basic")
+                G_recordMode="basic"
+                G_recordModeCmndOption=" -r basic "
+                ;;
+            *)
+                G_recordMode="${OPTARG}"
+                G_recordModeCmndOption=" -r ${OPTARG} "
+                ##badUsage=TRUE
+                ;;
+        esac
+        ;;
 
     v)
-	G_verbose="verbose"
+        G_verbose="verbose"
         G_verboseCmndOption=" -v "
-	;;
+        ;;
 
     f)
-	G_forceMode="force"
-	G_forceModeCmndOption=" -f "
-	;;
+        G_forceMode="force"
+        G_forceModeCmndOption=" -f "
+        ;;
 
     h)
-	G_humanUser=TRUE
-	G_humanCmndOption=" -h "
-	;;
+        G_humanUser=TRUE
+        G_humanCmndOption=" -h "
+        ;;
 
     u | \?)
-	badUsage=TRUE
-	;;
+        badUsage=TRUE
+        ;;
     esac
 done
 
@@ -278,13 +278,13 @@ fi
 
 for i in ${loadFiles} ; do
     if test -f ${i} ; then
-	TM_trace 7 "Pre Loading: $i"
-	loadSegment="PRE"
-	. ${i}
+        TM_trace 7 "Pre Loading: $i"
+        loadSegment="PRE"
+        . ${i}
     else
-	EH_problem "${i} not found: skiping it."
-	usage=TRUE
-	#exit
+        EH_problem "${i} not found: skiping it."
+        usage=TRUE
+        #exit
     fi
 done
 
@@ -302,12 +302,12 @@ done
 if [ "${loadSegment}_" == "POST_" ] ; then
 for i in ${loadFiles} ; do
     if test -f ${i} ; then
-	TM_trace 7 "Post Loading: $i"
-	. ${i}
+        TM_trace 7 "Post Loading: $i"
+        . ${i}
     else
-	EH_problem "${i} not found: skiping it."
-	usage=TRUE
-	#exit
+        EH_problem "${i} not found: skiping it."
+        usage=TRUE
+        #exit
     fi
 done
 fi
@@ -325,8 +325,8 @@ function iimParamFuncsInvoke {
     EH_assert [[ $# -eq 0 ]]
     declare iimParamFuncsList=$( declare -F | grep iimParam_ | sed -e s/"declare -f "// | cut -d= -f1 )
     for thisFunc in ${iimParamFuncsList} ; do
-	#opDo ${thisFunc} # NOTYET, subject this to tracing
-	${thisFunc}
+        #opDo ${thisFunc} # NOTYET, subject this to tracing
+        ${thisFunc}
     done
 }
 
@@ -341,8 +341,8 @@ fi
 G_postParamHookVal=`ListFuncs | egrep '^G_postParamHook$'`
 if [ ! -z "${G_postParamHookVal}" ] ;   then
     if ! G_postParamHook ; then
-	printf >&2 "PROBLEM: G_postParamHook Failure\n"
-	exit 1
+        printf >&2 "PROBLEM: G_postParamHook Failure\n"
+        exit 1
     fi
 fi
 
@@ -394,12 +394,12 @@ function opParamMandatoryVerify {
 
 function dash_i_set {
     if [ "${dash_i}" = "" ] ; then
-	dash_i="-i"
+        dash_i="-i"
     elif [ "${dash_i}" = "nil" ] ; then
-	dash_i=""
+        dash_i=""
     else
-	EH_problem "Oops"
-	exit 1
+        EH_problem "Oops"
+        exit 1
     fi
 }
 
@@ -457,14 +457,14 @@ if [ "${visibleFunction}X" != "X" ]
 then
     #echo "running ${visibleFunction}"
     if [ ! -z "${G_recordMode}" ] ; then
-	iimRecordBegin
+        iimRecordBegin
     fi
     
     vis_${visibleFunction} "$@"
     exitCode=$?
 
-    if [ ! -z "${G_recordMode}" ] ; then	
-	iimRecordEnd
+    if [ ! -z "${G_recordMode}" ] ; then        
+        iimRecordEnd
     fi
     
     exit ${exitCode}
@@ -488,7 +488,7 @@ fi
 runNoArgsHook "$@"
 exitCode=$?
 
-if [ ! -z "${G_recordMode}" ] ; then	
+if [ ! -z "${G_recordMode}" ] ; then    
     iimRecordEnd
 fi
 

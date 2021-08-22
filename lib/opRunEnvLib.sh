@@ -133,7 +133,7 @@ function opRunEnvSet {
   fi
   
   if [ "${opHostMode}X" != "X" ] ; then
-    siteParam="${siteParam} -p 	opHostMode=${opHostMode}"
+    siteParam="${siteParam} -p  opHostMode=${opHostMode}"
   fi
 
   gotVal=0

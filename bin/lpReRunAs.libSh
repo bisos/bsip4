@@ -26,15 +26,15 @@ _EOF_
 
     runId=$( id -u )
     if [ "${runId}" != "0" ] ; then
-	#ANT_raw "Re Invokation as root:"
-	#opDo sudo ${opBinBase}/${G_myName} -i runFunc $@
-	#export G_runMode="runOnly"
-	opDo sudo ${G_myFullName} ${G_commandOptions} -i runFunc $@
-	globalReRunRetVal=$?
-	#ANT_raw retVal=${globalReRunRetVal}
-	lpReturn 0
+        #ANT_raw "Re Invokation as root:"
+        #opDo sudo ${opBinBase}/${G_myName} -i runFunc $@
+        #export G_runMode="runOnly"
+        opDo sudo ${G_myFullName} ${G_commandOptions} -i runFunc $@
+        globalReRunRetVal=$?
+        #ANT_raw retVal=${globalReRunRetVal}
+        lpReturn 0
     else
-	lpReturn 127
+        lpReturn 127
     fi
 }
 
@@ -50,12 +50,12 @@ _EOF_
     lsipusrId=$( id -u lsipusr )
     runId=$( id -u )
     if [ "${runId}" != "${lsipusrId}" ] ; then
-	ANT_raw "Re Invokation as lsipusr:"
-	#opDo sudo -u lsipusr ${opBinBase}/${G_myName} -i runFunc $@
-	opDo sudo -u lsipusr ${G_myFullName} -i runFunc $@
-	lpReturn 0
+        ANT_raw "Re Invokation as lsipusr:"
+        #opDo sudo -u lsipusr ${opBinBase}/${G_myName} -i runFunc $@
+        opDo sudo -u lsipusr ${G_myFullName} -i runFunc $@
+        lpReturn 0
     else
-	lpReturn 1
+        lpReturn 1
     fi
 }
 

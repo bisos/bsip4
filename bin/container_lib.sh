@@ -48,7 +48,7 @@ _CommentEnd_
 
 function vis_bisosContainerBase {
     if [ ! -d /bisos/var/containers ] ; then
-	mkdir /bisos/var/containers
+        mkdir /bisos/var/containers
     fi
     echo /bisos/var/containers
 }
@@ -73,7 +73,7 @@ function vis_bisosContainerSelect {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** 
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 1 ]]
     local containerBxoId=$1
 
@@ -99,21 +99,21 @@ _EOF_
     local selectedContainerPath="${bisosContainerBase}/selected"
 
     if [ ! -e "${selectedContainerPath}" ] ; then
-	EH_problem "Missing selectedContainerPath=${selectedContainerPath}"
-	lpReturn 101
+        EH_problem "Missing selectedContainerPath=${selectedContainerPath}"
+        lpReturn 101
     fi
     
     local selectedContainerBxoId="$( FN_nonDirsPart $( readlink -f ${selectedContainerPath} ) )"
 
     if ! vis_bxoAcctVerify "${selectedContainerBxoId}" ; then
-	EH_problem "Missing selectedContainerBxoId"
-	lpReturn 101
+        EH_problem "Missing selectedContainerBxoId"
+        lpReturn 101
     fi
 
     echo "${selectedContainerBxoId}"
 
     lpReturn
-}	
+}       
 
 function vis_selectedContainerBxoPath {
    G_funcEntry
@@ -128,8 +128,8 @@ _EOF_
     local selectedContainerPath="${bisosContainerBase}/selected"
 
     if [ ! -e "${selectedContainerPath}" ] ; then
-	EH_problem "Missing selectedContainerPath=${selectedContainerPath}"
-	lpReturn 101
+        EH_problem "Missing selectedContainerPath=${selectedContainerPath}"
+        lpReturn 101
     fi
 
     selectedContainerPath=$( readlink -f ${selectedContainerPath} )
@@ -137,7 +137,7 @@ _EOF_
     echo "${selectedContainerPath}"
 
     lpReturn
-}	
+}       
 
 
 
@@ -165,9 +165,9 @@ _EOF_
     EH_assert [ ! -z "${bxoId}" ]
 
     if vis_bxoAcctVerify "${bxoId}" ; then
-	ANT_cooked "WARNING: Did not expect ${bxoId} to exist -- Activation skipped"
+        ANT_cooked "WARNING: Did not expect ${bxoId} to exist -- Activation skipped"
     else
-	lpDo bxoManage.sh -p bxoId="${bxoId}" -i fullConstruct
+        lpDo bxoManage.sh -p bxoId="${bxoId}" -i fullConstruct
     fi
 
     EH_assert vis_bxoAcctVerify "${bxoId}"
@@ -191,7 +191,7 @@ function vis_containerReposList {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
 
    local siteBxoId=$( vis_selectedSiteBxoId )
@@ -206,19 +206,19 @@ _EOF_
 
    for each in ${reposList} ; do
        if LIST_isIn "${each}" "${nonContainersRepos}" ; then
-	   doNothing
-	   # ANT_raw  "${each} is a nonContainersRepos -- skipped"
+           doNothing
+           # ANT_raw  "${each} is a nonContainersRepos -- skipped"
        else
-	   echo ${each}
+           echo ${each}
        fi
    done
-}	
+}       
 
 function vis_activate_containersAll {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
 
    local containerReposList=$( vis_containerReposList )
@@ -227,13 +227,13 @@ _EOF_
        bxoId="${each}"
        lpDo vis_activate_sysContainerBxo
    done
-}	
+}       
 
 function vis_activate_virtGenerics {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
 
    local containerReposList="pmp_VAG-deb11_ pmp_VSG-deb11_"
@@ -242,7 +242,7 @@ _EOF_
        bxoId="${each}"
        lpDo vis_activate_sysContainerBxo
    done
-}	
+}       
 
 
 

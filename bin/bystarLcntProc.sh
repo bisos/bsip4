@@ -150,9 +150,9 @@ function vis_lcntBaseVcGet {
     # RunAs Root ## NOTYET: This Should go into lpSysDevelopers.sh
 
     if [ ! -d /here/sandbox/lsipusr/lcnt ] ; then
-	opDo lpSysDevelopers.sh -h -v -n showRun -p developer=lsipusr -i cvsOutLcnt
+        opDo lpSysDevelopers.sh -h -v -n showRun -p developer=lsipusr -i cvsOutLcnt
     else
-	opDo lpSysDevelopers.sh -h -v -n showRun -p developer=lsipusr -i cvsUpdateLcnt
+        opDo lpSysDevelopers.sh -h -v -n showRun -p developer=lsipusr -i cvsUpdateLcnt
     fi
 }
 
@@ -185,9 +185,9 @@ function vis_lcntBasePrep {
     # runAs lsipusr
 
     if [ -d  /lcnt/outputs/all/lists ] ; then
-	opDoExit pushd /lcnt/outputs/all/lists
-	opDo rm nuBaseDir*
-	opDoExit popd
+        opDoExit pushd /lcnt/outputs/all/lists
+        opDo rm nuBaseDir*
+        opDoExit popd
     fi
 
     opDo lcnLcntOutputs.sh -n showRun  -p outFile=/lcnt/outputs/all/lists/nuBaseDir -i nuBaseDirFullUpdate
@@ -248,8 +248,8 @@ function vis_plone3Upload {
     opDo getLcntNuBase ${oneDocEntry}
     typeset this_cntntRawHome="${cntntRawHome}"
     if [ "${this_cntntRawHome}" =  "" ] ; then
-	EH_problem "Missing cntntRawHome -- ${oneDocEntry}"
-	continue
+        EH_problem "Missing cntntRawHome -- ${oneDocEntry}"
+        continue
     fi
 
     lcntInfoPrep ${this_cntntRawHome}
@@ -282,8 +282,8 @@ function vis_plone3EntriesVerify {
     getLcntNuBase ${oneDocEntry}
     typeset this_cntntRawHome="${cntntRawHome}"
     if [ "${this_cntntRawHome}" =  "" ] ; then
-	EH_problem "Missing cntntRawHome -- ${oneDocEntry}"
-	continue
+        EH_problem "Missing cntntRawHome -- ${oneDocEntry}"
+        continue
     fi
 
     #ANT_raw "Verified: ${oneDocEntry}"
@@ -432,8 +432,8 @@ _EOF_
     EH_retOnFail
 
     if [ ! -f ${bystarUidHome}/lcaPlone/ContentTree/lcntList ] ; then
-	EH_problem "Missing ${bystarUidHome}/lcaPlone/ContentTree/lcntList"
-	lpReturn 101
+        EH_problem "Missing ${bystarUidHome}/lcaPlone/ContentTree/lcntList"
+        lpReturn 101
     fi
 
     opDo ${G_myName} -p bystarUid=${bystarUid} -p inListLcntNu="${bystarUidHome}/lcaPlone/ContentTree/lcntList" -i plone3Upload all

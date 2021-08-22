@@ -54,7 +54,7 @@ function vis_aabis_assignAndFullRealize {
    function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Dispatches to BoxRealize or to VirtRealize.
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
 
    EH_assert [ ! -z "${serviceType}" ]   
@@ -73,7 +73,7 @@ _EOF_
 
    lpDo vis_aabis_repoBasesAllCreate
    lpDo vis_aabis_repoBasesAllPush   
-}	
+}       
 
 
 function vis_aabis_assignAndBasicBxoRealize {
@@ -81,7 +81,7 @@ function vis_aabis_assignAndBasicBxoRealize {
    function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Dispatches to BoxRealize or to VirtRealize.
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
 
    EH_assert [ ! -z "${serviceType}" ]   
@@ -92,28 +92,28 @@ _EOF_
    
    case "${serviceType}" in
        ByName|BySmb|ByFamily)
-	   assignBase=$(lpDo vis_aabis_serviceTypeAssignCorrespondingBxo)
-	   EH_assert [ ! -z "${assignBase}" ]
-	   
-	   thisBxoId=$(lpDo vis_aabis_withAssignBaseBasicBxoRealize ${assignBase})
-	   EH_assert [ ! -z "${thisBxoId}" ]
-	   ;;
+           assignBase=$(lpDo vis_aabis_serviceTypeAssignCorrespondingBxo)
+           EH_assert [ ! -z "${assignBase}" ]
+           
+           thisBxoId=$(lpDo vis_aabis_withAssignBaseBasicBxoRealize ${assignBase})
+           EH_assert [ ! -z "${thisBxoId}" ]
+           ;;
        *)
-	   EH_problem "Bad Usage -- serviceType=${serviceType}"
-	   ;;
+           EH_problem "Bad Usage -- serviceType=${serviceType}"
+           ;;
    esac
 
    echo "${thisBxoId}"
-}	
+}       
 
 
 function vis_aabis_withAssignBaseGetBxoId {
-	G_funcEntry
+        G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 ** \$1 is bxoRepoScope -- \$2 is path to siteAabisAssignBase 
 *** -p passive= instead of  EH_assert bxoRealizationScopeIsValid "${bxoRealizationScope}"
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
 
    local aabisAssignBase=$1
@@ -128,7 +128,7 @@ function vis_aabis_withAssignBaseBasicBxoRealize {
 ** \$1 is bxoRepoScope -- \$2 is path to siteAabisAssignBase 
 *** -p passive= instead of  EH_assert bxoRealizationScopeIsValid "${bxoRealizationScope}"
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
 
    local aabisAssignBase=$1
@@ -184,36 +184,36 @@ function vis_aabis_repoBasesAllCreate {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** 
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
     EH_assert bxoIdPrep
 
     lpDo eval vis_aabis_repoBasesList \| vis_bxoRealize_repoBasesCreate aabis
-}	
+}       
 
 function vis_aabis_repoBasesAllPush {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** 
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
     EH_assert bxoIdPrep
 
     lpDo eval vis_aabis_repoBasesList \| vis_bxoRealize_repoBasesPush
-}	
+}       
 
 function vis_aabis_nonRepoBasesAllCreate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** 
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
     EH_assert bxoIdPrep
 
     lpDo eval vis_aabis_nonRepoBasesList \| vis_bxoRealize_nonRepoBasesCreate aabis
-}	
+}       
 
 
 function vis_aabis_nonRepoBaseCreate_var {
@@ -221,7 +221,7 @@ function vis_aabis_nonRepoBaseCreate_var {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Create /bisos/var/bxoId/${bxoId} and symlink to it.
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
     EH_assert bxoIdPrep
 
@@ -235,7 +235,7 @@ _EOF_
     lpDo FN_fileSymlinkUpdate ${bisosVarBaseDir} ${basePath}
 
     lpReturn
-}	
+}       
 
 function vis_aabis_repoBaseCreate_panel { vis_repoBaseCreate_panel; }
 
@@ -243,7 +243,7 @@ function vis_aabis_repoBaseCreate_BAGP {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
     EH_assert bxoIdPrep
 
@@ -263,13 +263,13 @@ _EOF_
     lpDo bx-gitRepos -h -v -n showRun -i baseUpdateDotIgnore "${repoBase}"
 
     lpReturn
-}	
+}       
 
 function vis_aabis_repoBaseCreate_NSP {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
     EH_assert bxoIdPrep
 
@@ -289,13 +289,13 @@ _EOF_
     lpDo bx-gitRepos -h -v -n showRun -i baseUpdateDotIgnore "${repoBase}"
 
     lpReturn
-}	
+}       
 
 function vis_aabis_repoBaseCreate_par_live {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
     EH_assert bxoIdPrep
 
@@ -316,7 +316,7 @@ _EOF_
     lpDo bx-gitRepos -h -v -n showRun -i baseUpdateDotIgnore "${repoBase}"
 
     lpReturn
-}	
+}       
 
 
 _CommentBegin_

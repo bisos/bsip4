@@ -73,16 +73,16 @@ _EOF_
     #  [[elisp:(lsip-local-run-command "apt-cache search something | egrep '^something'")][apt-cache search something | egrep '^something']]
 
     itemOrderedList=( 
-	"emacs"
-	"dict"
-	"sqlite3"     # Used by: org-roam,
-	"graphviz"    # Used by: org-roam,
-	"ripgrep"     # Used by: doom,
+        "emacs"
+        "dict"
+        "sqlite3"     # Used by: org-roam,
+        "graphviz"    # Used by: org-roam,
+        "ripgrep"     # Used by: doom,
     "fd_find"     # Used by: doom,
     )
 
     itemOptionalOrderedList=(
-	"ripgrep"     # Used by: doom,
+        "ripgrep"     # Used by: doom,
     )
     itemLaterOrderedList=()
 }

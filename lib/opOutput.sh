@@ -43,9 +43,9 @@ function ANV_raw {
 function ant_cooked {
     #print -u2 -r -- "NOTE,${G_myName},${tm_fileName},${tm_lineNo}: $*"
     if [ -z "${G_recordMode}" ] ; then
-	printf  1>&2 "NOTE,${G_myName},${tm_fileName},${tm_lineNo}: $*\n"  
+        printf  1>&2 "NOTE,${G_myName},${tm_fileName},${tm_lineNo}: $*\n"  
     else
-	printf  1>&2 "** NOTE,${G_myName},${tm_fileName},${tm_lineNo}: $*\n"  
+        printf  1>&2 "** NOTE,${G_myName},${tm_fileName},${tm_lineNo}: $*\n"  
     fi
 }
 
@@ -53,9 +53,9 @@ function anv_cooked {
   if [[ "${G_verbose}_" == "verbose_" ]] ; then
       #print -u2 -r -- "NOTE,${G_myName},${tm_fileName},${tm_lineNo}: $*"
     if [ -z "${G_recordMode}" ] ; then
-	printf  1>&2 "NOTE,${G_myName},${tm_fileName},${tm_lineNo}: $*\n"  
+        printf  1>&2 "NOTE,${G_myName},${tm_fileName},${tm_lineNo}: $*\n"  
     else
-	printf  1>&2 "** [[file:${G_myFullName}::${tm_lineNo}][inBaseDirDo]] $*\n"  
+        printf  1>&2 "** [[file:${G_myFullName}::${tm_lineNo}][inBaseDirDo]] $*\n"  
     fi
   fi
 }

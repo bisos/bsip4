@@ -109,7 +109,7 @@ $( examplesSeperatorSection "SERVER CONFIG FILES" )
 ${G_myName} ${extraInfo} -i serverConfigUpdate         # SafeKeep configFile and replace with ConfigStdout
 ${G_myName} ${extraInfo} -i serverConfigVerify         # diff configFile vs ConfigStdout
 ${G_myName} ${extraInfo} -i serverConfigShow           # ls -l ${daemonConfigFile}
-${G_myName} ${extraInfo} -i serverConfigStdout         # Likely provided in -niche.sh	
+${G_myName} ${extraInfo} -i serverConfigStdout         # Likely provided in -niche.sh   
 _EOF_
 }
 
@@ -185,7 +185,7 @@ function vis_daemonDisable {
     local thisSvc=""
     
     for thisSvc in ${daemonsServiceName[@]} ; do
-	lpDo systemctl --no-pager disable ${thisSvc}
+        lpDo systemctl --no-pager disable ${thisSvc}
     done
 }
 
@@ -198,7 +198,7 @@ function vis_daemonEnable {
     local thisSvc=""
     
     for thisSvc in ${daemonsServiceName[@]} ; do
-	lpDo systemctl --no-pager enable ${thisSvc}
+        lpDo systemctl --no-pager enable ${thisSvc}
     done
 }
 
@@ -211,20 +211,20 @@ function vis_daemonEnabledStatus {
 
 function daemonPrep {
     if [ "${daemonControlScript}_" == "_" ] ; then
-	EH_problem "Missing Parameter: daemonControlScript"
-	return 1
+        EH_problem "Missing Parameter: daemonControlScript"
+        return 1
     fi
     if [ "${daemonDefaultFile}_" == "_" ] ; then
-	EH_problem "Missing Parameter: daemonDefaultFile"
-	return 1
+        EH_problem "Missing Parameter: daemonDefaultFile"
+        return 1
     fi
 }
 
 
 function serverConfigPrep {
     if [ "${daemonConfigFile}_" == "_" ] ; then
-	EH_problem "Missing Parameter: daemonControlScript"
-	return 1
+        EH_problem "Missing Parameter: daemonControlScript"
+        return 1
     fi
 }
 
@@ -283,7 +283,7 @@ _EOF_
     local thisSvc=""
     
     for thisSvc in ${daemonsServiceName[@]} ; do
-	lpDo systemctl --no-pager start ${thisSvc}
+        lpDo systemctl --no-pager start ${thisSvc}
     done
 
     lpReturn
@@ -303,7 +303,7 @@ _EOF_
     local thisSvc=""
     
     for thisSvc in ${daemonsServiceName[@]} ; do
-	lpDo systemctl --no-pager stop ${thisSvc}
+        lpDo systemctl --no-pager stop ${thisSvc}
     done
 
     lpReturn
@@ -323,7 +323,7 @@ _EOF_
     local thisSvc=""
     
     for thisSvc in ${daemonsServiceName[@]} ; do
-	lpDo systemctl --no-pager restart ${thisSvc}
+        lpDo systemctl --no-pager restart ${thisSvc}
     done
 
     lpReturn
@@ -343,7 +343,7 @@ vis_daemonStatus () {
     local thisSvc=""
     
     for thisSvc in ${daemonsServiceName[@]} ; do
-	lpDo systemctl --no-pager status ${thisSvc}
+        lpDo systemctl --no-pager status ${thisSvc}
     done
 }
 
@@ -369,9 +369,9 @@ _EOF_
     local origFile="${keepFile}.orig"
 
     if [ -e "${origFile}" ] ; then
-	lpDo doNothing
+        lpDo doNothing
     else
-	lpDo cp -p "${keepFile}" "${origFile}"
+        lpDo cp -p "${keepFile}" "${origFile}"
     fi
 }
 
@@ -385,8 +385,8 @@ _EOF_
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
 
     if [ -z "${daemonConfigFile}" ] ; then
-	ANT_raw "Blank daemonConfigFile -- No Configuration Performed"
-	return
+        ANT_raw "Blank daemonConfigFile -- No Configuration Performed"
+        return
     fi
 
     EH_assert daemonPrep
@@ -434,8 +434,8 @@ _EOF_
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
 
     if [ -z "${daemonDefaultFile}" ] ; then
-	ANT_raw "Blank daemonConfigFile -- No Configuration Performed"
-	return
+        ANT_raw "Blank daemonConfigFile -- No Configuration Performed"
+        return
     fi
 
     EH_assert daemonPrep
@@ -488,7 +488,7 @@ _EOF_
 
   if [ ! -z "${daemonLogDir}" ] ; then
       if [ "${daemonLogDir}" != "/var/log" ] ; then
-	  opDo ls -l ${daemonLogDir}
+          opDo ls -l ${daemonLogDir}
       fi
   fi
 
@@ -514,11 +514,11 @@ function vis_logGrep {
 
   if [ -z "${daemonLogTag}" ] ; then
       if [ "${daemonLogFile}_" != "_" -a ! -z ${daemonName} ] ; then 
-	  opDo grep -i ${daemonName} ${daemonLogFile} 
+          opDo grep -i ${daemonName} ${daemonLogFile} 
       fi
   else
       if [ ! -z "${daemonLogFile}"  ] ; then 
-	  opDo grep -i ${daemonLogTag} ${daemonLogFile} 
+          opDo grep -i ${daemonLogTag} ${daemonLogFile} 
       fi
   fi
 }
@@ -537,11 +537,11 @@ function vis_logErrGrep {
 
   if [ -z "${daemonLogTag}" ] ; then
       if [ "${daemonLogErrFile}_" != "_" -a ! -z ${daemonName} ] ; then 
-	  opDo grep -i ${daemonName} ${daemonLogErrFile} 
+          opDo grep -i ${daemonName} ${daemonLogErrFile} 
       fi
   else
       if [ ! -z "${daemonLogErrFile}"  ] ; then 
-	  opDo grep -i ${daemonLogTag} ${daemonLogErrFile} 
+          opDo grep -i ${daemonLogTag} ${daemonLogErrFile} 
       fi
   fi
 }

@@ -74,10 +74,10 @@ _EOF_
     #  [[elisp:(lsip-local-run-command "apt-cache search something | egrep '^something'")][apt-cache search something | egrep '^something']]
 
     itemOrderedList=(
-	"preview_latex"
-	"texlive_full"
-	"hevea"
-	# "tetex_extra"
+        "preview_latex"
+        "texlive_full"
+        "hevea"
+        # "tetex_extra"
     )
 
     itemOptionalOrderedList=()
@@ -172,7 +172,7 @@ function examplesHookPost {
     apt-get install arabtex
     apt-get install tex4ht
 
-    ln -s  /bisos/apps/bxtex/tex/macros /usr/share/texmf/tex/extras	
+    ln -s  /bisos/apps/bxtex/tex/macros /usr/share/texmf/tex/extras     
 texhash
 or
 TEXINPUTS=.://bisos/apps/bxtex/tex/macros::

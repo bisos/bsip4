@@ -94,69 +94,69 @@ vis_opRunDistFamilySet () {
   opRunDistGeneration="UNKNOWN"
   case ${opRunDistFamily} in
     "UBUNTU")
-	      if grep "6.10" /etc/issue ; then
-		opRunDistGeneration="EDGY"
-		opRunDistGenNu="6.10"
-	      elif grep "14.04" /etc/issue ; then  # LTS
-		opRunDistGeneration="1404"
-		opRunDistGenNu="14.04"
-	      elif grep "Xenial" /etc/issue ; then  # LTS
-		opRunDistGeneration="1604"
-		opRunDistGenNu="16.04"
-	      elif grep "16.04" /etc/issue ; then  # LTS
-		opRunDistGeneration="1604"
-		opRunDistGenNu="16.04"
-	      elif grep "Beaver" /etc/issue ; then  # LTS
-		opRunDistGeneration="1804"
-		opRunDistGenNu="18.04"
-	      elif grep "18.04" /etc/issue ; then  # LTS
-		opRunDistGeneration="1804"
-		opRunDistGenNu="18.04"
-	      elif grep "Focal" /etc/issue ; then  # LTS
-		opRunDistGeneration="2004"
-		opRunDistGenNu="20.04"
-	      elif grep "20.04" /etc/issue ; then  # LTS
-		opRunDistGeneration="2004"
-		opRunDistGenNu="20.04"
-	      else
-		opRunDistGeneration="UNSUPPORTED"
-		opRunDistGenNu="UNSUPORTED"
-	      fi
+              if grep "6.10" /etc/issue ; then
+                opRunDistGeneration="EDGY"
+                opRunDistGenNu="6.10"
+              elif grep "14.04" /etc/issue ; then  # LTS
+                opRunDistGeneration="1404"
+                opRunDistGenNu="14.04"
+              elif grep "Xenial" /etc/issue ; then  # LTS
+                opRunDistGeneration="1604"
+                opRunDistGenNu="16.04"
+              elif grep "16.04" /etc/issue ; then  # LTS
+                opRunDistGeneration="1604"
+                opRunDistGenNu="16.04"
+              elif grep "Beaver" /etc/issue ; then  # LTS
+                opRunDistGeneration="1804"
+                opRunDistGenNu="18.04"
+              elif grep "18.04" /etc/issue ; then  # LTS
+                opRunDistGeneration="1804"
+                opRunDistGenNu="18.04"
+              elif grep "Focal" /etc/issue ; then  # LTS
+                opRunDistGeneration="2004"
+                opRunDistGenNu="20.04"
+              elif grep "20.04" /etc/issue ; then  # LTS
+                opRunDistGeneration="2004"
+                opRunDistGenNu="20.04"
+              else
+                opRunDistGeneration="UNSUPPORTED"
+                opRunDistGenNu="UNSUPORTED"
+              fi
        ;;
     "DEBIAN")
-	  # NOTYET -- use lsb_release -i or /etc/os-release ... instead
-	      if grep "3.1" /etc/issue ; then
-		opRunDistGeneration="SARGE"
-		opRunDistGenNu="3.1"
-	      elif grep "7.0" /etc/issue ; then
-		opRunDistGeneration="7"
-		opRunDistGenNu="7.0"
-	      elif grep "10" /etc/issue ; then
-		opRunDistGeneration="10"
-		opRunDistGenNu="10"
-	      elif grep "bullseye" /etc/issue ; then
-		opRunDistGeneration="11"
-		opRunDistGenNu="11"
-	      elif grep "11" /etc/issue ; then
-		opRunDistGeneration="11"
-		opRunDistGenNu="11"
-	      else
-		opRunDistGeneration="UNSUPPORTED"
-		opRunDistGenNu="UNSUPORTED"
-	      fi
+          # NOTYET -- use lsb_release -i or /etc/os-release ... instead
+              if grep "3.1" /etc/issue ; then
+                opRunDistGeneration="SARGE"
+                opRunDistGenNu="3.1"
+              elif grep "7.0" /etc/issue ; then
+                opRunDistGeneration="7"
+                opRunDistGenNu="7.0"
+              elif grep "10" /etc/issue ; then
+                opRunDistGeneration="10"
+                opRunDistGenNu="10"
+              elif grep "bullseye" /etc/issue ; then
+                opRunDistGeneration="11"
+                opRunDistGenNu="11"
+              elif grep "11" /etc/issue ; then
+                opRunDistGeneration="11"
+                opRunDistGenNu="11"
+              else
+                opRunDistGeneration="UNSUPPORTED"
+                opRunDistGenNu="UNSUPORTED"
+              fi
        ;;
     "REDHAT")
-	     opRunDistGeneration="UNSUPPORTED"
+             opRunDistGeneration="UNSUPPORTED"
        ;;
     "UNKNOWN")
-	       opRunDistGeneration="UNSUPPORTED"
+               opRunDistGeneration="UNSUPPORTED"
        ;;
     "UNSUPPORTED")
-		   opRunDistGeneration="UNSUPPORTED"
+                   opRunDistGeneration="UNSUPPORTED"
        ;;
     *)
        opRunDistGeneration="UNSUPPORTED"
-	EH_oops ;
+        EH_oops ;
        return
        ;;
   esac

@@ -127,7 +127,7 @@ function G_postParamHook {
     bxoIdPrepValidate    
 
     if [ ! -z "${bxoId}" ] ; then
-     	bxoHome=$( FN_absolutePathGet ~${bxoId} )
+        bxoHome=$( FN_absolutePathGet ~${bxoId} )
     fi
     
     bisosCurrentsGet
@@ -192,11 +192,11 @@ function netNameInfoInit {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
 
     if [ -d /tmp/netNameInfo ] ; then
-	lpDo rm -r /tmp/netNameInfo
+        lpDo rm -r /tmp/netNameInfo
     fi
     lpDo mkdir -p /tmp/netNameInfo
 }
@@ -206,7 +206,7 @@ function netNameInfoWrite {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 2 ]]
     local key=$1
     local value=$2
@@ -219,7 +219,7 @@ function netNameInfoRead {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Vagrant stdout -- Based on Abode and Host Network Interface put on stdout needed guest.vm.network info.
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 1 ]]
     local key=$1
 
@@ -231,7 +231,7 @@ function vis_containerGenericMaterialize {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
 
    local examplesOrDoIt=$1
@@ -247,20 +247,20 @@ _EOF_
        EH_assert vis_bxoAcctVerify "${sysCharContainerBxoId}"
 
        if [ "${examplesOrDoIt}" == "examples" ] ; then
-	   cat  << _EOF_
+           cat  << _EOF_
 ${G_myName} ${extraInfo} -p bxoId="${sysCharContainerBxoId}" -i vagrantFile_run
 $( ${G_myName} -p bxoId="${sysCharContainerBxoId}" -i vagrantBase_last )
 _EOF_
        elif [ "${examplesOrDoIt}" == "doIt" ] ; then
-	   bxoId="${sysCharContainerBxoId}"
-	   lpDo vis_vagrantFile_run
+           bxoId="${sysCharContainerBxoId}"
+           lpDo vis_vagrantFile_run
        else
-	   EH_problem "Bad Usage -- ${examplesOrDoIt}"
+           EH_problem "Bad Usage -- ${examplesOrDoIt}"
        fi
    done
    
    lpReturn
-}	
+}       
 
 
 function vis_vagrantBaseObtain%% {
@@ -279,7 +279,7 @@ _EOF_
     echo ${bxoHome}/var/vagrantBase
     
     lpReturn
-}	
+}       
 
 function vis_vagrantBaseObtain {
     G_funcEntry
@@ -301,7 +301,7 @@ _EOF_
     echo ${hostCntnrHome}/var/vagrantBase/${bxoId}
     
     lpReturn
-}	
+}       
 
 function vis_vagrantBase_last%% {
     G_funcEntry
@@ -324,15 +324,15 @@ _EOF_
     local vmsDirsList=$( ls | grep -v Vagrantfile | grep -v bxo | grep -v history | sort -n )
 
     for thisDir in ${vmsDirsList} ; do
-	doNothing
+        doNothing
     done
 
     if [ ! -z "${thisDir}" ] ; then
-	echo $(pwd)/${thisDir}
+        echo $(pwd)/${thisDir}
     fi
     
     lpReturn
-}	
+}       
 
 
 function vis_vagrantBase_last {
@@ -356,15 +356,15 @@ _EOF_
     local vmsDirsList=$( ls | grep -v Vagrantfile | grep -v bxo | grep -v history | sort -n )
 
     for thisDir in ${vmsDirsList} ; do
-	doNothing
+        doNothing
     done
 
     if [ ! -z "${thisDir}" ] ; then
-	echo $(pwd)/${thisDir}
+        echo $(pwd)/${thisDir}
     fi
     
     lpReturn
-}	
+}       
 
 
 function vis_vagrantFile_run%% {
@@ -389,8 +389,8 @@ _EOF_
 
     # echo ${vmsDirsList}
     for thisDir in ${vmsDirsList} ; do
-	# echo $(pwd)/${thisDir}
-	doNothing
+        # echo $(pwd)/${thisDir}
+        doNothing
     done
 
     nextNu=$( expr ${thisDir} +  1 )
@@ -406,7 +406,7 @@ _EOF_
     lpDo vagrant up
     
     lpReturn
-}	
+}       
 
 
 function vis_vagrantFile_run {
@@ -433,8 +433,8 @@ _EOF_
 
     # echo ${vmsDirsList}
     for thisDir in ${vmsDirsList} ; do
-	# echo $(pwd)/${thisDir}
-	doNothing
+        # echo $(pwd)/${thisDir}
+        doNothing
     done
 
     nextNu=$( expr ${thisDir} +  1 )
@@ -469,7 +469,7 @@ _EOF_
     lpDo describeF
     
     lpReturn
-}	
+}       
 
 
 function vis_vmDeploy {
@@ -478,7 +478,7 @@ function vis_vmDeploy {
 Use virsh to autostart the VM.
 Perhaps use related ICMs to run services.
 _EOF_
-		       }
+                       }
     local thisDescribeF=describeF
     EH_assert [[ $# -eq 0 ]]
     EH_assert [ ! -z "${bxoId}" ]
@@ -488,7 +488,7 @@ _EOF_
     lpDo echo ${thisDescribeF}
     
     lpReturn
-}	
+}       
 
 vmParamRam=2049
 vmParamDisk=20GB
@@ -500,7 +500,7 @@ function setVmParamsBasedOnSizing {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 From a given sysChar, based on  containerDistro and containerDistroType determine vagrantBaseBox.
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
 
     EH_assert [ ! -z "${bxoId}" ]
@@ -513,32 +513,32 @@ _EOF_
     local vmSizing="${sysChar_virtSpec_sizing}"
 
     if [ "${vmSizing}" == "minimal" ] ; then
-	vmParamRam=512
-	vmParamDisk=5GB
-	vmParamCpus=1    
+        vmParamRam=512
+        vmParamDisk=5GB
+        vmParamCpus=1    
     elif [ "${vmSizing}" == "small" ] ; then
-	vmParamRam=1024
-	vmParamDisk=8GB
-	vmParamCpus=1    
+        vmParamRam=1024
+        vmParamDisk=8GB
+        vmParamCpus=1    
     elif [ "${vmSizing}" == "medium" ] ; then
-	vmParamRam=2048
-	vmParamDisk=20GB
-	vmParamCpus=2    
+        vmParamRam=2048
+        vmParamDisk=20GB
+        vmParamCpus=2    
     elif [ "${vmSizing}" == "large" ] ; then
-	vmParamRam=4096
-	vmParamDisk=100GB
-	vmParamCpus=2    
+        vmParamRam=4096
+        vmParamDisk=100GB
+        vmParamCpus=2    
     elif [ "${vmSizing}" == "Large" ] ; then
-	vmParamRam=4096
-	vmParamDisk=100GB
-	vmParamCpus=2    
+        vmParamRam=4096
+        vmParamDisk=100GB
+        vmParamCpus=2    
     elif [ "${vmSizing}" == "huge" ] ; then
-	vmParamRam=4096
-	vmParamDisk=100GB
-	vmParamCpus=2    
+        vmParamRam=4096
+        vmParamDisk=100GB
+        vmParamCpus=2    
     else
-	EH_problem "Unknown vmSizing=${vmSizing}"
-	return 101
+        EH_problem "Unknown vmSizing=${vmSizing}"
+        return 101
     fi
 }
 
@@ -548,7 +548,7 @@ function vis_recordDeployment {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Use the sysChar BxO to record that the VM was deployed.
 _EOF_
-		       }
+                       }
     local thisDescribeF=$(describeF)
     EH_assert [[ $# -eq 0 ]]
     EH_assert [ ! -z "${bxoId}" ]
@@ -565,7 +565,7 @@ function vis_vagrantBaseBoxFromSysChar {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 From a given sysChar, based on  containerDistro and containerDistroType determine vagrantBaseBox.
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
 
     EH_assert [ ! -z "${bxoId}" ]
@@ -576,8 +576,8 @@ _EOF_
     lpDo vis_sysCharRead
 
     if [ ! -z "${sysChar_virtSpec_vagBaseBox}" ] ; then
-	lpDo echo "${sysChar_virtSpec_vagBaseBox}"
-	lpReturn
+        lpDo echo "${sysChar_virtSpec_vagBaseBox}"
+        lpReturn
     fi
 
     local vagrantBaseBox=$( withDistroGetVagBaseBox "${sysChar_sysInfo_distro}" "${sysChar_sysInfo_distroType}" "bxcntnr" )
@@ -591,7 +591,7 @@ _EOF_
 #     function describeF {  G_funcEntryShow; cat  << _EOF_
 # ** Based on Abode get applicableNetsList
 # _EOF_
-# 		       }
+#                      }
 #     EH_assert [[ $# -eq 1 ]]
 
 #     local abode=$1
@@ -599,23 +599,23 @@ _EOF_
 #     applicableNetsList=()   # global variable
 
 #     case "${containerAssign_abode}" in
-# 	"Auto")
-# 	    applicableNetsList=("nat")
-# 	    ;;
-# 	"Mobile")
-# 	    applicableNetsList=("nat")
-# 	    ;;
-# 	"Perim")
-# 	    applicableNetsList=("perimA")
-# 	    ;;
-# 	"Shield")
-# 	    applicableNetsList=("privA")
-# 	    ;;
-# 	"Internet")
-# 	    applicableNetsList=("pubA" "pubB" "perimA")
-# 	    ;;
-# 	*)
-# 	    EH_problem "Bad Usage -- abodeInitial=${abodeInitial}"
+#       "Auto")
+#           applicableNetsList=("nat")
+#           ;;
+#       "Mobile")
+#           applicableNetsList=("nat")
+#           ;;
+#       "Perim")
+#           applicableNetsList=("perimA")
+#           ;;
+#       "Shield")
+#           applicableNetsList=("privA")
+#           ;;
+#       "Internet")
+#           applicableNetsList=("pubA" "pubB" "perimA")
+#           ;;
+#       *)
+#           EH_problem "Bad Usage -- abodeInitial=${abodeInitial}"
 #     esac
 # }
 
@@ -625,15 +625,15 @@ function vis_getIpAddr_privA {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** If generic, one way, if not anotherway
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
 
     local functionAbbrev=$(lpDo vis_containerBxoId_getFunction pmp_${containerAssign_containerId})
 
     if [ "${functionAbbrev}" == "G" ] ; then
-	lpDo vis_assignNextAddr privA generic
+        lpDo vis_assignNextAddr privA generic
     else
-	lpDo echo "containerBxoId"
+        lpDo echo "containerBxoId"
     fi
 }
 
@@ -645,7 +645,7 @@ function vis_vagStdout_netInterfaces {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Vagrant stdout -- Based on Abode and Host Network Interface put on stdout needed guest.vm.network info.
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
 
     EH_assert bxoIdPrep
@@ -664,64 +664,64 @@ _EOF_
     EH_assert [ ! -z "${containerAssign_abode}" ]
 
     function netInterfaceUpdate {
-	EH_assert [[ $# -eq 1 ]]
+        EH_assert [[ $# -eq 1 ]]
 
-	local netName="$1"
-	# local ethCount="$2"
+        local netName="$1"
+        # local ethCount="$2"
 
-	EH_assert [ ! -z "${netName}" ]
+        EH_assert [ ! -z "${netName}" ]
 
-	local hostBxoId=$( withContainerIdGetBxoId ${hostContainerId} )
-	EH_assert vis_bxoAcctVerify "${hostBxoId}"
+        local hostBxoId=$( withContainerIdGetBxoId ${hostContainerId} )
+        EH_assert vis_bxoAcctVerify "${hostBxoId}"
 
-	local netIf=""
-	local netIfControl=""
+        local netIf=""
+        local netIfControl=""
 
-	function getNetIfAsArgs { netIf=$1; netIfControl=$2; }
-    	lpDo getNetIfAsArgs  $(vis_cntnr_netName_interfaceObtain ${netName} sysChar)
-	EH_assert [ ! -z "${netIf}" ]
-	
-	if [ "${netName}" == "nat" ] ; then
-    	cat   << _EOF_
+        function getNetIfAsArgs { netIf=$1; netIfControl=$2; }
+        lpDo getNetIfAsArgs  $(vis_cntnr_netName_interfaceObtain ${netName} sysChar)
+        EH_assert [ ! -z "${netIf}" ]
+        
+        if [ "${netName}" == "nat" ] ; then
+        cat   << _EOF_
     # NAT on hostBxoId=${hostBxoId} -- No additional network interface is being configured.
 _EOF_
-	    lpReturn
-	fi
+            lpReturn
+        fi
 
-	lpDo vis_sysCharRead ${hostBxoId}
-	# EH_assert [ ! -z "${sysChar_containerSpec_netIfs_${netName}}" ]
+        lpDo vis_sysCharRead ${hostBxoId}
+        # EH_assert [ ! -z "${sysChar_containerSpec_netIfs_${netName}}" ]
 
-	if [ "${netIfControl}" == "enabled" ] || [ "${netIfControl}" == "guestOnly" ] ; then
+        if [ "${netIfControl}" == "enabled" ] || [ "${netIfControl}" == "guestOnly" ] ; then
 
-	    (( inUseEthCount++ ))
+            (( inUseEthCount++ ))
 
-	    # Store netName's ethNu for use in conveyInfo
-	    # Mystery -- vmNetIfsArray does not work??!!
-	    vmNetIfsArray[${netName}]=eth${inUseEthCount}
-	    lpDo netNameInfoWrite ${netName} eth${inUseEthCount}
-	    lpDo netNameInfoWrite ${netName}-host ${netIf}
-	    lpDo netNameInfoWrite ${netName}-control enabled
-	    
+            # Store netName's ethNu for use in conveyInfo
+            # Mystery -- vmNetIfsArray does not work??!!
+            vmNetIfsArray[${netName}]=eth${inUseEthCount}
+            lpDo netNameInfoWrite ${netName} eth${inUseEthCount}
+            lpDo netNameInfoWrite ${netName}-host ${netIf}
+            lpDo netNameInfoWrite ${netName}-control enabled
+            
             cat   << _EOF_
     # ${netName} interface on hostBxoId=${hostBxoId}  eth${inUseEthCount} netIf=${netIf} netIfControl=${netIfControl}
     guest.vm.network :public_network, :dev => "${netIf}", :mode => 'bridge', auto_config: false
 
 _EOF_
-	else
-	    lpDo netNameInfoWrite ${netName} unUsed
-	    lpDo netNameInfoWrite ${netName}-host ${netIf}
-	    lpDo netNameInfoWrite ${netName}-control disabled
-	    cat   << _EOF_
+        else
+            lpDo netNameInfoWrite ${netName} unUsed
+            lpDo netNameInfoWrite ${netName}-host ${netIf}
+            lpDo netNameInfoWrite ${netName}-control disabled
+            cat   << _EOF_
     # ${netName} interface on hostBxoId=${hostBxoId}  unUsed netIf=${netIf} netIfControl=${netIfControl}
 
 _EOF_
-	fi
+        fi
     }
 
     local applicableNets=$( vis_withAbodeGetApplicableNetsList "${containerAssign_abode}" )
 
      for eachNetName in ${applicableNets} ; do
-	lpDo netInterfaceUpdate ${eachNetName}
+        lpDo netInterfaceUpdate ${eachNetName}
     done
     
     lpReturn
@@ -733,7 +733,7 @@ function vis_vagStdout_netInterfacesDown {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Based on XX put on stdout needed provioning facilities to produce a container.
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
 
     EH_assert [ ! -z "${bxoId}" ]
@@ -743,51 +743,51 @@ _EOF_
     hostCntnr=$( vis_bxoIdPrep "sysChar" )
 
     cat  << _OUTER_EOF_
-	cat   << _EOF_
+        cat   << _EOF_
 ######### PHASE -1.0: Deactivate All Network Interfaces
 _EOF_
 _OUTER_EOF_
 
 
     function netInterfacesDown {
-	EH_assert [[ $# -eq 1 ]]
+        EH_assert [[ $# -eq 1 ]]
 
-	local netName="$1"
+        local netName="$1"
 
-	EH_assert [ ! -z "${netName}" ]
+        EH_assert [ ! -z "${netName}" ]
 
-	if [ "${netName}" == "nat" ] ; then
-	    cat  << _OUTER_EOF_
-	echo "netName=${netName} Requires No Deactivation."
+        if [ "${netName}" == "nat" ] ; then
+            cat  << _OUTER_EOF_
+        echo "netName=${netName} Requires No Deactivation."
 _OUTER_EOF_
-	    lpReturn
-	fi
+            lpReturn
+        fi
 
-	local vmNetIf=$(netNameInfoRead ${netName})
-	local hostNetIf=$(netNameInfoRead ${netName}-host)
-	local vmNetIfControl=$(netNameInfoRead ${netName}-control)
+        local vmNetIf=$(netNameInfoRead ${netName})
+        local hostNetIf=$(netNameInfoRead ${netName}-host)
+        local vmNetIfControl=$(netNameInfoRead ${netName}-control)
 
- 	if [ -z "${vmNetIf}" ] || [ "${vmNetIf}" == "unUsed" ] || [ "${vmNetIf}" == "blank" ] ; then
- 	    cat  << _OUTER_EOF_
- 	echo "netName=${netName} Interface Is Not In Use cfpNetIf=${vmNetIf} cfpHostNetIf=${hostNetIf}."
+        if [ -z "${vmNetIf}" ] || [ "${vmNetIf}" == "unUsed" ] || [ "${vmNetIf}" == "blank" ] ; then
+            cat  << _OUTER_EOF_
+        echo "netName=${netName} Interface Is Not In Use cfpNetIf=${vmNetIf} cfpHostNetIf=${hostNetIf}."
 _OUTER_EOF_
 
- 	else
-	    if [ "${netName}" == "pubA" ]  || [ "${netName}" == "pubB" ] ; then
+        else
+            if [ "${netName}" == "pubA" ]  || [ "${netName}" == "pubB" ] ; then
 
-		cat  << _OUTER_EOF_
-	sudo ifconfig ${vmNetIf}  down  # Shutting Down ${netName} -- Needed for deb11
+                cat  << _OUTER_EOF_
+        sudo ifconfig ${vmNetIf}  down  # Shutting Down ${netName} -- Needed for deb11
 _OUTER_EOF_
-	    fi
+            fi
 
-	fi
+        fi
     }
 
     local applicableNets=$( vis_withAbodeGetApplicableNetsList "${containerAssign_abode}" )
     local applicableNetsLine=$(echo ${applicableNets})
 
     for eachNetName in ${applicableNets} ; do
-	lpDo netInterfacesDown ${eachNetName}
+        lpDo netInterfacesDown ${eachNetName}
     done
 
     lpReturn
@@ -799,7 +799,7 @@ function vis_vagStdout_bisosSetIdAndDeploy {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Based on XX put on stdout needed provioning facilities to produce a container.
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 1 ]]
 
     EH_assert [ ! -z "${bxoId}" ]
@@ -836,75 +836,75 @@ _EOF_
     hostCntnr=$( vis_bxoIdPrep "sysChar" )
 
     cat  << _OUTER_EOF_
-	cat   << _EOF_
+        cat   << _EOF_
 ######### PHASE 2.1: BISOS Site Setup And SysChar Container Activate And Identity Set -- With IpAddrs settings
 _EOF_
-	sudo -u bystar ${binPath} ${runInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -p siteBxoId="${siteBxoId}" -i bisosBasePlatform_siteSetup
-	sudo -u bystar ${binPath} ${runInfo} -p bisosDevBxoId=${bisosDevBxoId} -i usgConvey_bisosDeveloper
-	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -i siteBasePlatform_sysBxoActivate
-	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpVmNameQualifier=\"${vmNameQualifier}\" -i conveyInfoStore
-	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpHostCntnr=\"${hostCntnr}\" -i conveyInfoStore
+        sudo -u bystar ${binPath} ${runInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -p siteBxoId="${siteBxoId}" -i bisosBasePlatform_siteSetup
+        sudo -u bystar ${binPath} ${runInfo} -p bisosDevBxoId=${bisosDevBxoId} -i usgConvey_bisosDeveloper
+        sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -i siteBasePlatform_sysBxoActivate
+        sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpVmNameQualifier=\"${vmNameQualifier}\" -i conveyInfoStore
+        sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpHostCntnr=\"${hostCntnr}\" -i conveyInfoStore
 _OUTER_EOF_
 
 
     function conveyNetInterfacesInfo {
-	EH_assert [[ $# -eq 1 ]]
+        EH_assert [[ $# -eq 1 ]]
 
-	local netName="$1"
+        local netName="$1"
 
-	EH_assert [ ! -z "${netName}" ]
+        EH_assert [ ! -z "${netName}" ]
 
-	if [ "${netName}" == "nat" ] ; then
-	    cat  << _OUTER_EOF_
-	echo "netName=${netName} Requires No ConveyInfo."
+        if [ "${netName}" == "nat" ] ; then
+            cat  << _OUTER_EOF_
+        echo "netName=${netName} Requires No ConveyInfo."
 _OUTER_EOF_
-	    lpReturn
-	fi
+            lpReturn
+        fi
 
-	local vmNetIf=$(netNameInfoRead ${netName})
-	local hostNetIf=$(netNameInfoRead ${netName}-host)
-	local vmNetIfControl=$(netNameInfoRead ${netName}-control)
+        local vmNetIf=$(netNameInfoRead ${netName})
+        local hostNetIf=$(netNameInfoRead ${netName}-host)
+        local vmNetIfControl=$(netNameInfoRead ${netName}-control)
 
-	cat  << _OUTER_EOF_
-	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpNetIf="${vmNetIf}" -i conveyNetInfoStore ${netName}
-	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpNetIfControl="${vmNetIfControl}" -i conveyNetInfoStore ${netName}
-	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpHostNetIf="${hostNetIf}" -i conveyNetInfoStore ${netName}
-_OUTER_EOF_
-
-	cat  << _OUTER_EOF_
-
+        cat  << _OUTER_EOF_
+        sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpNetIf="${vmNetIf}" -i conveyNetInfoStore ${netName}
+        sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpNetIfControl="${vmNetIfControl}" -i conveyNetInfoStore ${netName}
+        sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpHostNetIf="${hostNetIf}" -i conveyNetInfoStore ${netName}
 _OUTER_EOF_
 
-	# IP Addrs are only converyed as over-writes or when Generic.
+        cat  << _OUTER_EOF_
 
-	if [ "${netName}" == "privA" ] ; then
-	    cfpNetAddr="$( vis_getIpAddr_${netName} )"
-	    if [ ! -z "${cfpNetAddr}" ] ; then
-		cat  << _OUTER_EOF_
-	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpNetAddr="${cfpNetAddr}" -i conveyNetInfoStore ${netName}
 _OUTER_EOF_
-	    fi
-	fi
+
+        # IP Addrs are only converyed as over-writes or when Generic.
+
+        if [ "${netName}" == "privA" ] ; then
+            cfpNetAddr="$( vis_getIpAddr_${netName} )"
+            if [ ! -z "${cfpNetAddr}" ] ; then
+                cat  << _OUTER_EOF_
+        sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpNetAddr="${cfpNetAddr}" -i conveyNetInfoStore ${netName}
+_OUTER_EOF_
+            fi
+        fi
     }
 
     local applicableNets=$( vis_withAbodeGetApplicableNetsList "${containerAssign_abode}" )
     local applicableNetsLine=$(echo ${applicableNets})
 
     cat  << _OUTER_EOF_
-	cat   << _EOF_
+        cat   << _EOF_
 ######### PHASE 2.2: Convey Network Interfaces Info For: ${applicableNetsLine}
 _EOF_
 _OUTER_EOF_
 
     for eachNetName in ${applicableNets} ; do
-	lpDo conveyNetInterfacesInfo ${eachNetName}
+        lpDo conveyNetInterfacesInfo ${eachNetName}
     done
     
     cat  << _OUTER_EOF_
-	cat   << _EOF_
+        cat   << _EOF_
 ######### PHASE 2.3: Deploy The SysChar Based On Abobe Provided ConveyInfo
 _EOF_
-	sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -i deployWithSysCharConveyInfo
+        sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -i deployWithSysCharConveyInfo
 _OUTER_EOF_
     
 
@@ -918,7 +918,7 @@ function vis_vagStdout_platformBinsRun {
 ** 
 *** NOTYET, pre and post hooks
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
 
     EH_assert [ ! -z "${bxoId}" ]
@@ -927,10 +927,10 @@ _EOF_
     function platformBinsRun {
     EH_assert [[ $# -eq 0 ]]
     cat  << _OUTER_EOF_
-	     cat   << _EOF_
+             cat   << _EOF_
 ######### PHASE 3: Run Pre and platformBinsRun and Post
 _EOF_
-	echo "NOTYET."
+        echo "NOTYET."
 _OUTER_EOF_
     }
 
@@ -947,7 +947,7 @@ function vis_vagStdout_bisosProvision {
 *** If containerBaseBox is a distro/bxcntnr, doNothing -- NOTYET should update relevant git repos.
 *** If containerBaseBox is a distro/mini or a distro/desktop, order provisioning steps.
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
 
     EH_assert [ ! -z "${bxoId}" ]
@@ -961,56 +961,56 @@ _EOF_
 
     case "${containerBaseBox}" in
 
-	"bisos/ubuntu-20.04/bxcntnr")
-	    doNothing
-	    ;&   #fallthru
-	"bisos/debian-11.pre/bxcntnr")
-	    doNothing
-	    ;&   #fallthru
-	"bisos/debian-10.8/bxcntnr")
-	    cat  << _OUTER_EOF_
-	     cat   << _EOF_
+        "bisos/ubuntu-20.04/bxcntnr")
+            doNothing
+            ;&   #fallthru
+        "bisos/debian-11.pre/bxcntnr")
+            doNothing
+            ;&   #fallthru
+        "bisos/debian-10.8/bxcntnr")
+            cat  << _OUTER_EOF_
+             cat   << _EOF_
 ######### PHASE 1: BISOS Provisioning -- baseBox=${containerBaseBox}
 _EOF_
-	     echo "containerBaseBox=${containerBaseBox} -- Vagrant Skipped BISOS Provisioning."
+             echo "containerBaseBox=${containerBaseBox} -- Vagrant Skipped BISOS Provisioning."
 _OUTER_EOF_
-	    ;;
+            ;;
 
-	"bxDistro/ubuntu-20.04/desktop")
-	    doNothing
-	    ;&   #fallthru
-	"bxDistro/debian-11.pre/desktop")
-	    doNothing
-	    ;&   #fallthru
-	"bxDistro/debian-10.8/desktop")
-	    doNothing
-	    ;&   #fallthru
-	"bento/debian-10.8"|"bento/debian-11.pre")
-	    doNothing
-	    ;&   #fallthru
-	"bxDistro/debian-10.8/mini"|"bxDistro/debian-11.pre/mini")
-	    doNothing
-	    ;&   #fallthru
-	"bento/ubuntu-20.04")
-	    doNothing
-	    ;&
-	"bxDistro/ubuntu-20.04/mini")
-	cat  << _OUTER_EOF_
+        "bxDistro/ubuntu-20.04/desktop")
+            doNothing
+            ;&   #fallthru
+        "bxDistro/debian-11.pre/desktop")
+            doNothing
+            ;&   #fallthru
+        "bxDistro/debian-10.8/desktop")
+            doNothing
+            ;&   #fallthru
+        "bento/debian-10.8"|"bento/debian-11.pre")
+            doNothing
+            ;&   #fallthru
+        "bxDistro/debian-10.8/mini"|"bxDistro/debian-11.pre/mini")
+            doNothing
+            ;&   #fallthru
+        "bento/ubuntu-20.04")
+            doNothing
+            ;&
+        "bxDistro/ubuntu-20.04/mini")
+        cat  << _OUTER_EOF_
       cat  << _EOF_
 ######### PHASE 1: BISOS Provisioning -- baseBox=${containerBaseBox}
 _EOF_
 
-	sudo apt-get update
-	sudo echo after release  -- apt-get -y upgrade # Prompts for keyboard selection
+        sudo apt-get update
+        sudo echo after release  -- apt-get -y upgrade # Prompts for keyboard selection
         sudo apt-get -y install python3-pip
         sudo pip3 install --upgrade bisos.provision  
         /usr/local/bin/provisionBisos.sh -h -v -n showRun -i sysBasePlatform
 _OUTER_EOF_
             ;;
-	
-	* )
-	    EH_problem "Unsupported containerBaseBox=${containerBaseBox}"
-	    ;;
+        
+        * )
+            EH_problem "Unsupported containerBaseBox=${containerBaseBox}"
+            ;;
     esac
     lpReturn
 }
@@ -1023,7 +1023,7 @@ function vis_vagStdout_serverToDesktop {
 *** If containerBaseBox is a distro/bxcntnr, or distro/bxcntnr doNothing.
 *** If containerBaseBox is a distro/mini order desktop installation steps -- based on distro.
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
 
     EH_assert [ ! -z "${bxoId}" ]
@@ -1037,58 +1037,58 @@ _EOF_
     
     case "${containerBaseBox}" in
 
-	"bxDistro/ubuntu-20.04/desktop"|"bisos/ubuntu-20.04/bxcntnr")
-	    doNothing
-	    ;&   #fallthru
-	"bxDistro/debian-11.pre/desktop"|"bisos/debian-11.pre/bxcntnr")
-	    doNothing
-	    ;&   #fallthru
-	"bxDistro/debian-10.8/desktop"|"bisos/debian-10.8/bxcntnr")
-	    cat  << _OUTER_EOF_
-	     cat   << _EOF_
+        "bxDistro/ubuntu-20.04/desktop"|"bisos/ubuntu-20.04/bxcntnr")
+            doNothing
+            ;&   #fallthru
+        "bxDistro/debian-11.pre/desktop"|"bisos/debian-11.pre/bxcntnr")
+            doNothing
+            ;&   #fallthru
+        "bxDistro/debian-10.8/desktop"|"bisos/debian-10.8/bxcntnr")
+            cat  << _OUTER_EOF_
+             cat   << _EOF_
  ######### PHASE 0: Bx Level Distro (serverToDesktop) -- baseBox=${containerBaseBox}
 _EOF_
-	     echo "containerBaseBox=${containerBaseBox} -- Vagrant Skipped desktop addition."
+             echo "containerBaseBox=${containerBaseBox} -- Vagrant Skipped desktop addition."
 _OUTER_EOF_
-	    ;;
-	
-	"bento/debian-10.8"|"bento/debian-11.pre")
-	    doNothing
-	    ;&   #fallthru
-	"bxDistro/debian-10.8/mini"|"bxDistro/debian-11.pre/mini")
-	    # From https://linuxhint.com/install_gnome_debian_10_minimal_server/
-	    cat  << _OUTER_EOF_
+            ;;
+        
+        "bento/debian-10.8"|"bento/debian-11.pre")
+            doNothing
+            ;&   #fallthru
+        "bxDistro/debian-10.8/mini"|"bxDistro/debian-11.pre/mini")
+            # From https://linuxhint.com/install_gnome_debian_10_minimal_server/
+            cat  << _OUTER_EOF_
        cat  << _EOF_
  ######### PHASE 0: Bx Level Distro (serverToDesktop) -- baseBox=${containerBaseBox}
 _EOF_
-	    
-	echo "Be Patient -- tasksel is silent and install can be loooong" 
-	sudo apt-get update
-	sudo apt-get -y install --reinstall debconf
-	sudo apt-get -y install task-gnome-desktop
-	sudo apt-get -y install task-laptop
-	sudo systemctl set-default graphical.target	
+            
+        echo "Be Patient -- tasksel is silent and install can be loooong" 
+        sudo apt-get update
+        sudo apt-get -y install --reinstall debconf
+        sudo apt-get -y install task-gnome-desktop
+        sudo apt-get -y install task-laptop
+        sudo systemctl set-default graphical.target     
 _OUTER_EOF_
             ;;
 
-	"bento/ubuntu-20.04")
-	    doNothing
-	    ;&
-	"bxDistro/ubuntu-20.04/mini")
-	    cat  << _OUTER_EOF_
-	     cat  << _EOF_
+        "bento/ubuntu-20.04")
+            doNothing
+            ;&
+        "bxDistro/ubuntu-20.04/mini")
+            cat  << _OUTER_EOF_
+             cat  << _EOF_
  ######### PHASE 0: Bx Level Distro (serverToDesktop) -- baseBox=${containerBaseBox}
 _EOF_
-	 
+         
         sudo apt-get update
         sudo apt-get -y install ubuntu-desktop        
         sudo service gdm3 start
 _OUTER_EOF_
             ;;
-	
-	* )
-	    EH_problem "Unsupported containerBaseBox=${containerBaseBox}"
-	    ;;
+        
+        * )
+            EH_problem "Unsupported containerBaseBox=${containerBaseBox}"
+            ;;
     esac
     lpReturn
 }
@@ -1101,7 +1101,7 @@ function vis_vagrantFile_stdout {
 *** \$1 (vmNameQualifier) [Optional] could be a digit (vmNameQualifier) that identifies an instance.
 *** \$2 (callable) [Optional] passed to vagrantFile_bottomPart.
 _EOF_
-		       }
+                       }
     local thisFunc=${G_thisFunc}
     EH_assert [[ $# -lt 3 ]]
 
@@ -1115,10 +1115,10 @@ _EOF_
     local vmNameQualifier=""
     
     if [ $# -eq 0 ] ; then
-	vmNameQualifier=""
+        vmNameQualifier=""
     else
-	vmNameQualifier="$1"
-	shift
+        vmNameQualifier="$1"
+        shift
     fi
 
     local dateTag=$( date +%Y%m%d%H%M%S )
@@ -1187,7 +1187,7 @@ function vis_vagrantFile_bottomPart {
 ** Output a vagrantfile using the sysChar BxO.
 *** \$1 (callable) [Optional] would produce bottom part instead of default.
 _EOF_
-		       }
+                       }
     local thisFunc=${G_thisFunc}
     EH_assert [[ $# -lt 3 ]]
     EH_assert [[ $# -gt 0 ]]
@@ -1201,9 +1201,9 @@ _EOF_
     local shellProvisioning=""
 
     if [ $# -eq 0 ] ; then
-	shellProvisioning=baseContainer
+        shellProvisioning=baseContainer
     else
-	shellProvisioning=$1
+        shellProvisioning=$1
     fi
 
     function baseContainer {
