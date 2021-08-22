@@ -152,15 +152,15 @@ _EOF_
     retVal=0 
 
     if [ $# -eq 0 ] ; then
-	while read this ; do
-	    vis_openUrlNewTabOne ${this}
-	    opDo sleep 1
-	done
+        while read this ; do
+            vis_openUrlNewTabOne ${this}
+            opDo sleep 1
+        done
     else
-	for this in $@; do
-	    vis_openUrlNewTabOne ${this}
-	    opDo sleep 1
-	done
+        for this in $@; do
+            vis_openUrlNewTabOne ${this}
+            opDo sleep 1
+        done
     fi
 
     lpReturn ${retVal}
@@ -183,13 +183,13 @@ _EOF_
     retVal=0 
 
     if [ $# -eq 0 ] ; then
-	while read this ; do
-	    vis_openUrlNewTabOne ${this}
-	done
+        while read this ; do
+            vis_openUrlNewTabOne ${this}
+        done
     else
-	for this in $@; do
-	    vis_openUrlNewTabOne ${this}
-	done
+        for this in $@; do
+            vis_openUrlNewTabOne ${this}
+        done
     fi
 
     lpReturn ${retVal}

@@ -80,10 +80,10 @@ function G_postParamHook {
     # lpCurrentsGet
 
     if [ ! -z "${RegReqFile}" ] ; then
-	RegReqFile=$( FN_absolutePathGet ${RegReqFile} )
+        RegReqFile=$( FN_absolutePathGet ${RegReqFile} )
     fi
     if [ ! -z "${bxeDesc}" ] ; then
-     	bxeDesc=$( FN_absolutePathGet ${bxeDesc} )
+        bxeDesc=$( FN_absolutePathGet ${bxeDesc} )
     fi
 }
 
@@ -111,8 +111,8 @@ function vis_examples {
     local oneRegReqFile="$( ls ${regReqInfoBasePath}/real/system/real_system_bisos.2*.REGREQ | head -1 )"
     
     if [ -z "${oneRegReqFile}" ] ; then
-	oneRegReqFile="Missing"
-	EH_problem "Missing oneRegReqFile"
+        oneRegReqFile="Missing"
+        EH_problem "Missing oneRegReqFile"
     fi
 
     local registrarPrivBase=$( registrarPrivBxe.sh -i registrarBaseGet )

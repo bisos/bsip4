@@ -234,96 +234,96 @@ _EOF_
     local srcPkgSelector=""
 
     if [ $# -eq 0 ] ; then
-	srcPkgSelector="latest"
+        srcPkgSelector="latest"
     else
-	srcPkgSelector="$1"
+        srcPkgSelector="$1"
     fi
    
     opDo emacsVerCanonicalized    
 
     function srcPkgSpecPrep_emacs28_git {
-	srcPkgName="emacs-28"
+        srcPkgName="emacs-28"
        
-	srcBuildScript=""
-	srcBuildScriptTmpDir=/tmp/"${srcPkgName}"
-	
-	srcObtainBaseDir="/bisos/var/srcPkgs/${srcPkgName}"
-	# -- depth 1 of git clone, copies only the latest revision 
-	#obtainCmndLine="git clone --depth 1 git://git.sv.gnu.org/emacs.git"
-	obtainCmndLine="obtainOrUpdateSrc_emacs28"
+        srcBuildScript=""
+        srcBuildScriptTmpDir=/tmp/"${srcPkgName}"
+        
+        srcObtainBaseDir="/bisos/var/srcPkgs/${srcPkgName}"
+        # -- depth 1 of git clone, copies only the latest revision 
+        #obtainCmndLine="git clone --depth 1 git://git.sv.gnu.org/emacs.git"
+        obtainCmndLine="obtainOrUpdateSrc_emacs28"
 
-	srcBuildBaseDir="/bisos/var/srcPkgs/${srcPkgName}/emacs"	
+        srcBuildBaseDir="/bisos/var/srcPkgs/${srcPkgName}/emacs"        
     }
 
     function srcPkgSpecPrep_emacs27_git {
-	srcPkgName="emacs-27"
-	srcBuildScript=""
-	srcBuildScriptTmpDir=/tmp/"${srcPkgName}"
+        srcPkgName="emacs-27"
+        srcBuildScript=""
+        srcBuildScriptTmpDir=/tmp/"${srcPkgName}"
 
-	srcObtainBaseDir="/bisos/var/srcPkgs/${srcPkgName}"
-	# -- depth 1 of git clone, copies only the latest revision 
-	obtainCmndLine="git clone --single-branch -b emacs-27 git://git.sv.gnu.org/emacs.git"
+        srcObtainBaseDir="/bisos/var/srcPkgs/${srcPkgName}"
+        # -- depth 1 of git clone, copies only the latest revision 
+        obtainCmndLine="git clone --single-branch -b emacs-27 git://git.sv.gnu.org/emacs.git"
 
-	srcBuildBaseDir="/bisos/var/srcPkgs/${srcPkgName}/emacs"	
+        srcBuildBaseDir="/bisos/var/srcPkgs/${srcPkgName}/emacs"        
     }
 
     function srcPkgSpecPrep_emacs27_tar {
-	srcPkgName="emacs-27"
-	srcBuildScript=""
-	srcBuildScriptTmpDir=/tmp/"${srcPkgName}"
-	srcBuildBaseDir="/bisos/var/srcPkgs/${srcPkgName}-tar"
+        srcPkgName="emacs-27"
+        srcBuildScript=""
+        srcBuildScriptTmpDir=/tmp/"${srcPkgName}"
+        srcBuildBaseDir="/bisos/var/srcPkgs/${srcPkgName}-tar"
 
         distEmacsTarFile=${srcPkgName}.tar
-	distEmacsTarUrl="http://ftp.gnu.org/pub/gnu/emacs/${distEmacsTarFile}.gz"
+        distEmacsTarUrl="http://ftp.gnu.org/pub/gnu/emacs/${distEmacsTarFile}.gz"
     }
 
     
     function srcPkgSpecPrep_dispatch {
-	local emacsVer="$1"
-	
-	if [ "${srcObtainForm}" == "git" ] ; then
-	    opDo srcPkgSpecPrep_${emacsVer}_git
-	elif [ "${srcObtainForm}" == "tar" ] ; then
-	    opDo srcPkgSpecPrep_${emacsVer}_tar
-	else
-	    EH_problem "Bad srcObtainForm -- specify srcObtainForm='git|tar'"
-	    lpReturn 101
-	fi
+        local emacsVer="$1"
+        
+        if [ "${srcObtainForm}" == "git" ] ; then
+            opDo srcPkgSpecPrep_${emacsVer}_git
+        elif [ "${srcObtainForm}" == "tar" ] ; then
+            opDo srcPkgSpecPrep_${emacsVer}_tar
+        else
+            EH_problem "Bad srcObtainForm -- specify srcObtainForm='git|tar'"
+            lpReturn 101
+        fi
     }
 
     if [ "${srcPkgSelector}" == "emacs28" ] ; then
-	opDoRet srcPkgSpecPrep_dispatch emacs28
+        opDoRet srcPkgSpecPrep_dispatch emacs28
 
     elif [ "${srcPkgSelector}" == "emacs27" ] ; then
-	opDoRet srcPkgSpecPrep_dispatch emacs27
-	
+        opDoRet srcPkgSpecPrep_dispatch emacs27
+        
     elif [ "${srcPkgSelector}" == "emacs-26" ] ; then
-	# http://ftp.gnu.org/pub/gnu/emacs/
-	srcPkgName="emacs-26.3"
-	srcObtainBaseDir="/bisos/var/srcPkgs/${srcPkgName}"
-	
+        # http://ftp.gnu.org/pub/gnu/emacs/
+        srcPkgName="emacs-26.3"
+        srcObtainBaseDir="/bisos/var/srcPkgs/${srcPkgName}"
+        
         distEmacsTarFile=${srcPkgName}.tar
-	distEmacsTarUrl="http://ftp.gnu.org/pub/gnu/emacs/${distEmacsTarFile}.gz"
+        distEmacsTarUrl="http://ftp.gnu.org/pub/gnu/emacs/${distEmacsTarFile}.gz"
 
-	obtainCmndLine="wget ${distEmacsTarUrl}"
-	prepCmndLine="tar -zxf ${distEmacsTarFile}.gz"
+        obtainCmndLine="wget ${distEmacsTarUrl}"
+        prepCmndLine="tar -zxf ${distEmacsTarFile}.gz"
 
-	srcBuildScriptTmpDir=/tmp/"${srcPkgName}"
-	srcBuildBaseDir="/bisos/var/srcPkgs/${srcPkgName}/${srcPkgName}"
-    	srcBuildScript="vis_srcBuild_26"
+        srcBuildScriptTmpDir=/tmp/"${srcPkgName}"
+        srcBuildBaseDir="/bisos/var/srcPkgs/${srcPkgName}/${srcPkgName}"
+        srcBuildScript="vis_srcBuild_26"
 
-    	srcInstallScript="vis_srcBinInstall_common"	
+        srcInstallScript="vis_srcBinInstall_common"     
 
-    elif [ "${srcPkgSelector}" == "emacs-25" ] ; then		
-	srcPkgName="emacs-25.1"
-	srcBuildScript=""
-	srcBuildScriptTmpDir=/tmp/"${srcPkgName}"
-	srcBuildBaseDir="/bisos/var/srcPkgs/${srcPkgName}-tar"
+    elif [ "${srcPkgSelector}" == "emacs-25" ] ; then           
+        srcPkgName="emacs-25.1"
+        srcBuildScript=""
+        srcBuildScriptTmpDir=/tmp/"${srcPkgName}"
+        srcBuildBaseDir="/bisos/var/srcPkgs/${srcPkgName}-tar"
 
         distEmacsTarFile=${srcPkgName}.tar
-	distEmacsTarUrl="http://ftp.gnu.org/pub/gnu/emacs/${distEmacsTarFile}.gz"
+        distEmacsTarUrl="http://ftp.gnu.org/pub/gnu/emacs/${distEmacsTarFile}.gz"
     else
-	EH_problem "Bad srcPkgSelector=${srcPkgSelector}"
+        EH_problem "Bad srcPkgSelector=${srcPkgSelector}"
     fi
 
     # NOTYET split the description based on srcObtainForm
@@ -337,7 +337,7 @@ _EOF_
     echo "prepCmndLine=${prepCmndLine}"    
 
     lpReturn
-}	
+}       
 
 
 _CommentBegin_
@@ -352,11 +352,11 @@ _CommentEnd_
 
 function emacsVerCanonicalized {
     if [ "${srcPkgSelector}" == "latest" ] ; then
-	srcPkgSelector=${emacsVerLatest}
+        srcPkgSelector=${emacsVerLatest}
     elif [ "${srcPkgSelector}" == "current" ] ; then
-	srcPkgSelector=${emacsVerCurrent}
+        srcPkgSelector=${emacsVerCurrent}
     else
-	opDo doNothing
+        opDo doNothing
     fi
 }
 
@@ -376,9 +376,9 @@ _EOF_
     local srcPkgSelector=""
 
     if [ $# -eq 0 ] ; then
-	srcPkgSelector="latest"
+        srcPkgSelector="latest"
     else
-	srcPkgSelector="$1"
+        srcPkgSelector="$1"
     fi
 
     opDo emacsVerCanonicalized    
@@ -386,7 +386,7 @@ _EOF_
     opDo vis_srcEnvSetup_${srcPkgSelector}
 
     lpReturn
-}	
+}       
 
 function vis_srcEnvSetup_buildPreRequisites {
     G_funcEntry
@@ -433,244 +433,244 @@ _EOF_
     retVal=$?
     
     if [ ${retVal} != 0 ] ; then
-	lpDo debAptSourcesManage.sh -h -v -n showRun -i enableDebSrc
+        lpDo debAptSourcesManage.sh -h -v -n showRun -i enableDebSrc
     fi
 
     # With sources enabled, we now can run: apt-get -y build-dep emacs
 
     if [ "${opRunDistGeneration}" == "2004" ] ; then
-	
-	# -------- Development Pkgs -----------
-	#
-	opDo apt-get -y build-dep emacs
-	
-	# On a fresh ubuntu 20.04 system -- for emacs-gtk is emacs26 as distributed with 20.04
-	# The following NEW packages will be installed:
-	# autopoint debhelper dh-autoreconf dh-strip-nondeterminism dwz imagemagick
-	# imagemagick-6.q16 libacl1-dev libasound2-dev libattr1-dev libbz2-dev
-	# libdebhelper-perl libdjvulibre-dev libexif-dev libfile-stripnondeterminism-perl
-	# libgpm-dev libilmbase-dev liblcms2-dev liblockfile-bin liblockfile-dev
-	# liblockfile1 liblqr-1-0-dev libm17n-dev libmagick++-6-headers libmagick++-6.q16-8
-	# libmagick++-6.q16-dev libmagickcore-6-arch-config libmagickcore-6-headers
-	# libmagickcore-6.q16-6-extra libmagickcore-6.q16-dev libmagickwand-6-headers
-	# libmagickwand-6.q16-dev libopenexr-dev libotf-dev librsvg2-dev
-	# libsub-override-perl libsystemd-dev libwmf-dev po-debconf quilt sharutils xaw3dg
-	# xaw3dg-dev xutils-dev
-	#
-	
-	# emacs-gtk is emacs26 as distributed with 20.04
-	#  apt-cache depends emacs-gtk | grep Depends: | grep -v emacs | cut -d ':' -f 2 | sed -e 's/^/opDo apt-get -y install /'
-	# ----- BEGIN  (emacs26 on 20.04) ------------
-	# -------- Run Time Pkgs -----------
-	opDo apt-get -y install  libacl1
-	opDo apt-get -y install  libasound2
-	opDo apt-get -y install  libc6
-	opDo apt-get -y install  libcairo2
-	opDo apt-get -y install  libdbus-1-3
-	opDo apt-get -y install  libfontconfig1
-	opDo apt-get -y install  libfreetype6
-	opDo apt-get -y install  libgdk-pixbuf2.0-0
-	opDo apt-get -y install  libgif7
-	opDo apt-get -y install  libglib2.0-0
-	opDo apt-get -y install  libgnutls30
-	opDo apt-get -y install  libgpm2
-	opDo apt-get -y install  libgtk-3-0
-	opDo apt-get -y install  libice6
-	opDo apt-get -y install  libjpeg8
-	opDo apt-get -y install  liblcms2-2
-	opDo apt-get -y install  libm17n-0
-	opDo apt-get -y install  libmagickcore-6.q16-6
-	opDo apt-get -y install  libmagickwand-6.q16-6
-	opDo apt-get -y install  libotf0
-	opDo apt-get -y install  libpango-1.0-0
-	opDo apt-get -y install  libpng16-16
-	opDo apt-get -y install  librsvg2-2
-	opDo apt-get -y install  libselinux1
-	opDo apt-get -y install  libsm6
-	opDo apt-get -y install  libsystemd0
-	opDo apt-get -y install  libtiff5
-	opDo apt-get -y install  libtinfo6
-	opDo apt-get -y install  libx11-6
-	opDo apt-get -y install  libxext6
-	opDo apt-get -y install  libxfixes3
-	opDo apt-get -y install  libxft2
-	opDo apt-get -y install  libxml2
-	opDo apt-get -y install  libxpm4
-	opDo apt-get -y install  libxrender1
-	opDo apt-get -y install  zlib1g
-	# ----- END  (emacs26 on ubuntu 20.04) ------------
+        
+        # -------- Development Pkgs -----------
+        #
+        opDo apt-get -y build-dep emacs
+        
+        # On a fresh ubuntu 20.04 system -- for emacs-gtk is emacs26 as distributed with 20.04
+        # The following NEW packages will be installed:
+        # autopoint debhelper dh-autoreconf dh-strip-nondeterminism dwz imagemagick
+        # imagemagick-6.q16 libacl1-dev libasound2-dev libattr1-dev libbz2-dev
+        # libdebhelper-perl libdjvulibre-dev libexif-dev libfile-stripnondeterminism-perl
+        # libgpm-dev libilmbase-dev liblcms2-dev liblockfile-bin liblockfile-dev
+        # liblockfile1 liblqr-1-0-dev libm17n-dev libmagick++-6-headers libmagick++-6.q16-8
+        # libmagick++-6.q16-dev libmagickcore-6-arch-config libmagickcore-6-headers
+        # libmagickcore-6.q16-6-extra libmagickcore-6.q16-dev libmagickwand-6-headers
+        # libmagickwand-6.q16-dev libopenexr-dev libotf-dev librsvg2-dev
+        # libsub-override-perl libsystemd-dev libwmf-dev po-debconf quilt sharutils xaw3dg
+        # xaw3dg-dev xutils-dev
+        #
+        
+        # emacs-gtk is emacs26 as distributed with 20.04
+        #  apt-cache depends emacs-gtk | grep Depends: | grep -v emacs | cut -d ':' -f 2 | sed -e 's/^/opDo apt-get -y install /'
+        # ----- BEGIN  (emacs26 on 20.04) ------------
+        # -------- Run Time Pkgs -----------
+        opDo apt-get -y install  libacl1
+        opDo apt-get -y install  libasound2
+        opDo apt-get -y install  libc6
+        opDo apt-get -y install  libcairo2
+        opDo apt-get -y install  libdbus-1-3
+        opDo apt-get -y install  libfontconfig1
+        opDo apt-get -y install  libfreetype6
+        opDo apt-get -y install  libgdk-pixbuf2.0-0
+        opDo apt-get -y install  libgif7
+        opDo apt-get -y install  libglib2.0-0
+        opDo apt-get -y install  libgnutls30
+        opDo apt-get -y install  libgpm2
+        opDo apt-get -y install  libgtk-3-0
+        opDo apt-get -y install  libice6
+        opDo apt-get -y install  libjpeg8
+        opDo apt-get -y install  liblcms2-2
+        opDo apt-get -y install  libm17n-0
+        opDo apt-get -y install  libmagickcore-6.q16-6
+        opDo apt-get -y install  libmagickwand-6.q16-6
+        opDo apt-get -y install  libotf0
+        opDo apt-get -y install  libpango-1.0-0
+        opDo apt-get -y install  libpng16-16
+        opDo apt-get -y install  librsvg2-2
+        opDo apt-get -y install  libselinux1
+        opDo apt-get -y install  libsm6
+        opDo apt-get -y install  libsystemd0
+        opDo apt-get -y install  libtiff5
+        opDo apt-get -y install  libtinfo6
+        opDo apt-get -y install  libx11-6
+        opDo apt-get -y install  libxext6
+        opDo apt-get -y install  libxfixes3
+        opDo apt-get -y install  libxft2
+        opDo apt-get -y install  libxml2
+        opDo apt-get -y install  libxpm4
+        opDo apt-get -y install  libxrender1
+        opDo apt-get -y install  zlib1g
+        # ----- END  (emacs26 on ubuntu 20.04) ------------
 
     elif [ "${opRunDistGeneration}" == "1804" ] ; then
 
-	# -------- Development Pkgs -----------
-	#
-	opDo apt-get -y build-dep emacs25
-	
-	# On a fresh ubuntu 18.04 system
-	# The following NEW packages will be installed:
-	# 
+        # -------- Development Pkgs -----------
+        #
+        opDo apt-get -y build-dep emacs25
+        
+        # On a fresh ubuntu 18.04 system
+        # The following NEW packages will be installed:
+        # 
 
-	# emacs25 as distributed with 18.04
-	#  apt-cache depends emacs25 | grep Depends: | grep -v emacs | cut -d ':' -f 2 | sed -e 's/^/opDo apt-get -y install /'
-	# ----- BEGIN  (emacs25 on 18.04) ------------
-	# -------- Run Time Pkgs -----------
-	opDo apt-get -y install  gconf-service
-	opDo apt-get -y install  libasound2
-	opDo apt-get -y install  libc6
-	opDo apt-get -y install  libcairo2
-	opDo apt-get -y install  libdbus-1-3
-	opDo apt-get -y install  libfontconfig1
-	opDo apt-get -y install  libfreetype6
-	opDo apt-get -y install  libgconf-2-4
-	opDo apt-get -y install  libgdk-pixbuf2.0-0
-	opDo apt-get -y install  libgif7
-	opDo apt-get -y install  libglib2.0-0
-	opDo apt-get -y install  libgnutls30
-	opDo apt-get -y install  libgpm2
-	opDo apt-get -y install  libgtk-3-0
-	opDo apt-get -y install  libice6
-	opDo apt-get -y install  libjpeg8
-	opDo apt-get -y install  liblockfile1
-	opDo apt-get -y install  libm17n-0
-	opDo apt-get -y install  libmagickcore-6.q16-3
-	opDo apt-get -y install  libmagickwand-6.q16-3
-	opDo apt-get -y install  libotf0
-	opDo apt-get -y install  libpango-1.0-0
-	opDo apt-get -y install  libpng16-16
-	opDo apt-get -y install  librsvg2-2
-	opDo apt-get -y install  libselinux1
-	opDo apt-get -y install  libsm6
-	opDo apt-get -y install  libtiff5
-	opDo apt-get -y install  libtinfo5
-	opDo apt-get -y install  libx11-6
-	opDo apt-get -y install  libx11-xcb1
-	opDo apt-get -y install  libxcb1
-	opDo apt-get -y install  libxfixes3
-	opDo apt-get -y install  libxft2
-	opDo apt-get -y install  libxml2
-	opDo apt-get -y install  libxpm4
-	opDo apt-get -y install  libxrender1
-	opDo apt-get -y install  zlib1g
-	# ----- END  (emacs25 on ubuntu 18.04) ------------
-	
+        # emacs25 as distributed with 18.04
+        #  apt-cache depends emacs25 | grep Depends: | grep -v emacs | cut -d ':' -f 2 | sed -e 's/^/opDo apt-get -y install /'
+        # ----- BEGIN  (emacs25 on 18.04) ------------
+        # -------- Run Time Pkgs -----------
+        opDo apt-get -y install  gconf-service
+        opDo apt-get -y install  libasound2
+        opDo apt-get -y install  libc6
+        opDo apt-get -y install  libcairo2
+        opDo apt-get -y install  libdbus-1-3
+        opDo apt-get -y install  libfontconfig1
+        opDo apt-get -y install  libfreetype6
+        opDo apt-get -y install  libgconf-2-4
+        opDo apt-get -y install  libgdk-pixbuf2.0-0
+        opDo apt-get -y install  libgif7
+        opDo apt-get -y install  libglib2.0-0
+        opDo apt-get -y install  libgnutls30
+        opDo apt-get -y install  libgpm2
+        opDo apt-get -y install  libgtk-3-0
+        opDo apt-get -y install  libice6
+        opDo apt-get -y install  libjpeg8
+        opDo apt-get -y install  liblockfile1
+        opDo apt-get -y install  libm17n-0
+        opDo apt-get -y install  libmagickcore-6.q16-3
+        opDo apt-get -y install  libmagickwand-6.q16-3
+        opDo apt-get -y install  libotf0
+        opDo apt-get -y install  libpango-1.0-0
+        opDo apt-get -y install  libpng16-16
+        opDo apt-get -y install  librsvg2-2
+        opDo apt-get -y install  libselinux1
+        opDo apt-get -y install  libsm6
+        opDo apt-get -y install  libtiff5
+        opDo apt-get -y install  libtinfo5
+        opDo apt-get -y install  libx11-6
+        opDo apt-get -y install  libx11-xcb1
+        opDo apt-get -y install  libxcb1
+        opDo apt-get -y install  libxfixes3
+        opDo apt-get -y install  libxft2
+        opDo apt-get -y install  libxml2
+        opDo apt-get -y install  libxpm4
+        opDo apt-get -y install  libxrender1
+        opDo apt-get -y install  zlib1g
+        # ----- END  (emacs25 on ubuntu 18.04) ------------
+        
     elif [ "${opRunDistGeneration}" == "1604" ] ; then
 
-	# -------- Development Pkgs -----------
-	#
-	opDo apt-get -y build-dep emacs24
-	
-	# On a fresh ubuntu 16.04 system
-	# The following NEW packages will be installed:
-	# 
-	# bsd-mailx gir1.2-gconf-2.0 libacl1-dev libasound2-dev libattr1-dev libbz2-dev
-	# libdjvulibre-dev libexif-dev libgconf2-dev libgpm-dev libgraphviz-dev
-	# libgvc6-plugins-gtk libilmbase-dev libjasper-dev liblcms2-dev liblockfile-dev
-	# liblqr-1-0-dev libmagick++-6-headers libmagick++-6.q16-dev libmagick++-dev
-	# libmagickcore-6-arch-config libmagickcore-6-headers libmagickcore-6.q16-dev
-	# libmagickwand-6-headers libmagickwand-6.q16-dev libopenexr-dev libselinux1-dev
-	# libsepol1-dev libwmf-dev libxdot4 quilt xaw3dg-dev xutils-dev
+        # -------- Development Pkgs -----------
+        #
+        opDo apt-get -y build-dep emacs24
+        
+        # On a fresh ubuntu 16.04 system
+        # The following NEW packages will be installed:
+        # 
+        # bsd-mailx gir1.2-gconf-2.0 libacl1-dev libasound2-dev libattr1-dev libbz2-dev
+        # libdjvulibre-dev libexif-dev libgconf2-dev libgpm-dev libgraphviz-dev
+        # libgvc6-plugins-gtk libilmbase-dev libjasper-dev liblcms2-dev liblockfile-dev
+        # liblqr-1-0-dev libmagick++-6-headers libmagick++-6.q16-dev libmagick++-dev
+        # libmagickcore-6-arch-config libmagickcore-6-headers libmagickcore-6.q16-dev
+        # libmagickwand-6-headers libmagickwand-6.q16-dev libopenexr-dev libselinux1-dev
+        # libsepol1-dev libwmf-dev libxdot4 quilt xaw3dg-dev xutils-dev
 
-	# emacs24 as distributed with 16.04
-	#  apt-cache depends emacs24 | grep Depends: | grep -v emacs | cut -d ':' -f 2 | sed -e 's/^/opDo apt-get -y install /'
-	# ----- BEGIN  (emacs24 on 16.04) ------------
-	# -------- Run Time Pkgs -----------
-	opDo apt-get -y install  gconf-service
-	opDo apt-get -y install  libacl1
-	opDo apt-get -y install  libasound2
-	opDo apt-get -y install  libc6
-	opDo apt-get -y install  libcairo2
-	opDo apt-get -y install  libdbus-1-3
-	opDo apt-get -y install  libfontconfig1
-	opDo apt-get -y install  libfreetype6
-	opDo apt-get -y install  libgconf-2-4
-	opDo apt-get -y install  libgdk-pixbuf2.0-0
-	opDo apt-get -y install  libgif7
-	opDo apt-get -y install  libglib2.0-0
-	opDo apt-get -y install  libgnutls30
-	opDo apt-get -y install  libgpm2
-	opDo apt-get -y install  libgtk-3-0
-	opDo apt-get -y install  libice6
-	opDo apt-get -y install  libjpeg8
-	opDo apt-get -y install  libm17n-0
-	opDo apt-get -y install  libmagickcore-6.q16-2
-	opDo apt-get -y install  libmagickwand-6.q16-2
-	opDo apt-get -y install  libotf0
-	opDo apt-get -y install  libpango-1.0-0
-	opDo apt-get -y install  libpng12-0
-	opDo apt-get -y install  librsvg2-2
-	opDo apt-get -y install  libselinux1
-	opDo apt-get -y install  libsm6
-	opDo apt-get -y install  libtiff5
-	opDo apt-get -y install  libtinfo5
-	opDo apt-get -y install  libx11-6
-	opDo apt-get -y install  libxft2
-	opDo apt-get -y install  libxml2
-	opDo apt-get -y install  libxpm4
-	opDo apt-get -y install  libxrender1
-	opDo apt-get -y install  zlib1g
-	# ----- END  (emacs24 on ubuntu 16.04) ------------
+        # emacs24 as distributed with 16.04
+        #  apt-cache depends emacs24 | grep Depends: | grep -v emacs | cut -d ':' -f 2 | sed -e 's/^/opDo apt-get -y install /'
+        # ----- BEGIN  (emacs24 on 16.04) ------------
+        # -------- Run Time Pkgs -----------
+        opDo apt-get -y install  gconf-service
+        opDo apt-get -y install  libacl1
+        opDo apt-get -y install  libasound2
+        opDo apt-get -y install  libc6
+        opDo apt-get -y install  libcairo2
+        opDo apt-get -y install  libdbus-1-3
+        opDo apt-get -y install  libfontconfig1
+        opDo apt-get -y install  libfreetype6
+        opDo apt-get -y install  libgconf-2-4
+        opDo apt-get -y install  libgdk-pixbuf2.0-0
+        opDo apt-get -y install  libgif7
+        opDo apt-get -y install  libglib2.0-0
+        opDo apt-get -y install  libgnutls30
+        opDo apt-get -y install  libgpm2
+        opDo apt-get -y install  libgtk-3-0
+        opDo apt-get -y install  libice6
+        opDo apt-get -y install  libjpeg8
+        opDo apt-get -y install  libm17n-0
+        opDo apt-get -y install  libmagickcore-6.q16-2
+        opDo apt-get -y install  libmagickwand-6.q16-2
+        opDo apt-get -y install  libotf0
+        opDo apt-get -y install  libpango-1.0-0
+        opDo apt-get -y install  libpng12-0
+        opDo apt-get -y install  librsvg2-2
+        opDo apt-get -y install  libselinux1
+        opDo apt-get -y install  libsm6
+        opDo apt-get -y install  libtiff5
+        opDo apt-get -y install  libtinfo5
+        opDo apt-get -y install  libx11-6
+        opDo apt-get -y install  libxft2
+        opDo apt-get -y install  libxml2
+        opDo apt-get -y install  libxpm4
+        opDo apt-get -y install  libxrender1
+        opDo apt-get -y install  zlib1g
+        # ----- END  (emacs24 on ubuntu 16.04) ------------
 
     elif [ "${opRunDistGeneration}" == "10" ] ; then
 
-	#
-	# This is debain 10 (buster_
-	# -------- Development Pkgs -----------
-	#
-	opDo apt-get -y build-dep emacs
-	
-	# emacs (26) as distributed with Debian 10
-	#  apt-cache depends emacs-gtk | grep Depends: | grep -v emacs | cut -d ':' -f 2 | sed -e 's/^/opDo apt-get -y install /'
-	# ----- BEGIN  (emacs 26 on Debian 10) ------------
-	# -------- Run Time Pkgs -----------
+        #
+        # This is debain 10 (buster_
+        # -------- Development Pkgs -----------
+        #
+        opDo apt-get -y build-dep emacs
+        
+        # emacs (26) as distributed with Debian 10
+        #  apt-cache depends emacs-gtk | grep Depends: | grep -v emacs | cut -d ':' -f 2 | sed -e 's/^/opDo apt-get -y install /'
+        # ----- BEGIN  (emacs 26 on Debian 10) ------------
+        # -------- Run Time Pkgs -----------
 
-	opDo apt-get -y install  libacl1
-	opDo apt-get -y install  libasound2
-	opDo apt-get -y install  libatk1.0-0
-	opDo apt-get -y install  libc6
-	opDo apt-get -y install  libcairo-gobject2
-	opDo apt-get -y install  libcairo2
-	opDo apt-get -y install  libdbus-1-3
-	opDo apt-get -y install  libfontconfig1
-	opDo apt-get -y install  libfreetype6
-	opDo apt-get -y install  libgdk-pixbuf2.0-0
-	opDo apt-get -y install  libgif7
-	opDo apt-get -y install  libglib2.0-0
-	opDo apt-get -y install  libgnutls30
-	opDo apt-get -y install  libgomp1
-	opDo apt-get -y install  libgpm2
-	opDo apt-get -y install  libgtk-3-0
-	opDo apt-get -y install  libice6
-	opDo apt-get -y install  libjpeg62-turbo
-	opDo apt-get -y install  liblcms2-2
-	opDo apt-get -y install  libm17n-0
-	opDo apt-get -y install  libmagickcore-6.q16-6
-	opDo apt-get -y install  libmagickwand-6.q16-6
-	opDo apt-get -y install  libotf0
-	opDo apt-get -y install  libpango-1.0-0
-	opDo apt-get -y install  libpangocairo-1.0-0
-	opDo apt-get -y install  libpng16-16
-	opDo apt-get -y install  librsvg2-2
-	opDo apt-get -y install  libselinux1
-	opDo apt-get -y install  libsm6
-	opDo apt-get -y install  libsystemd0
-	opDo apt-get -y install  libtiff5
-	opDo apt-get -y install  libtinfo6
-	opDo apt-get -y install  libx11-6
-	opDo apt-get -y install  libx11-xcb1
-	opDo apt-get -y install  libxcb1
-	opDo apt-get -y install  libxext6
-	opDo apt-get -y install  libxfixes3
-	opDo apt-get -y install  libxft2
-	opDo apt-get -y install  libxinerama1
-	opDo apt-get -y install  libxml2
-	opDo apt-get -y install  libxpm4
-	opDo apt-get -y install  libxrandr2
-	opDo apt-get -y install  libxrender1
-	opDo apt-get -y install  zlib1g
-	# ----- END  (emacs (26) on Debian 10) ------------
-	
+        opDo apt-get -y install  libacl1
+        opDo apt-get -y install  libasound2
+        opDo apt-get -y install  libatk1.0-0
+        opDo apt-get -y install  libc6
+        opDo apt-get -y install  libcairo-gobject2
+        opDo apt-get -y install  libcairo2
+        opDo apt-get -y install  libdbus-1-3
+        opDo apt-get -y install  libfontconfig1
+        opDo apt-get -y install  libfreetype6
+        opDo apt-get -y install  libgdk-pixbuf2.0-0
+        opDo apt-get -y install  libgif7
+        opDo apt-get -y install  libglib2.0-0
+        opDo apt-get -y install  libgnutls30
+        opDo apt-get -y install  libgomp1
+        opDo apt-get -y install  libgpm2
+        opDo apt-get -y install  libgtk-3-0
+        opDo apt-get -y install  libice6
+        opDo apt-get -y install  libjpeg62-turbo
+        opDo apt-get -y install  liblcms2-2
+        opDo apt-get -y install  libm17n-0
+        opDo apt-get -y install  libmagickcore-6.q16-6
+        opDo apt-get -y install  libmagickwand-6.q16-6
+        opDo apt-get -y install  libotf0
+        opDo apt-get -y install  libpango-1.0-0
+        opDo apt-get -y install  libpangocairo-1.0-0
+        opDo apt-get -y install  libpng16-16
+        opDo apt-get -y install  librsvg2-2
+        opDo apt-get -y install  libselinux1
+        opDo apt-get -y install  libsm6
+        opDo apt-get -y install  libsystemd0
+        opDo apt-get -y install  libtiff5
+        opDo apt-get -y install  libtinfo6
+        opDo apt-get -y install  libx11-6
+        opDo apt-get -y install  libx11-xcb1
+        opDo apt-get -y install  libxcb1
+        opDo apt-get -y install  libxext6
+        opDo apt-get -y install  libxfixes3
+        opDo apt-get -y install  libxft2
+        opDo apt-get -y install  libxinerama1
+        opDo apt-get -y install  libxml2
+        opDo apt-get -y install  libxpm4
+        opDo apt-get -y install  libxrandr2
+        opDo apt-get -y install  libxrender1
+        opDo apt-get -y install  zlib1g
+        # ----- END  (emacs (26) on Debian 10) ------------
+        
     else
-	EH_problem "Unsupported Distro and DistroGeneration=${opRunDistGeneration}"
+        EH_problem "Unsupported Distro and DistroGeneration=${opRunDistGeneration}"
     fi
 }
 
@@ -699,63 +699,63 @@ _EOF_
     opDo vis_srcEnvSetup_distroGeneration    
     
     if [ "${opRunDistGeneration}" == "2004" ] ; then
-	#
+        #
 
-	opDo apt-get -y install  libjpeg-dev
-	opDo apt-get -y install  libtiff-dev
-	opDo apt-get -y install  libncurses5-dev
-	opDo apt-get -y install  libgif-dev
-	opDo apt-get -y install  libpng-dev
-	opDo apt-get -y install  librsvg2-dev
-	opDo apt-get -y install  libotf-dev
-	
-	opDo apt-get -y install  libgnutls28-dev # NOTYET double check on need for this
+        opDo apt-get -y install  libjpeg-dev
+        opDo apt-get -y install  libtiff-dev
+        opDo apt-get -y install  libncurses5-dev
+        opDo apt-get -y install  libgif-dev
+        opDo apt-get -y install  libpng-dev
+        opDo apt-get -y install  librsvg2-dev
+        opDo apt-get -y install  libotf-dev
+        
+        opDo apt-get -y install  libgnutls28-dev # NOTYET double check on need for this
 
-	opDo apt-get -y install  libwebkit2gtk-4.0-dev
-	opDo apt-get -y install  libwebkit2gtk-4.0-37-gtk2  # NOTYET, is this needed
+        opDo apt-get -y install  libwebkit2gtk-4.0-dev
+        opDo apt-get -y install  libwebkit2gtk-4.0-37-gtk2  # NOTYET, is this needed
 
-	opDo apt-get -y install  libm17n-dev
-	opDo apt-get -y install  libharfbuzz-dev     # shaping for farsi/arabic
+        opDo apt-get -y install  libm17n-dev
+        opDo apt-get -y install  libharfbuzz-dev     # shaping for farsi/arabic
 
     elif [ "${opRunDistGeneration}" == "10" ] ; then
-	#
+        #
 
-	opDo apt-get -y install  libjpeg-dev
-	opDo apt-get -y install  libtiff-dev
-	opDo apt-get -y install  libncurses5-dev
-	opDo apt-get -y install  libgif-dev
-	opDo apt-get -y install  libpng-dev
-	opDo apt-get -y install  librsvg2-dev
-	opDo apt-get -y install  libotf-dev
-	
-	opDo apt-get -y install  libgnutls28-dev # NOTYET double check on need for this
+        opDo apt-get -y install  libjpeg-dev
+        opDo apt-get -y install  libtiff-dev
+        opDo apt-get -y install  libncurses5-dev
+        opDo apt-get -y install  libgif-dev
+        opDo apt-get -y install  libpng-dev
+        opDo apt-get -y install  librsvg2-dev
+        opDo apt-get -y install  libotf-dev
+        
+        opDo apt-get -y install  libgnutls28-dev # NOTYET double check on need for this
 
-	opDo apt-get -y install  libwebkit2gtk-4.0-dev
-	opDo apt-get -y install  libwebkit2gtk-4.0-37-gtk2  # NOTYET, is this needed
+        opDo apt-get -y install  libwebkit2gtk-4.0-dev
+        opDo apt-get -y install  libwebkit2gtk-4.0-37-gtk2  # NOTYET, is this needed
 
-	opDo apt-get -y install  libm17n-dev
-	opDo apt-get -y install  libharfbuzz-dev     # shaping for farsi/arabic
+        opDo apt-get -y install  libm17n-dev
+        opDo apt-get -y install  libharfbuzz-dev     # shaping for farsi/arabic
 
-	
+        
     elif [ "${opRunDistGeneration}" == "1804" ] ; then
-	#
+        #
 
-	opDo apt-get -y install libgif-dev      # NOTYET double check on need for this
-	opDo apt-get -y install libgnutls28-dev # NOTYET double check on need for this
-	opDo apt-get -y install libwebkit2gtk-4.0-dev	
-	opDo apt-get -y install libwebkit2gtk-4.0-37-gtk2	
-	opDo apt-get -y install libharfbuzz-dev     # shaping for farsi/arabic
+        opDo apt-get -y install libgif-dev      # NOTYET double check on need for this
+        opDo apt-get -y install libgnutls28-dev # NOTYET double check on need for this
+        opDo apt-get -y install libwebkit2gtk-4.0-dev   
+        opDo apt-get -y install libwebkit2gtk-4.0-37-gtk2       
+        opDo apt-get -y install libharfbuzz-dev     # shaping for farsi/arabic
 
     elif [ "${opRunDistGeneration}" == "1604" ] ; then
-	#
-	opDo apt-get -y install libgif-dev      # NOTYET double check on need for this
-	opDo apt-get -y install libgnutls28-dev # NOTYET double check on need for this
-	opDo apt-get -y install libwebkit2gtk-4.0-dev	
-	opDo apt-get -y install libwebkit2gtk-4.0-37-gtk2  # libwebkit2gtk-4.0-dev	
-	opDo apt-get -y install libharfbuzz-dev     # shaping for farsi/arabic
+        #
+        opDo apt-get -y install libgif-dev      # NOTYET double check on need for this
+        opDo apt-get -y install libgnutls28-dev # NOTYET double check on need for this
+        opDo apt-get -y install libwebkit2gtk-4.0-dev   
+        opDo apt-get -y install libwebkit2gtk-4.0-37-gtk2  # libwebkit2gtk-4.0-dev      
+        opDo apt-get -y install libharfbuzz-dev     # shaping for farsi/arabic
 
     else
-	EH_problem "Unsupported Distro and Generation -- ${opRunDistGeneration}"
+        EH_problem "Unsupported Distro and Generation -- ${opRunDistGeneration}"
     fi
 }
 
@@ -873,16 +873,16 @@ function vis_srcPkgObtain {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		       }
+                       }
 
     EH_assert [[ $# -lt 2 ]]
 
     local srcPkgSelector=""
 
     if [ $# -eq 0 ] ; then
-	srcPkgSelector="latest"
+        srcPkgSelector="latest"
     else
-	srcPkgSelector="$1"
+        srcPkgSelector="$1"
     fi
 
     opDo emacsVerCanonicalized    
@@ -912,18 +912,18 @@ _EOF_
     local gitDir=$( inBaseDirDo ${emacsDir} git rev-parse --show-toplevel )
 
     if [ -d "${emacsDir}" ] ; then
-	if [ "${emacsDir}" == "${gitDir}" ] ; then
-	    inBaseDirDo ${emacsDir} git pull
-	else
-	    EH_problem "${emacsDir} is not a git base"
-	    lpReturn 101
-	fi
+        if [ "${emacsDir}" == "${gitDir}" ] ; then
+            inBaseDirDo ${emacsDir} git pull
+        else
+            EH_problem "${emacsDir} is not a git base"
+            lpReturn 101
+        fi
     else
-	# -- depth 1 of git clone, copies only the latest revision	
-	opDo git clone --depth 1 git://git.sv.gnu.org/emacs.git
+        # -- depth 1 of git clone, copies only the latest revision      
+        opDo git clone --depth 1 git://git.sv.gnu.org/emacs.git
     fi
     lpReturn
-}	
+}       
 
 
 
@@ -937,16 +937,16 @@ function vis_srcPkgPrepDefunct {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 This can likely be eliminated and absorbed in obtainSrc
 _EOF_
-		       }
+                       }
 
     EH_assert [[ $# -lt 2 ]]
 
     local srcPkgSelector=""
 
     if [ $# -eq 0 ] ; then
-	srcPkgSelector="latest"
+        srcPkgSelector="latest"
     else
-	srcPkgSelector="$1"
+        srcPkgSelector="$1"
     fi
     
     opDo vis_srcPkgSpecPrep ${srcPkgSelector}
@@ -968,16 +968,16 @@ function vis_srcBuild {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		       }
+                       }
 
     EH_assert [[ $# -lt 2 ]]
 
     local srcPkgSelector=""
 
     if [ $# -eq 0 ] ; then
-	srcPkgSelector="latest"
+        srcPkgSelector="latest"
     else
-	srcPkgSelector="$1"
+        srcPkgSelector="$1"
     fi
 
     opDo emacsVerCanonicalized    
@@ -999,13 +999,13 @@ function vis_srcBuild_default {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		       }
+                       }
 
     opDo vis_srcPkgSpecPrep ${srcPkgSelector}
 
     if [ ! -d ${srcBuildBaseDir} ] ; then
-	EH_problem "Unreachable srcBuildBaseDir=${srcBuildBaseDir}"
-	return
+        EH_problem "Unreachable srcBuildBaseDir=${srcBuildBaseDir}"
+        return
     fi
 
     inBaseDirDo ${srcBuildBaseDir} ./autogen.sh
@@ -1086,16 +1086,16 @@ function vis_srcBinInstall {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		       }
+                       }
 
     EH_assert [[ $# -lt 2 ]]
 
     local srcPkgSelector=""
 
     if [ $# -eq 0 ] ; then
-	srcPkgSelector="latest"
+        srcPkgSelector="latest"
     else
-	srcPkgSelector="$1"
+        srcPkgSelector="$1"
     fi
 
     opDo emacsVerCanonicalized
@@ -1114,11 +1114,11 @@ function vis_srcBinInstall_common {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		       }
+                       }
 
     if [ ! -d ${srcBuildBaseDir} ] ; then
-	EH_problem "Unreachable srcBuildBaseDir=${srcBuildBaseDir}"
-	return
+        EH_problem "Unreachable srcBuildBaseDir=${srcBuildBaseDir}"
+        return
     fi
 
     inBaseDirDo ${srcBuildBaseDir} sudo make install
@@ -1133,13 +1133,13 @@ function vis_srcBinInstall_latest {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		       }
+                       }
 
     opDo vis_srcPkgSpecPrep ${srcPkgSelector}
 
     if [ ! -d ${srcBuildBaseDir} ] ; then
-	EH_problem "Unreachable srcBuildBaseDir=${srcBuildBaseDir}"
-	return
+        EH_problem "Unreachable srcBuildBaseDir=${srcBuildBaseDir}"
+        return
     fi
 
     opDo vis_srcPkgSpecPrep ${srcPkgSelector}
@@ -1163,7 +1163,7 @@ function vis_postInstall {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 To be run after installation of emacs (vis_srcBinInstall)
 _EOF_
-		       }
+                       }
 
     EH_assert [[ $# -lt 2 ]]
 
@@ -1172,9 +1172,9 @@ _EOF_
     local srcPkgSelector=""
 
     if [ $# -eq 0 ] ; then
-	srcPkgSelector="latest"
+        srcPkgSelector="latest"
     else
-	srcPkgSelector="$1"
+        srcPkgSelector="$1"
     fi
 
     opDo emacsVerCanonicalized
@@ -1194,7 +1194,7 @@ For example, for emacs-28 take care of the following:
   ln -s /usr/local/bin/emacsclient-28.0.50 /usr/local/bin/emacsclient-28
   rm /usr/local/bin/emacs # which was symlinked to /usr/local/bin/emacs-28.0.50
 _EOF_
-		       }
+                       }
 
     local emacsVersion=${srcPkgSelector##emacs}  # eg, 28 - emacs front stripped from emacs28 
     
@@ -1207,15 +1207,15 @@ _EOF_
     opDo FN_fileSymlinkRemoveIfThere /usr/local/bin/emacs
 
     if [ -z "${emacsClientFullVersion}" ] ; then
-	EH_problem "Missing /usr/local/bin/emacsclient"
-	lpReturn
+        EH_problem "Missing /usr/local/bin/emacsclient"
+        lpReturn
     fi       
     
     if [ "${emacsClientVersion}" == "${emacsVersion}" ] ; then
-	opDo mv /usr/local/bin/emacsclient  /usr/local/bin/emacsclient-${emacsClientFullVersion}
-	FN_fileSymlinkUpdate /usr/local/bin/emacsclient-${emacsClientFullVersion} /usr/local/bin/emacsclient-${emacsClientVersion}
+        opDo mv /usr/local/bin/emacsclient  /usr/local/bin/emacsclient-${emacsClientFullVersion}
+        FN_fileSymlinkUpdate /usr/local/bin/emacsclient-${emacsClientFullVersion} /usr/local/bin/emacsclient-${emacsClientVersion}
     else
-	EH_problem "emacsclient version does not match specified emacsVersion=${emacsVersion}"
+        EH_problem "emacsclient version does not match specified emacsVersion=${emacsVersion}"
     fi
 
     opDo ls -l /usr/local/bin/emacs-${emacsVersion} /usr/local/bin/emacsclient-${emacsClientVersion} 
@@ -1226,7 +1226,7 @@ function vis_installedVerify {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Verify if specified emacs has been installed.
 _EOF_
-		       }
+                       }
 
     EH_assert [[ $# -lt 2 ]]
 
@@ -1234,9 +1234,9 @@ _EOF_
     local retVal=0
 
     if [ $# -eq 0 ] ; then
-	srcPkgSelector="latest"
+        srcPkgSelector="latest"
     else
-	srcPkgSelector="$1"
+        srcPkgSelector="$1"
     fi
 
     opDo emacsVerCanonicalized
@@ -1255,7 +1255,7 @@ function installedVerify {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		       }
+                       }
 
     local emacsVersion=${srcPkgSelector##emacs}  # eg, 28 - emacs front stripped from emacs28 
     
@@ -1264,17 +1264,17 @@ _EOF_
     local retVal=0
 
     if [ ! -f /usr/local/bin/emacs-${emacsVersion} ] ; then
-	retVal=101
+        retVal=101
     fi
 
     if [ ! -f /usr/local/bin/emacsclient-${emacsVersion} ] ; then
-	retVal=101
+        retVal=101
     fi
 
     if [ ${retVal} == 0 ] ; then
-	opDo ls -l /usr/local/bin/emacs-${emacsVersion} /usr/local/bin/emacsclient-${emacsVersion}
+        opDo ls -l /usr/local/bin/emacs-${emacsVersion} /usr/local/bin/emacsclient-${emacsVersion}
     else
-	ANT_raw "/usr/local/bin/emacs-${emacsVersion} has not been installed"
+        ANT_raw "/usr/local/bin/emacs-${emacsVersion} has not been installed"
     fi
 
     lpReturn  ${retVal}
@@ -1302,9 +1302,9 @@ _EOF_
     local srcPkgSelector=""
 
     if [ $# -eq 0 ] ; then
-	srcPkgSelector="latest"
+        srcPkgSelector="latest"
     else
-	srcPkgSelector="$1"
+        srcPkgSelector="$1"
     fi
 
     opDo emacsVerCanonicalized
@@ -1312,12 +1312,12 @@ _EOF_
     opDo vis_srcPkgSpecPrep ${srcPkgSelector}
 
     if installedVerify ; then
-	if [ "${G_forceMode}" == "force" ] ; then
-	    ANT_raw "Re-Building:: Emacs ${srcPkgSelector} is installed but forceMode is specified"
-	else
-	    ANT_raw "Skipping Build:: Emacs ${srcPkgSelector} is installed and forceMode is not specified"
-	    lpReturn 0
-	fi
+        if [ "${G_forceMode}" == "force" ] ; then
+            ANT_raw "Re-Building:: Emacs ${srcPkgSelector} is installed but forceMode is specified"
+        else
+            ANT_raw "Skipping Build:: Emacs ${srcPkgSelector} is installed and forceMode is not specified"
+            lpReturn 0
+        fi
     fi
     
     opDoAfterPause vis_srcEnvSetup ${srcPkgSelector}

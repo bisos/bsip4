@@ -69,13 +69,13 @@ _EOF_
     #  [[elisp:(lsip-local-run-command "apt-cache search something | egrep '^something'")][apt-cache search something | egrep '^something']]
 
     itemOrderedList=(
-	"acroreadIntsallPreps"
-	"libxml2:i386"
-	"libcanberra_gtk_module:i386"
-	"gtk2_engines_murrine:i386"
-	"libatk_adaptor:i386"
-	#
-	"acroreadDpkg95"
+        "acroreadIntsallPreps"
+        "libxml2:i386"
+        "libcanberra_gtk_module:i386"
+        "gtk2_engines_murrine:i386"
+        "libatk_adaptor:i386"
+        #
+        "acroreadDpkg95"
     )
 
     itemOptionalOrderedList=()
@@ -157,8 +157,8 @@ binsPrep_acroreadIntsallPreps_DEFAULT_DEFAULT () {
     binsPrep_installPostHook=""
 
     function customInstallScript {
-	lpDo sudo dpkg --add-architecture i386
-	lpDo sudo apt-get update
+        lpDo sudo dpkg --add-architecture i386
+        lpDo sudo apt-get update
     }
 }
 
@@ -180,14 +180,14 @@ binsPrep_acroreadDpkg95_DEFAULT_DEFAULT () {
     binsPrep_installPostHook="acroread_installPost"
 
     function customInstallScript {
-	opDo mkdir -p /bisos/var/srcPkgs/acroread-9.5
+        opDo mkdir -p /bisos/var/srcPkgs/acroread-9.5
 
-	opDo wget -O /bisos/var/srcPkgs/acroread-9.5/adobe.deb ftp://ftp.adobe.com/pub/adobe/reader/unix/9.x/9.5.5/enu/AdbeRdr9.5.5-1_i386linux_enu.deb
+        opDo wget -O /bisos/var/srcPkgs/acroread-9.5/adobe.deb ftp://ftp.adobe.com/pub/adobe/reader/unix/9.x/9.5.5/enu/AdbeRdr9.5.5-1_i386linux_enu.deb
 
-	opDo sudo dpkg --add-architecture i386
-	opDo sudo apt update
+        opDo sudo dpkg --add-architecture i386
+        opDo sudo apt update
 
-	opDo sudo dpkg -i /bisos/var/srcPkgs/acroread-9.5/adobe.deb
+        opDo sudo dpkg -i /bisos/var/srcPkgs/acroread-9.5/adobe.deb
     }
 }
 
@@ -195,7 +195,7 @@ function acroread_installPost {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		       }
+                       }
     opDo echo mimeopen -d *.pdf
     opDo echo sudo apt-get -f install
 }

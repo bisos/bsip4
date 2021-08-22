@@ -84,14 +84,14 @@ function vis_enabledExportsDirsList {
     local each=""
     
     if [ -f "${inFile}" ] ; then
-	enabledDirsList=$( cat "${inFile}" )
-	for each in ${enabledDirsList}; do
-	    echo "./LCNT-INFO/Exports/${each}"
-	done
-	lpReturn 0
+        enabledDirsList=$( cat "${inFile}" )
+        for each in ${enabledDirsList}; do
+            echo "./LCNT-INFO/Exports/${each}"
+        done
+        lpReturn 0
     else
-	EH_problem "Missing ${inFile}"
-	lpReturn 1
+        EH_problem "Missing ${inFile}"
+        lpReturn 1
     fi
 }
 
@@ -103,15 +103,15 @@ function gitLocalBaseGet {
     local gitLocalBase=""
 
     case "${gitType}" in
-	github)
-	    gitLocalBase="/bisos/git/bxRepos/bxlcnt/results"
-	    ;;
-	bitbucket)
-	    gitLocalBase="/bisos/git/bxRepos/bxlcnt/results-TO-BE-Overwritten"		
-	    ;;
-	*)
-	    EH_problem "Unknown gitType: ${gitType}"
-	    ;;
+        github)
+            gitLocalBase="/bisos/git/bxRepos/bxlcnt/results"
+            ;;
+        bitbucket)
+            gitLocalBase="/bisos/git/bxRepos/bxlcnt/results-TO-BE-Overwritten"          
+            ;;
+        *)
+            EH_problem "Unknown gitType: ${gitType}"
+            ;;
     esac
     echo ${gitLocalBase}
 }
@@ -136,180 +136,180 @@ _EOF_
     local lcntExportCommonInfoBasePath="${lcntInfoPath}/Exports"
 
     if [ ! -d "${lcntExportCommonInfoBasePath}" ] ; then
-	opDo mkdir "${lcntExportCommonInfoBasePath}"
+        opDo mkdir "${lcntExportCommonInfoBasePath}"
     fi
 
     function fvNameValueCommonSet {
-	EH_assert [[ $# -eq 2 ]]
-	local fvName=$1
-	local fvValue=$2
-	local fvNamePath="${lcntExportCommonInfoBasePath}/${fvName}"
-	
-	if [[ ! -s "${fvNamePath}" ]]; then
-	    echo "${fvValue}" > "${fvNamePath}"
-	else
-	    ANT_cooked "Exists"
-	fi
+        EH_assert [[ $# -eq 2 ]]
+        local fvName=$1
+        local fvValue=$2
+        local fvNamePath="${lcntExportCommonInfoBasePath}/${fvName}"
+        
+        if [[ ! -s "${fvNamePath}" ]]; then
+            echo "${fvValue}" > "${fvNamePath}"
+        else
+            ANT_cooked "Exists"
+        fi
     }
 
     opDo fvNameValueCommonSet "enabledList" "bxGithub"
 
     function fvNameValueSpecificSet {
-	EH_assert [[ $# -eq 3 ]]
-	local exportDirPath=$1
-	local fvName=$2
-	local fvValue=$3
-	local fvNamePath="${exportDirPath}/${fvName}"
-	
-	if [[ ! -s "${fvNamePath}" ]]; then
-	    echo "${fvValue}" > "${fvNamePath}"
-	else
-	    ANT_cooked "Exists"
-	fi
+        EH_assert [[ $# -eq 3 ]]
+        local exportDirPath=$1
+        local fvName=$2
+        local fvValue=$3
+        local fvNamePath="${exportDirPath}/${fvName}"
+        
+        if [[ ! -s "${fvNamePath}" ]]; then
+            echo "${fvValue}" > "${fvNamePath}"
+        else
+            ANT_cooked "Exists"
+        fi
     }
 
     function buildSpecsForExportGet {
-	EH_assert [[ $# -eq 1 ]]
-	local exportType=$1
+        EH_assert [[ $# -eq 1 ]]
+        local exportType=$1
 
-	local buildsDirList=$( vis_buildsDirsList )
-	local applicableBuildSpecs=""
+        local buildsDirList=$( vis_buildsDirsList )
+        local applicableBuildSpecs=""
 
-	case "${exportType}" in
-	    ploneProc)
-		applicableBuildSpecs="${applicableBuildSpecs} $( echo ${buildsDirList} | xargs -n 1 | grep 8.5x11 )"
-		applicableBuildSpecs="${applicableBuildSpecs} $( echo ${buildsDirList} | xargs -n 1 | grep html )"
-		;;
-	    web)
-		applicableBuildSpecs="${applicableBuildSpecs} $( echo ${buildsDirList} | xargs -n 1 | grep reveal )"		
-		;;
-	    git)
-		applicableBuildSpecs="${applicableBuildSpecs} $( echo ${buildsDirList} | xargs -n 1 | grep 8.5x11 )"
-		applicableBuildSpecs="${applicableBuildSpecs} $( echo ${buildsDirList} | xargs -n 1 | grep presPdf )"		
-		;;
-	    *)
-		EH_problem "Unknown exportType: ${exportType}"
-		;;
-	esac
-	echo ${applicableBuildSpecs}
+        case "${exportType}" in
+            ploneProc)
+                applicableBuildSpecs="${applicableBuildSpecs} $( echo ${buildsDirList} | xargs -n 1 | grep 8.5x11 )"
+                applicableBuildSpecs="${applicableBuildSpecs} $( echo ${buildsDirList} | xargs -n 1 | grep html )"
+                ;;
+            web)
+                applicableBuildSpecs="${applicableBuildSpecs} $( echo ${buildsDirList} | xargs -n 1 | grep reveal )"            
+                ;;
+            git)
+                applicableBuildSpecs="${applicableBuildSpecs} $( echo ${buildsDirList} | xargs -n 1 | grep 8.5x11 )"
+                applicableBuildSpecs="${applicableBuildSpecs} $( echo ${buildsDirList} | xargs -n 1 | grep presPdf )"           
+                ;;
+            *)
+                EH_problem "Unknown exportType: ${exportType}"
+                ;;
+        esac
+        echo ${applicableBuildSpecs}
     }
 
     local ploneProc_export_hasRun=false
     function ploneProc_export {
-	EH_assert [[ $# -eq 0 ]]
+        EH_assert [[ $# -eq 0 ]]
 
-	if [ ${ploneProc_export_hasRun} = false ] ; then ploneProc_export_hasRun=true; else  return;  fi
+        if [ ${ploneProc_export_hasRun} = false ] ; then ploneProc_export_hasRun=true; else  return;  fi
 
-	local exportDirName="ploneProc"
-	local exportDirPath="${lcntExportCommonInfoBasePath}/${exportDirName}"	
+        local exportDirName="ploneProc"
+        local exportDirPath="${lcntExportCommonInfoBasePath}/${exportDirName}"  
 
-	if [ ! -d "${exportDirPath}" ] ; then
-	    opDo mkdir "${exportDirPath}"
-	fi
+        if [ ! -d "${exportDirPath}" ] ; then
+            opDo mkdir "${exportDirPath}"
+        fi
 
-	opDo fvNameValueSpecificSet ${exportDirPath} "exportSpecName" "${exportDirName}"
-	opDo fvNameValueSpecificSet ${exportDirPath} "exportMethod" "ploneProc"	
-	opDo fvNameValueSpecificSet ${exportDirPath} "buildSpecs"  "$( buildSpecsForExportGet ploneProc )"
+        opDo fvNameValueSpecificSet ${exportDirPath} "exportSpecName" "${exportDirName}"
+        opDo fvNameValueSpecificSet ${exportDirPath} "exportMethod" "ploneProc" 
+        opDo fvNameValueSpecificSet ${exportDirPath} "buildSpecs"  "$( buildSpecsForExportGet ploneProc )"
     }
 
     local webApache_export_hasRun=false
     function webApache_export {
-	EH_assert [[ $# -eq 0 ]]
+        EH_assert [[ $# -eq 0 ]]
 
-	# Made idempotent
-	if [ ${webApache_export_hasRun} = false ] ; then webApache_export_hasRun=true; else  return;  fi
-	
-	local exportDirName="webApache"
-	local exportDirPath="${lcntExportCommonInfoBasePath}/${exportDirName}"	
+        # Made idempotent
+        if [ ${webApache_export_hasRun} = false ] ; then webApache_export_hasRun=true; else  return;  fi
+        
+        local exportDirName="webApache"
+        local exportDirPath="${lcntExportCommonInfoBasePath}/${exportDirName}"  
 
-	if [ ! -d "${exportDirPath}" ] ; then
-	    opDo mkdir "${exportDirPath}"
-	fi
+        if [ ! -d "${exportDirPath}" ] ; then
+            opDo mkdir "${exportDirPath}"
+        fi
 
-	opDo fvNameValueSpecificSet ${exportDirPath} "exportSpecName" "${exportDirName}"
-	opDo fvNameValueSpecificSet ${exportDirPath} "exportMethod" "web"
-	opDo fvNameValueSpecificSet ${exportDirPath} "buildSpecs"  "$( buildSpecsForExportGet web )"
+        opDo fvNameValueSpecificSet ${exportDirPath} "exportSpecName" "${exportDirName}"
+        opDo fvNameValueSpecificSet ${exportDirPath} "exportMethod" "web"
+        opDo fvNameValueSpecificSet ${exportDirPath} "buildSpecs"  "$( buildSpecsForExportGet web )"
     }
 
     local bxGithub_export_hasRun=false    
     function bxGithub_export {
-	EH_assert [[ $# -eq 0 ]]
+        EH_assert [[ $# -eq 0 ]]
 
-	# Made idempotent
-	if [ ${bxGithub_export_hasRun} = false ] ; then bxGithub_export_hasRun=true; else  return;  fi
-	
-	local exportDirName="bxGithub"
-	local exportDirPath="${lcntExportCommonInfoBasePath}/${exportDirName}"	
+        # Made idempotent
+        if [ ${bxGithub_export_hasRun} = false ] ; then bxGithub_export_hasRun=true; else  return;  fi
+        
+        local exportDirName="bxGithub"
+        local exportDirPath="${lcntExportCommonInfoBasePath}/${exportDirName}"  
 
-	if [ ! -d "${exportDirPath}" ] ; then
-	    opDo mkdir "${exportDirPath}"
-	fi
+        if [ ! -d "${exportDirPath}" ] ; then
+            opDo mkdir "${exportDirPath}"
+        fi
 
-	opDo fvNameValueSpecificSet ${exportDirPath} "exportSpecName" "${exportDirName}"
-	opDo fvNameValueSpecificSet ${exportDirPath} "exportMethod" "git"
-	opDo fvNameValueSpecificSet ${exportDirPath} "buildSpecs"  "$( buildSpecsForExportGet git )"	
-	opDo fvNameValueSpecificSet ${exportDirPath} "gitLocalBase" "$( gitLocalBaseGet github )"
-	opDo fvNameValueSpecificSet ${exportDirPath} "gitRemoteAccessMethod"  "ssh"
-	opDo fvNameValueSpecificSet ${exportDirPath} "gitRemoteUri"  "NA"
-	opDo fvNameValueSpecificSet ${exportDirPath} "gitRemoteUserId"  "NA"
-	opDo fvNameValueSpecificSet ${exportDirPath} "gitRemoteUserCredentials"  "NA"					
+        opDo fvNameValueSpecificSet ${exportDirPath} "exportSpecName" "${exportDirName}"
+        opDo fvNameValueSpecificSet ${exportDirPath} "exportMethod" "git"
+        opDo fvNameValueSpecificSet ${exportDirPath} "buildSpecs"  "$( buildSpecsForExportGet git )"    
+        opDo fvNameValueSpecificSet ${exportDirPath} "gitLocalBase" "$( gitLocalBaseGet github )"
+        opDo fvNameValueSpecificSet ${exportDirPath} "gitRemoteAccessMethod"  "ssh"
+        opDo fvNameValueSpecificSet ${exportDirPath} "gitRemoteUri"  "NA"
+        opDo fvNameValueSpecificSet ${exportDirPath} "gitRemoteUserId"  "NA"
+        opDo fvNameValueSpecificSet ${exportDirPath} "gitRemoteUserCredentials"  "NA"                                   
     }
 
     local bxBitbucket_export_hasRun=false    
     function bxBitbucket_export {
-	EH_assert [[ $# -eq 0 ]]
+        EH_assert [[ $# -eq 0 ]]
 
-	# Made idempotent
-	if [ ${bxBitbucket_export_hasRun} = false ] ; then bxBitbucket_export_hasRun=true; else  return;  fi
+        # Made idempotent
+        if [ ${bxBitbucket_export_hasRun} = false ] ; then bxBitbucket_export_hasRun=true; else  return;  fi
 
-	local exportDirName="bitbucket"
-	local exportDirPath="${lcntExportCommonInfoBasePath}/${exportDirName}"	
+        local exportDirName="bitbucket"
+        local exportDirPath="${lcntExportCommonInfoBasePath}/${exportDirName}"  
 
-	if [ ! -d "${exportDirPath}" ] ; then
-	    opDo mkdir "${exportDirPath}"
-	fi
+        if [ ! -d "${exportDirPath}" ] ; then
+            opDo mkdir "${exportDirPath}"
+        fi
 
-	opDo fvNameValueSpecificSet ${exportDirPath} "exportSpecName" "${exportDirName}"
-	opDo fvNameValueSpecificSet ${exportDirPath} "exportMethod" "git"
-	#
-	# NOTYET, ./LCNT-INFO/Builds/presPdf
-	#
-	opDo fvNameValueSpecificSet ${exportDirPath} "buildSpecs"  "$( buildSpecsForExportGet git)"
-	opDo fvNameValueSpecificSet ${exportDirPath} "gitLocalBase" "$( gitLocalBaseGet bitbucket )"	
-	opDo fvNameValueSpecificSet ${exportDirPath} "gitRemoteAccessMethod"  "ssh"
-	opDo fvNameValueSpecificSet ${exportDirPath} "gitRemoteUri"  "NA"
-	opDo fvNameValueSpecificSet ${exportDirPath} "gitRemoteUserId"  "NA"
-	opDo fvNameValueSpecificSet ${exportDirPath} "gitRemoteUserCredentials"  "NA"					
+        opDo fvNameValueSpecificSet ${exportDirPath} "exportSpecName" "${exportDirName}"
+        opDo fvNameValueSpecificSet ${exportDirPath} "exportMethod" "git"
+        #
+        # NOTYET, ./LCNT-INFO/Builds/presPdf
+        #
+        opDo fvNameValueSpecificSet ${exportDirPath} "buildSpecs"  "$( buildSpecsForExportGet git)"
+        opDo fvNameValueSpecificSet ${exportDirPath} "gitLocalBase" "$( gitLocalBaseGet bitbucket )"    
+        opDo fvNameValueSpecificSet ${exportDirPath} "gitRemoteAccessMethod"  "ssh"
+        opDo fvNameValueSpecificSet ${exportDirPath} "gitRemoteUri"  "NA"
+        opDo fvNameValueSpecificSet ${exportDirPath} "gitRemoteUserId"  "NA"
+        opDo fvNameValueSpecificSet ${exportDirPath} "gitRemoteUserCredentials"  "NA"                                   
     }
     
 
     local eachModel=""
 
     for eachModel in ${lcnt_docSrcList} ; do
-	case ${eachModel} in
-	    "articleEnFa")
-		opDo ploneProc_export
-		opDo bxGithub_export
-		opDo bxBitbucket_export		
-		;;
-	    "presentationEnFa")
-		opDo webApache_export
-		opDo bxGithub_export
-		opDo bxBitbucket_export		
-		;;
-	    "presArtEnFa")
-		opDo ploneProc_export
-		opDo bxGithub_export
-		opDo bxBitbucket_export		
-		;;
-	    *)
-		EH_problem "Missing Model"
-		;;
-	esac
+        case ${eachModel} in
+            "articleEnFa")
+                opDo ploneProc_export
+                opDo bxGithub_export
+                opDo bxBitbucket_export         
+                ;;
+            "presentationEnFa")
+                opDo webApache_export
+                opDo bxGithub_export
+                opDo bxBitbucket_export         
+                ;;
+            "presArtEnFa")
+                opDo ploneProc_export
+                opDo bxGithub_export
+                opDo bxBitbucket_export         
+                ;;
+            *)
+                EH_problem "Missing Model"
+                ;;
+        esac
     done
 
     lpReturn
-}	
+}       
 
 
 

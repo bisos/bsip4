@@ -57,11 +57,11 @@ function vis_bibtexBinsPrepFix {
       "${opRunDistGeneration}_" == "7_" || \
       "${opRunDistGeneration}_" == "SQUEEZE_" ]] ; then
       if [[ -h /usr/bin/bibtex ]] ; then
-	  opDo FN_fileSafeKeep /usr/bin/bibtex
-	  opDo eval "bibtexBinsPrepFixStdout > /usr/bin/bibtex"
-	  opDo chmod ugo+x /usr/bin/bibtex
+          opDo FN_fileSafeKeep /usr/bin/bibtex
+          opDo eval "bibtexBinsPrepFixStdout > /usr/bin/bibtex"
+          opDo chmod ugo+x /usr/bin/bibtex
       else
-	  ANT_raw "/usr/bin/bibtex not a symlink -- must have been fixed already -- do verify"
+          ANT_raw "/usr/bin/bibtex not a symlink -- must have been fixed already -- do verify"
       fi
       opDo ls -l /usr/bin/bibtex
   else

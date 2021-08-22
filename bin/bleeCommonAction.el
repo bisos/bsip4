@@ -2,8 +2,8 @@
   "General panel cleanup in current buffer."
   (interactive "fName Of File: ")
   (let (
-	($curBuf (current-buffer))
-	)
+        ($curBuf (current-buffer))
+        )
     (save-excursion 
       (find-file <fileName)
       (latexNewlineFix)
@@ -52,8 +52,8 @@
   "General panel cleanup in current buffer."
   (interactive "fName Of File: ")
   (let (
-	($curBuf (current-buffer))
-	)
+        ($curBuf (current-buffer))
+        )
     (find-file <fileName)
     (filterBufferPanelCleanups)
     (filterBufferAddRoamTitle)

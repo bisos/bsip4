@@ -58,7 +58,7 @@ function vis_containerBxoId_getContainerId {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** For example, from  pmp_VSG-deb11_, get "G" for generic
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 1 ]]    
     local containerBxoId=$1
     echo ${containerBxoId} | sed -e 's:pmp_::'
@@ -69,7 +69,7 @@ function vis_containerBxoId_getFunction {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** For example, from  pmp_VSG-deb11_, get "G" for generic
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 1 ]]    
     local containerBxoId=$1
     echo ${containerBxoId} | sed -e 's:pmp_..\(.\).*:\1:'
@@ -80,7 +80,7 @@ function fromGenericContainerIdGetDistro {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 For example from VAG-deb10- get deb10
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 1 ]]    
     local containerId=$1
     echo ${containerId} | sed -e 's:...-\(.*\)_:\1:' | sed -e 's:.*\(bx_\)\(.*\):\2:'
@@ -91,19 +91,19 @@ function fromGenericContainerIdGetBaseBoxIndicator {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 For example from VAG-bx_deb10- get bx
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 1 ]]    
     local containerId=$1
     local baseBoxIndicator=$( echo ${containerId} | sed -e 's:...-\(bx\)_.*_:\1:' )
 
     if [ "${baseBoxIndicator}" == "bx" ] ; then
-	echo "bxcntnr"
+        echo "bxcntnr"
     elif [ "${baseBoxIndicator}" == "${containerId}" ] ; then
-	echo "desktop"
+        echo "desktop"
     else
-	EH_problem "Bad Usage -- ${baseBoxIndicator}"
-	echo ""
-	lpReturn 101
+        EH_problem "Bad Usage -- ${baseBoxIndicator}"
+        echo ""
+        lpReturn 101
     fi
     lpReturn 0
 }
@@ -113,7 +113,7 @@ function withFunctionAndContainerIdGetVagBoxType {
      G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 2 ]]    
     local function=$1
     local containerId=$2
@@ -121,8 +121,8 @@ _EOF_
     # local vagBaseBoxType="desktop"
     local vagBaseBoxType="bxcntnr"    
     if [ "${function}" == "Generic" ] ; then
-	vagBaseBoxType=$( fromGenericContainerIdGetBaseBoxIndicator ${containerId} )
-	EH_assert [ ! -z ${vagBaseBoxType} ]
+        vagBaseBoxType=$( fromGenericContainerIdGetBaseBoxIndicator ${containerId} )
+        EH_assert [ ! -z ${vagBaseBoxType} ]
     fi
 
     echo ${vagBaseBoxType}
@@ -133,7 +133,7 @@ function withDistroGetVagBaseBox {
      G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 4 ]]    
     local function=$1
     local distro=$2   
@@ -142,38 +142,38 @@ _EOF_
 
     local vagBaseBoxType="desktop"
     if [ "${function}" == "Generic" ] ; then
-	vagBaseBoxType=$( fromGenericContainerIdGetBaseBoxIndicator ${containerId} )
-	EH_assert [ ! -z ${vagBaseBoxType} ]
+        vagBaseBoxType=$( fromGenericContainerIdGetBaseBoxIndicator ${containerId} )
+        EH_assert [ ! -z ${vagBaseBoxType} ]
     fi
 
     local baseBoxName=""
     local baseBoxDistro=""
 
     case ${distro} in
-	deb10)
-	    baseBoxDistro=debian-10.8
-	    ;;
-	deb11|default)
-	    baseBoxDistro=debian-11.pre
-	    ;;
-	ub2004)
-	    baseBoxDistro=ubuntu-20.04
-	    ;;
-	*)
-	    EH_problem "Bad Usage -- ${distro}"
-	    ;;
+        deb10)
+            baseBoxDistro=debian-10.8
+            ;;
+        deb11|default)
+            baseBoxDistro=debian-11.pre
+            ;;
+        ub2004)
+            baseBoxDistro=ubuntu-20.04
+            ;;
+        *)
+            EH_problem "Bad Usage -- ${distro}"
+            ;;
     esac
 
     case ${vagBaseBoxType} in
-	bxcntnr)
-	    baseBoxName=bisos
-	    ;;
-	desktop|mini)
-	    baseBoxName=bxDistro
-	    ;;
-	*)
-	    EH_problem "Bad Usage -- ${vagBaseBoxType}"
-	    ;;
+        bxcntnr)
+            baseBoxName=bisos
+            ;;
+        desktop|mini)
+            baseBoxName=bxDistro
+            ;;
+        *)
+            EH_problem "Bad Usage -- ${vagBaseBoxType}"
+            ;;
     esac
 
     echo ${baseBoxName}/${baseBoxDistro}/${vagBaseBoxType}
@@ -185,7 +185,7 @@ function vis_forThisSysFindContainerBase {
    function describeF {  G_funcEntryShow; cat  << _EOF_
 Incomplete -- interim work -- does not support machineId yet
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
 
    local virtualizationType=$( facter virtual )
@@ -194,11 +194,11 @@ _EOF_
    # lpDo vis_bxoIdPrep "sysChar"
    
     if [ "${virtualizationType}" == "physical" ] ; then
-	boxId=$( siteBoxAssign.sh -i thisBoxFindId )
-	lpDo vis_withBoxIdFindContainerBase "${boxId}"
+        boxId=$( siteBoxAssign.sh -i thisBoxFindId )
+        lpDo vis_withBoxIdFindContainerBase "${boxId}"
     else
-	bxoId=$( vis_bxoIdPrep "sysChar" )
-	lpDo vis_fromBxoIdFindContainerBase ${bxoId}
+        bxoId=$( vis_bxoIdPrep "sysChar" )
+        lpDo vis_fromBxoIdFindContainerBase ${bxoId}
     fi
 }
 
@@ -207,7 +207,7 @@ function vis_fromBxoIdFindContainerBase {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    
    EH_assert [[ $# -eq 1 ]]
    local bxoId="$1"
@@ -220,7 +220,7 @@ function vis_withBoxIdFindContainerBase {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    
    EH_assert [[ $# -eq 1 ]]
    local boxId="$1"
@@ -238,17 +238,17 @@ _EOF_
        stored_boxId=$( fileParamManage.py -i fileParamReadPath ${eachBoxIdFp} )
 
        if [ -z "${stored_boxId}" ] ; then
-	   EH_problem "Missing boxId in ${eachBoxIdFp} -- continuing"
-	   continue
+           EH_problem "Missing boxId in ${eachBoxIdFp} -- continuing"
+           continue
        else
-	   if [ "${boxId}" == "${stored_boxId}" ] ; then
-	       if [ -z "${found}" ] ; then
-		   found=${eachBoxIdFp}
-	       else
-   		   ANT_raw "Also Found: ${eachBoxIdFp}"
-	       fi
-	       #break
-	   fi
+           if [ "${boxId}" == "${stored_boxId}" ] ; then
+               if [ -z "${found}" ] ; then
+                   found=${eachBoxIdFp}
+               else
+                   ANT_raw "Also Found: ${eachBoxIdFp}"
+               fi
+               #break
+           fi
        fi
    done
 
@@ -259,14 +259,14 @@ _EOF_
    fi
 
    lpReturn
-}	
+}       
 
 
 function vis_withBoxOrMachineIdFindContainerBase {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    
    EH_assert [[ $# -eq 1 ]]
    local boxId="$1"
@@ -284,17 +284,17 @@ _EOF_
        stored_boxId=$( fileParamManage.py -i fileParamReadPath ${eachBoxIdFp} )
 
        if [ -z "${stored_boxId}" ] ; then
-	   EH_problem "Missing boxId in ${eachBoxIdFp} -- continuing"
-	   continue
+           EH_problem "Missing boxId in ${eachBoxIdFp} -- continuing"
+           continue
        else
-	   if [ "${boxId}" == "${stored_boxId}" ] ; then
-	       if [ -z "${found}" ] ; then
-		   found=${eachBoxIdFp}
-	       else
-   		   ANT_raw "Also Found: ${eachBoxIdFp}"
-	       fi
-	       #break
-	   fi
+           if [ "${boxId}" == "${stored_boxId}" ] ; then
+               if [ -z "${found}" ] ; then
+                   found=${eachBoxIdFp}
+               else
+                   ANT_raw "Also Found: ${eachBoxIdFp}"
+               fi
+               #break
+           fi
        fi
    done
 
@@ -305,14 +305,14 @@ _EOF_
    fi
 
    lpReturn
-}	
+}       
 
 
 function vis_fromContainerBaseGetContainerNu {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    
    EH_assert [[ $# -eq 1 ]]
    local containerBase="$1"
@@ -326,7 +326,7 @@ _EOF_
    echo "${containerNu}"
 
    lpReturn
-}	
+}       
 
 
 function vis_containerId {
@@ -337,7 +337,7 @@ word="Host"; firstLetter=${word:0:1} -- "H"
 For function==Generic, containerNu is not a number. So, we add an underscore
 at the end.
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
    local containerNu="$1"
 
@@ -361,7 +361,7 @@ function vis_containerBoxSysCharReport {
 ** For thisBox, report sysCharContainer
 *** It should be improved.
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
 
     local containerBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
@@ -375,14 +375,14 @@ _EOF_
     lpDo vis_sysCharReport
     
     lpReturn
-}	
+}       
 
 
 function vis_sysCharReport {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
     EH_assert [ ! -z "${bxoId}" ]
 
@@ -398,7 +398,7 @@ _EOF_
     lpDo fileParamManage.py -i fileParamDictReadDeep ${bxoHome}/siteContainersRepo/steady/net/routes        
     
     lpReturn
-}	
+}       
 
 
 function vis_containerAssignRead {
@@ -407,24 +407,24 @@ function vis_containerAssignRead {
 bxoId is the sysChar. From which the link to assign is followed.
 When boxId is "virt", virtSpec.fps become effective.
 _EOF_
-		      }
+                      }
 
     EH_assert [[ $# -lt 2 ]]
     
     local containerAssignBase=""
     
     if [ $# -eq 0 ] ; then
-	EH_assert [ ! -z "${bxoId}" ]
+        EH_assert [ ! -z "${bxoId}" ]
 
-	EH_assert vis_bxoAcctVerify "${bxoId}"
-	bxoHome=$( FN_absolutePathGet ~${bxoId} )
+        EH_assert vis_bxoAcctVerify "${bxoId}"
+        bxoHome=$( FN_absolutePathGet ~${bxoId} )
   
-	containerAssignBase=${bxoHome}/siteContainersRepo/assign
+        containerAssignBase=${bxoHome}/siteContainersRepo/assign
     elif [ $# -eq 1 ] ; then
-	containerAssignBase=$1
+        containerAssignBase=$1
     else
-	EH_oops ""
-	lpReturn
+        EH_oops ""
+        lpReturn
     fi
   
     containerAssign_containerId=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} containerId )
@@ -440,7 +440,7 @@ function vis_containerSteadyRead {
 bxoId is the sysChar. From which the link to the steady dir of container repo is followed.
 From there links to networks and routes are also followed.
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
    EH_assert [ ! -z "${bxoId}" ]
 
@@ -467,7 +467,7 @@ function vis_containerSteadyWrite {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
    local containerSteadyBase="$1"
    # typically something like: /bxo/r3/iso/pmc_siteName-containers/VAG-deb10_/steady/
@@ -496,14 +496,14 @@ function vis_sysChar_netIfsRead%% {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** bxoId is the sysChar and can be specified through -p or as \$1. Reads value of applicable net interfaces.
 _EOF_
-		       }
+                       }
 
     EH_assert [[ $# -lt 2 ]]
 
     local thisBxoId="${bxoId}"
     
     if [ $# -eq 1 ] ; then
-	thisBxoId=$1
+        thisBxoId=$1
     fi
 
     thisBxoId=$( bxoIdPrep ${thisBxoId} )
@@ -524,15 +524,15 @@ _EOF_
     sysChar_netIfs_privA="" # Global Var
     
     if [ -d "${virtSpecFps}" ] ; then
-	sysChar_netIfs_privA="eth1"
+        sysChar_netIfs_privA="eth1"
     fi
 
     if [ -d "${containerSpecFps}" ] ; then
-	sysChar_netIfs_privA=$( fileParamManage.py -i fileParamRead ${containerSpecFps}/netIfs privA )
+        sysChar_netIfs_privA=$( fileParamManage.py -i fileParamRead ${containerSpecFps}/netIfs privA )
     fi
 
     if [ -z "${sysChar_netIfs_privA}" ] ; then
-	EH_problem "Missing sysChar_netIfs_privA"
+        EH_problem "Missing sysChar_netIfs_privA"
     fi
 }
 
@@ -543,7 +543,7 @@ function vis_sysCharConveyInfoWrite {
 bxoId is the sysChar.
 sysInfo.fps of sysChar overwrites sysInfo.fps of siteContainersRepo.
 _EOF_
-		       }
+                       }
 
     EH_assert [[ $# -eq 2 ]]
 
@@ -562,16 +562,16 @@ _EOF_
     local sysCharConveyInfoBase="${bxoHome}/var/sysCharConveyInfo"
     
     if [ ! -d "${sysCharConveyInfoBase}" ] ; then
-	lpDo mkdir "${sysCharConveyInfoBase}"
+        lpDo mkdir "${sysCharConveyInfoBase}"
     fi
 
     case ${paramName} in
-	securityMode|vmNameQualifier)
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} "${paramName}" "${paramValue}"
-	    ;;
-	*)
-	    EH_problem "Bad Usage -- ${paramName}"
-	    ;;
+        securityMode|vmNameQualifier)
+            lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} "${paramName}" "${paramValue}"
+            ;;
+        *)
+            EH_problem "Bad Usage -- ${paramName}"
+            ;;
     esac
 }
 
@@ -582,14 +582,14 @@ function vis_sysCharConveyInfoRead {
 bxoId is the sysChar.
 sysInfo.fps of sysChar overwrites sysInfo.fps of siteContainersRepo.
 _EOF_
-		       }
+                       }
 
     EH_assert [[ $# -lt 2 ]]
 
     local thisBxoId="${bxoId}"
     
     if [ $# -eq 1 ] ; then
-	thisBxoId=$1
+        thisBxoId=$1
     fi
 
     EH_assert [ ! -z "${thisBxoId}" ]
@@ -600,21 +600,21 @@ _EOF_
     local sysCharConveyInfoBase="${bxoHome}/var/sysCharConveyInfo"
     
     if [ -d "${sysCharConveyInfoBase}" ] ; then
-	sysChar_conveyInfo_vmNameQualifier=$( fileParamManage.py -i fileParamRead  ${sysCharConveyInfoBase} vmNameQualifier )
-	sysChar_conveyInfo_hostCntnr=$( fileParamManage.py -i fileParamRead  ${sysCharConveyInfoBase} hostCntnr )	
-	sysChar_conveyInfo_ipAddr_privA=$( fileParamManage.py -i fileParamRead  ${sysCharConveyInfoBase} ipAddr_privA )
-	sysChar_conveyInfo_ipAddr_pubA=$( fileParamManage.py -i fileParamRead  ${sysCharConveyInfoBase} ipAddr_pubA )
-	sysChar_conveyInfo_privGitMode=$( fileParamManage.py -i fileParamRead  ${sysCharConveyInfoBase} privGit )
-	sysChar_conveyInfo_pubGitMode=$( fileParamManage.py -i fileParamRead  ${sysCharConveyInfoBase} pubGitMode )
-	sysChar_conveyInfo_securityMode=$( fileParamManage.py -i fileParamRead  ${sysCharConveyInfoBase} securityMode )
+        sysChar_conveyInfo_vmNameQualifier=$( fileParamManage.py -i fileParamRead  ${sysCharConveyInfoBase} vmNameQualifier )
+        sysChar_conveyInfo_hostCntnr=$( fileParamManage.py -i fileParamRead  ${sysCharConveyInfoBase} hostCntnr )       
+        sysChar_conveyInfo_ipAddr_privA=$( fileParamManage.py -i fileParamRead  ${sysCharConveyInfoBase} ipAddr_privA )
+        sysChar_conveyInfo_ipAddr_pubA=$( fileParamManage.py -i fileParamRead  ${sysCharConveyInfoBase} ipAddr_pubA )
+        sysChar_conveyInfo_privGitMode=$( fileParamManage.py -i fileParamRead  ${sysCharConveyInfoBase} privGit )
+        sysChar_conveyInfo_pubGitMode=$( fileParamManage.py -i fileParamRead  ${sysCharConveyInfoBase} pubGitMode )
+        sysChar_conveyInfo_securityMode=$( fileParamManage.py -i fileParamRead  ${sysCharConveyInfoBase} securityMode )
     else
-	sysChar_conveyInfo_vmNameQualifier=""
-	sysChar_conveyInfo_hostCntnr=""	
-	sysChar_conveyInfo_ipAddr_privA=""
-	sysChar_conveyInfo_ipAddr_pubA=""
-	sysChar_conveyInfo_privGitMode=""
-	sysChar_conveyInfo_pubGitMode=""
-	sysChar_conveyInfo_securityMode=""
+        sysChar_conveyInfo_vmNameQualifier=""
+        sysChar_conveyInfo_hostCntnr="" 
+        sysChar_conveyInfo_ipAddr_privA=""
+        sysChar_conveyInfo_ipAddr_pubA=""
+        sysChar_conveyInfo_privGitMode=""
+        sysChar_conveyInfo_pubGitMode=""
+        sysChar_conveyInfo_securityMode=""
     fi
 }
 
@@ -626,14 +626,14 @@ function vis_sysCharRead {
 bxoId is the sysChar.
 sysInfo.fps of sysChar overwrites sysInfo.fps of siteContainersRepo.
 _EOF_
-		       }
+                       }
 
     EH_assert [[ $# -lt 2 ]]
 
     local thisBxoId="${bxoId}"
     
     if [ $# -eq 1 ] ; then
-	thisBxoId=$1
+        thisBxoId=$1
     fi
 
     EH_assert [ ! -z "${thisBxoId}" ]
@@ -653,23 +653,23 @@ _EOF_
     sysChar_sysInfo_distroType=$( fileParamManage.py -v 30 -i fileParamRead ${sysInfoFps} distroType )      
 
     if [ -d "${virtSpecFps}" ] ; then
-	sysChar_virtSpec_vagBaseBoxType=$( fileParamManage.py -i fileParamRead ${virtSpecFps} vagBaseBoxType )
-	sysChar_virtSpec_virtType=$( fileParamManage.py -i fileParamRead ${virtSpecFps} virtType )
-	sysChar_virtSpec_sizing=$( fileParamManage.py -i fileParamRead ${virtSpecFps} sizing )
-	sysChar_virtSpec_vagBaseBox=$( fileParamManage.py -i fileParamRead ${virtSpecFps} vagBaseBox )    
+        sysChar_virtSpec_vagBaseBoxType=$( fileParamManage.py -i fileParamRead ${virtSpecFps} vagBaseBoxType )
+        sysChar_virtSpec_virtType=$( fileParamManage.py -i fileParamRead ${virtSpecFps} virtType )
+        sysChar_virtSpec_sizing=$( fileParamManage.py -i fileParamRead ${virtSpecFps} sizing )
+        sysChar_virtSpec_vagBaseBox=$( fileParamManage.py -i fileParamRead ${virtSpecFps} vagBaseBox )    
     else
-	sysChar_virtSpec_vagBaseBoxType=""
-	sysChar_virtSpec_virtType=""
-	sysChar_virtSpec_sizing=""
-	sysChar_virtSpec_vagBaseBox=""
+        sysChar_virtSpec_vagBaseBoxType=""
+        sysChar_virtSpec_virtType=""
+        sysChar_virtSpec_sizing=""
+        sysChar_virtSpec_vagBaseBox=""
     fi
 
     
 
     if [ -d "${containerSpecFps}" ] ; then
-	sysChar_containerSpec_netIfs_privA=$( fileParamManage.py -i fileParamRead ${containerSpecFps}/netIfs privA )
+        sysChar_containerSpec_netIfs_privA=$( fileParamManage.py -i fileParamRead ${containerSpecFps}/netIfs privA )
     else
-	sysChar_containerSpec_netIfs_privA=""
+        sysChar_containerSpec_netIfs_privA=""
     fi
 }
 
@@ -682,7 +682,7 @@ function vis_sysCharWrite {
 *** sysInfo.fps of sysChar overwrites sysInfo.fps of siteContainersRepo.
 *** TODO Needs to be developed in conjunction with siteNetworks_lib.sh
 _EOF_
-		      }
+                      }
     EH_assert [[ $# -eq 0 ]]
 
     EH_assert bxoIdPrep
@@ -713,45 +713,45 @@ _EOF_
     local vagBaseBox=""             # Virt
 
     case ${function} in
-	Generic)
-	    distro=$( fromGenericContainerIdGetDistro ${containerId} )
-	    distroType="desktop"
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysInfoFps} distro ${distro}
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysInfoFps} distroType ${distroType}
-	    ;;
-	Server)
-	    distro="deb11"  # NOTYET get it from facter or from /etc/issue
-	    distroType="desktop"
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysInfoFps} distro ${distro}
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysInfoFps} distroType ${distroType}
-	    ;;
-	*)
-	    EH_problem "Unimplemented yet -- ${function}"
-	    ;;
+        Generic)
+            distro=$( fromGenericContainerIdGetDistro ${containerId} )
+            distroType="desktop"
+            lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysInfoFps} distro ${distro}
+            lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysInfoFps} distroType ${distroType}
+            ;;
+        Server)
+            distro="deb11"  # NOTYET get it from facter or from /etc/issue
+            distroType="desktop"
+            lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysInfoFps} distro ${distro}
+            lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysInfoFps} distroType ${distroType}
+            ;;
+        *)
+            EH_problem "Unimplemented yet -- ${function}"
+            ;;
     esac
 
     case ${model} in
-	Virt)
-	    vagBaseBoxType=$( withFunctionAndContainerIdGetVagBoxType ${function} ${containerId} )
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${virtSpecFps} vagBaseBoxType ${vagBaseBoxType}
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${virtSpecFps} virtType default
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${virtSpecFps} sizing medium
-  	    #vagBaseBox=$( withDistroGetVagBaseBox ${distro} ${distroType} ${vagBaseBoxType} )
-	    vagBaseBox=$( withDistroGetVagBaseBox ${function} ${distro} ${distroType} ${containerId} )	    
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${virtSpecFps} vagBaseBox ${vagBaseBox}
+        Virt)
+            vagBaseBoxType=$( withFunctionAndContainerIdGetVagBoxType ${function} ${containerId} )
+            lpDo fileParamManage.py -v 30 -i fileParamWrite ${virtSpecFps} vagBaseBoxType ${vagBaseBoxType}
+            lpDo fileParamManage.py -v 30 -i fileParamWrite ${virtSpecFps} virtType default
+            lpDo fileParamManage.py -v 30 -i fileParamWrite ${virtSpecFps} sizing medium
+            #vagBaseBox=$( withDistroGetVagBaseBox ${distro} ${distroType} ${vagBaseBoxType} )
+            vagBaseBox=$( withDistroGetVagBaseBox ${function} ${distro} ${distroType} ${containerId} )      
+            lpDo fileParamManage.py -v 30 -i fileParamWrite ${virtSpecFps} vagBaseBox ${vagBaseBox}
 
-	    ANT_raw "For model=${model} Network InterfaceName was communicated at VM creation"
-	    ANT_raw "Through conjecture, we label them as any enabled"	    
-	    lpDo vis_cntnr_netName_interfacesUpdateBasedOnConjecture
-	    ;;
-	Host|Pure)
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${virtSpecFps} virtType none
+            ANT_raw "For model=${model} Network InterfaceName was communicated at VM creation"
+            ANT_raw "Through conjecture, we label them as any enabled"      
+            lpDo vis_cntnr_netName_interfacesUpdateBasedOnConjecture
+            ;;
+        Host|Pure)
+            lpDo fileParamManage.py -v 30 -i fileParamWrite ${virtSpecFps} virtType none
 
-	    lpDo vis_cntnr_netName_interfacesUpdateBasedOnConjecture
-	    ;;
-	*)
-	    EH_problem "Bad Usage model=${model}"
-	    ;;
+            lpDo vis_cntnr_netName_interfacesUpdateBasedOnConjecture
+            ;;
+        *)
+            EH_problem "Bad Usage model=${model}"
+            ;;
     esac
 }
 
@@ -761,7 +761,7 @@ function vis_cntnr_netName_applicables {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Analyze sysCharBxoId, list applicable netNames based on abode.
 _EOF_
-		      }
+                      }
     EH_assert [[ $# -eq 0 ]]
 
     EH_assert bxoIdPrep
@@ -783,13 +783,13 @@ function vis_cntnr_netName_interfaceObtain {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Analyze sysCharBxoId, based on that and specified NetName, obtaine network interface.
 _EOF_
-		      }
+                      }
     EH_assert [[ $# -lt 3 ]]
 
     local thisBxoId="${bxoId}"
     
     if [ $# -eq 2 ] ; then
-	thisBxoId=$2
+        thisBxoId=$2
     fi
 
     thisBxoId=$( bxoIdPrep ${thisBxoId} )
@@ -803,9 +803,9 @@ _EOF_
     EH_assert [ ! -z "${netName}" ]
 
     if [ "${netName}" == "nat" ] ; then
-	# ANT_raw "netName=nat requires no processing"
-	lpDo echo "nat" "nat"
-	lpReturn
+        # ANT_raw "netName=nat requires no processing"
+        lpDo echo "nat" "nat"
+        lpReturn
     fi
     
     local repoName="sysChar"
@@ -832,31 +832,31 @@ _EOF_
     local interfaceOfNetControl=""    
     
     case ${model} in
-	Virt)
-	    # Result is something like eth0  and is obtained from
-	    # sysCharBxoHome/var
+        Virt)
+            # Result is something like eth0  and is obtained from
+            # sysCharBxoHome/var
 
-	    interfaceOfNet=$( fileParamManage.py -v 30 -i fileParamRead ${bxoHome}/var/sysCharConveyInfo/netIfs "${netName}" )
-	    interfaceOfNetControl=$( fileParamManage.py -v 30 -i fileParamRead ${bxoHome}/var/sysCharConveyInfo/netIfs "${netName}-control" )	    	    
-	    ;;
-	Host|Pure)
-	    # Result is something like en0 and is obtained from
-	    # sysCharBxoHome/sysChar/containerSpec.fps/netIfs
-	    interfaceOfNet=$( fileParamManage.py -v 30 -i fileParamRead ${containerSpecFps_netIfs} "${netName}" )
-	    interfaceOfNetControl=$( fileParamManage.py -v 30 -i fileParamRead ${containerSpecFps_netIfs} "${netName}-control" )	    	    
-	    ;;
-	*)
-	    EH_problem "Bad Usage model=${model}"
-	    ;;
+            interfaceOfNet=$( fileParamManage.py -v 30 -i fileParamRead ${bxoHome}/var/sysCharConveyInfo/netIfs "${netName}" )
+            interfaceOfNetControl=$( fileParamManage.py -v 30 -i fileParamRead ${bxoHome}/var/sysCharConveyInfo/netIfs "${netName}-control" )               
+            ;;
+        Host|Pure)
+            # Result is something like en0 and is obtained from
+            # sysCharBxoHome/sysChar/containerSpec.fps/netIfs
+            interfaceOfNet=$( fileParamManage.py -v 30 -i fileParamRead ${containerSpecFps_netIfs} "${netName}" )
+            interfaceOfNetControl=$( fileParamManage.py -v 30 -i fileParamRead ${containerSpecFps_netIfs} "${netName}-control" )                    
+            ;;
+        *)
+            EH_problem "Bad Usage model=${model}"
+            ;;
     esac
 
     if [ -z "${interfaceOfNet}" ] ; then
-	ANT_cooked "Missing Net Interface Info -- interfaceOfNet=${interfaceOfNet} -- Set to blank"
-	interfaceOfNet="blank"
+        ANT_cooked "Missing Net Interface Info -- interfaceOfNet=${interfaceOfNet} -- Set to blank"
+        interfaceOfNet="blank"
     fi
     if [ -z "${interfaceOfNetControl}" ] ; then
-	ANT_cooked "Missing Net Interface Info -- interfaceOfNetControl=${interfaceOfNetControl} -- Set to blank"
-	interfaceOfNetControl="blank"	
+        ANT_cooked "Missing Net Interface Info -- interfaceOfNetControl=${interfaceOfNetControl} -- Set to blank"
+        interfaceOfNetControl="blank"   
     fi
     
     echo "${interfaceOfNet}" "${interfaceOfNetControl}"
@@ -868,7 +868,7 @@ function vis_cntnr_netName_interfaceUpdate {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Analyze sysCharBxoId, based on that and specified NetName, obtaine network interface.
 _EOF_
-		      }
+                      }
     EH_assert [[ $# -eq 3 ]]
 
     EH_assert bxoIdPrep
@@ -880,8 +880,8 @@ _EOF_
     EH_assert [ ! -z "${netName}" ]
 
     if [ "${netName}" == "nat" ] ; then
-	ANT_raw "netName=nat requires no processing"
-	lpReturn
+        ANT_raw "netName=nat requires no processing"
+        lpReturn
     fi
     
     local repoName="sysChar"
@@ -905,30 +905,30 @@ _EOF_
     local containerSpecFps_netIfs=${containerSpecFps}/netIfs
     
     case ${model} in
-	Virt)
-	    # Result is something like eth0  and is obtained from
-	    # sysCharBxoHome/var
+        Virt)
+            # Result is something like eth0  and is obtained from
+            # sysCharBxoHome/var
 
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${bxoHome}/var/sysCharConveyInfo/netIfs "${netName}" "${interfaceOfNet}"
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${bxoHome}/var/sysCharConveyInfo/netIfs "${netName}-control" "${interfaceOfNetControl}"	    
-	    ;;
-	Host|Pure)
-	    # Result is something like en0 and is obtained from
-	    # sysCharBxoHome/sysChar/containerSpec.fps/netIfs
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${containerSpecFps_netIfs} "${netName}" "${interfaceOfNet}"
-	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${containerSpecFps_netIfs} "${netName}-control" "${interfaceOfNetControl}"	    
-	    # case ${netName} in
-	    # 	pubA|pubB)
-	    # 	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${containerSpecFps_netIfs} "${netName}-control" "disabled"
-	    # 	    ;;
-	    # 	*)
-	    # 	    lpDo fileParamManage.py -v 30 -i fileParamWrite ${containerSpecFps_netIfs} "${netName}-control" "enabled"
-	    # 	    ;;
-	    # esac
-	    ;;
-	*)
-	    EH_problem "Bad Usage model=${model}"
-	    ;;
+            lpDo fileParamManage.py -v 30 -i fileParamWrite ${bxoHome}/var/sysCharConveyInfo/netIfs "${netName}" "${interfaceOfNet}"
+            lpDo fileParamManage.py -v 30 -i fileParamWrite ${bxoHome}/var/sysCharConveyInfo/netIfs "${netName}-control" "${interfaceOfNetControl}"         
+            ;;
+        Host|Pure)
+            # Result is something like en0 and is obtained from
+            # sysCharBxoHome/sysChar/containerSpec.fps/netIfs
+            lpDo fileParamManage.py -v 30 -i fileParamWrite ${containerSpecFps_netIfs} "${netName}" "${interfaceOfNet}"
+            lpDo fileParamManage.py -v 30 -i fileParamWrite ${containerSpecFps_netIfs} "${netName}-control" "${interfaceOfNetControl}"      
+            # case ${netName} in
+            #   pubA|pubB)
+            #       lpDo fileParamManage.py -v 30 -i fileParamWrite ${containerSpecFps_netIfs} "${netName}-control" "disabled"
+            #       ;;
+            #   *)
+            #       lpDo fileParamManage.py -v 30 -i fileParamWrite ${containerSpecFps_netIfs} "${netName}-control" "enabled"
+            #       ;;
+            # esac
+            ;;
+        *)
+            EH_problem "Bad Usage model=${model}"
+            ;;
     esac
 }
 
@@ -938,7 +938,7 @@ function vis_cntnr_netName_interfacesUpdateBasedOnConjecture {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Analyze sysCharBxoId, based on that and specified netName, and specified interfaceOfNet, set network interface.
 _EOF_
-		      }
+                      }
     EH_assert [[ $# -eq 0 ]]
 
     EH_assert bxoIdPrep
@@ -954,41 +954,41 @@ _EOF_
     local model=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} model )
 
     function procNetNameInterface {
-	netName=$1
-	netInterface=$2
+        netName=$1
+        netInterface=$2
 
-	if [ "${netInterface}" == "unknown" ] ; then
-	    lpDo vis_cntnr_netName_interfaceUpdate ${netName} ${netInterface} "unconfigured"
-	    ANT_raw "No conjectures for netName=$1 and netInterface=$2"
-	    lpReturn
-	else
-	    lpDo vis_cntnr_netName_interfaceUpdate ${netName} ${netInterface} "enabled"
-	fi
+        if [ "${netInterface}" == "unknown" ] ; then
+            lpDo vis_cntnr_netName_interfaceUpdate ${netName} ${netInterface} "unconfigured"
+            ANT_raw "No conjectures for netName=$1 and netInterface=$2"
+            lpReturn
+        else
+            lpDo vis_cntnr_netName_interfaceUpdate ${netName} ${netInterface} "enabled"
+        fi
 
-	case ${model} in
-	    Virt)
-		lpDo vis_cntnr_netName_interfaceUpdate ${netName} "any" "enabled"
-		;;
-	    Host|Pure)
-		case ${netName} in
-		    pubA|pubB)
-			lpDo vis_cntnr_netName_interfaceUpdate ${netName} ${netInterface} "disabled"
-			;;
-		    *)
-			doNothing
-			;;
-		esac
-		;;
-	    *)
-		doNothing
-		;;
-	esac
+        case ${model} in
+            Virt)
+                lpDo vis_cntnr_netName_interfaceUpdate ${netName} "any" "enabled"
+                ;;
+            Host|Pure)
+                case ${netName} in
+                    pubA|pubB)
+                        lpDo vis_cntnr_netName_interfaceUpdate ${netName} ${netInterface} "disabled"
+                        ;;
+                    *)
+                        doNothing
+                        ;;
+                esac
+                ;;
+            *)
+                doNothing
+                ;;
+        esac
     }
     
     vis_cntnr_netName_interfacesConject |
-	while read line ; do
-	    procNetNameInterface ${line} # 2 Args
-	done
+        while read line ; do
+            procNetNameInterface ${line} # 2 Args
+        done
 }
 
 
@@ -997,7 +997,7 @@ function vis_cntnr_netName_interfacesConject {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Analyze sysCharBxoId, based on that and specified netName, and specified interfaceOfNet, set network interface.
 _EOF_
-		      }
+                      }
     EH_assert [[ $# -eq 0 ]]
 
     EH_assert bxoIdPrep
@@ -1008,8 +1008,8 @@ _EOF_
     # EH_assert [ ! -z "${netName}" ]
 
     # if [ "${netName}" == "nat" ] ; then
-    # 	ANT_raw "netName=nat requires no processing"
-    # 	lpReturn
+    #   ANT_raw "netName=nat requires no processing"
+    #   lpReturn
     # fi
     
     local repoName="sysChar"
@@ -1040,15 +1040,15 @@ _EOF_
     
     for eachNetName in ${applicableNets} ; do
 
-	netAddr=$(vis_site_netNameAddr ${eachNetName} )
-	netmask=$(vis_site_netNameNetmask ${eachNetName} )
+        netAddr=$(vis_site_netNameAddr ${eachNetName} )
+        netmask=$(vis_site_netNameNetmask ${eachNetName} )
 
-	interfaceOfNet=$( vis_givenNetGetInterface "${netAddr}" "${netmask}" )
-	if [ -z "${interfaceOfNet}" ] ; then
-	    interfaceOfNet="unknown"
-	fi
+        interfaceOfNet=$( vis_givenNetGetInterface "${netAddr}" "${netmask}" )
+        if [ -z "${interfaceOfNet}" ] ; then
+            interfaceOfNet="unknown"
+        fi
 
-	lpDo echo "${eachNetName}" "${interfaceOfNet}"
+        lpDo echo "${eachNetName}" "${interfaceOfNet}"
     done
 }
 
@@ -1058,7 +1058,7 @@ function vis_recordDeployment {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Use the sysChar BxO to record that the VM was deployed.
 _EOF_
-		       }
+                       }
     local thisDescribeF=$(describeF)
     EH_assert [[ $# -eq 0 ]]
     EH_assert [ ! -z "${bxoId}" ]
@@ -1068,7 +1068,7 @@ _EOF_
     lpDo printf ${thisDescribeF}
     
     lpReturn
-}	
+}       
 
 
 _CommentBegin_

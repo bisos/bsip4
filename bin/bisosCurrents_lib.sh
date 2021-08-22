@@ -33,9 +33,9 @@ function vis_setParam {
     paramValue=$2
 
     if [ ! -f /bisos/var/currents ] ; then
-	EH_problem "Missing ${bisosCurrentsFileName} -- First Run:"
-	ANT_raw "${bisosCurrentsIcm} -i currentsFileCreate"
-	return 101
+        EH_problem "Missing ${bisosCurrentsFileName} -- First Run:"
+        ANT_raw "${bisosCurrentsIcm} -i currentsFileCreate"
+        return 101
     fi
 
     typeset thisDateTag=`date +%y%m%d%H%M%S`
@@ -55,29 +55,29 @@ function vis_validateParam {
 
   acctsList=$( bystarBacsAcctsList )
 
-	case ${paramName} in
-	    "currentBxoUname"|"currentBxoAutonomousUname"|"currentBynameUname")
-	        if [ "${paramValue}_" == "_" ] ; then
-		   doNothing
-		fi
+        case ${paramName} in
+            "currentBxoUname"|"currentBxoAutonomousUname"|"currentBynameUname")
+                if [ "${paramValue}_" == "_" ] ; then
+                   doNothing
+                fi
 
-		if LIST_isIn "${paramValue}" "${acctsList}" ; then	
-		   doNothing
-  	        else
-		   EH_problem "${paramValue} not in: ${acctsList}"
-		   ANT_raw "Consider running:"
+                if LIST_isIn "${paramValue}" "${acctsList}" ; then      
+                   doNothing
+                else
+                   EH_problem "${paramValue} not in: ${acctsList}"
+                   ANT_raw "Consider running:"
                    ANT_raw "lpCurrentsAdmin.sh -i currentsSetRecent"
-		   return 101
-  	        fi
-		   
-		;;
-	    "currentDeveloper")
-		doNothing
-		;;
-	    *)
-		doNothing
-		;;
-	esac
+                   return 101
+                fi
+                   
+                ;;
+            "currentDeveloper")
+                doNothing
+                ;;
+            *)
+                doNothing
+                ;;
+        esac
 }
 
 function bxoAcctsList {
@@ -92,39 +92,39 @@ function lpCurrentsGet {
     EH_assert [[ $# -eq 0 ]]
 
     if [ -f "${bisosCurrentsFileName}" ] ; then
-	. "${bisosCurrentsFileName}"
+        . "${bisosCurrentsFileName}"
     else
-	EH_problem "Missing bisosCurrentsFileName=${bisosCurrentsFileName}"
-	lpReturn 101
+        EH_problem "Missing bisosCurrentsFileName=${bisosCurrentsFileName}"
+        lpReturn 101
     fi
 
     typeset acctsList=$( bxoAcctsList )
 
     if [ -z "${acctsList}" ] ; then
-	#EH_problem "Missing bxoAcctsList"
-	currentBxoId=""
-	#lpReturn 101
-	lpReturn
+        #EH_problem "Missing bxoAcctsList"
+        currentBxoId=""
+        #lpReturn 101
+        lpReturn
     fi
 
     if [ "${currentBxoId}" == "" ] ; then
-	currentBxoId=$( LIST_getFirst ${acctsList} | cut -d ':' -f 1 )
+        currentBxoId=$( LIST_getFirst ${acctsList} | cut -d ':' -f 1 )
     fi
     if [ "${currentBxoUname}" == "" ] ; then
-	currentBxoUname=$( LIST_getFirst ${acctsList} | cut -d ':' -f 1 )
-	#currentBxoUname=$( echo ${acctsList} | head -1 )
+        currentBxoUname=$( LIST_getFirst ${acctsList} | cut -d ':' -f 1 )
+        #currentBxoUname=$( echo ${acctsList} | head -1 )
     fi
     if [ "${currentBxoAutonomousUname}" == "" ] ; then
-	currentBxoAutonomousUname=$( LIST_getFirst ${acctsList} | cut -d ':' -f 1 )
+        currentBxoAutonomousUname=$( LIST_getFirst ${acctsList} | cut -d ':' -f 1 )
     fi
     if [ "${currentBxoUeUname}" == "" ] ; then
-	currentBxoUeUname="ca-16001"
+        currentBxoUeUname="ca-16001"
     fi
     if [ "${currentBxoSiteUname}" == "" ] ; then
-	currentBxoSiteUname="NOTYET"
+        currentBxoSiteUname="NOTYET"
     fi
     if [ "${currentUsgUname}" == "" ] ; then
-	currentUsgUname=$( id -u -n )
+        currentUsgUname=$( id -u -n )
     fi
 
 }
@@ -134,10 +134,10 @@ function lpCurrentsDefaults {
 
     typeset acctsList=$( bystarBacsAcctsList )
 
-	currentDefaultBystarUname=$( LIST_getFirst ${acctsList} )
-	currentDefaultMasterUname=$( LIST_getFirst ${acctsList} )
-	currentDefaultBcaUname="ca-16001"
-	currentDefaultDeveloper=lsipusr
+        currentDefaultBystarUname=$( LIST_getFirst ${acctsList} )
+        currentDefaultMasterUname=$( LIST_getFirst ${acctsList} )
+        currentDefaultBcaUname="ca-16001"
+        currentDefaultDeveloper=lsipusr
 }
 
 function lpCurrentsShow {
@@ -163,7 +163,7 @@ _EOF_
     cat /bisos/var/currents | sed -e 's/=.*$//'
 
     lpReturn
-}	
+}       
 
 function vis_bisosCurrentsObtain {
    G_funcEntry
@@ -177,13 +177,13 @@ _EOF_
     local inVal="$1"
     local cursList=$(lpDo vis_bisosCurrentsList)
     
-    if LIST_isIn "${inVal}" "${cursList}" ; then	
-	eval "echo \${${inVal}}"
+    if LIST_isIn "${inVal}" "${cursList}" ; then        
+        eval "echo \${${inVal}}"
     else
-	echo ${inVal}
+        echo ${inVal}
     fi
 
     lpReturn
-}	
+}       
 
 

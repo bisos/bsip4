@@ -57,7 +57,7 @@ ${G_myName} ${extraInfo} -i emacsclientProgOfEmacsServerVersion ${emacsServerVer
 ${G_myName} ${extraInfo} -i emacsServerSocketBleeVersion ${emacsServerSocket}          # Obtain BleeVersion in Bash
 ${G_myName} ${extraInfo} -i emacsServerSocketEmacsVersion ${emacsServerSocket}         # Obtain EmacsVersion in Bash
 ${G_myName} ${extraInfo} -i emacsServerSocketFromEnv                                   # Obtain ServerSocket from environement
-${G_myName} ${extraInfo} -i emacsServerPidFromEnv				       # Obatin ServerPid from environment
+${G_myName} ${extraInfo} -i emacsServerPidFromEnv                                      # Obatin ServerPid from environment
 $( examplesSeperatorSection "Raw emacsclient Invocations" )
 $( vis_thisEmacsClient ) --eval "(emacs-version)"
 $( vis_examples_bleeLibLine )
@@ -86,7 +86,7 @@ _EOF_
 
     local emacsServerSocket=$(vis_emacsServerSocketDefault)
     if [ -z "${emacsServerSocket}" ] ; then
-	EH_problem "Missing emacsServerSocket"
+        EH_problem "Missing emacsServerSocket"
     fi
     
     local emacsServerVersion=$(vis_emacsServerSocketEmacsVersion ${emacsServerSocket})
@@ -105,7 +105,7 @@ _EOF_
 
     local emacsServerSocket=$(vis_emacsServerSocketFromEnv)
     if [ -z "${emacsServerSocket}" ] ; then
-	EH_problem "Missing emacsServerSocket"
+        EH_problem "Missing emacsServerSocket"
     fi
     
     local emacsServerVersion=$(vis_emacsServerSocketEmacsVersion ${emacsServerSocket})
@@ -131,12 +131,12 @@ _EOF_
     # NOTYET, do this based on blee-version and INSIDE_EMACS variable
     #
     case ${emacsVersion} in
-	27.0.5 )
+        27.0.5 )
             emacsClient="/usr/local/bin/emacsclient27"
             ;;
-	*)
-	    emacsClient="$(which emacsclient)"
-	    ;;
+        *)
+            emacsClient="$(which emacsclient)"
+            ;;
     esac
 
     echo "${emacsClient}"
@@ -178,7 +178,7 @@ _EOF_
     local serverSocket=$( ls -t -1 /run/user/$(id -u)/emacs/* | head -1 ) #2> /dev/null )
 
     if [ -z "${serverSocket}" ] ; then
-	EH_problem "No blee emacs sockets were found"
+        EH_problem "No blee emacs sockets were found"
     fi
     
     echo ${serverSocket}
@@ -198,10 +198,10 @@ _EOF_
     local serverSocket=$( ls -1 /run/user/$(id -u)/emacs/*${parentEmacsPid}* 2> /dev/null )
 
     if [ -z "${serverSocket}" ] ; then
-	serverSocket=$( ls -1 /run/user/$(id -u)/emacs/server 2> /dev/null )
-	if [ -z "${serverSocket}" ] ; then
-	    serverSocket=""
-	fi
+        serverSocket=$( ls -1 /run/user/$(id -u)/emacs/server 2> /dev/null )
+        if [ -z "${serverSocket}" ] ; then
+            serverSocket=""
+        fi
     fi
     
     echo ${serverSocket}
@@ -215,8 +215,8 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if [ -z "${G_emacsServerPid}" ] ; then
-	EH_problem "Missing G_emacsServerPid"
-	lpReturn
+        EH_problem "Missing G_emacsServerPid"
+        lpReturn
     fi
 
     echo ${G_emacsServerPid} 

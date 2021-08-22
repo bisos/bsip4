@@ -20,7 +20,7 @@ function vis_description_bxeHookRun {
 *** info: registrar, site
 *** svc: byname, bysmb
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
 }
 

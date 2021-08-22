@@ -106,7 +106,7 @@ function vis_doTheWork {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		       }
+                       }
     
     typeset tmpFile=$( FN_tempFile )
 

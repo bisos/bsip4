@@ -47,7 +47,7 @@ function vis_moduleDescription {  cat  << _EOF_
 *  [[elisp:(org-cycle)][| ]]  Info          :: *[Module Description:]* [[elisp:(org-cycle)][| ]]
 
 _EOF_
-			       }
+                               }
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *Seed Extensions*
@@ -173,8 +173,8 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if [ -z "${acctName}" ] ; then
-	EH_problem "Missing acctName"
-	lpReturn 101
+        EH_problem "Missing acctName"
+        lpReturn 101
     fi
 
     # NOTYET, verify that acctName is valid (source needed lib)    

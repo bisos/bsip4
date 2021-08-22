@@ -38,7 +38,7 @@ function aptPinUpdate {
 
   FN_fileSafeCopy ${aptPreferencesFile} ${aptPreferencesFile}.${dateTag}
 
-  aptPinStdout $1 $2 $3	>> ${aptPreferencesFile}
+  aptPinStdout $1 $2 $3 >> ${aptPreferencesFile}
 
   opDo ls -l ${aptPreferencesFile}
 }

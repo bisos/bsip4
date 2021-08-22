@@ -125,12 +125,12 @@ _EOF_
     local gitServerInfoBase="${selectedSite}/gitServerInfo"
 
     if [ ! -e "${selectedSite}" ] ; then
-	EH_problem "Missing ${selectedSite}"
-	lpReturn 101
+        EH_problem "Missing ${selectedSite}"
+        lpReturn 101
     fi
 
     if [ ! -d "${gitServerInfoBase}" ] ; then
-	lpDo mkdir -p "${gitServerInfoBase}"
+        lpDo mkdir -p "${gitServerInfoBase}"
     fi
     
     lpDo fileParamManage.py -i fileParamWrite "${gitServerInfoBase}" gitServerName "${gitServerName}"
@@ -150,8 +150,8 @@ _EOF_
     local gitServerInfoBase="${selectedSite}/gitServerInfo"
 
     if [ ! -e "${selectedSite}" ] ; then
-	EH_problem "Missing ${selectedSite}"
-	lpReturn 101
+        EH_problem "Missing ${selectedSite}"
+        lpReturn 101
     fi
 
     lpDo fileParamManage.py -i fileParamDictRead "${gitServerInfoBase}"
@@ -170,8 +170,8 @@ _EOF_
     local gitServerInfoBase="${selectedSite}/gitServerInfo"
 
     if [ ! -e "${selectedSite}" ] ; then
-	EH_problem "Missing ${selectedSite}"
-	lpReturn 101
+        EH_problem "Missing ${selectedSite}"
+        lpReturn 101
     fi
 
     lpDo echo "${gitServerInfoBase}"

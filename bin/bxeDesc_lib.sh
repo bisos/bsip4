@@ -24,7 +24,7 @@ _EOF_
     local kindTypeTag=$( vis_kindTypeTag_obtain ${bxeKind} ${bxeType} "alpha" )
 
     echo ${privacyTag}${kindTypeTag}
-}	
+}       
 
 
 function vis_bxeDescBase_obtain { echo "/bisos/var/bxe/bxeDesc"; }
@@ -42,32 +42,32 @@ _EOF_
     local bxeTreeDir=""
 
     if [ -z "${parentBxoId}" ] ; then
-	local cp_bxePrivacy=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxePrivacy )
-	local cp_bxeKind=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxeKind )    
-	local cp_bxeType=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxeType )
+        local cp_bxePrivacy=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxePrivacy )
+        local cp_bxeKind=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxeKind )    
+        local cp_bxeType=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxeType )
 
-	echo "$(vis_bxeDescBase_obtain)/${cp_bxePrivacy}/${cp_bxeKind}/${cp_bxeType}"
+        echo "$(vis_bxeDescBase_obtain)/${cp_bxePrivacy}/${cp_bxeKind}/${cp_bxeType}"
     else
-	if ! unisosAccts.sh -i userAcctExists "${parentBxoId}" ; then
-	    EH_problem "Missing bxoId -- parentBxoId=${parentBxoId}"
-	    lpReturn 101
-	fi
-	bxoHome=$( FN_absolutePathGet ~${parentBxoId} )
-	if [ -z "${bxoHome}" ] ; then
-	    EH_problem "Missing bxoHome -- parentBxoId=${parentBxoId}"
-	    lpReturn 101
-	fi
-	bxeTreeDir="${bxoHome}/bxeTree"
-	if [ ! -d "${bxeTreeDir}" ] ; then
-	    lpDo mkdir -p ${bxeTreeDir}
-	fi
-	bxeTreeDescDir="${bxoHome}/bxeTree/bxeDesc"
-	if [ ! -d "${bxeTreeDescDir}" ] ; then
-	    lpDo mkdir -p ${bxeTreeDescDir}
-	fi
-	echo "${bxeTreeDescDir}"
-    fi	
-}	
+        if ! unisosAccts.sh -i userAcctExists "${parentBxoId}" ; then
+            EH_problem "Missing bxoId -- parentBxoId=${parentBxoId}"
+            lpReturn 101
+        fi
+        bxoHome=$( FN_absolutePathGet ~${parentBxoId} )
+        if [ -z "${bxoHome}" ] ; then
+            EH_problem "Missing bxoHome -- parentBxoId=${parentBxoId}"
+            lpReturn 101
+        fi
+        bxeTreeDir="${bxoHome}/bxeTree"
+        if [ ! -d "${bxeTreeDir}" ] ; then
+            lpDo mkdir -p ${bxeTreeDir}
+        fi
+        bxeTreeDescDir="${bxoHome}/bxeTree/bxeDesc"
+        if [ ! -d "${bxeTreeDescDir}" ] ; then
+            lpDo mkdir -p ${bxeTreeDescDir}
+        fi
+        echo "${bxeTreeDescDir}"
+    fi  
+}       
 
 
 function vis_privacyTag_obtain {
@@ -79,19 +79,19 @@ _EOF_
     local privacy="$1"
 
     case ${privacy} in
-	"priv"|"private")
-	    echo "p"
-	    ;;
-	"group")
-	    echo "g"
-	    ;;
-	"all"|"public")
-	    echo "a"
-	    ;;
-	*)
-	    EH_problem "privacy=${privacy} -- Unexpected"
-	    return
-	    ;;
+        "priv"|"private")
+            echo "p"
+            ;;
+        "group")
+            echo "g"
+            ;;
+        "all"|"public")
+            echo "a"
+            ;;
+        *)
+            EH_problem "privacy=${privacy} -- Unexpected"
+            return
+            ;;
       esac
 }
 
@@ -110,166 +110,166 @@ _EOF_
     local numeric=0
 
     case ${bxeKind} in
-	"real")
-	    case ${bxeType} in
-		"individual")
-		    alpha="ri"
-		    numeric=1
-		    ;;
-		"corp")
-		    alpha="rc"
-		    numeric=2
-		    ;;
-		"system")
-		    alpha="rs"
-		    numeric=3
-		    ;;
-		*)
-		    EH_problem "bxeType=${bxeType} -- Unexpected"
-		    return
-		    ;;
-	    esac
-	    ;;
-	"info")
-	    case ${bxeType} in
-		"registrar")
-		    alpha="ir"
-		    numeric=31
-		    ;;
-		"site")
-		    alpha="is"
-		    numeric=32
-		    ;;
-		"sysChar")
-		    alpha="ic"
-		    numeric=33
-		    ;;
-		"usage")
-		    alpha="iu"
-		    numeric=34
-		    ;;
-		"project")
-		    alpha="ip"
-		    numeric=35
-		    ;;
-		"virtGuest")
-		    alpha="ig"
-		    numeric=36
-		    ;;
-		*)
-		    EH_problem "bxeType=${bxeType} -- Unexpected"		    
-		    return
-		    ;;
-	    esac
-	    ;;
-	"svc")
-	    case ${bxeType} in
-		"byname")
-		    alpha="sn"
-		    numeric=61
-		    ;;
-		"bysmb")
-		    alpha="sb"
-		    numeric=62
-		    ;;
-		*)
-		    EH_problem "bxeType=${bxeType} -- Unexpected"
-		    return
-		    ;;
-	    esac
-	    ;;
-	"materialization")
-	    case ${bxeType} in
-		"site")
-		    alpha="ms"
-		    numeric=91
-		    ;;
-		"nets")
-		    alpha="mn"
-		    numeric=92
-		    ;;
-		"domains")
-		    alpha="md"
-		    numeric=93
-		    ;;
-		"boxes")
-		    alpha="mb"
-		    numeric=94
-		    ;;
-		"containers")
-		    alpha="mc"
-		    numeric=95
-		    ;;
-		"sysChar")
-		    # c is taken by containers, p for personality instead of character
-		    alpha="mp"
-		    numeric=96
-		    ;;
-		"aais")
-		    alpha="mi"
-		    numeric=97
-		    ;;
-		"scs")
-		    # s,c,i are taken, z because it is available
-		    alpha="mz"
-		    numeric=98
-		    ;;
-		*)
-		    EH_problem "bxeType=${bxeType} -- Unexpected"
-		    return
-		    ;;
-	    esac
-	    ;;
-	"container")
-	    # To be obsoleted
-	    case ${bxeType} in
-		"exposed")
-		    alpha="ce"
-		    numeric=121
-		    ;;
-		"intra")
-		    alpha="ci"
-		    numeric=122
-		    ;;
-		"usage")
-		    alpha="cu"
-		    numeric=123
-		    ;;
-		"dev")
-		    alpha="cd"
-		    numeric=124
-		    ;;
-		"android")
-		    alpha="ca"
-		    numeric=125
-		    ;;
-		"vmHost")
-		    alpha="cv"
-		    numeric=126
-		    ;;
-		"perimeter")
-		    alpha="cp"
-		    numeric=127
-		    ;;
-		*)
-		    EH_problem "bxeType=${bxeType} -- Unexpected"
-		    return
-		    ;;
-	    esac
-	    ;;
-	*)
-	    EH_problem "bxeKind=${bxeKind} -- Unexpected"
-	    return
-	    ;;
+        "real")
+            case ${bxeType} in
+                "individual")
+                    alpha="ri"
+                    numeric=1
+                    ;;
+                "corp")
+                    alpha="rc"
+                    numeric=2
+                    ;;
+                "system")
+                    alpha="rs"
+                    numeric=3
+                    ;;
+                *)
+                    EH_problem "bxeType=${bxeType} -- Unexpected"
+                    return
+                    ;;
+            esac
+            ;;
+        "info")
+            case ${bxeType} in
+                "registrar")
+                    alpha="ir"
+                    numeric=31
+                    ;;
+                "site")
+                    alpha="is"
+                    numeric=32
+                    ;;
+                "sysChar")
+                    alpha="ic"
+                    numeric=33
+                    ;;
+                "usage")
+                    alpha="iu"
+                    numeric=34
+                    ;;
+                "project")
+                    alpha="ip"
+                    numeric=35
+                    ;;
+                "virtGuest")
+                    alpha="ig"
+                    numeric=36
+                    ;;
+                *)
+                    EH_problem "bxeType=${bxeType} -- Unexpected"                   
+                    return
+                    ;;
+            esac
+            ;;
+        "svc")
+            case ${bxeType} in
+                "byname")
+                    alpha="sn"
+                    numeric=61
+                    ;;
+                "bysmb")
+                    alpha="sb"
+                    numeric=62
+                    ;;
+                *)
+                    EH_problem "bxeType=${bxeType} -- Unexpected"
+                    return
+                    ;;
+            esac
+            ;;
+        "materialization")
+            case ${bxeType} in
+                "site")
+                    alpha="ms"
+                    numeric=91
+                    ;;
+                "nets")
+                    alpha="mn"
+                    numeric=92
+                    ;;
+                "domains")
+                    alpha="md"
+                    numeric=93
+                    ;;
+                "boxes")
+                    alpha="mb"
+                    numeric=94
+                    ;;
+                "containers")
+                    alpha="mc"
+                    numeric=95
+                    ;;
+                "sysChar")
+                    # c is taken by containers, p for personality instead of character
+                    alpha="mp"
+                    numeric=96
+                    ;;
+                "aais")
+                    alpha="mi"
+                    numeric=97
+                    ;;
+                "scs")
+                    # s,c,i are taken, z because it is available
+                    alpha="mz"
+                    numeric=98
+                    ;;
+                *)
+                    EH_problem "bxeType=${bxeType} -- Unexpected"
+                    return
+                    ;;
+            esac
+            ;;
+        "container")
+            # To be obsoleted
+            case ${bxeType} in
+                "exposed")
+                    alpha="ce"
+                    numeric=121
+                    ;;
+                "intra")
+                    alpha="ci"
+                    numeric=122
+                    ;;
+                "usage")
+                    alpha="cu"
+                    numeric=123
+                    ;;
+                "dev")
+                    alpha="cd"
+                    numeric=124
+                    ;;
+                "android")
+                    alpha="ca"
+                    numeric=125
+                    ;;
+                "vmHost")
+                    alpha="cv"
+                    numeric=126
+                    ;;
+                "perimeter")
+                    alpha="cp"
+                    numeric=127
+                    ;;
+                *)
+                    EH_problem "bxeType=${bxeType} -- Unexpected"
+                    return
+                    ;;
+            esac
+            ;;
+        *)
+            EH_problem "bxeKind=${bxeKind} -- Unexpected"
+            return
+            ;;
     esac
 
     if [ "${resultType}" == "alpha" ] ; then
-	echo ${alpha}
+        echo ${alpha}
     elif [ "${resultType}" == "numeric" ] ; then
-	echo ${numeric}
+        echo ${numeric}
     else
-	EH_problem "Bad resultType=${resultType} -- Unexpected"
-	lpReturn 101
+        EH_problem "Bad resultType=${resultType} -- Unexpected"
+        lpReturn 101
     fi
 }
 
@@ -322,7 +322,7 @@ _EOF_
     local stashedBxeDescBase="$( vis_bxceBxeDescBaseGet "${parentBxoId}" )/${bxeLocalName}"
 
     if [ ! -d ${stashedBxeDescBase} ] ; then
-	lpDo mkdir -p "${stashedBxeDescBase}"
+        lpDo mkdir -p "${stashedBxeDescBase}"
     fi
     
     lpDo cp -r "${bxeDesc}"/* "${stashedBxeDescBase}"
@@ -330,7 +330,7 @@ _EOF_
     echo "${stashedBxeDescBase}"
 
     lpReturn
-}	
+}       
 
 
 function vis_bxeDescInfo {

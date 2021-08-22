@@ -92,8 +92,8 @@ function G_postParamHook {
     # lpCurrentsGet
 
     if [ ! -z "${bxoId}" ] ; then
-	# NOTYET -- This is unreliable as bxoId may not exist
-     	bxoHome=$( FN_absolutePathGet ~${bxoId} )
+        # NOTYET -- This is unreliable as bxoId may not exist
+        bxoHome=$( FN_absolutePathGet ~${bxoId} )
     fi
 
     return 0
@@ -118,13 +118,13 @@ function vis_examples {
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
     if ! lpCurrentsGet ; then
-	EH_problem "lpCurrentsGet Failure"
-	lpReturn 101
+        EH_problem "lpCurrentsGet Failure"
+        lpReturn 101
     fi
 
     local thisBisosDevBxoId=$( vis_usgBposUsageEnvs_bisosDevBxoId_read )
     if [ -z "${thisBisosDevBxoId}" ] ; then
-	thisBisosDevBxoId="piu_XXBisosDev"
+        thisBisosDevBxoId="piu_XXBisosDev"
     fi
 
     local oneRealIndiv=$(bxoGitlab.py -v 30  -i acctList  | grep pri_ | head -1)    

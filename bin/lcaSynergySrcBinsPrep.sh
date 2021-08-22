@@ -55,8 +55,8 @@ Xref-Here-
 **      ====[[elisp:(org-cycle)][Fold]]==== [[file:/libre/ByStar/InitialTemplates/activeDocs/bxServices/versionControl/fullUsagePanel-en.org::Xref-VersionControl][Panel Roadmap Documentation]]
 *      ======[[elisp:(org-cycle)][Fold]]====== *[Module Description:]*
 **      ====[[elisp:(org-cycle)][Fold]]====  /Windows Binaries Installation/
-	http://synergy-project.org/download/free/      -- Old Stable Releases
-	https://synergy-project.org/nightly            -- Latest Nightly Builds
+        http://synergy-project.org/download/free/      -- Old Stable Releases
+        https://synergy-project.org/nightly            -- Latest Nightly Builds
 _EOF_
 }
 
@@ -75,7 +75,7 @@ _EOF_
     #  [[elisp:(lsip-local-run-command "apt-cache search synergy | egrep '^synergy'")][apt-cache search synergy | egrep '^synergy']]
 
     itemOrderedList=( 
-	"synergy" 
+        "synergy" 
     )
 
     # Obsoleted itemOptionalOrderedList=( "quicksynergy" ) 
@@ -109,25 +109,25 @@ binsPrep_synergy_DEFAULT_DEFAULT () {
     mmaPkgDebianMethod="custom"  #  or "apt" no need for customInstallScript but with binsPrep_installPostHook
 
     function customInstallScript {
-	lpDo sudo apt-get install -y qtcreator qtbase5-dev qttools5-dev cmake make g++ xorg-dev libssl-dev libx11-dev libsodium-dev libgl1-mesa-glx libegl1-mesa libcurl4-openssl-dev libavahi-compat-libdnssd-dev qtdeclarative5-dev libqt5svg5-dev libsystemd-dev git build-essential
+        lpDo sudo apt-get install -y qtcreator qtbase5-dev qttools5-dev cmake make g++ xorg-dev libssl-dev libx11-dev libsodium-dev libgl1-mesa-glx libegl1-mesa libcurl4-openssl-dev libavahi-compat-libdnssd-dev qtdeclarative5-dev libqt5svg5-dev libsystemd-dev git build-essential
 
-	lpDo sudo apt-get -y install libqt5glib-2.0-0
-	lpDo sudo apt-get -y install libglib2.0-dev
-	lpDo sudo apt-get -y install libgdk-pixbuf-2.0-dev
-	lpDo sudo apt-get -y install libnotify-dev
-	
-	lpDo sudo apt-get install -y libavahi-compat-libdnssd1
-	
-	lpDo mkdir /bisos/var/srcPkgs/synergy-git
-	lpDo cd /bisos/var/srcPkgs/synergy-git
-	lpDo git clone https://github.com/symless/synergy-core.git
-	lpDo cd synergy-core
-	lpDo mkdir build
-	lpDo cd build
-	lpDo cmake ..
-	lpDo make
-	lpDo sudo make install
-	cat  << _EOF_
+        lpDo sudo apt-get -y install libqt5glib-2.0-0
+        lpDo sudo apt-get -y install libglib2.0-dev
+        lpDo sudo apt-get -y install libgdk-pixbuf-2.0-dev
+        lpDo sudo apt-get -y install libnotify-dev
+        
+        lpDo sudo apt-get install -y libavahi-compat-libdnssd1
+        
+        lpDo mkdir /bisos/var/srcPkgs/synergy-git
+        lpDo cd /bisos/var/srcPkgs/synergy-git
+        lpDo git clone https://github.com/symless/synergy-core.git
+        lpDo cd synergy-core
+        lpDo mkdir build
+        lpDo cd build
+        lpDo cmake ..
+        lpDo make
+        lpDo sudo make install
+        cat  << _EOF_
 Binaries will be installed in /usr/local/bin
 
 Note: After starting Synergy, you don’t have to enter the serial to get basic

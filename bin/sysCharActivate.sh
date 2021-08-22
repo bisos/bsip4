@@ -114,7 +114,7 @@ function G_postParamHook {
     bxoIdPrepValidate    
 
     if [ ! -z "${bxoId}" ] ; then
-     	bxoHome=$( FN_absolutePathGet ~${bxoId} )
+        bxoHome=$( FN_absolutePathGet ~${bxoId} )
     fi
     
     # bisosCurrentsGet
@@ -145,14 +145,14 @@ function vis_examples {
 
     if [ -z "${selectedContainerBxoId}" ] ; then
 
-	local containerAssignBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
-	EH_assert [ ! -z "${containerAssignBase}" ]
+        local containerAssignBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
+        EH_assert [ ! -z "${containerAssignBase}" ]
    
-	local sysCharContainerBxoId=$( vis_sysCharContainerBxoIdName ${containerAssignBase} )
+        local sysCharContainerBxoId=$( vis_sysCharContainerBxoIdName ${containerAssignBase} )
 
-	effectiveContainerBxoId="${sysCharContainerBxoId}"
+        effectiveContainerBxoId="${sysCharContainerBxoId}"
     else
-	effectiveContainerBxoId="${selectedContainerBxoId}"
+        effectiveContainerBxoId="${selectedContainerBxoId}"
     fi
 
     visLibExamplesOutput ${G_myName} 

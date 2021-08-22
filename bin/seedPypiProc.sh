@@ -213,15 +213,15 @@ _EOF_
     local thisBase=$(basename $(pwd))
 
     if [[ ${thisBase} == *"rel"* ]] ; then
-	pypiPkgBaseMode="rel"
+        pypiPkgBaseMode="rel"
     elif [[ ${thisBase} == *"dev"* ]] ; then
-	pypiPkgBaseMode="dev"
+        pypiPkgBaseMode="dev"
     elif [[ ${thisBase} == *"py2"* ]] ; then
-	pypiPkgBaseMode="rel"
+        pypiPkgBaseMode="rel"
     elif [[ ${thisBase} == *"py3"* ]] ; then
-	pypiPkgBaseMode="rel"
+        pypiPkgBaseMode="rel"
     else
-	EH_oops "Missing or bad: ${thisBase}"
+        EH_oops "Missing or bad: ${thisBase}"
     fi
 
     pypiPkgName=$(./setup.py --name)
@@ -234,23 +234,23 @@ _EOF_
 
     pypiPkgNamespace=""
     for each in "${components[@]}"; do
-	if [ -z ${pypiPkgNamespace} ] ; then
-	    pypiPkgNamespace="${each}"
-	else
-	    pypiPkgNamespace="${pypiPkgNamespace}.${each}"
-	fi
+        if [ -z ${pypiPkgNamespace} ] ; then
+            pypiPkgNamespace="${each}"
+        else
+            pypiPkgNamespace="${pypiPkgNamespace}.${each}"
+        fi
     done
 
     local pkgModuleBase=""
 
     if [ -z "${pypiPkgModule}" ] ; then
-	EH_problem "Bad Usage"
+        EH_problem "Bad Usage"
     else
-	if [ -z "${pypiPkgNamespace}" ] ; then
-	    pkgModuleBase="./${pypiPkgModule}"
-	else
-	    pkgModuleBase="./${pypiPkgNamespace}/${pypiPkgModule}"
-	fi
+        if [ -z "${pypiPkgNamespace}" ] ; then
+            pkgModuleBase="./${pypiPkgModule}"
+        else
+            pkgModuleBase="./${pypiPkgNamespace}/${pypiPkgModule}"
+        fi
     fi
     
     pypiPkgModuleBase=${pkgModuleBase}    
@@ -299,13 +299,13 @@ _EOF_
     local pkgModuleBase=""
 
     if [ -z "${pypiPkgModule}" ] ; then
-	EH_problem "Bad Usage"
+        EH_problem "Bad Usage"
     else
-	if [ -z "${pypiPkgNamespace}" ] ; then
-	    pkgModuleBase="./${pypiPkgModule}"
-	else
-	    pkgModuleBase="./${pypiPkgNamespace}/${pypiPkgModule}"
-	fi
+        if [ -z "${pypiPkgNamespace}" ] ; then
+            pkgModuleBase="./${pypiPkgModule}"
+        else
+            pkgModuleBase="./${pypiPkgNamespace}/${pypiPkgModule}"
+        fi
     fi
 
     echo "${pkgModuleBase}"
@@ -330,23 +330,23 @@ _EOF_
     local moduleLink="${installDestBase}/${pypiPkgModule}"
     
     if [ $# -eq 0 ] ; then
-	if [ -h "${moduleLink}" ] ; then
-	    opDo ls -l ${moduleLink}
-	else
-	    ANT_raw "Released Production Mode"
-	    opDo ls -ld $(FN_absolutePathGet "${installDestBase}/$(vis_pkgModuleBase)")
-	fi
-	lpReturn
+        if [ -h "${moduleLink}" ] ; then
+            opDo ls -l ${moduleLink}
+        else
+            ANT_raw "Released Production Mode"
+            opDo ls -ld $(FN_absolutePathGet "${installDestBase}/$(vis_pkgModuleBase)")
+        fi
+        lpReturn
     fi
 
     local mode=$1
 
     if [ "${mode}" == "rel" ] ; then
-	opDo FN_fileSymlinkRemoveIfThere "${moduleLink}"
+        opDo FN_fileSymlinkRemoveIfThere "${moduleLink}"
     elif [ "${mode}" == "dev" ] ; then
-	opDo FN_fileSymlinkUpdate $(FN_absolutePathGet $(vis_pkgModuleBase)) "${moduleLink}"
+        opDo FN_fileSymlinkUpdate $(FN_absolutePathGet $(vis_pkgModuleBase)) "${moduleLink}"
     else
-	EH_oops ""
+        EH_oops ""
     fi
     
     lpReturn
@@ -356,14 +356,14 @@ _EOF_
 function withVenvBaseGetActiveFile {
     local venvBase=$1
     if [ "${venvBase}" == "sys" ] ; then
-	echo ""
-	return 0
+        echo ""
+        return 0
     fi
     if [ ! -d "${venvBase}" ] ; then
-	return 1
+        return 1
     fi
     if [ ! -f "${venvBase}"/bin/activate ] ; then
-	return 1
+        return 1
     fi
     echo "${venvBase}"/bin/activate
     return 0
@@ -372,9 +372,9 @@ function withVenvBaseGetActiveFile {
 function sourceVenvActiveFile {
     local activeFile=$1
     if [ -z ${activeFile} ] ; then
-	return
+        return
     else
-	opDo . ${activeFile}
+        opDo . ${activeFile}
     fi
 }
 
@@ -393,11 +393,11 @@ _EOF_
     local activeFile=$(withVenvBaseGetActiveFile ${venvBase})
 
     if [ ! -z ${activeFile} ] ; then
-	opDo sourceVenvActiveFile ${activeFile}
+        opDo sourceVenvActiveFile ${activeFile}
     fi
     
     opDo pip uninstall -y --no-cache-dir "${pypiPkgName}"
-	
+        
     lpReturn
 }
 
@@ -427,30 +427,30 @@ _EOF_
     local activeFile=$(withVenvBaseGetActiveFile ${venvBase})
 
     if [ ! -z ${activeFile} ] ; then
-	opDo sourceVenvActiveFile ${activeFile}
+        opDo sourceVenvActiveFile ${activeFile}
     else
-	ANT_raw "No activeFile -- Will apply to system"
+        ANT_raw "No activeFile -- Will apply to system"
     fi
     
     if [ "${installType}" == "edit" ]; then
-	opDo  pip install --no-cache-dir --editable .
-	return
-	
+        opDo  pip install --no-cache-dir --editable .
+        return
+        
     elif [ "${installType}" == "local" ]; then
-	if [ -f "${pipPkgFile}" ] ; then
-	    opDo pip install --no-cache-dir "${pipPkgFile}"
-	else
-	    EH_problem "Missing pipPkgFile=${pipPkgFile}"
-	fi
-	return
-	
+        if [ -f "${pipPkgFile}" ] ; then
+            opDo pip install --no-cache-dir "${pipPkgFile}"
+        else
+            EH_problem "Missing pipPkgFile=${pipPkgFile}"
+        fi
+        return
+        
     elif [ "${installType}" == "pypi" ]; then
-	opDo pip install --no-cache-dir "${pypiPkgName}"
+        opDo pip install --no-cache-dir "${pypiPkgName}"
     else
-	EH_problem "bad argument -- ${installType}"
-	return
+        EH_problem "bad argument -- ${installType}"
+        return
     fi
-	
+        
     lpReturn
 }
 
@@ -469,18 +469,18 @@ _EOF_
     opDo icmPreps
     
     if [ -d ./dist ] ; then
-	opDo rm -r ./dist
+        opDo rm -r ./dist
     else
-	ANT_raw "No ./dist -- Skipping removal"
+        ANT_raw "No ./dist -- Skipping removal"
     fi
 
     # Module's autodoc
     pkgModuleAutodoc="$( vis_pkgModuleBase )/autodoc"
 
     if [ -d ./*.egg-info ] ; then
-	opDo rm -r ./*.egg-info
+        opDo rm -r ./*.egg-info
     else
-	ANT_raw "No ./*.egg-info -- Skipping removal"
+        ANT_raw "No ./*.egg-info -- Skipping removal"
     fi
 
     opDo vis_sphinxDocClean
@@ -496,7 +496,7 @@ _EOF_
 
     opDo FN_fileRmIfThere ./auto/*
     if [ -d ./auto ] ; then
-	opDo rmdir ./auto
+        opDo rmdir ./auto
     fi
 
     lpReturn
@@ -517,13 +517,13 @@ _EOF_
     typeset baseDir="autodoc"
 
     if [[ "${G_forceMode}_" == "force_" ]] ; then
-	opDo FN_dirSafeKeep ${baseDir}	    
+        opDo FN_dirSafeKeep ${baseDir}      
     fi
     
     if [ ! -d ${baseDir} ] ; then
-	sphinx-apidoc . --full -o ${baseDir} -H "${fptb_docTitle}" -A "${pypiPkgAuthor}" -V "${fptb_docVersion}"
-	FN_textReplace "^#sys.path.insert.*$" "sys.path.insert(0, os.path.abspath('..'))" ./autodoc/conf.py
-	FN_textReplace "^html_theme = 'alabaster'" "html_theme = 'classic'" ./autodoc/conf.py
+        sphinx-apidoc . --full -o ${baseDir} -H "${fptb_docTitle}" -A "${pypiPkgAuthor}" -V "${fptb_docVersion}"
+        FN_textReplace "^#sys.path.insert.*$" "sys.path.insert(0, os.path.abspath('..'))" ./autodoc/conf.py
+        FN_textReplace "^html_theme = 'alabaster'" "html_theme = 'classic'" ./autodoc/conf.py
     fi
 
     inBaseDirDo ${baseDir} make html
@@ -569,9 +569,9 @@ _EOF_
     lpReturn
 
     if [ -d ./iim/autodoc/_build ] ; then
-	opDo sudo cp -r ./iim/autodoc/_build/html /var/www
+        opDo sudo cp -r ./iim/autodoc/_build/html /var/www
     else
-	EH_problem "Missing ./iim/autodoc/_build"
+        EH_problem "Missing ./iim/autodoc/_build"
     fi
 }
 
@@ -588,24 +588,24 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if [ -d ./autodoc ] ; then
-	opDo rm -r ./autodoc
+        opDo rm -r ./autodoc
     else
-	ANT_raw "No ./autodoc -- Skipping removal"
+        ANT_raw "No ./autodoc -- Skipping removal"
     fi
 
     # Module's autodoc
     pkgModuleAutodoc="$( vis_pkgModuleBase )/autodoc"
 
     if [ -d ${pkgModuleAutodoc} ] ; then
-	opDo rm -r ${pkgModuleAutodoc}
+        opDo rm -r ${pkgModuleAutodoc}
     else
-	ANT_raw "No ${pkgModuleAutodoc} -- Skipping removal"
+        ANT_raw "No ${pkgModuleAutodoc} -- Skipping removal"
     fi
 
     savedAutodoc=$(echo ${pkgModuleAutodoc}*)
 
     if [ "${savedAutodoc}" != "${pkgModuleAutodoc}*" ] ; then
-	opDo FN_dirDeleteIfThere ${savedAutodoc}
+        opDo FN_dirDeleteIfThere ${savedAutodoc}
     fi
 }
 
@@ -640,12 +640,12 @@ _EOF_
     local pypiUrl=''
 
     if [ "${repo}" == "main" ] ; then
-	pypiUrl='https://pypi.python.org/pypi'
+        pypiUrl='https://pypi.python.org/pypi'
     elif [ "${repo}" == "test" ] ; then
-	pypiUrl='https://testpypi.python.org/pypi'
+        pypiUrl='https://testpypi.python.org/pypi'
     else
-	EH_oops "Bad repo"
-	return
+        EH_oops "Bad repo"
+        return
     fi
 
     opDo vis_fullPrep
@@ -679,16 +679,16 @@ _EOF_
     EH_assert [ -n "${userPasswd}" ]
     
     if [ "${repo}" == "main" ] ; then
-	repoStr=${repoStr}
+        repoStr=${repoStr}
     elif [ "${repo}" == "test" ] ; then
-	repoStr="--repository-url https://test.pypi.org/legacy/"
-	userName=$(fileParamManage.py  -i fileParamReadPath ${credentialsBxoPath}/pypi/profiles/testDefault/userName)
-	EH_assert [ -n "${userName}" ]
-	userPasswd=$(fileParamManage.py  -i fileParamReadPath ${credentialsBxoPath}/pypi/profiles/testDefault/userPasswd)
-	EH_assert [ -n "${userPasswd}" ]
+        repoStr="--repository-url https://test.pypi.org/legacy/"
+        userName=$(fileParamManage.py  -i fileParamReadPath ${credentialsBxoPath}/pypi/profiles/testDefault/userName)
+        EH_assert [ -n "${userName}" ]
+        userPasswd=$(fileParamManage.py  -i fileParamReadPath ${credentialsBxoPath}/pypi/profiles/testDefault/userPasswd)
+        EH_assert [ -n "${userPasswd}" ]
     else
-	EH_oops "Bad repo"
-	return
+        EH_oops "Bad repo"
+        return
     fi
 
     local credentials="--username ${userName} --password ${userPasswd}"
@@ -698,10 +698,10 @@ _EOF_
     #opDo gpg --detach-sign -a dist/package-1.0.1.tar.gz
 
     if [ -f "${pipPkgFile}" ] ; then
-	opDo twine upload --verbose ${repoStr} ${credentials} ${pipPkgFile}
+        opDo twine upload --verbose ${repoStr} ${credentials} ${pipPkgFile}
     else
-	EH_problem "Missing pipPkgFile=${pipPkgFile}"
-    fi	
+        EH_problem "Missing pipPkgFile=${pipPkgFile}"
+    fi  
 
 }
 
@@ -719,8 +719,8 @@ _EOF_
 
     FN_lineIsInFile "^include lh-agpl3-LICENSE.txt" ${manifestFile} ; thisRetVal=$?
     if [[ ${thisRetVal} -eq 0 ]] ; then
-	ANT_raw "lh-agpl3-LICENSE.txt is already in ${manifestFile}."
-	return 
+        ANT_raw "lh-agpl3-LICENSE.txt is already in ${manifestFile}."
+        return 
     fi
 
     cat >> ${manifestFile} << _EOF_ 

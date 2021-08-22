@@ -35,10 +35,10 @@ function G_postParamHook {
     lpCurrentsGet
 
     if [ "${BarcFile}_" != "MANDATORY_" ] ; then
-	BarcFile=$( FN_absolutePathGet ${BarcFile} )
+        BarcFile=$( FN_absolutePathGet ${BarcFile} )
     fi
     if [ "${RBAE}_" != "MANDATORY_" ] ; then
-	RBAE=$( FN_absolutePathGet ${RBAE} )
+        RBAE=$( FN_absolutePathGet ${RBAE} )
     fi
     lpReturn 0
 }
@@ -88,10 +88,10 @@ function vis_RbaeLocate {
     RBAEList=$( find /libre/ByStar/InfoBase/RBAE -type d -print | egrep '/[0-9]*$' | sort )
     
     for thisDir in ${RBAEList} ; do
-	if RbaeFound=$( RbaeMatchesBystarUid ${thisDir} ${targetAcctTypePrefix} ${targetAcctNu}) ; then
-	    echo ${RbaeFound}
-	    return
-	fi
+        if RbaeFound=$( RbaeMatchesBystarUid ${thisDir} ${targetAcctTypePrefix} ${targetAcctNu}) ; then
+            echo ${RbaeFound}
+            return
+        fi
     done
 }
 
@@ -107,10 +107,10 @@ function vis_RbaeDeleteWithUid {
     RBAEList=$( find /libre/ByStar/InfoBase/RBAE -type d -print | egrep '/[0-9]*$' | sort )
     
     for thisDir in ${RBAEList} ; do
-	if RbaeFound=$( RbaeMatchesBystarUid ${thisDir} ${targetAcctTypePrefix} ${targetAcctNu}) ; then
-	    opDo echo rm -r -f ${RbaeFound}
-	    return
-	fi
+        if RbaeFound=$( RbaeMatchesBystarUid ${thisDir} ${targetAcctTypePrefix} ${targetAcctNu}) ; then
+            opDo echo rm -r -f ${RbaeFound}
+            return
+        fi
     done
 }
 
@@ -124,10 +124,10 @@ RbaeMatchesBystarUid () {
     #ANT_raw "${cp_acctPrefix} ${2} ${cp_acctNu} ${3}"
 
     if [ "${cp_acctPrefix}_" == "${2}_" -a  "${cp_acctNu}_" == "${3}_" ] ; then
-	echo $1
-	return 0
+        echo $1
+        return 0
     else
-	return 1
+        return 1
     fi
 }
 
@@ -186,11 +186,11 @@ RBAeParamInitSpecific_BYNAME_DEFAULT () {
   # nameSelector
  case ${bc_serviceSupportType} in 
    "COMMITTED")
-	    echo "${selectorNu}" > ${thisDir}/nameSelector:mr
-	    ;;
+            echo "${selectorNu}" > ${thisDir}/nameSelector:mr
+            ;;
    "TRIAL")
-	    echo "t${selectorNu}" > ${thisDir}/nameSelector:mr
-  	    ;;
+            echo "t${selectorNu}" > ${thisDir}/nameSelector:mr
+            ;;
    *)
       EH_problem "Unknown serviceSupportType=${bc_serviceSupportType} -- selectorNu: ${selectorNu}"
       return 1
@@ -219,11 +219,11 @@ RBAeParamInitSpecific_BYMEMORY_DEFAULT () {
   # nameSelector
  case ${bc_serviceSupportType} in 
    "COMMITTED")
-	    echo "${selectorNu}" > ${thisDir}/nameSelector:mr
-	    ;;
+            echo "${selectorNu}" > ${thisDir}/nameSelector:mr
+            ;;
    "TRIAL")
-	    echo "t${selectorNu}" > ${thisDir}/nameSelector:mr
-  	    ;;
+            echo "t${selectorNu}" > ${thisDir}/nameSelector:mr
+            ;;
    *)
       EH_problem "Unknown serviceSupportType=${bc_serviceSupportType} -- selectorNu: ${selectorNu}"
       return 1
@@ -314,8 +314,8 @@ RBAeCheckDuplicateSpecificCommon () {
 
     thisBarcFileName=$( FN_absolutePathGet ${cp_BarcFileName} )
     if [ "${thisBarcFileName}_" == "${BarcFile}_" ] ; then
-	EH_problem "DUPLICATE BarcFile=${BarcFile}"
-	return 101
+        EH_problem "DUPLICATE BarcFile=${BarcFile}"
+        return 101
     fi
 }
 
@@ -324,8 +324,8 @@ RBAeCheckDuplicateSpecific_BYNAME_DEFAULT () {
     RBAeCheckDuplicateSpecificCommon ${1}
 
     if [ "${bc_firstName}_" == "${cp_FirstName}_" -a  "${bc_lastName}_" == "${cp_LastName}_" ] ; then
-	ANT_raw "$1: DUPLICATE, ${selectorNu}"
-	selectorNu=$( expr ${selectorNu} +  1 )
+        ANT_raw "$1: DUPLICATE, ${selectorNu}"
+        selectorNu=$( expr ${selectorNu} +  1 )
     fi
 
 }
@@ -347,8 +347,8 @@ RBAeCheckDuplicateSpecific_BYSMB_DEFAULT () {
     RBAeCheckDuplicateSpecificCommon ${1}
 
     if [ "${bc_Domain1}_" == "${cp_Domain1}_" -a  "${bc_Domain2}_" == "${cp_Domain2}_" ] ; then
-	EH_problem "$1: DUPLICATE, ${bc_Domain1}.${bc_Domain2}"
-	return 101
+        EH_problem "$1: DUPLICATE, ${bc_Domain1}.${bc_Domain2}"
+        return 101
     fi
 }
 
@@ -398,26 +398,26 @@ bystarTypeSpecific_DEFAULT_DEFAULT () {
     opDoExit cd ${bystarIbAcctTypeRBAEBase}
 
     if isDisposableRegisterUid ; then
-	selectorNu=1
+        selectorNu=1
 
-	nextNu=$( bystarNextDisposableScopeAcctNu )
-	FN_dirSafeKeep ${nextNu}
-	opDoExit mkdir ${nextNu}
+        nextNu=$( bystarNextDisposableScopeAcctNu )
+        FN_dirSafeKeep ${nextNu}
+        opDoExit mkdir ${nextNu}
     else
-	RBAEList=$( ls | grep -v CVS | sort )
+        RBAEList=$( ls | grep -v CVS | sort )
 
-	selectorNu=1
+        selectorNu=1
     
-	for thisDir in ${RBAEList} ; do
-	    if ! RBAeCheckDuplicateSpecific ${thisDir} ; then 
-		return 101
-	    fi
-	done
+        for thisDir in ${RBAEList} ; do
+            if ! RBAeCheckDuplicateSpecific ${thisDir} ; then 
+                return 101
+            fi
+        done
 
-	lastNuStr=${thisDir} 
+        lastNuStr=${thisDir} 
 
-	nextNu=$( expr $lastNuStr +  1 )
-	opDoExit mkdir ${nextNu}
+        nextNu=$( expr $lastNuStr +  1 )
+        opDoExit mkdir ${nextNu}
     fi
 
 
@@ -431,12 +431,12 @@ bystarTypeSpecific_DEFAULT_DEFAULT () {
       opDoExit bystarIbParamSpecific
       acctNu=${bc_bystarUid##${bystarAcctTypePrefix}-}
       if [ -d ${bystarIbAcctTypeRBAEBase}/${acctNu} ] ; then
-	  EH_problem "${bystarIbAcctTypeRBAEBase}/${acctNu} Exists"
-	  return 101
+          EH_problem "${bystarIbAcctTypeRBAEBase}/${acctNu} Exists"
+          return 101
       else
-	  opDoExit sudo -u lsipusr mkdir -p ${bystarIbAcctTypeRBAEBase}/${acctNu}
-	  thisDir=${bystarIbAcctTypeRBAEBase}/${acctNu}
-	  nextNu=${acctNu}
+          opDoExit sudo -u lsipusr mkdir -p ${bystarIbAcctTypeRBAEBase}/${acctNu}
+          thisDir=${bystarIbAcctTypeRBAEBase}/${acctNu}
+          nextNu=${acctNu}
           selectorNu=1
       fi
   fi

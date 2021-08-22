@@ -237,19 +237,19 @@ _EOF_
     local logFilePath=""
     
     if [ $# -eq 0 ] ; then
-	EH_assert bxoIdPrep
+        EH_assert bxoIdPrep
 
-	local availableServersList=$(lpDo vis_siteSynergyServersAvailable)
-	
-	if IS_inList ${bxoId} "${availableServersList}" ; then
-	    logFilePath=${synergyLogsBaseDir}/server-${bxoId}.log
-	else
-	    EH_problem "Not a server ${bxoId}"
-	    lpReturn 101
-	fi
+        local availableServersList=$(lpDo vis_siteSynergyServersAvailable)
+        
+        if IS_inList ${bxoId} "${availableServersList}" ; then
+            logFilePath=${synergyLogsBaseDir}/server-${bxoId}.log
+        else
+            EH_problem "Not a server ${bxoId}"
+            lpReturn 101
+        fi
     else
-	local destinationServer=$1
-	logFilePath=${synergyLogsBaseDir}/client-${destinationServer}.log
+        local destinationServer=$1
+        logFilePath=${synergyLogsBaseDir}/client-${destinationServer}.log
     fi
 
     echo ${logFilePath}
@@ -440,9 +440,9 @@ _EOF_
     local synergyPrcesses=$(echo $( pgrep -x synergyc))
 
     if [ -z "${synergyPrcesses}" ] ; then
-	ANT_raw "No Synergy Client Processes"
+        ANT_raw "No Synergy Client Processes"
     else
-	opDo ps -wwfp "${synergyPrcesses}"
+        opDo ps -wwfp "${synergyPrcesses}"
     fi
 
     lpReturn
@@ -461,13 +461,13 @@ _EOF_
     local logFilePath=""
     
     for each in ${availableServersList} ; do
-	logFilePath=$(vis_logFilePath "${each}")
+        logFilePath=$(vis_logFilePath "${each}")
 
-	if [ -n "${logFilePath}" ] ; then
-	    ANT_raw "tail -10 ${logFilePath}"
-	else
-	    ANT_cooked "Missing logFilePath"
-	fi
+        if [ -n "${logFilePath}" ] ; then
+            ANT_raw "tail -10 ${logFilePath}"
+        else
+            ANT_cooked "Missing logFilePath"
+        fi
     done
 
     ANT_raw "journalctl --user-unit synergy.service | tail -100"
@@ -499,9 +499,9 @@ _EOF_
     local synergyPrcesses=$(echo $( pgrep -x synergys))
 
     if [ -z "${synergyPrcesses}" ] ; then
-	ANT_raw "No Synergy Server Processes"
+        ANT_raw "No Synergy Server Processes"
     else
-	opDo ps -wwfp "${synergyPrcesses}"
+        opDo ps -wwfp "${synergyPrcesses}"
     fi
 
     lpReturn
@@ -520,9 +520,9 @@ _EOF_
     local logFilePath=$(vis_logFilePath)
 
     if [ -n "${logFilePath}" ] ; then
-	ANT_raw "tail -10 ${logFilePath}"
+        ANT_raw "tail -10 ${logFilePath}"
     else
-	ANT_cooked "Missing logFilePath"
+        ANT_cooked "Missing logFilePath"
     fi
 
     lpReturn
@@ -542,12 +542,12 @@ _EOF_
     local availableClientsList=$(lpDo vis_siteSynergyClientsAvailable)
 
     if IS_inList ${bxoId} "${availableServersList}" ; then
-	lpDo vis_serverStartUpRun
+        lpDo vis_serverStartUpRun
     elif IS_inList ${bxoId} "${availableClientsList}" ; then
-	lpDo vis_clientsStartUpRun
+        lpDo vis_clientsStartUpRun
     else
-	EH_problem "Not a client or a server ${bxoId}"
-	lpReturn 101
+        EH_problem "Not a client or a server ${bxoId}"
+        lpReturn 101
     fi
 
     lpReturn
@@ -566,8 +566,8 @@ _EOF_
     local availableClientsList=$(lpDo vis_siteSynergyClientsAvailable)
 
     if ! IS_inList ${bxoId} "${availableClientsList}" ; then
-	EH_problem "not an available client -- ${bxoId}"
-	lpReturn 101
+        EH_problem "not an available client -- ${bxoId}"
+        lpReturn 101
     fi
 
     opDo /usr/bin/killall synergyc
@@ -580,17 +580,17 @@ _EOF_
     local logFilePath=""
     
     for each in ${availableServersList} ; do
-	bxoId=${each}
-	serverIpAddr=$(lpDo vis_bpoCntnr_ipAddr_get privA wifi)
+        bxoId=${each}
+        serverIpAddr=$(lpDo vis_bpoCntnr_ipAddr_get privA wifi)
 
-	if [ -z "${serverIpAddr}" ] ; then
-	    EH_problem "Missing serverIpAddr for ${each}"
-	    continue
-	fi
+        if [ -z "${serverIpAddr}" ] ; then
+            EH_problem "Missing serverIpAddr for ${each}"
+            continue
+        fi
 
-	logFilePath=$(vis_logFilePath "${each}")
-	
-	lpDo synergyc --daemon --debug DEBUG --log ${logFilePath} --name ${screenName} ${serverIpAddr}
+        logFilePath=$(vis_logFilePath "${each}")
+        
+        lpDo synergyc --daemon --debug DEBUG --log ${logFilePath} --name ${screenName} ${serverIpAddr}
     done
 
     lpDo pgrep synergyc
@@ -610,8 +610,8 @@ _EOF_
     local availableServersList=$(lpDo vis_siteSynergyServersAvailable)
 
     if ! IS_inList ${bxoId} "${availableServersList}" ; then
-	EH_problem "not an available server -- ${bxoId}"
-	lpReturn 101
+        EH_problem "not an available server -- ${bxoId}"
+        lpReturn 101
     fi
 
     ANT_raw "Killing existing synergys processes"
@@ -619,7 +619,7 @@ _EOF_
     
     local synergyProcesses="$(pgrep -x synergys 2> /dev/null)"
     if [ -n "${synergyProcesses}" ] ; then
-	while [ "$(pgrep -x synergys)" ] ; do sleep 0.1; done
+        while [ "$(pgrep -x synergys)" ] ; do sleep 0.1; done
     fi
 
     ANT_raw "Starting Synergy Server Processes"
@@ -654,11 +654,11 @@ _EOF_
     EH_assert [ -d "${bxCntnrSvcsSpecBase}" ]
 
     if [ -d "${bxCntnrSvcsSpecBase}/synergyServer" ] ; then
-	echo "${bxCntnrSvcsSpecBase}/synergyServer"
+        echo "${bxCntnrSvcsSpecBase}/synergyServer"
     elif [ -d "${bxCntnrSvcsSpecBase}/synergyClient" ] ; then
-       	echo "${bxCntnrSvcsSpecBase}/synergyClient"
+        echo "${bxCntnrSvcsSpecBase}/synergyClient"
     else
-	echo "synergyNone"
+        echo "synergyNone"
     fi
 
     lpReturn
@@ -735,9 +735,9 @@ _EOF_
     EH_assert [ -d "${synergyClientServersBase}" ]
     
     if [ -d "${synergyClientServersBase}/availableServers" ] ; then
-	local availableServers=$(lpDo fileParamManage.py -v 30 -i fileParamRead  "${synergyClientServersBase}" availableServers)
-	EH_assert [ -n "${availableServers}" ]
-	lpDo vis_listBposAtBaseSansAvailable "${availableServers}"
+        local availableServers=$(lpDo fileParamManage.py -v 30 -i fileParamRead  "${synergyClientServersBase}" availableServers)
+        EH_assert [ -n "${availableServers}" ]
+        lpDo vis_listBposAtBaseSansAvailable "${availableServers}"
     fi
 
     lpDo vis_listBposAtBaseSansAvailable "${synergyClientServersBase}"
@@ -778,18 +778,18 @@ _EOF_
     local availableClientsList=$(lpDo vis_siteSynergyClientsAvailable)
 
     if IS_inList ${bxoId} "${availableServersList}" ; then
-	lpDo doNothing
+        lpDo doNothing
     elif IS_inList ${bxoId} "${availableClientsList}" ; then
-	lpDo doNothing
+        lpDo doNothing
     else
-	EH_problem "Not a client or a server ${bxoId}"
-	lpReturn 101
+        EH_problem "Not a client or a server ${bxoId}"
+        lpReturn 101
     fi
 
     local serviceBaseDir=$(echo ~/.config/systemd/user)
 
     if [ ! -d "${serviceBaseDir}" ] ; then
-	lpDo mkdir -p "${serviceBaseDir}"
+        lpDo mkdir -p "${serviceBaseDir}"
     fi
 
     local serviceFilePath="${serviceBaseDir}/synergy.service"
@@ -816,12 +816,12 @@ _EOF_
     local availableClientsList=$(lpDo vis_siteSynergyClientsAvailable)
 
     if IS_inList ${bxoId} "${availableServersList}" ; then
-	lpDo vis_serverSystemdSvcStdout
+        lpDo vis_serverSystemdSvcStdout
     elif IS_inList ${bxoId} "${availableClientsList}" ; then
-	lpDo vis_clientsSystemdSvcStdout
+        lpDo vis_clientsSystemdSvcStdout
     else
-	EH_problem "Not a client or a server ${bxoId}"
-	lpReturn 101
+        EH_problem "Not a client or a server ${bxoId}"
+        lpReturn 101
     fi
 
     lpReturn
@@ -839,8 +839,8 @@ _EOF_
     local availableClientsList=$(lpDo vis_siteSynergyClientsAvailable)
 
     if ! IS_inList ${bxoId} "${availableClientsList}" ; then
-	EH_problem "not an available client -- ${bxoId}"
-	lpReturn 101
+        EH_problem "not an available client -- ${bxoId}"
+        lpReturn 101
     fi
 
     local screenName=$(lpDo vis_bxCntnr_synergy_client_screenName)
@@ -848,7 +848,7 @@ _EOF_
     local availableServersList=$(lpDo vis_siteSynergyServersAvailable)
     local serverIpAddr=""
     
-	
+        
     cat  << _EOF_
 [Unit]
 Description=Synergy Clients For ${screenName}
@@ -878,8 +878,8 @@ _EOF_
     local availableServersList=$(lpDo vis_siteSynergyServersAvailable)
 
     if ! IS_inList ${bxoId} "${availableServersList}" ; then
-	EH_problem "not an available server -- ${bxoId}"
-	lpReturn 101
+        EH_problem "not an available server -- ${bxoId}"
+        lpReturn 101
     fi
 
     local screensTopologyFile=$(lpDo vis_bxCntnr_synergy_server_screensTopologyFile)

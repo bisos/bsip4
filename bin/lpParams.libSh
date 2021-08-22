@@ -7,10 +7,10 @@ vis_lpPlatformHelp () {
   cat  << _EOF_
 
 TODO:
-	- This needs to become more generalized
-	  The expectations being that most functions 
-	  call this once and know that they have everything 
-	  they need.
+        - This needs to become more generalized
+          The expectations being that most functions 
+          call this once and know that they have everything 
+          they need.
 
 This is the layer below lpPlatform.
 
@@ -26,17 +26,17 @@ function lpParamsBasicGet {
     opDoExit opNetCfg_paramsGet ${opRunClusterName} ${opRunHostName}
 
     case ${opRunHostFamily} in
-	"BUE"|"BMUE"|"BHUE")
-	    dynamicIpAddrSupported="TRUE"
-	    lpDnsEntryIpAddr="127.0.0.1"   #  one's own entry for apache2, plone3, ...
-	    ;;
-	"BISP"|"BACS"|"BSSP")  
-	    dynamicIpAddrSupported="FASLE"		
-	    lpDnsEntryIpAddr=${opNetCfg_ipAddr}
-	    ;;
-	*)  
-	    EH_problem "Unsupported opRunHostFamily=${opRunHostFamily}"
-	    ;;
+        "BUE"|"BMUE"|"BHUE")
+            dynamicIpAddrSupported="TRUE"
+            lpDnsEntryIpAddr="127.0.0.1"   #  one's own entry for apache2, plone3, ...
+            ;;
+        "BISP"|"BACS"|"BSSP")  
+            dynamicIpAddrSupported="FASLE"              
+            lpDnsEntryIpAddr=${opNetCfg_ipAddr}
+            ;;
+        *)  
+            EH_problem "Unsupported opRunHostFamily=${opRunHostFamily}"
+            ;;
     esac
 
 

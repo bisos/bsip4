@@ -52,18 +52,18 @@ function vis_scs_bxoRealize {
    function describeF {  G_funcEntryShow; cat  << _EOF_
 ** 
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
-}	
+}       
 
 
 function vis_scs_getBxoId {
-	G_funcEntry
+        G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 ** \$1 is bxoRepoScope -- \$2 is path to siteScsAssignBase 
 *** -p passive= instead of  EH_assert bxoRealizationScopeIsValid "${bxoRealizationScope}"
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
 
    local bxoName=$1
@@ -77,7 +77,7 @@ function vis_scs_basicBxoRealize {
 ** \$1 is bxoRepoScope -- \$2 is path to siteScsAssignBase 
 *** -p passive= instead of  EH_assert bxoRealizationScopeIsValid "${bxoRealizationScope}"
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
    local bxoName=$1
 
@@ -126,36 +126,36 @@ function vis_scs_repoBasesAllCreate {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** 
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
     EH_assert bxoIdPrep
 
     lpDo eval vis_scs_repoBasesList \| vis_bxoRealize_repoBasesCreate scs
-}	
+}       
 
 function vis_scs_repoBasesAllPush {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** 
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
     EH_assert bxoIdPrep
 
     lpDo eval vis_scs_repoBasesList \| vis_bxoRealize_repoBasesPush
-}	
+}       
 
 function vis_scs_nonRepoBasesAllCreate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** 
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
     EH_assert bxoIdPrep
 
     lpDo eval vis_scs_nonRepoBasesList \| vis_bxoRealize_nonRepoBasesCreate scs
-}	
+}       
 
 
 function vis_scs_nonRepoBaseCreate_var {
@@ -163,7 +163,7 @@ function vis_scs_nonRepoBaseCreate_var {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Create /bisos/var/bxoId/${bxoId} and symlink to it.
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
     EH_assert bxoIdPrep
 
@@ -177,7 +177,7 @@ _EOF_
     lpDo FN_fileSymlinkUpdate ${bisosVarBaseDir} ${basePath}
 
     lpReturn
-}	
+}       
 
 function vis_scs_repoBaseCreate_panel { vis_repoBaseCreate_panel; }
 
@@ -185,7 +185,7 @@ function vis_scs_repoBaseCreate_BAGP%% {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
     EH_assert bxoIdPrep
 
@@ -205,7 +205,7 @@ _EOF_
     lpDo bx-gitRepos -h -v -n showRun -i baseUpdateDotIgnore "${repoBase}"
 
     lpReturn
-}	
+}       
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*

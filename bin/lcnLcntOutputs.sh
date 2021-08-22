@@ -353,22 +353,22 @@ function vis_bibItemStdout {
 
   case ${lcnt_pubCategory} in
     "Permanent"|"LCNT"|"PLPC")
-	    bibType="Permanent Libre Published Content"
+            bibType="Permanent Libre Published Content"
        ;;
     "Records"|"RLCNT"|"record")
-	    bibType="Published Libre Record"
+            bibType="Published Libre Record"
        ;;
     "DRAFT"|"DLCNT"|"draft")
-	    bibType="Draft Libre Published Content"
+            bibType="Draft Libre Published Content"
        ;;
     "Private")
-	    bibType="Private Libre Generated Content"
+            bibType="Private Libre Generated Content"
        ;;
     "Repub")
-	    bibType="Re-Published Content"
+            bibType="Re-Published Content"
        ;;
     "SW")
-	    bibType="Software Content"
+            bibType="Software Content"
        ;;
     *)
        EH_problem "${lcnt_pubCategory} -- Unexpected"
@@ -380,14 +380,14 @@ function vis_bibItemStdout {
   typeset thisAuthor=""
   for (( i=1;i<=${author_count};i++ )) ; do
       if [ "${lcnt_author_lang[$i]}" = "fa" ] ; then
-	  thisAuthor="\begin{fa} ${lcnt_author_name[$i]} \end{fa}"
+          thisAuthor="\begin{fa} ${lcnt_author_name[$i]} \end{fa}"
       else
-	  thisAuthor="${lcnt_author_name[$i]}"
+          thisAuthor="${lcnt_author_name[$i]}"
       fi
       if [[ "${lcnt_authors}_" == "_" ]] ; then
-	  lcnt_authors="${thisAuthor}"
+          lcnt_authors="${thisAuthor}"
       else
-	  lcnt_authors="${lcnt_authors}, ${thisAuthor}"
+          lcnt_authors="${lcnt_authors}, ${thisAuthor}"
       fi
   done
 
@@ -532,15 +532,15 @@ function vis_bibHtmlShortStdout {
   for (( i=1;i<=${author_count};i++ )) ; do
     if [[ "${lcnt_authors}_" == "_" ]] ; then
       if [[ "${lcnt_author_url[$i]}_" != "_" ]] ; then
-	lcnt_authors="<a href=${lcnt_author_url[$i]}>${lcnt_author_name[$i]}</a>"
+        lcnt_authors="<a href=${lcnt_author_url[$i]}>${lcnt_author_name[$i]}</a>"
       else
-	lcnt_authors="${lcnt_author_name[$i]}"
+        lcnt_authors="${lcnt_author_name[$i]}"
       fi
     else
       if [[ "${lcnt_author_url[$i]}_" != "_" ]] ; then
-	lcnt_authors="${lcnt_authors}<br><a href=${lcnt_author_url[$i]}>${lcnt_author_name[$i]}</a>"
+        lcnt_authors="${lcnt_authors}<br><a href=${lcnt_author_url[$i]}>${lcnt_author_name[$i]}</a>"
       else
-	lcnt_authors="${lcnt_authors}<br>${lcnt_author_name[$i]}"
+        lcnt_authors="${lcnt_authors}<br>${lcnt_author_name[$i]}"
       fi
     fi
   done
@@ -615,7 +615,7 @@ _EOF_
 <a href="http://${lcnt_one_pubDestUrls}${docModulePath}/${lcnt_one_docSrcList}.ps">[ps]</a><br>
 _EOF_
     elif [[ "${oneFormat}_" == "pdf_" ]] ; then
-	#<a href="http://${lcnt_one_pubDestUrls}${docModulePath}/${lcnt_one_docSrcList}.pdf">[pdf]</a><br>
+        #<a href="http://${lcnt_one_pubDestUrls}${docModulePath}/${lcnt_one_docSrcList}.pdf">[pdf]</a><br>
  cat  << _EOF_
 <a href="http://${lcnt_one_pubDestUrls}${docModulePath}/${lcnt_one_docSrcList}.pdf">[pdf]</a><br>
 _EOF_
@@ -655,15 +655,15 @@ function vis_bibHtmlLongStdout {
   for (( i=1;i<=${author_count};i++ )) ; do
     if [[ "${lcnt_authors}_" == "_" ]] ; then
       if [[ "${lcnt_author_url[$i]}_" != "_" ]] ; then
-	lcnt_authors="<a href=${lcnt_author_url[$i]}>${lcnt_author_name[$i]}</a>"
+        lcnt_authors="<a href=${lcnt_author_url[$i]}>${lcnt_author_name[$i]}</a>"
       else
-	lcnt_authors="${lcnt_author_name[$i]}"
+        lcnt_authors="${lcnt_author_name[$i]}"
       fi
     else
       if [[ "${lcnt_author_url[$i]}_" != "_" ]] ; then
-	lcnt_authors="${lcnt_authors}, <a href=${lcnt_author_url[$i]}>${lcnt_author_name[$i]}</a>"
+        lcnt_authors="${lcnt_authors}, <a href=${lcnt_author_url[$i]}>${lcnt_author_name[$i]}</a>"
       else
-	lcnt_authors="${lcnt_authors}, ${lcnt_author_name[$i]}"
+        lcnt_authors="${lcnt_authors}, ${lcnt_author_name[$i]}"
       fi
     fi
   done
@@ -775,7 +775,7 @@ function vis_fullHtmlTable {
 
   case ${format} in
     "short")
-	     #FN_fileSafeKeep ${outFile}
+             #FN_fileSafeKeep ${outFile}
  cat  << _EOF_ > ${outFile}
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
@@ -822,7 +822,7 @@ _EOF_
 
 _EOF_
     opDo ls -l ${outFile}
-	     ;;
+             ;;
          "long")
 
  cat  << _EOF_ > ${outFile}
@@ -864,10 +864,10 @@ _EOF_
 _EOF_
 
     opDo ls -l ${outFile}
-		 ;;
+                 ;;
          *)
-	    EH_problem "Unknown ${format}"
-	    ;;
+            EH_problem "Unknown ${format}"
+            ;;
     esac
 }
 
@@ -900,9 +900,9 @@ function vis_inListDotBibOut {
     print "####### Generate .bib for ${lcntNu} ##############"
 
     if [ -z "${outFile}" ] ; then
-	outputFile="${docModulePath}/${lcnt_pubCategory}-${lcnt_lcntNu}.bib"
+        outputFile="${docModulePath}/${lcnt_pubCategory}-${lcnt_lcntNu}.bib"
     else
-	outputFile="${outFile}"
+        outputFile="${outFile}"
     fi
 
     FN_dirCreatePathIfNotThere `dirname ${outputFile}`
@@ -921,9 +921,9 @@ function vis_inListFullBibOut {
 
   if [ "${outFile}_" == "MANDATORY_" ] ; then
       if [ "${urlFormat}" = "url" ] ; then
-	  outFile="/lcnt/outputs/all/plpcUrl.bib"
+          outFile="/lcnt/outputs/all/plpcUrl.bib"
       else
-	  outFile="/lcnt/outputs/all/plpc.bib"
+          outFile="/lcnt/outputs/all/plpc.bib"
       fi
   fi
 
@@ -1008,30 +1008,30 @@ function vis_accessPageBxoGen {
 
     typeset oneDocEntry
     for oneDocEntry in ${docEntries}; do
-	if [[ "${oneDocEntry}_" == "all_" ]]; then
-	    EH_assert [ -f  ${inListLcntNu} ]
-	    goThroughList ${inListLcntNu} ${visibleFunction}
-	    return
-	fi
+        if [[ "${oneDocEntry}_" == "all_" ]]; then
+            EH_assert [ -f  ${inListLcntNu} ]
+            goThroughList ${inListLcntNu} ${visibleFunction}
+            return
+        fi
 
-	opDo getLcntNuBase ${oneDocEntry}
-	#lcntPathAnalyze "${cntntRawHome}"
-	lcntInfoPrep "${cntntRawHome}"
-	opDo pwd
+        opDo getLcntNuBase ${oneDocEntry}
+        #lcntPathAnalyze "${cntntRawHome}"
+        lcntInfoPrep "${cntntRawHome}"
+        opDo pwd
 
     
-	if [[ "${lcntAttrPermanence}_" == "repub_" ]] ; then
-	    typeset this_publishableFiles=`ls ${lcntInfoPath}/publishable[0-9] 2> /dev/null`
+        if [[ "${lcntAttrPermanence}_" == "repub_" ]] ; then
+            typeset this_publishableFiles=`ls ${lcntInfoPath}/publishable[0-9] 2> /dev/null`
             if [ "${this_publishableFiles}_" == "_" ] ; then
-		opDo generateOneAccessPageBxo_general "${lcntNu}" "${cntntRawHome}"
-	    else
-		opDo generateOneAccessPage_repub "${lcntNu}" "${cntntRawHome}"
-	    fi
-	elif [[ "${lcntAttrPermanence}_" == "sw_" ]] ; then
-	    opDo generateOneAccessPage_sw "${lcntNu}" "${cntntRawHome}"
-	else
-	    opDo generateOneAccessPageBxo_general "${lcntNu}" "${cntntRawHome}"
-	fi
+                opDo generateOneAccessPageBxo_general "${lcntNu}" "${cntntRawHome}"
+            else
+                opDo generateOneAccessPage_repub "${lcntNu}" "${cntntRawHome}"
+            fi
+        elif [[ "${lcntAttrPermanence}_" == "sw_" ]] ; then
+            opDo generateOneAccessPage_sw "${lcntNu}" "${cntntRawHome}"
+        else
+            opDo generateOneAccessPageBxo_general "${lcntNu}" "${cntntRawHome}"
+        fi
     done
 }
 
@@ -1054,14 +1054,14 @@ _EOF_
     opDo vis_accessPageGen $@
 
     cat "${outFile}" \
-	| sed -e s/www.bytopic.org/bytopic/ -e s/www.bycontent.org/bycontent/ \
-	| grep -v 'A Permanent Libre Published Content' \
-	|  pandoc --from html --to markdown_strict -o "${origOutFile}"
+        | sed -e s/www.bytopic.org/bytopic/ -e s/www.bycontent.org/bycontent/ \
+        | grep -v 'A Permanent Libre Published Content' \
+        |  pandoc --from html --to markdown_strict -o "${origOutFile}"
 
     ls -l $( FN_absolutePathGet "${origOutFile}" )
 
     lpReturn
-}	
+}       
 
 
 
@@ -1089,12 +1089,12 @@ function vis_accessPageGen {
 
     
     if [[ "${lcntAttrPermanence}_" == "repub_" ]] ; then
-	typeset this_publishableFiles=`ls ${lcntInfoPath}/publishable[0-9] 2> /dev/null`
+        typeset this_publishableFiles=`ls ${lcntInfoPath}/publishable[0-9] 2> /dev/null`
         if [ "${this_publishableFiles}_" == "_" ] ; then
-	  opDo generateOneAccessPage_general "${lcntNu}" "${cntntRawHome}"
-	else
-	  opDo generateOneAccessPage_repub "${lcntNu}" "${cntntRawHome}"
-	fi
+          opDo generateOneAccessPage_general "${lcntNu}" "${cntntRawHome}"
+        else
+          opDo generateOneAccessPage_repub "${lcntNu}" "${cntntRawHome}"
+        fi
     elif [[ "${lcntAttrPermanence}_" == "sw_" ]] ; then
       opDo generateOneAccessPage_sw "${lcntNu}" "${cntntRawHome}"
     else
@@ -1126,13 +1126,13 @@ function vis_readyRoomCleanDir {
     # Protect Against bad docModulePath
     typeset dstPathChk=$( cat ${lcntInfoPath}/destPath1 )
     if [ -z "${dstPathChk}" ] ; then
-	EH_problem "Bad ${docModulePath}"
-	lpReturn 101
+        EH_problem "Bad ${docModulePath}"
+        lpReturn 101
     fi
     if [ -d "${docModulePath}" ] ; then
-	opDo rm -r "${docModulePath}"
+        opDo rm -r "${docModulePath}"
     else
-	EH_problem "Missing ${docModulePath}"
+        EH_problem "Missing ${docModulePath}"
     fi
   done
 }
@@ -1155,22 +1155,22 @@ function setPubCategoryString {
 
   case ${lcnt_pubCategory} in
     "Permanent"|"LCNT"|"PLPC")
-	    pubCategoryString="Permanent Libre Published Content"
+            pubCategoryString="Permanent Libre Published Content"
        ;;
     "Records"|"RLCNT"|"record")
-	    pubCategoryString="Published Libre Record"
+            pubCategoryString="Published Libre Record"
        ;;
     "DRAFT"|"DLCNT"|"draft")
-	    pubCategoryString="Draft Libre Published Content"
+            pubCategoryString="Draft Libre Published Content"
        ;;
     "Private")
-	    pubCategoryString="Private Libre Generated Content"
+            pubCategoryString="Private Libre Generated Content"
        ;;
     "Repub")
-	    pubCategoryString="Re-Published Public Content"
+            pubCategoryString="Re-Published Public Content"
        ;;
     "SW")
-	    pubCategoryString="Libre Software Content"
+            pubCategoryString="Libre Software Content"
        ;;
     *)
        EH_problem "${lcnt_pubCategory} -- Unexpected"
@@ -1192,13 +1192,13 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if [ -z "${outFile}" ] ; then
-	FN_dirCreatePathIfNotThere "${docModulePath}/accessPage"
-	echo "${docModulePath}/accessPage/index.html"
+        FN_dirCreatePathIfNotThere "${docModulePath}/accessPage"
+        echo "${docModulePath}/accessPage/index.html"
     elif [ "${outFile}" == "MANDATORY" ] ; then
-	FN_dirCreatePathIfNotThere "${docModulePath}/accessPage"
-	echo "${docModulePath}/accessPage/index.html"
+        FN_dirCreatePathIfNotThere "${docModulePath}/accessPage"
+        echo "${docModulePath}/accessPage/index.html"
     else
-	echo "${outFile}"
+        echo "${outFile}"
     fi
 
     lpReturn
@@ -1238,20 +1238,20 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if [ ! -z "${lcnt_accessPageDoc}" ] ; then
-	filesList=$( find ${docModulePath}/${lcnt_accessPageDoc} -print | egrep ".png|.PNG|.jpg|.JPG|.pnm|.PNM" )		
+        filesList=$( find ${docModulePath}/${lcnt_accessPageDoc} -print | egrep ".png|.PNG|.jpg|.JPG|.pnm|.PNM" )               
     else
-	filesList=$( find ${docModulePath}/${lcnt_one_docSrcList} -print | egrep ".png|.PNG|.jpg|.JPG|.pnm|.PNM" )	
+        filesList=$( find ${docModulePath}/${lcnt_one_docSrcList} -print | egrep ".png|.PNG|.jpg|.JPG|.pnm|.PNM" )      
     fi
 
     if [ -z "${filesList}" ] ; then 
-	ANT_raw "Nothing To Copy"
+        ANT_raw "Nothing To Copy"
     else
-	opDo cp ${filesList} $( getAccessPageOutputDirName )
+        opDo cp ${filesList} $( getAccessPageOutputDirName )
 
         # Backwards Compatibility
-	if [ -f  "${docModulePath}/${lcnt_lcntNu}-access.html" ] ; then
-	    opDo cp ${filesList} "${docModulePath}"
-	fi
+        if [ -f  "${docModulePath}/${lcnt_lcntNu}-access.html" ] ; then
+            opDo cp ${filesList} "${docModulePath}"
+        fi
     fi 
 
     lpReturn
@@ -1322,15 +1322,15 @@ _EOF_
   for (( i=1;i<=${author_count};i++ )) ; do
     if [[ "${lcnt_authors}_" == "_" ]] ; then
       if [[ "${lcnt_author_url[$i]}_" != "_" ]] ; then
-	lcnt_authors="<a href=${lcnt_author_url[$i]}>${lcnt_author_name[$i]}</a>"
+        lcnt_authors="<a href=${lcnt_author_url[$i]}>${lcnt_author_name[$i]}</a>"
       else
-	lcnt_authors="${lcnt_author_name[$i]}"
+        lcnt_authors="${lcnt_author_name[$i]}"
       fi
     else
       if [[ "${lcnt_author_url[$i]}_" != "_" ]] ; then
-	lcnt_authors="${lcnt_authors}, <a href=${lcnt_author_url[$i]}>${lcnt_author_name[$i]}</a>"
+        lcnt_authors="${lcnt_authors}, <a href=${lcnt_author_url[$i]}>${lcnt_author_name[$i]}</a>"
       else
-	lcnt_authors="${lcnt_authors}, ${lcnt_author_name[$i]}"
+        lcnt_authors="${lcnt_authors}, ${lcnt_author_name[$i]}"
       fi
     fi
   done
@@ -1409,69 +1409,69 @@ _EOF_
     typeset thisOneFormat
     for thisOneFormat in ${lcnt_pubFormats} ; do
       case ${thisOneFormat} in
-	"genHtml")
-	 fileSize=`du -h ${docModulePath}/${lcnt_one_docSrcList} | cut -f 1`
+        "genHtml")
+         fileSize=`du -h ${docModulePath}/${lcnt_one_docSrcList} | cut -f 1`
  cat  << _EOF_ >> ${outputFile}
 <LI>
 <A HREF="${docModulePath}/${lcnt_one_docSrcList}/index.html">HTML</A>:  -- ${fileSize} -- Displays the
 document as a web page.
 _EOF_
         ;;
-	"html")
-	fileSize=`du -h ${docModulePath}/${lcnt_one_docSrcList} | cut -f 1`
+        "html")
+        fileSize=`du -h ${docModulePath}/${lcnt_one_docSrcList} | cut -f 1`
  cat  << _EOF_ >> ${outputFile}
 <LI>
 <A HREF="${docModulePath}/${lcnt_one_docSrcList}/index.html">HTML</A>: -- ${fileSize} -- Displays the
 document as a web page.
 _EOF_
         ;;
-	"tex4ht")
-	fileSize=`du -h ${docModulePath}/${lcnt_one_docSrcList} | cut -f 1`
+        "tex4ht")
+        fileSize=`du -h ${docModulePath}/${lcnt_one_docSrcList} | cut -f 1`
  cat  << _EOF_ >> ${outputFile}
 <LI>
 <A HREF="${docModulePath}/${lcnt_one_docSrcList}/index.html">HTML</A>: -- ${fileSize} -- Displays the
 document as a web page.
 _EOF_
         ;;
-	"heveaHtml")
-	fileSize=`du -h ${docModulePath}/${lcnt_one_docSrcList} | cut -f 1`
+        "heveaHtml")
+        fileSize=`du -h ${docModulePath}/${lcnt_one_docSrcList} | cut -f 1`
  cat  << _EOF_ >> ${outputFile}
 <LI>
 <A HREF="${docModulePath}/${lcnt_one_docSrcList}/index.html">HTML</A>: -- ${fileSize} -- Displays the
 document as a web page.
 _EOF_
         ;;
-	"pdf")
-	fileSize=`du -h ${docModulePath}/${lcnt_one_docSrcList}.pdf | cut -f 1`
+        "pdf")
+        fileSize=`du -h ${docModulePath}/${lcnt_one_docSrcList}.pdf | cut -f 1`
  cat  << _EOF_ >> ${outputFile}
 <LI>  
 <A HREF="${docModulePath}/${lcnt_one_docSrcList}.pdf">PDF</A>: -- ${fileSize} -- Provides the document in Portable Document Format.
 _EOF_
         ;;
-	"ps")
-	fileSize=`du -h ${docModulePath}/${lcnt_one_docSrcList}.ps | cut -f 1`
+        "ps")
+        fileSize=`du -h ${docModulePath}/${lcnt_one_docSrcList}.ps | cut -f 1`
  cat  << _EOF_ >> ${outputFile}
 <LI>
 <A HREF="${docModulePath}/${lcnt_one_docSrcList}.ps">PS</A>: -- ${fileSize} --  Provides the document in Postscript format for printing.
 _EOF_
         ;;
-	"odp")
-	fileSize=`du -h ${docModulePath}/${lcnt_one_docSrcList}.odp | cut -f 1`
+        "odp")
+        fileSize=`du -h ${docModulePath}/${lcnt_one_docSrcList}.odp | cut -f 1`
  cat  << _EOF_ >> ${outputFile}
 <LI>
 <A HREF="${docModulePath}/${lcnt_one_docSrcList}.odp">ODP</A>: -- ${fileSize} --  Provides the document in Open Document Presentation.
 _EOF_
         ;;
-	"tty")
+        "tty")
  cat  << _EOF_ >> ${outputFile}
 <LI>
 <A HREF="${docModulePath#/content/generated}/${lcnt_one_docSrcList}.tty">Text Only</A>: Provides the document in text-only format for faster downloading.
 _EOF_
         ;;
-	*)
-	EH_problem "${thisOneFormat}: Unknown"
-	print ""
-	;;
+        *)
+        EH_problem "${thisOneFormat}: Unknown"
+        print ""
+        ;;
       esac
     done
 
@@ -1495,13 +1495,13 @@ _EOF_
 
      typeset thisOnePublishable
      for thisOnePublishable in ${this_publishableFiles} ; do
-	 typeset thisFileName=`cat ${thisOnePublishable}`
-	 fileSize=`du -h ${docModulePath}/${thisFileName} | cut -f 1`
-	 typeset thisPublishableDesc=""
-	 if [ -f ${thisOnePublishable}_desc ] ; then
-	     thisPublishableDesc=$( cat ${thisOnePublishable}_desc )
-	 fi
-	 cat  << _EOF_ >> ${outputFile}
+         typeset thisFileName=`cat ${thisOnePublishable}`
+         fileSize=`du -h ${docModulePath}/${thisFileName} | cut -f 1`
+         typeset thisPublishableDesc=""
+         if [ -f ${thisOnePublishable}_desc ] ; then
+             thisPublishableDesc=$( cat ${thisOnePublishable}_desc )
+         fi
+         cat  << _EOF_ >> ${outputFile}
 <LI>  
 <A HREF="${docModulePath}/${thisFileName}">${thisFileName}</A>: -- ${fileSize} -- ${thisPublishableDesc} .
 _EOF_
@@ -1527,50 +1527,50 @@ _EOF_
 
    if [ "${lcnt_accessPageInclusion}_" != "_" -o "${lcnt_accessPageInclusion}_" != "none_" ] ; then
        if [ -f "${lcnt_accessPageInclusion}" ] ; then
- cat  << _EOF_ >> ${outputFile}	   
+ cat  << _EOF_ >> ${outputFile}    
 <HR>
 <P><center><big style="color: rgb(153, 51, 0); font-weight: bold;">FULL INLINE DOCUMENT</big></center><br>
 <P>
 _EOF_
  cat ${lcnt_accessPageInclusion} >> ${outputFile}
        else
-	   case ${lcnt_accessPageInclusion} in
-	       "html")
-		   cat  << _EOF_ >> ${outputFile}
+           case ${lcnt_accessPageInclusion} in
+               "html")
+                   cat  << _EOF_ >> ${outputFile}
 <HR>
 <P><center><big style="color: rgb(153, 51, 0); font-weight: bold;">FULL INLINE DOCUMENT</big></center><br>
 <P>
 _EOF_
-		   if [ ! -z "${lcnt_accessPageDoc}" ] ; then
-		       cat ${docModulePath}/${lcnt_accessPageDoc}/index.html >> ${outputFile}
-		   else
-		       cat ${docModulePath}/${lcnt_one_docSrcList}/index.html >> ${outputFile}
-		   fi
-		   opDo copyHtmlAccessPageImages 
-		   ;;
+                   if [ ! -z "${lcnt_accessPageDoc}" ] ; then
+                       cat ${docModulePath}/${lcnt_accessPageDoc}/index.html >> ${outputFile}
+                   else
+                       cat ${docModulePath}/${lcnt_one_docSrcList}/index.html >> ${outputFile}
+                   fi
+                   opDo copyHtmlAccessPageImages 
+                   ;;
 
-		       "pdf-beamer")
-			   cat  << _EOF_ >> ${outputFile}
+                       "pdf-beamer")
+                           cat  << _EOF_ >> ${outputFile}
 <HR>
 <P><center><big style="color: rgb(153, 51, 0); font-weight: bold;">FULL INLINE DOCUMENT</big></center><br>
 <P>
 _EOF_
 
-			   if [ -z ${lcnt_one_docSrcList} ] ; then
-			       if [ -f ${lcntInfoPath}/publishable1 ]; then
-				   typeset publishable1=$( cat ${lcntInfoPath}/publishable1 )
-				   cat  << _EOF_ >> ${outputFile}
+                           if [ -z ${lcnt_one_docSrcList} ] ; then
+                               if [ -f ${lcntInfoPath}/publishable1 ]; then
+                                   typeset publishable1=$( cat ${lcntInfoPath}/publishable1 )
+                                   cat  << _EOF_ >> ${outputFile}
 <embed src="http://${lcnt_one_pubDestUrls}${docModulePath}/${publishable1}#toolbar=0&navpanes=0&scrollbar=0" width="750" height="570">
 _EOF_
-			       else
-				   EH_problem "Missing docSrcList and no publishable1"
-			       fi
-			   else
-			       cat  << _EOF_ >> ${outputFile}
+                               else
+                                   EH_problem "Missing docSrcList and no publishable1"
+                               fi
+                           else
+                               cat  << _EOF_ >> ${outputFile}
 <embed src="http://${lcnt_one_pubDestUrls}${docModulePath}/${lcnt_one_docSrcList}.pdf#toolbar=0&navpanes=0&scrollbar=0" width="750" height="570">
 _EOF_
-			   fi
-			   ;;
+                           fi
+                           ;;
        "pdf")
  cat  << _EOF_ >> ${outputFile}
 <HR>
@@ -1580,12 +1580,12 @@ _EOF_
 
  if [ -z ${lcnt_one_docSrcList} ] ; then
      if [ -f ${lcntInfoPath}/publishable1 ]; then
-	 typeset publishable1=$( cat ${lcntInfoPath}/publishable1 )
+         typeset publishable1=$( cat ${lcntInfoPath}/publishable1 )
  cat  << _EOF_ >> ${outputFile}
 <embed src="${docModulePath}/${publishable1}#toolbar=0&navpanes=0&scrollbar=0" width="750" height="1000">
 _EOF_
      else
-	 EH_problem "Missing docSrcList and no publishable1"
+         EH_problem "Missing docSrcList and no publishable1"
      fi
  else
 
@@ -1596,11 +1596,11 @@ _EOF_
 _EOF_
  fi
        ;;
-	*)
-	EH_problem "${lcnt_accessPageInclusion}: Unknown"
-	print ""
-	;;
-	   esac
+        *)
+        EH_problem "${lcnt_accessPageInclusion}: Unknown"
+        print ""
+        ;;
+           esac
        fi
    fi
 
@@ -1691,15 +1691,15 @@ _EOF_
   for (( i=1;i<=${author_count};i++ )) ; do
     if [[ "${lcnt_authors}_" == "_" ]] ; then
       if [[ "${lcnt_author_url[$i]}_" != "_" ]] ; then
-	lcnt_authors="<a href=${lcnt_author_url[$i]}>${lcnt_author_name[$i]}</a>"
+        lcnt_authors="<a href=${lcnt_author_url[$i]}>${lcnt_author_name[$i]}</a>"
       else
-	lcnt_authors="${lcnt_author_name[$i]}"
+        lcnt_authors="${lcnt_author_name[$i]}"
       fi
     else
       if [[ "${lcnt_author_url[$i]}_" != "_" ]] ; then
-	lcnt_authors="${lcnt_authors}, <a href=${lcnt_author_url[$i]}>${lcnt_author_name[$i]}</a>"
+        lcnt_authors="${lcnt_authors}, <a href=${lcnt_author_url[$i]}>${lcnt_author_name[$i]}</a>"
       else
-	lcnt_authors="${lcnt_authors}, ${lcnt_author_name[$i]}"
+        lcnt_authors="${lcnt_authors}, ${lcnt_author_name[$i]}"
       fi
     fi
   done
@@ -1778,124 +1778,124 @@ _EOF_
 
     local lcntSrcType
     for this_docSrcList in ${lcnt_docSrcList} ; do
-	lcntSrcType=$( vis_determineSrcType "${cntntRawHome}" "${this_docSrcList}" )
+        lcntSrcType=$( vis_determineSrcType "${cntntRawHome}" "${this_docSrcList}" )
      
-	typeset thisOneFormat
-	for thisOneFormat in ${lcnt_pubFormats} ; do
+        typeset thisOneFormat
+        for thisOneFormat in ${lcnt_pubFormats} ; do
 
-	    function notyetSupported {
-		echo "NOTYET Supported"
-	    }
+            function notyetSupported {
+                echo "NOTYET Supported"
+            }
 
-	    function badLcntSrcType {
-		EH_problem "Bad Doc: ${this_docSrcList} ${lcntSrcType}"
-	    }
+            function badLcntSrcType {
+                EH_problem "Bad Doc: ${this_docSrcList} ${lcntSrcType}"
+            }
 
 
-	    local rsyncLcntAsRoot
-	    local resultPath
-	    case ${thisOneFormat} in
-		"heveaHtml")
-		    if [ "${lcntSrcType}" == "presentation" ]  ; then
-			# What we really want is the reveal.js files
+            local rsyncLcntAsRoot
+            local resultPath
+            case ${thisOneFormat} in
+                "heveaHtml")
+                    if [ "${lcntSrcType}" == "presentation" ]  ; then
+                        # What we really want is the reveal.js files
 
-			resultPath=${docModuleExportPath}/pres/${lcntNu}-pres.html
-			fileSize=$( du -h ${resultPath}  | cut -f 1 )
-			rsyncLcntAsRoot=$( echo ${resultPath##*/rsync/} )
-			cat  << _EOF_ >> ${outputFile}
+                        resultPath=${docModuleExportPath}/pres/${lcntNu}-pres.html
+                        fileSize=$( du -h ${resultPath}  | cut -f 1 )
+                        rsyncLcntAsRoot=$( echo ${resultPath##*/rsync/} )
+                        cat  << _EOF_ >> ${outputFile}
 <LI>
 <A HREF="http://${bystarDomFormTld_web}/${rsyncLcntAsRoot}">Screencast-Presentation</A>: -- ${fileSize} -- Displays the
 presentation document as a Reveal.Js web page.
 _EOF_
-			
-		    elif [ "${lcntSrcType}" == "article" ]  ; then
-			resultPath=${docModuleExportPath}/art/${lcntNu}-art.html
-			fileSize=$( du -h ${resultPath}  | cut -f 1 )
-			rsyncLcntAsRoot=$( echo ${resultPath##*/rsync/} )
-			cat  << _EOF_ >> ${outputFile}
+                        
+                    elif [ "${lcntSrcType}" == "article" ]  ; then
+                        resultPath=${docModuleExportPath}/art/${lcntNu}-art.html
+                        fileSize=$( du -h ${resultPath}  | cut -f 1 )
+                        rsyncLcntAsRoot=$( echo ${resultPath##*/rsync/} )
+                        cat  << _EOF_ >> ${outputFile}
 <LI>
 <A HREF="http://${bystarDomFormTld_web}/${rsyncLcntAsRoot}">Article-Html</A>: -- ${fileSize} -- Displays the
 article document as a web page.
 _EOF_
 
-			
-		    elif [ "${lcntSrcType}" == "presArt" ]  ; then
-			resultPath=${docModuleExportPath}/presArt/${lcntNu}-presArt.html
-			fileSize=$( du -h ${resultPath}  | cut -f 1 )
-			rsyncLcntAsRoot=$( echo ${resultPath##*/rsync/} )
-			cat  << _EOF_ >> ${outputFile}
+                        
+                    elif [ "${lcntSrcType}" == "presArt" ]  ; then
+                        resultPath=${docModuleExportPath}/presArt/${lcntNu}-presArt.html
+                        fileSize=$( du -h ${resultPath}  | cut -f 1 )
+                        rsyncLcntAsRoot=$( echo ${resultPath##*/rsync/} )
+                        cat  << _EOF_ >> ${outputFile}
 <LI>
 <A HREF="http://${bystarDomFormTld_web}/${rsyncLcntAsRoot}">Presentation-As-Article-Html</A>: -- ${fileSize} -- Displays the
 presentation document as an article web page.
 _EOF_
-			
-		    else
-			badLcntSrcType
-		    fi
-		    ;;
+                        
+                    else
+                        badLcntSrcType
+                    fi
+                    ;;
 
-		"pdf")
-		    if [ "${lcntSrcType}" == "presentation" ]  ; then
-			resultPath=${docModuleExportPath}/pres/${lcntNu}-pres.pdf
-			fileSize=$( du -h ${resultPath}  | cut -f 1 )
-			rsyncLcntAsRoot=$( echo ${resultPath##*/rsync/} )
-			cat  << _EOF_ >> ${outputFile}
+                "pdf")
+                    if [ "${lcntSrcType}" == "presentation" ]  ; then
+                        resultPath=${docModuleExportPath}/pres/${lcntNu}-pres.pdf
+                        fileSize=$( du -h ${resultPath}  | cut -f 1 )
+                        rsyncLcntAsRoot=$( echo ${resultPath##*/rsync/} )
+                        cat  << _EOF_ >> ${outputFile}
 <LI>
 <A HREF="http://${bystarDomFormTld_web}/${rsyncLcntAsRoot}">Presentation-Pdf</A>: -- ${fileSize} -- 
 Provides the presentation document in Portable Document Format.
 _EOF_
 
-		    elif [ "${lcntSrcType}" == "article" ]  ; then
-			resultPath=${docModuleExportPath}/art/${lcntNu}-art.pdf
-			fileSize=$( du -h ${resultPath}  | cut -f 1 )
-			rsyncLcntAsRoot=$( echo ${resultPath##*/rsync/} )
-			cat  << _EOF_ >> ${outputFile}
+                    elif [ "${lcntSrcType}" == "article" ]  ; then
+                        resultPath=${docModuleExportPath}/art/${lcntNu}-art.pdf
+                        fileSize=$( du -h ${resultPath}  | cut -f 1 )
+                        rsyncLcntAsRoot=$( echo ${resultPath##*/rsync/} )
+                        cat  << _EOF_ >> ${outputFile}
 <LI>
 <A HREF="http://${bystarDomFormTld_web}/${rsyncLcntAsRoot}">Article-Pdf</A>: -- ${fileSize} -- 
 Provides the article document in Portable Document Format.
 _EOF_
 
-		    elif [ "${lcntSrcType}" == "presArt" ]  ; then
-			resultPath=${docModuleExportPath}/presArt/${lcntNu}-presArt.pdf
-			fileSize=$( du -h ${resultPath}  | cut -f 1 )
-			rsyncLcntAsRoot=$( echo ${resultPath##*/rsync/} )
-			cat  << _EOF_ >> ${outputFile}
+                    elif [ "${lcntSrcType}" == "presArt" ]  ; then
+                        resultPath=${docModuleExportPath}/presArt/${lcntNu}-presArt.pdf
+                        fileSize=$( du -h ${resultPath}  | cut -f 1 )
+                        rsyncLcntAsRoot=$( echo ${resultPath##*/rsync/} )
+                        cat  << _EOF_ >> ${outputFile}
 <LI>
 <A HREF="http://${bystarDomFormTld_web}/${rsyncLcntAsRoot}">Presentation-Article-Pdf</A>: -- ${fileSize} -- 
 Provides the presentation document as an article in Portable Document Format.
 _EOF_
-			
-		    else
-			badLcntSrcType
-		    fi
-		    ;;
-		
-		"ps")
-		    fileSize=`du -h ${docModulePath}/${this_docSrcList}.ps | cut -f 1`
-		    cat  << _EOF_ >> ${outputFile}
+                        
+                    else
+                        badLcntSrcType
+                    fi
+                    ;;
+                
+                "ps")
+                    fileSize=`du -h ${docModulePath}/${this_docSrcList}.ps | cut -f 1`
+                    cat  << _EOF_ >> ${outputFile}
 <LI>
 <A HREF="${docModulePath}/${this_docSrcList}.ps">PS</A>: -- ${fileSize} --  Provides the document in Postscript format for printing.
 _EOF_
-		    ;;
-		"odp")
-		    fileSize=`du -h ${docModulePath}/${this_docSrcList}.odp | cut -f 1`
-		    cat  << _EOF_ >> ${outputFile}
+                    ;;
+                "odp")
+                    fileSize=`du -h ${docModulePath}/${this_docSrcList}.odp | cut -f 1`
+                    cat  << _EOF_ >> ${outputFile}
 <LI>
 <A HREF="${docModulePath}/${this_docSrcList}.odp">ODP</A>: -- ${fileSize} --  Provides the document in Open Document Presentation.
 _EOF_
-		    ;;
-		"tty")
-		    cat  << _EOF_ >> ${outputFile}
+                    ;;
+                "tty")
+                    cat  << _EOF_ >> ${outputFile}
 <LI>
 <A HREF="${docModulePath#/content/generated}/${this_docSrcList}.tty">Text Only</A>: Provides the document in text-only format for faster downloading.
 _EOF_
-		    ;;
-		*)
-		    EH_problem "${thisOneFormat}: Unknown"
-		    print ""
-		    ;;
-	    esac
-	done
+                    ;;
+                *)
+                    EH_problem "${thisOneFormat}: Unknown"
+                    print ""
+                    ;;
+            esac
+        done
     done
 
  cat  << _EOF_ >> ${outputFile}
@@ -1918,13 +1918,13 @@ _EOF_
 
      typeset thisOnePublishable
      for thisOnePublishable in ${this_publishableFiles} ; do
-	 typeset thisFileName=`cat ${thisOnePublishable}`
-	 fileSize=`du -h ${docModulePath}/${thisFileName} | cut -f 1`
-	 typeset thisPublishableDesc=""
-	 if [ -f ${thisOnePublishable}_desc ] ; then
-	     thisPublishableDesc=$( cat ${thisOnePublishable}_desc )
-	 fi
-	 cat  << _EOF_ >> ${outputFile}
+         typeset thisFileName=`cat ${thisOnePublishable}`
+         fileSize=`du -h ${docModulePath}/${thisFileName} | cut -f 1`
+         typeset thisPublishableDesc=""
+         if [ -f ${thisOnePublishable}_desc ] ; then
+             thisPublishableDesc=$( cat ${thisOnePublishable}_desc )
+         fi
+         cat  << _EOF_ >> ${outputFile}
 <LI>  
 <A HREF="${docModulePath}/${thisFileName}">${thisFileName}</A>: -- ${fileSize} -- ${thisPublishableDesc} .
 _EOF_
@@ -1950,51 +1950,51 @@ _EOF_
 
    if [ "${lcnt_accessPageInclusion}_" != "_" -o "${lcnt_accessPageInclusion}_" != "none_" ] ; then
        if [ -f "${lcnt_accessPageInclusion}" ] ; then
- cat  << _EOF_ >> ${outputFile}	   
+ cat  << _EOF_ >> ${outputFile}    
 <HR>
 <P><center><big style="color: rgb(153, 51, 0); font-weight: bold;">FULL INLINE DOCUMENT</big></center><br>
 <P>
 _EOF_
  cat ${lcnt_accessPageInclusion} >> ${outputFile}
        else
-	   case ${lcnt_accessPageInclusion} in
-	       "html")
-		   cat  << _EOF_ >> ${outputFile}
+           case ${lcnt_accessPageInclusion} in
+               "html")
+                   cat  << _EOF_ >> ${outputFile}
 <HR>
 <P><center><big style="color: rgb(153, 51, 0); font-weight: bold;">FULL INLINE DOCUMENT</big></center><br>
 <P>
 _EOF_
-		   if [ ! -z "${lcnt_accessPageDoc}" ] ; then
-		       cat ${docModulePath}/${lcnt_accessPageDoc}/index.html >> ${outputFile}
-		   else
-		       cat ${docModulePath}/${lcnt_one_docSrcList}/index.html >> ${outputFile}
-		   fi
-		   opDo copyHtmlAccessPageImages 
-		   ;;
+                   if [ ! -z "${lcnt_accessPageDoc}" ] ; then
+                       cat ${docModulePath}/${lcnt_accessPageDoc}/index.html >> ${outputFile}
+                   else
+                       cat ${docModulePath}/${lcnt_one_docSrcList}/index.html >> ${outputFile}
+                   fi
+                   opDo copyHtmlAccessPageImages 
+                   ;;
 
-	       "pdf-beamer")
-			   cat  << _EOF_ >> ${outputFile}
+               "pdf-beamer")
+                           cat  << _EOF_ >> ${outputFile}
 <HR>
 <P><center><big style="color: rgb(153, 51, 0); font-weight: bold;">FULL INLINE DOCUMENT</big></center><br>
 <P>
 _EOF_
 
-			   if [ -z ${lcnt_one_docSrcList} ] ; then
-			       if [ -f ${lcntInfoPath}/publishable1 ]; then
-				   typeset publishable1=$( cat ${lcntInfoPath}/publishable1 )
-				   cat  << _EOF_ >> ${outputFile}
+                           if [ -z ${lcnt_one_docSrcList} ] ; then
+                               if [ -f ${lcntInfoPath}/publishable1 ]; then
+                                   typeset publishable1=$( cat ${lcntInfoPath}/publishable1 )
+                                   cat  << _EOF_ >> ${outputFile}
 <embed src="http://${lcnt_one_pubDestUrls}${docModulePath}/${publishable1}#toolbar=0&navpanes=0&scrollbar=0" width="750" height="570">
 _EOF_
-			       else
-				   EH_problem "Missing docSrcList and no publishable1"
-			       fi
-			   else
-			       cat  << _EOF_ >> ${outputFile}
+                               else
+                                   EH_problem "Missing docSrcList and no publishable1"
+                               fi
+                           else
+                               cat  << _EOF_ >> ${outputFile}
 <embed src="http://${lcnt_one_pubDestUrls}${docModulePath}/${lcnt_one_docSrcList}.pdf#toolbar=0&navpanes=0&scrollbar=0" width="750" height="570">
 _EOF_
-			   fi
-			   ;;
-	       "pdf")
+                           fi
+                           ;;
+               "pdf")
  cat  << _EOF_ >> ${outputFile}
 <HR>
 <P><center><big style="color: rgb(153, 51, 0); font-weight: bold;">FULL PDF INLINE DOCUMENT</big></center><br>
@@ -2003,12 +2003,12 @@ _EOF_
 
  if [ -z ${lcnt_one_docSrcList} ] ; then
      if [ -f ${lcntInfoPath}/publishable1 ]; then
-	 typeset publishable1=$( cat ${lcntInfoPath}/publishable1 )
+         typeset publishable1=$( cat ${lcntInfoPath}/publishable1 )
  cat  << _EOF_ >> ${outputFile}
 <embed src="${docModulePath}/${publishable1}#toolbar=0&navpanes=0&scrollbar=0" width="750" height="1000">
 _EOF_
      else
-	 EH_problem "Missing docSrcList and no publishable1"
+         EH_problem "Missing docSrcList and no publishable1"
      fi
  else
 
@@ -2020,15 +2020,15 @@ _EOF_
  fi
                 ;;
 
-	       "revealjs")
-		   resultPath=${docModuleExportPath}/pres/${lcntNu}-pres.html
-		   rsyncLcntAsRoot=$( echo ${resultPath##*/rsync/} )
-		   cat  << _EOF_ >> ${outputFile}
+               "revealjs")
+                   resultPath=${docModuleExportPath}/pres/${lcntNu}-pres.html
+                   rsyncLcntAsRoot=$( echo ${resultPath##*/rsync/} )
+                   cat  << _EOF_ >> ${outputFile}
 <HR>
 <P><center><big style="color: rgb(153, 51, 0); font-weight: bold;">IFRAMED REVEALJS INLINE SCREENCAST PRESENTATION DOCUMENT</big></center><br>
 <P>
 _EOF_
-		   cat  << _EOF_ >> ${outputFile}
+                   cat  << _EOF_ >> ${outputFile}
 <p>
 You can also access the Screencast-Presentation in 
 <a href="http://${bystarDomFormTld_web}/${rsyncLcntAsRoot}">Full Page</a> form.
@@ -2043,11 +2043,11 @@ understand IFRAME.  However, we'll still <a href=http://${bystarDomFormTld_web}/
 _EOF_
 
                ;;
-	       *)
-	EH_problem "${lcnt_accessPageInclusion}: Unknown"
-	print ""
-	;;
-	   esac
+               *)
+        EH_problem "${lcnt_accessPageInclusion}: Unknown"
+        print ""
+        ;;
+           esac
        fi
    fi
 
@@ -2121,15 +2121,15 @@ _EOF_
   for (( i=1;i<=${author_count};i++ )) ; do
     if [[ "${lcnt_authors}_" == "_" ]] ; then
       if [[ "${lcnt_author_url[$i]}_" != "_" ]] ; then
-	lcnt_authors="<a href=${lcnt_author_url[$i]}>${lcnt_author_name[$i]}</a>"
+        lcnt_authors="<a href=${lcnt_author_url[$i]}>${lcnt_author_name[$i]}</a>"
       else
-	lcnt_authors="${lcnt_author_name[$i]}"
+        lcnt_authors="${lcnt_author_name[$i]}"
       fi
     else
       if [[ "${lcnt_author_url[$i]}_" != "_" ]] ; then
-	lcnt_authors="${lcnt_authors}, <a href=${lcnt_author_url[$i]}>${lcnt_author_name[$i]}</a>"
+        lcnt_authors="${lcnt_authors}, <a href=${lcnt_author_url[$i]}>${lcnt_author_name[$i]}</a>"
       else
-	lcnt_authors="${lcnt_authors}, ${lcnt_author_name[$i]}"
+        lcnt_authors="${lcnt_authors}, ${lcnt_author_name[$i]}"
       fi
     fi
   done
@@ -2195,10 +2195,10 @@ _EOF_
       typeset thisFileName=`cat ${thisOnePublishable}`
       fileSize=`du -h ${docModulePath}/${thisFileName} | cut -f 1`
       if [[ -f ${thisOnePublishable}_desc ]] ; then
-	  typeset thisPublishableDesc=$( cat ${thisOnePublishable}_desc )
-	  thisPublishableDesc="-- ${thisPublishableDesc}"
+          typeset thisPublishableDesc=$( cat ${thisOnePublishable}_desc )
+          thisPublishableDesc="-- ${thisPublishableDesc}"
       else
-	  thisPublishableDesc=""
+          thisPublishableDesc=""
       fi
  cat  << _EOF_ >> ${outputFile}
 <LI>  
@@ -2281,15 +2281,15 @@ _EOF_
   for (( i=1;i<=${author_count};i++ )) ; do
     if [[ "${lcnt_authors}_" == "_" ]] ; then
       if [[ "${lcnt_author_url[$i]}_" != "_" ]] ; then
-	lcnt_authors="<a href=${lcnt_author_url[$i]}>${lcnt_author_name[$i]}</a>"
+        lcnt_authors="<a href=${lcnt_author_url[$i]}>${lcnt_author_name[$i]}</a>"
       else
-	lcnt_authors="${lcnt_author_name[$i]}"
+        lcnt_authors="${lcnt_author_name[$i]}"
       fi
     else
       if [[ "${lcnt_author_url[$i]}_" != "_" ]] ; then
-	lcnt_authors="${lcnt_authors}, <a href=${lcnt_author_url[$i]}>${lcnt_author_name[$i]}</a>"
+        lcnt_authors="${lcnt_authors}, <a href=${lcnt_author_url[$i]}>${lcnt_author_name[$i]}</a>"
       else
-	lcnt_authors="${lcnt_authors}, ${lcnt_author_name[$i]}"
+        lcnt_authors="${lcnt_authors}, ${lcnt_author_name[$i]}"
       fi
     fi
   done

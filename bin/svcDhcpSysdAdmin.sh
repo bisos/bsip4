@@ -100,13 +100,13 @@ function vis_examples_general {
     #typeset extraInfo=""
 
     if [ "${context}" == "general" ] ; then
-	doNothing
+        doNothing
     elif [ "${context}" == "niche" ] ; then
-	doNothing
-	#G_myName=$( G_myUnNicheNameGet )      
+        doNothing
+        #G_myName=$( G_myUnNicheNameGet )      
     else
-	EH_problem "Bad context=${context}"
-	lpReturn 101
+        EH_problem "Bad context=${context}"
+        lpReturn 101
     fi
   
 

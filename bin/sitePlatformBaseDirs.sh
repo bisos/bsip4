@@ -66,7 +66,7 @@ function vis_disksImportMount  {
 
 
     if [ ! -d /dd/net/bisp0003/c/0 ] ; then
-	opDo mkdir /dd/net/bisp0003/c/0
+        opDo mkdir /dd/net/bisp0003/c/0
     fi
     opDo mount 192.168.0.183:/dd/this/c/0 /dd/net/bisp0003/c/0
 
@@ -300,17 +300,17 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if [[ "${opRunHostName}" == "bisp0017" ]] ; then
-	opDo sitePlatformBaseDirs.sh -h -v -n showRun -p baseDir="/uniform" -i pbdListUpdate pbdList_uniformProviderLinks
-	
-	opDo sitePlatformBaseDirs.sh -h -v -n showRun -p baseDir="/uniform" -i pbdListUpdate pbdList_uniformProviderMediaLinks
-	opDo sitePlatformBaseDirs.sh -h -v -n showRun -p baseDir="/uniform" -i pbdListUpdate pbdList_uniformProviderMediaLinks_contents
-	opDo sitePlatformBaseDirs.sh -h -v -n showRun -p baseDir="/uniform" -i pbdListUpdate pbdList_uniformProviderMediaLinks_vms
+        opDo sitePlatformBaseDirs.sh -h -v -n showRun -p baseDir="/uniform" -i pbdListUpdate pbdList_uniformProviderLinks
+        
+        opDo sitePlatformBaseDirs.sh -h -v -n showRun -p baseDir="/uniform" -i pbdListUpdate pbdList_uniformProviderMediaLinks
+        opDo sitePlatformBaseDirs.sh -h -v -n showRun -p baseDir="/uniform" -i pbdListUpdate pbdList_uniformProviderMediaLinks_contents
+        opDo sitePlatformBaseDirs.sh -h -v -n showRun -p baseDir="/uniform" -i pbdListUpdate pbdList_uniformProviderMediaLinks_vms
     else
-	opDo sitePlatformBaseDirs.sh -h -v -n showRun -p baseDir="/uniform" -i pbdListUpdate pbdList_uniformRemoteLinks
+        opDo sitePlatformBaseDirs.sh -h -v -n showRun -p baseDir="/uniform" -i pbdListUpdate pbdList_uniformRemoteLinks
 
-	opDo sitePlatformBaseDirs.sh -h -v -n showRun -p baseDir="/uniform" -i pbdListUpdate pbdList_uniformRemoteMediaLinks
-	opDo sitePlatformBaseDirs.sh -h -v -n showRun -p baseDir="/uniform" -i pbdListUpdate pbdList_uniformRemoteMediaLinks_contents
-	opDo sitePlatformBaseDirs.sh -h -v -n showRun -p baseDir="/uniform" -i pbdListUpdate pbdList_uniformRemoteMediaLinks_vms
+        opDo sitePlatformBaseDirs.sh -h -v -n showRun -p baseDir="/uniform" -i pbdListUpdate pbdList_uniformRemoteMediaLinks
+        opDo sitePlatformBaseDirs.sh -h -v -n showRun -p baseDir="/uniform" -i pbdListUpdate pbdList_uniformRemoteMediaLinks_contents
+        opDo sitePlatformBaseDirs.sh -h -v -n showRun -p baseDir="/uniform" -i pbdListUpdate pbdList_uniformRemoteMediaLinks_vms
     fi
     
     lpReturn
@@ -1657,13 +1657,13 @@ _CommentEnd_
 # _CommentEnd_
 
 #     if [ "${opRunMachineArch}" == "x86_64" ] ; then
-# 	prpList_main=( 
-# 	    "basePkg_64bit"
-# 	)
+#       prpList_main=( 
+#           "basePkg_64bit"
+#       )
 #     else
-# 	prpList_main=( 
-# 	    "basePkg_32bit"
-# 	)
+#       prpList_main=( 
+#           "basePkg_32bit"
+#       )
 #     fi
 
 #     #

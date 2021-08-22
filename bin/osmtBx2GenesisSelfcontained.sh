@@ -92,7 +92,7 @@ function _opDoRunOnly {
     if [[ $err -ne 0 ]] ; then
       EH_problem "$failedMsg" "$err"
       if [[ "${mode}X" == "EXITX" ]] ; then
-	exit $err
+        exit $err
       fi
       return $err
     fi
@@ -106,10 +106,10 @@ function _opDoShowOnly {
   # $3: failed msg
   # $4-: command
     if [[ "${BASH_VERSION}" != "" ]] ; then
-	#echo -e ${2} 1>&2
-	printf "%b \n" "${2}"
+        #echo -e ${2} 1>&2
+        printf "%b \n" "${2}"
     else
-	print -u2 "${2}"
+        print -u2 "${2}"
     fi
 }
 
@@ -154,92 +154,92 @@ function _opDo {
     typeset mode="$1"; shift || exit
 
     if [[ -z "${__opDo_prevScriptName}" ]] ; then
-	export __opDo_prevScriptName=""
+        export __opDo_prevScriptName=""
     fi
     if [[ -z "${__opDo_prevFunctionName}" ]] ; then
-	export __opDo_prevFunctionName=""
+        export __opDo_prevFunctionName=""
     fi
     if [[ "${__opDo_prevScriptName}X" == "${scriptName}X" ]] ; then
-	scriptName=""
+        scriptName=""
     else
-	__opDo_prevScriptName="${scriptName}"
-	scriptName="${scriptName}::"
+        __opDo_prevScriptName="${scriptName}"
+        scriptName="${scriptName}::"
     fi
     if [[ "${__opDo_prevFunctionName}" == "${functionName}" ]] ; then
-	functionName=""
+        functionName=""
     else
-	__opDo_prevFunctionName="${functionName}"
+        __opDo_prevFunctionName="${functionName}"
     fi
     
     if [ -z "${G_recordMode}" ] ; then
-	lineNumberTag="** [${lineNumber}]"
+        lineNumberTag="** [${lineNumber}]"
     else
-	lineNumberTag="** [[file:${G_myFullName}::${lineNumber}][${lineNumber}]]"	
+        lineNumberTag="** [[file:${G_myFullName}::${lineNumber}][${lineNumber}]]"       
     fi
 
     if [ -z "${G_recordMode}" ] ; then
-	scriptFuncName="* ${scriptName}${functionName}"	
+        scriptFuncName="* ${scriptName}${functionName}" 
     else
-	scriptFuncName="* [[file:${G_myFullName}::function ${functionName}][${scriptName}${functionName}]]"		
+        scriptFuncName="* [[file:${G_myFullName}::function ${functionName}][${scriptName}${functionName}]]"             
     fi
 
     typeset msg
     typeset failedMsg
     dateTag=$( date +%Y%m%d%H%M%S%N )
     case "${G_verbose}" in
-	"verbose")
-	    if [ "${scriptName}" == "" ] ; then
-		if [ "${functionName}" == "" ] ; then
-		   msg="${lineNumberTag}: $@"
-		else
-		    #msg="* ${scriptName}${functionName} -- ${dateTag}\n${lineNumber}: $@"
-		    msg="${scriptFuncName} -- ${dateTag}\n${lineNumberTag}: $@"
-		fi 
-	    else
-		#msg="* ${scriptName}${functionName} -- ${dateTag}\n${lineNumber}: $@"
-		msg="${scriptFuncName} -- ${dateTag}\n${lineNumberTag}: $@"		
-	    fi
-	    failedMsg="FAILED: ${scriptName}${functionName}${lineNumber}: $@ [ErrCode]="
-	    ;;
-	*)
-	    msg="$@"
-	    failedMsg="FAILED: $@ [ErrCode]="
-	    ;;
+        "verbose")
+            if [ "${scriptName}" == "" ] ; then
+                if [ "${functionName}" == "" ] ; then
+                   msg="${lineNumberTag}: $@"
+                else
+                    #msg="* ${scriptName}${functionName} -- ${dateTag}\n${lineNumber}: $@"
+                    msg="${scriptFuncName} -- ${dateTag}\n${lineNumberTag}: $@"
+                fi 
+            else
+                #msg="* ${scriptName}${functionName} -- ${dateTag}\n${lineNumber}: $@"
+                msg="${scriptFuncName} -- ${dateTag}\n${lineNumberTag}: $@"             
+            fi
+            failedMsg="FAILED: ${scriptName}${functionName}${lineNumber}: $@ [ErrCode]="
+            ;;
+        *)
+            msg="$@"
+            failedMsg="FAILED: $@ [ErrCode]="
+            ;;
     esac
     case "${G_runMode}" in
-	"runOnly")
-	    _opDoRunOnly "$mode" "$msg" "$failedMsg" "$@" || return $?
-	    ;;
-	"showOnly")
-	    _opDoShowOnly "$mode" "$msg" "$failedMsg" "$@" || return
-	    ;;
-	"showRun")
-	    _opDoShowRun "$mode" "$msg" "$failedMsg" "$@" || return
-	    ;;
-	"runSafe")
-	    #runSafe = unprotected: showRun, protected: show
-	    if [[ ${__opDo_withinCritical} -eq 0 ]] ; then
-		_opDoShowRun "$mode" "$msg" "$failedMsg" "$@" || return
-	    else
-		_opDoShowOnly "$mode" "$msg" "$failedMsg" "$@" || return
-	    fi
-	    ;;
-	"showCritical"|"showProtected")
-	    #showCritical    = unprotected: run,     protected: show
-	    if [[ ${__opDo_withinCritical} -eq 0 ]] ; then
-		_opDoRunOnly "$mode" "$msg" "$failedMsg" "$@" || return
-	    else
-		_opDoShowOnly "$mode" "$msg" "$failedMsg" "$@" || return
-	    fi
-	    ;;
-	"showRunCritical"|"showRunProtected")
-	    #showRunCritical = unprotected: run,     protected: showRun 
-	    if [[ ${__opDo_withinCritical} -eq 0 ]] ; then
-		_opDoRunOnly "$mode" "$msg" "$failedMsg" "$@" || return
-	    else
-		_opDoShowRun "$mode" "$msg" "$failedMsg" "$@" || return
-	    fi
-	    ;;
+        "runOnly")
+            _opDoRunOnly "$mode" "$msg" "$failedMsg" "$@" || return $?
+            ;;
+        "showOnly")
+            _opDoShowOnly "$mode" "$msg" "$failedMsg" "$@" || return
+            ;;
+        "showRun")
+            _opDoShowRun "$mode" "$msg" "$failedMsg" "$@" || return
+            ;;
+        "runSafe")
+            #runSafe = unprotected: showRun, protected: show
+            if [[ ${__opDo_withinCritical} -eq 0 ]] ; then
+                _opDoShowRun "$mode" "$msg" "$failedMsg" "$@" || return
+            else
+                _opDoShowOnly "$mode" "$msg" "$failedMsg" "$@" || return
+            fi
+            ;;
+        "showCritical"|"showProtected")
+            #showCritical    = unprotected: run,     protected: show
+            if [[ ${__opDo_withinCritical} -eq 0 ]] ; then
+                _opDoRunOnly "$mode" "$msg" "$failedMsg" "$@" || return
+            else
+                _opDoShowOnly "$mode" "$msg" "$failedMsg" "$@" || return
+            fi
+            ;;
+        "showRunCritical"|"showRunProtected")
+            #showRunCritical = unprotected: run,     protected: showRun 
+            if [[ ${__opDo_withinCritical} -eq 0 ]] ; then
+                _opDoRunOnly "$mode" "$msg" "$failedMsg" "$@" || return
+            else
+                _opDoShowRun "$mode" "$msg" "$failedMsg" "$@" || return
+            fi
+            ;;
     esac
     return $err
 }
@@ -254,8 +254,8 @@ function _opDoAssert {
     typeset failedMsg="ASSERTION FAILED: ${scriptName}${functionName}${lineNumber}: $@ [ErrCode]="
     "$@" || err=$?
     if [[ $err -ne 0 ]] ; then
-	EH_problem "$failedMsg" "$err"
-	exit $err
+        EH_problem "$failedMsg" "$err"
+        exit $err
     fi
 }
 
@@ -299,15 +299,15 @@ function vis_reRunAsRoot {
 
     runId=$( id -u )
     if [ "${runId}" != "0" ] ; then
-	#ANT_raw "Re Invokation as root:"
-	#opDo sudo ${opBinBase}/${G_myName} -i runFunc $@
-	#export G_runMode="runOnly"
-	opDo sudo ${G_myFullName} ${G_commandOptions} -i runFunc $@
-	globalReRunRetVal=$?
-	#ANT_raw retVal=${globalReRunRetVal}
-	lpReturn 0
+        #ANT_raw "Re Invokation as root:"
+        #opDo sudo ${opBinBase}/${G_myName} -i runFunc $@
+        #export G_runMode="runOnly"
+        opDo sudo ${G_myFullName} ${G_commandOptions} -i runFunc $@
+        globalReRunRetVal=$?
+        #ANT_raw retVal=${globalReRunRetVal}
+        lpReturn 0
     else
-	lpReturn 127
+        lpReturn 127
     fi
 }
 
@@ -347,28 +347,28 @@ alias continueAfterThis='_continueAfterThis; if [[ ${skipIt} == "true" ]] ; then
 function _continueAfterThis {
     #echo "About to: $*"
     if [ ${G_humanUser} != "TRUE" ] ; then
-	return
+        return
     fi
     echo -n "Hit enter to continue, \"skip\" to skip or \"EXIT\" to exit: "
     skipIt=false
     while read line ; do
-	if [[ "${line}_" == "SKIP_"  || "${line}_" == "skip_" ]] ; then
-	echo "Skiped"
-	    skipIt=true
-	    break
-	fi
+        if [[ "${line}_" == "SKIP_"  || "${line}_" == "skip_" ]] ; then
+        echo "Skiped"
+            skipIt=true
+            break
+        fi
 
-	if [[ "${line}_" == "EXIT_"  || "${line}_" == "exit_" ]] ; then
-	    exit
-	fi
+        if [[ "${line}_" == "EXIT_"  || "${line}_" == "exit_" ]] ; then
+            exit
+        fi
 
-	if [[ "${line}_" == "_" ]] ; then
-	    #echo "Continuing ...."
-	    break
-	fi
+        if [[ "${line}_" == "_" ]] ; then
+            #echo "Continuing ...."
+            break
+        fi
 
-	echo "HA! ${line} -- Say Again"
-	echo -n "Hit enter to continue, \"skip\" to skip or \"EXIT\" to exit: "
+        echo "HA! ${line} -- Say Again"
+        echo -n "Hit enter to continue, \"skip\" to skip or \"EXIT\" to exit: "
     done
 }
 
@@ -665,31 +665,31 @@ function adjustSourcesList {
 
   case ${opRunDistFamily} in
     "UBUNTU"|"DEBIAN")
-	  echo  "About To: Adjust (eliminate cdrom) sources.list"; continueAfterThis
+          echo  "About To: Adjust (eliminate cdrom) sources.list"; continueAfterThis
 
-	  if [ -f /etc/apt/sources.list.orig ] ; then 
-	      cp /etc/apt/sources.list /etc/apt/sources.list.$$
-	  else
-	      cp -p /etc/apt/sources.list /etc/apt/sources.list.orig
-	  fi
+          if [ -f /etc/apt/sources.list.orig ] ; then 
+              cp /etc/apt/sources.list /etc/apt/sources.list.$$
+          else
+              cp -p /etc/apt/sources.list /etc/apt/sources.list.orig
+          fi
 
-	  grep -v "cdrom" /etc/apt/sources.list > /tmp/sources.NoCdrom.$$
+          grep -v "cdrom" /etc/apt/sources.list > /tmp/sources.NoCdrom.$$
 
-	  mv /tmp/sources.NoCdrom.$$ /etc/apt/sources.list
+          mv /tmp/sources.NoCdrom.$$ /etc/apt/sources.list
 
-	  apt-get update
+          apt-get update
        ;;
     "MAEMO")
 
-	  echo "/etc/apt/sources.list is assumed to be good"
+          echo "/etc/apt/sources.list is assumed to be good"
        ;;
     "REDHAT"|"SOLARIS"|"UNKNOWN"|"UNSUPPORTED")
-	  echo "Unsupported distribution: ${opRunDistFamily}"
-	  return 1
+          echo "Unsupported distribution: ${opRunDistFamily}"
+          return 1
        ;;
     *)
-	  echo "Oops distribution: ${opRunDistFamily}"
-	  return 1
+          echo "Oops distribution: ${opRunDistFamily}"
+          return 1
        ;;
   esac
 
@@ -705,24 +705,24 @@ _CommentEnd_
 function installCVS {
   case ${opRunDistFamily} in
     "UBUNTU"|"DEBIAN")
-	  echo  "About To: Install cvs"; continueAfterThis
-	  apt-get install cvs
-	  apt-get install sudo
+          echo  "About To: Install cvs"; continueAfterThis
+          apt-get install cvs
+          apt-get install sudo
        ;;
     "MAEMO")
-	  echo  "About To: Install cvs"; continueAfterThis
-	  apt-get -y install wget
-	  wget http://www.bybinary.org/republish/maemo/4.x/armel/cvs
-	  mv cvs /usr/bin/cvs
-	  chmod 755 /usr/bin/cvs
+          echo  "About To: Install cvs"; continueAfterThis
+          apt-get -y install wget
+          wget http://www.bybinary.org/republish/maemo/4.x/armel/cvs
+          mv cvs /usr/bin/cvs
+          chmod 755 /usr/bin/cvs
        ;;
     "REDHAT"|"SOLARIS"|"UNKNOWN"|"UNSUPPORTED")
-	  echo "Unsupported distribution: ${opRunDistFamily}"
-	  return 1
+          echo "Unsupported distribution: ${opRunDistFamily}"
+          return 1
        ;;
     *)
-	  echo "Oops distribution: ${opRunDistFamily}"
-	  return 1
+          echo "Oops distribution: ${opRunDistFamily}"
+          return 1
        ;;
   esac
 }
@@ -834,9 +834,9 @@ function step5_run_lpSysMgmtSteps {
     #lpSysMgmtSteps.sh -h -v -n showRun  -p developer=noedit -i stepByStep
     #lpSysMgmtSteps.sh -h -v -n showRun  -p developer=noedit -i restartFromIdle
     if [ "${G_humanUser}" != "TRUE" ] ; then
-	opDo lpSysMgmtSteps.sh -v -n showRun  -p developer=lsipusr -i restartFromIdle
+        opDo lpSysMgmtSteps.sh -v -n showRun  -p developer=lsipusr -i restartFromIdle
     else
-	opDo lpSysMgmtSteps.sh -h -v -n showRun  -p developer=lsipusr -i restartFromIdle
+        opDo lpSysMgmtSteps.sh -h -v -n showRun  -p developer=lsipusr -i restartFromIdle
     fi
        ;;
     "MAEMO")
@@ -849,12 +849,12 @@ function step5_run_lpSysMgmtSteps {
     lpMaemoMgmtSteps.sh -h -v -n showRun  -p developer=noedit -i restartFromIdle
        ;;
     "REDHAT"|"SOLARIS"|"UNKNOWN"|"UNSUPPORTED")
-	  echo "Unsupported distribution: ${opRunDistFamily}"
-	  return 1
+          echo "Unsupported distribution: ${opRunDistFamily}"
+          return 1
        ;;
     *)
-	  echo "Oops distribution: ${opRunDistFamily}"
-	  return 1
+          echo "Oops distribution: ${opRunDistFamily}"
+          return 1
        ;;
   esac
 }
@@ -895,43 +895,43 @@ function installKsh93 {
 
   case ${opRunDistFamily} in
     "UBUNTU"|"DEBIAN")
-	  # echo  "About To: Get ksh93"; continueAfterThis
+          # echo  "About To: Get ksh93"; continueAfterThis
   
-	  case ${opRunMachineArch} in
-	  "i686"|"i586"|"i386")
-	  #    mkdir -p /here/opt/public/mma/multiArch/Linux/i686/bin
-	  #    cd /here/opt/public/mma/multiArch/Linux/i686/bin
-	  #    wget http://www.bysource.org/mma/multiArch/Linux/i686/bin/ksh93
-	  #    chmod 775 ksh93
-	  #    mkdir -p /opt/public
-	  #    ln -s /here/opt/public/mma /opt/public
-	  #    ln -s /opt/public/mma/multiArch/Linux/i686/bin/ksh93 /bin/osmtKsh
+          case ${opRunMachineArch} in
+          "i686"|"i586"|"i386")
+          #    mkdir -p /here/opt/public/mma/multiArch/Linux/i686/bin
+          #    cd /here/opt/public/mma/multiArch/Linux/i686/bin
+          #    wget http://www.bysource.org/mma/multiArch/Linux/i686/bin/ksh93
+          #    chmod 775 ksh93
+          #    mkdir -p /opt/public
+          #    ln -s /here/opt/public/mma /opt/public
+          #    ln -s /opt/public/mma/multiArch/Linux/i686/bin/ksh93 /bin/osmtKsh
 
-	     echo "Skipping Ksh93 for ${opRunDistFamily} -- ${opRunMachineArch}"
-	     mkdir -p /opt/public
-	     ln -s /bin/bash /bin/osmtKsh
-	     ;;
+             echo "Skipping Ksh93 for ${opRunDistFamily} -- ${opRunMachineArch}"
+             mkdir -p /opt/public
+             ln -s /bin/bash /bin/osmtKsh
+             ;;
           *)
 
-	     echo "Skipping Ksh93 for ${opRunDistFamily} -- ${opRunMachineArch}"
-	     mkdir -p /opt/public
-	     ln -s /bin/bash /bin/osmtKsh
-	     ;;
+             echo "Skipping Ksh93 for ${opRunDistFamily} -- ${opRunMachineArch}"
+             mkdir -p /opt/public
+             ln -s /bin/bash /bin/osmtKsh
+             ;;
           esac
-	  ;;
+          ;;
     "MAEMO")
-	  echo  "About To: Get ksh93"; continueAfterThis
-	  echo "Skipping Ksh93 for ${opRunDistFamily} -- ${opRunMachineArch}"
-	  mkdir -p /opt/public
+          echo  "About To: Get ksh93"; continueAfterThis
+          echo "Skipping Ksh93 for ${opRunDistFamily} -- ${opRunMachineArch}"
+          mkdir -p /opt/public
           ln -s /bin/bash /bin/osmtKsh
        ;;
     "REDHAT"|"SOLARIS"|"UNKNOWN"|"UNSUPPORTED")
-	  echo "Unsupported distribution: ${opRunDistFamily}"
-	  return 1
+          echo "Unsupported distribution: ${opRunDistFamily}"
+          return 1
        ;;
     *)
-	  echo "Oops distribution: ${opRunDistFamily}"
-	  return 1
+          echo "Oops distribution: ${opRunDistFamily}"
+          return 1
        ;;
   esac
 }
@@ -980,83 +980,83 @@ vis_opRunDistFamilySet () {
   opRunDistGeneration="UNKNOWN"
   case ${opRunDistFamily} in
     "UBUNTU")
-	      if grep "14.04" /etc/issue ; then
-		opRunDistGeneration="1404"
-		opRunDistGenNu="14.04"
-	      elif grep "Xenial" /etc/issue ; then
-		opRunDistGeneration="1604"
-		opRunDistGenNu="16.04"
-	      elif grep "16.04" /etc/issue ; then
-		opRunDistGeneration="1604"
-		opRunDistGenNu="16.04"
-	      elif grep  "Beaver" /etc/issue ; then  # LTS
-		opRunDistGeneration="1804"
-		opRunDistGenNu="18.04"
-	      elif grep  "18.04" /etc/issue ; then  # LTS
-		opRunDistGeneration="1804"
-		opRunDistGenNu="18.04"
-	      elif grep  "Focal" /etc/issue ; then  # LTS
-		opRunDistGeneration="2004"
-		opRunDistGenNu="20.04"
-	      elif grep  "20.04" /etc/issue ; then  # LTS
-		opRunDistGeneration="2004"
-		opRunDistGenNu="20.04"
-	      else
-		opRunDistGeneration="UNSUPPORTED"
-		opRunDistGenNu="UNSUPORTED"
-	      fi
+              if grep "14.04" /etc/issue ; then
+                opRunDistGeneration="1404"
+                opRunDistGenNu="14.04"
+              elif grep "Xenial" /etc/issue ; then
+                opRunDistGeneration="1604"
+                opRunDistGenNu="16.04"
+              elif grep "16.04" /etc/issue ; then
+                opRunDistGeneration="1604"
+                opRunDistGenNu="16.04"
+              elif grep  "Beaver" /etc/issue ; then  # LTS
+                opRunDistGeneration="1804"
+                opRunDistGenNu="18.04"
+              elif grep  "18.04" /etc/issue ; then  # LTS
+                opRunDistGeneration="1804"
+                opRunDistGenNu="18.04"
+              elif grep  "Focal" /etc/issue ; then  # LTS
+                opRunDistGeneration="2004"
+                opRunDistGenNu="20.04"
+              elif grep  "20.04" /etc/issue ; then  # LTS
+                opRunDistGeneration="2004"
+                opRunDistGenNu="20.04"
+              else
+                opRunDistGeneration="UNSUPPORTED"
+                opRunDistGenNu="UNSUPORTED"
+              fi
        ;;
     "DEBIAN")
-	      if grep "3.1" /etc/issue ; then
-		opRunDistGeneration="SARGE"
-		opRunDistGenNu="3.1"
-	      elif grep "4.0" /etc/issue ; then
-		opRunDistGeneration="ETCH"
-		opRunDistGenNu="4.0"
-	      elif grep "5.0" /etc/issue ; then
-		opRunDistGeneration="LENNY"
-		opRunDistGenNu="5.0"
-	      elif grep "squeeze" /etc/issue ; then
-		opRunDistGeneration="SQUEEZE"
-		opRunDistGenNu="6.0"
-	      elif grep "6.0" /etc/issue ; then
-		opRunDistGeneration="SQUEEZE"
-		opRunDistGenNu="6.0"
-	      elif grep "7.0" /etc/issue ; then
-		opRunDistGeneration="7"
-		opRunDistGenNu="7.0"
-	      elif grep "sid" /etc/issue ; then
-		opRunDistGeneration="SID"
-		opRunDistGenNu="UNSTABLE"
-	      else
-		opRunDistGeneration="UNSUPPORTED"
-		opRunDistGenNu="UNSUPORTED"
-	      fi
+              if grep "3.1" /etc/issue ; then
+                opRunDistGeneration="SARGE"
+                opRunDistGenNu="3.1"
+              elif grep "4.0" /etc/issue ; then
+                opRunDistGeneration="ETCH"
+                opRunDistGenNu="4.0"
+              elif grep "5.0" /etc/issue ; then
+                opRunDistGeneration="LENNY"
+                opRunDistGenNu="5.0"
+              elif grep "squeeze" /etc/issue ; then
+                opRunDistGeneration="SQUEEZE"
+                opRunDistGenNu="6.0"
+              elif grep "6.0" /etc/issue ; then
+                opRunDistGeneration="SQUEEZE"
+                opRunDistGenNu="6.0"
+              elif grep "7.0" /etc/issue ; then
+                opRunDistGeneration="7"
+                opRunDistGenNu="7.0"
+              elif grep "sid" /etc/issue ; then
+                opRunDistGeneration="SID"
+                opRunDistGenNu="UNSTABLE"
+              else
+                opRunDistGeneration="UNSUPPORTED"
+                opRunDistGenNu="UNSUPORTED"
+              fi
        ;;
     "MAEMO")
-	      if grep "OS2008" /etc/issue ; then
-		opRunDistGeneration="OS2008"
-		opRunDistGenNu="2008"
-	      elif grep "OS2009" /etc/issue ; then
-		opRunDistGeneration="OS2009"
-		opRunDistGenNu="2009"
-	      fi
+              if grep "OS2008" /etc/issue ; then
+                opRunDistGeneration="OS2008"
+                opRunDistGenNu="2008"
+              elif grep "OS2009" /etc/issue ; then
+                opRunDistGeneration="OS2009"
+                opRunDistGenNu="2009"
+              fi
        ;;
     "REDHAT")
-	     opRunDistGeneration="UNSUPPORTED"
+             opRunDistGeneration="UNSUPPORTED"
        ;;
     "SOLARIS")
-	     opRunDistGeneration="UNSUPPORTED"
+             opRunDistGeneration="UNSUPPORTED"
        ;;
     "UNKNOWN")
-	       opRunDistGeneration="UNSUPPORTED"
+               opRunDistGeneration="UNSUPPORTED"
        ;;
     "UNSUPPORTED")
-		   opRunDistGeneration="UNSUPPORTED"
+                   opRunDistGeneration="UNSUPPORTED"
        ;;
     *)
        opRunDistGeneration="UNSUPPORTED"
-	EH_oops ;
+        EH_oops ;
        return
        ;;
   esac
@@ -1097,19 +1097,19 @@ _CommentEnd_
 
 function vis_baseIoC {
     if [ $# -eq 0 ] ; then
-	location="far"
+        location="far"
     elif [ $# -eq 1 ] ; then
-	if [ "$1" == "far" -o "$1" == "atNeda" ] ; then
-	    location=$1
-	else
-	    printf "Bad Args: $@\n"
-	    usage
-	    return 2
-	fi
+        if [ "$1" == "far" -o "$1" == "atNeda" ] ; then
+            location=$1
+        else
+            printf "Bad Args: $@\n"
+            usage
+            return 2
+        fi
     else
-	echo "Too Many Args -- $# -- $@"
-	usage
-	return 2
+        echo "Too Many Args -- $# -- $@"
+        usage
+        return 2
     fi
 
     opDo echo "Start Date:"
@@ -1264,16 +1264,16 @@ Tracing
 
             Trace Number Conventions:
 
-	    0: No Tracing
-	    1: Application Basic Info
-	    2: Application General Info
-	    3: Application Function Entry and Exit
-    	    4: Application Debugging
-	    5: Wrappers Library
-	    6: Seed Script
-	    7: Seed Supporting Libraries (eg, doLib.sh)
-	    8: ocp_library
-	    9: Quick Debug, usually temporary
+            0: No Tracing
+            1: Application Basic Info
+            2: Application General Info
+            3: Application Function Entry and Exit
+            4: Application Debugging
+            5: Wrappers Library
+            6: Seed Script
+            7: Seed Supporting Libraries (eg, doLib.sh)
+            8: ocp_library
+            9: Quick Debug, usually temporary
 
 Run Mode:
 =========
@@ -1369,19 +1369,19 @@ while getopts e:T:c:i:p:l:u?n:r:vfh c
 do
     case $c in
     T)
-	case $OPTARG in
-	*[!0-9]* )
-	    echo "$0: -T requires a numeric option"
- 	    badUsage=TRUE
-	    ;;
+        case $OPTARG in
+        *[!0-9]* )
+            echo "$0: -T requires a numeric option"
+            badUsage=TRUE
+            ;;
         [0-9]* )
-	    traceLevel=$OPTARG
-	    ;;
-	esac
-	;;
+            traceLevel=$OPTARG
+            ;;
+        esac
+        ;;
     i)
         visibleFunction="${OPTARG}"   # rest of argv is passed to visibleFunction
-	;;
+        ;;
     p)
        leftSide=`ATTR_leftSide "${OPTARG}"`
        rightSide=`ATTR_rightSide "${OPTARG}"`
@@ -1391,83 +1391,83 @@ do
        G_paramCmndOption=" -p ${OPTARG} ${G_paramCmndOption}"
        ;;
     l)
-	loadFiles="${loadFiles} ${OPTARG}"
-	G_myName=`FN_nonDirsPart ${OPTARG}`
+        loadFiles="${loadFiles} ${OPTARG}"
+        G_myName=`FN_nonDirsPart ${OPTARG}`
         G_myInvokedName=${OPTARG}
-	;;
+        ;;
 
     c)
-	G_checkMode="${OPTARG}"
-	G_checkCmndOption=" -c "
-	;;
+        G_checkMode="${OPTARG}"
+        G_checkCmndOption=" -c "
+        ;;
 
     e)
-	# Elaboration Text SimplyIgnored
+        # Elaboration Text SimplyIgnored
         elaborationTextSimplyIgnored="${OPTARG}"
-	;;
+        ;;
 
     n)
-	case ${OPTARG} in 
-	    "runOnly")
-		G_runMode="runOnly"
-   	        G_runModeCmndOption=" -n runOnly "
-		;;
-	    "showOnly")
-		G_runMode="showOnly"
-   	        G_runModeCmndOption=" -n showOnly "
-		;;
-	    "showRun")
-		G_runMode="showRun"
-   	        G_runModeCmndOption=" -n showRun "
-		;;
-	    "runSafe")
-		G_runMode="runSafe"
-   	        G_runModeCmndOption=" -n runSafe "
-		;;
-	    "showProtected")
-		G_runMode="showProtected"
-   	        G_runModeCmndOption=" -n showProtected "
-		;;
-	    "showRunProtected")
-		G_runMode="showRunProtected"
-   	        G_runModeCmndOption=" -n showRunProtected "
-		;;
-	    *)
-		badUsage=TRUE
-		;;
-	esac
-	;;
+        case ${OPTARG} in 
+            "runOnly")
+                G_runMode="runOnly"
+                G_runModeCmndOption=" -n runOnly "
+                ;;
+            "showOnly")
+                G_runMode="showOnly"
+                G_runModeCmndOption=" -n showOnly "
+                ;;
+            "showRun")
+                G_runMode="showRun"
+                G_runModeCmndOption=" -n showRun "
+                ;;
+            "runSafe")
+                G_runMode="runSafe"
+                G_runModeCmndOption=" -n runSafe "
+                ;;
+            "showProtected")
+                G_runMode="showProtected"
+                G_runModeCmndOption=" -n showProtected "
+                ;;
+            "showRunProtected")
+                G_runMode="showRunProtected"
+                G_runModeCmndOption=" -n showRunProtected "
+                ;;
+            *)
+                badUsage=TRUE
+                ;;
+        esac
+        ;;
 
     r)
-	case ${OPTARG} in 
-	    "basic")
-		G_recordMode="basic"
-   	        G_recordModeCmndOption=" -r basic "
-		;;
-	    *)
-		badUsage=TRUE
-		;;
-	esac
-	;;
+        case ${OPTARG} in 
+            "basic")
+                G_recordMode="basic"
+                G_recordModeCmndOption=" -r basic "
+                ;;
+            *)
+                badUsage=TRUE
+                ;;
+        esac
+        ;;
 
     v)
-	G_verbose="verbose"
+        G_verbose="verbose"
         G_verboseCmndOption=" -v "
-	;;
+        ;;
 
     f)
-	G_forceMode="force"
-	G_forceModeCmndOption=" -f "
-	;;
+        G_forceMode="force"
+        G_forceModeCmndOption=" -f "
+        ;;
 
     h)
-	G_humanUser=TRUE
-	G_humanCmndOption=" -h "
-	;;
+        G_humanUser=TRUE
+        G_humanCmndOption=" -h "
+        ;;
 
     u | \?)
-	badUsage=TRUE
-	;;
+        badUsage=TRUE
+        ;;
     esac
 done
 
@@ -1512,22 +1512,22 @@ function opMyFullNameGet {
     typeset firstChar=${G_myInvokedName:0:1}
 
     if [ "${firstChar}" == "/" ] ; then 
-	G_myFullName=${G_myInvokedName}
-	G_myFullName=$( FN_absolutePathGet ${G_myFullName} )
-	return 
+        G_myFullName=${G_myInvokedName}
+        G_myFullName=$( FN_absolutePathGet ${G_myFullName} )
+        return 
     fi
     
     if [[ -f ${G_myInvokedName} ]] ; then
-	G_myFullName=${PWD}/${G_myInvokedName}
+        G_myFullName=${PWD}/${G_myInvokedName}
     else
-	G_myFullName=$( which ${G_myName} )
+        G_myFullName=$( which ${G_myName} )
     fi
 
     G_myFullName=$( FN_absolutePathGet ${G_myFullName} )
 
     if [[ ! -f ${G_myFullName} ]] ; then
-	echo "${G_myFullName} not found"
-	return 1
+        echo "${G_myFullName} not found"
+        return 1
     fi
 }
 
@@ -1576,7 +1576,7 @@ function iimRecordBegin {
     typeset recordingBaseDir="/tmp"
 
     if [[ -d "/var/log/bisos/iim/bash" ]] ; then
-	recordingBaseDir="/var/log/bisos/iim/bash"
+        recordingBaseDir="/var/log/bisos/iim/bash"
     fi
 
     logFile=${recordingBaseDir}/${userIdTag}-${G_myName}-${dateTag}-log.org
@@ -1601,8 +1601,8 @@ iimRecordEndedP="false"
 
 function iimRecordEnd {
     if [ ${iimRecordEndedP} != "false" ] ; then
-	return
-    fi	
+        return
+    fi  
     printf "End Logging To ${logFile}\n"
     date
     cat  << _EOF_
@@ -1650,12 +1650,12 @@ function opParamMandatoryVerify {
 
 function dash_i_set {
     if [ "${dash_i}" = "" ] ; then
-	dash_i="-i"
+        dash_i="-i"
     elif [ "${dash_i}" = "nil" ] ; then
-	dash_i=""
+        dash_i=""
     else
-	EH_problem "Oops"
-	exit 1
+        EH_problem "Oops"
+        exit 1
     fi
 }
 
@@ -1714,14 +1714,14 @@ if [ "${visibleFunction}X" != "X" ]
 then
     #echo "running ${visibleFunction}"
     if [ ! -z "${G_recordMode}" ] ; then
-	iimRecordBegin
+        iimRecordBegin
     fi
     
     vis_${visibleFunction} "$@"
     exitCode=$?
 
-    if [ ! -z "${G_recordMode}" ] ; then	
-	iimRecordEnd
+    if [ ! -z "${G_recordMode}" ] ; then        
+        iimRecordEnd
     fi
     
     exit ${exitCode}
@@ -1745,7 +1745,7 @@ fi
 runNoArgsHook "$@"
 exitCode=$?
 
-if [ ! -z "${G_recordMode}" ] ; then	
+if [ ! -z "${G_recordMode}" ] ; then    
     iimRecordEnd
 fi
 

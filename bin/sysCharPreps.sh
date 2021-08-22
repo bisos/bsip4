@@ -83,7 +83,7 @@ typeset -t passwdFile=""
 
 
 function G_postParamHook {
-	
+        
     return 0
 }
 
@@ -147,20 +147,20 @@ _EOF_
     local virtualizationType=$( facter virtual )
 
     if [ "${virtualizationType}" == "physical" ] ; then
-	
-	lpDo lcaKvmBinsPrep.sh -v -n showRun -i fullUpdatePlus   #  not just fullUpdate
+        
+        lpDo lcaKvmBinsPrep.sh -v -n showRun -i fullUpdatePlus   #  not just fullUpdate
 
-	lpDo usgAcctManage.sh -h -v -n showRun -i usgAcct_supplementaryGroupsUpdate bystar
+        lpDo usgAcctManage.sh -h -v -n showRun -i usgAcct_supplementaryGroupsUpdate bystar
 
-	lpDo lcaVagrantBinsPrep.sh -v -n showRun -i fullUpdate
-	
-	lpDo vagrant plugin list --local
-	# Should produce something like
-	# vagrant-disksize (0.1.3, global)
-	# vagrant-libvirt (0.0.45, system)
-	
+        lpDo lcaVagrantBinsPrep.sh -v -n showRun -i fullUpdate
+        
+        lpDo vagrant plugin list --local
+        # Should produce something like
+        # vagrant-disksize (0.1.3, global)
+        # vagrant-libvirt (0.0.45, system)
+        
     else
-	lpDo echo "This is a virtual machine and we need NOTYET"
+        lpDo echo "This is a virtual machine and we need NOTYET"
     fi
 }
 
@@ -178,25 +178,25 @@ _EOF_
 
     if [ "${virtualizationType}" == "physical" ] ; then
 
-	# activate the aip_vagrantBaseBoxes BxO
-	lpDo bxoPubGithubManage.sh -h -v -n showRun -p privacy="allGithub" -p bxoId="aip_vagrantBaseBoxes" -i fullConstruct
-	
-	lpDo lcaVagrantBoxBuild.sh -h -v -n showRun -i bvdbb_deb11_desktopBuild
-	#
-	# If Pre-Release -- Weekly Build, the digest may not match.
-	# correct it by running:
-	# find /bxo/iso/aip_vagrantBaseBoxes/vagrants -type f -print | xargs grep -i oldDiget
-	# Then replace the old digest with the new digest in the .json file
-	#
-	# The lcaVagrantBoxBuild.sh can take a VERY LONG TIME.
-	# Even on a fast machine it can take 40 minutes or so.
-	# In the beginning be very patient with "Sending Commands" and "Waiting For SSH"
-	# as these are silent. It works, it just takes along time.
+        # activate the aip_vagrantBaseBoxes BxO
+        lpDo bxoPubGithubManage.sh -h -v -n showRun -p privacy="allGithub" -p bxoId="aip_vagrantBaseBoxes" -i fullConstruct
+        
+        lpDo lcaVagrantBoxBuild.sh -h -v -n showRun -i bvdbb_deb11_desktopBuild
+        #
+        # If Pre-Release -- Weekly Build, the digest may not match.
+        # correct it by running:
+        # find /bxo/iso/aip_vagrantBaseBoxes/vagrants -type f -print | xargs grep -i oldDiget
+        # Then replace the old digest with the new digest in the .json file
+        #
+        # The lcaVagrantBoxBuild.sh can take a VERY LONG TIME.
+        # Even on a fast machine it can take 40 minutes or so.
+        # In the beginning be very patient with "Sending Commands" and "Waiting For SSH"
+        # as these are silent. It works, it just takes along time.
 
-	lpDo vagrant box list
-	
+        lpDo vagrant box list
+        
     else
-	lpDo echo "This is a virtual machine and we need NOTYET"
+        lpDo echo "This is a virtual machine and we need NOTYET"
     fi
 }
 
@@ -213,13 +213,13 @@ _EOF_
 
     if [ "${virtualizationType}" == "physical" ] ; then
 
-	echo "Build the guest based on BxO and run the Guest"
-	echo "Generic Guest To Be Materialized"
+        echo "Build the guest based on BxO and run the Guest"
+        echo "Generic Guest To Be Materialized"
         lpDo sysCharActivate.sh -h -v -n showRun -p bxoId="pmp_VAG-deb11_" -i activate_sysContainerBxo
 
-	lpDo sysCharGuestMaterialize.sh -h -v -n showRun -p bxoId="pmp_VAG-deb11_" -i vagrantFile_run
+        lpDo sysCharGuestMaterialize.sh -h -v -n showRun -p bxoId="pmp_VAG-deb11_" -i vagrantFile_run
     else
-	lpDo echo "This is a virtual machine and we need NOTYET"
+        lpDo echo "This is a virtual machine and we need NOTYET"
     fi
 }
 

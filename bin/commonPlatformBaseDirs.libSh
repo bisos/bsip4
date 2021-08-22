@@ -1105,7 +1105,7 @@ _EOF_
     EH_assert [[ $# -le 1 ]]
 
     if [  $# -eq 1 ] ; then
-	baseDir="$1"
+        baseDir="$1"
     fi
     #if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
 
@@ -1127,7 +1127,7 @@ _EOF_
     EH_assert [[ $# -le 1 ]]
 
     if [  $# -eq 1 ] ; then
-	baseDir="$1"
+        baseDir="$1"
     fi
     #if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
 
@@ -1149,7 +1149,7 @@ _EOF_
     EH_assert [[ $# -le 1 ]]
 
     if [  $# -eq 1 ] ; then
-	baseDir="$1"
+        baseDir="$1"
     fi
     #if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
 

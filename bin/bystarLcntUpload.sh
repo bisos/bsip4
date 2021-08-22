@@ -204,10 +204,10 @@ _EOF_
 
 
     function rsyncUploadNodesModule {
-	local sourcePath="/rsync/node_modules"
-	local destPath=$( FN_dirsPart ${sourcePath} )
-	
-	opDo mmaRsyncAdmin.sh -p rsyncOptions="--delete-after --stats" -p destHost=${bystarDomFormTld_web} -p dest=${destPath} -p source=${sourcePath} -i localToRemoteUpdate		
+        local sourcePath="/rsync/node_modules"
+        local destPath=$( FN_dirsPart ${sourcePath} )
+        
+        opDo mmaRsyncAdmin.sh -p rsyncOptions="--delete-after --stats" -p destHost=${bystarDomFormTld_web} -p dest=${destPath} -p source=${sourcePath} -i localToRemoteUpdate           
     }
     rsyncUploadNodesModule
 }
@@ -227,39 +227,39 @@ _EOF_
     EH_assert [[ $# -ge 0 ]]
 
     function processOneLcnt {
-	local figuresListPng=$( inBaseDirDo ${cntntRawHome} ./lcntProc.sh -i figuresList )
-	local rsyncLcntFiguresBase="/rsync/lcnt/common/figures"
+        local figuresListPng=$( inBaseDirDo ${cntntRawHome} ./lcntProc.sh -i figuresList )
+        local rsyncLcntFiguresBase="/rsync/lcnt/common/figures"
 
-	opDo cp ${figuresListPng} ${rsyncLcntFiguresBase}
-	
+        opDo cp ${figuresListPng} ${rsyncLcntFiguresBase}
+        
     }
     
     if [ $# -eq 0 ] ; then
-	EH_assert [[ "${cntntRawHome}_" != "MANDATORY_" ]]
-	lcntInfoPrep ${cntntRawHome}
-	processOneLcnt
+        EH_assert [[ "${cntntRawHome}_" != "MANDATORY_" ]]
+        lcntInfoPrep ${cntntRawHome}
+        processOneLcnt
     else
-	typeset docEntries="$@"
+        typeset docEntries="$@"
 
-	typeset oneDocEntry
-	for oneDocEntry in ${docEntries}; do
-	    if [[ "${oneDocEntry}_" == "all_" ]]; then
-		EH_assert [ -f  ${inListLcntNu} ]
-		goThroughList ${inListLcntNu} ${visibleFunction}
-		return
-	    fi
+        typeset oneDocEntry
+        for oneDocEntry in ${docEntries}; do
+            if [[ "${oneDocEntry}_" == "all_" ]]; then
+                EH_assert [ -f  ${inListLcntNu} ]
+                goThroughList ${inListLcntNu} ${visibleFunction}
+                return
+            fi
 
-	    opDo getLcntNuBase ${oneDocEntry}
+            opDo getLcntNuBase ${oneDocEntry}
 
-	    cntntRawHome="${cntntRawHome}"
-	    lcntInfoPrep ${cntntRawHome}
+            cntntRawHome="${cntntRawHome}"
+            lcntInfoPrep ${cntntRawHome}
 
-	    processOneLcnt
-	done
+            processOneLcnt
+        done
     fi
 
     lpReturn
-}	
+}       
 
 
 _CommentBegin_
@@ -282,48 +282,48 @@ _EOF_
     bystarDomainFormsPrep 2> /dev/null
 
     function lcntRsyncUploadOne {
-	local destPath=$( FN_dirsPart ${docModuleExportPath} )
+        local destPath=$( FN_dirsPart ${docModuleExportPath} )
 
-	opDo mmaRsyncAdmin.sh -p rsyncOptions="--delete-after --stats" -p destHost=${bystarDomFormTld_web} -p dest=${destPath} -p source=${docModuleExportPath} -i localToRemoteUpdate		
+        opDo mmaRsyncAdmin.sh -p rsyncOptions="--delete-after --stats" -p destHost=${bystarDomFormTld_web} -p dest=${destPath} -p source=${docModuleExportPath} -i localToRemoteUpdate          
     }
 
     
     if [ $# -eq 0 ] ; then
-	EH_assert [[ "${cntntRawHome}_" != "MANDATORY_" ]]
-	lcntInfoPrep ${cntntRawHome}
-	lcntRsyncUploadOne
-	opDo vis_rsyncLocalUpdateFigures
+        EH_assert [[ "${cntntRawHome}_" != "MANDATORY_" ]]
+        lcntInfoPrep ${cntntRawHome}
+        lcntRsyncUploadOne
+        opDo vis_rsyncLocalUpdateFigures
     else
-	typeset docEntries="$@"
+        typeset docEntries="$@"
 
-	typeset oneDocEntry
-	for oneDocEntry in ${docEntries}; do
-	    if [[ "${oneDocEntry}_" == "all_" ]]; then
-		EH_assert [ -f  ${inListLcntNu} ]
-		goThroughList ${inListLcntNu} ${visibleFunction}
-		return
-	    fi
+        typeset oneDocEntry
+        for oneDocEntry in ${docEntries}; do
+            if [[ "${oneDocEntry}_" == "all_" ]]; then
+                EH_assert [ -f  ${inListLcntNu} ]
+                goThroughList ${inListLcntNu} ${visibleFunction}
+                return
+            fi
 
-	    opDo getLcntNuBase ${oneDocEntry}
+            opDo getLcntNuBase ${oneDocEntry}
 
-	    cntntRawHome="${cntntRawHome}"
-	    lcntInfoPrep ${cntntRawHome}
+            cntntRawHome="${cntntRawHome}"
+            lcntInfoPrep ${cntntRawHome}
 
-	    lcntRsyncUploadOne
-	    opDo vis_rsyncLocalUpdateFigures ${oneDocEntry}
-	done
+            lcntRsyncUploadOne
+            opDo vis_rsyncLocalUpdateFigures ${oneDocEntry}
+        done
     fi
 
     function lcntRsyncUploadFigures {
-	local sourcePath="/rsync/lcnt/common/figures"
-	local destPath=$( FN_dirsPart ${sourcePath} )
-	
-	opDo mmaRsyncAdmin.sh -p rsyncOptions="--delete-after --stats" -p destHost=${bystarDomFormTld_web} -p dest=${destPath} -p source=${sourcePath} -i localToRemoteUpdate		
+        local sourcePath="/rsync/lcnt/common/figures"
+        local destPath=$( FN_dirsPart ${sourcePath} )
+        
+        opDo mmaRsyncAdmin.sh -p rsyncOptions="--delete-after --stats" -p destHost=${bystarDomFormTld_web} -p dest=${destPath} -p source=${sourcePath} -i localToRemoteUpdate           
     }
     lcntRsyncUploadFigures
 
     lpReturn
-}	
+}       
 
 
 
@@ -343,27 +343,27 @@ _EOF_
 
     typeset oneDocEntry
     for oneDocEntry in ${docEntries}; do
-	if [[ "${oneDocEntry}_" == "all_" ]]; then
-	    EH_assert [ -f  ${inListLcntNu} ]
-	    goThroughList ${inListLcntNu} ${visibleFunction}
-	    return
-	fi
+        if [[ "${oneDocEntry}_" == "all_" ]]; then
+            EH_assert [ -f  ${inListLcntNu} ]
+            goThroughList ${inListLcntNu} ${visibleFunction}
+            return
+        fi
 
-	opDo getLcntNuBase ${oneDocEntry}
+        opDo getLcntNuBase ${oneDocEntry}
 
-	cntntRawHome="${cntntRawHome}"
-	lcntInfoPrep ${cntntRawHome}
+        cntntRawHome="${cntntRawHome}"
+        lcntInfoPrep ${cntntRawHome}
 
-	if [ -z "${lcnt_pubDestBxUids}" ] ; then 
-	    EH_problem "No pubDestBxUids specified"
-	    lpReturn 1
-	fi
+        if [ -z "${lcnt_pubDestBxUids}" ] ; then 
+            EH_problem "No pubDestBxUids specified"
+            lpReturn 1
+        fi
 
-	typeset thisDest
-	for thisDest in ${lcnt_pubDestBxUids} ; do
-	    bystarUid=${thisDest}
-	    opDo vis_plone3Sync
-	done
+        typeset thisDest
+        for thisDest in ${lcnt_pubDestBxUids} ; do
+            bystarUid=${thisDest}
+            opDo vis_plone3Sync
+        done
     done
 }
 
@@ -524,10 +524,10 @@ _EOF_
       typeset figuresInclusion=`ls ${contentBaseDir}/${thisDocBaseName}/*.png 2> /dev/null`
       typeset oneFigure
       if [[ "${figuresInclusion}_" != "_" ]] ; then
-	for oneFigure in ${figuresInclusion}; do
-	  this_id=`FN_nonDirsPart ${oneFigure}`
-	  opDo lcaPloneAdmin.sh -p username=zopemanager -p password=zopemanager -p title="Figure+${this_id}" -p inputFile="${oneFigure}" -p id="${this_id}" -p siteurl=${thisDest}/PLPC -i addExternalFile  
-	done
+        for oneFigure in ${figuresInclusion}; do
+          this_id=`FN_nonDirsPart ${oneFigure}`
+          opDo lcaPloneAdmin.sh -p username=zopemanager -p password=zopemanager -p title="Figure+${this_id}" -p inputFile="${oneFigure}" -p id="${this_id}" -p siteurl=${thisDest}/PLPC -i addExternalFile  
+        done
       fi
     fi
 

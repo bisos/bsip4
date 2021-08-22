@@ -89,7 +89,7 @@ typeset -t password=""
 
 
 function G_postParamHook {
-	
+        
     return 0
 }
 
@@ -167,8 +167,8 @@ _EOF_
     lpDo vis_obtainTmpSite    # registrar, id, password are icm params
 
     if [ ! -d "${HOME}/tmp/tmp-site" ] ; then
-	EH_problem "Missing ${HOME}/tmp/tmp-site"
-	lpReturn 101
+        EH_problem "Missing ${HOME}/tmp/tmp-site"
+        lpReturn 101
     fi
     
     lpDo FN_dirCreatePathIfNotThere /bisos/var/sites
@@ -188,8 +188,8 @@ _EOF_
     local siteBootstrapDir=$( FN_absolutePathGet ~pis_defaultSite/bootstrap )
 
     if [ ! -d "${siteBootstrapDir}" ] ; then
-	EH_problem "Missing siteBootstrapDir=${siteBootstrapDir}"
-	lpReturn 101
+        EH_problem "Missing siteBootstrapDir=${siteBootstrapDir}"
+        lpReturn 101
     fi
 
     lpDo FN_fileSymlinkUpdate $(FN_absolutePathGet ~pis_defaultSite) /bisos/var/sites/selected
@@ -242,13 +242,13 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if [ -z "${registrar}" ] ; then
-	registrar=$( siteRegistrarInfo.sh -i registrarHostName )
+        registrar=$( siteRegistrarInfo.sh -i registrarHostName )
     fi
     if [ -z "${id}" ] ; then
-	id=$( siteRegistrarInfo.sh -i registrarUserName )
+        id=$( siteRegistrarInfo.sh -i registrarUserName )
     fi
     if [ -z "${password}" ] ; then
-	password=$( siteRegistrarInfo.sh -i registrarUserPassword )
+        password=$( siteRegistrarInfo.sh -i registrarUserPassword )
     fi
 
     local passwdFile="/tmp/bisosPasswdFile"
@@ -256,15 +256,15 @@ _EOF_
     echo ${password} > "${passwdFile}"
     
     if [ ! -f "${passwdFile}" ] ; then
-	EH_problem "Missing passwdFile"
-	lpReturn 101
+        EH_problem "Missing passwdFile"
+        lpReturn 101
     fi
     
     lpDo FN_dirCreatePathIfNotThere ${HOME}/tmp
 
     if [ -d "${HOME}/tmp/tmp-site" ] ; then
-	EH_problem "${HOME}/tmp/tmp-site already exists"
-	lpReturn 101
+        EH_problem "${HOME}/tmp/tmp-site already exists"
+        lpReturn 101
     fi
 
     #local siteBootstrapDir="/bxo/r3/iso/pis_defaultSite/bootstrap"  # OBSOLETED
@@ -286,7 +286,7 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if [ -z "${id}" ] ; then
-	id=$( siteRegistrarInfo.sh -i registrarUserName )
+        id=$( siteRegistrarInfo.sh -i registrarUserName )
     fi
     local siteGitServerInfoBaseDir=$( bisosSiteGitServer.sh -i gitServerInfoBaseDir )
 

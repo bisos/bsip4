@@ -74,7 +74,7 @@ _EOF_
     #  [[elisp:(lsip-local-run-command "apt-cache search something | egrep '^something'")][apt-cache search something | egrep '^something']]
 
     itemOrderedList=(
-	"isc_dhcp_server"
+        "isc_dhcp_server"
     )
 
     itemOptionalOrderedList=()

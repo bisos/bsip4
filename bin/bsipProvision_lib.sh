@@ -18,13 +18,13 @@ _EOF_
     local provisionersBinBase=""
 
     if [ -z "${bxp_rootDir_bisos}" ] ; then
-	EH_problem "Blank bxp_rootDir_bisos"
-	lpReturn 101
+        EH_problem "Blank bxp_rootDir_bisos"
+        lpReturn 101
     elif [ -d "${bxp_rootDir_bisos}/core/bsip/bin" ] ; then
-	provisionersBinBase="${bxp_rootDir_bisos}/core/bsip/bin"
+        provisionersBinBase="${bxp_rootDir_bisos}/core/bsip/bin"
     else
-	EH_problem "Missing ${bxp_rootDir_bisos}/core/bsip/bin"
-	lpReturn 101
+        EH_problem "Missing ${bxp_rootDir_bisos}/core/bsip/bin"
+        lpReturn 101
     fi
 
     echo ${provisionersBinBase}
@@ -118,15 +118,15 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     local bisosBinBase="$( bisosBinBaseGet )"
-	
+        
     # /bisos/core/bsip/bin/bisosAccounts.sh
     local bisosProg="${bisosBinBase}/bisosAccounts.sh"
 
     if [ ! -x "${bisosProg}" ] ; then
-	EH_problem "Missing ${bisosProg}"
-	lpReturn 1
-    else	
-    	opDo "${bisosProg}" -h -v -n showRun -i bisosAcctsProvisionSetup
+        EH_problem "Missing ${bisosProg}"
+        lpReturn 1
+    else        
+        opDo "${bisosProg}" -h -v -n showRun -i bisosAcctsProvisionSetup
     fi
     
     lpReturn
@@ -140,15 +140,15 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     local bisosBinBase="$( bisosBinBaseGet )"
-	
+        
     # /bisos/core/bsip/bin/usgAcctManage.sh
     local bisosProg="${bisosBinBase}/usgAcctManage.sh"
 
     if [ ! -x "${bisosProg}" ] ; then
-	EH_problem "Missing ${bisosProg}"
-	lpReturn 1
-    else	
-    	opDo "${bisosProg}" -h -v -n showRun -i provisionSetup
+        EH_problem "Missing ${bisosProg}"
+        lpReturn 1
+    else        
+        opDo "${bisosProg}" -h -v -n showRun -i provisionSetup
     fi
     
     lpReturn
@@ -163,16 +163,16 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     local bisosBinBase="$( bisosBinBaseGet )"
-	
+        
     # /bisos/core/bsip/bin/bisosSysEssentialsBinsPrep.sh
     local bisosProg="${bisosBinBase}/bisosSysEssentialsBinsPrep.sh"
 
     if [ ! -x "${bisosProg}" ] ; then
-	EH_problem "Missing ${bisosProg}"
-	lpReturn 1
+        EH_problem "Missing ${bisosProg}"
+        lpReturn 1
     else
-	opDo "${bisosProg}" -h -v -n showRun -i sysPreps
-    	opDo "${bisosProg}" -h -v -n showRun -i fullUpdate
+        opDo "${bisosProg}" -h -v -n showRun -i sysPreps
+        opDo "${bisosProg}" -h -v -n showRun -i fullUpdate
     fi
     
     lpReturn
@@ -186,15 +186,15 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     local bisosBinBase="$( bisosBinBaseGet )"
-	
+        
     # /bisos/core/bsip/bin/bleeBinsPrep.sh
     local bisosProg="${bisosBinBase}/bleeBinsPrep.sh"
 
     if [ ! -x "${bisosProg}" ] ; then
-	EH_problem "Missing ${bisosProg}"
-	lpReturn 1
-    else	
-    	opDo "${bisosProg}" -h -v -n showRun -i fullUpdate
+        EH_problem "Missing ${bisosProg}"
+        lpReturn 1
+    else        
+        opDo "${bisosProg}" -h -v -n showRun -i fullUpdate
     fi
     
     lpReturn
@@ -208,15 +208,15 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     local bisosBinBase="$( bisosBinBaseGet )"
-	
+        
     # /bisos/core/bsip/bin/bisosPySysSetup.sh
     local bisosProg="${bisosBinBase}/bisosPySysSetup.sh"
 
     if [ ! -x "${bisosProg}" ] ; then
-	EH_problem "Missing ${bisosProg}"
-	lpReturn 1
-    else	
-    	opDo "${bisosProg}" -h -v -n showRun  -i pySys_provisionSetup
+        EH_problem "Missing ${bisosProg}"
+        lpReturn 1
+    else        
+        opDo "${bisosProg}" -h -v -n showRun  -i pySys_provisionSetup
     fi
     
     lpReturn
@@ -230,15 +230,15 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     local bisosBinBase="$( bisosBinBaseGet )"
-	
+        
     # /bisos/core/bsip/bin/bisosPyVenvSetup.sh
     local bisosProg="${bisosBinBase}/bisosPyVenvSetup.sh"
 
     if [ ! -x "${bisosProg}" ] ; then
-	EH_problem "Missing ${bisosProg}"
-	lpReturn 1
-    else	
-    	opDo "${bisosProg}" -h -v -n showRun  -i pyVenv_provisionSetup
+        EH_problem "Missing ${bisosProg}"
+        lpReturn 1
+    else        
+        opDo "${bisosProg}" -h -v -n showRun  -i pyVenv_provisionSetup
     fi
     
     lpReturn
@@ -252,16 +252,16 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     local bisosBinBase="$( bisosBinBaseGet )"
-	
+        
     # /bisos/core/bsip/bin/bisosVirtSysSetup.sh
     local bisosProg="${bisosBinBase}/bisosVirtSysSetup.sh"
 
     if [ ! -x "${bisosProg}" ] ; then
-	EH_problem "Missing ${bisosProg}"
-	lpReturn 1
+        EH_problem "Missing ${bisosProg}"
+        lpReturn 1
     else
-	echo $PATH
-    	opDo "${bisosProg}" -h -v -n showRun  -i virtSys_provisionSetup
+        echo $PATH
+        opDo "${bisosProg}" -h -v -n showRun  -i virtSys_provisionSetup
     fi
     
     lpReturn
@@ -278,16 +278,16 @@ _EOF_
     local icmArgs="$@"
 
     local provisionersBinBase="$( provisionersBinBaseGet )"
-	
+        
     # /opt/bisosProvisioner/gitRepos/provisioners/bin/osmtBx2GenesisSelfcontained.sh
     local bisosProg="${provisionersBinBase}/osmtBx2GenesisSelfcontained.sh"
 
     if [ ! -x "${bisosProg}" ] ; then
-	EH_problem "Missing ${bisosProg}"
-	lpReturn 1
+        EH_problem "Missing ${bisosProg}"
+        lpReturn 1
     else
-	osmtBx2GenesisSelfcontained.sh -h -v -n showRun -r basic -i baseIoC            # Blee + Ability To Import Io
-    	opDo sudo "${bisosProg}"  -h -v -n showRun -r basic -i $@
+        osmtBx2GenesisSelfcontained.sh -h -v -n showRun -r basic -i baseIoC            # Blee + Ability To Import Io
+        opDo sudo "${bisosProg}"  -h -v -n showRun -r basic -i $@
     fi
     
     lpReturn
@@ -303,6 +303,6 @@ _EOF_
     local bisosBinBase="$( bisosBinBaseGet )"
     
     opDo sudo -u bisos ${bisosBinBase}/lcaEmacsSrcBinsPrep.sh -v -n showRun -i srcFullBuild emacs27
-	
+        
     lpReturn
 }

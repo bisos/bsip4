@@ -43,7 +43,7 @@ tm_trace() {
   # $1 = traceNu
   # $2 = traceString
 
-	#print "in $0"
+        #print "in $0"
 
   if [ ${traceLevel:-} ]
   then

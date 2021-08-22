@@ -77,10 +77,10 @@ _EOF_
     local nicheCommand="$2"
 
     if [ -e $(G_icmBaseDirGet)/${nicheIcm} ] ; then
-	lpDo $(G_icmBaseDirGet)/${nicheIcm} ${G_commandPrefs} -i "${nicheCommand}"
+        lpDo $(G_icmBaseDirGet)/${nicheIcm} ${G_commandPrefs} -i "${nicheCommand}"
     else
-	EH_problem "Missing $(G_icmBaseDirGet)/${nicheIcm} -- Execution Skipped"
-	lpReturn 101
+        EH_problem "Missing $(G_icmBaseDirGet)/${nicheIcm} -- Execution Skipped"
+        lpReturn 101
     fi
     
     lpReturn
@@ -111,48 +111,48 @@ _EOF_
     local nicheExamplesFile=""
     
     case ${nicheScope} in
-	container)
-	    cat  << _EOF_
+        container)
+            cat  << _EOF_
 $( examplesSeperatorChapter "Container Niche Examples" )
 $( sysCharDeploy.sh -i selectedContainerBxoPath )/sys/bin/$(G_myNicheNameGet)
 _EOF_
 
-	    nicheExamplesFile="$(dirname $(dirname ${G_myFullName}))/examples/$(G_myNicheNameGet)"
-	    if [ -e "${nicheExamplesFile}" ] ; then
-		cat  << _EOF_
+            nicheExamplesFile="$(dirname $(dirname ${G_myFullName}))/examples/$(G_myNicheNameGet)"
+            if [ -e "${nicheExamplesFile}" ] ; then
+                cat  << _EOF_
 ${nicheExamplesFile}
 _EOF_
-	    fi
-	    ;;
-	site)
-	    cat  << _EOF_
+            fi
+            ;;
+        site)
+            cat  << _EOF_
 $( examplesSeperatorChapter "Selected Site Niche Examples" )
 $(sysCharDeploy.sh -i selectedSiteBxoPath)/sys/bin/$(G_myNicheNameGet)
 _EOF_
 
-	    nicheExamplesFile="$(dirname $(dirname ${G_myFullName}))/examples/$(G_myNicheNameGet)"
-	    if [ -e "${nicheExamplesFile}" ] ; then
-		cat  << _EOF_
+            nicheExamplesFile="$(dirname $(dirname ${G_myFullName}))/examples/$(G_myNicheNameGet)"
+            if [ -e "${nicheExamplesFile}" ] ; then
+                cat  << _EOF_
 ${nicheExamplesFile}
 _EOF_
-	    fi
-	    ;;
-	usage)
-	    cat  << _EOF_
+            fi
+            ;;
+        usage)
+            cat  << _EOF_
 $( examplesSeperatorChapter "Selected Usage Niche Examples" )
 $(vis_usgBpos_controller_bxoPath)/sys/bin/$(G_myNicheNameGet)
 _EOF_
 
-	    nicheExamplesFile="$(dirname $(dirname ${G_myFullName}))/examples/$(G_myNicheNameGet)"
-	    if [ -e "${nicheExamplesFile}" ] ; then
-		cat  << _EOF_
+            nicheExamplesFile="$(dirname $(dirname ${G_myFullName}))/examples/$(G_myNicheNameGet)"
+            if [ -e "${nicheExamplesFile}" ] ; then
+                cat  << _EOF_
 ${nicheExamplesFile}
 _EOF_
-	    fi
-	    ;;
-	*)
-	    EH_problem "Unimplemented yet -- ${function}"
-	    ;;
+            fi
+            ;;
+        *)
+            EH_problem "Unimplemented yet -- ${function}"
+            ;;
     esac
     
     

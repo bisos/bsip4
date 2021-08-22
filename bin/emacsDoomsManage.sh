@@ -194,10 +194,10 @@ _EOF_
         sansBlee)
             case $profile in
                 blee2)
-		    lpDo chmod ug+rw ${doomDirBase}/init.el
-	            # /bisos/blee/doom-blee-base/initSansBlee.el
-	            lpDo cp ${doomDirBase}/initSansBlee.el ${doomDirBase}/init.el
-		    lpDo chmod 444 ${doomDirBase}/init.el
+                    lpDo chmod ug+rw ${doomDirBase}/init.el
+                    # /bisos/blee/doom-blee-base/initSansBlee.el
+                    lpDo cp ${doomDirBase}/initSansBlee.el ${doomDirBase}/init.el
+                    lpDo chmod 444 ${doomDirBase}/init.el
                     ;;
                 *)
                     lpDo doNothing
@@ -207,10 +207,10 @@ _EOF_
         withBlee)
             case $profile in
                 blee2)
-		    lpDo chmod ug+rw ${doomDirBase}/init.el		    
+                    lpDo chmod ug+rw ${doomDirBase}/init.el                 
                     # /bisos/blee/doom-blee-base/initSansBlee.el
-	                # /bisos/blee/doom-blee-base/loadBlee.el
-	                lpDo eval cat ${doomDirBase}/initSansBlee.el ${doomDirBase}/loadBlee.el \> ${doomDirBase}/init.el
+                        # /bisos/blee/doom-blee-base/loadBlee.el
+                        lpDo eval cat ${doomDirBase}/initSansBlee.el ${doomDirBase}/loadBlee.el \> ${doomDirBase}/init.el
                     lpDo chmod 444 ${doomDirBase}/init.el
                     ;;
                 *)
@@ -271,7 +271,7 @@ _EOF_
     lpDo vis_switchInitTo withBlee
 
     lpReturn
-}	
+}       
 
 
 

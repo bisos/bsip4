@@ -26,33 +26,33 @@ if [[ "${BASH_VERSION}X" != "X" ]] ; then
     while getopts "nrsu:f:" c
     do
       case $c in
-	n) 
-	   nFlag=1
-	   ;;
-	r)
-	   rFlag=1
-	   ;;
-	s)
-	   sFlag=1
-	   ;;
-	u) 
-	   case "$OPTARG" in
-	     *[!1-9]* )
-		  echo "$0: -u requires a numeric option"
-		  badUsage=TRUE
-		  ;;
-	     [1-9]* )
-		  outFileDesc=${OPTARG}
-		  ;;
-	   esac
-	   ;;
-	f)
-	   fFlag=1
-	   ;;
-	'*'|\?)
-	   echo "Unknown print option: $c"
-	   badUsage=TRUE
-	   ;;
+        n) 
+           nFlag=1
+           ;;
+        r)
+           rFlag=1
+           ;;
+        s)
+           sFlag=1
+           ;;
+        u) 
+           case "$OPTARG" in
+             *[!1-9]* )
+                  echo "$0: -u requires a numeric option"
+                  badUsage=TRUE
+                  ;;
+             [1-9]* )
+                  outFileDesc=${OPTARG}
+                  ;;
+           esac
+           ;;
+        f)
+           fFlag=1
+           ;;
+        '*'|\?)
+           echo "Unknown print option: $c"
+           badUsage=TRUE
+           ;;
       esac
     done
 
@@ -60,15 +60,15 @@ shift `expr $OPTIND - 1`
 
   case ${outFileDesc} in
     '1')
-	 if [ ${nFlag} == "1" ] ; then
-	   echo -n "$@"
-	 else
-	   echo "$@"
-	 fi
-	 ;;
+         if [ ${nFlag} == "1" ] ; then
+           echo -n "$@"
+         else
+           echo "$@"
+         fi
+         ;;
     *)
          echo $@ 1>&${outFileDesc}
-	 ;;
+         ;;
   esac
 
    if [ "${badUsage}X" == "TRUEX" ] ; then

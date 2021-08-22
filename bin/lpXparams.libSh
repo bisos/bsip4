@@ -23,29 +23,29 @@ _EOF_
   }
 
     if [[ "${inList}_" != "INVALID_" && "${inList}_" != "_" ]] ; then
-	EH_assert [[ -f  ${inList} ]]
-	cat ${inList} |
-	while read thisLine ; do
-	    eval ${thisLine}
-	    expandedLine=$( eval echo ${@} )
-	    opDo ${expandedLine}
-	done
+        EH_assert [[ -f  ${inList} ]]
+        cat ${inList} |
+        while read thisLine ; do
+            eval ${thisLine}
+            expandedLine=$( eval echo ${@} )
+            opDo ${expandedLine}
+        done
     else
-	typeset tmpFile=$( FN_tempFile )
-	
-	#opDo eval "cat > ${tmpFile}"
-	eval "cat > ${tmpFile}"
+        typeset tmpFile=$( FN_tempFile )
+        
+        #opDo eval "cat > ${tmpFile}"
+        eval "cat > ${tmpFile}"
 
-	cat ${tmpFile} |
-	while read thisLine ; do
-	    eval ${thisLine}
-	    expandedLine=$( eval echo ${@} )
-	    #opDo ${expandedLine}
-	    ${expandedLine}
-	done
+        cat ${tmpFile} |
+        while read thisLine ; do
+            eval ${thisLine}
+            expandedLine=$( eval echo ${@} )
+            #opDo ${expandedLine}
+            ${expandedLine}
+        done
 
-	#opDo /bin/rm ${tmpFile}
-	/bin/rm ${tmpFile}
+        #opDo /bin/rm ${tmpFile}
+        /bin/rm ${tmpFile}
     fi
 }
 # }}}
@@ -68,10 +68,10 @@ _EOF_
 
     cat ${tmpFile} |
     while read thisLine ; do
-	for this in $@; do
-	    eval ${thisLine}
-	    opDo ${this} 
-	done
+        for this in $@; do
+            eval ${thisLine}
+            opDo ${this} 
+        done
     done
 
     opDo /bin/rm ${tmpFile}
@@ -92,7 +92,7 @@ _EOF_
   }
 
     for this in $@; do
-	opDo vis_${this} 
+        opDo vis_${this} 
     done
 }
 # }}}

@@ -40,7 +40,7 @@ if [ "${OSMTROOT}X" != "X" ] ; then
     fi
 else
     if [ -f `dirname $0`/opConfig.sh ] ; then
-	.  `dirname $0`/opConfig.sh
+        .  `dirname $0`/opConfig.sh
     else
       echo "OSMTROOT not set and `dirname $0`/opConfig.sh not found.\n"
       exit 1
@@ -142,101 +142,101 @@ while getopts e:a:c:T:s:i:p:l:u?n:vfh c
 do
     case $c in
     T)
-	case "$OPTARG" in
-	*[!0-9]* )
-	    echo "$0: -T requires a numeric option"
- 	    badUsage=TRUE
-	    ;;
+        case "$OPTARG" in
+        *[!0-9]* )
+            echo "$0: -T requires a numeric option"
+            badUsage=TRUE
+            ;;
         [0-9]* )
-	    traceLevel="$OPTARG"
-	    ;;
-	esac
-	;;
+            traceLevel="$OPTARG"
+            ;;
+        esac
+        ;;
     a)
         action="${OPTARG}"
-	;;
+        ;;
     s)
         typeset t1=${argsSubjectsList[@]}
         argsSubjectsList=( $t1 "${OPTARG}" )
-	;;
+        ;;
     i)
         visibleFunction="${OPTARG}"   # rest of argv is passed to visibleFunction
-	;;
+        ;;
     p)
        leftSide=`ATTR_leftSide "${OPTARG}"`
        rightSide=`ATTR_rightSide "${OPTARG}"`
   
        echo "${leftSide}"="${rightSide}" >> ${dotMeParamTmpFile}
-	;;
+        ;;
 
     c)
-	G_checkMode="${OPTARG}"
-	G_checkCmndOption=" -c "
-	;;
+        G_checkMode="${OPTARG}"
+        G_checkCmndOption=" -c "
+        ;;
 
     e)
-	# Elaboration Text SimplyIgnored
+        # Elaboration Text SimplyIgnored
         elaborationTextSimplyIgnored="${OPTARG}"
-	;;
+        ;;
 
     n)
-	case ${OPTARG} in 
-	    "runOnly")
-		G_runMode="runOnly"
-   	        G_runModeCmndOption=" -n runOnly "
-		;;
-	    "showOnly")
-		G_runMode="showOnly"
-   	        G_runModeCmndOption=" -n showOnly "
-		;;
-	    "seeRun")
-		G_runMode="seeRun"
-   	        G_runModeCmndOption=" -n seeRun "
-		;;
-	    "showRun")
-		G_runMode="showRun"
-   	        G_runModeCmndOption=" -n showRun "
-		;;
-	    "runSafe")
-		G_runMode="runSafe"
-   	        G_runModeCmndOption=" -n runSafe "
-		;;
-	    "showProtected")
-		G_runMode="showProtected"
-   	        G_runModeCmndOption=" -n showProtected "
-		;;
-	    "showRunProtected")
-		G_runMode="showRunProtected"
-   	        G_runModeCmndOption=" -n showRunProtected "
-		;;
-	    *)
-		badUsage=TRUE
-		;;
-	esac
-	;;
+        case ${OPTARG} in 
+            "runOnly")
+                G_runMode="runOnly"
+                G_runModeCmndOption=" -n runOnly "
+                ;;
+            "showOnly")
+                G_runMode="showOnly"
+                G_runModeCmndOption=" -n showOnly "
+                ;;
+            "seeRun")
+                G_runMode="seeRun"
+                G_runModeCmndOption=" -n seeRun "
+                ;;
+            "showRun")
+                G_runMode="showRun"
+                G_runModeCmndOption=" -n showRun "
+                ;;
+            "runSafe")
+                G_runMode="runSafe"
+                G_runModeCmndOption=" -n runSafe "
+                ;;
+            "showProtected")
+                G_runMode="showProtected"
+                G_runModeCmndOption=" -n showProtected "
+                ;;
+            "showRunProtected")
+                G_runMode="showRunProtected"
+                G_runModeCmndOption=" -n showRunProtected "
+                ;;
+            *)
+                badUsage=TRUE
+                ;;
+        esac
+        ;;
     v)
-	G_verbose="verbose"
+        G_verbose="verbose"
         G_verboseCmndOption=" -v "
-	;;
+        ;;
 
     f)
-	G_forceMode="force"
-	G_forceModeCmndOption=" -f "
-	;;
+        G_forceMode="force"
+        G_forceModeCmndOption=" -f "
+        ;;
     l)
-	loadFiles="${loadFiles} ${OPTARG}"
-	G_myName=`FN_nonDirsPart ${OPTARG}`
-	G_myInvokedName=${OPTARG}
-	;;
+        loadFiles="${loadFiles} ${OPTARG}"
+        G_myName=`FN_nonDirsPart ${OPTARG}`
+        G_myInvokedName=${OPTARG}
+        ;;
 
     h)
-	G_humanUser=TRUE
-	G_humanCmndOption=" -h "
-	;;
+        G_humanUser=TRUE
+        G_humanCmndOption=" -h "
+        ;;
 
     u | \?)
-	badUsage=TRUE
-	;;
+        badUsage=TRUE
+        ;;
     esac
 done
 
@@ -291,13 +291,13 @@ fi
 
 for i in ${loadFiles} ; do
     if test -f ${i} ; then
-	TM_trace 7 "Pre Loading: $i"
-	loadSegment="PRE"
-	. ${i}
+        TM_trace 7 "Pre Loading: $i"
+        loadSegment="PRE"
+        . ${i}
     else
-	EH_problem "${i} not found: skiping it."
-	usage=TRUE
-	#exit
+        EH_problem "${i} not found: skiping it."
+        usage=TRUE
+        #exit
     fi
 done
 
@@ -316,12 +316,12 @@ done
 if [ "${loadSegment}_" == "POST_" ] ; then
 for i in ${loadFiles} ; do
     if test -f ${i} ; then
-	TM_trace 7 "Post Loading: $i"
-	. ${i}
+        TM_trace 7 "Post Loading: $i"
+        . ${i}
     else
-	EH_problem "${i} not found: skiping it."
-	usage=TRUE
-	#exit
+        EH_problem "${i} not found: skiping it."
+        usage=TRUE
+        #exit
     fi
 done
 fi
@@ -391,8 +391,8 @@ else
       TM_trace 7 "Loaded ItemsFile=${i}"
     else
       if [  "${i}_" != "/dev/null_" ] ; then 
-	echo "${i} not found: skiping it."
-	usage=TRUE
+        echo "${i} not found: skiping it."
+        usage=TRUE
       fi
     fi
   done
@@ -415,16 +415,16 @@ function subjectIsValidOld {
 
     # item_all is a special case
     if IS_inList ${targetSubject} "${itemsList}" ;  then
-	return 0
+        return 0
     else
       itemsList=`ListFuncs | egrep '^itemSpecial_'`
       #echo "${itemsList}"
     
       targetSubject=itemSpecial_${subject}
       if IS_inList ${targetSubject} "${itemsList}" ;  then
-	return 0
+        return 0
       else
-	return 1
+        return 1
       fi
     fi
 }
@@ -438,30 +438,30 @@ function subjectIsValid {
 
     # item_all is a special case
     if IS_inList ${targetSubject} "${itemsList}" ;  then
-	return 0
+        return 0
     else
-	itemsList=`ListFuncs | egrep '^itemSpecial_'`
+        itemsList=`ListFuncs | egrep '^itemSpecial_'`
         #echo "${itemsList}"
     
-	targetSubject=itemSpecial_${subject}
-	if IS_inList ${targetSubject} "${itemsList}" ;  then
-	    return 0
-	else
-	    if [ "${opRunHostFamily}_" == "_" ] ; then
-		return 1
-	    fi
+        targetSubject=itemSpecial_${subject}
+        if IS_inList ${targetSubject} "${itemsList}" ;  then
+            return 0
+        else
+            if [ "${opRunHostFamily}_" == "_" ] ; then
+                return 1
+            fi
 
-	    itemsList=`ListFuncs | egrep '^itemFamily_'`
+            itemsList=`ListFuncs | egrep '^itemFamily_'`
             #echo "${itemsList}"
     
-	    targetSubject=itemFamily_${opRunHostFamily}
-	    if IS_inList ${targetSubject} "${itemsList}" ;  then
-	        targetSameAsFamily item_${subject} itemFamily_${opRunHostFamily}
-		return 0
-	    else
-		return 1
-	    fi
-	fi
+            targetSubject=itemFamily_${opRunHostFamily}
+            if IS_inList ${targetSubject} "${itemsList}" ;  then
+                targetSameAsFamily item_${subject} itemFamily_${opRunHostFamily}
+                return 0
+            else
+                return 1
+            fi
+        fi
     fi
 }
 
@@ -473,7 +473,7 @@ function targetSameAsFamily {
 
  cat  << _EOF_ > ${tmpFile}
 function $1 {
-	 $2
+         $2
 }
 _EOF_
 
@@ -487,10 +487,10 @@ function subjectValidVerify {
     subjectIsValid || gotVal=$?
 
     if [[ ${gotVal} != 0 ]] ; then
-	EH_problem "Subject: ${subject} is not valid!"
-	subjectIsValid=FALSE
-	usage
-	exit 1
+        EH_problem "Subject: ${subject} is not valid!"
+        subjectIsValid=FALSE
+        usage
+        exit 1
     fi
     return ${gotVal}
 }
@@ -514,7 +514,7 @@ function subjectValidatePrepareOld {
     targetSubject=itemSpecial_${subject}
     if IS_inList ${targetSubject} "${itemsList}" ;  then
       if [[ "${G_verbose}_" == "verbose_" ]] ; then
-	print -u2 -- "Subject in Use: ${targetSubject}"
+        print -u2 -- "Subject in Use: ${targetSubject}"
       fi
     else
       EH_problem "Subject: ${subject} is not valid!"
@@ -547,11 +547,11 @@ function subjectValidatePrepare {
     targetSubject=itemSpecial_${subject}
     if IS_inList ${targetSubject} "${itemsList}" ;  then
       if [[ "${G_verbose}_" == "verbose_" ]] ; then
-	print -u2 -- "Subject in Use: ${targetSubject}"
+        print -u2 -- "Subject in Use: ${targetSubject}"
       fi
     else
       if [ "${opRunHostFamily}_" == "_" ] ; then
-	EH_problem "Subject: ${subject} is not valid!"
+        EH_problem "Subject: ${subject} is not valid!"
         subjectIsValid=FALSE
         usage
         exit 1
@@ -563,7 +563,7 @@ function subjectValidatePrepare {
       targetSubject=itemFamily_${opRunHostFamily}
       if IS_inList ${targetSubject} "${itemsList}" ;  then
         if [[ "${G_verbose}_" == "verbose_" ]] ; then
-	  print -u2  -- "Family Subject in Use: ${targetSubject} -- Orig Subject=item_${subject}"
+          print -u2  -- "Family Subject in Use: ${targetSubject} -- Orig Subject=item_${subject}"
         fi
       else
         EH_problem "Subject: ${subject} is not valid!"
@@ -594,9 +594,9 @@ function usage {
       
       if IS_inList ${targetSubject} "${itemsList}"
       then
-	${targetSubject}
+        ${targetSubject}
       else
-	EH_problem "Subject: ${subject} is not valid!"
+        EH_problem "Subject: ${subject} is not valid!"
       fi
     fi
   fi
@@ -614,8 +614,8 @@ function usage {
     if [ "${hookFuncVal}X" != "X" ] ;   then
       ${hookFuncVal} ${i##item_}
       if [ $? != 0 ] ; then
-	# substring to get item_ out
-	printf >&2 "${i##item_} "
+        # substring to get item_ out
+        printf >&2 "${i##item_} "
       fi
     else
       printf >&2 "${i##item_} "
@@ -656,9 +656,9 @@ function usage {
     done
     printf >&2 "\n"
 
-	if [ "${ItemsFiles}X" != "X" -a "${ItemsFiles}_" != "MANDATORY_" ] ; then 
-	        printf >&2 "Usage: ItemsFiles = ${ItemsFiles}\n"
-	fi
+        if [ "${ItemsFiles}X" != "X" -a "${ItemsFiles}_" != "MANDATORY_" ] ; then 
+                printf >&2 "Usage: ItemsFiles = ${ItemsFiles}\n"
+        fi
 
 
     
@@ -695,7 +695,7 @@ itemCmdProcessor () {
     print "echo About to eval: \${${applyCmd}} ${G_argv}" > ${dotMeParamTmpFile}
     print "eval \${${applyCmd}} ${G_argv}" >> ${dotMeParamTmpFile}
   
-	#TM_trace 5 "About to eval: ${applyCmd} ${G_argv}"
+        #TM_trace 5 "About to eval: ${applyCmd} ${G_argv}"
     #cat ${dotMeParamTmpFile}
     . ${dotMeParamTmpFile}
 
@@ -844,7 +844,7 @@ then
     if [ "${hookFuncVal}X" != "X" ] ;   then
       ${hookFuncVal} ${subject}
       if [ $? == 0 ] ; then   # itemIsSubjectHook returned FALSE
-	continue
+        continue
       fi
     fi
     actionProcessor "$@" ; retVal=$?

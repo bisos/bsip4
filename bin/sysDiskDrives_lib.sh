@@ -135,14 +135,14 @@ function vis_appendFilesToFstab {
 If there are any args, process those. If there are no args, process stdin.
 # ${G_myName} ${extraInfo} -i appendFilesToFstab /tmp/sysDisks.fstab
 _EOF_
-		       }
+                       }
 
     local dateTag=$( DATE_nowTag )
 
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;    
 
     if [ ! -e /etc/fstab.orig ] ; then
-	lpDo cp -p /etc/fstab /etc/fstab.orig
+        lpDo cp -p /etc/fstab /etc/fstab.orig
     fi
 
     lpDo cp -p /etc/fstab /etc/fstab.${dateTag}
@@ -156,34 +156,34 @@ _EOF_
 _EOF_
 
     function processEach {
-	EH_assert [[ $# -eq 1 ]]
-	local thisOne="$1"
+        EH_assert [[ $# -eq 1 ]]
+        local thisOne="$1"
 
-	lpDo eval "cat ${thisOne} >> /etc/fstab"
+        lpDo eval "cat ${thisOne} >> /etc/fstab"
     }
 
 ####+BEGIN: bx:bsip:bash/processArgsAndStdin 
      function processArgsAndStdin {
-	local effectiveArgs=( "$@" )
-	local stdinArgs
-	local each
-	if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
-	    readarray stdinArgs < /dev/stdin
-	    effectiveArgs=( "$@" "${stdinArgs[@]}" )
-	fi
-	if [ ${#effectiveArgs[@]} -eq 0 ] ; then
-	    ANT_raw "No Args And Stdin Is Empty"
-	    lpReturn
-	fi
-	for each in "${effectiveArgs[@]}"; do
-	    lpDo processEach "${each%$'\n'}"
-	done
+        local effectiveArgs=( "$@" )
+        local stdinArgs
+        local each
+        if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
+            readarray stdinArgs < /dev/stdin
+            effectiveArgs=( "$@" "${stdinArgs[@]}" )
+        fi
+        if [ ${#effectiveArgs[@]} -eq 0 ] ; then
+            ANT_raw "No Args And Stdin Is Empty"
+            lpReturn
+        fi
+        for each in "${effectiveArgs[@]}"; do
+            lpDo processEach "${each%$'\n'}"
+        done
     }
     lpDo processArgsAndStdin "$@"
 ####+END:
     
     lpReturn
-}	
+}       
 
 
 function vis_mountAllFstab {

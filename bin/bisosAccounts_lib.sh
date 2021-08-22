@@ -149,14 +149,14 @@ function vis_bisosAcctsProvisionSetup {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Update required groups and accounts at provisioning time.
 Repeatable: 
-	You can re-run this function multiple times.
+        You can re-run this function multiple times.
 Assumptions:
-	1) bisos group has already been created.
-	2) bisos account has already been created.
+        1) bisos group has already been created.
+        2) bisos account has already been created.
 Actions:
-	1) Verify that bisos group is properly setup.
-	2) Verify that bisos account is properly setup.
-	3) Create the bystar account.
+        1) Verify that bisos group is properly setup.
+        2) Verify that bisos account is properly setup.
+        3) Create the bystar account.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -164,19 +164,19 @@ _EOF_
     local bisosGroupName=$( vis_bisosGroup_bisosGroupName )
     
     if vis_bisosGroupVerify ; then
-	ANT_raw "${bisosGroupName} group is as expected."
+        ANT_raw "${bisosGroupName} group is as expected."
     else
-	EH_problem "${bisosGroupName} group is missing or misconfigured -- Re-run bisosGroupAdd"
-	lpReturn 101
+        EH_problem "${bisosGroupName} group is missing or misconfigured -- Re-run bisosGroupAdd"
+        lpReturn 101
     fi
 
     local bisosGroupAcctName="$( vis_bisosAcct_bisosName )"
 
     if vis_bisosGroupAcctVerify ; then
-	ANT_raw "${bisosGroupAcctName} account is as expected."
+        ANT_raw "${bisosGroupAcctName} account is as expected."
     else
-	EH_problem "${bisosGroupAcctName} account is missing or misconfigured -- Re-run bisosGroupAdd"
-	lpReturn 101
+        EH_problem "${bisosGroupAcctName} account is missing or misconfigured -- Re-run bisosGroupAdd"
+        lpReturn 101
     fi
 
     opDo vis_usgAcctCreate bystar
@@ -203,15 +203,15 @@ _EOF_
     local acctHome="$( vis_bisosAcct_usgHomeBase )/${acctName}"    
 
     if vis_userAcctExists "${acctName}" ; then
-	acctUid=$( forAcctNameGetUid ${acctName} )
+        acctUid=$( forAcctNameGetUid ${acctName} )
     else
-	ANT_raw "${acctName} account entry does not exist in /etc/passwd"
-	lpReturn 101
+        ANT_raw "${acctName} account entry does not exist in /etc/passwd"
+        lpReturn 101
     fi
     
     if ! vis_bisosGroupVerify ; then
-	EH_problem "${acctGid} Group is missing or misconfigured -- Re-run bisosGroupAdd"
-	lpReturn 101
+        EH_problem "${acctGid} Group is missing or misconfigured -- Re-run bisosGroupAdd"
+        lpReturn 101
     fi
     
     lpDo vis_accountVerify ${acctName} ${acctUid} ${acctGid} ${acctHome}
@@ -232,21 +232,21 @@ _EOF_
     local acctGid="$( vis_bisosGroup_bisosGroupName )"
     
     if vis_groupExists ${acctGid} ; then    
-	if ! vis_bisosGroupVerify ; then
-	    EH_problem "${acctGid} group is misconfigured -- Re-run bisosGroupAdd"
-	    lpReturn 101
-	fi
+        if ! vis_bisosGroupVerify ; then
+            EH_problem "${acctGid} group is misconfigured -- Re-run bisosGroupAdd"
+            lpReturn 101
+        fi
     else
-	EH_problem "${acctGid} group is missing Re-run bisosGroupAdd"
-	lpReturn 101
+        EH_problem "${acctGid} group is missing Re-run bisosGroupAdd"
+        lpReturn 101
     fi
 
    if vis_userAcctExists "${acctName}" ; then
        if vis_usgAcctVerify "${acctName}" ; then
-	   ANT_raw "${acctName} exists and is properly configured. It will be used"
+           ANT_raw "${acctName} exists and is properly configured. It will be used"
        else
-	   EH_problem "${acctName} account is misconfigured"
-	   lpReturn 101
+           EH_problem "${acctName} account is misconfigured"
+           lpReturn 101
        fi
    else
        opDo vis_usgAcctAdd ${acctName}
@@ -279,8 +279,8 @@ _EOF_
     local acctName=$1
 
     if ! vis_userAcctExists "${acctName}" ; then
-	EH_problem "Missing ${acctName} account -- Processing Skipped"
-	lpReturn 101
+        EH_problem "Missing ${acctName} account -- Processing Skipped"
+        lpReturn 101
     fi
 
     local userAcctPasswd=$( vis_getInitialPasswdForAcct ${acctName} "intra" )
@@ -310,8 +310,8 @@ _EOF_
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;        
     
     if vis_userAcctExists "${acctName}" ; then
-	EH_problem "${acctName} Already Exists -- Addition Skipped"
-	lpReturn 101
+        EH_problem "${acctName} Already Exists -- Addition Skipped"
+        lpReturn 101
     fi
 
     local acctGid="$( vis_bisosAcct_usgGid )"
@@ -320,20 +320,20 @@ _EOF_
     local acctHome="$( vis_bisosAcct_usgHomeBase )/${acctName}"
 
     if [ "${acctName}" == "$( vis_bisosAcct_bystarName )" ] ; then
-	acctUid=$( vis_bisosAcct_bystarUid )
-	acctComment="bystar -- Default BISOS Acct"
+        acctUid=$( vis_bisosAcct_bystarUid )
+        acctComment="bystar -- Default BISOS Acct"
     else
-	acctUid=$( vis_usgAcctNextLocalUidNu )
-	acctComment="BISOS Named Usage Acct"	
+        acctUid=$( vis_usgAcctNextLocalUidNu )
+        acctComment="BISOS Named Usage Acct"    
     fi
 
     lpDo useradd \
-	 --uid "${acctUid}" \
-	 --gid "${acctGid}" \
-	 --shell /bin/bash \
-	 --home-dir "${acctHome}" \
-	 --comment "${acctComment}" \
-	 ${acctName}
+         --uid "${acctUid}" \
+         --gid "${acctGid}" \
+         --shell /bin/bash \
+         --home-dir "${acctHome}" \
+         --comment "${acctComment}" \
+         ${acctName}
 
     lpReturn
 }
@@ -396,7 +396,7 @@ _EOF_
     lpDo distFamilyGenerationHookRun "addSupplementaryGroups"
 
     for eachGroup in ${supplementaryGroupsList[@]} ; do
-	opDo sudo usermod -G ${eachGroup} --append ${acctName}    
+        opDo sudo usermod -G ${eachGroup} --append ${acctName}    
     done
 }
 
@@ -413,14 +413,14 @@ _EOF_
     local acctName="$1"
 
     if lcaSshAdmin.sh -p localUser="${acctName}" -i userKeyVerify; then
-	if [ "${G_forceMode}" == "force" ] ; then
-	    ANT_raw "Ssh Keys Exist -- Overwriting Them"
-	    opDo lcaSshAdmin.sh -p localUser="${acctName}" -i userKeyUpdate
-	else
-	    ANT_raw "Ssh Keys Exist and No G_forceMode -- Updating Skipped"
-	fi
+        if [ "${G_forceMode}" == "force" ] ; then
+            ANT_raw "Ssh Keys Exist -- Overwriting Them"
+            opDo lcaSshAdmin.sh -p localUser="${acctName}" -i userKeyUpdate
+        else
+            ANT_raw "Ssh Keys Exist and No G_forceMode -- Updating Skipped"
+        fi
     else
-	opDo lcaSshAdmin.sh -p localUser="${acctName}" -i userKeyUpdate
+        opDo lcaSshAdmin.sh -p localUser="${acctName}" -i userKeyUpdate
     fi
 
 
@@ -431,7 +431,7 @@ function vis_usgAcct_gitConfigUpdate {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Configure git pars -- just a starting point for now.
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -lt 4 ]]
     EH_assert [[ $# -gt 0 ]]
 
@@ -443,8 +443,8 @@ _EOF_
     local acctName="$1"
 
     if [ $# -eq 3 ] ; then
-	userName="$2"
-	userEmail="$3"
+        userName="$2"
+        userEmail="$3"
     fi
 
     lpDo sudo -u ${acctName} git config --global user.name "${userName}"
@@ -500,15 +500,15 @@ _EOF_
     local acctHome="$( vis_bisosAcct_bxisoHomeBase )/${acctName}"
 
     if vis_userAcctExists "${acctName}" ; then
-	acctUid=$( forAcctNameGetUid ${acctName} )
+        acctUid=$( forAcctNameGetUid ${acctName} )
     else
-	ANT_raw "${acctName} account entry does not exist in /etc/passwd"
-	lpReturn 101
+        ANT_raw "${acctName} account entry does not exist in /etc/passwd"
+        lpReturn 101
     fi
     
     if ! vis_bisosGroupVerify ; then
-	EH_problem "${acctGid} Group is missing or misconfigured -- Re-run bisosGroupAdd"
-	lpReturn 101
+        EH_problem "${acctGid} Group is missing or misconfigured -- Re-run bisosGroupAdd"
+        lpReturn 101
     fi
     
     lpDo vis_accountVerify ${acctName} ${acctUid} ${acctGid} ${acctHome}
@@ -530,21 +530,21 @@ _EOF_
     local acctGid="$( vis_bisosGroup_bisosGroupName )"
     
     if vis_groupExists ${acctGid} ; then    
-	if ! vis_bisosGroupVerify ; then
-	    EH_problem "${acctGid} group is misconfigured -- Re-run bisosGroupAdd"
-	    lpReturn 101
-	fi
+        if ! vis_bisosGroupVerify ; then
+            EH_problem "${acctGid} group is misconfigured -- Re-run bisosGroupAdd"
+            lpReturn 101
+        fi
     else
-	EH_problem "${acctGid} group is missing Re-run bisosGroupAdd"
-	lpReturn 101
+        EH_problem "${acctGid} group is missing Re-run bisosGroupAdd"
+        lpReturn 101
     fi
 
    if vis_userAcctExists "${acctName}" ; then
        if vis_bxoAcctVerify "${acctName}" ; then
-	   ANT_raw "${acctName} exists and is properly configured. It will be used"
+           ANT_raw "${acctName} exists and is properly configured. It will be used"
        else
-	   EH_problem "${acctName} account is misconfigured"
-	   lpReturn 101
+           EH_problem "${acctName} account is misconfigured"
+           lpReturn 101
        fi
    else
        opDo vis_bxoAcctAdd ${acctName}
@@ -573,8 +573,8 @@ _EOF_
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;        
     
     if vis_userAcctExists "${acctName}" ; then
-	EH_problem "${acctName} Already Exists -- Addition Skipped"
-	lpReturn 101
+        EH_problem "${acctName} Already Exists -- Addition Skipped"
+        lpReturn 101
     fi
 
     local acctGid="$( vis_bisosAcct_bxisoGid )"
@@ -583,24 +583,24 @@ _EOF_
     local supplementaryGroups="adm"  # NOTYET, locate existing code in 
 
     if [ "${acctName}" == "$( vis_bisosAcct_bxisoDelimiterName )" ] ; then
-	acctUid=$( vis_bisosAcct_bxisoDelimiterUid )
-	acctComment="BISOS Default BXISO Accts Delimiter"
+        acctUid=$( vis_bisosAcct_bxisoDelimiterUid )
+        acctComment="BISOS Default BXISO Accts Delimiter"
     else
-	acctUid=$( vis_bxoAcctNextLocalUidNu )
-	if [ -z "${acctComment}" ] ; then
-	    EH_problem "Missing Acct Comment"
-	    lpReturn 101
-	fi
+        acctUid=$( vis_bxoAcctNextLocalUidNu )
+        if [ -z "${acctComment}" ] ; then
+            EH_problem "Missing Acct Comment"
+            lpReturn 101
+        fi
     fi
 
     lpDo useradd \
-	 --uid "${acctUid}" \
-	 --gid "${acctGid}" \
-	 --groups "${supplementaryGroups}" \
-	 --shell /usr/sbin/nologin \
-	 --home-dir "${acctHome}" \
-	 --comment "${acctComment}" \
-	 ${acctName}
+         --uid "${acctUid}" \
+         --gid "${acctGid}" \
+         --groups "${supplementaryGroups}" \
+         --shell /usr/sbin/nologin \
+         --home-dir "${acctHome}" \
+         --comment "${acctComment}" \
+         ${acctName}
     
     lpReturn
 }
@@ -636,7 +636,7 @@ _EOF_
     # lpDo distFamilyGenerationHookRun "addSupplementaryGroups"
 
     # for eachGroup in ${supplementaryGroupsList[@]} ; do
-    # 	opDo sudo usermod -G ${eachGroup} --append ${acctName}    
+    #   opDo sudo usermod -G ${eachGroup} --append ${acctName}    
     # done
 }
 
@@ -653,14 +653,14 @@ _EOF_
     local acctName="$1"
 
     if lcaSshAdmin.sh -p localUser="${acctName}" -i userKeyVerify; then
-	if [ "${G_forceMode}" == "force" ] ; then
-	    ANT_raw "Ssh Keys Exist -- Overwriting Them"
-	    opDo lcaSshAdmin.sh -p localUser="${acctName}" -i userKeyUpdate
-	else
-	    ANT_raw "Ssh Keys Exist and No G_forceMode -- Updating Skipped"
-	fi
+        if [ "${G_forceMode}" == "force" ] ; then
+            ANT_raw "Ssh Keys Exist -- Overwriting Them"
+            opDo lcaSshAdmin.sh -p localUser="${acctName}" -i userKeyUpdate
+        else
+            ANT_raw "Ssh Keys Exist and No G_forceMode -- Updating Skipped"
+        fi
     else
-	opDo lcaSshAdmin.sh -v -n showRun -p localUser="${acctName}" -i userKeyUpdate
+        opDo lcaSshAdmin.sh -v -n showRun -p localUser="${acctName}" -i userKeyUpdate
     fi
 
 
@@ -681,15 +681,15 @@ _EOF_
     local userAcctPasswd=""
 
     case ${passwdPolicy} in
-	"passwd_tmpSame")
-	    userAcctPasswd=${userAcctName}
-	    ;;
-	"intra")
-	    userAcctPasswd="intra"
-	    ;;
-	*)
-	    EH_problem "Unknown: ${passwdPolicy}"
-	    ;;
+        "passwd_tmpSame")
+            userAcctPasswd=${userAcctName}
+            ;;
+        "intra")
+            userAcctPasswd="intra"
+            ;;
+        *)
+            EH_problem "Unknown: ${passwdPolicy}"
+            ;;
     esac
 
     echo ${userAcctPasswd}
@@ -707,16 +707,16 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     local lastNuStr=$( sort -g -t : -k 3 /etc/passwd | \
-			   cut -d : -f 3 | \
-			   egrep '2[0-9][0-9][0-9]$' |\
-			   tail -1 
-	  )
+                           cut -d : -f 3 | \
+                           egrep '2[0-9][0-9][0-9]$' |\
+                           tail -1 
+          )
 
     local nextNu=0
 
     if [ -z "${lastNuStr}" ] ; then
-	EH_problem ""
-	lpReturn 101
+        EH_problem ""
+        lpReturn 101
     fi
 
     nextNu=$( expr $lastNuStr +  1 )
@@ -724,7 +724,7 @@ _EOF_
     echo ${nextNu}
 
     lpReturn
-}	
+}       
 
 function vis_bxoAcctNextLocalUidNu {
    G_funcEntry
@@ -735,16 +735,16 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     local lastNuStr=$( sort -g -t : -k 3 /etc/passwd | \
-			   cut -d : -f 3 | \
-			   egrep '1[0-9][0-9][0-9][0-9][0-9][0-9]$' |\
-			   tail -1 
-	  )
+                           cut -d : -f 3 | \
+                           egrep '1[0-9][0-9][0-9][0-9][0-9][0-9]$' |\
+                           tail -1 
+          )
 
     local nextNu=0
 
     if [ -z "${lastNuStr}" ] ; then
-	EH_problem ""
-	lpReturn 101
+        EH_problem ""
+        lpReturn 101
     fi
 
     nextNu=$( expr $lastNuStr +  1 )
@@ -752,7 +752,7 @@ _EOF_
     echo ${nextNu}
 
     lpReturn
-}	
+}       
 
 
 addSupplementaryGroups_UBUNTU_1404 () {

@@ -99,7 +99,7 @@ _EOF_
     lpDo vis_sysPipInstallBisosPlatform2
     
     lpReturn
-}	
+}       
 
 
 function vis_pySysEnvVerify {
@@ -111,7 +111,7 @@ _EOF_
 
 
     lpReturn
-}	
+}       
 
 
 function vis_sysPipInstallBisosPlatform2 {
@@ -125,7 +125,7 @@ _EOF_
     lpDo sudo -H pip2 install --no-cache-dir --upgrade bisos.platform    
 
     lpReturn
-}	
+}       
 
 
 _CommentBegin_

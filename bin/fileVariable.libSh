@@ -71,11 +71,11 @@ _EOF_
     fileVarName="$1"
 
     if [ -f "${fileVarName}" ] ; then
-	opDo cat "${fileVarName}"
-	lpReturn 0
+        opDo cat "${fileVarName}"
+        lpReturn 0
     else
-	ANV_cooked "Missing ${fileVarName}, should become objectType specific and detect defaults"
-	lpReturn 101
+        ANV_cooked "Missing ${fileVarName}, should become objectType specific and detect defaults"
+        lpReturn 101
     fi
     
     lpReturn

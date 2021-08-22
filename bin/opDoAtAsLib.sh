@@ -28,18 +28,18 @@ function opDoAtAs {
   do
     case $c in
       h)
-	 destHost="${OPTARG}"
-	 ;;
+         destHost="${OPTARG}"
+         ;;
       u)
-	 user="${OPTARG}"
-	 ;;
+         user="${OPTARG}"
+         ;;
       m)
-	 runMode="${OPTARG}"
-	 ;;
+         runMode="${OPTARG}"
+         ;;
       \?)
           opDoAtAsUsage
-	  return 2
-	  ;;
+          return 2
+          ;;
     esac
   done
   
@@ -63,15 +63,15 @@ function opDoAtAs {
       # MB: NOTYET, what if it $1 is a function not a file
       opDoAtAsRunMode "$@"
          #opDoAtAsRunMode "sudo env PATH=$PATH $@"
-	 #TM_trace 7 "Running: sudo env PATH=$PATH $@"
-	 #sudo env PATH=$PATH $@
-	 ;;
+         #TM_trace 7 "Running: sudo env PATH=$PATH $@"
+         #sudo env PATH=$PATH $@
+         ;;
       *)
          opDoAtAsRunMode "$@"
-	 #echo "Running: $@"
-	 #case 'runMode'
-	 #$@
-	 ;;
+         #echo "Running: $@"
+         #case 'runMode'
+         #$@
+         ;;
     esac
 
   else
@@ -80,21 +80,21 @@ function opDoAtAs {
     if [ ${knownHostRetVal} == 0 ] ; then
 
       case ${user} in
-	"root")
-	   logNameIsInOSMTAuthKeysFile ; retVal=$?
-	   if [ ${retVal} == 0 ] ; then
-	    opDoAtAsRunMode "ssh osmt@${destHost} cd ${opBinBase} ; sudo env PATH=$PATH $@"
-	   fi
-	   ;;
-	"osmt")
+        "root")
            logNameIsInOSMTAuthKeysFile ; retVal=$?
-	   if [ ${retVal} == 0 ] ; then
-	     opDoAtAsRunMode "ssh ${user}@${destHost} cd ${opBinBase} ; sudo env PATH=$PATH $@"
-	   fi
-	   ;;
-	*)
-	   opDoAtAsRunMode "ssh ${user}@${destHost} $@"
-	   ;;
+           if [ ${retVal} == 0 ] ; then
+            opDoAtAsRunMode "ssh osmt@${destHost} cd ${opBinBase} ; sudo env PATH=$PATH $@"
+           fi
+           ;;
+        "osmt")
+           logNameIsInOSMTAuthKeysFile ; retVal=$?
+           if [ ${retVal} == 0 ] ; then
+             opDoAtAsRunMode "ssh ${user}@${destHost} cd ${opBinBase} ; sudo env PATH=$PATH $@"
+           fi
+           ;;
+        *)
+           opDoAtAsRunMode "ssh ${user}@${destHost} $@"
+           ;;
       esac
 
     else
@@ -203,10 +203,10 @@ function doAtAsModeSet {
   case ${m_doing} in
     "doNot")
         echo "showOnly"
-	;;
+        ;;
     "doit")
         echo "runOnly"
-	;;
+        ;;
     *)
        EH_problem "Unknown Qualifier ${m_doing}"
        return 2

@@ -76,14 +76,14 @@ _EOF_
     #  [[elisp:(lsip-local-run-command "apt-cache search something | egrep '^something'")][apt-cache search something | egrep '^something']]
 
     itemOrderedList=( 
-	"curl"
-	"$( itemNameFor openssh-server )"
-	"$( itemNameFor ca-certificates )"
-	"gnupg"
-	"$( itemNameFor debian-archive-keyring )"
-	"$( itemNameFor apt-transport-https )"
-	"gitlabCe_repoAdd"
-	"$( itemNameFor gitlab-ce )"
+        "curl"
+        "$( itemNameFor openssh-server )"
+        "$( itemNameFor ca-certificates )"
+        "gnupg"
+        "$( itemNameFor debian-archive-keyring )"
+        "$( itemNameFor apt-transport-https )"
+        "gitlabCe_repoAdd"
+        "$( itemNameFor gitlab-ce )"
     )
 
     itemOptionalOrderedList=()
@@ -270,43 +270,43 @@ vis_repositoryAdd () {
     curl_exit_code=$?
 
     if [ "$curl_exit_code" = "22" ]; then
-	echo
-	echo
-	echo -n "Unable to download repo config from: "
-	echo "${apt_config_url}"
-	echo
-	echo "This usually happens if your operating system is not supported by "
-	echo "packagecloud.io, or this script's OS detection failed."
-	echo
-	echo "You can override the OS detection by setting os= and dist= prior to running this script."
-	echo "You can find a list of supported OSes and distributions on our website: https://packages.gitlab.com/docs#os_distro_version"
-	echo
-	echo "For example, to force Ubuntu Trusty: os=ubuntu dist=trusty ./script.sh"
-	echo
-	echo "If you are running a supported OS, please email support@packagecloud.io and report this."
-	[ -e $apt_source_path ] && rm $apt_source_path
-	exit 1
+        echo
+        echo
+        echo -n "Unable to download repo config from: "
+        echo "${apt_config_url}"
+        echo
+        echo "This usually happens if your operating system is not supported by "
+        echo "packagecloud.io, or this script's OS detection failed."
+        echo
+        echo "You can override the OS detection by setting os= and dist= prior to running this script."
+        echo "You can find a list of supported OSes and distributions on our website: https://packages.gitlab.com/docs#os_distro_version"
+        echo
+        echo "For example, to force Ubuntu Trusty: os=ubuntu dist=trusty ./script.sh"
+        echo
+        echo "If you are running a supported OS, please email support@packagecloud.io and report this."
+        [ -e $apt_source_path ] && rm $apt_source_path
+        exit 1
     elif [ "$curl_exit_code" = "35" -o "$curl_exit_code" = "60" ]; then
-	echo "curl is unable to connect to packagecloud.io over TLS when running: "
-	echo "    curl ${apt_config_url}"
-	echo "This is usually due to one of two things:"
-	echo
-	echo " 1.) Missing CA root certificates (make sure the ca-certificates package is installed)"
-	echo " 2.) An old version of libssl. Try upgrading libssl on your system to a more recent version"
-	echo
-	echo "Contact support@packagecloud.io with information about your system for help."
-	[ -e $apt_source_path ] && rm $apt_source_path
-	exit 1
+        echo "curl is unable to connect to packagecloud.io over TLS when running: "
+        echo "    curl ${apt_config_url}"
+        echo "This is usually due to one of two things:"
+        echo
+        echo " 1.) Missing CA root certificates (make sure the ca-certificates package is installed)"
+        echo " 2.) An old version of libssl. Try upgrading libssl on your system to a more recent version"
+        echo
+        echo "Contact support@packagecloud.io with information about your system for help."
+        [ -e $apt_source_path ] && rm $apt_source_path
+        exit 1
     elif [ "$curl_exit_code" -gt "0" ]; then
-	echo
-	echo "Unable to run: "
-	echo "    curl ${apt_config_url}"
-	echo
-	echo "Double check your curl installation and try again."
-	[ -e $apt_source_path ] && rm $apt_source_path
-	exit 1
+        echo
+        echo "Unable to run: "
+        echo "    curl ${apt_config_url}"
+        echo
+        echo "Double check your curl installation and try again."
+        [ -e $apt_source_path ] && rm $apt_source_path
+        exit 1
     else
-	echo "done."
+        echo "done."
     fi
 
     echo -n "Importing packagecloud gpg key... "
@@ -335,7 +335,7 @@ binsPrep_gitlabCe_repoAdd_DEFAULT_DEFAULT () {
     mmaPkgDebianMethod="custom"  #  or "apt" no need for customInstallScript but with binsPrep_installPostHook
 
     function customInstallScript {
-	opDo vis_repositoryAdd
+        opDo vis_repositoryAdd
     }
 }
 

@@ -46,7 +46,7 @@ _EOF_
       #macAddr=$( ifconfig ${thisLink} | grep HWaddr | cut -c 39-55 )
       #ANT_raw "${thisLink}: ${macAddr}"
       if [ ! -z "${macAddr}" ] ; then
-	  echo ${macAddr}
+          echo ${macAddr}
       fi
   done
 }
@@ -57,7 +57,7 @@ function vis_givenNetGetIPAddr {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Implemented  for class C only. $2 is the prefix number.
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 2 ]]
     local netAddr=$1
     local netAddrStr=$( echo "${netAddr}" | sed -e 's/\.0$//' )
@@ -71,7 +71,7 @@ function vis_givenNetGetInterface {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Implemented  for class C only. $2 is the prefix number.
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 2 ]]
     local netAddr=$1
     local netAddrStr=$( echo "${netAddr}" | sed -e 's/\.0$//' )
@@ -79,20 +79,20 @@ _EOF_
     ip addr show | grep ${netAddrStr} | grep -oE '[^ ]+$'
 
     lpReturn
-}	
+}       
 
 function vis_givenIPAddrGetInterface {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 1 ]]
     local IPAddr=$1
     
     ip addr show | grep ${IPAddr} | grep -oE '[^ ]+$'
 
     lpReturn
-}	
+}       
 
 
 function vis_givenInterfaceGetIPAddr {

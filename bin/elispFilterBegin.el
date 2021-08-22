@@ -76,15 +76,15 @@
   (let (start-point end-point this-url this-anchor-text)
     (while (re-search-forward "\\htmladdnormallink{" nil t)
       (progn
-	(setq start-point (point))
-	(re-search-forward "}{" nil t)
-	(setq end-point (point))
-	(kill-region start-point end-point)
-	(re-search-forward "}" nil t)
-	(insert "{")
-	(yank)
-	(delete-char -1)
-	)
+        (setq start-point (point))
+        (re-search-forward "}{" nil t)
+        (setq end-point (point))
+        (kill-region start-point end-point)
+        (re-search-forward "}" nil t)
+        (insert "{")
+        (yank)
+        (delete-char -1)
+        )
       )
     )
   (goto-char (point-min))
@@ -99,11 +99,11 @@
     (re-search-forward "<title>" nil t)
     (setq start-point (point))
     (if 
-	(re-search-forward "</title>" nil t)
-	(progn
-	  (setq end-point (match-beginning 0))
-	  (delete-region start-point end-point)
-	  ))
+        (re-search-forward "</title>" nil t)
+        (progn
+          (setq end-point (match-beginning 0))
+          (delete-region start-point end-point)
+          ))
     )
   )
 
@@ -117,11 +117,11 @@
     (end-of-line)
     (setq start-point (point))
     (if 
-	(re-search-forward "</title>" nil t)
-	(progn
-	  (setq end-point (match-beginning 0))
-	  (delete-region start-point end-point)
-	  ))
+        (re-search-forward "</title>" nil t)
+        (progn
+          (setq end-point (match-beginning 0))
+          (delete-region start-point end-point)
+          ))
     )
   )
 
@@ -134,11 +134,11 @@
     (end-of-line)
     (setq start-point (point))
     (if 
-	(re-search-forward "</TITLE>" nil t)
-	(progn
-	  (setq end-point (match-beginning 0))
-	  (delete-region start-point end-point)
-	  ))
+        (re-search-forward "</TITLE>" nil t)
+        (progn
+          (setq end-point (match-beginning 0))
+          (delete-region start-point end-point)
+          ))
     )
   )
 
@@ -243,10 +243,10 @@
     (beginning-of-line)
     (forward-line)
     (if (file-readable-p "../headSectionInsert.html")
-	(progn
-	  (insert-file-contents "../headSectionInsert.html")
-	  (message "Inserted ../headSectionInsert.html")
-	  )
+        (progn
+          (insert-file-contents "../headSectionInsert.html")
+          (message "Inserted ../headSectionInsert.html")
+          )
       (message "Missing ../headSectionInsert.html -- Skipped")
       )
     )

@@ -75,9 +75,9 @@ _EOF_
     #  [[elisp:(lsip-local-run-command "apt-cache search something | egrep '^something'")][apt-cache search something | egrep '^something']]
 
     itemOrderedList=( 
-	# "kodi_stableAddRepo" 
-	"kodi" 
-	"kodi_addOns" 
+        # "kodi_stableAddRepo" 
+        "kodi" 
+        "kodi_addOns" 
     )
 
     itemOptionalOrderedList=()
@@ -145,7 +145,7 @@ binsPrep_kodi_stableAddRepo_DEFAULT_DEFAULT () {
     mmaPkgDebianMethod="custom"  #  or "apt" no need for customInstallScript but with binsPrep_installPostHook
 
     function customInstallScript {
-	opDo vis_repositoryAdd
+        opDo vis_repositoryAdd
     }
 }
 
@@ -173,7 +173,7 @@ binsPrep_kodi_addOns_DEFAULT_DEFAULT () {
     mmaPkgDebianMethod="custom"  #  or "apt" no need for customInstallScript but with binsPrep_installPostHook
 
     function customInstallScript {
-	opDo vis_kodiAddOns
+        opDo vis_kodiAddOns
     }
 }
 

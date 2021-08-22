@@ -17,9 +17,9 @@ function OLDopNetCfg_paramsGet {
       gotVal=0
       i_nedaNetParamsGet ${t_ipAddr} ${t_domainName} ${t_netmask} ${t_network} ${t_defaultRoute} || gotVal=$?
       if [ ${gotVal} != 0 ] ; then
-	EH_problem "clusterName=${1} hostName=${2}"
-	lpL3Hosts.sh -p clusterName=${1} -p hostName=${2} -i givenHostGetNetworkSetting 
-	return 1
+        EH_problem "clusterName=${1} hostName=${2}"
+        lpL3Hosts.sh -p clusterName=${1} -p hostName=${2} -i givenHostGetNetworkSetting 
+        return 1
       fi
     done # of while read
 
@@ -34,9 +34,9 @@ function OLDopNetCfg_paramsGet {
       gotVal=0
       i_nedaNetParamsGet ${t_ipAddr} ${t_domainName} ${t_netmask} ${t_network} ${t_defaultRoute} || gotVal=$?
       if [ ${gotVal} != 0 ] ; then
-	EH_problem "clusterName=${1} hostName=${2}"
-	lpL3Hosts.sh -p clusterName=${1} -p hostName=${2} -i givenHostGetNetworkSetting 
-	return 1
+        EH_problem "clusterName=${1} hostName=${2}"
+        lpL3Hosts.sh -p clusterName=${1} -p hostName=${2} -i givenHostGetNetworkSetting 
+        return 1
       fi
     done # of while read
   else
@@ -63,9 +63,9 @@ function opNetCfg_paramsGet {
       gotVal=0
       i_nedaNetParamsGet ${t_ipAddr} ${t_domainName} ${t_netmask} ${t_network} ${t_defaultRoute} || gotVal=$?
       if [ ${gotVal} != 0 ] ; then
-	EH_problem "clusterName=${1} hostName=${2}"
-	lpL3Hosts.sh -p clusterName=${1} -p hostName=${2} -i givenHostGetNetworkSetting 
-	return 1
+        EH_problem "clusterName=${1} hostName=${2}"
+        lpL3Hosts.sh -p clusterName=${1} -p hostName=${2} -i givenHostGetNetworkSetting 
+        return 1
       fi
     done # of while read
 
@@ -75,17 +75,17 @@ function opNetCfg_paramsGet {
        gotArgs=`lpL3Hosts.sh -p clusterName=${1} -p hostName=${2} -i givenHostGetNetworkSetting`
        gotVal=$?
       if [ ${gotVal} != 0 ] ; then
-	EH_problem "FAILED:${gotVal}: lpL3Hosts.sh -p clusterName=${1} -p hostName=${2} -i givenHostGetNetworkSetting"
-	ANT_raw "Got Args=${gotArgs}"
-	return 1
+        EH_problem "FAILED:${gotVal}: lpL3Hosts.sh -p clusterName=${1} -p hostName=${2} -i givenHostGetNetworkSetting"
+        ANT_raw "Got Args=${gotArgs}"
+        return 1
       fi
 
        #ANT_raw "Got Args=${gotArgs}"
       i_nedaNetParamsGet  ${gotArgs} || gotVal=$?
       if [ ${gotVal} != 0 ] ; then
-	EH_problem "FAILED:${gotVal}: lpL3Hosts.sh -p clusterName=${1} -p hostName=${2} -i givenHostGetNetworkSetting"
-	ANT_raw "Got Args=${gotArgs}"
-	return 1
+        EH_problem "FAILED:${gotVal}: lpL3Hosts.sh -p clusterName=${1} -p hostName=${2} -i givenHostGetNetworkSetting"
+        ANT_raw "Got Args=${gotArgs}"
+        return 1
       fi
   else
     EH_problem "Unsupported OS: ${opRunOsType}"

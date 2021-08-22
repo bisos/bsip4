@@ -127,7 +127,7 @@ _EOF_
     local bleeCommonActionEl="${opBinBase}/bleeCommonAction.el"
     
     bleeclient -h -v -n showRun -i run -- --eval \
-	       "(load-file \"${bleeCommonActionEl}\")"
+               "(load-file \"${bleeCommonActionEl}\")"
     lpReturn
 }
 
@@ -144,14 +144,14 @@ _EOF_
     local bleeCommonActionEl="${opBinBase}/bleeCommonAction.el"
 
     if [ ! -f "${fileName}" ] ; then
-	ANT_cooked "Missing ${fileName} -- skipped"
-	lpReturn 101
+        ANT_cooked "Missing ${fileName} -- skipped"
+        lpReturn 101
     fi
 
     lpDo FN_fileSafeCopy ${fileName} ${fileName}.${dateTag}
     
     bleeclient -h -v -n showRun -i run -- --eval \
-	       "(save-excursion (load-file \"${bleeCommonActionEl}\") (filterFilePanelCleanups \"${fileName}\"))"
+               "(save-excursion (load-file \"${bleeCommonActionEl}\") (filterFilePanelCleanups \"${fileName}\"))"
 
     lpReturn
 }
@@ -168,14 +168,14 @@ _EOF_
     local bleeCommonActionEl="${opBinBase}/bleeCommonAction.el"
 
     if [ ! -f "${fileName}" ] ; then
-	ANT_cooked "Missing ${fileName} -- skipped"
-	lpReturn 101
+        ANT_cooked "Missing ${fileName} -- skipped"
+        lpReturn 101
     fi
 
     lpDo FN_fileSafeCopy ${fileName} ${fileName}.${dateTag}
     
     bleeclient -h -v -n showRun -i run -- --eval \
-	       "(save-excursion (load-file \"${bleeCommonActionEl}\") (latexNewlineFixFile \"${fileName}\"))"
+               "(save-excursion (load-file \"${bleeCommonActionEl}\") (latexNewlineFixFile \"${fileName}\"))"
 
     lpReturn
 }

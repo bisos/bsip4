@@ -43,7 +43,7 @@ typeset -t BarcFile="MANDATORY"
 
 function G_postParamHook {
     if [ "${BarcFile}_" != "MANDATORY_" ] ; then
-	BarcFile=$( FN_absolutePathGet ${BarcFile} )
+        BarcFile=$( FN_absolutePathGet ${BarcFile} )
     fi
     lpCurrentsGet
     lpReturn 0
@@ -106,14 +106,14 @@ function vis_acctCreate {
 
 function vis_fullCreateFg {
     if ! vis_acctCreate ; then 
-	return 101
+        return 101
     fi
     opDoAfterPause bystarAcctAdmin.sh ${G_commandOptions} -p RBAE="$RBAE" -i fullUpdate
 }
 
 function vis_startToEssentials {
     if ! vis_acctCreate ; then 
-	return 101
+        return 101
     fi
 
     #bystarUid=$( bystarAcctAdmin.sh ${G_commandOptions} -p RBAE="$RBAE" -i startToEssentials 2> /dev/null )
@@ -128,7 +128,7 @@ function vis_startToEssentials {
 
 function vis_fullCreateBg {
     if ! vis_acctCreate ; then 
-	return 101
+        return 101
     fi
 
     opDoAfterPause bystarAcctAdmin.sh ${G_commandOptions} -p RBAE="$RBAE" -i fullUpdate &
@@ -136,7 +136,7 @@ function vis_fullCreateBg {
 
 function vis_fullCreateDev {
     if ! vis_acctCreate ; then 
-	return 101
+        return 101
     fi
 
     opDoAfterPause bystarAcctAdmin.sh ${G_commandOptions} -p RBAE="$RBAE" -i fullUpdate

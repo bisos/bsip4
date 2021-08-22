@@ -117,13 +117,13 @@ _EOF_
 
 noArgsHook() {
     if [[ $# -eq 0 ]] ; then
-	vis_examples
-	return
+        vis_examples
+        return
     fi
 
     G_runMode="showRun"
 
-    vis_dblockDirsAll $*	 
+    vis_dblockDirsAll $*         
 }
 
 _CommentBegin_
@@ -156,17 +156,17 @@ function vis_dblockUpdateFileOrIgnore {
 
     
     for thisOne in ${*} ; do
-	if [ ! -f "${thisOne}" ] ; then
-	    EH_problem "Missing ${thisOne} -- Skipped"
-	    continue
-	fi
+        if [ ! -f "${thisOne}" ] ; then
+            EH_problem "Missing ${thisOne} -- Skipped"
+            continue
+        fi
 
-    	if egrep '^.*\+BEGIN:' ${thisOne} > /dev/null ; then
-	    ANT_raw "${G_myName}: Dblock Updating ${thisOne}"
-	    opDo ${thisEmacsClient} -e "(org-dblock-update-file-bx \"${thisOne}\")"
-	else
-	    ANT_raw "${G_myName}: Skipping ${thisOne}"
-	fi
+        if egrep '^.*\+BEGIN:' ${thisOne} > /dev/null ; then
+            ANT_raw "${G_myName}: Dblock Updating ${thisOne}"
+            opDo ${thisEmacsClient} -e "(org-dblock-update-file-bx \"${thisOne}\")"
+        else
+            ANT_raw "${G_myName}: Skipping ${thisOne}"
+        fi
     done
 }
 
@@ -180,40 +180,40 @@ function vis_reUpdateDiffFiles {
 If there are any args, process those.
 If there are no args, process stdin.
 _EOF_
-		       }
+                       }
 
     function processOne {
-	EH_assert [[ $# -eq 1 ]]
-	local thisOne="$1"
+        EH_assert [[ $# -eq 1 ]]
+        local thisOne="$1"
 
-	if [ ! -f "${thisOne}" ] ; then
-	    EH_problem "Missing Input File ${thisOne}"
-	    lpReturn 101
-	fi
+        if [ ! -f "${thisOne}" ] ; then
+            EH_problem "Missing Input File ${thisOne}"
+            lpReturn 101
+        fi
 
-	local thisSafeOne="${thisOne}-${dateTag}" 
+        local thisSafeOne="${thisOne}-${dateTag}" 
 
-	opDo cp -p ${thisOne} ${thisSafeOne}
+        opDo cp -p ${thisOne} ${thisSafeOne}
 
-	opDo vis_dblockBlankFiles ${thisOne}
-	opDo vis_dblockUpdateFiles ${thisOne}
+        opDo vis_dblockBlankFiles ${thisOne}
+        opDo vis_dblockUpdateFiles ${thisOne}
 
-	opDo echo diff ${thisOne} ${thisSafeOne}
+        opDo echo diff ${thisOne} ${thisSafeOne}
     }
 
     if [ $# -gt 0 ] ; then
-	typeset thisOne=""
-	for thisOne in ${@} ; do
-	    opDo processOne ${thisOne}
-	done
+        typeset thisOne=""
+        for thisOne in ${@} ; do
+            opDo processOne ${thisOne}
+        done
     else
-	typeset thisLine=""
+        typeset thisLine=""
     
-	while read thisLine ; do
-	    if [ "${thisLine}" != "" ] ; then
-		opDo processOne ${thisLine}
-	    fi
-	done
+        while read thisLine ; do
+            if [ "${thisLine}" != "" ] ; then
+                opDo processOne ${thisLine}
+            fi
+        done
     fi
 
     lpReturn
@@ -225,7 +225,7 @@ function vis_diffBlankedFiles {
 If there are any args, process those.
 If there are no args, process stdin.
 _EOF_
-		       }
+                       }
 
     EH_assert [[ $# -eq 2 ]]
     local thisOne="$1"
@@ -260,21 +260,21 @@ function vis_dblockUpdateFiles {
 If there are any args, process those.
 If there are no args, process stdin.
 _EOF_
-		       }
+                       }
 
     if [ $# -gt 0 ] ; then
-	typeset thisOne=""
-	for thisOne in ${@} ; do
-	    opDo vis_dblockUpdateOneFileOrIgnore ${thisOne}
-	done
+        typeset thisOne=""
+        for thisOne in ${@} ; do
+            opDo vis_dblockUpdateOneFileOrIgnore ${thisOne}
+        done
     else
-	typeset thisLine=""
+        typeset thisLine=""
     
-	while read thisLine ; do
-	    if [ "${thisLine}" != "" ] ; then
-		opDo vis_dblockUpdateOneFileOrIgnore ${thisLine}
-	    fi
-	done
+        while read thisLine ; do
+            if [ "${thisLine}" != "" ] ; then
+                opDo vis_dblockUpdateOneFileOrIgnore ${thisLine}
+            fi
+        done
     fi
 
     lpReturn
@@ -289,22 +289,22 @@ function vis_dblockUpdateOneFileOrIgnore {
     function describeF {  cat  << _EOF_
 Operates on a single file. To be used by other scripts.
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 1 ]]
 
     typeset thisOne="$1"
     local thisEmacsClient=$( vis_thisEmacsClient )
 
     if [ ! -f "${thisOne}" ] ; then
-	EH_problem "Missing ${thisOne} -- Skipped"
-	lpReturn
+        EH_problem "Missing ${thisOne} -- Skipped"
+        lpReturn
     fi
 
     if egrep '^.*\+BEGIN:' ${thisOne} > /dev/null ; then
-	ANT_raw "${G_myName}: Dblock Updating ${thisOne}"
-	opDo ${thisEmacsClient} -e "(org-dblock-update-file-bx \"${thisOne}\")"
+        ANT_raw "${G_myName}: Dblock Updating ${thisOne}"
+        opDo ${thisEmacsClient} -e "(org-dblock-update-file-bx \"${thisOne}\")"
     else
-	ANT_raw "${G_myName}: Skipping ${thisOne}"
+        ANT_raw "${G_myName}: Skipping ${thisOne}"
     fi
 }
 
@@ -321,18 +321,18 @@ _EOF_
     }
 
     if [ $# -gt 0 ] ; then
-	typeset thisOne=""
-	for thisOne in ${@} ; do
-	    opDo vis_dblockBlankOneFileOrIgnore ${thisOne}
-	done
+        typeset thisOne=""
+        for thisOne in ${@} ; do
+            opDo vis_dblockBlankOneFileOrIgnore ${thisOne}
+        done
     else
-	typeset thisLine=""
+        typeset thisLine=""
     
-	while read thisLine ; do
-	    if [ "${thisLine}" != "" ] ; then
-		opDo vis_dblockBlankOneFileOrIgnore ${thisLine}
-	    fi
-	done
+        while read thisLine ; do
+            if [ "${thisLine}" != "" ] ; then
+                opDo vis_dblockBlankOneFileOrIgnore ${thisLine}
+            fi
+        done
     fi
 
     lpReturn
@@ -354,15 +354,15 @@ _EOF_
     local thisEmacsClient=$( vis_thisEmacsClient )  
 
     if [ ! -f "${thisOne}" ] ; then
-	EH_problem "Missing ${thisOne} -- Skipped"
-	lpReturn
+        EH_problem "Missing ${thisOne} -- Skipped"
+        lpReturn
     fi
     
     if egrep '^.*\+BEGIN:' ${thisOne} > /dev/null ; then
-	ANT_raw "${G_myName}: Dblock Blanking ${thisOne}"
-	opDo ${thisEmacsClient} -e "(org-dblock-bx-blank-file \"${thisOne}\")"
+        ANT_raw "${G_myName}: Dblock Blanking ${thisOne}"
+        opDo ${thisEmacsClient} -e "(org-dblock-bx-blank-file \"${thisOne}\")"
     else
-	ANT_raw "${G_myName}: Skipping ${thisOne}"
+        ANT_raw "${G_myName}: Skipping ${thisOne}"
     fi
 }
 
@@ -405,7 +405,7 @@ _EOF_
     typeset thisOne=""
 
     for thisOne in ${*} ; do
-	opDo emacsclient -e "(org-dblock-update-file-bx \"${thisOne}\")"
+        opDo emacsclient -e "(org-dblock-update-file-bx \"${thisOne}\")"
     done
 }
 

@@ -82,11 +82,11 @@ binsPrep_vagrantDebUpstream_DEFAULT_DEFAULT () {
     mmaPkgDebianMethod="custom"  #  or "apt" no need for customInstallScript but with binsPrep_installPostHook
 
     function customInstallScript {
-	lpDo sudo dpkg --purge --force-all vagrant
+        lpDo sudo dpkg --purge --force-all vagrant
 
-	inBaseDirDo /tmp wget https://releases.hashicorp.com/vagrant/2.2.10/vagrant_2.2.10_x86_64.deb
+        inBaseDirDo /tmp wget https://releases.hashicorp.com/vagrant/2.2.10/vagrant_2.2.10_x86_64.deb
     
-	opDo sudo dpkg -i /tmp/vagrant_2.2.10_x86_64.deb
+        opDo sudo dpkg -i /tmp/vagrant_2.2.10_x86_64.deb
     }
 }
 
@@ -100,10 +100,10 @@ binsPrep_vagrantPlugins_DEFAULT_DEFAULT () {
     mmaPkgDebianMethod="custom"  #  or "apt" no need for customInstallScript but with binsPrep_installPostHook
 
     function customInstallScript {
-	lpDo sudo vagrant plugin install vagrant-libvirt
-	lpDo sudo vagrant plugin install vagrant-disksize
+        lpDo sudo vagrant plugin install vagrant-libvirt
+        lpDo sudo vagrant plugin install vagrant-disksize
 
-	lpDo vagrant plugin list
+        lpDo vagrant plugin list
     }
 }
 
@@ -140,7 +140,7 @@ binsPrep_packer_addRepo_DEFAULT_DEFAULT () {
     mmaPkgDebianMethod="custom"  #  or "apt" no need for customInstallScript but with binsPrep_installPostHook
 
     function customInstallScript {
-	opDo vis_repositoryAdd
+        opDo vis_repositoryAdd
     }
 }
 

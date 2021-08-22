@@ -113,110 +113,110 @@ function vis_buildDocs {
     subjectExtensionName=`FN_extension ${currentFile}`
     TM_trace 9 "Subject Name is  ${subjectBaseName}"
     TM_trace 9 "Subject Extension is  ${subjectExtensionName}"
-	
+        
     case ${subjectExtensionName} in
       'ttytex')
-	 typeset outputFormatsList=`getOutputFormatsList ${outputs}`
-	 typeset singleOutput
-	 for singleOutput in ${outputFormatsList} ; do
-	   case ${singleOutput} in
-	     'tty')
-		    doing_tty ${subjectBaseName}
-		    ;;
-	     'dvi')
-		    doing_dvi ${subjectBaseName}
-		    ;;
-	     'xdvi')
-		     doing_dvi ${subjectBaseName}
-		     xdvi ${subjectBaseName}.dvi
-		     ;;
-	     'ps')
-		   doing_ps ${subjectBaseName}
-		   ;;
-	     'pdf')
-		    doing_pdf ${subjectBaseName}
-		    ;;
-	     'pdf+')
-		    doing_pdf ${subjectBaseName}
-		    opDo acroread ${subjectBaseName}.pdf &
-		    ;;
-	     'lpr')
-		    doing_ps
-		    echo "Printing ${subjectBaseName}.ps"
-		    lpr ${subjectBaseName}.ps 
-		    ;;
-	     'prehtml')
-		    preProcForHtml ${subjectBaseName}
-		    ;;
-	     'prehtmlPC')
-	            preProcForHtmlPC ${subjectBaseName}
-		    ;;
-	     'html')
-		    ttytexToHtml ${subjectBaseName}
-		    ;;
-	     'onehtml')
-		    ttytexToOneHtml ${subjectBaseName}
-		    ;;
-	     'simplehtml')
-	            ttytexToSimpleHtml ${subjectBaseName}
-		    ;;
-	     'tex4ht')
-	            ttytexWithTex4ht ${subjectBaseName}
-		    ;;
-	     'heveaHtml')
-	            ttytexToHeveaHtml ${subjectBaseName}
-		    ;;
-	     'simplehtmlPC')
-		    ttytexToSimpleHtmlPC ${subjectBaseName}
-		    ;;
-	     'all')
-		 #doing_ps ${subjectBaseName}
-		 doing_pdf ${subjectBaseName}
-		 ttytexToHeveaHtml ${subjectBaseName}		 
-		 #doing_tty ${subjectBaseName}
+         typeset outputFormatsList=`getOutputFormatsList ${outputs}`
+         typeset singleOutput
+         for singleOutput in ${outputFormatsList} ; do
+           case ${singleOutput} in
+             'tty')
+                    doing_tty ${subjectBaseName}
+                    ;;
+             'dvi')
+                    doing_dvi ${subjectBaseName}
+                    ;;
+             'xdvi')
+                     doing_dvi ${subjectBaseName}
+                     xdvi ${subjectBaseName}.dvi
+                     ;;
+             'ps')
+                   doing_ps ${subjectBaseName}
+                   ;;
+             'pdf')
+                    doing_pdf ${subjectBaseName}
+                    ;;
+             'pdf+')
+                    doing_pdf ${subjectBaseName}
+                    opDo acroread ${subjectBaseName}.pdf &
+                    ;;
+             'lpr')
+                    doing_ps
+                    echo "Printing ${subjectBaseName}.ps"
+                    lpr ${subjectBaseName}.ps 
+                    ;;
+             'prehtml')
+                    preProcForHtml ${subjectBaseName}
+                    ;;
+             'prehtmlPC')
+                    preProcForHtmlPC ${subjectBaseName}
+                    ;;
+             'html')
+                    ttytexToHtml ${subjectBaseName}
+                    ;;
+             'onehtml')
+                    ttytexToOneHtml ${subjectBaseName}
+                    ;;
+             'simplehtml')
+                    ttytexToSimpleHtml ${subjectBaseName}
+                    ;;
+             'tex4ht')
+                    ttytexWithTex4ht ${subjectBaseName}
+                    ;;
+             'heveaHtml')
+                    ttytexToHeveaHtml ${subjectBaseName}
+                    ;;
+             'simplehtmlPC')
+                    ttytexToSimpleHtmlPC ${subjectBaseName}
+                    ;;
+             'all')
+                 #doing_ps ${subjectBaseName}
+                 doing_pdf ${subjectBaseName}
+                 ttytexToHeveaHtml ${subjectBaseName}            
+                 #doing_tty ${subjectBaseName}
                  #ttytexWithTex4ht ${subjectBaseName}
-		 #ttytexToOneHtml ${subjectBaseName}
-		 #ttytexToHtml ${subjectBaseName}
-		 ;;
-	     *)
-		EH_problem "Unknown: ${outputs}"
-		exit 1
-		;;
-	   esac
-	 done
-	 ;;
+                 #ttytexToOneHtml ${subjectBaseName}
+                 #ttytexToHtml ${subjectBaseName}
+                 ;;
+             *)
+                EH_problem "Unknown: ${outputs}"
+                exit 1
+                ;;
+           esac
+         done
+         ;;
       'texinfo')
-	;;
+        ;;
       'tex')
-	EH_oops "NOTYET"
-	;;
+        EH_oops "NOTYET"
+        ;;
       'fm5')
          EH_assert [[ "${currentBase}_" != "_" ]]
-	 typeset outputFormatsList=`getOutputFormatsList ${outputs}`
-	 typeset singleOutput
-	 for singleOutput in ${outputFormatsList} ; do
-	   case ${singleOutput} in
-	     'ps')
-		   doing_fm5ToPs  ${currentBase}/${subjectBaseName}
-		   ;;
-	     'pdf')
-		    doing_fm5ToPdf  ${currentBase}/${subjectBaseName}
-		    ;;
-	     'all')
-		    doing_fm5ToPs ${currentBase}/${subjectBaseName}
-		    doing_fm5ToPdf ${currentBase}/${subjectBaseName}
-		    ;;
-	     *)
-		EH_problem "Unknown: ${outputs}"
-		exit 1
-		;;
-	   esac
-	 done
-	 ;;
+         typeset outputFormatsList=`getOutputFormatsList ${outputs}`
+         typeset singleOutput
+         for singleOutput in ${outputFormatsList} ; do
+           case ${singleOutput} in
+             'ps')
+                   doing_fm5ToPs  ${currentBase}/${subjectBaseName}
+                   ;;
+             'pdf')
+                    doing_fm5ToPdf  ${currentBase}/${subjectBaseName}
+                    ;;
+             'all')
+                    doing_fm5ToPs ${currentBase}/${subjectBaseName}
+                    doing_fm5ToPdf ${currentBase}/${subjectBaseName}
+                    ;;
+             *)
+                EH_problem "Unknown: ${outputs}"
+                exit 1
+                ;;
+           esac
+         done
+         ;;
       *)
-	EH_problem "Unknown extension file: ${subjectExtensionName}"
-	exit 1
-	;;
+        EH_problem "Unknown extension file: ${subjectExtensionName}"
+        exit 1
+        ;;
     esac
 
   done
@@ -234,49 +234,49 @@ function vis_clean {
     subjectExtensionName=`FN_extension ${currentFile}`
     TM_trace 9 "Subject Name is  ${subjectBaseName}"
     TM_trace 9 "Subject Extension is  ${subjectExtensionName}"
-	
+        
     case ${subjectExtensionName} in
       'ttytex')
-	 case ${cleanType} in
-	   'realclean')
-		 doing_realclean ${subjectBaseName}
-		 ;;
-	   'cleanKeepResults')
-		 doing_cleanKeepResults ${subjectBaseName}
-		 ;;
-	   *)
-	      EH_problem "Unknown: ${cleanType}"
-	      exit 1
-	      ;;
-	 esac
-	 ;;
+         case ${cleanType} in
+           'realclean')
+                 doing_realclean ${subjectBaseName}
+                 ;;
+           'cleanKeepResults')
+                 doing_cleanKeepResults ${subjectBaseName}
+                 ;;
+           *)
+              EH_problem "Unknown: ${cleanType}"
+              exit 1
+              ;;
+         esac
+         ;;
       'texinfo')
-	;;
+        ;;
       'tex')
-	EH_oops "NOTYET"
-	exit
-	;;
+        EH_oops "NOTYET"
+        exit
+        ;;
       'fm5')
-	 case ${cleanType} in
-	   'realclean')
-		 opDo doing_realcleanFigure ${subjectBaseName}
-		 ;;
-	   'cleanKeepResults')
-		 opDo doing_cleanKeepResultsFigure ${subjectBaseName}
-		 ;;
-	   *)
-	      EH_problem "Unknown: ${cleanType}"
-	      exit 1
-	      ;;
-	 esac
-	 ;;
+         case ${cleanType} in
+           'realclean')
+                 opDo doing_realcleanFigure ${subjectBaseName}
+                 ;;
+           'cleanKeepResults')
+                 opDo doing_cleanKeepResultsFigure ${subjectBaseName}
+                 ;;
+           *)
+              EH_problem "Unknown: ${cleanType}"
+              exit 1
+              ;;
+         esac
+         ;;
       'odg')
-	    ANT_raw "Automated Processing of .odg is not yet supported, so cleaning does not apply"
-	 ;;
+            ANT_raw "Automated Processing of .odg is not yet supported, so cleaning does not apply"
+         ;;
       *)
-	EH_problem "Unknown extension file: ${subjectExtensionName}"
-	exit 1
-	;;
+        EH_problem "Unknown extension file: ${subjectExtensionName}"
+        exit 1
+        ;;
     esac
 
   done
@@ -421,9 +421,9 @@ function ttytexToTtyDvi {
     'SunOS' | 'Linux' | 'CYGWIN_NT-5.0')
       echo "$0 running on ${opRunOsType} ...."
       if [[ "${textOnly}_" != "_nil_" ]] ; then
-	sed -e "s@%ttyStyleFile%@palatino,@g" -e "s@16.5cm@8cm@g" $1.ttytex | RCSdefVarsExpand.sh -f $1.ttytex | nedaGlobalVarsExpand.sh | expand  > $1.tex
+        sed -e "s@%ttyStyleFile%@palatino,@g" -e "s@16.5cm@8cm@g" $1.ttytex | RCSdefVarsExpand.sh -f $1.ttytex | nedaGlobalVarsExpand.sh | expand  > $1.tex
       else
-	sed -e "s@%ttyStyleFile%@palatino,@g" $1.ttytex | RCSdefVarsExpand.sh -f $1.ttytex | nedaGlobalVarsExpand.sh | expand  > $1.tex
+        sed -e "s@%ttyStyleFile%@palatino,@g" $1.ttytex | RCSdefVarsExpand.sh -f $1.ttytex | nedaGlobalVarsExpand.sh | expand  > $1.tex
       fi
       ;;
     'Windows_NT' | 'UWIN-NT')
@@ -433,7 +433,7 @@ function ttytexToTtyDvi {
     *)
       #uname
       echo "$1 not Suported on ${opRunOsType}"
-	exit
+        exit
   esac
 
   if [ "${extraLatexOptions}_" != "_" ] ; then 
@@ -464,14 +464,14 @@ function ttytexToPdf {
 
   case ${opRunOsType} in
     'SunOS' | 'Windows_NT' | 'Linux' | 'UWIN-NT' | 'CYGWIN_NT-5.0')
-	# sed -e "s@%ttyStyleFile%@@g" $1.ttytex | RCSdefVarsExpand.sh -f $1.ttytex | nedaGlobalVarsExpand.sh | expand  > $1.tex
-	sed -e "s@%ttyStyleFile%@@g" $1.ttytex | expand  > $1.tex	
-	# sed -e "s@%ttyStyleFile%@@g" $1.ttytex | expand  > $1.tex
-	;;
+        # sed -e "s@%ttyStyleFile%@@g" $1.ttytex | RCSdefVarsExpand.sh -f $1.ttytex | nedaGlobalVarsExpand.sh | expand  > $1.tex
+        sed -e "s@%ttyStyleFile%@@g" $1.ttytex | expand  > $1.tex       
+        # sed -e "s@%ttyStyleFile%@@g" $1.ttytex | expand  > $1.tex
+        ;;
     *)
       #uname
       echo "$0 not Suported on ${opRunOsType}"
-	exit
+        exit
   esac
 
   if [ "${extraLatexOptions:-}_" != "_" ] ; then 
@@ -482,25 +482,25 @@ function ttytexToPdf {
 
   case ${inFormat} in
       "latex"|"")
-	  pdflatex ${extraLatexOptions} $1.tex
-	  bibtex $1
-	  makeindex $1.idx
-	  makeglossaries $1
-	  pdflatex ${extraLatexOptions} $1.tex
-	  pdflatex ${extraLatexOptions} $1.tex
-	  ;;
+          pdflatex ${extraLatexOptions} $1.tex
+          bibtex $1
+          makeindex $1.idx
+          makeglossaries $1
+          pdflatex ${extraLatexOptions} $1.tex
+          pdflatex ${extraLatexOptions} $1.tex
+          ;;
       "xelatex")
-	  opDo xelatex  ${extraLatexOptions} $1.tex
-	  #opDo echo SKIPPED: bibtex $1
-	  opDo vis_bibTexProvider_run $1.ttytex	  
-	  opDo makeindex $1.idx
-	  opDo makeglossaries $1	  
-	  opDo xelatex  ${extraLatexOptions} $1.tex
-	  opDo xelatex  ${extraLatexOptions} $1.tex
-	  ;;
+          opDo xelatex  ${extraLatexOptions} $1.tex
+          #opDo echo SKIPPED: bibtex $1
+          opDo vis_bibTexProvider_run $1.ttytex   
+          opDo makeindex $1.idx
+          opDo makeglossaries $1          
+          opDo xelatex  ${extraLatexOptions} $1.tex
+          opDo xelatex  ${extraLatexOptions} $1.tex
+          ;;
       *)
-	  EH_problem "Unknown inFormat ${inFormat}"
-	exit
+          EH_problem "Unknown inFormat ${inFormat}"
+        exit
   esac
 
   if [ -f $1.pdfpc ] ; then
@@ -602,7 +602,7 @@ function ttytexToHeveaHtml {
   # $1 is the module name
   print -r -- "Building HTML With hevea For $1"
 
-  sed -e "s@%ttyStyleFile%@@g" $1.ttytex | expand  > $1.tex	
+  sed -e "s@%ttyStyleFile%@@g" $1.ttytex | expand  > $1.tex     
 
   # sed -e "s@%ttyStyleFile%@@g" $1.ttytex | RCSdefVarsExpand.sh -f $1.ttytex | nedaGlobalVarsExpand.sh |  expand  > $1.tex
 
@@ -703,27 +703,27 @@ function vis_buildFigures {
     typeset singleOutput
     for singleOutput in ${outputFormatsList} ; do
       case ${singleOutput} in
-	'epsi')
-	   doing_figureEPSI ${currentBase}/${currentFigure}
-	   ;;
-	'pdf')
+        'epsi')
+           doing_figureEPSI ${currentBase}/${currentFigure}
+           ;;
+        'pdf')
            doing_figurePDF ${currentBase}/${currentFigure%.*}
-	   ;;
-	'gif')
-	   doing_figureGIF ${currentBase}/${currentFigure%.*}
-	   ;;
-	'odg')
-	   ANT_raw "Automated conversion for odg is not yet supported"
-	   ;;
-	'all')
-	   doing_figureEPSI ${currentBase}/${currentFigure}
-	   doing_figurePDF ${currentBase}/${currentFigure%.*}
-	   doing_figureGIF ${currentBase}/${currentFigure%.*}
-	   ;;
-	*)
-	   EH_problem "Unknown: ${cleanType}"
-	   exit 1
-	   ;;
+           ;;
+        'gif')
+           doing_figureGIF ${currentBase}/${currentFigure%.*}
+           ;;
+        'odg')
+           ANT_raw "Automated conversion for odg is not yet supported"
+           ;;
+        'all')
+           doing_figureEPSI ${currentBase}/${currentFigure}
+           doing_figurePDF ${currentBase}/${currentFigure%.*}
+           doing_figureGIF ${currentBase}/${currentFigure%.*}
+           ;;
+        *)
+           EH_problem "Unknown: ${cleanType}"
+           exit 1
+           ;;
       esac
     done
   done
@@ -854,9 +854,9 @@ _EOF_
     EH_assert [[ $# -eq 1 ]]
 
     if [ -f "lcntProc.sh" ] ; then
-	opDo lcntProc.sh -i lcnLcntInputPre "$1"
+        opDo lcntProc.sh -i lcnLcntInputPre "$1"
     else
-	EH_problem "Missing ./lcntProc.sh"
+        EH_problem "Missing ./lcntProc.sh"
     fi
 
     lpReturn
@@ -872,9 +872,9 @@ _EOF_
     EH_assert [[ $# -eq 1 ]]
 
     if [ -f "lcntProc.sh" ] ; then
-	opDo lcntProc.sh -i lcnLcntInputPost "$1"
+        opDo lcntProc.sh -i lcnLcntInputPost "$1"
     else
-	EH_problem "Missing ./lcntProc.sh"
+        EH_problem "Missing ./lcntProc.sh"
     fi
 
     lpReturn

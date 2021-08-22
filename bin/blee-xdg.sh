@@ -135,10 +135,10 @@ function mimeAppFileUpdate {
       ${updateStdoutFunc} > ${updateFileName} # 2> /dev/null 
   else
       if [ -f ${updateFileName} ] ; then
-	  ANT_raw "File: ${updateFileName} exists -- no action taken"
+          ANT_raw "File: ${updateFileName} exists -- no action taken"
       else
-	  FN_fileSafeKeep ${updateFileName}
-	  ${updateStdoutFunc} > ${updateFileName} # 2> /dev/null 
+          FN_fileSafeKeep ${updateFileName}
+          ${updateStdoutFunc} > ${updateFileName} # 2> /dev/null 
       fi
   fi
 

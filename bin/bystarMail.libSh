@@ -26,8 +26,8 @@ bystarMboxMain=""
 bystarMboxSpam="Spam"
 bystarMboxMobile="Mobile"
 bystarMboxRecord="Record"
-						
-						   # Main(main,office,libre,)
+                                                
+                                                   # Main(main,office,libre,)
 bystarMboxActivism="activism"                          
 bystarMboxBookmark="bookmark" 
 bystarMboxCallerid="callerid"
@@ -169,9 +169,9 @@ function maildirFind {
 
   for thisDir in ${dirsBelowPath} ; do
       if opDo maildirIsValid ${thisDir} ; then
-	  echo ${thisDir}
+          echo ${thisDir}
       else
-	  ANT_raw "${thisDir} Skipped"
+          ANT_raw "${thisDir} Skipped"
       fi
   done
 }

@@ -93,7 +93,7 @@ function G_postParamHook {
 }
 
 function noArgsHook {
-	vis_examples
+        vis_examples
 }
 
 

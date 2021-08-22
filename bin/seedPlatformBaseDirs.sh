@@ -216,19 +216,19 @@ _EOF_
 
     typeset name=""
     for name in "$@" ; do
-	typeset nameEvaled=$( eval echo '$'{${name}[@]} )
+        typeset nameEvaled=$( eval echo '$'{${name}[@]} )
 
-	if [ -z "${nameEvaled}" ] ; then
-	    EH_problem "Empty ${name} -- Skipped"
-	    continue
-	else
-	    ANT_raw "${G_thisFunc}: func=${first} -- list=${name} -- nameEvaled=${nameEvaled}"
-	fi
+        if [ -z "${nameEvaled}" ] ; then
+            EH_problem "Empty ${name} -- Skipped"
+            continue
+        else
+            ANT_raw "${G_thisFunc}: func=${first} -- list=${name} -- nameEvaled=${nameEvaled}"
+        fi
 
-	typeset thisItem
-	for thisItem in ${nameEvaled} ; do
-	    opDo ${first} "${thisItem}"
-	done
+        typeset thisItem
+        for thisItem in ${nameEvaled} ; do
+            opDo ${first} "${thisItem}"
+        done
     done
 }
 
@@ -252,8 +252,8 @@ _EOF_
     
     typeset thisItemName=$( eval echo '$'{pbd_${internalName}[destPathRel]} )
     if [ -z "${thisItemName}" ] ; then
-	EH_problem "Invalid Item Name=$1"
-	lpReturn 101
+        EH_problem "Invalid Item Name=$1"
+        lpReturn 101
     fi
   
     thisItem="pbd_${internalName}"
@@ -283,19 +283,19 @@ _EOF_
     
     typeset name=""
     for name in "$@" ; do
-	typeset destFullPath=""
-	opDoRet  pbdPrep "${name}"
-	printf 2>&1 "* name=${name}\n"
-	printf 2>&1 "** $(varNameValueStdout pbd_type)\n"
-	printf 2>&1 "** $(varNameValueStdout pbd_destPathBaseDefault)\n"
-	printf 2>&1 "** $(varNameValueStdout pbd_destPathRel)\n"
-	printf 2>&1 "** $(varNameValueStdout pbd_srcPath)\n"
-	printf 2>&1 "** $(varNameValueStdout pbd_owner)\n"
-	printf 2>&1 "** $(varNameValueStdout pbd_group)\n"
-	printf 2>&1 "** $(varNameValueStdout pbd_permissions_group)\n"
-	printf 2>&1 "** $(varNameValueStdout pbd_basePrepFunc)\n"
-	printf 2>&1 "** $(varNameValueStdout pbd_baseCleanFunc)\n"
-	printf 2>&1 "** $(varNameValueStdout pbd_description)\n"
+        typeset destFullPath=""
+        opDoRet  pbdPrep "${name}"
+        printf 2>&1 "* name=${name}\n"
+        printf 2>&1 "** $(varNameValueStdout pbd_type)\n"
+        printf 2>&1 "** $(varNameValueStdout pbd_destPathBaseDefault)\n"
+        printf 2>&1 "** $(varNameValueStdout pbd_destPathRel)\n"
+        printf 2>&1 "** $(varNameValueStdout pbd_srcPath)\n"
+        printf 2>&1 "** $(varNameValueStdout pbd_owner)\n"
+        printf 2>&1 "** $(varNameValueStdout pbd_group)\n"
+        printf 2>&1 "** $(varNameValueStdout pbd_permissions_group)\n"
+        printf 2>&1 "** $(varNameValueStdout pbd_basePrepFunc)\n"
+        printf 2>&1 "** $(varNameValueStdout pbd_baseCleanFunc)\n"
+        printf 2>&1 "** $(varNameValueStdout pbd_description)\n"
     done
 }
 
@@ -309,14 +309,14 @@ _EOF_
     
     typeset name=""
     for name in "$@" ; do
-	typeset destFullPath=""
-	opDoRet  pbdPrep "${name}"
-	destFullPath=$( destFullPathGet )
-	if [ -z "${destFullPath}" ] ; then
-	    EH_problem ""
-	    continue
-	fi
-	opDo ls -ld "${destFullPath}"
+        typeset destFullPath=""
+        opDoRet  pbdPrep "${name}"
+        destFullPath=$( destFullPathGet )
+        if [ -z "${destFullPath}" ] ; then
+            EH_problem ""
+            continue
+        fi
+        opDo ls -ld "${destFullPath}"
     done
 }
 
@@ -330,22 +330,22 @@ _EOF_
     typeset destFullPath=""
 
     if [ -z "${pbd_destPathBaseDefault}" ] ; then 
-	EH_problem "Missing destPathBaseDefault"
-	lpReturn 101
+        EH_problem "Missing destPathBaseDefault"
+        lpReturn 101
     fi
 
     if [ -z "${baseDir}" ] ; then
-	if [ "${pbd_destPathBaseDefault}" == "/" ] ; then
-	    destFullPath=/"${pbd_destPathRel}"
-	else
-	    destFullPath="${pbd_destPathBaseDefault}"/"${pbd_destPathRel}"
-	fi
+        if [ "${pbd_destPathBaseDefault}" == "/" ] ; then
+            destFullPath=/"${pbd_destPathRel}"
+        else
+            destFullPath="${pbd_destPathBaseDefault}"/"${pbd_destPathRel}"
+        fi
     else
-	if [ "${baseDir}" == "/" ] ; then
-	    destFullPath=/"${pbd_destPathRel}"
-	else
-	    destFullPath="${baseDir}"/"${pbd_destPathRel}"
-	fi
+        if [ "${baseDir}" == "/" ] ; then
+            destFullPath=/"${pbd_destPathRel}"
+        else
+            destFullPath="${baseDir}"/"${pbd_destPathRel}"
+        fi
     fi
 
     echo "${destFullPath}"
@@ -371,51 +371,51 @@ _EOF_
 
     typeset name=""
     for name in "$@" ; do
-	typeset destFullPath=""
-	opDoRet  pbdPrep "${name}"
-	destFullPath=$( destFullPathGet )
-	if [ -z "${destFullPath}" ] ; then
-	    EH_problem ""
-	    continue
-	fi
+        typeset destFullPath=""
+        opDoRet  pbdPrep "${name}"
+        destFullPath=$( destFullPathGet )
+        if [ -z "${destFullPath}" ] ; then
+            EH_problem ""
+            continue
+        fi
 
-	case ${pbd_type} in
-	    "directory")
-		if [ -d "${destFullPath}" ] ; then
-		    # Check that ownership and permissions Match
-		    ANT_raw "${destFullPath} Exists -- mkdir Skipped"
-		else
-		    opDo mkdir -p "${destFullPath}"
-		    opDo chown ${pbd_owner} "${destFullPath}"
-		    opDo chgrp ${pbd_group} "${destFullPath}"
-		    opDo chmod ${pbd_permissions} "${destFullPath}"
-		fi
-		;;
-	    "symlink")
-		typeset destFullBase=$( FN_dirsPart ${destFullPath} )
-		srcFullPath=$( inBaseDirDo ${destFullBase} FN_absolutePathGet ${pbd_srcPath} )  # endOfLink
+        case ${pbd_type} in
+            "directory")
+                if [ -d "${destFullPath}" ] ; then
+                    # Check that ownership and permissions Match
+                    ANT_raw "${destFullPath} Exists -- mkdir Skipped"
+                else
+                    opDo mkdir -p "${destFullPath}"
+                    opDo chown ${pbd_owner} "${destFullPath}"
+                    opDo chgrp ${pbd_group} "${destFullPath}"
+                    opDo chmod ${pbd_permissions} "${destFullPath}"
+                fi
+                ;;
+            "symlink")
+                typeset destFullBase=$( FN_dirsPart ${destFullPath} )
+                srcFullPath=$( inBaseDirDo ${destFullBase} FN_absolutePathGet ${pbd_srcPath} )  # endOfLink
 
-		opDo FN_fileSymlinkUpdate ${srcFullPath} ${destFullPath}
-	    
-		#opDo chown ${pbd_owner} "${destFullPath}"
-		#opDo chgrp ${pbd_group} "${destFullPath}"
-		#opDo chmod ${pbd_permissions} "${destFullPath}"
-		;;
-	    "gitClone")
-		doNothing  # Everything Happens In basePrepFunc
-		
-		;;
-	    *)
-		
-	esac
+                opDo FN_fileSymlinkUpdate ${srcFullPath} ${destFullPath}
+            
+                #opDo chown ${pbd_owner} "${destFullPath}"
+                #opDo chgrp ${pbd_group} "${destFullPath}"
+                #opDo chmod ${pbd_permissions} "${destFullPath}"
+                ;;
+            "gitClone")
+                doNothing  # Everything Happens In basePrepFunc
+                
+                ;;
+            *)
+                
+        esac
 
-	if [ "${pbd_basePrepFunc}" == "" ] ; then
-	    doNothing
-	elif [ "${pbd_basePrepFunc}" == "noOp" ] ; then
-	    doNothing
-	else
-	    opDo eval "${pbd_basePrepFunc}"
-	fi
+        if [ "${pbd_basePrepFunc}" == "" ] ; then
+            doNothing
+        elif [ "${pbd_basePrepFunc}" == "noOp" ] ; then
+            doNothing
+        else
+            opDo eval "${pbd_basePrepFunc}"
+        fi
     done
 }
 
@@ -429,17 +429,17 @@ _EOF_
     
     typeset name=""
     for name in "$@" ; do
-	typeset nameEvaled=$( eval echo '$'{${name}[@]} )
+        typeset nameEvaled=$( eval echo '$'{${name}[@]} )
 
-	if [ -z "${nameEvaled}" ] ; then
-	    EH_problem "Empty ${name} -- Skipped"
-	    continue
-	fi
+        if [ -z "${nameEvaled}" ] ; then
+            EH_problem "Empty ${name} -- Skipped"
+            continue
+        fi
 
-	typeset thisItem
-	for thisItem in ${nameEvaled} ; do
-	    opDo vis_pbdShow "${thisItem}"
-	done
+        typeset thisItem
+        for thisItem in ${nameEvaled} ; do
+            opDo vis_pbdShow "${thisItem}"
+        done
     done
 }
 
@@ -454,17 +454,17 @@ _EOF_
     
     typeset name=""
     for name in "$@" ; do
-	typeset nameEvaled=$( eval echo '$'{${name}[@]} )
+        typeset nameEvaled=$( eval echo '$'{${name}[@]} )
 
-	if [ -z "${nameEvaled}" ] ; then
-	    EH_problem "Empty ${name} -- Skipped"
-	    continue
-	fi
+        if [ -z "${nameEvaled}" ] ; then
+            EH_problem "Empty ${name} -- Skipped"
+            continue
+        fi
 
-	typeset thisItem
-	for thisItem in ${nameEvaled} ; do
-	    opDo vis_pbdVerify "${thisItem}"
-	done
+        typeset thisItem
+        for thisItem in ${nameEvaled} ; do
+            opDo vis_pbdVerify "${thisItem}"
+        done
     done
 }
 
@@ -477,19 +477,19 @@ _EOF_
     
     typeset name=""
     for name in "$@" ; do
-	typeset nameEvaled=$( eval echo '$'{${name}[@]} )
+        typeset nameEvaled=$( eval echo '$'{${name}[@]} )
 
-	if [ -z "${nameEvaled}" ] ; then
-	    EH_problem "Empty ${name} -- Skipped"
-	    continue
-	else
-	    ANT_raw "name=${name} -- nameEvaled=${nameEvaled}"
-	fi
+        if [ -z "${nameEvaled}" ] ; then
+            EH_problem "Empty ${name} -- Skipped"
+            continue
+        else
+            ANT_raw "name=${name} -- nameEvaled=${nameEvaled}"
+        fi
 
-	typeset thisItem
-	for thisItem in ${nameEvaled} ; do
-	    opDo vis_pbdUpdate "${thisItem}"
-	done
+        typeset thisItem
+        for thisItem in ${nameEvaled} ; do
+            opDo vis_pbdUpdate "${thisItem}"
+        done
     done
 }
 
@@ -514,51 +514,51 @@ _EOF_
     EH_assert [[ $# -gt 0 ]]
 
     if [ -z "${baseDir}" ] ; then
-	EH_problem ""
-	lpReturn
+        EH_problem ""
+        lpReturn
     fi
 
     if [ -z "${endBaseDir}" ] ; then
-	EH_problem ""
-	lpReturn
+        EH_problem ""
+        lpReturn
     fi
 
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
     
     typeset name=""
     for name in "$@" ; do
-	typeset destFullPath=""
-	opDoRet  pbdPrep "${name}"
-	destFullPath=$( destFullPathGet )
-	if [ -z "${destFullPath}" ] ; then
-	    EH_problem ""
-	    continue
-	fi
+        typeset destFullPath=""
+        opDoRet  pbdPrep "${name}"
+        destFullPath=$( destFullPathGet )
+        if [ -z "${destFullPath}" ] ; then
+            EH_problem ""
+            continue
+        fi
 
-	if [ -z ${pbd_srcPath} ] ; then
-	    # Not A Symlink --- Actual Base To Creates
-	    EH_problem ""
-	else
-	    # Create A Symlink To Path
-	    typeset destFullBase=$( FN_dirsPart ${destFullPath} )
-	    #srcPathHead=$( FN_nonDirsPart ${pbd_srcPath} )
-	    #endOfLinkPath=$( inBaseDirDo ${endBaseDir} FN_absolutePathGet ${srcPathHead} )
+        if [ -z ${pbd_srcPath} ] ; then
+            # Not A Symlink --- Actual Base To Creates
+            EH_problem ""
+        else
+            # Create A Symlink To Path
+            typeset destFullBase=$( FN_dirsPart ${destFullPath} )
+            #srcPathHead=$( FN_nonDirsPart ${pbd_srcPath} )
+            #endOfLinkPath=$( inBaseDirDo ${endBaseDir} FN_absolutePathGet ${srcPathHead} )
 
-	    endOfLinkPath=$( inBaseDirDo ${endBaseDir} FN_absolutePathGet ${pbd_srcPath} )
+            endOfLinkPath=$( inBaseDirDo ${endBaseDir} FN_absolutePathGet ${pbd_srcPath} )
 
-	    opDo FN_fileSymlinkUpdate ${endOfLinkPath} ${destFullPath}
-	    #opDo chown ${pbd_owner} "${destFullPath}"
-	    #opDo chgrp ${pbd_group} "${destFullPath}"
-	    #opDo chmod ${pbd_permissions} "${destFullPath}"
-	fi
+            opDo FN_fileSymlinkUpdate ${endOfLinkPath} ${destFullPath}
+            #opDo chown ${pbd_owner} "${destFullPath}"
+            #opDo chgrp ${pbd_group} "${destFullPath}"
+            #opDo chmod ${pbd_permissions} "${destFullPath}"
+        fi
 
-	if [ "${pbd_basePrepFunc}" == "" ] ; then
-	    doNothing
-	elif [ "${pbd_basePrepFunc}" == "noOp" ] ; then
-	    doNothing
-	else
-	    opDo eval "${pbd_basePrepFunc}"
-	fi
+        if [ "${pbd_basePrepFunc}" == "" ] ; then
+            doNothing
+        elif [ "${pbd_basePrepFunc}" == "noOp" ] ; then
+            doNothing
+        else
+            opDo eval "${pbd_basePrepFunc}"
+        fi
     done
 }
 
@@ -579,60 +579,60 @@ _EOF_
     EH_assert [[ $# -gt 0 ]]
 
     if [ -z "${baseDir}" ] ; then
-	EH_problem "Missing baseDir"
-	lpReturn
+        EH_problem "Missing baseDir"
+        lpReturn
     fi
 
     if [ -z "${remBaseDir}" ] ; then
-	EH_problem "Missing remBaseDir"
-	lpReturn
+        EH_problem "Missing remBaseDir"
+        lpReturn
     fi
 
     if [ -z "${remAddr}" ] ; then
-	EH_problem "Missing remAddr"
-	lpReturn
+        EH_problem "Missing remAddr"
+        lpReturn
     fi
 
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
     
     typeset name=""
     for name in "$@" ; do
-	typeset localFullPath=""
-	opDoRet  pbdPrep "${name}"
-	localFullPath=${pbd_srcPath}
-	if [ -z "${localFullPath}" ] ; then
-	    EH_problem ""
-	    continue
-	fi
+        typeset localFullPath=""
+        opDoRet  pbdPrep "${name}"
+        localFullPath=${pbd_srcPath}
+        if [ -z "${localFullPath}" ] ; then
+            EH_problem ""
+            continue
+        fi
 
-	if [ ! -d "${localFullPath}" ] ; then
-	    opDo mkdir -p "${localFullPath}"
-	    opDo chown ${pbd_owner} "${localFullPath}"
-	    opDo chgrp ${pbd_group} "${localFullPath}"
-	    opDo chmod ${pbd_permissions} "${localFullPath}"
-	fi
-	typeset remPathHead=$( FN_nonDirsPart ${localFullPath} )
-	typeset remPathBase=$( FN_dirsPart ${localFullPath} )
-	typeset remPathBeforeHead=$( FN_nonDirsPart ${remPathBase} )
-	
-	#remFullPath=$( inBaseDirDo ${remBaseDir} FN_absolutePathGet ${destPathHead} )
-	if [ "${remBaseDir}" == "default" ] ; then
-	    remFullPath="/dd/this/${remPathBeforeHead}/${remPathHead}"
-	else
-	    remFullPath=${remBaseDir}/${destPathHead}
-	fi
+        if [ ! -d "${localFullPath}" ] ; then
+            opDo mkdir -p "${localFullPath}"
+            opDo chown ${pbd_owner} "${localFullPath}"
+            opDo chgrp ${pbd_group} "${localFullPath}"
+            opDo chmod ${pbd_permissions} "${localFullPath}"
+        fi
+        typeset remPathHead=$( FN_nonDirsPart ${localFullPath} )
+        typeset remPathBase=$( FN_dirsPart ${localFullPath} )
+        typeset remPathBeforeHead=$( FN_nonDirsPart ${remPathBase} )
+        
+        #remFullPath=$( inBaseDirDo ${remBaseDir} FN_absolutePathGet ${destPathHead} )
+        if [ "${remBaseDir}" == "default" ] ; then
+            remFullPath="/dd/this/${remPathBeforeHead}/${remPathHead}"
+        else
+            remFullPath=${remBaseDir}/${destPathHead}
+        fi
 
-	#opDo echo ${remAddr}:${remFullPath}  ${destFullPath}  nfs ro,hard,intr 0 0
-	#mountOptions="-o soft,bg"
-	opDo mount -t nfs ${remAddr}:${remFullPath}  ${localFullPath} 
+        #opDo echo ${remAddr}:${remFullPath}  ${destFullPath}  nfs ro,hard,intr 0 0
+        #mountOptions="-o soft,bg"
+        opDo mount -t nfs ${remAddr}:${remFullPath}  ${localFullPath} 
 
-	if [ "${pbd_basePrepFunc}" == "" ] ; then
-	    doNothing
-	elif [ "${pbd_basePrepFunc}" == "noOp" ] ; then
-	    doNothing
-	else
-	    opDo eval "${pbd_basePrepFunc}"
-	fi
+        if [ "${pbd_basePrepFunc}" == "" ] ; then
+            doNothing
+        elif [ "${pbd_basePrepFunc}" == "noOp" ] ; then
+            doNothing
+        else
+            opDo eval "${pbd_basePrepFunc}"
+        fi
     done
 
     lpReturn
@@ -647,60 +647,60 @@ _EOF_
     EH_assert [[ $# -gt 0 ]]
 
     if [ -z "${baseDir}" ] ; then
-	EH_problem "Missing baseDir"
-	lpReturn
+        EH_problem "Missing baseDir"
+        lpReturn
     fi
 
     if [ -z "${remBaseDir}" ] ; then
-	EH_problem "Missing remBaseDir"
-	lpReturn
+        EH_problem "Missing remBaseDir"
+        lpReturn
     fi
 
     if [ -z "${remAddr}" ] ; then
-	EH_problem "Missing remAddr"
-	lpReturn
+        EH_problem "Missing remAddr"
+        lpReturn
     fi
 
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
     
     typeset name=""
     for name in "$@" ; do
-	typeset destFullPath=""
-	opDoRet  pbdPrep "${name}"
-	destFullPath=$( destFullPathGet )
-	if [ -z "${destFullPath}" ] ; then
-	    EH_problem ""
-	    continue
-	fi
+        typeset destFullPath=""
+        opDoRet  pbdPrep "${name}"
+        destFullPath=$( destFullPathGet )
+        if [ -z "${destFullPath}" ] ; then
+            EH_problem ""
+            continue
+        fi
 
-	if [ ! -d "${destFullPath}" ] ; then
-	    opDo mkdir -p "${destFullPath}"
-	    opDo chown ${pbd_owner} "${destFullPath}"
-	    opDo chgrp ${pbd_group} "${destFullPath}"
-	    opDo chmod ${pbd_permissions} "${destFullPath}"
-	fi
-	typeset destPathHead=$( FN_nonDirsPart ${destFullPath} )
-	typeset destPathBase=$( FN_dirsPart ${destFullPath} )
-	typeset destPathBeforeHead=$( FN_nonDirsPart ${destPathBase} )
-	
-	#remFullPath=$( inBaseDirDo ${remBaseDir} FN_absolutePathGet ${destPathHead} )
-	if [ "${remBaseDir}" == "default" ] ; then
-	    remFullPath="/dd/this/${destPathBeforeHead}/${destPathHead}"
-	else
-	    remFullPath=${remBaseDir}/${destPathHead}
-	fi
+        if [ ! -d "${destFullPath}" ] ; then
+            opDo mkdir -p "${destFullPath}"
+            opDo chown ${pbd_owner} "${destFullPath}"
+            opDo chgrp ${pbd_group} "${destFullPath}"
+            opDo chmod ${pbd_permissions} "${destFullPath}"
+        fi
+        typeset destPathHead=$( FN_nonDirsPart ${destFullPath} )
+        typeset destPathBase=$( FN_dirsPart ${destFullPath} )
+        typeset destPathBeforeHead=$( FN_nonDirsPart ${destPathBase} )
+        
+        #remFullPath=$( inBaseDirDo ${remBaseDir} FN_absolutePathGet ${destPathHead} )
+        if [ "${remBaseDir}" == "default" ] ; then
+            remFullPath="/dd/this/${destPathBeforeHead}/${destPathHead}"
+        else
+            remFullPath=${remBaseDir}/${destPathHead}
+        fi
 
-	#opDo echo ${remAddr}:${remFullPath}  ${destFullPath}  nfs ro,hard,intr 0 0
-	#mountOptions="-o soft,bg"
-	opDo mount -t nfs ${remAddr}:${remFullPath}  ${destFullPath} 
+        #opDo echo ${remAddr}:${remFullPath}  ${destFullPath}  nfs ro,hard,intr 0 0
+        #mountOptions="-o soft,bg"
+        opDo mount -t nfs ${remAddr}:${remFullPath}  ${destFullPath} 
 
-	if [ "${pbd_basePrepFunc}" == "" ] ; then
-	    doNothing
-	elif [ "${pbd_basePrepFunc}" == "noOp" ] ; then
-	    doNothing
-	else
-	    opDo eval "${pbd_basePrepFunc}"
-	fi
+        if [ "${pbd_basePrepFunc}" == "" ] ; then
+            doNothing
+        elif [ "${pbd_basePrepFunc}" == "noOp" ] ; then
+            doNothing
+        else
+            opDo eval "${pbd_basePrepFunc}"
+        fi
     done
 
     lpReturn
@@ -723,54 +723,54 @@ _EOF_
     EH_assert [[ $# -gt 0 ]]
 
     if [ -z "${baseDir}" ] ; then
-	EH_problem "Missing baseDir"
-	lpReturn
+        EH_problem "Missing baseDir"
+        lpReturn
     fi
 
     if [ -z "${remBaseDir}" ] ; then
-	EH_problem "Missing remBaseDir"
-	lpReturn
+        EH_problem "Missing remBaseDir"
+        lpReturn
     fi
 
     if [ -z "${remAddr}" ] ; then
-	EH_problem "Missing remAddr"
-	lpReturn
+        EH_problem "Missing remAddr"
+        lpReturn
     fi
 
     #if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
     
     typeset name=""
     for name in "$@" ; do
-	typeset destFullPath=""
-	opDoRet  pbdPrep "${name}"
-	destFullPath=$( destFullPathGet )
-	if [ -z "${destFullPath}" ] ; then
-	    EH_problem "Missing destFullPath"
-	    continue
-	fi
+        typeset destFullPath=""
+        opDoRet  pbdPrep "${name}"
+        destFullPath=$( destFullPathGet )
+        if [ -z "${destFullPath}" ] ; then
+            EH_problem "Missing destFullPath"
+            continue
+        fi
 
-	if [ ! -d "${destFullPath}" ] ; then
-	    opDo mkdir -p "${destFullPath}"
-	    opDo chown ${pbd_owner} "${destFullPath}"
-	    opDo chgrp ${pbd_group} "${destFullPath}"
-	    opDo chmod ${pbd_permissions} "${destFullPath}"
-	fi
-	typeset destPathHead=$( FN_nonDirsPart ${destFullPath} )
-	#remFullPath=$( inBaseDirDo ${remBaseDir} FN_absolutePathGet ${destPathHead} )
-	remFullPath=${remBaseDir}/${destPathHead}
+        if [ ! -d "${destFullPath}" ] ; then
+            opDo mkdir -p "${destFullPath}"
+            opDo chown ${pbd_owner} "${destFullPath}"
+            opDo chgrp ${pbd_group} "${destFullPath}"
+            opDo chmod ${pbd_permissions} "${destFullPath}"
+        fi
+        typeset destPathHead=$( FN_nonDirsPart ${destFullPath} )
+        #remFullPath=$( inBaseDirDo ${remBaseDir} FN_absolutePathGet ${destPathHead} )
+        remFullPath=${remBaseDir}/${destPathHead}
 
-	#opDo echo ${remAddr}:${remFullPath}  ${destFullPath}  nfs ro,hard,intr 0 0
-	#mountOptions="-o soft,bg"
-	opDo printf "${remAddr}:${remFullPath}\t${destFullPath}\tnfs\tdefaults,rsize=8192,wsize=8192,intr,hard,bg\t0\t0\n"
-	#opDo mount -t nfs ${remAddr}:${remFullPath}  ${destFullPath} 
+        #opDo echo ${remAddr}:${remFullPath}  ${destFullPath}  nfs ro,hard,intr 0 0
+        #mountOptions="-o soft,bg"
+        opDo printf "${remAddr}:${remFullPath}\t${destFullPath}\tnfs\tdefaults,rsize=8192,wsize=8192,intr,hard,bg\t0\t0\n"
+        #opDo mount -t nfs ${remAddr}:${remFullPath}  ${destFullPath} 
 
-	if [ "${pbd_basePrepFunc}" == "" ] ; then
-	    doNothing
-	elif [ "${pbd_basePrepFunc}" == "noOp" ] ; then
-	    doNothing
-	else
-	    opDo eval "${pbd_basePrepFunc}"
-	fi
+        if [ "${pbd_basePrepFunc}" == "" ] ; then
+            doNothing
+        elif [ "${pbd_basePrepFunc}" == "noOp" ] ; then
+            doNothing
+        else
+            opDo eval "${pbd_basePrepFunc}"
+        fi
     done
 
     lpReturn
@@ -792,37 +792,37 @@ _EOF_
     EH_assert [[ $# -gt 0 ]]
 
     if [ -z "${baseDir}" ] ; then
-	EH_problem ""
-	lpReturn
+        EH_problem ""
+        lpReturn
     fi
 
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
     
     typeset name=""
     for name in "$@" ; do
-	typeset destFullPath=""
-	opDoRet  pbdPrep "${name}"
-	#destFullPath=$( destFullPathGet )
-	destFullPath=${pbd_srcPath}
-	if [ -z "Skipped $(ls -ld ${destFullPath})" ] ; then
-	    EH_problem ""
-	    continue
-	fi
+        typeset destFullPath=""
+        opDoRet  pbdPrep "${name}"
+        #destFullPath=$( destFullPathGet )
+        destFullPath=${pbd_srcPath}
+        if [ -z "Skipped $(ls -ld ${destFullPath})" ] ; then
+            EH_problem ""
+            continue
+        fi
 
-	if [ ! -d "${destFullPath}" ] ; then
-	    EH_problem "Skipped $(ls -ld ${destFullPath})"
-	    continue
-	fi
+        if [ ! -d "${destFullPath}" ] ; then
+            EH_problem "Skipped $(ls -ld ${destFullPath})"
+            continue
+        fi
 
-	opDo umount ${destFullPath} 
+        opDo umount ${destFullPath} 
 
-	if [ "${pbd_basePrepFunc}" == "" ] ; then
-	    doNothing
-	elif [ "${pbd_basePrepFunc}" == "noOp" ] ; then
-	    doNothing
-	else
-	    opDo eval "${pbd_basePrepFunc}"
-	fi
+        if [ "${pbd_basePrepFunc}" == "" ] ; then
+            doNothing
+        elif [ "${pbd_basePrepFunc}" == "noOp" ] ; then
+            doNothing
+        else
+            opDo eval "${pbd_basePrepFunc}"
+        fi
     done
 
     lpReturn
@@ -837,36 +837,36 @@ _EOF_
     EH_assert [[ $# -gt 0 ]]
 
     if [ -z "${baseDir}" ] ; then
-	EH_problem ""
-	lpReturn
+        EH_problem ""
+        lpReturn
     fi
 
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
     
     typeset name=""
     for name in "$@" ; do
-	typeset destFullPath=""
-	opDoRet  pbdPrep "${name}"
-	destFullPath=$( destFullPathGet )
-	if [ -z "Skipped $(ls -ld ${destFullPath})" ] ; then
-	    EH_problem ""
-	    continue
-	fi
+        typeset destFullPath=""
+        opDoRet  pbdPrep "${name}"
+        destFullPath=$( destFullPathGet )
+        if [ -z "Skipped $(ls -ld ${destFullPath})" ] ; then
+            EH_problem ""
+            continue
+        fi
 
-	if [ ! -d "${destFullPath}" ] ; then
-	    EH_problem "Skipped $(ls -ld ${destFullPath})"
-	    continue
-	fi
+        if [ ! -d "${destFullPath}" ] ; then
+            EH_problem "Skipped $(ls -ld ${destFullPath})"
+            continue
+        fi
 
-	opDo umount ${destFullPath} 
+        opDo umount ${destFullPath} 
 
-	if [ "${pbd_basePrepFunc}" == "" ] ; then
-	    doNothing
-	elif [ "${pbd_basePrepFunc}" == "noOp" ] ; then
-	    doNothing
-	else
-	    opDo eval "${pbd_basePrepFunc}"
-	fi
+        if [ "${pbd_basePrepFunc}" == "" ] ; then
+            doNothing
+        elif [ "${pbd_basePrepFunc}" == "noOp" ] ; then
+            doNothing
+        else
+            opDo eval "${pbd_basePrepFunc}"
+        fi
     done
 
     lpReturn
@@ -900,47 +900,47 @@ _EOF_
     EH_assert [[ $# -gt 0 ]]
 
     if [ -z "${baseDir}" ] ; then
-	EH_problem ""
-	lpReturn
+        EH_problem ""
+        lpReturn
     fi
 
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
 
     typeset name=""
     for name in "$@" ; do
-	typeset destFullPath=""
-	opDoRet  pbdPrep "${name}"
-	destFullPath=$( destFullPathGet )
-	if [ -z "${destFullPath}" ] ; then
-	    EH_problem ""
-	    continue
-	fi
+        typeset destFullPath=""
+        opDoRet  pbdPrep "${name}"
+        destFullPath=$( destFullPathGet )
+        if [ -z "${destFullPath}" ] ; then
+            EH_problem ""
+            continue
+        fi
 
-	if [ -z ${pbd_srcPath} ] ; then
-	    # Not A Symlink --- Actual Base To Creates
-	    if [ ! -d "${destFullPath}" ] ; then
-		opDo mkdir -p "${destFullPath}"
-		opDo chown ${pbd_owner} "${destFullPath}"
-		opDo chgrp ${pbd_group} "${destFullPath}"
-		opDo chmod ${pbd_permissions} "${destFullPath}"
-	    fi
-	    #
-	    # opDo echo   ${destFullPath}    "192.168.0.0/255.255.255.0(ro,sync,no_subtree_check)"
-	    # Then edit /etc/exports to configure your shares.
-	    #
-	    opDo echo   ${destFullPath}    ${exportOptions}
-	else
-	    # Create A Symlink To Path
-	    EH_problem ""
-	fi
+        if [ -z ${pbd_srcPath} ] ; then
+            # Not A Symlink --- Actual Base To Creates
+            if [ ! -d "${destFullPath}" ] ; then
+                opDo mkdir -p "${destFullPath}"
+                opDo chown ${pbd_owner} "${destFullPath}"
+                opDo chgrp ${pbd_group} "${destFullPath}"
+                opDo chmod ${pbd_permissions} "${destFullPath}"
+            fi
+            #
+            # opDo echo   ${destFullPath}    "192.168.0.0/255.255.255.0(ro,sync,no_subtree_check)"
+            # Then edit /etc/exports to configure your shares.
+            #
+            opDo echo   ${destFullPath}    ${exportOptions}
+        else
+            # Create A Symlink To Path
+            EH_problem ""
+        fi
 
-	if [ "${pbd_basePrepFunc}" == "" ] ; then
-	    doNothing
-	elif [ "${pbd_basePrepFunc}" == "noOp" ] ; then
-	    doNothing
-	else
-	    opDo eval "${pbd_basePrepFunc}"
-	fi
+        if [ "${pbd_basePrepFunc}" == "" ] ; then
+            doNothing
+        elif [ "${pbd_basePrepFunc}" == "noOp" ] ; then
+            doNothing
+        else
+            opDo eval "${pbd_basePrepFunc}"
+        fi
     done
 
 
@@ -963,51 +963,51 @@ _EOF_
     typeset destFullPath=""
     destFullPath=$( destFullPathGet )
     if [ -z "${destFullPath}" ] ; then
-	EH_problem ""
-	lpReturn
+        EH_problem ""
+        lpReturn
     fi
 
     case "${gitAccessMode}" in
-	"anonGitDaemon"|"anonHttp"|"anonHttps")
-	    EH_assert [[ $# -eq 0 ]]
-	    opDo sudo -u lsipusr /opt/public/osmt/bin/bx-gitAccess.sh -h -v -n showRun -p localDest="${destFullPath}" -p gitServer=${gitServer} -p repoBase=${pbd_srcPath} -f -i repoClone "${gitAccessMode}"
-	    ;;
+        "anonGitDaemon"|"anonHttp"|"anonHttps")
+            EH_assert [[ $# -eq 0 ]]
+            opDo sudo -u lsipusr /opt/public/osmt/bin/bx-gitAccess.sh -h -v -n showRun -p localDest="${destFullPath}" -p gitServer=${gitServer} -p repoBase=${pbd_srcPath} -f -i repoClone "${gitAccessMode}"
+            ;;
 
-	"authHttp"|"authHttps")
-	    EH_assert [[ $# -le 2 ]]
-	    typeset gitUser=$1
-	    typeset gitPasswd=""
-	    if [ "${gitUser}" == "uaso" ] ; then
-		gitUser=$( fileParamManage.py -i fileParamReadPath ~/gitAuth/${gitServer}/userName )
-		if [ -z "${gitUser}" ] ; then
-		    EH_problem ""
-		    lpReturn
-		fi
-		gitPasswd=$( fileParamManage.py -i fileParamReadPath ~/gitAuth/${gitServer}/userPasswd )
-	    else
-		gitPasswd=$2
-	    fi
-	    opDo sudo -u lsipusr /opt/public/osmt/bin/bx-gitAccess.sh -h -v -n showRun -p localDest="${destFullPath}" -p gitServer=${gitServer} -p repoBase=${pbd_srcPath} -f -i repoClone "${gitAccessMode}" ${gitUser} ${gitPasswd}	    
-	    ;;
+        "authHttp"|"authHttps")
+            EH_assert [[ $# -le 2 ]]
+            typeset gitUser=$1
+            typeset gitPasswd=""
+            if [ "${gitUser}" == "uaso" ] ; then
+                gitUser=$( fileParamManage.py -i fileParamReadPath ~/gitAuth/${gitServer}/userName )
+                if [ -z "${gitUser}" ] ; then
+                    EH_problem ""
+                    lpReturn
+                fi
+                gitPasswd=$( fileParamManage.py -i fileParamReadPath ~/gitAuth/${gitServer}/userPasswd )
+            else
+                gitPasswd=$2
+            fi
+            opDo sudo -u lsipusr /opt/public/osmt/bin/bx-gitAccess.sh -h -v -n showRun -p localDest="${destFullPath}" -p gitServer=${gitServer} -p repoBase=${pbd_srcPath} -f -i repoClone "${gitAccessMode}" ${gitUser} ${gitPasswd}       
+            ;;
 
-	"authSsh")
-	    EH_assert [[ $# -eq 1 ]]
-	    typeset gitUser=$1
-	    if [ "${gitUser}" == "uaso" ] ; then
-		gitUser=$( bueAcctCurrent.sh -i currentAssociatedShow 2> /dev/null )
-		if [ -z "${gitUser}" ] ; then
-		    EH_problem ""
-		    lpReturn
-		else
-		    gitUser="${gitUser}.${gitServer}"
-		fi
-	    fi
-	    opDo sudo -u lsipusr /opt/public/osmt/bin/bx-gitAccess.sh -h -v -n showRun -p localDest="${destFullPath}" -p gitServer=${gitServer} -p repoBase=${pbd_srcPath} -f -i repoClone "${gitAccessMode}" ${gitUser}
-	    ;;
+        "authSsh")
+            EH_assert [[ $# -eq 1 ]]
+            typeset gitUser=$1
+            if [ "${gitUser}" == "uaso" ] ; then
+                gitUser=$( bueAcctCurrent.sh -i currentAssociatedShow 2> /dev/null )
+                if [ -z "${gitUser}" ] ; then
+                    EH_problem ""
+                    lpReturn
+                else
+                    gitUser="${gitUser}.${gitServer}"
+                fi
+            fi
+            opDo sudo -u lsipusr /opt/public/osmt/bin/bx-gitAccess.sh -h -v -n showRun -p localDest="${destFullPath}" -p gitServer=${gitServer} -p repoBase=${pbd_srcPath} -f -i repoClone "${gitAccessMode}" ${gitUser}
+            ;;
 
-	*)
-	    EH_problem "gitAccessMode=${gitAccessMode}"
-	    lpReturn
+        *)
+            EH_problem "gitAccessMode=${gitAccessMode}"
+            lpReturn
     esac
 
     lpReturn

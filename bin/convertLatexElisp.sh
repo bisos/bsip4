@@ -233,28 +233,28 @@ cat << _EOF_
   (interactive)
   (if (save-excursion (re-search-forward "^\\\\\\\\input" nil t))
       (while (re-search-forward "^\\\\\\\\input" nil t)
-	(save-excursion
-	  (skip-chars-forward " 	{")
-	  (let ((file-name
-		 (buffer-substring 
-		  (point)
-		  (progn
-		    (skip-chars-forward "^ 	\n}")
-		    (point)))))
-	    (setq file-name
-		  (expand-file-name
-		   (if (file-readable-p (expand-file-name file-name))
-		       file-name
-		     (concat file-name ".tex"))))
-	    (beginning-of-line 1)
-	    (if (file-readable-p file-name)
-		(progn
-		  (delete-region (point) (progn (forward-line 1) (point)))
-		  (message "Inserting file %s..." file-name) ;;(sit-for 1)
-		  (insert-file file-name)
-		  (message "Inserting file %s...done" file-name))
-	      (error "I can't find the file %s" file-name))
-	    )))))
+        (save-excursion
+          (skip-chars-forward "         {")
+          (let ((file-name
+                 (buffer-substring 
+                  (point)
+                  (progn
+                    (skip-chars-forward "^      \n}")
+                    (point)))))
+            (setq file-name
+                  (expand-file-name
+                   (if (file-readable-p (expand-file-name file-name))
+                       file-name
+                     (concat file-name ".tex"))))
+            (beginning-of-line 1)
+            (if (file-readable-p file-name)
+                (progn
+                  (delete-region (point) (progn (forward-line 1) (point)))
+                  (message "Inserting file %s..." file-name) ;;(sit-for 1)
+                  (insert-file file-name)
+                  (message "Inserting file %s...done" file-name))
+              (error "I can't find the file %s" file-name))
+            )))))
 
 _EOF_
 }

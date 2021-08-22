@@ -73,7 +73,7 @@ function bystarNextControlledAcctOld {
 function bystarIsControlledAcct {
   EH_assert [[ $# -eq  1 ]]
 
-  bystarUid=$1	
+  bystarUid=$1  
   bystarBagpLoad
 
   if [ "${cp_MasterAcct}_" == "_" ] ; then
@@ -106,12 +106,12 @@ function bystarBacpBaseDirVerifyAndFix {
 
     bystarUidHome=$( FN_absolutePathGet ~${bystarUid} )
     if [ ! -d ${bystarUidHome} ] ; then
-	EH_problem "Missing ${bystarUidHome}"
-	return 101
+        EH_problem "Missing ${bystarUidHome}"
+        return 101
     fi
 
     if [ ! -d ${bystarUidHome}/BACP ] ; then
-	FN_dirCreatePathIfNotThere ${bystarUidHome}/BACP
+        FN_dirCreatePathIfNotThere ${bystarUidHome}/BACP
     fi
 }
 
@@ -124,13 +124,13 @@ function bystarBagpLoad {
     bystarUidHome=$( FN_absolutePathGet ~${bystarUid} )
 
     if [ ! -d ${bystarUidHome} ] ; then
-	EH_problem "Missing ${bystarUidHome}"
-	return 101
+        EH_problem "Missing ${bystarUidHome}"
+        return 101
     fi
 
     if [ ! -d ${bystarUidHome}/BAGP ] ; then
-	EH_problem "Missing ${bystarUidHome}/BAGP"
-	return 101
+        EH_problem "Missing ${bystarUidHome}/BAGP"
+        return 101
     fi
 
     opDo fileParamsLoadVarsFromBaseDir  ${bystarUidHome}/BAGP 2> /dev/null
@@ -154,7 +154,7 @@ function masterAcctBagpLoad {
       return 100
   fi
 
-  fileParamsLoadVarsFromBaseDir	${paramsFileBaseDir}	
+  fileParamsLoadVarsFromBaseDir ${paramsFileBaseDir}    
   
   funcName=cpf_$( FN_nonDirsPart ${paramsFileBaseDir} )
 
@@ -211,90 +211,90 @@ function bystarAcctPrefixAnalyze {
 
     case ${bystar_acct_acctTypePrefix} in 
       "ea")
-	    bystarUidGidTag="smb"
-	    ;;
+            bystarUidGidTag="smb"
+            ;;
       "ma")
-	    bystarUidGidTag="memory"
-	    ;;
+            bystarUidGidTag="memory"
+            ;;
       "mu")
-	    bystarUidGidTag="memoryUser"
-	    ;;
+            bystarUidGidTag="memoryUser"
+            ;;
       "sa")
-	    bystarUidGidTag="subscriber"
-	    ;;
+            bystarUidGidTag="subscriber"
+            ;;
       "ua")
-	    bystarUidGidTag="user"
-	    ;;
+            bystarUidGidTag="user"
+            ;;
       "aa")
-	    bystarUidGidTag="alias"
-	    ;;
+            bystarUidGidTag="alias"
+            ;;
       "au")
-	    bystarUidGidTag="aliasUsr"
-	    ;;
+            bystarUidGidTag="aliasUsr"
+            ;;
       "ca")
-	    bystarUidGidTag="reserved"
-	    ;;
-	*)
-	    EH_problem "Unknown ${bystar_acct_acctTypePrefix}"
-	    return 101
+            bystarUidGidTag="reserved"
+            ;;
+        *)
+            EH_problem "Unknown ${bystar_acct_acctTypePrefix}"
+            return 101
     esac
     opAcctUidGidAnalyze ${bystarUidGidTag}
 
     case ${bystar_acct_acctTypePrefix} in 
       "ea")
-	    bystarServiceType="BYSMB"
-	    bystarServiceSupportType="COMMITTED"
-	    bystarDomainsList=("bysmb.net" "bysmb.com" "libresite.org")
-	    thisHomeDir="${iv_uidPolicy_homeDir}/${cp_Domain1}/${cp_Domain2}"
-	    ;;
+            bystarServiceType="BYSMB"
+            bystarServiceSupportType="COMMITTED"
+            bystarDomainsList=("bysmb.net" "bysmb.com" "libresite.org")
+            thisHomeDir="${iv_uidPolicy_homeDir}/${cp_Domain1}/${cp_Domain2}"
+            ;;
       "ma")
-	    bystarServiceType="BYMEMORY"
-	    bystarServiceSupportType="COMMITTED"
-	    bystarDomainsList=("bymemory.net")
-	    thisHomeDir="${iv_uidPolicy_homeDir}/${cp_LastName}/1/${cp_FirstName}"
-	    ;;
+            bystarServiceType="BYMEMORY"
+            bystarServiceSupportType="COMMITTED"
+            bystarDomainsList=("bymemory.net")
+            thisHomeDir="${iv_uidPolicy_homeDir}/${cp_LastName}/1/${cp_FirstName}"
+            ;;
       "mu")
-	    bystarServiceType="BYMEMORY"
-	    bystarServiceSupportType="TRIAL"
-	    bystarDomainsList=("bymemory.com")
-	    thisHomeDir="${iv_uidPolicy_homeDir}/${cp_LastName}/1/${cp_FirstName}"
-	    ;;
+            bystarServiceType="BYMEMORY"
+            bystarServiceSupportType="TRIAL"
+            bystarDomainsList=("bymemory.com")
+            thisHomeDir="${iv_uidPolicy_homeDir}/${cp_LastName}/1/${cp_FirstName}"
+            ;;
       "sa")
-	    bystarUidGidTag="subscriber"
-	    bystarServiceType="BYNAME"
-	    bystarServiceSupportType="COMMITTED"
-	    bystarDomainsList=("byname.net")
-	    thisHomeDir="${iv_uidPolicy_homeDir}/${cp_LastName}/${cp_nameSelector}/${cp_FirstName}"
-	    ;;
+            bystarUidGidTag="subscriber"
+            bystarServiceType="BYNAME"
+            bystarServiceSupportType="COMMITTED"
+            bystarDomainsList=("byname.net")
+            thisHomeDir="${iv_uidPolicy_homeDir}/${cp_LastName}/${cp_nameSelector}/${cp_FirstName}"
+            ;;
       "ua")
-	    bystarUidGidTag="user"
-	    bystarServiceType="BYNAME"
-	    bystarServiceSupportType="TRIAL"
-	    bystarDomainsList=("byname.com")
-	    thisHomeDir="${iv_uidPolicy_homeDir}/${cp_LastName}/${cp_nameSelector}/${cp_FirstName}"
-	    ;;
+            bystarUidGidTag="user"
+            bystarServiceType="BYNAME"
+            bystarServiceSupportType="TRIAL"
+            bystarDomainsList=("byname.com")
+            thisHomeDir="${iv_uidPolicy_homeDir}/${cp_LastName}/${cp_nameSelector}/${cp_FirstName}"
+            ;;
       "aa")
-	    bystarServiceType="BYALIAS"
-	    bystarServiceSupportType="COMMITTED"
-	    bystarDomainsList=("byname.net")
-	    thisHomeDir="${iv_uidPolicy_homeDir}/${aliasName}"
-	    ;;
+            bystarServiceType="BYALIAS"
+            bystarServiceSupportType="COMMITTED"
+            bystarDomainsList=("byname.net")
+            thisHomeDir="${iv_uidPolicy_homeDir}/${aliasName}"
+            ;;
       "au")
-	    bystarUidGidTag="aliasusr"
-	    bystarServiceType="BYALIAS"
-	    bystarServiceSupportType="TRIAL"
-	    bystarDomainsList=("byalias.com")
-	    thisHomeDir="${iv_uidPolicy_homeDir}/${aliasName}"
-	    ;;
+            bystarUidGidTag="aliasusr"
+            bystarServiceType="BYALIAS"
+            bystarServiceSupportType="TRIAL"
+            bystarDomainsList=("byalias.com")
+            thisHomeDir="${iv_uidPolicy_homeDir}/${aliasName}"
+            ;;
       "ca")
-	    bystarServiceType="BCA"
-	    bystarServiceSupportType="COMMITTED"
-	    bystarDomainsList=("BCA")
-	    thisHomeDir="${iv_uidPolicy_homeDir}/${cp_acctNu}"
-	    ;;
-	*)
-	    EH_problem "Unknown ${bystar_acct_acctTypePrefix}"
-	    return 101
+            bystarServiceType="BCA"
+            bystarServiceSupportType="COMMITTED"
+            bystarDomainsList=("BCA")
+            thisHomeDir="${iv_uidPolicy_homeDir}/${cp_acctNu}"
+            ;;
+        *)
+            EH_problem "Unknown ${bystar_acct_acctTypePrefix}"
+            return 101
     esac
   return 0
 }
@@ -318,40 +318,40 @@ function bystarAcctAnalyze {
     bystarAcctPrefixAnalyze ${bystar_acct_acctTypePrefix}
     case ${bystar_acct_acctTypePrefix} in 
       "ea")
-	    bystarServiceType="BYSMB"
-	    bystarServiceSupportType="COMMITTED"
-	    ;;
+            bystarServiceType="BYSMB"
+            bystarServiceSupportType="COMMITTED"
+            ;;
       "ma")
-	    bystarServiceType="BYMEMORY"
-	    bystarServiceSupportType="COMMITTED"
-	    ;;
+            bystarServiceType="BYMEMORY"
+            bystarServiceSupportType="COMMITTED"
+            ;;
       "mu")
-	    bystarServiceType="BYMEMORY"
-	    bystarServiceSupportType="TRIAL"
-	    ;;
+            bystarServiceType="BYMEMORY"
+            bystarServiceSupportType="TRIAL"
+            ;;
       "sa")
-	    bystarServiceType="BYNAME"
-	    bystarServiceSupportType="COMMITTED"
-	    ;;
+            bystarServiceType="BYNAME"
+            bystarServiceSupportType="COMMITTED"
+            ;;
       "ua")
-	    bystarServiceType="BYNAME"
-	    bystarServiceSupportType="TRIAL"
-	    ;;
+            bystarServiceType="BYNAME"
+            bystarServiceSupportType="TRIAL"
+            ;;
       "aa")
-	    bystarServiceType="BYALIAS"
-	    bystarServiceSupportType="COMMITTED"
-	    ;;
+            bystarServiceType="BYALIAS"
+            bystarServiceSupportType="COMMITTED"
+            ;;
       "au")
-	    bystarServiceType="BYALIAS"
-	    bystarServiceSupportType="TRIAL"
-	    ;;
+            bystarServiceType="BYALIAS"
+            bystarServiceSupportType="TRIAL"
+            ;;
       "ca")
-	    bystarServiceType="BCA"
-	    bystarServiceSupportType="COMMITTED"
-	    ;;
-	*)
-	    EH_problem "Unknown ${bystar_acct_acctTypePrefix}"
-	    return 101
+            bystarServiceType="BCA"
+            bystarServiceSupportType="COMMITTED"
+            ;;
+        *)
+            EH_problem "Unknown ${bystar_acct_acctTypePrefix}"
+            return 101
     esac
 
    bystarUidHome=$( FN_absolutePathGet ~${bystarUid} )
@@ -461,8 +461,8 @@ function developerVerify {
       readEditPathOffSet=""
       ;;
     *)
-	  EH_problem "unknown cvsMode ${cvsMode}"
-	  ;;
+          EH_problem "unknown cvsMode ${cvsMode}"
+          ;;
   esac
 
   mirrorBystarAccountsBase="/mirror/bystar/accounts"
@@ -482,94 +482,94 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if [ -z "${sr}" ] ; then
-	EH_problem "Missing Service Realiztion Specification"
-	lpReturn 101
+        EH_problem "Missing Service Realiztion Specification"
+        lpReturn 101
     fi
 
     srBaseDir="${bystarUidHome}/${sr}"
 
     if [ ! -d ${srBaseDir} ] ; then 
-	EH_problem "Missing srBaseDir=${srBaseDir}"
-	lpReturn 101
+        EH_problem "Missing srBaseDir=${srBaseDir}"
+        lpReturn 101
     fi
 
     srAgent="${bystarUidHome}/${sr}/bsrAgent.sh"
 
     if [ ! -f ${srAgent} ] ; then 
-	srAgent="${bystarUidHome}/${sr}/srAgent.sh"
-	if [ ! -f ${srAgent} ] ; then 
-	    EH_problem "Missing srAgent=${srAgent} and also missing bsrAgent.sh"
-	    lpReturn 101
-	fi
+        srAgent="${bystarUidHome}/${sr}/srAgent.sh"
+        if [ ! -f ${srAgent} ] ; then 
+            EH_problem "Missing srAgent=${srAgent} and also missing bsrAgent.sh"
+            lpReturn 101
+        fi
     fi
 
     srDomName=$( inBaseDirDo ${srBaseDir} ${srAgent} -i srDomNameGet 2> /dev/null )
     if [ -z ${srDomName} ] ; then 
-	EH_problem "Blank srDomName"
+        EH_problem "Blank srDomName"
     fi 
 
     srFqdn=$( inBaseDirDo ${srBaseDir} ${srAgent} -i srFqdnGet 2> /dev/null )
     if [ -z ${srFqdn} ] ; then 
-	EH_problem "Blank srFqdn"
+        EH_problem "Blank srFqdn"
     fi 
 
     svcName=$( inBaseDirDo ${srBaseDir} ${srAgent} -i svcNameGet 2> /dev/null )
     if [ -z ${svcName} ] ; then 
-	EH_problem "Blank svcName"
+        EH_problem "Blank svcName"
     fi 
 
     svcCapabilityName=$( inBaseDirDo ${srBaseDir} ${srAgent} -i svcCapabilityNameGet 2> /dev/null )
     if [ -z ${svcCapabilityName} ] ; then 
-	EH_problem "Blank svcCapabilityName"
+        EH_problem "Blank svcCapabilityName"
     fi 
 
     svcCapabilityAgent=$( inBaseDirDo ${srBaseDir} ${srAgent} -i svcCapabilityAgentGet 2> /dev/null )
     if [ -z ${svcCapabilityAgent} ] ; then 
-	EH_problem "Blank svcCapabilityAgent"
+        EH_problem "Blank svcCapabilityAgent"
     fi 
 
     svcCapabilityFlavor=$( inBaseDirDo ${srBaseDir} ${srAgent} -i svcCapabilityFlavorGet 2> /dev/null )
     if [ -z ${svcCapabilityFlavor} ] ; then 
-	EH_problem "Blank svcCapabilityFlavor"
+        EH_problem "Blank svcCapabilityFlavor"
     fi 
     
     srSvcBaseLogs=$( inBaseDirDo ${srBaseDir} ${srAgent} -i srSvcBaseLogs 2> /dev/null )
     if [ -z ${srSvcBaseLogs} ] ; then 
-	EH_problem "Blank srSvcBaseLogs"
+        EH_problem "Blank srSvcBaseLogs"
     fi 
 
     srSvcBaseData=$( inBaseDirDo ${srBaseDir} ${srAgent} -i srSvcBaseData 2> /dev/null )
     if [ -z ${srSvcBaseData} ] ; then 
-	EH_problem "Blank srSvcBaseData"
+        EH_problem "Blank srSvcBaseData"
     fi 
 
     srSvcBaseControl=$( inBaseDirDo ${srBaseDir} ${srAgent} -i srSvcBaseControl 2> /dev/null )
     if [ -z ${srSvcBaseControl} ] ; then 
-	EH_problem "Blank srSvcBaseControl"
+        EH_problem "Blank srSvcBaseControl"
     fi 
 
     srSvcBaseTmp=$( inBaseDirDo ${srBaseDir} ${srAgent} -i srSvcBaseTmp 2> /dev/null )
     if [ -z ${srSvcBaseTmp} ] ; then 
-	EH_problem "Blank srSvcBaseTmp"
+        EH_problem "Blank srSvcBaseTmp"
     fi 
 
     srSvcBaseMailDir=$( inBaseDirDo ${srBaseDir} ${srAgent} -i srSvcBaseMailDir 2> /dev/null )
     if [ -z ${srSvcBaseMailDir} ] ; then 
-	EH_problem "Blank srSvcBaseMailDir"
+        EH_problem "Blank srSvcBaseMailDir"
     fi 
     
 
     # Historic -- Obsoleted
     # srLogsBase=$( inBaseDirDo ${srBaseDir} ${srAgent} -i srLogsBase  2> /dev/null )
     # if [ -z ${srLogsBase} ] ; then 
-    # 	EH_problem "Blank srLogsBase"
+    #   EH_problem "Blank srLogsBase"
     # fi 
 
     # Historic -- Obsoleted
     srA2LogBaseDir=$(vis_srA2LogBaseDirGet ${srFqdn})
     if [ -z "${srA2LogBaseDir}" ] ; then
-    	EH_problem "Missing srA2LogBaseDir"
-    	lpReturn
+        EH_problem "Missing srA2LogBaseDir"
+        lpReturn
     fi
 
 
@@ -595,8 +595,8 @@ _EOF_
     opDoRet bystarAcctAnalyze ${bystarUid}
 
     if [ -z "${sr}" ] ; then
-	EH_problem ""
-	lpReturn
+        EH_problem ""
+        lpReturn
     fi
 
     echo ${bystarUidHome}/${sr}
@@ -647,8 +647,8 @@ _EOF_
 
     typeset srFqdn=$(vis_srFqdnGet $(vis_srBaseDirGet))
     if [ -z "${srFqdn}" ] ; then
-	EH_problem ""
-	lpReturn
+        EH_problem ""
+        lpReturn
     fi
 
     echo "/etc/apache2/sites-available/${srFqdn}.conf"
@@ -658,24 +658,24 @@ _EOF_
 
 
     # if [ -z "${sr}" ] ; then
-    # 	EH_problem ""
-    # 	lpReturn
+    #   EH_problem ""
+    #   lpReturn
     # fi
 
     # typeset srBaseDir=$(vis_srBaseDirGet)
     # if [ -z "${srBaseDir}" ] ; then
-    # 	EH_problem ""
-    # 	lpReturn
+    #   EH_problem ""
+    #   lpReturn
     # fi
 
     # typeset srFqdn=$(vis_srFqdnGet ${srBaseDir})
     # if [ -z "${srFqdn}" ] ; then
-    # 	EH_problem ""
-    # 	lpReturn
+    #   EH_problem ""
+    #   lpReturn
     # fi
 
     # typeset srA2LogBaseDir=$(vis_srA2LogBaseDirGet ${srFqdn})
     # if [ -z "${srA2LogBaseDir}" ] ; then
-    # 	EH_problem ""
-    # 	lpReturn
+    #   EH_problem ""
+    #   lpReturn
     # fi

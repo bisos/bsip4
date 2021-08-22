@@ -161,9 +161,9 @@ _EOF_
     local each
     
     for each in ${dirsList} ; do
-	if [ -f "${each}/bleePanelProc.sh" ] ; then
-	    inBaseDirDo ${each} ftoProc.sh -v -n showRun -i ftoWalkRunCmnd bleePanelsPrep.sh -h -v -n showRun -i renew
-	fi
+        if [ -f "${each}/bleePanelProc.sh" ] ; then
+            inBaseDirDo ${each} ftoProc.sh -v -n showRun -i ftoWalkRunCmnd bleePanelsPrep.sh -h -v -n showRun -i renew
+        fi
     done
     
     lpReturn
@@ -180,22 +180,22 @@ _EOF_
     local extent=""
 
     if [ $# -eq 0 ] ; then
-	extent="recurse"
+        extent="recurse"
     else
-	extent="$1"
+        extent="$1"
     fi
 
     case ${extent} in
-	recurse)
-	    lpDo eval find . -type f -print \| egrep 'ftoProc.sh$' \| xargs bx-dblock -h -v -n showRun -i dblockUpdateFiles
-	    lpDo ftoProc.sh -v -n showRun -i ftoWalkRunCmnd bleePanelProc.sh -h -v -n showRun -i renew
-	    ;;
-	here)
-	    lpDo vis_renew
-	    ;;
-	*)
-	    EH_problem "BAD Usage: extent=${extent} -- Valid values: here|recurse"
-	    ;;
+        recurse)
+            lpDo eval find . -type f -print \| egrep 'ftoProc.sh$' \| xargs bx-dblock -h -v -n showRun -i dblockUpdateFiles
+            lpDo ftoProc.sh -v -n showRun -i ftoWalkRunCmnd bleePanelProc.sh -h -v -n showRun -i renew
+            ;;
+        here)
+            lpDo vis_renew
+            ;;
+        *)
+            EH_problem "BAD Usage: extent=${extent} -- Valid values: here|recurse"
+            ;;
     esac
 
     lpReturn
@@ -209,36 +209,36 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if [ ! -f "./_tree_" ] ; then
-	EH_problem "Missing ./_tree_"
-	lpReturn
+        EH_problem "Missing ./_tree_"
+        lpReturn
     fi
     
     local treeItem=$( cat ./_tree_)
 
     case ${treeItem} in
-	"node")
-	    if [ -d "./_nodeBase_" ] ; then
-		lpDo startOrgPanel.sh -h -v -n showRun -i bleePanelBase node .
-	    else
-		lpDo bx-dblock -i dblockUpdateFile ./fullUsagePanel-en.org
-	    fi
-	    ;;
-	"auxNode")
-	    EH_problem ""
-	    ;;
-	"leaf")
-	    lpDo startOrgPanel.sh -h -v -n showRun -i bleePanelBase leaf .
-	    lpDo bx-dblock -i dblockUpdateFile ./fullUsagePanel-en.org	    
-	    ;;
-	"auxLeaf")
-	    EH_problem ""
-	    ;;
-	"ignore")
-	    doNothing
-	    ;;
-	*)
-	    EH_problem ""
-	    ;;		
+        "node")
+            if [ -d "./_nodeBase_" ] ; then
+                lpDo startOrgPanel.sh -h -v -n showRun -i bleePanelBase node .
+            else
+                lpDo bx-dblock -i dblockUpdateFile ./fullUsagePanel-en.org
+            fi
+            ;;
+        "auxNode")
+            EH_problem ""
+            ;;
+        "leaf")
+            lpDo startOrgPanel.sh -h -v -n showRun -i bleePanelBase leaf .
+            lpDo bx-dblock -i dblockUpdateFile ./fullUsagePanel-en.org      
+            ;;
+        "auxLeaf")
+            EH_problem ""
+            ;;
+        "ignore")
+            doNothing
+            ;;
+        *)
+            EH_problem ""
+            ;;          
     esac
 
     lpReturn
@@ -254,9 +254,9 @@ _EOF_
     local thisFile="$1"
     
     if [ -f "${thisFile}" ] ; then
-	lpDo bx-dblock -v -n showRun -i dblockUpdateFiles "${thisFile}"
+        lpDo bx-dblock -v -n showRun -i dblockUpdateFiles "${thisFile}"
     else
-	ANT_raw "Missing ${thisFile} -- Skipped"
+        ANT_raw "Missing ${thisFile} -- Skipped"
     fi
 }
 
@@ -270,9 +270,9 @@ _EOF_
     local thisFile="$1"
     
     if [ -f "${thisFile}" ] ; then
-	lpDo bx-dblock  -v -n showRun -i dblockBlankFiles "${thisFile}"
+        lpDo bx-dblock  -v -n showRun -i dblockBlankFiles "${thisFile}"
     else
-	ANT_raw "Missing ${thisFile} -- Skipped"
+        ANT_raw "Missing ${thisFile} -- Skipped"
     fi
 }
 

@@ -183,10 +183,10 @@ _EOF_
 
     typeset -i procsNum=`pgrep  '^svscan$' | wc -l`
     if [[ "${G_forceMode}_" != "force_" ]] ; then
-	if [ "${procsNum}_" = "1_" ] ; then
-	    ANT_raw "svscan Running -- No Action Taken"
-	    return 0
-	fi
+        if [ "${procsNum}_" = "1_" ] ; then
+            ANT_raw "svscan Running -- No Action Taken"
+            return 0
+        fi
     fi
 
     opDo pgrep -l '^svscan$'
@@ -247,7 +247,7 @@ _EOF_
     typeset daemonList=`mmaDaemonList`
     typeset thisOne
     for thisOne  in ${daemonList}; do
-	mmaDaemonShow ${thisOne}
+        mmaDaemonShow ${thisOne}
     done
 
     lpReturn

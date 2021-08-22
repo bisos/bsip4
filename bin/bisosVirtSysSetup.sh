@@ -93,9 +93,9 @@ _EOF_
     local virtualizationType=$( facter virtual )
 
     if [ "${virtualizationType}" == "physical" ] ; then
-	opDo echo skipping:: bisosVirtHostSetup.sh -h -v -n showRun -i virtHost_provisionSetup
+        opDo echo skipping:: bisosVirtHostSetup.sh -h -v -n showRun -i virtHost_provisionSetup
     else
-	opDo bisosVirtGuestSetup.sh -h -v -n showRun -i virtGuest_provisionSetup
+        opDo bisosVirtGuestSetup.sh -h -v -n showRun -i virtGuest_provisionSetup
     fi
     
     lpReturn

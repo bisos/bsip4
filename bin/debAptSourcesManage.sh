@@ -117,9 +117,9 @@ _EOF_
     retVal=$?
 
     if [ ${retVal} == 0 ]  ; then
-	ANT_raw "deb-src lines detected in ${aptSourcesFile} -- returning ${retVal}"
+        ANT_raw "deb-src lines detected in ${aptSourcesFile} -- returning ${retVal}"
     else
-	ANT_raw "deb-src lines are missing in ${aptSourcesFile} -- returning ${retVal}"
+        ANT_raw "deb-src lines are missing in ${aptSourcesFile} -- returning ${retVal}"
     fi
     
     lpReturn ${retVal}
@@ -140,10 +140,10 @@ _EOF_
     opDo FN_fileSafeCopy ${aptSourcesFile} ${aptSourcesFile}.${dateTag}    
 
     egrep '^deb ' ${aptSourcesFile}  | egrep 'restricted|universe' | grep -i ubuntu.com | grep -v backports  |
-	while read thisLine ; do
-	    echo Running: $( echo add-apt-repository --enable-source \'${thisLine}\' )
-	    eval          $( echo add-apt-repository --enable-source \'${thisLine}\' )
-	done
+        while read thisLine ; do
+            echo Running: $( echo add-apt-repository --enable-source \'${thisLine}\' )
+            eval          $( echo add-apt-repository --enable-source \'${thisLine}\' )
+        done
 
     opDo apt-get update
 
@@ -168,10 +168,10 @@ _EOF_
     opDo FN_fileSafeCopy ${aptSourcesFile} ${aptSourcesFile}.${dateTag}    
 
     egrep '^deb-src ' ${aptSourcesFile}  |
-	while read thisLine ; do
-	    echo Running: $( echo add-apt-repository --remove \'${thisLine}\' )
-	    eval          $( echo add-apt-repository --remove \'${thisLine}\' )
-	done
+        while read thisLine ; do
+            echo Running: $( echo add-apt-repository --remove \'${thisLine}\' )
+            eval          $( echo add-apt-repository --remove \'${thisLine}\' )
+        done
 
     opDo apt-get update
 

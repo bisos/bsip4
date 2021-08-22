@@ -92,14 +92,14 @@ function vis_enabledBuildsDirsList {
     local each=""
     
     if [ -f "${inFile}" ] ; then
-	enabledDirsList=$( cat "${inFile}" )
-	for each in ${enabledDirsList}; do
-	    echo "./LCNT-INFO/Builds/${each}"
-	done
-	lpReturn 0
+        enabledDirsList=$( cat "${inFile}" )
+        for each in ${enabledDirsList}; do
+            echo "./LCNT-INFO/Builds/${each}"
+        done
+        lpReturn 0
     else
-	EH_problem "Missing ${inFile}"
-	lpReturn 1
+        EH_problem "Missing ${inFile}"
+        lpReturn 1
     fi
 }
 
@@ -136,44 +136,44 @@ _EOF_
     local lcntName=${lcntAttrHomeArray[-1]}  # TODO -- lcntName needs to become a fv in LCNT_INFO
 
     if [ ! -d "${lcntBuildCommonInfoBasePath}" ] ; then
-	opDo mkdir "${lcntBuildCommonInfoBasePath}"
+        opDo mkdir "${lcntBuildCommonInfoBasePath}"
     fi
 
     function fvNameValueCommonSet {
-	EH_assert [[ $# -eq 2 ]]
-	local fvName=$1
-	local fvValue=$2
-	local fvNamePath="${lcntBuildCommonInfoBasePath}/${fvName}"
-	
-	if [[ ! -s "${fvNamePath}" ]]; then
-	    echo "${fvValue}" > "${fvNamePath}"
-	else
-	    ANT_cooked "Exists"
-	fi
+        EH_assert [[ $# -eq 2 ]]
+        local fvName=$1
+        local fvValue=$2
+        local fvNamePath="${lcntBuildCommonInfoBasePath}/${fvName}"
+        
+        if [[ ! -s "${fvNamePath}" ]]; then
+            echo "${fvValue}" > "${fvNamePath}"
+        else
+            ANT_cooked "Exists"
+        fi
     }
 
     function getEnabledList {
-	EH_assert [[ $# -eq 0 ]]
-	local eachDocModel=""
-	local enabledList=""
+        EH_assert [[ $# -eq 0 ]]
+        local eachDocModel=""
+        local enabledList=""
 
-	for eachModel in ${lcnt_docSrcList} ; do
-	    case ${eachModel} in
-		"articleEnFa"|"articleFaEn"|"main")
-		    enabledList="${enabledList} art-8.5x11"
-		    ;;
-		"presentationEnFa"|"presentationFaEn")
-		    enabledList="${enabledList} presPdf"
-		    ;;
-		"presArtEnFa"|"presArtFaEn")
-		    enabledList="${enabledList} presArt-8.5x11"
-		    ;;
-		*)
-		    EH_problem "Missing docModel: ${eachModel}"
-		    ;;
-	    esac
-	done
-	echo ${enabledList}
+        for eachModel in ${lcnt_docSrcList} ; do
+            case ${eachModel} in
+                "articleEnFa"|"articleFaEn"|"main")
+                    enabledList="${enabledList} art-8.5x11"
+                    ;;
+                "presentationEnFa"|"presentationFaEn")
+                    enabledList="${enabledList} presPdf"
+                    ;;
+                "presArtEnFa"|"presArtFaEn")
+                    enabledList="${enabledList} presArt-8.5x11"
+                    ;;
+                *)
+                    EH_problem "Missing docModel: ${eachModel}"
+                    ;;
+            esac
+        done
+        echo ${enabledList}
     }
     
     opDo fvNameValueCommonSet "enabledList" "$( getEnabledList )"
@@ -182,363 +182,363 @@ _EOF_
     opDo fvNameValueCommonSet "releaseBaseDir" "./Release"        
 
     function fvNameValueSpecificSet {
-	EH_assert [[ $# -eq 3 ]]
-	local buildDirPath=$1
-	local fvName=$2
-	local fvValue=$3
-	local fvNamePath="${buildDirPath}/${fvName}"
-	
-	if [[ ! -s "${fvNamePath}" ]]; then
-	    echo "${fvValue}" > "${fvNamePath}"
-	else
-	    ANT_cooked "Exists"
-	fi
+        EH_assert [[ $# -eq 3 ]]
+        local buildDirPath=$1
+        local fvName=$2
+        local fvValue=$3
+        local fvNamePath="${buildDirPath}/${fvName}"
+        
+        if [[ ! -s "${fvNamePath}" ]]; then
+            echo "${fvValue}" > "${fvNamePath}"
+        else
+            ANT_cooked "Exists"
+        fi
     }
 
     function buildNameGet {
-	EH_assert [[ $# -eq 2 ]]
-	local buildDirName=$1
-	local lcntName=$2
+        EH_assert [[ $# -eq 2 ]]
+        local buildDirName=$1
+        local lcntName=$2
 
-	if [ "${buildDirName}" == "presPdf" ] ; then
-	    buildDirName="pres"
-	fi
-	
-	local thisBuildName="${lcntName}-${buildDirName}"
+        if [ "${buildDirName}" == "presPdf" ] ; then
+            buildDirName="pres"
+        fi
+        
+        local thisBuildName="${lcntName}-${buildDirName}"
 
-	echo "${thisBuildName}"
-	
+        echo "${thisBuildName}"
+        
     }
 
     
     function art_8.5x11_build {
-	EH_assert [[ $# -eq 0 ]]
+        EH_assert [[ $# -eq 0 ]]
 
-	local buildDirName="art-8.5x11"
-	local buildDirPath="${lcntBuildCommonInfoBasePath}/${buildDirName}"	
+        local buildDirName="art-8.5x11"
+        local buildDirPath="${lcntBuildCommonInfoBasePath}/${buildDirName}"     
 
-	if [ ! -d "${buildDirPath}" ] ; then
-	    opDo mkdir "${buildDirPath}"
-	fi
+        if [ ! -d "${buildDirPath}" ] ; then
+            opDo mkdir "${buildDirPath}"
+        fi
 
-	opDo fvNameValueSpecificSet ${buildDirPath} "buildDocClass" "article"
-	opDo fvNameValueSpecificSet ${buildDirPath} "buildName" "$( buildNameGet ${buildDirName} ${lcntName} )"
-	opDo fvNameValueSpecificSet ${buildDirPath} "docSrc"  "${articleSrcFile}"
-	opDo fvNameValueSpecificSet ${buildDirPath} "paperSize" "8.5x11"
-	opDo fvNameValueSpecificSet ${buildDirPath} "results" "pdf"
-	opDo fvNameValueSpecificSet ${buildDirPath} "sides" "2"	
+        opDo fvNameValueSpecificSet ${buildDirPath} "buildDocClass" "article"
+        opDo fvNameValueSpecificSet ${buildDirPath} "buildName" "$( buildNameGet ${buildDirName} ${lcntName} )"
+        opDo fvNameValueSpecificSet ${buildDirPath} "docSrc"  "${articleSrcFile}"
+        opDo fvNameValueSpecificSet ${buildDirPath} "paperSize" "8.5x11"
+        opDo fvNameValueSpecificSet ${buildDirPath} "results" "pdf"
+        opDo fvNameValueSpecificSet ${buildDirPath} "sides" "2" 
     }
 
     function art_a4_build {
-	EH_assert [[ $# -eq 0 ]]
+        EH_assert [[ $# -eq 0 ]]
 
-	local buildDirName="art-a4"
-	local buildDirPath="${lcntBuildCommonInfoBasePath}/${buildDirName}"	
+        local buildDirName="art-a4"
+        local buildDirPath="${lcntBuildCommonInfoBasePath}/${buildDirName}"     
 
-	if [ ! -d "${buildDirPath}" ] ; then
-	    opDo mkdir "${buildDirPath}"
-	fi
+        if [ ! -d "${buildDirPath}" ] ; then
+            opDo mkdir "${buildDirPath}"
+        fi
 
-	opDo fvNameValueSpecificSet ${buildDirPath} "buildDocClass" "article"
-	opDo fvNameValueSpecificSet ${buildDirPath} "buildName" "$( buildNameGet ${buildDirName} ${lcntName} )"	
-	opDo fvNameValueSpecificSet ${buildDirPath} "docSrc"  "${articleSrcFile}"
-	opDo fvNameValueSpecificSet ${buildDirPath} "paperSize" "a4"
-	opDo fvNameValueSpecificSet ${buildDirPath} "results" "pdf"
-	opDo fvNameValueSpecificSet ${buildDirPath} "sides" "2"	
+        opDo fvNameValueSpecificSet ${buildDirPath} "buildDocClass" "article"
+        opDo fvNameValueSpecificSet ${buildDirPath} "buildName" "$( buildNameGet ${buildDirName} ${lcntName} )" 
+        opDo fvNameValueSpecificSet ${buildDirPath} "docSrc"  "${articleSrcFile}"
+        opDo fvNameValueSpecificSet ${buildDirPath} "paperSize" "a4"
+        opDo fvNameValueSpecificSet ${buildDirPath} "results" "pdf"
+        opDo fvNameValueSpecificSet ${buildDirPath} "sides" "2" 
     }
 
 
     function art_6x9_build {
-	EH_assert [[ $# -eq 0 ]]
+        EH_assert [[ $# -eq 0 ]]
 
-	local buildDirName="art-6x9"
-	local buildDirPath="${lcntBuildCommonInfoBasePath}/${buildDirName}"	
+        local buildDirName="art-6x9"
+        local buildDirPath="${lcntBuildCommonInfoBasePath}/${buildDirName}"     
 
-	if [ ! -d "${buildDirPath}" ] ; then
-	    opDo mkdir "${buildDirPath}"
-	fi
+        if [ ! -d "${buildDirPath}" ] ; then
+            opDo mkdir "${buildDirPath}"
+        fi
 
-	opDo fvNameValueSpecificSet ${buildDirPath} "buildDocClass" "article"
-	opDo fvNameValueSpecificSet ${buildDirPath} "buildName" "$( buildNameGet ${buildDirName} ${lcntName} )"		
-	opDo fvNameValueSpecificSet ${buildDirPath} "docSrc"  "${articleSrcFile}"
-	opDo fvNameValueSpecificSet ${buildDirPath} "paperSize" "6x9"
-	opDo fvNameValueSpecificSet ${buildDirPath} "results" "pdf"
-	opDo fvNameValueSpecificSet ${buildDirPath} "sides" "2"	
+        opDo fvNameValueSpecificSet ${buildDirPath} "buildDocClass" "article"
+        opDo fvNameValueSpecificSet ${buildDirPath} "buildName" "$( buildNameGet ${buildDirName} ${lcntName} )"         
+        opDo fvNameValueSpecificSet ${buildDirPath} "docSrc"  "${articleSrcFile}"
+        opDo fvNameValueSpecificSet ${buildDirPath} "paperSize" "6x9"
+        opDo fvNameValueSpecificSet ${buildDirPath} "results" "pdf"
+        opDo fvNameValueSpecificSet ${buildDirPath} "sides" "2" 
     }
 
     function art_17.5x23.5_build {
-	EH_assert [[ $# -eq 0 ]]
+        EH_assert [[ $# -eq 0 ]]
 
-	local buildDirName="art-17.5x23.5"
-	local buildDirPath="${lcntBuildCommonInfoBasePath}/${buildDirName}"	
+        local buildDirName="art-17.5x23.5"
+        local buildDirPath="${lcntBuildCommonInfoBasePath}/${buildDirName}"     
 
-	if [ ! -d "${buildDirPath}" ] ; then
-	    opDo mkdir "${buildDirPath}"
-	fi
+        if [ ! -d "${buildDirPath}" ] ; then
+            opDo mkdir "${buildDirPath}"
+        fi
 
-	opDo fvNameValueSpecificSet ${buildDirPath} "buildDocClass" "article"
-	opDo fvNameValueSpecificSet ${buildDirPath} "buildName" "$( buildNameGet ${buildDirName} ${lcntName} )"			
-	opDo fvNameValueSpecificSet ${buildDirPath} "docSrc"  "${articleSrcFile}"
-	opDo fvNameValueSpecificSet ${buildDirPath} "paperSize" "17.5x23.5"
-	opDo fvNameValueSpecificSet ${buildDirPath} "results" "pdf"
-	opDo fvNameValueSpecificSet ${buildDirPath} "sides" "2"	
+        opDo fvNameValueSpecificSet ${buildDirPath} "buildDocClass" "article"
+        opDo fvNameValueSpecificSet ${buildDirPath} "buildName" "$( buildNameGet ${buildDirName} ${lcntName} )"                 
+        opDo fvNameValueSpecificSet ${buildDirPath} "docSrc"  "${articleSrcFile}"
+        opDo fvNameValueSpecificSet ${buildDirPath} "paperSize" "17.5x23.5"
+        opDo fvNameValueSpecificSet ${buildDirPath} "results" "pdf"
+        opDo fvNameValueSpecificSet ${buildDirPath} "sides" "2" 
     }
     
 
 
     function book_8.5x11_build {
-	EH_assert [[ $# -eq 0 ]]
+        EH_assert [[ $# -eq 0 ]]
 
-	local buildDirName="book-8.5x11"
-	local buildDirPath="${lcntBuildCommonInfoBasePath}/${buildDirName}"	
+        local buildDirName="book-8.5x11"
+        local buildDirPath="${lcntBuildCommonInfoBasePath}/${buildDirName}"     
 
-	if [ ! -d "${buildDirPath}" ] ; then
-	    opDo mkdir "${buildDirPath}"
-	fi
+        if [ ! -d "${buildDirPath}" ] ; then
+            opDo mkdir "${buildDirPath}"
+        fi
 
-	opDo fvNameValueSpecificSet ${buildDirPath} "buildDocClass" "article"
-	opDo fvNameValueSpecificSet ${buildDirPath} "buildName" "$( buildNameGet ${buildDirName} ${lcntName} )"				
-	opDo fvNameValueSpecificSet ${buildDirPath} "docSrc"  "${articleSrcFile}"
-	opDo fvNameValueSpecificSet ${buildDirPath} "paperSize" "8.5x11"
-	opDo fvNameValueSpecificSet ${buildDirPath} "results" "pdf"
-	opDo fvNameValueSpecificSet ${buildDirPath} "sides" "2"	
+        opDo fvNameValueSpecificSet ${buildDirPath} "buildDocClass" "article"
+        opDo fvNameValueSpecificSet ${buildDirPath} "buildName" "$( buildNameGet ${buildDirName} ${lcntName} )"                         
+        opDo fvNameValueSpecificSet ${buildDirPath} "docSrc"  "${articleSrcFile}"
+        opDo fvNameValueSpecificSet ${buildDirPath} "paperSize" "8.5x11"
+        opDo fvNameValueSpecificSet ${buildDirPath} "results" "pdf"
+        opDo fvNameValueSpecificSet ${buildDirPath} "sides" "2" 
     }
 
     function book_a4_build {
-	EH_assert [[ $# -eq 0 ]]
+        EH_assert [[ $# -eq 0 ]]
 
-	local buildDirName="book-a4"
-	local buildDirPath="${lcntBuildCommonInfoBasePath}/${buildDirName}"	
+        local buildDirName="book-a4"
+        local buildDirPath="${lcntBuildCommonInfoBasePath}/${buildDirName}"     
 
-	if [ ! -d "${buildDirPath}" ] ; then
-	    opDo mkdir "${buildDirPath}"
-	fi
+        if [ ! -d "${buildDirPath}" ] ; then
+            opDo mkdir "${buildDirPath}"
+        fi
 
-	opDo fvNameValueSpecificSet ${buildDirPath} "buildDocClass" "article"
-	opDo fvNameValueSpecificSet ${buildDirPath} "buildName" "$( buildNameGet ${buildDirName} ${lcntName} )"
-	opDo fvNameValueSpecificSet ${buildDirPath} "docSrc"  "${articleSrcFile}"
-	opDo fvNameValueSpecificSet ${buildDirPath} "paperSize" "a4"
-	opDo fvNameValueSpecificSet ${buildDirPath} "results" "pdf"
-	opDo fvNameValueSpecificSet ${buildDirPath} "sides" "2"	
+        opDo fvNameValueSpecificSet ${buildDirPath} "buildDocClass" "article"
+        opDo fvNameValueSpecificSet ${buildDirPath} "buildName" "$( buildNameGet ${buildDirName} ${lcntName} )"
+        opDo fvNameValueSpecificSet ${buildDirPath} "docSrc"  "${articleSrcFile}"
+        opDo fvNameValueSpecificSet ${buildDirPath} "paperSize" "a4"
+        opDo fvNameValueSpecificSet ${buildDirPath} "results" "pdf"
+        opDo fvNameValueSpecificSet ${buildDirPath} "sides" "2" 
     }
 
 
     function book_6x9_build {
-	EH_assert [[ $# -eq 0 ]]
+        EH_assert [[ $# -eq 0 ]]
 
-	local buildDirName="book-6x9"
-	local buildDirPath="${lcntBuildCommonInfoBasePath}/${buildDirName}"	
+        local buildDirName="book-6x9"
+        local buildDirPath="${lcntBuildCommonInfoBasePath}/${buildDirName}"     
 
-	if [ ! -d "${buildDirPath}" ] ; then
-	    opDo mkdir "${buildDirPath}"
-	fi
+        if [ ! -d "${buildDirPath}" ] ; then
+            opDo mkdir "${buildDirPath}"
+        fi
 
-	opDo fvNameValueSpecificSet ${buildDirPath} "buildDocClass" "article"
-	opDo fvNameValueSpecificSet ${buildDirPath} "buildName" "$( buildNameGet ${buildDirName} ${lcntName} )"	
-	opDo fvNameValueSpecificSet ${buildDirPath} "docSrc"  "${articleSrcFile}"
-	opDo fvNameValueSpecificSet ${buildDirPath} "paperSize" "6x9"
-	opDo fvNameValueSpecificSet ${buildDirPath} "results" "pdf"
-	opDo fvNameValueSpecificSet ${buildDirPath} "sides" "2"	
+        opDo fvNameValueSpecificSet ${buildDirPath} "buildDocClass" "article"
+        opDo fvNameValueSpecificSet ${buildDirPath} "buildName" "$( buildNameGet ${buildDirName} ${lcntName} )" 
+        opDo fvNameValueSpecificSet ${buildDirPath} "docSrc"  "${articleSrcFile}"
+        opDo fvNameValueSpecificSet ${buildDirPath} "paperSize" "6x9"
+        opDo fvNameValueSpecificSet ${buildDirPath} "results" "pdf"
+        opDo fvNameValueSpecificSet ${buildDirPath} "sides" "2" 
     }
 
     function book_17.5x23.5_build {
-	EH_assert [[ $# -eq 0 ]]
+        EH_assert [[ $# -eq 0 ]]
 
-	local buildDirName="book-17.5x23.5"
-	local buildDirPath="${lcntBuildCommonInfoBasePath}/${buildDirName}"	
+        local buildDirName="book-17.5x23.5"
+        local buildDirPath="${lcntBuildCommonInfoBasePath}/${buildDirName}"     
 
-	if [ ! -d "${buildDirPath}" ] ; then
-	    opDo mkdir "${buildDirPath}"
-	fi
+        if [ ! -d "${buildDirPath}" ] ; then
+            opDo mkdir "${buildDirPath}"
+        fi
 
-	opDo fvNameValueSpecificSet ${buildDirPath} "buildDocClass" "article"
-	opDo fvNameValueSpecificSet ${buildDirPath} "buildName" "$( buildNameGet ${buildDirName} ${lcntName} )"	
-	opDo fvNameValueSpecificSet ${buildDirPath} "docSrc"  "${articleSrcFile}"
-	opDo fvNameValueSpecificSet ${buildDirPath} "paperSize" "17.5x23.5"
-	opDo fvNameValueSpecificSet ${buildDirPath} "results" "pdf"
-	opDo fvNameValueSpecificSet ${buildDirPath} "sides" "2"	
+        opDo fvNameValueSpecificSet ${buildDirPath} "buildDocClass" "article"
+        opDo fvNameValueSpecificSet ${buildDirPath} "buildName" "$( buildNameGet ${buildDirName} ${lcntName} )" 
+        opDo fvNameValueSpecificSet ${buildDirPath} "docSrc"  "${articleSrcFile}"
+        opDo fvNameValueSpecificSet ${buildDirPath} "paperSize" "17.5x23.5"
+        opDo fvNameValueSpecificSet ${buildDirPath} "results" "pdf"
+        opDo fvNameValueSpecificSet ${buildDirPath} "sides" "2" 
     }
     
     
     function presPdf_build {
-	EH_assert [[ $# -eq 0 ]]
+        EH_assert [[ $# -eq 0 ]]
 
-	local buildDirName="presPdf"
-	local buildDirPath="${lcntBuildCommonInfoBasePath}/${buildDirName}"	
+        local buildDirName="presPdf"
+        local buildDirPath="${lcntBuildCommonInfoBasePath}/${buildDirName}"     
 
-	if [ ! -d "${buildDirPath}" ] ; then
-	    opDo mkdir "${buildDirPath}"
-	fi
+        if [ ! -d "${buildDirPath}" ] ; then
+            opDo mkdir "${buildDirPath}"
+        fi
 
-	opDo fvNameValueSpecificSet ${buildDirPath} "buildDocClass" "article"
-	opDo fvNameValueSpecificSet ${buildDirPath} "buildName" "$( buildNameGet ${buildDirName} ${lcntName} )"	
-	opDo fvNameValueSpecificSet ${buildDirPath} "docSrc"  "${presentationSrcFile}"
-	opDo fvNameValueSpecificSet ${buildDirPath} "paperSize" "8.5x11"
-	opDo fvNameValueSpecificSet ${buildDirPath} "results" "pdf"
-	opDo fvNameValueSpecificSet ${buildDirPath} "sides" "2"	
+        opDo fvNameValueSpecificSet ${buildDirPath} "buildDocClass" "article"
+        opDo fvNameValueSpecificSet ${buildDirPath} "buildName" "$( buildNameGet ${buildDirName} ${lcntName} )" 
+        opDo fvNameValueSpecificSet ${buildDirPath} "docSrc"  "${presentationSrcFile}"
+        opDo fvNameValueSpecificSet ${buildDirPath} "paperSize" "8.5x11"
+        opDo fvNameValueSpecificSet ${buildDirPath} "results" "pdf"
+        opDo fvNameValueSpecificSet ${buildDirPath} "sides" "2" 
     }
     
 
     function html_build {
-	EH_assert [[ $# -eq 0 ]]
+        EH_assert [[ $# -eq 0 ]]
 
-	local buildDirName="html"
-	local buildDirPath="${lcntBuildCommonInfoBasePath}/${buildDirName}"		
+        local buildDirName="html"
+        local buildDirPath="${lcntBuildCommonInfoBasePath}/${buildDirName}"             
 
-	if [ ! -d "${buildDirPath}" ] ; then
-	    opDo mkdir "${buildDirPath}"
-	fi
+        if [ ! -d "${buildDirPath}" ] ; then
+            opDo mkdir "${buildDirPath}"
+        fi
 
-	opDo fvNameValueSpecificSet ${buildDirPath} "buildDocClass" "article"
-	opDo fvNameValueSpecificSet ${buildDirPath} "buildName" "$( buildNameGet ${buildDirName} ${lcntName} )"	
-	opDo fvNameValueSpecificSet ${buildDirPath} "docSrc"  "${articleSrcFile}"
-	opDo fvNameValueSpecificSet ${buildDirPath} "paperSize" "html"
-	opDo fvNameValueSpecificSet ${buildDirPath} "results" "pdf"
-	opDo fvNameValueSpecificSet ${buildDirPath} "sides" "2"	
+        opDo fvNameValueSpecificSet ${buildDirPath} "buildDocClass" "article"
+        opDo fvNameValueSpecificSet ${buildDirPath} "buildName" "$( buildNameGet ${buildDirName} ${lcntName} )" 
+        opDo fvNameValueSpecificSet ${buildDirPath} "docSrc"  "${articleSrcFile}"
+        opDo fvNameValueSpecificSet ${buildDirPath} "paperSize" "html"
+        opDo fvNameValueSpecificSet ${buildDirPath} "results" "pdf"
+        opDo fvNameValueSpecificSet ${buildDirPath} "sides" "2" 
     }
 
     function presReveal_build {
-	EH_assert [[ $# -eq 0 ]]
+        EH_assert [[ $# -eq 0 ]]
 
-	local buildDirName="pres-reveal"
-	local buildDirPath="${lcntBuildCommonInfoBasePath}/${buildDirName}"		
+        local buildDirName="pres-reveal"
+        local buildDirPath="${lcntBuildCommonInfoBasePath}/${buildDirName}"             
 
-	if [ ! -d "${buildDirPath}" ] ; then
-	    opDo mkdir "${buildDirPath}"
-	fi
+        if [ ! -d "${buildDirPath}" ] ; then
+            opDo mkdir "${buildDirPath}"
+        fi
 
-	opDo fvNameValueSpecificSet ${buildDirPath} "buildDocClass" "article"
-	opDo fvNameValueSpecificSet ${buildDirPath} "buildName" "$( buildNameGet ${buildDirName} ${lcntName} )"	
-	opDo fvNameValueSpecificSet ${buildDirPath} "docSrc"  "${presentationSrcFile}"
-	opDo fvNameValueSpecificSet ${buildDirPath} "paperSize" "html"
-	opDo fvNameValueSpecificSet ${buildDirPath} "results" "pdf"
-	opDo fvNameValueSpecificSet ${buildDirPath} "sides" "2"	
+        opDo fvNameValueSpecificSet ${buildDirPath} "buildDocClass" "article"
+        opDo fvNameValueSpecificSet ${buildDirPath} "buildName" "$( buildNameGet ${buildDirName} ${lcntName} )" 
+        opDo fvNameValueSpecificSet ${buildDirPath} "docSrc"  "${presentationSrcFile}"
+        opDo fvNameValueSpecificSet ${buildDirPath} "paperSize" "html"
+        opDo fvNameValueSpecificSet ${buildDirPath} "results" "pdf"
+        opDo fvNameValueSpecificSet ${buildDirPath} "sides" "2" 
     }
 
     function presArt_8.5x11_build {
-	EH_assert [[ $# -eq 0 ]]
+        EH_assert [[ $# -eq 0 ]]
 
-	local buildDirName="presArt-8.5x11"
-	local buildDirPath="${lcntBuildCommonInfoBasePath}/${buildDirName}"		
+        local buildDirName="presArt-8.5x11"
+        local buildDirPath="${lcntBuildCommonInfoBasePath}/${buildDirName}"             
 
-	if [ ! -d "${buildDirPath}" ] ; then
-	    opDo mkdir "${buildDirPath}"
-	fi
+        if [ ! -d "${buildDirPath}" ] ; then
+            opDo mkdir "${buildDirPath}"
+        fi
 
-	opDo fvNameValueSpecificSet ${buildDirPath} "buildDocClass" "article"
-	opDo fvNameValueSpecificSet ${buildDirPath} "buildName" "$( buildNameGet ${buildDirName} ${lcntName} )"	
-	opDo fvNameValueSpecificSet ${buildDirPath} "docSrc"  "${presArtSrcFile}"
-	opDo fvNameValueSpecificSet ${buildDirPath} "paperSize" "8.5x11"
-	opDo fvNameValueSpecificSet ${buildDirPath} "results" "pdf"
-	opDo fvNameValueSpecificSet ${buildDirPath} "sides" "2"	
+        opDo fvNameValueSpecificSet ${buildDirPath} "buildDocClass" "article"
+        opDo fvNameValueSpecificSet ${buildDirPath} "buildName" "$( buildNameGet ${buildDirName} ${lcntName} )" 
+        opDo fvNameValueSpecificSet ${buildDirPath} "docSrc"  "${presArtSrcFile}"
+        opDo fvNameValueSpecificSet ${buildDirPath} "paperSize" "8.5x11"
+        opDo fvNameValueSpecificSet ${buildDirPath} "results" "pdf"
+        opDo fvNameValueSpecificSet ${buildDirPath} "sides" "2" 
     }
 
     function presArt_a4_build {
-	EH_assert [[ $# -eq 0 ]]
+        EH_assert [[ $# -eq 0 ]]
 
-	local buildDirName="presArt-a4"
-	local buildDirPath="${lcntBuildCommonInfoBasePath}/${buildDirName}"		
+        local buildDirName="presArt-a4"
+        local buildDirPath="${lcntBuildCommonInfoBasePath}/${buildDirName}"             
 
-	if [ ! -d "${buildDirPath}" ] ; then
-	    opDo mkdir "${buildDirPath}"
-	fi
+        if [ ! -d "${buildDirPath}" ] ; then
+            opDo mkdir "${buildDirPath}"
+        fi
 
-	opDo fvNameValueSpecificSet ${buildDirPath} "buildDocClass" "article"
-	opDo fvNameValueSpecificSet ${buildDirPath} "buildName" "$( buildNameGet ${buildDirName} ${lcntName} )"	
-	opDo fvNameValueSpecificSet ${buildDirPath} "docSrc"  "${presArtSrcFile}"
-	opDo fvNameValueSpecificSet ${buildDirPath} "paperSize" "a4"
-	opDo fvNameValueSpecificSet ${buildDirPath} "results" "pdf"
-	opDo fvNameValueSpecificSet ${buildDirPath} "sides" "2"	
+        opDo fvNameValueSpecificSet ${buildDirPath} "buildDocClass" "article"
+        opDo fvNameValueSpecificSet ${buildDirPath} "buildName" "$( buildNameGet ${buildDirName} ${lcntName} )" 
+        opDo fvNameValueSpecificSet ${buildDirPath} "docSrc"  "${presArtSrcFile}"
+        opDo fvNameValueSpecificSet ${buildDirPath} "paperSize" "a4"
+        opDo fvNameValueSpecificSet ${buildDirPath} "results" "pdf"
+        opDo fvNameValueSpecificSet ${buildDirPath} "sides" "2" 
     }
 
     function presArt_html_build {
-	EH_assert [[ $# -eq 0 ]]
+        EH_assert [[ $# -eq 0 ]]
 
-	local buildDirName="presArt-html"
-	local buildDirPath="${lcntBuildCommonInfoBasePath}/${buildDirName}"		
+        local buildDirName="presArt-html"
+        local buildDirPath="${lcntBuildCommonInfoBasePath}/${buildDirName}"             
 
-	if [ ! -d "${buildDirPath}" ] ; then
-	    opDo mkdir "${buildDirPath}"
-	fi
+        if [ ! -d "${buildDirPath}" ] ; then
+            opDo mkdir "${buildDirPath}"
+        fi
 
-	opDo fvNameValueSpecificSet ${buildDirPath} "buildDocClass" "article"
-	opDo fvNameValueSpecificSet ${buildDirPath} "buildName" "$( buildNameGet ${buildDirName} ${lcntName} )"	
-	opDo fvNameValueSpecificSet ${buildDirPath} "docSrc"  "${presArtSrcFile}"
-	opDo fvNameValueSpecificSet ${buildDirPath} "paperSize" "html"
-	opDo fvNameValueSpecificSet ${buildDirPath} "results" "pdf"
-	opDo fvNameValueSpecificSet ${buildDirPath} "sides" "2"	
+        opDo fvNameValueSpecificSet ${buildDirPath} "buildDocClass" "article"
+        opDo fvNameValueSpecificSet ${buildDirPath} "buildName" "$( buildNameGet ${buildDirName} ${lcntName} )" 
+        opDo fvNameValueSpecificSet ${buildDirPath} "docSrc"  "${presArtSrcFile}"
+        opDo fvNameValueSpecificSet ${buildDirPath} "paperSize" "html"
+        opDo fvNameValueSpecificSet ${buildDirPath} "results" "pdf"
+        opDo fvNameValueSpecificSet ${buildDirPath} "sides" "2" 
     }
     
 
     
     function odt_build {
-	EH_assert [[ $# -eq 0 ]]
+        EH_assert [[ $# -eq 0 ]]
 
-	local buildDirName="odt"
-	local buildDirPath="${lcntBuildCommonInfoBasePath}/${buildDirName}"		
+        local buildDirName="odt"
+        local buildDirPath="${lcntBuildCommonInfoBasePath}/${buildDirName}"             
 
-	if [ ! -d "${buildDirPath}" ] ; then
-	    opDo mkdir "${buildDirPath}"
-	fi
+        if [ ! -d "${buildDirPath}" ] ; then
+            opDo mkdir "${buildDirPath}"
+        fi
 
-	opDo fvNameValueSpecificSet ${buildDirPath} "buildDocClass" "article"
-	opDo fvNameValueSpecificSet ${buildDirPath} "buildName" "$( buildNameGet ${buildDirName} ${lcntName} )"	
-	opDo fvNameValueSpecificSet ${buildDirPath} "docSrc"  "${articleSrcFile}"
-	opDo fvNameValueSpecificSet ${buildDirPath} "paperSize" "8.5x11"
-	opDo fvNameValueSpecificSet ${buildDirPath} "results" "pdf"
-	opDo fvNameValueSpecificSet ${buildDirPath} "sides" "2"	
+        opDo fvNameValueSpecificSet ${buildDirPath} "buildDocClass" "article"
+        opDo fvNameValueSpecificSet ${buildDirPath} "buildName" "$( buildNameGet ${buildDirName} ${lcntName} )" 
+        opDo fvNameValueSpecificSet ${buildDirPath} "docSrc"  "${articleSrcFile}"
+        opDo fvNameValueSpecificSet ${buildDirPath} "paperSize" "8.5x11"
+        opDo fvNameValueSpecificSet ${buildDirPath} "results" "pdf"
+        opDo fvNameValueSpecificSet ${buildDirPath} "sides" "2" 
     }
 
     function markdown_build {
-	EH_assert [[ $# -eq 0 ]]
+        EH_assert [[ $# -eq 0 ]]
 
-	local buildDirName="markdown"
-	local buildDirPath="${lcntBuildCommonInfoBasePath}/${buildDirName}"		
+        local buildDirName="markdown"
+        local buildDirPath="${lcntBuildCommonInfoBasePath}/${buildDirName}"             
 
-	if [ ! -d "${buildDirPath}" ] ; then
-	    opDo mkdir "${buildDirPath}"
-	fi
+        if [ ! -d "${buildDirPath}" ] ; then
+            opDo mkdir "${buildDirPath}"
+        fi
 
-	opDo fvNameValueSpecificSet ${buildDirPath} "buildDocClass" "article"
-	opDo fvNameValueSpecificSet ${buildDirPath} "buildName" "$( buildNameGet ${buildDirName} ${lcntName} )"	
-	opDo fvNameValueSpecificSet ${buildDirPath} "docSrc"  "${articleSrcFile}"
-	opDo fvNameValueSpecificSet ${buildDirPath} "paperSize" "8.5x11"
-	opDo fvNameValueSpecificSet ${buildDirPath} "results" "pdf"
-	opDo fvNameValueSpecificSet ${buildDirPath} "sides" "2"	
+        opDo fvNameValueSpecificSet ${buildDirPath} "buildDocClass" "article"
+        opDo fvNameValueSpecificSet ${buildDirPath} "buildName" "$( buildNameGet ${buildDirName} ${lcntName} )" 
+        opDo fvNameValueSpecificSet ${buildDirPath} "docSrc"  "${articleSrcFile}"
+        opDo fvNameValueSpecificSet ${buildDirPath} "paperSize" "8.5x11"
+        opDo fvNameValueSpecificSet ${buildDirPath} "results" "pdf"
+        opDo fvNameValueSpecificSet ${buildDirPath} "sides" "2" 
     }
 
     local eachModel=""
 
     for eachModel in ${lcnt_docSrcList} ; do
-	case ${eachModel} in
-	    "articleEnFa"|"articleFaEn"|"main")
-		# Based on articleForm choose Book or Article
-		opDo art_8.5x11_build
-		opDo art_a4_build
-		opDo art_6x9_build
-		opDo art_17.5x23.5_build						
-		opDo html_build
-		opDo odt_build
-		opDo markdown_build		
-		;;
-	    "presentationEnFa"|"presentationFaEn")
-		opDo presPdf_build
-		opDo presReveal_build
-		;;
-	    "presArtEnFa"|"presArtFaEn")
-		opDo presArt_8.5x11_build
-		opDo presArt_a4_build
-		opDo presArt_html_build
-		;;
-	    *)
-		EH_problem "Missing docModel: ${eachModel}"
-		;;
-	esac
+        case ${eachModel} in
+            "articleEnFa"|"articleFaEn"|"main")
+                # Based on articleForm choose Book or Article
+                opDo art_8.5x11_build
+                opDo art_a4_build
+                opDo art_6x9_build
+                opDo art_17.5x23.5_build                                                
+                opDo html_build
+                opDo odt_build
+                opDo markdown_build             
+                ;;
+            "presentationEnFa"|"presentationFaEn")
+                opDo presPdf_build
+                opDo presReveal_build
+                ;;
+            "presArtEnFa"|"presArtFaEn")
+                opDo presArt_8.5x11_build
+                opDo presArt_a4_build
+                opDo presArt_html_build
+                ;;
+            *)
+                EH_problem "Missing docModel: ${eachModel}"
+                ;;
+        esac
     done
     
 
     lpReturn
-}	
+}       
 
 
 
@@ -587,51 +587,51 @@ _EOF_
     local lcntBuildInfoPath="$1"
 
     if [ -f "${lcntBuildInfoPath}/results" ] ; then
-	lcntBuild_results=$( head -1 "${lcntBuildInfoPath}/results" )
+        lcntBuild_results=$( head -1 "${lcntBuildInfoPath}/results" )
     else
-	lcntBuild_results=""
+        lcntBuild_results=""
     fi
 
     rightSide=${lcntBuild_results}
 
     lcntBuild_resultsList=""
     while [ "${rightSide}" != "" ] ; do
-	leftSide=`Plus_leftSide ${rightSide}`
-	lcntBuild_resultsList="${lcntBuild_resultsList} ${leftSide}"
-	if [ "${leftSide}" == "${rightSide}" ] ; then
-	    break
-	fi
-	rightSide=`Plus_rightSide ${rightSide}`
+        leftSide=`Plus_leftSide ${rightSide}`
+        lcntBuild_resultsList="${lcntBuild_resultsList} ${leftSide}"
+        if [ "${leftSide}" == "${rightSide}" ] ; then
+            break
+        fi
+        rightSide=`Plus_rightSide ${rightSide}`
     done
 
     if [ -f "${lcntBuildInfoPath}/buildName" ] ; then
-	lcntBuild_buildName=$( head -1 "${lcntBuildInfoPath}/buildName" )
+        lcntBuild_buildName=$( head -1 "${lcntBuildInfoPath}/buildName" )
     else
-	lcntBuild_buildName=""
+        lcntBuild_buildName=""
     fi
 
     if [ -f "${lcntBuildInfoPath}/docSrc" ] ; then
-	lcntBuild_docSrc=$( head -1 "${lcntBuildInfoPath}/docSrc" )
+        lcntBuild_docSrc=$( head -1 "${lcntBuildInfoPath}/docSrc" )
     else
-	lcntBuild_docSrc=""
+        lcntBuild_docSrc=""
     fi
 
     if [ -f "${lcntBuildInfoPath}/buildDocClass" ] ; then
-	lcntBuild_buildDocClass=$( head -1 "${lcntBuildInfoPath}/buildDocClass" )
+        lcntBuild_buildDocClass=$( head -1 "${lcntBuildInfoPath}/buildDocClass" )
     else
-	lcntBuild_buildDocClass=""
+        lcntBuild_buildDocClass=""
     fi
 
     if [ -f "${lcntBuildInfoPath}/paperSize" ] ; then
-	lcntBuild_paperSize=$( head -1 "${lcntBuildInfoPath}/paperSize" )
+        lcntBuild_paperSize=$( head -1 "${lcntBuildInfoPath}/paperSize" )
     else
-	lcntBuild_paperSize=""
+        lcntBuild_paperSize=""
     fi
 
     if [ -f "${lcntBuildInfoPath}/sides" ] ; then
-	lcntBuild_sides=$( head -1 "${lcntBuildInfoPath}/sides" )
+        lcntBuild_sides=$( head -1 "${lcntBuildInfoPath}/sides" )
     else
-	lcntBuild_sides=""
+        lcntBuild_sides=""
     fi
 }
 
@@ -651,27 +651,27 @@ _EOF_
     local lcntBuildsBasePath="./LCNT-INFO/Builds"  
 
     if [ -f "${lcntBuildsBasePath}/enabledList" ] ; then
-	lcntBuild_enabledList=$( head -1 "${lcntBuildsBasePath}/enabledList" )
+        lcntBuild_enabledList=$( head -1 "${lcntBuildsBasePath}/enabledList" )
     else
-	lcntBuild_enabledList=""
+        lcntBuild_enabledList=""
     fi
 
     if [ -f "${lcntBuildsBasePath}/resultsBaseDir" ] ; then
-	lcntBuild_resultsBaseDir=$( head -1 "${lcntBuildsBasePath}/resultsBaseDir" )
+        lcntBuild_resultsBaseDir=$( head -1 "${lcntBuildsBasePath}/resultsBaseDir" )
     else
-	lcntBuild_resultsBaseDir=""
+        lcntBuild_resultsBaseDir=""
     fi
 
     if [ -f "${lcntBuildsBasePath}/releaseBaseDir" ] ; then
-	lcntBuild_releaseBaseDir=$( head -1 "${lcntBuildsBasePath}/releaseBaseDir" )
+        lcntBuild_releaseBaseDir=$( head -1 "${lcntBuildsBasePath}/releaseBaseDir" )
     else
-	lcntBuild_releaseBaseDir=""
+        lcntBuild_releaseBaseDir=""
     fi
 
     if [ -f "${lcntBuildsBasePath}/releaseEnabledList" ] ; then
-	lcntBuild_releaseEnabledList=$( head -1 "${lcntBuildsBasePath}/releaseEnabledList" )
+        lcntBuild_releaseEnabledList=$( head -1 "${lcntBuildsBasePath}/releaseEnabledList" )
     else
-	lcntBuild_releaseEnabledList=""
+        lcntBuild_releaseEnabledList=""
     fi
 }
 

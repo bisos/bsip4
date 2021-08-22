@@ -47,7 +47,7 @@ function vis_moduleDescription {  cat  << _EOF_
 *  [[elisp:(org-cycle)][| ]]  Info          :: *[Module Description:]* [[elisp:(org-cycle)][| ]]
 
 _EOF_
-			       }
+                               }
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *Seed Extensions*
@@ -156,22 +156,22 @@ _EOF_
     local bxosList=$(vis_bxoIdsList)
     local each
     for each in ${bxosList} ; do
-	echo "+ ~${each}"
-    done	
+        echo "+ ~${each}"
+    done        
 }
 
 function noArgsHook {
     if [ $# -eq 0 ] ; then
-	vis_examples
+        vis_examples
     else
-	if [ "$1" == "list" ] ; then
-	    vis_bxoIdsList
-	elif [ "$1" == "there" ] ; then
-	    vis_bxoIdsListExamples
-	else
-	    # No other feature supported yet.
-	    vis_bxoIdsListExamples
-	fi
+        if [ "$1" == "list" ] ; then
+            vis_bxoIdsList
+        elif [ "$1" == "there" ] ; then
+            vis_bxoIdsListExamples
+        else
+            # No other feature supported yet.
+            vis_bxoIdsListExamples
+        fi
     fi
 }
 
@@ -202,8 +202,8 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if [ -z "${acctName}" ] ; then
-	EH_problem "Missing acctName"
-	lpReturn 101
+        EH_problem "Missing acctName"
+        lpReturn 101
     fi
 
     # NOTYET, verify that acctName is valid (source needed lib)    

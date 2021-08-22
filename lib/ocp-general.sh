@@ -62,15 +62,15 @@ alias _CommentBegin_='cat << _CommentEnd_ > /dev/null'
 function thisFuncNameBashOrKsh {
     if [[ "${BASH_VERSION}X" != "X" ]] ; then
         # for BASH -- ${BASH_VERSION}
-	echo ${2}
+        echo ${2}
     elif [[ "${KSH_VERSION}X" != "X" ]] ; then
         # For mksh
-	echo ${1}
+        echo ${1}
     elif [[ "${.sh.version}X" != "X" ]] ; then
         # for ksh93
-	echo "${1}"
+        echo "${1}"
     else
-	echo "UnknownShell"
+        echo "UnknownShell"
     fi
 }
 
@@ -83,8 +83,8 @@ function opBasePathSet {
       export PATH="${PATH}:/opt/sfw/bin:/usr/local/bin"
       export PATH="${PATH}:/usr/5bin:/usr/ccs/bin:/usr/sbin:/bin:/usr/bin"
       if [[ "${opRunOsRev}_" == "5.7_" ]] ; then 
-	# temporary, just to get perl
-	export PATH="${PATH}:/usr/public/foundation/bin"
+        # temporary, just to get perl
+        export PATH="${PATH}:/usr/public/foundation/bin"
       fi
       export PATH="${PATH}:."
       ;;
@@ -103,7 +103,7 @@ function opBasePathSet {
       ;;
     *)
       EH_problem "$0 not Suported on ${opRunOsType}"
-      ;;	
+      ;;        
   esac
 
 #   if [[ "${CURENVBASE}_" != "_" ]] ; then
@@ -152,9 +152,9 @@ function varIsSetPredicate {
     typeset varName="$1"
     eval validVar=\${$varName+"x"} 
     if [ -z ${validVar} ] ; then
-	return 1
+        return 1
     else
-	return 0
+        return 0
     fi
 }
 
@@ -269,12 +269,12 @@ FN_nonDirsPart() {
 
 function FN_typeIs  {
     if [ "${1}_" == "image_" ] ; then
-	file $2 | grep 'image data,' 1> /dev/null 2> /dev/null
-	retVal=$?
+        file $2 | grep 'image data,' 1> /dev/null 2> /dev/null
+        retVal=$?
         #echo ${retVal}
-	return ${retVal}
+        return ${retVal}
     else
-	return 101
+        return 101
     fi
 }
 
@@ -287,15 +287,15 @@ function FN_fileDefunctMake {
   then
     if test -f $2
     then
-	# The target should not have existed before
-	print "$2 exists: skiping defuncting of $1"
+        # The target should not have existed before
+        print "$2 exists: skiping defuncting of $1"
     else
-      	mv $1 $2
-	if [ ! -L $2 ] ; then
-	  # Only if not a symbolic link
-	  chmod 0000 $2
-	fi
-	ls -l $2 1>&2
+        mv $1 $2
+        if [ ! -L $2 ] ; then
+          # Only if not a symbolic link
+          chmod 0000 $2
+        fi
+        ls -l $2 1>&2
     fi
   else
     print "No $1: skiping defuncting of $1"
@@ -314,8 +314,8 @@ function FN_dirDefunctMake {
     else
       mv $1 $2
       if [ ! -L $2 ] ; then
-	# Only if not a symbolic link
-	chmod 0000 $2
+        # Only if not a symbolic link
+        chmod 0000 $2
       fi
       ls -ld $2 1>&2
     fi
@@ -334,7 +334,7 @@ FN_FileCreateIfNotThere() {
   fi
 
     if [ !  -f "${1}" ] ;  then
-	touch ${1}
+        touch ${1}
     fi
 }
 
@@ -343,12 +343,12 @@ FN_dirIsThereVerify() {
 
     if test -d "${1}"
     then
-	#ls -ld ${1}
-	#print "${1} exists"
-	return 0
+        #ls -ld ${1}
+        #print "${1} exists"
+        return 0
     else
-	print "Problem: FN_dirIsThereVerify: Missing Directory  ${1}"
-	return 101
+        print "Problem: FN_dirIsThereVerify: Missing Directory  ${1}"
+        return 101
     fi
 }
 
@@ -358,14 +358,14 @@ FN_dirCreateIfNotThere() {
 
     if test -d "${1}"
     then
-	#ls -ld ${1}
-	#print "${1} exists"
-	return 0
+        #ls -ld ${1}
+        #print "${1} exists"
+        return 0
     else
-	mkdir "${1}"
-	#print "${1} created"
-	#ls -ld ${1}
-	return $?
+        mkdir "${1}"
+        #print "${1} created"
+        #ls -ld ${1}
+        return $?
     fi
 }
 
@@ -377,7 +377,7 @@ function FN_dirCreatePathIfNotThere {
 
   if test -d $1 ;   then
      if [[ "${G_verbose}_" == "verbose_" ]] ; then
-	printf 1>&2 "Directory $1 exists -- ${BASH_SOURCE[0]} $FUNCNAME skipped\n"
+        printf 1>&2 "Directory $1 exists -- ${BASH_SOURCE[0]} $FUNCNAME skipped\n"
      fi
   else
      mkdir -p $1
@@ -396,12 +396,12 @@ FN_fileSymlinkSafeMake() {
 
   if test -a $1 ;  then
     if test -a $2 ;  then
-	# The target should not have existed before
-	print "$2 exists: skiping $0 of $1"
-	ls -l $2 1>&2
+        # The target should not have existed before
+        print "$2 exists: skiping $0 of $1"
+        ls -l $2 1>&2
     else
-      	ln -s $1 $2
-	ls -l $2 1>&2
+        ln -s $1 $2
+        ls -l $2 1>&2
     fi
   else
     print "No $1: skiping $0 of $1"
@@ -481,14 +481,14 @@ FN_fileSymlinkRemove() {
 
   for thisFile in "$@" ; do
       if test  -h "${thisFile}" ;     then
-	  print "running: rm ${thisFile}" 
-	  /bin/rm "${thisFile}"
+          print "running: rm ${thisFile}" 
+          /bin/rm "${thisFile}"
       elif test -a "${thisFile}" ; then
           # The target should not have existed before
-	  print "${thisFile} exists: skiping"
-	  ls -l "${thisFile}" 1>&2
+          print "${thisFile} exists: skiping"
+          ls -l "${thisFile}" 1>&2
       else
-	  print "Missing ${thisFile}: skiping"
+          print "Missing ${thisFile}: skiping"
       fi
   done
 }
@@ -502,12 +502,12 @@ FN_fileSymlinkRemoveIfThere() {
 
   for thisFile in "$@" ; do
       if test  -h "${thisFile}" ;     then
-	  print "running: rm ${thisFile}" 
-	  /bin/rm "${thisFile}"
+          print "running: rm ${thisFile}" 
+          /bin/rm "${thisFile}"
       elif test -a "${thisFile}" ; then
           # The target should not have existed before
-	  print "${thisFile} exists: skiping"
-	  ls -l "${thisFile}" 1>&2
+          print "${thisFile} exists: skiping"
+          ls -l "${thisFile}" 1>&2
       fi
   done
 }
@@ -616,11 +616,11 @@ function FN_fileSafeCopy {
 
   if test -f $1 ;  then
     if test -f $2 ; then
-	# The target should not have existed before
-	print "$2 exists: Skiping $0 of $1 $2"
+        # The target should not have existed before
+        print "$2 exists: Skiping $0 of $1 $2"
     else
-      	cp -p $1 $2
-	#ls -l $2 1>&2
+        cp -p $1 $2
+        #ls -l $2 1>&2
     fi
   else
     print "No $1: Skipping $0 of $1 $2"
@@ -638,12 +638,12 @@ function FN_fileSafeMove {
 
   if test -f $1 ;  then
     if test -f $2 ; then
-	# The target should not have existed before
-	print "$2 exists: mv $2 $2.$$; mv $1 $2"
-	mv $2 $2.$$
-      	mv $1 $2
+        # The target should not have existed before
+        print "$2 exists: mv $2 $2.$$; mv $1 $2"
+        mv $2 $2.$$
+        mv $1 $2
     else
-      	mv $1 $2
+        mv $1 $2
     fi
   else
     print "No $1: Skipping $0 of $1 $2"
@@ -653,8 +653,8 @@ function FN_fileSafeMove {
 
 function FN_fileSize { 
     if test $# -ne 1 ; then
-	EH_problem "$0 requires one arg: Args=$*"
-	return 1
+        EH_problem "$0 requires one arg: Args=$*"
+        return 1
     fi
     FILESIZE=$(stat -c%s "$1")
     echo "$FILESIZE"
@@ -677,7 +677,7 @@ FN_fileCopy() {
 
   if test -f $1 ;  then
     if test -f $2 ; then
-	TM_trace 7 "$2 exists: overwriting it"
+        TM_trace 7 "$2 exists: overwriting it"
     fi
 
     cp -p $1 $2
@@ -696,11 +696,11 @@ function FN_fileSafeKeep {
   for thisOne in $* ;  do
     if test -f ${thisOne} -o -L ${thisOne} ;   then
       if [ "${dateTag}X" == "X" ] ; then 
-	#TM_trace 7 "not found"
-	dateTag=`date +%y%m%d%H%M%S`
+        #TM_trace 7 "not found"
+        dateTag=`date +%y%m%d%H%M%S`
       fi
       if [[ "${G_verbose}_" == "verbose_" ]] ; then
-	print "$0: ${thisOne}.${dateTag}" 1>&2
+        print "$0: ${thisOne}.${dateTag}" 1>&2
       fi
       mv ${thisOne} ${thisOne}.${dateTag}
     fi
@@ -714,11 +714,11 @@ function FN_fileSafeKeepCp {
   for thisOne in $* ;  do
     if test -f ${thisOne} -o -L ${thisOne} ;   then
       if [ "${dateTag}X" == "X" ] ; then 
-	#TM_trace 7 "not found"
-	dateTag=`date +%y%m%d%H%M%S`
+        #TM_trace 7 "not found"
+        dateTag=`date +%y%m%d%H%M%S`
       fi
       if [[ "${G_verbose}_" == "verbose_" ]] ; then
-	print "$0: ${thisOne}.${dateTag}" 1>&2
+        print "$0: ${thisOne}.${dateTag}" 1>&2
       fi
       cp -p  ${thisOne} ${thisOne}.${dateTag}
     fi
@@ -739,7 +739,7 @@ function FN_dirSafeKeep {
     mv $1 $1.${dateTag}
   else
      if [[ "${G_verbose}_" == "verbose_" ]] ; then
-	print -u2 "$1: not a directory, $0 skipped"
+        print -u2 "$1: not a directory, $0 skipped"
      fi
   fi
 }
@@ -756,17 +756,17 @@ function FN_safeKeepsClean {
     typeset filesListVar=$( ls -d $1.[0-9]* 2> /dev/null )
 
     for thisFile in ${filesListVar} ; do
-	if test  -d "${thisFile}" ;     then
-	      print "running: rm -r ${thisFile}" 
-	      /bin/rm -r "${thisFile}"
-	elif test -f "${thisFile}" ; then
-	      print "running: rm  ${thisFile}" 
-	      /bin/rm "${thisFile}"
-	else
-	    if [[ "${G_verbose}_" == "verbose_" ]] ; then
-		print -u2 "$1: not a directory or file, $FUNCNAME skipped"
-	    fi
-	fi
+        if test  -d "${thisFile}" ;     then
+              print "running: rm -r ${thisFile}" 
+              /bin/rm -r "${thisFile}"
+        elif test -f "${thisFile}" ; then
+              print "running: rm  ${thisFile}" 
+              /bin/rm "${thisFile}"
+        else
+            if [[ "${G_verbose}_" == "verbose_" ]] ; then
+                print -u2 "$1: not a directory or file, $FUNCNAME skipped"
+            fi
+        fi
     done
 }
 
@@ -780,11 +780,11 @@ function FN_dirDeleteIfThere {
 
   for thisDir in "$@" ; do
       if test -d ${thisDir} ;   then
-	  /bin/rm -r -f ${thisDir}
+          /bin/rm -r -f ${thisDir}
       else
-	  if [[ "${G_verbose}_" == "verbose_" ]] ; then
-	      print -u2 "${thisDir}: not a directory, $0 skipped"
-	  fi
+          if [[ "${G_verbose}_" == "verbose_" ]] ; then
+              print -u2 "${thisDir}: not a directory, $0 skipped"
+          fi
       fi
   done
 }
@@ -805,10 +805,10 @@ FN_lineIsInFile() {
 
     if [ -s /tmp/$$id ]
     then
-	#print "String $1 already in $2"
-	return 0
+        #print "String $1 already in $2"
+        return 0
     else
-	return 1
+        return 1
     fi
     /bin/rm /tmp/$$id
 }
@@ -867,15 +867,15 @@ FN_lineAddToFile() {
 
     if [ -s /tmp/$$id ]
     then
-	#print "String $1 already in $3"
-	#cat /tmp/$$id
-	#print "$0: skiping it"
-	return 1
+        #print "String $1 already in $3"
+        #cat /tmp/$$id
+        #print "$0: skiping it"
+        return 1
     else
-	#print "Adding $2 to $3"
-	#print $2 >> $3
+        #print "Adding $2 to $3"
+        #print $2 >> $3
         print $2 >> $3
-	return 0
+        return 0
     fi
     /bin/rm /tmp/$$id
 }
@@ -908,14 +908,14 @@ function FN_textReplaceOrAdd {
 # 
 
     if [[ $# -ne 3 ]] ; then
-	EH_problem "Bad usage: $# expected 3"
-	return 1
+        EH_problem "Bad usage: $# expected 3"
+        return 1
     fi
     FN_lineIsInFile "$1" "$3"
     if [[ $? == 0 ]] ; then
-	FN_textReplace "$1" "$2" "$3" || return $?
+        FN_textReplace "$1" "$2" "$3" || return $?
     else
-	( print "$2" >> "$3" ) || return $?
+        ( print "$2" >> "$3" ) || return $?
     fi
 }
 
@@ -928,9 +928,9 @@ function FN_fileInstall {
 
     typeset cmdPath=""
     if [[ "X${opRunOsType}" == "XSunOS" ]] ; then
-	cmdPath="/opt/sfw/bin/install"
+        cmdPath="/opt/sfw/bin/install"
     elif [[ "X${opRunOsType}" == "XLinux" ]] ; then
-	cmdPath="install"
+        cmdPath="install"
     fi
     ${cmdPath} "$@"
 }    
@@ -970,7 +970,7 @@ function FN_tempFile {
     typeset tmp="/tmp/${G_myName}.$$.$RANDOM"
     #while [[ -e "$tmp" ]] ; do
     while test -e "$tmp"  ; do
-	tmp="/tmp/${G_myName}.$$.$RANDOM"
+        tmp="/tmp/${G_myName}.$$.$RANDOM"
     done
     print -- "$tmp"
 }
@@ -1012,18 +1012,18 @@ function FN_absolutePathGet {
   
   case "${givenFile}" in
       ~*)
-	  processedGivenFile=$(eval /bin/echo "${givenFile}")
-	  if [ "${processedGivenFile}" == "${givenFile}" ] ; then
-	      printf "FN_absolutePathGet: Missing ${givenFile}\n" 1>&2
-	      echo ""
-	      return
-	  else
-	      givenFile="${processedGivenFile}"
-	  fi
-	  ;;
+          processedGivenFile=$(eval /bin/echo "${givenFile}")
+          if [ "${processedGivenFile}" == "${givenFile}" ] ; then
+              printf "FN_absolutePathGet: Missing ${givenFile}\n" 1>&2
+              echo ""
+              return
+          else
+              givenFile="${processedGivenFile}"
+          fi
+          ;;
       *)
-	  givenFile=$(eval /bin/echo "${givenFile}")
-	  ;;
+          givenFile=$(eval /bin/echo "${givenFile}")
+          ;;
   esac
 
   local absPath=""
@@ -1049,13 +1049,13 @@ FN_fileCmpAndDiff () {
     typeset retVal=0
 
     if (cmp ${1} ${2}  1> /dev/null 2>&1) ; then
-	ANT_raw "VERIFIED: ${1} and ${2} Are identical"
-	retVal=0
+        ANT_raw "VERIFIED: ${1} and ${2} Are identical"
+        retVal=0
     else
-	ANT_raw "Inconsistent -- ${1} ${2} : Are Different"
-	#opDo diff ${1} ${2}
-	diff ${1} ${2}
-	retVal=100
+        ANT_raw "Inconsistent -- ${1} ${2} : Are Different"
+        #opDo diff ${1} ${2}
+        diff ${1} ${2}
+        retVal=100
     fi
     return ${retVal}
 }
@@ -1072,13 +1072,13 @@ USER_isInPasswdFile() {
 
     if [ -s /tmp/$$id ]
     then
-	print "User -- $1 -- Is In /etc/passwd file"
+        print "User -- $1 -- Is In /etc/passwd file"
        /bin/rm /tmp/$$id
-	return 0
+        return 0
     else
-	print "User -- $1 -- Is NOT In /etc/passwd file"
-	/bin/rm /tmp/$$id
-	return 11
+        print "User -- $1 -- Is NOT In /etc/passwd file"
+        /bin/rm /tmp/$$id
+        return 11
     fi
 
 }
@@ -1095,12 +1095,12 @@ USER_loginGivenHomeDir() {
      loginName=`cat /etc/passwd | FN_egrep ":$1:" | cut -d':' -f 1` 
 
        if [ "${loginName}X" == "X" ] ; then 
-	 #TM_trace 7 "not found"
-	 return 1
+         #TM_trace 7 "not found"
+         return 1
        else
-	 print ${loginName}
-	 return 0
-	 fi
+         print ${loginName}
+         return 0
+         fi
 
 }
 
@@ -1119,25 +1119,25 @@ PN_fileVerify () {
 }
 
 function FN_fileRmIfThere {
-	#print $*
-	#typeset -ft PN_rmIfThere
-	PN_rmIfThere $*
+        #print $*
+        #typeset -ft PN_rmIfThere
+        PN_rmIfThere $*
 }
 
 PN_rmIfThere()
 {
-	rmIfThereVerbose=FALSE
+        rmIfThereVerbose=FALSE
 
   while getopts v c
   do
     case $c in
       'v')
-	rmIfThereVerbose=TRUE
-	;;
+        rmIfThereVerbose=TRUE
+        ;;
       *)
-	EH_problem "rmIfThere: BAD OPTION"
-	exit
-	;;
+        EH_problem "rmIfThere: BAD OPTION"
+        exit
+        ;;
     esac
   done
 
@@ -1148,15 +1148,15 @@ PN_rmIfThere()
   for f in $* 
   do
       if [ -f ${f} ] ;  then
-	if [ ${rmIfThereVerbose} == TRUE ] ; then 
-	  print Removing $f
-	fi
-	/bin/rm $f
+        if [ ${rmIfThereVerbose} == TRUE ] ; then 
+          print Removing $f
+        fi
+        /bin/rm $f
       else
-	#TM_trace 9 -- Skipping $f
-	# NOTYET, TM_trace is not working ...
-	rmIfThereVerbose=${rmIfThereVerbose}
-	#print ""
+        #TM_trace 9 -- Skipping $f
+        # NOTYET, TM_trace is not working ...
+        rmIfThereVerbose=${rmIfThereVerbose}
+        #print ""
       fi
   done
 
@@ -1167,11 +1167,11 @@ function IS_inList {
   # $1=target --  $2=validList
 
     if [[ "$1_" == "_" ]] ; then
-	return 1
+        return 1
     fi
 
     if [[ "$2_" == "_" ]] ; then
-	return 1
+        return 1
     fi
 
 
@@ -1230,7 +1230,7 @@ function STR_toTitleCaseWords {
 
     typeset thisOne=""
     for thisOne in ${argv} ; do
-	echo ${thisOne} | awk 'BEGIN{OFS=FS=""}{$1=toupper($1);print}'
+        echo ${thisOne} | awk 'BEGIN{OFS=FS=""}{$1=toupper($1);print}'
     done
 }
 
@@ -1348,8 +1348,8 @@ G_abortIfNotSupportedOs() {
     # NOTYET, Linux to be added
     *)
       uname
-	print "$0 not Suported on ${osType}"
-	exit
+        print "$0 not Suported on ${osType}"
+        exit
   esac
 
 }

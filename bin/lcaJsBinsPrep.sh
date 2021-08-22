@@ -75,9 +75,9 @@ _EOF_
     #  [[elisp:(lsip-local-run-command "apt-cache search revealJs | egrep '^revealJs'")][apt-cache search revealJs | egrep '^revealJs']]
 
     itemOrderedList=(
-	"npm" #  package manager for Node.js
-	"npmPkgsInstall"
-	"npmPkgVideoInstall"
+        "npm" #  package manager for Node.js
+        "npmPkgsInstall"
+        "npmPkgVideoInstall"
     )
 
     itemOptionalOrderedList=()
@@ -134,7 +134,7 @@ binsPrep_npmPkgsInstall_DEFAULT_DEFAULT () {
     typeset pkgRePubAgent=""
 
     function customInstallScript {
-	opDo sudo npm install -g --save --prefix=/usr/local reveal.js
+        opDo sudo npm install -g --save --prefix=/usr/local reveal.js
     }
 }
 
@@ -157,8 +157,8 @@ binsPrep_npmPkgVideoInstall_DEFAULT_DEFAULT () {
     typeset pkgRePubAgent=""
 
     function customInstallScript {
-	opDo sudo npm install -g --save --prefix=/usr/local video.js@^5.8
-	opDo sudo npm install -g --save --prefix=/usr/local videojs-resolution-switcher-v6
+        opDo sudo npm install -g --save --prefix=/usr/local video.js@^5.8
+        opDo sudo npm install -g --save --prefix=/usr/local videojs-resolution-switcher-v6
     }
 }
 
@@ -173,7 +173,7 @@ function vis_revealJsPluginsUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
 
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;     
@@ -182,8 +182,8 @@ _EOF_
     typeset thisPluginBase=""    
 
     if [ ! -d "${revealPluginBase}" ] ; then
-	EH_problem "Missing ${revealPluginBase}"
-	lpReturn 101
+        EH_problem "Missing ${revealPluginBase}"
+        lpReturn 101
     fi
 
     thisPluginBase="${revealPluginBase}/audio-slideshow"
@@ -204,7 +204,7 @@ _EOF_
     opDo sudo npm install -g --save reveal.js-menu
 
     lpReturn
-}	
+}       
 
 
 _CommentBegin_
@@ -216,7 +216,7 @@ function nodePpaPrep {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
 
     opDo sudo apt-get install python-software-properties
@@ -226,7 +226,7 @@ _EOF_
     sudo apt-get install nodejs
     
     lpReturn
-}	
+}       
 
 
 

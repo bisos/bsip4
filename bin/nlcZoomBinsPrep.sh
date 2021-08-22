@@ -52,11 +52,11 @@ binsPrep_zoom_DEFAULT_DEFAULT () {
     mmaPkgDebianMethod="custom"  #  or "apt" no need for customInstallScript but with binsPrep_installPostHook
 
     function customInstallScript {
-	#lpDo sudo dpkg --purge --force-all zoom
+        #lpDo sudo dpkg --purge --force-all zoom
 
-	inBaseDirDo /tmp wget https://zoom.us/client/latest/zoom_amd64.deb
-	
-	opDo sudo apt-get install -y /tmp/zoom_amd64.deb
+        inBaseDirDo /tmp wget https://zoom.us/client/latest/zoom_amd64.deb
+        
+        opDo sudo apt-get install -y /tmp/zoom_amd64.deb
     }
 }
 

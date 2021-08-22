@@ -120,8 +120,8 @@ _CommentEnd_
 
 function noArgsHook {
     if [[ $# -gt 0 ]] ; then
-	${G_myName} $*
-	return
+        ${G_myName} $*
+        return
     fi
 
     G_runMode="showRun"
@@ -168,27 +168,27 @@ _EOF_
     declare orgTopLevel=1
 
     if [ $# -eq 1 ] ; then
-	orgTopLevel="$1"
+        orgTopLevel="$1"
     fi
 
     typeset orgTopLevelStr=""
 
     for (( i=1; i<=${orgTopLevel}; i++ )) ; do
-	orgTopLevelStr=${orgTopLevelStr}"*"
+        orgTopLevelStr=${orgTopLevelStr}"*"
     done
     
     typeset thisLine=""
 
     cat |
-	while read thisLine  ; do
-	    if [[ ${thisLine:0:1} == "*" ]] ; then
-		echo "${orgTopLevelStr}${thisLine}"
-	    elif [[ ${orgTopLevel} == 0 ]] ; then 
-		printf -- "${thisLine}\n"
-	    else
-		echo "${orgTopLevelStr} ${thisLine}"
-	    fi
-	done
+        while read thisLine  ; do
+            if [[ ${thisLine:0:1} == "*" ]] ; then
+                echo "${orgTopLevelStr}${thisLine}"
+            elif [[ ${orgTopLevel} == 0 ]] ; then 
+                printf -- "${thisLine}\n"
+            else
+                echo "${orgTopLevelStr} ${thisLine}"
+            fi
+        done
 
     lpReturn
 }
@@ -208,16 +208,16 @@ _EOF_
     declare orgTopLevel=1
 
     if [ $# -eq 1 ] ; then
-	orgTopLevel="$1"
+        orgTopLevel="$1"
     fi
 
     typeset thisLine=""
 
     cat |
     while read thisLine  ; do
-	lineType=$( getLineType "${thisLine}" )
+        lineType=$( getLineType "${thisLine}" )
 
-	lineProc "${lineType}" "${thisLine}" "${orgTopLevel}"
+        lineProc "${lineType}" "${thisLine}" "${orgTopLevel}"
     done
 
     lpReturn
@@ -237,13 +237,13 @@ _EOF_
     typeset thisLine="$1"
 
     if [[ "${thisLine}" == *###* ]] ; then
-	echo "chapter"
+        echo "chapter"
     elif [[ "${thisLine}" == *===* ]] ; then
-	echo "section"
+        echo "section"
     elif [[ "${thisLine}" == *%%%* ]] ; then
-	echo "subsection"
+        echo "subsection"
     else
-	echo "cmndLine"
+        echo "cmndLine"
     fi
     lpReturn
 }
@@ -266,37 +266,37 @@ _EOF_
     typeset orgTopLevelStr=""
 
     for (( i=1; i<=${orgTopLevel}; i++ )) ; do
-	orgTopLevelStr=${orgTopLevelStr}"*"
+        orgTopLevelStr=${orgTopLevelStr}"*"
     done
     
 
     case "${lineType}" in
-	"chapter")
-	cat  << _EOF_
+        "chapter")
+        cat  << _EOF_
 ${orgTopLevelStr}  [[elisp:(org-show-subtree)][|=]]  [[elisp:(org-cycle)][| ]]  [[elisp:(beginning-of-buffer)][Top]] | [[elisp:(delete-other-windows)][(1)]] | [[elisp:(org-top-overview)][(O)]]  ${thisLine}
 _EOF_
 
-	    doNothing
-	    ;;
-	"section")
-	cat  << _EOF_
+            doNothing
+            ;;
+        "section")
+        cat  << _EOF_
 ${orgTopLevelStr}*  [[elisp:(org-show-subtree)][|=]]  [[elisp:(org-cycle)][| ]]  [[elisp:(beginning-of-buffer)][Top]] | [[elisp:(delete-other-windows)][(1)]] | [[elisp:(org-top-overview)][(O)]]  ${thisLine}
 _EOF_
-	    ;;
-	"subsection")
-	cat  << _EOF_
+            ;;
+        "subsection")
+        cat  << _EOF_
 ${orgTopLevelStr}**  [[elisp:(org-show-subtree)][|=]]  [[elisp:(org-cycle)][| ]]  [[elisp:(beginning-of-buffer)][Top]] | [[elisp:(delete-other-windows)][(1)]] | [[elisp:(org-top-overview)][(O)]]  ${thisLine}
 _EOF_
-	    ;;
-	"cmndLine")
-	cat  << _EOF_
+            ;;
+        "cmndLine")
+        cat  << _EOF_
 [[elisp:(lsip-local-run-command-here "$( str_escapeQuotes ${thisLine} )")][${thisLine}]] 
 _EOF_
-	    ;;
-	*)
-	    EH_problem "Unexpected lineType=${lineType}"
-	    lpReturn 1
-	    ;;
+            ;;
+        *)
+            EH_problem "Unexpected lineType=${lineType}"
+            lpReturn 1
+            ;;
     esac
 
 
@@ -362,7 +362,7 @@ _EOF_
 
     egrep -v "_tree_|_treeProc_|Notes.org|CVS" |
     while read thisLine  ; do
-	lsLineProc "${thisLine}"
+        lsLineProc "${thisLine}"
     done
 
     lpReturn
@@ -378,13 +378,13 @@ _EOF_
     typeset thisLine="$1"
 
     if [ -z "${orgLevel}" ] ; then
-	orgLevel=1
+        orgLevel=1
     fi
 
     orgLevelString=""    
 
     for (( i=1; i <= ${orgLevel} ;i++ )) ; do
-	orgLevelString="${orgLevelString}*"
+        orgLevelString="${orgLevelString}*"
     done
     
     cat  << _EOF_

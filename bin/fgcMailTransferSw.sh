@@ -136,7 +136,7 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     for this in ${itemsOrderedList[@]} ; do
-	echo ${this}
+        echo ${this}
     done
 
     lpReturn
@@ -151,7 +151,7 @@ _EOF_
     EH_assert [[ $# -gt 0 ]]
 
     for this in ${itemsOrderedList[@]} ; do
-	opDo eval "${this}" " " $@
+        opDo eval "${this}" " " $@
     done
 
     lpReturn

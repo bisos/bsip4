@@ -164,18 +164,18 @@ _EOF_
     local ppBoxesBxoId=""
 
     if [ -d "${selectedPpBoxesPath}" ] ; then
-	ppBoxesBxoId=$( fileParamManage.py -i fileParamReadPath ${selectedPpBoxesPath} )
-	if [ -z "${ppBoxesBxoId}" ] ; then
-	    EH_problem "Missing ppBoxesBxoId"
-	    lpReturn 101
-	fi
-	if ! vis_bxoAcctVerify "${ppBoxesBxoId}" ; then
-	    EH_problem "Missing ppBoxesBxoId"
-	    lpReturn 101
-	fi
+        ppBoxesBxoId=$( fileParamManage.py -i fileParamReadPath ${selectedPpBoxesPath} )
+        if [ -z "${ppBoxesBxoId}" ] ; then
+            EH_problem "Missing ppBoxesBxoId"
+            lpReturn 101
+        fi
+        if ! vis_bxoAcctVerify "${ppBoxesBxoId}" ; then
+            EH_problem "Missing ppBoxesBxoId"
+            lpReturn 101
+        fi
      else
-	EH_problem "Missing ${selectedPpBoxesPath}"
-	lpReturn 101
+        EH_problem "Missing ${selectedPpBoxesPath}"
+        lpReturn 101
     fi
 
     local ppBoxesBase=$( FN_absolutePathGet ~${ppBoxesBxoId} )/boxes
@@ -184,14 +184,14 @@ _EOF_
     echo "${ppBoxesBase}"
 
     lpReturn
-}	
+}       
 
 
 function vis_thisBoxNuUpdateAt {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    
    EH_assert [[ $# -eq 1 ]]
    local boxNu="$1"
@@ -211,8 +211,8 @@ _EOF_
        lpDo fileParamManage.py -i fileParamWrite ${boxNuBase} uniqueBoxId "${my_uniqueBoxId}"
    else
        if [ "${my_uniqueBoxId}" != "${stored_uniqueBoxId}" ] ; then
-	   EH_problem "Expected ${my_uniqueBoxId} -- got ${stored_uniqueBoxId}"
-	   lpReturn 101
+           EH_problem "Expected ${my_uniqueBoxId} -- got ${stored_uniqueBoxId}"
+           lpReturn 101
        fi
    fi
 
@@ -222,8 +222,8 @@ _EOF_
        lpDo fileParamManage.py -i fileParamWrite ${boxNuBase} boxNu "${boxNu}"
    else
        if [ "${boxNu}" != "${stored_boxNu}" ] ; then
-	   EH_problem "Expected ${boxNu} -- got ${stored_boxNu}"
-	   lpReturn 101
+           EH_problem "Expected ${boxNu} -- got ${stored_boxNu}"
+           lpReturn 101
        fi
    fi
 
@@ -234,19 +234,19 @@ _EOF_
        lpDo fileParamManage.py -i fileParamWrite ${boxNuBase} boxId "${my_boxId}"
    else
        if [ "${my_boxId}" != "${stored_boxId}" ] ; then
-	   EH_problem "Expected ${my_boxId} -- got ${stored_boxId}"
-	   lpReturn 101
+           EH_problem "Expected ${my_boxId} -- got ${stored_boxId}"
+           lpReturn 101
        fi
    fi
 
    lpReturn
-}	
+}       
 
 function vis_boxNuGetNext {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    
    EH_assert [[ $# -eq 0 ]]
 
@@ -271,7 +271,7 @@ function vis_givenUniqueBoxIdFindBoxNuBase {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    
    EH_assert [[ $# -eq 1 ]]
    local uniqueBoxId="$1"
@@ -291,13 +291,13 @@ _EOF_
        stored_uniqueBoxId=$( fileParamManage.py -i fileParamRead ${eachBoxNuBase} uniqueBoxId )
 
        if [ -z "${stored_uniqueBoxId}" ] ; then
-	   EH_problem "Missing uniqueBoxId in ${eachBoxNuBase}"
-	   continue
+           EH_problem "Missing uniqueBoxId in ${eachBoxNuBase}"
+           continue
        else
-	   if [ "${uniqueBoxId}" == "${stored_uniqueBoxId}" ] ; then
-	       found=${eachBoxNuBase}
-	       break
-	   fi
+           if [ "${uniqueBoxId}" == "${stored_uniqueBoxId}" ] ; then
+               found=${eachBoxNuBase}
+               break
+           fi
        fi
 
    done
@@ -311,7 +311,7 @@ function vis_boxNuToBoxId {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
 
    EH_assert [[ $# -eq 1 ]]
    
@@ -323,7 +323,7 @@ function vis_boxIdToBoxNu {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
 
    EH_assert [[ $# -eq 1 ]]
    
@@ -337,7 +337,7 @@ function vis_thisBoxFindId {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
 
    local boxNu=$( vis_thisBoxFindNu )
@@ -351,7 +351,7 @@ function vis_thisBoxFindNu {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
 
    EH_assert [[ $# -eq 0 ]]
    
@@ -362,7 +362,7 @@ function vis_thisBoxFindBase {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
 
    EH_assert [[ $# -eq 0 ]]
    
@@ -374,7 +374,7 @@ function vis_thisBoxAdd {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
 
    EH_assert [[ $# -eq 0 ]]
 
@@ -405,7 +405,7 @@ function vis_thisBoxPush {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
 
    EH_assert [[ $# -eq 0 ]]
 
@@ -420,7 +420,7 @@ function vis_thisBoxAddAndPush {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 0 ]]
 
    lpDo vis_thisBoxAdd
@@ -431,7 +431,7 @@ function vis_boxesGitPull {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		      }
+                      }
 
    EH_assert [[ $# -eq 0 ]]
 

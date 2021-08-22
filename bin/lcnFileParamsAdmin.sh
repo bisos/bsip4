@@ -131,20 +131,20 @@ _EOF_
     }
 
     if [ $# -gt 0 ] ; then
-	typeset thisOne=""
-	for thisOne in ${@} ; do
-	    typeset thisFile=$( FN_absolutePathGet ${thisOne} )
-	    echo ${thisFile}
-	done
+        typeset thisOne=""
+        for thisOne in ${@} ; do
+            typeset thisFile=$( FN_absolutePathGet ${thisOne} )
+            echo ${thisFile}
+        done
     else
-	typeset thisLine=""
+        typeset thisLine=""
     
-	while read thisLine ; do
-	    if [ "${thisLine}" != "" ] ; then
-		typeset thisFile=$( FN_absolutePathGet ${thisLine} )
-		echo ${thisFile}
-	    fi
-	done
+        while read thisLine ; do
+            if [ "${thisLine}" != "" ] ; then
+                typeset thisFile=$( FN_absolutePathGet ${thisLine} )
+                echo ${thisFile}
+            fi
+        done
     fi
 
     lpReturn

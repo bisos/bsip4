@@ -27,16 +27,16 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
     if [ ! -z "${bxoId}" ] ; then
-	return 0
+        return 0
     elif [ ! -z "${bxoPath:-}" ] ; then
-	bxoId=$( vis_bxoIdObtainForPath "${bxoPath}" )
-	if [ -z ${bxoId} ] ; then
-	    return 101
-	else
-	    bxoHome=$( FN_absolutePathGet ~${bxoId} )
-	fi
+        bxoId=$( vis_bxoIdObtainForPath "${bxoPath}" )
+        if [ -z ${bxoId} ] ; then
+            return 101
+        else
+            bxoHome=$( FN_absolutePathGet ~${bxoId} )
+        fi
     else
-	return 101
+        return 101
     fi
     return 0
 }
@@ -109,23 +109,23 @@ _EOF_
     
     case ${bxeKind} in 
       real)
-	    bxeKindTag="bxro"
-	    ;;
+            bxeKindTag="bxro"
+            ;;
       info)
-	    bxeKindTag="bxio"
-	    ;;
+            bxeKindTag="bxio"
+            ;;
       svc)
-	    bxeKindTag="bxso"
-	    ;;
+            bxeKindTag="bxso"
+            ;;
       container)
-	    bxeKindTag="bxco"
-	    ;;
+            bxeKindTag="bxco"
+            ;;
       materialization)
-	    bxeKindTag="bxmo"
-	    ;;
+            bxeKindTag="bxmo"
+            ;;
       *)
-	    EH_problem "Unknown bxeKind=${bxeKind}"
-	    return 101
+            EH_problem "Unknown bxeKind=${bxeKind}"
+            return 101
     esac
 
     echo "${bxeKindTag}${bxeTypeWord}.sh"
@@ -190,19 +190,19 @@ _EOF_
     set ${pathArray[@]}
 
     for thisElem in ${pathArray[@]} ; do
-	#echo "${thisElem}"
-	shift
-	if [[ "${bxoBaseFound}" == "TRUE" ]] ; then
-	    break
-	fi
-	if [[ "${thisElem}" == "iso" ]] ; then
-	    bxoBaseFound="TRUE"
-	fi
+        #echo "${thisElem}"
+        shift
+        if [[ "${bxoBaseFound}" == "TRUE" ]] ; then
+            break
+        fi
+        if [[ "${thisElem}" == "iso" ]] ; then
+            bxoBaseFound="TRUE"
+        fi
     done
     
     if [[ "${bxoBaseFound}" != "TRUE" ]] ; then
-	ANT_raw "bxoId not found"
-	lpReturn 101
+        ANT_raw "bxoId not found"
+        lpReturn 101
     fi
 
     echo "${thisElem}"
@@ -217,7 +217,7 @@ function bxoRealizationScopeIsValid {
 - realize     -- Create the git account or the repo. Assumes basePrep has previously been invoked. 
 - full        -- basePrep+realize
 _EOF_
-		      }
+                      }
    EH_assert [[ $# -eq 1 ]]
    local bxoRealizationScope=$1
    case ${bxoRealizationScope} in
@@ -225,8 +225,8 @@ _EOF_
            return 0
            ;;
        *)
-	   return 1
-	   ;;
+           return 1
+           ;;
    esac
 }
 
@@ -241,39 +241,39 @@ _EOF_
     local repoBase=$2
 
     if [ -d "${repoBase}" ] ; then
-	case ${bxoRealizationScope} in
-	    realize)
-		lpDo vis_repoCreateAndPushBasedOnPath ${repoBase}
-		lpReturn 1
-		;;
-	    full)
-		ANT_raw "With bxoRealizationScope=${bxoRealizationScope} did not expect ${repoBase}"
-		lpDo vis_repoCreateAndPushBasedOnPath ${repoBase}
-		lpReturn 1
-		;;
-	    basePrep)
-		ANT_raw "repoBase=${repoBase} is in place, updating"
-		;;
-	    *)
-		EH_problem "Bad Usage -- ${bxoRealizationScope}"
-		return 101
-		;;
-	esac
+        case ${bxoRealizationScope} in
+            realize)
+                lpDo vis_repoCreateAndPushBasedOnPath ${repoBase}
+                lpReturn 1
+                ;;
+            full)
+                ANT_raw "With bxoRealizationScope=${bxoRealizationScope} did not expect ${repoBase}"
+                lpDo vis_repoCreateAndPushBasedOnPath ${repoBase}
+                lpReturn 1
+                ;;
+            basePrep)
+                ANT_raw "repoBase=${repoBase} is in place, updating"
+                ;;
+            *)
+                EH_problem "Bad Usage -- ${bxoRealizationScope}"
+                return 101
+                ;;
+        esac
     else
-	case ${bxoRealizationScope} in
-	    realize)
-		EH_problem "Base does not exist but realize was specified."
-		lpReturn 101
-		;;
-	    basePrep|full)
-		ANT_raw "repoBase=${repoBase} missing, creating"
-		lpDo mkdir -p ${repoBase}
-		;;
-	    *)
-		EH_problem "Bad Usage -- ${bxoRealizationScope}"
-		return 101
-		;;
-	esac
+        case ${bxoRealizationScope} in
+            realize)
+                EH_problem "Base does not exist but realize was specified."
+                lpReturn 101
+                ;;
+            basePrep|full)
+                ANT_raw "repoBase=${repoBase} missing, creating"
+                lpDo mkdir -p ${repoBase}
+                ;;
+            *)
+                EH_problem "Bad Usage -- ${bxoRealizationScope}"
+                return 101
+                ;;
+        esac
     fi
     lpReturn 0
 }
@@ -289,7 +289,7 @@ _EOF_
     local repoBase=$2
 
     if [ "${bxoRealizationScope}" == "full" ] ; then
-	lpDo vis_repoCreateAndPushBasedOnPath ${repoBase}
+        lpDo vis_repoCreateAndPushBasedOnPath ${repoBase}
     fi
 }
 
@@ -305,13 +305,13 @@ _EOF_
     local gitRemote=$( inBaseDirDo ${canonRepoPath} git remote 2> /dev/null )
 
     if [ ! -d "${canonRepoPath}" ] ; then
-	EH_problem "${canonRepoPath} -- does not exist  -- Skipped"
-	lpReturn 101
+        EH_problem "${canonRepoPath} -- does not exist  -- Skipped"
+        lpReturn 101
     fi
 
     if [ ! -z "${gitRemote}" ] ; then
-	EH_problem "${canonRepoPath} Is Already A Git Repo -- Skipped"
-	lpReturn 101
+        EH_problem "${canonRepoPath} Is Already A Git Repo -- Skipped"
+        lpReturn 101
     fi
 
     local baseName=$( basename "${canonRepoPath}" )
@@ -337,8 +337,8 @@ _EOF_
     local gitRemote=$( inBaseDirDo ${canonRepoPath} git remote 2> /dev/null )
 
     if [ -z "${gitRemote}" ] ; then
-	EH_problem "${canonRepoPath} Is Not A Git Repo -- Deletion Skipped"
-	lpReturn 101
+        EH_problem "${canonRepoPath} Is Not A Git Repo -- Deletion Skipped"
+        lpReturn 101
     fi
 
     local baseName=$( basename "${canonRepoPath}" )
@@ -350,9 +350,9 @@ _EOF_
     local repoContainerPath=$( FN_dirsPart "${canonRepoPath}" )
 
     if [ "${G_forceMode}" == "force" ] ; then
-	inBaseDirDo ${repoContainerPath} rm -r "${baseName}"
+        inBaseDirDo ${repoContainerPath} rm -r "${baseName}"
     else
-	ANT_raw "${canonRepoPath} not deleted -- forceMode is not specified."
+        ANT_raw "${canonRepoPath} not deleted -- forceMode is not specified."
     fi
     
     lpReturn
@@ -393,7 +393,7 @@ _EOF_
     local reposList=$( bxoGitlab.py -v 30 --bxoId="${bxoId}" -i reposList )
 
     for each in ${reposList} ; do
-	echo ${bxoHome}/${each}
+        echo ${bxoHome}/${each}
     done
     
     lpReturn
@@ -412,35 +412,35 @@ _EOF_
     local thisFunc=${G_thisFunc}
 
     function processEach {
-	EH_assert [[ $# -eq 1 ]]
-	local bxoId=$1
-	if ! vis_userAcctExists ${bxoId} ; then
-	    EH_problem "${bxoId} Account Does Not Exist -- ${thisFunc} Processing Skipped"
-	    lpReturn 101
-	fi
+        EH_assert [[ $# -eq 1 ]]
+        local bxoId=$1
+        if ! vis_userAcctExists ${bxoId} ; then
+            EH_problem "${bxoId} Account Does Not Exist -- ${thisFunc} Processing Skipped"
+            lpReturn 101
+        fi
 
-	if [ "${G_verbose}_" == "verbose_" ] ; then
-	    ANT_raw "Listing Names Of Repos Of bxoId=${bxoId}"
-	fi
-	lpDo bxoGitlab.py -v 30 --bxoId="${bxoId}" -i reposList 	
+        if [ "${G_verbose}_" == "verbose_" ] ; then
+            ANT_raw "Listing Names Of Repos Of bxoId=${bxoId}"
+        fi
+        lpDo bxoGitlab.py -v 30 --bxoId="${bxoId}" -i reposList         
     }
 
 ####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
     if [ $# -gt 0 ] ; then
-	local each=""
-	for each in ${inputsList} ; do
-	    lpDo processEach ${each}
-	done
+        local each=""
+        for each in ${inputsList} ; do
+            lpDo processEach ${each}
+        done
     else
-	local eachLine=""
-	while read -r -t 1 eachLine ; do
-	    if [ ! -z "${eachLine}" ] ; then
-		local each=""
-		for each in ${eachLine} ; do
-		    lpDo processEach ${each}
-		done
-	    fi
-	done
+        local eachLine=""
+        while read -r -t 1 eachLine ; do
+            if [ ! -z "${eachLine}" ] ; then
+                local each=""
+                for each in ${eachLine} ; do
+                    lpDo processEach ${each}
+                done
+            fi
+        done
     fi
 
 ####+END:
@@ -459,39 +459,39 @@ _EOF_
     local thisFunc=${G_thisFunc}
 
     function processEach {
-	EH_assert [[ $# -eq 1 ]]
-	local bxoId=$1
-	if ! vis_userAcctExists ${bxoId} ; then
-	    EH_problem "${bxoId} Account Does Not Exist -- ${thisFunc} Processing Skipped"
-	    lpReturn 101
-	fi
-	local bxoHome=$( FN_absolutePathGet ~${bxoId} )
-	local reposList=$( bxoGitlab.py -v 30 --bxoId="${bxoId}" -i reposList )
+        EH_assert [[ $# -eq 1 ]]
+        local bxoId=$1
+        if ! vis_userAcctExists ${bxoId} ; then
+            EH_problem "${bxoId} Account Does Not Exist -- ${thisFunc} Processing Skipped"
+            lpReturn 101
+        fi
+        local bxoHome=$( FN_absolutePathGet ~${bxoId} )
+        local reposList=$( bxoGitlab.py -v 30 --bxoId="${bxoId}" -i reposList )
 
-	if [ "${G_verbose}_" == "verbose_" ] ; then
-	    ANT_raw "Listing Path Of Repos Of bxoId=${bxoId}"
-	fi
-	for each in ${reposList} ; do
-	    echo ${bxoHome}/${each}
-	done
+        if [ "${G_verbose}_" == "verbose_" ] ; then
+            ANT_raw "Listing Path Of Repos Of bxoId=${bxoId}"
+        fi
+        for each in ${reposList} ; do
+            echo ${bxoHome}/${each}
+        done
     }
 
 ####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
     if [ $# -gt 0 ] ; then
-	local each=""
-	for each in ${inputsList} ; do
-	    lpDo processEach ${each}
-	done
+        local each=""
+        for each in ${inputsList} ; do
+            lpDo processEach ${each}
+        done
     else
-	local eachLine=""
-	while read -r -t 1 eachLine ; do
-	    if [ ! -z "${eachLine}" ] ; then
-		local each=""
-		for each in ${eachLine} ; do
-		    lpDo processEach ${each}
-		done
-	    fi
-	done
+        local eachLine=""
+        while read -r -t 1 eachLine ; do
+            if [ ! -z "${eachLine}" ] ; then
+                local each=""
+                for each in ${eachLine} ; do
+                    lpDo processEach ${each}
+                done
+            fi
+        done
     fi
 
 ####+END:
@@ -517,8 +517,8 @@ _EOF_
     local gitRemote=$( inBaseDirDo ${canonRepoPath} git remote 2> /dev/null )
 
     if [ ! -z "${gitRemote}" ] ; then
-	EH_problem "${canonRepoPath} Is Already A Git Repo -- Skipped"
-	lpReturn 101
+        EH_problem "${canonRepoPath} Is Already A Git Repo -- Skipped"
+        lpReturn 101
     fi
 
     #local gitServerUrl=git@bxoGit-${gitServerSelector}.${bxoId}:${bxoId}/${repoName}.git
@@ -527,8 +527,8 @@ _EOF_
     local curUser=$( id -u -n )
 
     if ! lpDo bxoGitlab.py -v 20 --bxoId="${bxoId}" -i reposCreate ${repoName} ; then
-	ANT_cooked "${repoName} exists -- git push skipped"
-	lpReturn 101
+        ANT_cooked "${repoName} exists -- git push skipped"
+        lpReturn 101
     fi
 
     #lpDo sudo chown -R "${curUser}":bisos ${baseDir}
@@ -559,7 +559,7 @@ _EOF_
     echo /bisos/var/bxo/construct/${privacy}
 
     lpReturn
-}	
+}       
 
 
 function vis_obtainRepoSnapshot {
@@ -574,26 +574,26 @@ _EOF_
     local repoName=$1
 
     if [ -z "${privacy}" ] ; then
-	privacy="priv"
+        privacy="priv"
     fi
 
     case ${privacy} in
-	"priv"|"private")
-	    lpDo obtainRepoSnapshot_priv $@
-	    ;;
-	"group")
-	    lpDo obtainRepoSnapshot_group $@
-	    ;;
-	"all"|"public")
-	    lpDo obtainRepoSnapshot_all $@
-	    ;;
-	"allGithub")
-	    lpDo obtainRepoSnapshot_allGithub $@
-	    ;;
-	*)
-	    EH_problem "privacy=${privacy} -- Unexpected"
-	    return
-	    ;;
+        "priv"|"private")
+            lpDo obtainRepoSnapshot_priv $@
+            ;;
+        "group")
+            lpDo obtainRepoSnapshot_group $@
+            ;;
+        "all"|"public")
+            lpDo obtainRepoSnapshot_all $@
+            ;;
+        "allGithub")
+            lpDo obtainRepoSnapshot_allGithub $@
+            ;;
+        *)
+            EH_problem "privacy=${privacy} -- Unexpected"
+            return
+            ;;
       esac
     
     lpReturn
@@ -714,8 +714,8 @@ _EOF_
     EH_assert [[ ! -z "${bxoId}" ]]
 
     if ! vis_userAcctExists "${bxoId}" ; then
-	ANT_raw "${bxoId} account is not valid."
-	lpReturn 101
+        ANT_raw "${bxoId} account is not valid."
+        lpReturn 101
     fi
     
     local gitCloneDest=""
@@ -724,12 +724,12 @@ _EOF_
     bxoHome=$( FN_absolutePathGet ~${bxoId} )    
     
     if [ $# -eq 0 ] ; then
-	gitCloneDest=${bxoHome}
+        gitCloneDest=${bxoHome}
     elif [ $# -eq 1 ] ; then
-	gitCloneDest=$1
+        gitCloneDest=$1
     else
-	EH_oops ""
-	lpReturn
+        EH_oops ""
+        lpReturn
     fi
     
     local reposList=$( bxoGitlab.py -v 20 --bxoId="${bxoId}"  -i reposList )
@@ -740,13 +740,13 @@ _EOF_
     opDo FN_dirCreatePathIfNotThere "${gitCloneDest}"  # NOTYET
     
     for eachRepo in ${reposList} ; do
-	gitServerUrl=git@bxoPriv_${bxoId}:${bxoId}/${eachRepo}.git
-	# NOTYET, 
-	
-	#
-	# NOTYET results into a add prompt -- needs something like below.
-	# ssh-keygen -F github.com || ssh-keyscan github.com >> ~/.ssh/known_hosts
-	lpDo git clone "${gitServerUrl}" "${gitCloneDest}/${eachRepo}"    	
+        gitServerUrl=git@bxoPriv_${bxoId}:${bxoId}/${eachRepo}.git
+        # NOTYET, 
+        
+        #
+        # NOTYET results into a add prompt -- needs something like below.
+        # ssh-keygen -F github.com || ssh-keyscan github.com >> ~/.ssh/known_hosts
+        lpDo git clone "${gitServerUrl}" "${gitCloneDest}/${eachRepo}"          
     done
 
     lpReturn
@@ -769,7 +769,7 @@ _EOF_
     lpDo bxoGitlab.py -v 20 --bxoId="${bxoId}" -i reposDelete ${args}
     
     lpReturn
-}	
+}       
 
 
 
@@ -783,11 +783,11 @@ function bxoNextDisposableScopeAcctNu {
     passwdFileInfo=$( egrep '^..-15' /etc/passwd | sort | tail -1 | cut -d: -f1 )
 
     if [ "${passwdFileInfo}_" == "_" ] ; then 
-	echo "15001"
+        echo "15001"
     else
-	lastNuStr=$( expr substr  ${passwdFileInfo}  4 10 )
-	nextNu=$( expr $lastNuStr +  1 )
-	echo ${nextNu}
+        lastNuStr=$( expr substr  ${passwdFileInfo}  4 10 )
+        nextNu=$( expr $lastNuStr +  1 )
+        echo ${nextNu}
     fi
 }
 
@@ -797,11 +797,11 @@ function bxoNextLocalScopeAcctNu {
     passwdFileInfo=$( egrep '^..-16' /etc/passwd | sort | tail -1 | cut -d: -f1 )
 
     if [ "${passwdFileInfo}_" == "_" ] ; then 
-	echo "16001"
+        echo "16001"
     else
-	lastNuStr=$( expr substr  ${passwdFileInfo}  4 10 )
-	nextNu=$( expr $lastNuStr +  1 )
-	echo ${nextNu}
+        lastNuStr=$( expr substr  ${passwdFileInfo}  4 10 )
+        nextNu=$( expr $lastNuStr +  1 )
+        echo ${nextNu}
     fi
 }
 
@@ -816,7 +816,7 @@ function bxoNextControlledAcct {
 function bxoIsControlledAcct {
   EH_assert [[ $# -eq  1 ]]
 
-  bxoUid=$1	
+  bxoUid=$1     
   bxoBagpLoad
 
   if [ "${cp_MasterAcct}_" == "_" ] ; then
@@ -838,12 +838,12 @@ function bxoBacpBaseDirVerifyAndFix {
 
     bxoUidHome=$( FN_absolutePathGet ~${bxoUid} )
     if [ ! -d ${bxoUidHome} ] ; then
-	EH_problem "Missing ${bxoUidHome}"
-	return 101
+        EH_problem "Missing ${bxoUidHome}"
+        return 101
     fi
 
     if [ ! -d ${bxoUidHome}/BACP ] ; then
-	FN_dirCreatePathIfNotThere ${bxoUidHome}/BACP
+        FN_dirCreatePathIfNotThere ${bxoUidHome}/BACP
     fi
 }
 
@@ -856,13 +856,13 @@ function bxoBagpLoad {
     bxoUidHome=$( FN_absolutePathGet ~${bxoUid} )
 
     if [ ! -d ${bxoUidHome} ] ; then
-	EH_problem "Missing ${bxoUidHome}"
-	return 101
+        EH_problem "Missing ${bxoUidHome}"
+        return 101
     fi
 
     if [ ! -d ${bxoUidHome}/BAGP ] ; then
-	EH_problem "Missing ${bxoUidHome}/BAGP"
-	return 101
+        EH_problem "Missing ${bxoUidHome}/BAGP"
+        return 101
     fi
 
     opDo fileParamsLoadVarsFromBaseDir  ${bxoUidHome}/BAGP 2> /dev/null
@@ -886,7 +886,7 @@ function masterAcctBagpLoad {
       return 100
   fi
 
-  fileParamsLoadVarsFromBaseDir	${paramsFileBaseDir}	
+  fileParamsLoadVarsFromBaseDir ${paramsFileBaseDir}    
   
   funcName=cpf_$( FN_nonDirsPart ${paramsFileBaseDir} )
 
@@ -942,107 +942,107 @@ function bxoAcctPrefixAnalyze {
 
     case ${bxo_acct_acctTypePrefix} in 
       "ea")
-	    bxoUidGidTag="smb"
-	    ;;
+            bxoUidGidTag="smb"
+            ;;
       "ma")
-	    bxoUidGidTag="memory"
-	    ;;
+            bxoUidGidTag="memory"
+            ;;
       "mu")
-	    bxoUidGidTag="memoryUser"
-	    ;;
+            bxoUidGidTag="memoryUser"
+            ;;
       "sa")
-	    bxoUidGidTag="subscriber"
-	    ;;
+            bxoUidGidTag="subscriber"
+            ;;
       "ua")
-	    bxoUidGidTag="user"
-	    ;;
+            bxoUidGidTag="user"
+            ;;
       "aa")
-	    bxoUidGidTag="alias"
-	    ;;
+            bxoUidGidTag="alias"
+            ;;
       "au")
-	    bxoUidGidTag="aliasUsr"
-	    ;;
+            bxoUidGidTag="aliasUsr"
+            ;;
       "ca")
-	    bxoUidGidTag="reserved"
-	    ;;
+            bxoUidGidTag="reserved"
+            ;;
 
       ##
       #####  BXO Generation
       ##
       "ai")
-	    bxoUidGidTag="autonomousIndividual"
-	    ;;
+            bxoUidGidTag="autonomousIndividual"
+            ;;
       *)
-	    EH_problem "Unknown ${bxo_acct_acctTypePrefix}"
-	    return 101
+            EH_problem "Unknown ${bxo_acct_acctTypePrefix}"
+            return 101
     esac
     opAcctUidGidAnalyze ${bxoUidGidTag}
 
     case ${bxo_acct_acctTypePrefix} in 
       "ea")
-	    bxoServiceType="BYSMB"
-	    bxoServiceSupportType="COMMITTED"
-	    bxoDomainsList=("bysmb.net" "bysmb.com" "libresite.org")
-	    thisHomeDir="${iv_uidPolicy_homeDir}/${cp_Domain1}/${cp_Domain2}"
-	    ;;
+            bxoServiceType="BYSMB"
+            bxoServiceSupportType="COMMITTED"
+            bxoDomainsList=("bysmb.net" "bysmb.com" "libresite.org")
+            thisHomeDir="${iv_uidPolicy_homeDir}/${cp_Domain1}/${cp_Domain2}"
+            ;;
       "ma")
-	    bxoServiceType="BYMEMORY"
-	    bxoServiceSupportType="COMMITTED"
-	    bxoDomainsList=("bymemory.net")
-	    thisHomeDir="${iv_uidPolicy_homeDir}/${cp_LastName}/1/${cp_FirstName}"
-	    ;;
+            bxoServiceType="BYMEMORY"
+            bxoServiceSupportType="COMMITTED"
+            bxoDomainsList=("bymemory.net")
+            thisHomeDir="${iv_uidPolicy_homeDir}/${cp_LastName}/1/${cp_FirstName}"
+            ;;
       "mu")
-	    bxoServiceType="BYMEMORY"
-	    bxoServiceSupportType="TRIAL"
-	    bxoDomainsList=("bymemory.com")
-	    thisHomeDir="${iv_uidPolicy_homeDir}/${cp_LastName}/1/${cp_FirstName}"
-	    ;;
+            bxoServiceType="BYMEMORY"
+            bxoServiceSupportType="TRIAL"
+            bxoDomainsList=("bymemory.com")
+            thisHomeDir="${iv_uidPolicy_homeDir}/${cp_LastName}/1/${cp_FirstName}"
+            ;;
       "sa")
-	    bxoUidGidTag="subscriber"
-	    bxoServiceType="BYNAME"
-	    bxoServiceSupportType="COMMITTED"
-	    bxoDomainsList=("byname.net")
-	    thisHomeDir="${iv_uidPolicy_homeDir}/${cp_LastName}/${cp_nameSelector}/${cp_FirstName}"
-	    ;;
+            bxoUidGidTag="subscriber"
+            bxoServiceType="BYNAME"
+            bxoServiceSupportType="COMMITTED"
+            bxoDomainsList=("byname.net")
+            thisHomeDir="${iv_uidPolicy_homeDir}/${cp_LastName}/${cp_nameSelector}/${cp_FirstName}"
+            ;;
       "ua")
-	    bxoUidGidTag="user"
-	    bxoServiceType="BYNAME"
-	    bxoServiceSupportType="TRIAL"
-	    bxoDomainsList=("byname.com")
-	    thisHomeDir="${iv_uidPolicy_homeDir}/${cp_LastName}/${cp_nameSelector}/${cp_FirstName}"
-	    ;;
+            bxoUidGidTag="user"
+            bxoServiceType="BYNAME"
+            bxoServiceSupportType="TRIAL"
+            bxoDomainsList=("byname.com")
+            thisHomeDir="${iv_uidPolicy_homeDir}/${cp_LastName}/${cp_nameSelector}/${cp_FirstName}"
+            ;;
       "aa")
-	    bxoServiceType="BYALIAS"
-	    bxoServiceSupportType="COMMITTED"
-	    bxoDomainsList=("byname.net")
-	    thisHomeDir="${iv_uidPolicy_homeDir}/${aliasName}"
-	    ;;
+            bxoServiceType="BYALIAS"
+            bxoServiceSupportType="COMMITTED"
+            bxoDomainsList=("byname.net")
+            thisHomeDir="${iv_uidPolicy_homeDir}/${aliasName}"
+            ;;
       "au")
-	    bxoUidGidTag="aliasusr"
-	    bxoServiceType="BYALIAS"
-	    bxoServiceSupportType="TRIAL"
-	    bxoDomainsList=("byalias.com")
-	    thisHomeDir="${iv_uidPolicy_homeDir}/${aliasName}"
-	    ;;
+            bxoUidGidTag="aliasusr"
+            bxoServiceType="BYALIAS"
+            bxoServiceSupportType="TRIAL"
+            bxoDomainsList=("byalias.com")
+            thisHomeDir="${iv_uidPolicy_homeDir}/${aliasName}"
+            ;;
       "ca")
-	    bxoServiceType="BCA"
-	    bxoServiceSupportType="COMMITTED"
-	    bxoDomainsList=("BCA")
-	    thisHomeDir="${iv_uidPolicy_homeDir}/${cp_acctNu}"
-	    ;;
+            bxoServiceType="BCA"
+            bxoServiceSupportType="COMMITTED"
+            bxoDomainsList=("BCA")
+            thisHomeDir="${iv_uidPolicy_homeDir}/${cp_acctNu}"
+            ;;
       ##
       #####  BXO Generation
       ##
       "ai")
-	    bxoServiceType="BXO"
-	    bxoServiceSupportType="BXO"
-	    bxoDomainsList=("BXO")
-	    # thisHomeDir=$( FN_absolutePathGet ${cp_acctNu} )
-	    ;;
+            bxoServiceType="BXO"
+            bxoServiceSupportType="BXO"
+            bxoDomainsList=("BXO")
+            # thisHomeDir=$( FN_absolutePathGet ${cp_acctNu} )
+            ;;
       
       *)
-	    EH_problem "Unknown ${bxo_acct_acctTypePrefix}"
-	    return 101
+            EH_problem "Unknown ${bxo_acct_acctTypePrefix}"
+            return 101
     esac
   return 0
 }
@@ -1067,48 +1067,48 @@ function bxoAcctAnalyze {
     bxoAcctPrefixAnalyze ${bxo_acct_acctTypePrefix}
     case ${bxo_acct_acctTypePrefix} in 
       "ea")
-	    bxoServiceType="BYSMB"
-	    bxoServiceSupportType="COMMITTED"
-	    ;;
+            bxoServiceType="BYSMB"
+            bxoServiceSupportType="COMMITTED"
+            ;;
       "ma")
-	    bxoServiceType="BYMEMORY"
-	    bxoServiceSupportType="COMMITTED"
-	    ;;
+            bxoServiceType="BYMEMORY"
+            bxoServiceSupportType="COMMITTED"
+            ;;
       "mu")
-	    bxoServiceType="BYMEMORY"
-	    bxoServiceSupportType="TRIAL"
-	    ;;
+            bxoServiceType="BYMEMORY"
+            bxoServiceSupportType="TRIAL"
+            ;;
       "sa")
-	    bxoServiceType="BYNAME"
-	    bxoServiceSupportType="COMMITTED"
-	    ;;
+            bxoServiceType="BYNAME"
+            bxoServiceSupportType="COMMITTED"
+            ;;
       "ua")
-	    bxoServiceType="BYNAME"
-	    bxoServiceSupportType="TRIAL"
-	    ;;
+            bxoServiceType="BYNAME"
+            bxoServiceSupportType="TRIAL"
+            ;;
       "aa")
-	    bxoServiceType="BYALIAS"
-	    bxoServiceSupportType="COMMITTED"
-	    ;;
+            bxoServiceType="BYALIAS"
+            bxoServiceSupportType="COMMITTED"
+            ;;
       "au")
-	    bxoServiceType="BYALIAS"
-	    bxoServiceSupportType="TRIAL"
-	    ;;
+            bxoServiceType="BYALIAS"
+            bxoServiceSupportType="TRIAL"
+            ;;
       "ca")
-	    bxoServiceType="BCA"
-	    bxoServiceSupportType="COMMITTED"
-	    ;;
+            bxoServiceType="BCA"
+            bxoServiceSupportType="COMMITTED"
+            ;;
 
       ##
       #####  BXO Generation
       ##
       "ai")
-	    bxoServiceType="BXO"
-	    bxoServiceSupportType="BXO"
-	    ;;
-	*)
-	    EH_problem "Unknown ${bxo_acct_acctTypePrefix}"
-	    return 101
+            bxoServiceType="BXO"
+            bxoServiceSupportType="BXO"
+            ;;
+        *)
+            EH_problem "Unknown ${bxo_acct_acctTypePrefix}"
+            return 101
     esac
 
    bxoUidHome=$( FN_absolutePathGet ~${bxoUid} )
@@ -1148,36 +1148,36 @@ _EOF_
 
     case ${bxoId} in 
       "")
-	    # EH_problem "bxoId=\"\" -- empty/blank -- invalid bxo"
-	    lpReturn 101
-	    ;;
+            # EH_problem "bxoId=\"\" -- empty/blank -- invalid bxo"
+            lpReturn 101
+            ;;
       "INVALID"|"MANDATORY")
-	    EH_problem "bxoId=${bxoId} -- empty/blank -- invalid bxo"
-	    lpReturn 101
-	    ;;
+            EH_problem "bxoId=${bxoId} -- empty/blank -- invalid bxo"
+            lpReturn 101
+            ;;
       "current")
-	    lpCurrentsGet
-	    #if [ "${currentBystarUid}" != "" ] ; then
-	    if [ "${currentBxoId}" != "" ] ; then	    
-		bxoId=${currentBxoId}
-	    else
-		EH_problem "bxoId=current But current is unset -- invalid bxo"
-		lpReturn 101
-	    fi	
-	    ;;
+            lpCurrentsGet
+            #if [ "${currentBystarUid}" != "" ] ; then
+            if [ "${currentBxoId}" != "" ] ; then           
+                bxoId=${currentBxoId}
+            else
+                EH_problem "bxoId=current But current is unset -- invalid bxo"
+                lpReturn 101
+            fi  
+            ;;
       "prompt")
-	    echo -n "Specify bxoId: "
-	    read bxoId
-	    ;;
+            echo -n "Specify bxoId: "
+            read bxoId
+            ;;
       "default")   # e.g., first applicable entry in /etc/passwd
             doNothing
-	    ;;	
+            ;;  
       "all")
             doNothing
-	    ;;	
-	*)
-	    doNothing
-	    ;;
+            ;;  
+        *)
+            doNothing
+            ;;
     esac
 
     #lpDo bxoCentralIsValid 
@@ -1196,10 +1196,10 @@ _EOF_
 
     case ${bxoId:-} in 
       "all")
-	    lpReturn 0
-	    ;;
-	*)
-	    doNothing
+            lpReturn 0
+            ;;
+        *)
+            doNothing
     esac
 
     #
@@ -1309,8 +1309,8 @@ function developerVerify {
       readEditPathOffSet=""
       ;;
     *)
-	  EH_problem "unknown cvsMode ${cvsMode}"
-	  ;;
+          EH_problem "unknown cvsMode ${cvsMode}"
+          ;;
   esac
 
   mirrorBxoAccountsBase="/mirror/bxo/accounts"
@@ -1330,94 +1330,94 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if [ -z "${sr}" ] ; then
-	EH_problem "Missing Service Realiztion Specification"
-	lpReturn 101
+        EH_problem "Missing Service Realiztion Specification"
+        lpReturn 101
     fi
 
     srBaseDir="${bxoUidHome}/${sr}"
 
     if [ ! -d ${srBaseDir} ] ; then 
-	EH_problem "Missing srBaseDir=${srBaseDir}"
-	lpReturn 101
+        EH_problem "Missing srBaseDir=${srBaseDir}"
+        lpReturn 101
     fi
 
     srAgent="${bxoUidHome}/${sr}/bsrAgent.sh"
 
     if [ ! -f ${srAgent} ] ; then 
-	srAgent="${bxoUidHome}/${sr}/srAgent.sh"
-	if [ ! -f ${srAgent} ] ; then 
-	    EH_problem "Missing srAgent=${srAgent} and also missing bsrAgent.sh"
-	    lpReturn 101
-	fi
+        srAgent="${bxoUidHome}/${sr}/srAgent.sh"
+        if [ ! -f ${srAgent} ] ; then 
+            EH_problem "Missing srAgent=${srAgent} and also missing bsrAgent.sh"
+            lpReturn 101
+        fi
     fi
 
     srDomName=$( inBaseDirDo ${srBaseDir} ${srAgent} -i srDomNameGet 2> /dev/null )
     if [ -z ${srDomName} ] ; then 
-	EH_problem "Blank srDomName"
+        EH_problem "Blank srDomName"
     fi 
 
     srFqdn=$( inBaseDirDo ${srBaseDir} ${srAgent} -i srFqdnGet 2> /dev/null )
     if [ -z ${srFqdn} ] ; then 
-	EH_problem "Blank srFqdn"
+        EH_problem "Blank srFqdn"
     fi 
 
     svcName=$( inBaseDirDo ${srBaseDir} ${srAgent} -i svcNameGet 2> /dev/null )
     if [ -z ${svcName} ] ; then 
-	EH_problem "Blank svcName"
+        EH_problem "Blank svcName"
     fi 
 
     svcCapabilityName=$( inBaseDirDo ${srBaseDir} ${srAgent} -i svcCapabilityNameGet 2> /dev/null )
     if [ -z ${svcCapabilityName} ] ; then 
-	EH_problem "Blank svcCapabilityName"
+        EH_problem "Blank svcCapabilityName"
     fi 
 
     svcCapabilityAgent=$( inBaseDirDo ${srBaseDir} ${srAgent} -i svcCapabilityAgentGet 2> /dev/null )
     if [ -z ${svcCapabilityAgent} ] ; then 
-	EH_problem "Blank svcCapabilityAgent"
+        EH_problem "Blank svcCapabilityAgent"
     fi 
 
     svcCapabilityFlavor=$( inBaseDirDo ${srBaseDir} ${srAgent} -i svcCapabilityFlavorGet 2> /dev/null )
     if [ -z ${svcCapabilityFlavor} ] ; then 
-	EH_problem "Blank svcCapabilityFlavor"
+        EH_problem "Blank svcCapabilityFlavor"
     fi 
     
     srSvcBaseLogs=$( inBaseDirDo ${srBaseDir} ${srAgent} -i srSvcBaseLogs 2> /dev/null )
     if [ -z ${srSvcBaseLogs} ] ; then 
-	EH_problem "Blank srSvcBaseLogs"
+        EH_problem "Blank srSvcBaseLogs"
     fi 
 
     srSvcBaseData=$( inBaseDirDo ${srBaseDir} ${srAgent} -i srSvcBaseData 2> /dev/null )
     if [ -z ${srSvcBaseData} ] ; then 
-	EH_problem "Blank srSvcBaseData"
+        EH_problem "Blank srSvcBaseData"
     fi 
 
     srSvcBaseControl=$( inBaseDirDo ${srBaseDir} ${srAgent} -i srSvcBaseControl 2> /dev/null )
     if [ -z ${srSvcBaseControl} ] ; then 
-	EH_problem "Blank srSvcBaseControl"
+        EH_problem "Blank srSvcBaseControl"
     fi 
 
     srSvcBaseTmp=$( inBaseDirDo ${srBaseDir} ${srAgent} -i srSvcBaseTmp 2> /dev/null )
     if [ -z ${srSvcBaseTmp} ] ; then 
-	EH_problem "Blank srSvcBaseTmp"
+        EH_problem "Blank srSvcBaseTmp"
     fi 
 
     srSvcBaseMailDir=$( inBaseDirDo ${srBaseDir} ${srAgent} -i srSvcBaseMailDir 2> /dev/null )
     if [ -z ${srSvcBaseMailDir} ] ; then 
-	EH_problem "Blank srSvcBaseMailDir"
+        EH_problem "Blank srSvcBaseMailDir"
     fi 
     
 
     # Historic -- Obsoleted
     # srLogsBase=$( inBaseDirDo ${srBaseDir} ${srAgent} -i srLogsBase  2> /dev/null )
     # if [ -z ${srLogsBase} ] ; then 
-    # 	EH_problem "Blank srLogsBase"
+    #   EH_problem "Blank srLogsBase"
     # fi 
 
     # Historic -- Obsoleted
     srA2LogBaseDir=$(vis_srA2LogBaseDirGet ${srFqdn})
     if [ -z "${srA2LogBaseDir}" ] ; then
-    	EH_problem "Missing srA2LogBaseDir"
-    	lpReturn
+        EH_problem "Missing srA2LogBaseDir"
+        lpReturn
     fi
 
 
@@ -1443,8 +1443,8 @@ _EOF_
     opDoRet bxoAcctAnalyze ${bxoUid}
 
     if [ -z "${sr}" ] ; then
-	EH_problem ""
-	lpReturn
+        EH_problem ""
+        lpReturn
     fi
 
     echo ${bxoUidHome}/${sr}
@@ -1495,8 +1495,8 @@ _EOF_
 
     typeset srFqdn=$(vis_srFqdnGet $(vis_srBaseDirGet))
     if [ -z "${srFqdn}" ] ; then
-	EH_problem ""
-	lpReturn
+        EH_problem ""
+        lpReturn
     fi
 
     echo "/etc/apache2/sites-available/${srFqdn}.conf"
@@ -1506,25 +1506,25 @@ _EOF_
 
 
     # if [ -z "${sr}" ] ; then
-    # 	EH_problem ""
-    # 	lpReturn
+    #   EH_problem ""
+    #   lpReturn
     # fi
 
     # typeset srBaseDir=$(vis_srBaseDirGet)
     # if [ -z "${srBaseDir}" ] ; then
-    # 	EH_problem ""
-    # 	lpReturn
+    #   EH_problem ""
+    #   lpReturn
     # fi
 
     # typeset srFqdn=$(vis_srFqdnGet ${srBaseDir})
     # if [ -z "${srFqdn}" ] ; then
-    # 	EH_problem ""
-    # 	lpReturn
+    #   EH_problem ""
+    #   lpReturn
     # fi
 
     # typeset srA2LogBaseDir=$(vis_srA2LogBaseDirGet ${srFqdn})
     # if [ -z "${srA2LogBaseDir}" ] ; then
-    # 	EH_problem ""
-    # 	lpReturn
+    #   EH_problem ""
+    #   lpReturn
     # fi
 

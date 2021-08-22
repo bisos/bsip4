@@ -114,7 +114,7 @@ function G_postParamHook {
     bxoIdPrepValidate    
 
     if [ ! -z "${bxoId}" ] ; then
-     	bxoHome=$( FN_absolutePathGet ~${bxoId} )
+        bxoHome=$( FN_absolutePathGet ~${bxoId} )
     fi
     
     bisosCurrentsGet
@@ -163,7 +163,7 @@ function vis_sshd_runAt3333 {
 ** TODO Restart sshd -- sudo service sshd restart
 ** ssh -X -p 3333 bystar@localhost
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
 
     EH_assert [ vis_runningInChromeOsContainer ]
@@ -172,9 +172,9 @@ _EOF_
 
 
     if [ -f /etc/ssh/sshd_not_to_be_run ] ; then
-	lpDo mv /etc/ssh/sshd_not_to_be_run /etc/ssh/sshd_not_to_be_run.orig
+        lpDo mv /etc/ssh/sshd_not_to_be_run /etc/ssh/sshd_not_to_be_run.orig
     else
-	ANT_raw "/etc/ssh/sshd_not_to_be_run not found -- moving skipped"
+        ANT_raw "/etc/ssh/sshd_not_to_be_run not found -- moving skipped"
     fi
 
     local sshdConfigFile="/etc/ssh/sshd_config"
@@ -183,16 +183,16 @@ _EOF_
     local restartNeeded=""
 
     if [ -z "${port22}" ] ; then
-	ANT_raw "Port Nu Already Changed To:"
-	egrep '^Port' "${sshdConfigFile}"
+        ANT_raw "Port Nu Already Changed To:"
+        egrep '^Port' "${sshdConfigFile}"
     else
-	lpDo cp "${sshdConfigFile}" "${sshdConfigFile}.orig"
-	lpDo FN_textReplace "^#Port .*" "Port 3333" "${sshdConfigFile}"
-	restartNeeded="true"
+        lpDo cp "${sshdConfigFile}" "${sshdConfigFile}.orig"
+        lpDo FN_textReplace "^#Port .*" "Port 3333" "${sshdConfigFile}"
+        restartNeeded="true"
     fi
 
     if [ -n "${restartNeeded}" ] ; then
-	lpDo sudo service sshd restart
+        lpDo sudo service sshd restart
     fi
     
     lpDo sudo service sshd status
@@ -209,7 +209,7 @@ function vis_sshd_portForwardTo3333 {
 ** TODO Port forward 3333 for sshd
 ** ssh -X -p 3333 bystar@localhost
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
 
     lpDo describeF
@@ -244,7 +244,7 @@ This disables the shortcut functionality of your Chromebook’s shortcut keys an
 their function as F-keys.
 
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 0 ]]
 
     lpDo describeF

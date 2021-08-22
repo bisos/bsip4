@@ -148,51 +148,51 @@ _EOF_
     print "#### At ${currentDir}: effectiveLeaves=${effectiveLeaves}  ####"
 
     for thisLeaf in ${effectiveLeaves} ; do
-	#opDoComplain cd ${currentDir}/${thisLeaf} || continue
-	cd ${currentDir}/${thisLeaf} || continue
-	print "#### At Leaf: ${currentDir}/${thisLeaf} ####"
-	#opDoComplain ${G_myName} -n showRun -i "$@"
-	typeset treeProc
-	if [ -f "ftoProc.sh" ] ; then
-	    treeProc="ftoProc.sh"
-	elif [ -f "_treeProc_" ] ; then
-	    treeProc=$( cat _treeProc_ )
-	elif [ -f "lcntProc.sh" ] ; then
-	    treeProc="lcntProc.sh"
-	elif [ -f "${G_myName}" ] ; then
-	    treeProc="${G_myName}"
-	else
-	    "EH_problem No Processor Found -- Being Skipped"
-	    continue
-	fi
-	
-	opDoComplain ${treeProc} -n showRun -i "$@"
+        #opDoComplain cd ${currentDir}/${thisLeaf} || continue
+        cd ${currentDir}/${thisLeaf} || continue
+        print "#### At Leaf: ${currentDir}/${thisLeaf} ####"
+        #opDoComplain ${G_myName} -n showRun -i "$@"
+        typeset treeProc
+        if [ -f "ftoProc.sh" ] ; then
+            treeProc="ftoProc.sh"
+        elif [ -f "_treeProc_" ] ; then
+            treeProc=$( cat _treeProc_ )
+        elif [ -f "lcntProc.sh" ] ; then
+            treeProc="lcntProc.sh"
+        elif [ -f "${G_myName}" ] ; then
+            treeProc="${G_myName}"
+        else
+            "EH_problem No Processor Found -- Being Skipped"
+            continue
+        fi
+        
+        opDoComplain ${treeProc} -n showRun -i "$@"
     done
 
     typeset effectiveNodes=$( vis_effectiveNodes )
     print "#### At ${currentDir}: effectiveNodes=${effectiveNodes}  ####"
 
     for thisNode in ${effectiveNodes} ; do
-	#opDoComplain cd ${currentDir}/${thisNode} || continue
-	cd ${currentDir}/${thisNode} || continue
-	print "#### Recursing To Node: ${currentDir}/${thisNode} ####"
+        #opDoComplain cd ${currentDir}/${thisNode} || continue
+        cd ${currentDir}/${thisNode} || continue
+        print "#### Recursing To Node: ${currentDir}/${thisNode} ####"
 
-	#opDoComplain ${G_myName} -n showRun -i treeRecurse "$@"
-	typeset treeProc
-	if [ -f "ftoProc.sh" ] ; then
-	    treeProc="ftoProc.sh"
-	elif [ -f "_treeProc_" ] ; then
-	    treeProc=$( cat _treeProc_ )
-	elif [ -f "lcntProc.sh" ] ; then
-	    treeProc="lcntProc.sh"
-	elif [ -f "${G_myName}" ] ; then
-	    treeProc="${G_myName}"
-	else
-	    "EH_problem No Processor Found -- Being Skipped"
-	    continue
-	fi
-	
-	${treeProc} -n showRun -i treeRecurse "$@"
+        #opDoComplain ${G_myName} -n showRun -i treeRecurse "$@"
+        typeset treeProc
+        if [ -f "ftoProc.sh" ] ; then
+            treeProc="ftoProc.sh"
+        elif [ -f "_treeProc_" ] ; then
+            treeProc=$( cat _treeProc_ )
+        elif [ -f "lcntProc.sh" ] ; then
+            treeProc="lcntProc.sh"
+        elif [ -f "${G_myName}" ] ; then
+            treeProc="${G_myName}"
+        else
+            "EH_problem No Processor Found -- Being Skipped"
+            continue
+        fi
+        
+        ${treeProc} -n showRun -i treeRecurse "$@"
     done
 }
 
@@ -201,17 +201,17 @@ function vis_in_nodeBase_ {
     G_funcEntry
     function describeF {  cat  << _EOF_
 _EOF_
-		       }
+                       }
     local currentDir=$( pwd )
     local relCurDir=$( FN_nonDirsPart ${currentDir} )
 
     if [ ${relCurDir} == "_nodeBase_" ] ; then
-	lpReturn 0
+        lpReturn 0
     else
-	lpReturn 1
+        lpReturn 1
     fi
 }
-		       
+                       
 
 function vis_ftoWalkRunCmnd {
     G_funcEntry
@@ -226,12 +226,12 @@ _EOF_
     typeset currentDir=`pwd`
 
     function perhapsRun {
-	local cmndName=$1
-	if which ${cmndName} ; then
-	    opDoComplain  "$@"
-	else
-	    ANT_raw "Missing ${cmndName} -- Execution Skipped"
-	fi
+        local cmndName=$1
+        if which ${cmndName} ; then
+            opDoComplain  "$@"
+        else
+            ANT_raw "Missing ${cmndName} -- Execution Skipped"
+        fi
     }
 
     ANT_raw  "#### At Current Node: ${currentDir} ####"
@@ -242,40 +242,40 @@ _EOF_
     ANT_raw  "#### At ${currentDir}: effectiveLeaves=${effectiveLeaves}  ####"
 
     for thisLeaf in ${effectiveLeaves} ; do
-	#opDoComplain cd ${currentDir}/${thisLeaf} || continue
-	cd ${currentDir}/${thisLeaf} || continue
-	ANT_raw  "#### At Leaf: ${currentDir}/${thisLeaf} ####"
-	typeset treeProc
-	if [ ! -f "_treeProc_" ] ; then
-	    ANT_raw "Leaf=${thisLeaf} -- No Processor Found -- Being Skipped"
-	    continue
-	fi
-	
-	perhapsRun "$@"
+        #opDoComplain cd ${currentDir}/${thisLeaf} || continue
+        cd ${currentDir}/${thisLeaf} || continue
+        ANT_raw  "#### At Leaf: ${currentDir}/${thisLeaf} ####"
+        typeset treeProc
+        if [ ! -f "_treeProc_" ] ; then
+            ANT_raw "Leaf=${thisLeaf} -- No Processor Found -- Being Skipped"
+            continue
+        fi
+        
+        perhapsRun "$@"
     done
 
     typeset effectiveNodes=$( vis_effectiveNodes )
     print "#### At ${currentDir}: effectiveNodes=${effectiveNodes}  ####"
 
     for thisNode in ${effectiveNodes} ; do
-	#opDoComplain cd ${currentDir}/${thisNode} || continue
-	cd ${currentDir}/${thisNode} || continue
-	print "#### Recursing To Node: ${currentDir}/${thisNode} ####"
+        #opDoComplain cd ${currentDir}/${thisNode} || continue
+        cd ${currentDir}/${thisNode} || continue
+        print "#### Recursing To Node: ${currentDir}/${thisNode} ####"
 
-	#opDoComplain ${G_myName} -n showRun -i treeRecurse "$@"
-	typeset treeProc
-	if [ -f "ftoProc.sh" ] ; then
-	    treeProc="ftoProc.sh"
-	elif [ -f "_treeProc_" ] ; then
-	    treeProc=$( cat _treeProc_ )
-	elif [ -f "${G_myName}" ] ; then
-	    treeProc="${G_myName}"
-	else
-	    ANT_raw "Node=${thisNode} -- No Processor Found -- Being Skipped"
-	    continue
-	fi
-	
-	opDo ${treeProc} -n showRun -i ftoWalkRunCmnd "$@"
+        #opDoComplain ${G_myName} -n showRun -i treeRecurse "$@"
+        typeset treeProc
+        if [ -f "ftoProc.sh" ] ; then
+            treeProc="ftoProc.sh"
+        elif [ -f "_treeProc_" ] ; then
+            treeProc=$( cat _treeProc_ )
+        elif [ -f "${G_myName}" ] ; then
+            treeProc="${G_myName}"
+        else
+            ANT_raw "Node=${thisNode} -- No Processor Found -- Being Skipped"
+            continue
+        fi
+        
+        opDo ${treeProc} -n showRun -i ftoWalkRunCmnd "$@"
     done
 }
 
@@ -295,12 +295,12 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if [ "${leavesOrdered}" != "" ] ; then
-	leavesEffective="${leavesOrdered}"
+        leavesEffective="${leavesOrdered}"
     else 
-	echo "${leavesExcludes}" | sort > /tmp/$$.excludes
-	echo "${leavesList}" | sort > /tmp/$$.include
-	leavesEffective=$( comm -13 /tmp/$$.excludes /tmp/$$.include )
-	/bin/rm /tmp/$$.excludes /tmp/$$.include 
+        echo "${leavesExcludes}" | sort > /tmp/$$.excludes
+        echo "${leavesList}" | sort > /tmp/$$.include
+        leavesEffective=$( comm -13 /tmp/$$.excludes /tmp/$$.include )
+        /bin/rm /tmp/$$.excludes /tmp/$$.include 
     fi
     echo ${leavesEffective}
 }
@@ -341,18 +341,18 @@ _EOF_
     opDoExit cd ${here}
 
     if [[ ! -f _tree_ ]] ; then 
-	EH_problem "Missing _tree_"
-	lpReturn 101
+        EH_problem "Missing _tree_"
+        lpReturn 101
     fi
 
     typeset nodeOrLeaf=$( cat _tree_ )
 
     if [ "${nodeOrLeaf}" == "leaf" ] ; then
-	lpReturn 0
+        lpReturn 0
     elif [ "${nodeOrLeaf}" == "node" ] ; then
-	lpReturn 1
+        lpReturn 1
     else
-	lpReturn 101
+        lpReturn 101
     fi
 }
 
@@ -374,21 +374,21 @@ _EOF_
     opDoExit cd ${here}
 
     if [[ ! -f _tree_ ]] ; then 
-	EH_problem "Missing _tree_"
-	#lpReturn 101
-	lpReturn 0
+        EH_problem "Missing _tree_"
+        #lpReturn 101
+        lpReturn 0
     fi
     
     typeset nodeOrLeaf=$( cat _tree_ )
 
     if [ "${nodeOrLeaf}" == "node" ] ; then
-	lpReturn 0
+        lpReturn 0
     elif [ "${nodeOrLeaf}" == "auxNode" ] ; then
-	lpReturn 0
+        lpReturn 0
     elif [ "${nodeOrLeaf}" == "leaf" ] ; then
-	lpReturn 1
+        lpReturn 1
     else
-	lpReturn 101
+        lpReturn 101
     fi
 }
 
@@ -414,10 +414,10 @@ _EOF_
     find -L . -maxdepth 1 -type d -print  | sed -e s:^./:: | egrep -v '^\.$' | egrep -v '^CVS$' | egrep -v '^.git$' |
     while read thisLine ; do
 
-	opDoExit cd ${here} 
-	if vis_leafTherePredicate ${thisLine} ; then
-	    echo "${thisLine}"
-	fi
+        opDoExit cd ${here} 
+        if vis_leafTherePredicate ${thisLine} ; then
+            echo "${thisLine}"
+        fi
     done
 }
 
@@ -441,10 +441,10 @@ _EOF_
     
     find -L . -maxdepth 1 -type d -print  | sed -e s:^./:: | egrep -v '^\.$' | egrep -v '^CVS$' | egrep -v '^.git$' |
     while read thisLine ; do
-	opDoExit cd ${here} 2> /dev/null
-	if vis_nodeTherePredicate ${thisLine} ; then
-	    echo "${thisLine}"
-	fi
+        opDoExit cd ${here} 2> /dev/null
+        if vis_nodeTherePredicate ${thisLine} ; then
+            echo "${thisLine}"
+        fi
     done
 }
 
@@ -508,15 +508,15 @@ _EOF_
     opDoExit pushd ${here}
 
     if [[ -f ${treeItemFileName} ]] ; then 
-	ANT_raw "${treeItemFileName} Already Exists -- Nothing Done"
+        ANT_raw "${treeItemFileName} Already Exists -- Nothing Done"
     else
-	opDo eval echo "${treeItemEnum[${treeItemType}]}" \> ${treeItemFileName}
+        opDo eval echo "${treeItemEnum[${treeItemType}]}" \> ${treeItemFileName}
     fi
 
     if [[ -f ${treeItemProcessor} ]] ; then 
-	ANT_raw "${treeItemProcessor} Already Exists -- Nothing Done"
+        ANT_raw "${treeItemProcessor} Already Exists -- Nothing Done"
     else
-	opDo eval echo "${treeProc}" \> ${treeItemProcessor}
+        opDo eval echo "${treeProc}" \> ${treeItemProcessor}
     fi
     opDo popd
     lpReturn
@@ -552,9 +552,9 @@ _EOF_
     opDoExit pushd ${here}
 
     if [[ -f ${bxtObjectTypeFileName} ]] ; then 
-	ANT_raw "${bxtObjectTypeFileName} Already Exists -- Nothing Done"
+        ANT_raw "${bxtObjectTypeFileName} Already Exists -- Nothing Done"
     else
-	opDo eval echo "${objectType}" \> ${bxtObjectTypeFileName}
+        opDo eval echo "${objectType}" \> ${bxtObjectTypeFileName}
     fi
 
     opDo popd
@@ -587,10 +587,10 @@ _EOF_
 
     typeset thisOne=""
     for thisOne in ${underBaseDirList} ; do
-	opDoComplain cd ${thisOne} || continue
-	print "%%%%%% ${thisOne} %%%%%"
+        opDoComplain cd ${thisOne} || continue
+        print "%%%%%% ${thisOne} %%%%%"
     
-	opDo ${commandToRun}
+        opDo ${commandToRun}
     done
 }
 

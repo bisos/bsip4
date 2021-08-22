@@ -126,21 +126,21 @@ _EOF_
     
     EH_assert [[ $# -eq 2 ]]
 
-    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;	
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;       
   
     updateFileName=$1
     updateStdoutFunc=$2
 
     if [ "${G_forceMode}" == "force" ] ; then
-	lpDo FN_fileSafeKeep ${updateFileName}
-	${updateStdoutFunc} | sudo tee ${updateFileName} >  /dev/null 
+        lpDo FN_fileSafeKeep ${updateFileName}
+        ${updateStdoutFunc} | sudo tee ${updateFileName} >  /dev/null 
     else
-	if [ -f ${updateFileName} ] ; then
-	    ANT_raw "File: ${updateFileName} exists -- no action taken"
-	else
-	    lpDo FN_fileSafeKeep ${updateFileName}
-	    ${updateStdoutFunc} | sudo tee ${updateFileName} >  /dev/null 	  
-	fi
+        if [ -f ${updateFileName} ] ; then
+            ANT_raw "File: ${updateFileName} exists -- no action taken"
+        else
+            lpDo FN_fileSafeKeep ${updateFileName}
+            ${updateStdoutFunc} | sudo tee ${updateFileName} >  /dev/null         
+        fi
     fi
 
     opDoComplain chown root ${updateFileName}  

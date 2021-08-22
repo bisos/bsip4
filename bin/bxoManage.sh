@@ -89,8 +89,8 @@ function G_postParamHook {
     # lpCurrentsGet
 
     if [ ! -z "${bxoId}" ] ; then
-	# NOTYET -- This is unreliable as bxoId may not exist
-     	bxoHome=$( FN_absolutePathGet ~${bxoId} )
+        # NOTYET -- This is unreliable as bxoId may not exist
+        bxoHome=$( FN_absolutePathGet ~${bxoId} )
     fi
 
     return 0
@@ -116,8 +116,8 @@ function vis_examples {
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
     if ! lpCurrentsGet ; then
-	EH_problem "lpCurrentsGet Failure"
-	lpReturn 101
+        EH_problem "lpCurrentsGet Failure"
+        lpReturn 101
     fi
     
     #local privacy="priv"

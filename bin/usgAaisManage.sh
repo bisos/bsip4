@@ -127,9 +127,9 @@ function vis_examples {
     local thisUid=$( id -u -n )
 
     if [ "${currentBynameUid:-}_" != "_" ] ; then
-	oneBystarUid=${currentBynameUid:-}
+        oneBystarUid=${currentBynameUid:-}
     else
-	oneBystarUid=${currentBystarUid:-}
+        oneBystarUid=${currentBystarUid:-}
     fi
 
     #typeset oneUser=bystar
@@ -274,22 +274,22 @@ function vis_offlineimapUpdate {
 
   if [ "${cp_bueCapMailRetrieve}_" == "_" ] ; then
       FN_fileSafeKeep ${userHome}/.offlineimaprc
-	vis_offlineimapStdout > ${userHome}/.offlineimaprc
+        vis_offlineimapStdout > ${userHome}/.offlineimaprc
 
-	opDo chown ${user} ${userHome}/.offlineimaprc
-	opDo chmod 600 ${userHome}/.offlineimaprc
-	
-	opDo ls -l ${userHome}/.offlineimaprc
+        opDo chown ${user} ${userHome}/.offlineimaprc
+        opDo chmod 600 ${userHome}/.offlineimaprc
+        
+        opDo ls -l ${userHome}/.offlineimaprc
 #  elif [ "${cp_bueCapMailRetrieve}_" == "none_" ] ; then # NOTYET none should be replaced by imap/smtp
-#	opDo /bin/rm ${userHome}/.offlineimaprc
+#       opDo /bin/rm ${userHome}/.offlineimaprc
   else  # applies to all urgent 
       FN_fileSafeKeep ${userHome}/.offlineimaprc      
-	vis_offlineimapStdout > ${userHome}/.offlineimaprc
+        vis_offlineimapStdout > ${userHome}/.offlineimaprc
 
-	opDo chown ${user} ${userHome}/.offlineimaprc
-	opDo chmod 600 ${userHome}/.offlineimaprc
-	
-	opDo ls -l ${userHome}/.offlineimaprc
+        opDo chown ${user} ${userHome}/.offlineimaprc
+        opDo chmod 600 ${userHome}/.offlineimaprc
+        
+        opDo ls -l ${userHome}/.offlineimaprc
   fi
 }
 
@@ -306,8 +306,8 @@ function vis_offlineimapStdout {
       
       acctsList=$( echo * ) 
       for thisBystarUid in ${acctsList} ; do
-	  bystarUid=${thisBystarUid}
-	  vis_offlineimapStdout
+          bystarUid=${thisBystarUid}
+          vis_offlineimapStdout
       done
   else
       vis_offlineimapStdout      
@@ -411,7 +411,7 @@ _EOF_
 
     # lpDo chown ${user} ${userHome}/.authinfo
     lpDo chmod 600 ${userHome}/.authinfo
-	
+        
     opDo ls -l ${userHome}/.authinfo
 }
 
@@ -432,15 +432,15 @@ _EOF_
     local curUsgAcctHome=$( vis_curUsgAcctHome )
     
     if [ "${bystarUid:-}_" == "all_" ] ; then
-	opDoExit cd ${userHome}/gatherer/bxo
+        opDoExit cd ${userHome}/gatherer/bxo
       
-	acctsList=$( echo * ) 
-	for thisBystarUid in ${acctsList} ; do
-	    bystarUid=${thisBystarUid}
-	    vis_authInfoStdoutOne  
-	done
+        acctsList=$( echo * ) 
+        for thisBystarUid in ${acctsList} ; do
+            bystarUid=${thisBystarUid}
+            vis_authInfoStdoutOne  
+        done
     else
-	vis_authInfoStdoutOne
+        vis_authInfoStdoutOne
     fi
 }
 
@@ -490,16 +490,16 @@ _EOF_
     local bystarAllFilePath=${usgEnvBxoPath}/blee/elisp/bystar-all.el
 
     if [ "${bystarUid:-}_" == "all_" ] ; then
-	opDoExit cd ${userHome}/gatherer/bxo
+        opDoExit cd ${userHome}/gatherer/bxo
       
-	acctsList=$( echo * ) 
-	for thisBystarUid in ${acctsList} ; do
-	    bystarUid=${thisBystarUid}
-	    vis_bleeUpdateOne  
-	done
+        acctsList=$( echo * ) 
+        for thisBystarUid in ${acctsList} ; do
+            bystarUid=${thisBystarUid}
+            vis_bleeUpdateOne  
+        done
     else
-	acctsList="${bystarUid}"
-	vis_bleeUpdateOne  
+        acctsList="${bystarUid}"
+        vis_bleeUpdateOne  
     fi
 
 #
@@ -566,8 +566,8 @@ _EOF_
 
 
 mkpipe () {
-	rm -f -- "$1"
-	mkfifo -m600 -- "$1"
+        rm -f -- "$1"
+        mkfifo -m600 -- "$1"
 }
 
 thisPipe=/tmp/pipe$$
@@ -632,7 +632,7 @@ while read  thisLine  ; do
     rightSide=$( Equal_rightSide "${thisLine}" )
     leftSide=$( Equal_leftSide "${thisLine}" )
     if [ "${leftSide}_" != "cp_currentPasswd_" ] ; then 
-	echo "(setq bystar-${leftSide} \"${rightSide}\")"
+        echo "(setq bystar-${leftSide} \"${rightSide}\")"
     fi
 done
 

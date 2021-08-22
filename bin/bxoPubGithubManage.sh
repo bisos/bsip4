@@ -86,11 +86,11 @@ function G_postParamHook {
     # lpCurrentsGet
 
     if [ ! -z "${bxoId}" ] ; then
-	if vis_userAcctExists "${bxoId}" ; then
-     	    bxoHome=$( FN_absolutePathGet ~${bxoId} )
-	else
-	    bxoHome=$( echo ~${bxoId} )
-	fi
+        if vis_userAcctExists "${bxoId}" ; then
+            bxoHome=$( FN_absolutePathGet ~${bxoId} )
+        else
+            bxoHome=$( echo ~${bxoId} )
+        fi
     fi
 
     lpCurrentsGet
@@ -165,8 +165,8 @@ _EOF_
     EH_assert [ ! -z "${privacy}" ]    
 
     if vis_userAcctExists "${bxoId}" ; then
-	ANT_raw "${bxoId} account already exists."
-	lpReturn 101
+        ANT_raw "${bxoId} account already exists."
+        lpReturn 101
     fi
     
     local bxeDesc="$(vis_bxoConstructBaseDir_obtain ${privacy})/${bxoId}/rbxe/bxeDesc"
@@ -189,8 +189,8 @@ _EOF_
     EH_assert [[ ! -z "${bxoId}" ]]
 
     if ! vis_userAcctExists "${bxoId}" ; then
-	ANT_raw "${bxoId} account is not valid."
-	lpReturn 101
+        ANT_raw "${bxoId} account is not valid."
+        lpReturn 101
     fi
 
     bxoHome=$( FN_absolutePathGet ~${bxoId} )    
@@ -198,12 +198,12 @@ _EOF_
     local gitCloneDest=""
     
     if [ $# -eq 0 ] ; then
-	gitCloneDest=${bxoHome}
+        gitCloneDest=${bxoHome}
     elif [ $# -eq 1 ] ; then
-	gitCloneDest=$1
+        gitCloneDest=$1
     else
-	EH_oops ""
-	lpReturn
+        EH_oops ""
+        lpReturn
     fi
     
     #local reposList="rbxe bxeTree mapFiles vagrants"
@@ -215,7 +215,7 @@ _EOF_
     opDo FN_dirCreatePathIfNotThere "${gitCloneDest}"  # NOTYET
     
     for eachRepo in ${reposList} ; do
-	lpDo git clone git://github.com/bxObjects/${bxoId}.${eachRepo}.git "${gitCloneDest}/${eachRepo}"
+        lpDo git clone git://github.com/bxObjects/${bxoId}.${eachRepo}.git "${gitCloneDest}/${eachRepo}"
     done
 
     lpReturn
@@ -237,8 +237,8 @@ _EOF_
     EH_assert [ ! -z "${privacy}" ]
 
     if vis_userAcctExists "${bxoId}" ; then
-	ANT_raw "${bxoId} account already exists."
-	lpReturn 101
+        ANT_raw "${bxoId} account already exists."
+        lpReturn 101
     fi
 
 
@@ -250,18 +250,18 @@ _EOF_
     #lpDo vis_usgSshConfigUpdate
 
     if [ $# -eq 0 ] ; then
-	lpDo vis_bxoAcctCreate
+        lpDo vis_bxoAcctCreate
 
-	lpDo vis_initialReposClone
-	
+        lpDo vis_initialReposClone
+        
     elif [ $# -eq 1 ] ; then
-	gitCloneDest=$1
+        gitCloneDest=$1
 
-	lpDo vis_initialReposClone ${gitCloneDest}	
-	
+        lpDo vis_initialReposClone ${gitCloneDest}      
+        
     else
-	EH_oops ""
-	lpReturn
+        EH_oops ""
+        lpReturn
     fi
 
     
@@ -282,7 +282,7 @@ _EOF_
     #EH_assert [ ! -z "${privacy}" ]
 
     if ! vis_userAcctExists "${bxoId}" ; then
-	ANT_raw "${bxoId} account is not valid." ; lpReturn 101
+        ANT_raw "${bxoId} account is not valid." ; lpReturn 101
     fi
 
     local gitCloneDest=""
@@ -290,16 +290,16 @@ _EOF_
     lpDo usgBxoSshManage.sh ${G_commandOptions}  -p bxoId=${bxoId} -i usgBxoFullDelete
     
     if [ $# -eq 0 ] ; then
-	lpDo echo NOTYET instead of vis_initialReposClone
-	
+        lpDo echo NOTYET instead of vis_initialReposClone
+        
     elif [ $# -eq 1 ] ; then
-	gitCloneDest=$1
+        gitCloneDest=$1
 
-	lpDo echo NOTYET instead of vis_initialReposClone ${gitCloneDest}	
-	
+        lpDo echo NOTYET instead of vis_initialReposClone ${gitCloneDest}       
+        
     else
-	EH_oops ""
-	lpReturn
+        EH_oops ""
+        lpReturn
     fi
 
     lpDo vis_userHomeAcctsDelete "${bxoId}"    
@@ -321,7 +321,7 @@ _EOF_
     #EH_assert [ ! -z "${privacy}" ]
 
     if ! vis_userAcctExists "${bxoId}" ; then
-	ANT_raw "${bxoId} account is not valid." ; lpReturn 101
+        ANT_raw "${bxoId} account is not valid." ; lpReturn 101
     fi
 
     lpDo vis_fullRemove $@

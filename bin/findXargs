@@ -105,9 +105,9 @@ _EOF_
 
 function noArgsHook {
     if [ $# -eq 0 ] ; then
-	vis_examples
+        vis_examples
     else
-	vis_hereFiles grep -i $@
+        vis_hereFiles grep -i $@
     fi
 }
 
@@ -129,7 +129,7 @@ _EOF_
     lpDo eval find -L .  -print0 \| xargs -0 $*
     
     lpReturn
-}	
+}       
 
 
 function vis_hereFiles {
@@ -142,7 +142,7 @@ _EOF_
     lpDo eval find -L . -type f  -print0 \| xargs -0 $*
     
     lpReturn
-}	
+}       
 
 function vis_homeOrg {
    G_funcEntry
@@ -154,7 +154,7 @@ _EOF_
     lpDo eval find -L ${HOME}/org -not -type d  -print0 \| xargs -0 $*
     
     lpReturn
-}	
+}       
 
 function vis_bleePanels {
    G_funcEntry
@@ -166,7 +166,7 @@ _EOF_
     lpDo eval find -L /libre/ByStar/InitialTemplates/activeDocs -not -type d -print0 \| xargs -0 $*
     
     lpReturn
-}	
+}       
 
 
 

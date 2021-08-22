@@ -95,13 +95,13 @@ _EOF_
     shift
 
     if [ $# -eq 0 ] ; then
-	while read thisLine ; do
-	    echo  ${prependStr}${thisLine}
-	done
+        while read thisLine ; do
+            echo  ${prependStr}${thisLine}
+        done
     else
-	for thisArg in $@; do
-	    echo  ${prependStr}${thisArg}
-	done
+        for thisArg in $@; do
+            echo  ${prependStr}${thisArg}
+        done
     fi
 }
 # }}}
