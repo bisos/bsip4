@@ -289,9 +289,14 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
+    lpDo bisosPyVenvSetup.sh -h -v -n showRun -i venvPy3_pipInstalls
+    
     lpDo /bisos/venv/py2/bisos3/bin/pip2 install --upgrade unisos.gcipher
     lpDo /bisos/venv/py2/bisos3/bin/pip2 install --upgrade twine
 
+    lpDo /bisos/venv/py3/bisos3/bin/pip3 install --upgrade unisos.gcipher
+    lpDo /bisos/venv/py3/bisos3/bin/pip3 install --upgrade twine
+    
     lpDo sudo apt-get install python3-venv  # needed for pipx
     lpDo /bisos/venv/py3/bisos3/bin/pip install --upgrade pipx
     # NOTYET, Run pipx --help and setup env vars in bashrc
