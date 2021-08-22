@@ -125,9 +125,9 @@ _EOF_
 
     lpDo vis_virtenvsPrep
 
-    lpDo vis_venvPy2_pipInstalls
+    #lpDo vis_venvPy2_pipInstalls
     lpDo vis_venvPy3_pipInstalls
-    lpDo vis_venvPy2Dev_pipInstalls
+    #lpDo vis_venvPy2Dev_pipInstalls
     lpDo vis_venvPy3Dev_pipInstalls    
     
     lpReturn
@@ -254,7 +254,7 @@ _CommentBegin_
 _CommentEnd_
 
 
-function vis_venvPy2_pipUpgrades {
+function vis_venvPy2_pipUpgrades%% {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Upgrade py2 packages.
@@ -325,7 +325,7 @@ _EOF_
 
 
 
-function vis_venvPy2_pipInstalls {
+function vis_venvPy2_pipInstalls%% {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Make sure python2 and python3 and their pips are in place

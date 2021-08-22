@@ -270,12 +270,12 @@ _EOF_
 function vis_pipUpgrades {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** /bisos/venv/py2/bisos3/bin
+**
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo bisosPyVenvSetup.sh -h -v -n showRun -i venvPy2_pipUpgrades
+    lpDo bisosPyVenvSetup.sh -h -v -n showRun -i venvPy3_pipUpgrades
 
     lpReturn
 }
@@ -284,15 +284,15 @@ _EOF_
 function vis_missingPipInstall {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** /bisos/venv/py2/bisos3/bin/missing
+**
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
     lpDo bisosPyVenvSetup.sh -h -v -n showRun -i venvPy3_pipInstalls
     
-    lpDo /bisos/venv/py2/bisos3/bin/pip2 install --upgrade unisos.gcipher
-    lpDo /bisos/venv/py2/bisos3/bin/pip2 install --upgrade twine
+    # lpDo /bisos/venv/py2/bisos3/bin/pip2 install --upgrade unisos.gcipher
+    # lpDo /bisos/venv/py2/bisos3/bin/pip2 install --upgrade twine
 
     lpDo /bisos/venv/py3/bisos3/bin/pip3 install --upgrade unisos.gcipher
     lpDo /bisos/venv/py3/bisos3/bin/pip3 install --upgrade twine
