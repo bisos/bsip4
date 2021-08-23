@@ -88,6 +88,8 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
+    local bisosBinBase="$( bisosBinBaseGet )"
+
     lpDo vis_provisionBisosAccts
     
     lpDo vis_provisionUsgAcctBases
@@ -100,7 +102,9 @@ _EOF_
 
     lpDo vis_provisionBasicBlee
 
-    lpDo vis_provisionVirtSysSetup    
+    lpDo vis_provisionVirtSysSetup
+
+    lpDo ${bisosBinBase}/bsipProvision.sh -h -v -n showRun -i sysBaseGeneralAugment
     
     lpDo echo skipping vis_provisionEmacsFromSrc
 

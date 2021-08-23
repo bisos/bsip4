@@ -63,6 +63,12 @@ $( examplesSeperatorTopLabel "${G_myName}" )
 _EOF_
     
     vis_bisosProvisionExamples "${extraInfo}"
+
+    cat  << _EOF_
+$( examplesSeperatorChapter "Runs After /bisos/bsip/bin is in place" )
+${G_myName} ${extraInfo} -i sysBaseGeneralAugment
+_EOF_
+
 }
 
 function vis_postSysBaseExamples {
@@ -110,6 +116,24 @@ _EOF_
 noArgsHook() {
   vis_examples
 }
+
+
+function vis_sysBaseGeneralAugment {
+     G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Augment provisionBisos.sh -i sysBasePlatform using /bisos/bsip/bin facilities.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local bisosBinBase="$( bisosBinBaseGet )"
+
+    lpDo ${bisosBinBase}/bisosPyVenvSetup.sh -h -v -n showRun -i venvPy3_pipInstalls
+
+    lpDo echo "Stuff from bisosMaintainInterim.sh comes here."
+}
+
+
 
 function vis_bxioContainer_provisionSetup {
     G_funcEntry
