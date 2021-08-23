@@ -345,9 +345,10 @@ _EOF_
     local bisosPackerBoxesPath=$( vis_bisos_packerBoxesBasePath )
 
     # /bxo/r3/iso/aip_vagrantBaseBoxes/vagrants/packerBaseBoxes/debian/desktop/debian-11.pre-amd64.json
-    inBaseDirDo ${bisosPackerBoxesPath}/debian/desktop packer build -only qemu -var "headless=true" debian-11.pre-amd64.json
+    # /bxo/r3/iso/aip_vagrantBaseBoxes/vagrants/packerBaseBoxes/debian/desktop/debian-11.0.0-amd64.json
+    inBaseDirDo ${bisosPackerBoxesPath}/debian/desktop packer build -only qemu -var "headless=true" debian-11.0.0-amd64.json
 
-    lpDo vagrant box add ${bisosPackerBoxesPath}/builds/debian-11.pre-desktop.libvirt.box --name "bxDistro/debian-11.pre/desktop"
+    lpDo vagrant box add ${bisosPackerBoxesPath}/builds/debian-11.0.0-desktop.libvirt.box --name "bxDistro/debian-11.0.0/desktop"
 
     lpReturn
 }

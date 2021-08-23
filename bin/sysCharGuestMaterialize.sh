@@ -979,7 +979,7 @@ _OUTER_EOF_
         "bxDistro/ubuntu-20.04/desktop")
             doNothing
             ;&   #fallthru
-        "bxDistro/debian-11.pre/desktop")
+        "bxDistro/debian-11.0.0/desktop")
             doNothing
             ;&   #fallthru
         "bxDistro/debian-10.8/desktop")
@@ -1040,7 +1040,7 @@ _EOF_
         "bxDistro/ubuntu-20.04/desktop"|"bisos/ubuntu-20.04/bxcntnr")
             doNothing
             ;&   #fallthru
-        "bxDistro/debian-11.pre/desktop"|"bisos/debian-11.pre/bxcntnr")
+        "bxDistro/debian-11.0.0/desktop"|"bisos/debian-11.pre/bxcntnr")
             doNothing
             ;&   #fallthru
         "bxDistro/debian-10.8/desktop"|"bisos/debian-10.8/bxcntnr")
