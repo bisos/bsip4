@@ -380,8 +380,13 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
+
+    # sha1 obtained from a stable release -- git rev-parse HEAD
+    inBaseDirDo /bisos/blee/extPkgs/emacs-application-framework git reset --hard 4ce9b1cab0f4894adcb1710917f96279cccd401b
+
+
     lpDo emacsDoomsManage.sh -h -v -n showRun -p profile=blee2 -i reBuild
-    lpDo emacsDoomsManage.sh -h -v -n showRun -p profile=sysDoom -i reBuild
+    # lpDo emacsDoomsManage.sh -h -v -n showRun -p profile=sysDoom -i reBuild
 
     lpDo blee -h -v -n showRun -i blee1InitSetup
 
