@@ -200,6 +200,7 @@ ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_aptSourcesPr
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_provisionBisos_sysBasePlatform # ManagerOnly -- intra user -- no bisos
 $( examplesSeperatorChapter "Site Setup -- bisosBasePlatform Actions" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_fullUpdate # onManager
+${G_myName} ${extraInfo} -i sysBaseGeneralAugment  # onTarget
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_siteSetup # onManager or below onTarget
 ${G_myName} ${extraInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -p siteBxoId=${siteBxoId}" -i bisosBasePlatform_siteSetup # onTarget
 $( examplesSeperatorChapter "SysChar Setup -- siteBasePlatform Actions" )
@@ -1401,6 +1402,19 @@ _EOF_
              -p targetName=onTargetRun ${G_paramCmndOption} -i ${commandName}
     fi
 ####+END:
+}
+
+
+function vis_sysBaseGeneralAugment {
+     G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Augment provisionBisos.sh -i sysBasePlatform using /bisos/bsip/bin facilities.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo bisosPyVenvSetup.sh -h -v -n showRun -i venvPy3_pipInstalls
+
 }
 
 

@@ -103,8 +103,8 @@ ${G_myName} ${extraInfo} -f -i venvDo py3 reInstall ${onePip3Pkg}  # reinstall
 ${G_myName} ${extraInfo} -f -i venvDo py3 unInstall ${onePip3Pkg}
 ${G_myName} ${extraInfo} -f -i venvDo py3 pip list
 $( examplesSeperatorChapter "Direct Examples" )
-${pdb_venv_py2Bisos3}/bin/pip2 list --outdated --format=freeze
-${pdb_venv_py2Bisos3}/bin/pip2 list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 ${pdb_venv_py2Bisos3}/bin/pip2 install --upgrade
+${pdb_venv_py3Bisos3}/bin/pip list --outdated --format=freeze
+${pdb_venv_py3Bisos3}/bin/pip list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 ${pdb_venv_py3Bisos3}/bin/pip install --upgrade
 pip2 list --outdated --format=freeze 
 pip list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
 _EOF_
