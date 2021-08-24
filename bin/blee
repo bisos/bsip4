@@ -365,6 +365,8 @@ function vis_provisionSetup {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 In acctName's (mandtaory) HOME, with vis_prepUpdateInit create emacs init files.
+Typically called as:
+lpDo sudo -u bystar \${bisosBinBase}/blee -v -n showRun -p acctName=bystar -i provisionSetup
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -376,9 +378,17 @@ _EOF_
 
     # NOTYET, verify that acctName is valid (source needed lib)
 
-    lpDo vis_doomReBuildBlee2
+    # sha1 obtained from a stable release -- git rev-parse HEAD
+    inBaseDirDo /bisos/blee/extPkgs/emacs-application-framework git reset --hard 4ce9b1cab0f4894adcb1710917f96279cccd401b
 
-    lpDo bueMailManage.sh -h -v -n showRun -i mhonarcBasePrep
+    lpDo sudo -u ${acctName} emacsDoomsManage.sh -h -v -n showRun -p profile=blee2 -i reBuild
+    # lpDo emacsDoomsManage.sh -h -v -n showRun -p profile=sysDoom -i reBuild
+
+    lpDo sudo -u ${acctName} blee -h -v -n showRun -i blee1InitSetup
+
+    lpDo sudo -u ${acctName} blee -h -v -n showRun -i chemacs2FullUpdate
+
+    lpDo sudo -u ${acctName} bueMailManage.sh -h -v -n showRun -i mhonarcBasePrep
 }
 
 
@@ -465,31 +475,6 @@ _EOF_
 
     lpReturn
 }
-
-
-function vis_doomReBuildBlee2 {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** Missing apt packages to be sorted out and absorbed
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-
-    # sha1 obtained from a stable release -- git rev-parse HEAD
-    inBaseDirDo /bisos/blee/extPkgs/emacs-application-framework git reset --hard 4ce9b1cab0f4894adcb1710917f96279cccd401b
-
-
-    lpDo emacsDoomsManage.sh -h -v -n showRun -p profile=blee2 -i reBuild
-    # lpDo emacsDoomsManage.sh -h -v -n showRun -p profile=sysDoom -i reBuild
-
-    lpDo blee -h -v -n showRun -i blee1InitSetup
-
-    lpDo blee -h -v -n showRun -i chemacs2FullUpdate
-
-    lpReturn
-}
-
 
 
 
