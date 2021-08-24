@@ -378,17 +378,22 @@ _EOF_
 
     # NOTYET, verify that acctName is valid (source needed lib)
 
+    local bisosBinBase="$( bisosBinBaseGet )"
+
+    lpDo ${bisosBinBase}/bisosPyVenvSetup.sh -h -v -n showRun -i venvPy3_pipInstalls
+
+
     # sha1 obtained from a stable release -- git rev-parse HEAD
     inBaseDirDo /bisos/blee/extPkgs/emacs-application-framework git reset --hard 4ce9b1cab0f4894adcb1710917f96279cccd401b
 
-    lpDo sudo -u ${acctName} emacsDoomsManage.sh -h -v -n showRun -p profile=blee2 -i reBuild
+    lpDo sudo -u ${acctName} ${bisosBinBase}/emacsDoomsManage.sh -h -v -n showRun -p profile=blee2 -i reBuild
     # lpDo emacsDoomsManage.sh -h -v -n showRun -p profile=sysDoom -i reBuild
 
-    lpDo sudo -u ${acctName} blee -h -v -n showRun -i blee1InitSetup
+    lpDo vis_blee1InitSetup
 
-    lpDo sudo -u ${acctName} blee -h -v -n showRun -i chemacs2FullUpdate
+    lpDo vis_chemacs2FullUpdate
 
-    lpDo sudo -u ${acctName} bueMailManage.sh -h -v -n showRun -i mhonarcBasePrep
+    lpDo sudo -u ${acctName} ${bisosBinBase}/bueMailManage.sh -h -v -n showRun -i mhonarcBasePrep
 }
 
 

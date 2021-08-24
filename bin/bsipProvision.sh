@@ -134,7 +134,7 @@ _EOF_
 
     lpDo ${bisosBinBase}/lcaPythonCommonBinsPrep.sh -v -n showRun -i fullUpdate
 
-    lpDo ${bisosBinBase}/blee -v -n showRun -p acctName=bystar -i provisionSetup
+    lpDo sudo -u bystar ${bisosBinBase}/blee -v -n showRun -p acctName=bystar -i provisionSetup
 
     lpDo echo "Stuff from bisosMaintainInterim.sh comes here."
 }
