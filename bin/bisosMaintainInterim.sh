@@ -234,6 +234,7 @@ _EOF_
 
     ANT_raw "Run this only after you have pushed all your changes."
     ANT_raw "Not automated as part of batch full update as it can be dangerous."
+    ANT_raw "/bisos/git/bxRepos and moved and re-cloned."
     lpDo echo sysCharDevel.sh -h -v -n showRun -i bisosDevBxo_fullSetup
 
     lpReturn
@@ -301,7 +302,7 @@ _EOF_
     lpDo /bisos/venv/py3/bisos3/bin/pip install --upgrade pipx
     # NOTYET, Run pipx --help and setup env vars in bashrc
 
-    lpDo lcaJsBinsPrep.sh -v -n showRun -i fullUpdate
+    # lpDo lcaJsBinsPrep.sh -v -n showRun -i fullUpdate
 
     function toBeAbsorbedIn_bleeBinsPrep {
         sudo npm install --global pyright

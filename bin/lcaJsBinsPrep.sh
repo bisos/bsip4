@@ -82,6 +82,12 @@ _EOF_
 
     itemOptionalOrderedList=()
     itemLaterOrderedList=()
+
+    itemNpmPkgsOrderedList=(
+        "pyright"       # comment for pkg1
+        "reveal.js"
+    )
+
 }
 
 distFamilyGenerationHookRun pkgsList
@@ -120,6 +126,15 @@ _CommentBegin_
 *      ======[[elisp:(org-cycle)][Fold]]====== Custom-Pkg: npmPkgsInstall
 _CommentEnd_
 
+vis_npmPkgsInstall () {
+    ANT_raw "Here we process npmPkgsInstall one by one."
+    local each
+    for each in ${itemNpmPkgsOrderedList[@]} ; do
+        opDo sudo npm install -g --save --prefix=/usr/local ${each}
+    done
+    print
+}
+
 
 item_npmPkgsInstall () {
   distFamilyGenerationHookRun binsPrep_npmPkgsInstall
@@ -134,7 +149,8 @@ binsPrep_npmPkgsInstall_DEFAULT_DEFAULT () {
     typeset pkgRePubAgent=""
 
     function customInstallScript {
-        opDo sudo npm install -g --save --prefix=/usr/local reveal.js
+        lpDo vis_npmPkgsInstall
+        # opDo sudo npm install -g --save --prefix=/usr/local reveal.js
     }
 }
 

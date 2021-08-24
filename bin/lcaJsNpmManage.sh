@@ -20,13 +20,13 @@ __author__="
 
 ####+BEGIN: bx:bsip:bash:seed-spec :types "seedActions.bash"
 SEED="
-*  /[dblock]/ /Seed/ :: [[file:/opt/public/osmt/bin/seedActions.bash]] | 
+*  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] |
 "
 FILE="
-*  /This File/ :: /opt/public/osmt/bin/lcaKvmManage.sh 
+*  /This File/ :: /bisos/git/auth/bxRepos/bisos/bsip4/bin/lcaJsNpmManage.sh
 "
 if [ "${loadFiles}" == "" ] ; then
-    /opt/public/osmt/bin/seedActions.bash -l $0 "$@" 
+    /bisos/core/bsip/bin/seedActions.bash -l $0 "$@"
     exit $?
 fi
 ####+END:
@@ -114,7 +114,7 @@ sudo npm -g install ${oneNpmPkg}@5.2
 sudo npm -g ls --depth 0
 sudo npm -g update reveal.js
 $( examplesSeperatorChapter "Freezing -- Updating" )
-npm -g ls | grep -o "\S\+@\S\+$" | tr @ ' ' | awk -v q='"' '{print q$1q": "q"^"$2q","}'
+npm -g ls | grep -o "\S\+@\S\+$" | tr @ ' ' | awk -v q='"' '{print q\$1q": "q"^"\$2q","}'
 npm -g --long outdated
 $( examplesSeperatorChapter "Development And Experimentation" )
 ${G_myName} ${extraInfo} -i examplesPlus

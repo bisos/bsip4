@@ -130,6 +130,12 @@ _EOF_
 
     lpDo ${bisosBinBase}/bisosPyVenvSetup.sh -h -v -n showRun -i venvPy3_pipInstalls
 
+    lpDo ${bisosBinBase}/lcaJsBinsPrep.sh -v -n showRun -i fullUpdate
+
+    lpDo ${bisosBinBase}/lcaPythonCommonBinsPrep.sh -v -n showRun -i fullUpdate
+
+    lpDo ${bisosBinBase}/blee -v -n showRun -i provisionSetup
+
     lpDo echo "Stuff from bisosMaintainInterim.sh comes here."
 }
 

@@ -78,7 +78,9 @@ _EOF_
         "sqlite3"     # Used by: org-roam,
         "graphviz"    # Used by: org-roam,
         "ripgrep"     # Used by: doom,
-    "fd_find"     # Used by: doom,
+        "fd_find"     # Used by: doom,
+        "w3m"         # Used by: gnus
+        "mhonarc"     # Used by: gnus
     )
 
     itemOptionalOrderedList=(

@@ -19,15 +19,15 @@ __author__="
 "
 
 
-####+BEGIN: bx:dblock:lsip:bash:seed-spec :types "seedSubjectBinsPrepDist.sh"
+####+BEGIN: bx:bsip:bash:seed-spec :types "seedSubjectBinsPrepDist.sh"
 SEED="
-*  /[dblock]/ /Seed/ :: [[file:/opt/public/osmt/bin/seedSubjectBinsPrepDist.sh]] | 
+*  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedSubjectBinsPrepDist.sh]] |
 "
 FILE="
-*  /This File/ :: /opt/public/osmt/bin/lcaPythonCommonBinsPrep.sh 
+*  /This File/ :: /bisos/git/auth/bxRepos/bisos/bsip4/bin/lcaPythonCommonBinsPrep.sh
 "
 if [ "${loadFiles}" == "" ] ; then
-    /opt/public/osmt/bin/seedSubjectBinsPrepDist.sh -l $0 "$@" 
+    /bisos/core/bsip/bin/seedSubjectBinsPrepDist.sh -l $0 "$@"
     exit $?
 fi
 ####+END:
@@ -51,9 +51,6 @@ _CommentBegin_
 _CommentEnd_
 function vis_describe {  cat  << _EOF_
 **     ============ Essential Features TODO
-*** TODO [#A] ======== Improve G_commonExamples.
-    SCHEDULED: <2014-02-03 Mon>
-*** TODO ======== Add the EH_ module.
 _EOF_
 }
 
@@ -63,7 +60,59 @@ _CommentEnd_
 
 #apt-cache search something | egrep '^something'
 
+
+
 function pkgsList_DEFAULT_DEFAULT {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+
+    #  [[elisp:(lsip-local-run-command "apt-cache search something | egrep '^something'")][apt-cache search something | egrep '^something']]
+
+    itemOrderedList=(
+        "python3_venv"         # needed by pipx
+        "py3Bisos3PipInstalls"
+        "pipxInstalls"
+    )
+
+    itemOptionalOrderedList=()
+    itemLaterOrderedList=()
+
+    itemPy3Bisos3PipOrderedList=(
+        "pipx"
+        "unisos.gcipher"       # perhaps not needed
+        "twine"                #
+    )
+
+    itemPipxOrderedList=(
+        # See github.com/hlissner/doom-emacs/blob/develop/modules/lang/python/README.org
+        "pytest"      # Used by blee and doom
+        "nose"        # Used by blee and doom
+        "black"       # Used by blee and doom
+        "isort"       # Used by blee and doom
+    )
+}
+
+distFamilyGenerationHookRun pkgsList
+
+
+_CommentBegin_
+*      ======[[elisp:(org-cycle)][Fold]]====== Module Specific Additions -- examplesHook
+_CommentEnd_
+
+
+function examplesHookPost {
+  cat  << _EOF_
+----- ADDITIONS -------
+${G_myName} -i moduleDescription
+${G_myName} ${extraInfo} -i repositoryAdd
+_EOF_
+}
+
+
+
+function pkgsList_DEFAULT_DEFAULT_OLD {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -92,7 +141,6 @@ _EOF_
     )
 }
 
-distFamilyGenerationHookRun pkgsList
 
 
 _CommentBegin_
@@ -100,11 +148,10 @@ _CommentBegin_
 _CommentEnd_
 
 
-function examplesHookPost {
+function examplesHookPost%% {
   cat  << _EOF_
 ----- ADDITIONS -------
 ${G_myName} -i pipInstallCommon
-${G_myName} -i pipInstallOpenpyxlForEnetsdk
 _EOF_
 }
 
@@ -131,15 +178,24 @@ _EOF_
     opDo pip install --upgrade  lxml         # ubuntu's is not good enough for openpyxl
 
     opDo pip install gprof2dot                # For Profiler Graphing
-
-    #opDo vis_pipInstallOpenpyxlForEnetsdk
 }
 
 
 _CommentBegin_
-*  [[elisp:(org-cycle)][| ]]  [PyPi]        :: pipInstallOpenpyxlForEnetsdk [[elisp:(org-cycle)][| ]]
+*  [[elisp:(org-cycle)][| ]]  [PyPi]        :: pipInstallOpenpyxl [[elisp:(org-cycle)][| ]]
 _CommentEnd_
 
+
+
+####+BEGIN: bx:dblock:lsip:binsprep:apt :module "python3-venv"
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || Apt-Pkg       :: python3-venv [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+item_python3_venv () { distFamilyGenerationHookRun binsPrep_python3_venv; }
+
+binsPrep_python3_venv_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "python3-venv"; }
+
+####+END:
 
 ####+BEGIN: bx:dblock:lsip:binsprep:apt :module "graphviz"
 _CommentBegin_
@@ -339,6 +395,61 @@ binsPrep_python_sphinx_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "python-sphinx
 ####+END:
 
 
+_CommentBegin_
+*      ======[[elisp:(org-cycle)][Fold]]====== Apt-Pkg: py3Bisos3 pip installs
+_CommentEnd_
+
+vis_py3Bisos3PipInstalls () {
+    ANT_raw "Here we process py3Bisos3PipInstalls one by one."
+    local each
+    for each in ${itemPy3Bisos3PipOrderedList[@]} ; do
+        lpDo sudo -u bisos /bisos/bsip/bin/bisosPyVenvSetup.sh -h -v -n showRun -f -i venvDo py3 reInstall "${each}"
+    done
+    print
+}
+
+
+item_py3Bisos3PipInstalls () {
+  distFamilyGenerationHookRun binsPrep_py3Bisos3PipInstalls
+}
+
+binsPrep_py3Bisos3PipInstalls_DEFAULT_DEFAULT () {
+    mmaThisPkgName="py3Bisos3PipInstalls"
+    mmaPkgDebianName="${mmaThisPkgName}"
+    mmaPkgDebianMethod="custom"  #  or "apt" no need for customInstallScript but with binsPrep_installPostHook
+
+    function customInstallScript {
+        opDo vis_py3Bisos3PipInstalls
+    }
+}
+
+_CommentBegin_
+*      ======[[elisp:(org-cycle)][Fold]]====== Apt-Pkg: pipx installs
+_CommentEnd_
+
+vis_pipxInstalls () {
+    ANT_raw "Here we process pipxInstalls one by one."
+    #lpDo sudo -u bisos id
+    local each
+    for each in ${itemPipxOrderedList[@]} ; do
+        lpDo sudo -u bisos env PIPX_HOME=/bisos/pipx PIPX_BIN_DIR=/bisos/pipx/bin /bisos/venv/py3/bisos3/bin/pipx install "${each}"
+    done
+}
+
+item_pipxInstalls () {
+  distFamilyGenerationHookRun binsPrep_pipxInstalls
+}
+
+binsPrep_pipxInstalls_DEFAULT_DEFAULT () {
+    mmaThisPkgName="pipxInstalls"
+    mmaPkgDebianName="${mmaThisPkgName}"
+    mmaPkgDebianMethod="custom"  #  or "apt" no need for customInstallScript but with binsPrep_installPostHook
+
+    function customInstallScript {
+        opDo vis_pipxInstalls
+        lpReturn
+    }
+}
 
 
 ####+BEGIN: bx:dblock:bash:end-of-file :type "basic"
