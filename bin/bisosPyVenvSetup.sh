@@ -123,11 +123,16 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
 
-    lpDo vis_virtenvsPrep
+    lpDo vis_virtenvsPrep py3
 
     #lpDo vis_venvPy2_pipInstalls
     lpDo vis_venvPy3_pipInstalls
+
+
     #lpDo vis_venvPy2Dev_pipInstalls
+
+    lpDo vis_virtenvsPrep py3/dev
+
     lpDo vis_venvPy3Dev_pipInstalls    
     
     lpReturn

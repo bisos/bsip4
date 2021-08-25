@@ -164,6 +164,26 @@ binsPrep_fd_find_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "fd-find"; }
 
 ####+END:
 
+####+BEGIN: bx:dblock:lsip:binsprep:apt :module "w3m"
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || Apt-Pkg       :: w3m [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+item_w3m () { distFamilyGenerationHookRun binsPrep_w3m; }
+
+binsPrep_w3m_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "w3m"; }
+
+####+END:
+
+####+BEGIN: bx:dblock:lsip:binsprep:apt :module "mhonarc"
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || Apt-Pkg       :: mhonarc [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+item_mhonarc () { distFamilyGenerationHookRun binsPrep_mhonarc; }
+
+binsPrep_mhonarc_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "mhonarc"; }
+
+####+END:
+
 
 _CommentBegin_
 *      ================ /[dblock] -- End-Of-File Controls/
