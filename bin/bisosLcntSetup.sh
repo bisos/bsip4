@@ -252,7 +252,7 @@ function vis_lcntBaseGetPrep%% {
 function vis_lcntBaseVcGet {
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo bxoActivate.sh -h -v -n showRun -p privacy="priv" -p bxoId="pip_lcntBases" -i bpoActivate
+    lpDo bpoActivate.sh -h -v -n showRun -p privacy="priv" -p bxoId="pip_lcntBases" -i bpoActivate
 }
 
 

@@ -190,7 +190,7 @@ _EOF_
 
   cat  << _EOF_
 $( examplesSeperatorChapter "Related -- See Also" )
-bxoActivate.sh -h -v -n showRun -p privacy="priv" -p bxoId="${oneRealIndiv}" -i bpoActivate
+bpoActivate.sh -h -v -n showRun -p privacy="priv" -p bxoId="${oneRealIndiv}" -i bpoActivate
 _EOF_
 
   vis_examplesNicheRun usage

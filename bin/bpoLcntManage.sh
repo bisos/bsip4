@@ -132,7 +132,7 @@ $( examplesSeperatorChapter "Site Lcnt General Information" )
 ${G_myName} ${extraInfo} -i moduleDescription | emlVisit
 $( examplesSeperatorChapter "Activate LCNT BPOs" )
 ${G_myName} -i lcntBposAvailable
-${G_myName} -i lcntBposAvailable | bxoActivate.sh -i bpoActivate
+${G_myName} -i lcntBposAvailable | bpoActivate.sh -i bpoActivate
 _EOF_
 }
 
