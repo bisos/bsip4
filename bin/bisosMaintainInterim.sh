@@ -124,7 +124,7 @@ ${G_myName} ${extraInfo} -i missingPipInstall
 ${G_myName} ${extraInfo} -i missingAptPkgsInstall
 ${G_myName} ${extraInfo} -i missingBxRepos
 $( examplesSeperatorChapter "Bisos Bases Update" )
-${G_myName} ${extraInfo} -i bisosBasesReClone  # with sysCharDevel.sh
+${G_myName} ${extraInfo} -i bisosBasesReClone  # with cntnrDevel.sh
 ${G_myName} ${extraInfo} -i bisosBasesPull  # with bx-gitRepos
 ${G_myName} ${extraInfo} -i bisosBasesReDirAndReLink # with bx-bases
 $( examplesSeperatorChapter "Blee Upgrade" )
@@ -225,7 +225,7 @@ _EOF_
 function vis_bisosBasesReClone {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** When Auth, use sysCharDevel.sh.
+** When Auth, use cntnrDevel.sh.
 ***  TODO When Anon, use bisosBaseDirs.sh.
 *** TODO Recloning is being done from scratch for all, instead it should be incremental
 _EOF_
@@ -235,7 +235,7 @@ _EOF_
     ANT_raw "Run this only after you have pushed all your changes."
     ANT_raw "Not automated as part of batch full update as it can be dangerous."
     ANT_raw "/bisos/git/bxRepos and moved and re-cloned."
-    lpDo echo sysCharDevel.sh -h -v -n showRun -i bisosDevBxo_fullSetup
+    lpDo echo cntnrDevel.sh -h -v -n showRun -i bisosDevBxo_fullSetup
 
     lpReturn
 }

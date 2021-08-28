@@ -85,6 +85,7 @@ _EOF_
         "net_tools"
         # Perhaps not available on all revs, hence coming last
         "linux_headers_generic"
+	"nmap"
     )
 
     itemOptionalOrderedList=()
@@ -126,6 +127,7 @@ _EOF_
             fi
             ;;
         "DEBIAN")
+	    # NOTYET, this should not be done to laptops. Only to servers.
             lpDo sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
             ;;
         *)
@@ -137,6 +139,16 @@ _EOF_
     
     lpReturn
 }
+
+####+BEGIN: bx:dblock:lsip:binsprep:apt :module "nmap"
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || Apt-Pkg       :: nmap [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+item_nmap () { distFamilyGenerationHookRun binsPrep_nmap; }
+
+binsPrep_nmap_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "nmap"; }
+
+####+END:
 
 
 ####+BEGIN: bx:dblock:lsip:binsprep:apt :module "debconf-utils"

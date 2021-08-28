@@ -159,8 +159,8 @@ ${G_myName} ${extraInfo} -i siteSynergyClientsBase
 ${G_myName} -i siteSynergyServersAvailable   # Laptop/Keyboard Side -- Needs Display Locations
 ${G_myName} -i siteSynergyClientsAvailable    # Display Side -- Needs Keyboards List
 $( examplesSeperatorChapter "Activate Synergy Servers And Clients BPOs" )
-${G_myName} -i siteSynergyServersAvailable | bxoActivate.sh -i bpoActivate
-${G_myName} -i siteSynergyClientsAvailable | bxoActivate.sh -i bpoActivate
+${G_myName} -i siteSynergyServersAvailable | bpoActivate.sh -i bpoActivate
+${G_myName} -i siteSynergyClientsAvailable | bpoActivate.sh -i bpoActivate
 $( examplesSeperatorChapter "Synergy GUI" )
 synergy  # Only use it for creation/edition of config file
 $( examplesSeperatorChapter "BxContainer Synergy Features" )

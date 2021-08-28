@@ -81,7 +81,7 @@ _EOF_
 
     itemPy3Bisos3PipOrderedList=(
         "pipx"
-        "unisos.gcipher"       # perhaps not needed
+        "unisos.gcipher"       # 
         "twine"                #
     )
 
