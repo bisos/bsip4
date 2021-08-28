@@ -140,7 +140,7 @@ _EOF_
         usage)
             cat  << _EOF_
 $( examplesSeperatorChapter "Selected Usage Niche Examples" )
-$(vis_usgBpos_controller_bxoPath)/sys/bin/$(G_myNicheNameGet)
+$(vis_usgBpos_controller_bxoPath)/sys/bin/$(G_myNicheNameGet) # Niche ICM
 _EOF_
 
             nicheExamplesFile="$(dirname $(dirname ${G_myFullName}))/examples/$(G_myNicheNameGet)"

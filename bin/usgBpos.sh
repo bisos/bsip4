@@ -181,7 +181,7 @@ ${G_myName} ${extraInfo} -i usgBpos_credentials_bxoId
 $( examplesSeperatorSection "Controller BPO -- Used To Set Other usgBpos" )
 ${G_myName} ${extraInfo} -i usgBpos_controller_bxoId_fpWrite ${oneRealIndiv} # Low Level Function
 ${G_myName} ${extraInfo} -i usgBpos_controller_bxoId_fpRead 
-${G_myName} ${extraInfo} -i usgBpos_controller_update ${oneRealIndiv} # Main Entry -- Sets 
+${G_myName} ${extraInfo} -i usgBpos_controller_update ${oneRealIndiv} # Main Entry Controller -- Sets
 ${G_myName} ${extraInfo} -i usgBpos_controller_bxoPath # Main Entry -- Gets
 ${G_myName} ${extraInfo} -i usgBpos_controller_bxoId
 $( examplesSeperatorChapter "Associate usgBpo With usgAcct" )
