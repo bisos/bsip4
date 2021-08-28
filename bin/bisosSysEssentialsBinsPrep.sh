@@ -85,7 +85,8 @@ _EOF_
         "net_tools"
         # Perhaps not available on all revs, hence coming last
         "linux_headers_generic"
-	"nmap"
+        "nmap"
+        "pandoc"
     )
 
     itemOptionalOrderedList=()
@@ -150,6 +151,15 @@ binsPrep_nmap_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "nmap"; }
 
 ####+END:
 
+####+BEGIN: bx:dblock:lsip:binsprep:apt :module "pandoc"
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || Apt-Pkg       :: pandoc [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+item_pandoc () { distFamilyGenerationHookRun binsPrep_pandoc; }
+
+binsPrep_pandoc_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "pandoc"; }
+
+####+END:
 
 ####+BEGIN: bx:dblock:lsip:binsprep:apt :module "debconf-utils"
 _CommentBegin_
