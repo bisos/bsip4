@@ -74,9 +74,11 @@ $( examplesSeperatorChapter "BISOS Bases Initialization" )
 $( examplesSeperatorSection "BISOS Sys Pip Installs" )
 ${G_myName} ${extraInfo} -i pySys_provisionSetup
 ${G_myName} ${extraInfo} -i pySysEnvVerify
-${G_myName} ${extraInfo} -i sysPipInstallBisosPlatform2
 _EOF_
 }
+
+# ${G_myName} ${extraInfo} -i sysPipInstallBisosPlatform2
+
 
 noArgsHook() {
   vis_examples
@@ -96,7 +98,7 @@ _EOF_
 
     lpDo vis_pySysEnvVerify
 
-    lpDo vis_sysPipInstallBisosPlatform2
+    # lpDo vis_sysPipInstallBisosPlatform2
     
     lpReturn
 }       
@@ -114,7 +116,7 @@ _EOF_
 }       
 
 
-function vis_sysPipInstallBisosPlatform2 {
+function vis_sysPipInstallBisosPlatform2%% {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 To provide parameters for destination provisioning
@@ -122,7 +124,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo sudo -H pip2 install --no-cache-dir --upgrade bisos.platform    
+    # lpDo sudo -H pip2 install --no-cache-dir --upgrade bisos.platform
 
     lpReturn
 }       
