@@ -1,0 +1,703 @@
+#
+#
+#  mmaCompAuto_ would select proper Component action
+#  based on opRunOsType, opRunOsRev and thisMmaCompxxx var settings.
+#
+#
+# Three different Pacakage Types Are Recognized:
+#
+#  1) mmaCompDebian_
+#      manipulated by dpkg family
+#
+#  2) mmaCompSol_
+#      manipulated by pkgadd family
+#
+#  3) mmaCompCustom_
+#      A package custom made in a generic tar fashion
+#      for mma usage
+#
+
+##################
+# Component Info #
+##################
+
+function mmaCompAuto_info {
+
+  if [[ "${opRunOsType}_" == "Linux_" ]] ; then
+    if [[ "${mmaPkgDebianName}_" != "_" ]] ; then
+      mmaCompDebian_info ${mmaPkgDebianName}
+    else
+      EH_problem "mmaPkgDebianName is not defined."
+      return 1
+    fi
+  elif [[ "${opRunOsType}_" == "SunOS_" ]] ; then
+    if [[ "${mmaPkgSolName}_" != "_" ]] ; then
+      mmaCompSol_info ${mmaPkgSolName}
+    else
+      EH_problem "mmaPkgSolName is not defined."
+      return 1
+    fi
+  else
+    EH_problem "Unsupported OS: ${opRunOsType}"
+    return 1
+  fi
+}
+
+function mmaCompDebian_info {
+  # $1 = pkgDebianName (eg daemontools)
+
+  EH_assert [[ $# -gt 0 ]]
+  opDoRet opLinuxOnly || return $?
+
+  integer retVal=0
+  typeset compVersion=`mmaCompDebian_version ${1} 2> /dev/null || retVal=$?`
+  
+  if [[ ${retVal} -ne 0 ]] ; then
+    ANT_raw "$0: ${retVal} -- $1 not found"
+    return 1
+  fi
+  
+  typeset thisOne=""
+  for thisOne in "$@" ; do
+    print -n  "${thisOne} -- "
+    #opDoComplain dpkg --status ${thisOne} | egrep '^Version:' | cut -d ':' -f  2 | cut -d ' ' -f 2
+    opDoComplain dpkg --status ${thisOne} | egrep '^Version:' | cut -d ' ' -f 2
+  done
+}
+
+function mmaCompSol_info {
+  # $1 = pkgSolName (eg SUNWprl5u)
+
+  EH_assert [[ $# -gt 0 ]]
+  opDoRet opSolarisOnly || return $?
+
+  integer retVal=0
+  typeset compVersion=`mmaCompSol_version ${1} 2> /dev/null || retVal=$?`
+  
+  if [[ ${retVal} -ne 0 ]] ; then
+    ANT_raw "$0: ${retVal} -- $1 not found"
+    return 1
+  fi
+
+  typeset thisOne=""
+  for thisOne in "$@" ; do
+    print -n  "${thisOne} -- "
+    opDoComplain pkginfo -l ${thisOne} | egrep 'VERSION:' | cut -d: -f2 | cut -d ' ' -f3
+  done
+}
+
+####################
+# Component Verify #
+####################
+
+function mmaCompAuto_verify {
+
+  if [[ "${opRunOsType}_" == "Linux_" ]] ; then
+    if [ "${mmaPkgDebianName}_" != "_" -a "${mmaPkgDebianVersion}_" != "_" ] ; then
+      mmaCompDebian_verify ${mmaPkgDebianName} ${mmaPkgDebianVersion}
+    else
+      EH_problem "mmaPkgDebianName and/or mmaPkgDebianVersion are not defined."
+      return 1
+    fi
+  elif [[ "${opRunOsType}_" == "SunOS_" ]] ; then
+    if [ "${mmaPkgSolName}_" != "_" -a "${mmaPkgSolVersion}_" != "_" ] ; then
+      mmaCompSol_verify ${mmaPkgSolName} ${mmaPkgSolVersion}
+    else
+      EH_problem "mmaPkgSolName and/or mmaPkgSolVersion are not defined."
+      return 1
+    fi
+  else
+    EH_problem "Unsupported OS: ${opRunOsType}"
+    return 1
+  fi
+  return 0
+}
+
+function mmaCompDebian_verify {
+  # $1 -  pkgDebianName eg daemontools
+  # $2 -  pkgDebianVersion
+
+  EH_assert [[ $# -eq 2 ]]
+  opDoRet opLinuxOnly || return $?
+
+  integer retVal=0
+  typeset compVersion=`mmaCompDebian_version ${1} 2> /dev/null || retVal=$?`
+  
+  if [[ ${retVal} -ne 0 ]] ; then
+    ANT_raw "$0: ${retVal} -- $1 not found"
+    return 1
+  fi
+  
+  if [[ "${compVersion}_" == "${2}_" ]] ; then
+    ANT_raw "${1} ver: ${compVersion} is current"
+    return 0
+  else
+    ANT_raw "${1} ver: ${compVersion} needs to be updated to: ${2}"
+    return 1
+  fi
+}
+
+function mmaCompSol_verify {
+  # $1 -  pkgSolName
+  # $2 -  pkgSolVersion
+
+  EH_assert [[ $# -eq 2 ]]
+  opDoRet opSolarisOnly || return $?
+
+  integer retVal=0
+  typeset compVersion=`mmaCompSol_version ${1} 2> /dev/null || retVal=$?`
+  
+  if [[ ${retVal} -ne 0 ]] ; then
+    ANT_raw "$0: ${retVal} -- $1 not found"
+    return 1
+  fi
+  
+  if [[ "${compVersion}_" == "${2}_" ]] ; then
+    ANT_raw "${1} ver: ${compVersion} is current"
+    return 0
+  else
+    ANT_raw "${1} ver: ${compVersion} needs to be updated to: ${2}"
+    return 1
+  fi
+}
+
+#####################
+# Component Version #
+#####################
+
+function mmaCompAuto_version {
+
+  if [[ "${opRunOsType}_" == "Linux_" ]] ; then
+    if [ "${mmaPkgDebianName}_" != "_" ] ; then
+      mmaCompDebian_version ${mmaPkgDebianName}
+    else
+      EH_problem "mmaPkgDebianName is not defined."
+      return 1
+    fi
+  elif [[ "${opRunOsType}_" == "SunOS_" ]] ; then
+    if [ "${mmaPkgSolName}_" != "_"  ] ; then
+      mmaCompSol_version ${mmaPkgSolName}
+    else
+      EH_problem "mmaPkgSolName is not defined."
+      return 1
+    fi
+  else
+    EH_problem "Unsupported OS: ${opRunOsType}"
+    return 1
+  fi
+}
+
+function mmaCompDebian_version {
+  # $1 ... componentName (eg daemontools)
+
+  EH_assert [[ $# -eq 1 ]]
+  opDoRet opLinuxOnly || return $?
+
+  if mmaCompDebian_isInstalled $1  ; then 
+    #opDoRet eval "(dpkg --status ${1} | egrep '^Version:'  | cut -d ':' -f2 | cut -d ' ' -f2)" || return $?
+    opDoRet eval "(dpkg --status ${1} | egrep '^Version:' | cut -d ' ' -f2)" || return $?
+  else
+    ANT_raw "$1 not installed"
+    return 1
+  fi
+}
+
+function mmaCompSol_version {
+  # $1 ... componentName (eg daemontools)
+
+  EH_assert [[ $# -eq 1 ]]
+  opDoRet opSolarisOnly || return $?
+
+  if mmaCompSol_isInstalled $1  ; then 
+
+    opDoRet eval "(pkginfo -l ${1} | egrep 'VERSION:'  | cut -d ':' -f2  | cut -d ' ' -f3)" || return $?
+  else
+    ANT_raw "$1 not installed"
+    return 1
+  fi
+}
+
+function mmaCompDebian_isInstalled {
+  # $1 ... componentName (eg daemontools)
+
+  EH_assert [[ $# -eq 1 ]]
+  opDoRet opLinuxOnly || return $?
+  
+  #opDoRet eval "(dpkg --status ${1} 1> /dev/null 2>&1)" || return $?
+
+  typeset thisRetVal=0
+  opDoRet eval "(dpkg --status ${1} 1> /dev/null 2>&1)" || thisRetVal=$?
+
+  if [[ ${thisRetVal} -eq 0 ]] ; then
+    thisRetVal2=0
+    opDoRet eval "(dpkg --status ${1} | egrep '^Status: install' 1> /dev/null 2>&1)" || thisRetVal2=$?
+    if [[ ${thisRetVal2} -ne 0 ]] ; then
+      return 1
+    else
+      return 0
+    fi
+  else
+    return 1
+  fi
+    
+}
+
+function mmaCompSol_isInstalled {
+  # $1 ... componentName (eg daemontools)
+
+  EH_assert [[ $# -eq 1 ]]
+  opDoRet opSolarisOnly || return $?
+
+  opDoRet eval "(pkginfo ${1} 1> /dev/null 2>&1)" || return $?
+}
+
+####################
+# Component Update #
+####################
+
+function mmaCompAuto_update {
+
+  if [ "${mmaPkgExtractableFile}_" != "_" ] ; then
+    mmaCompExtractable_update ${mmaPkgExtractableFile}
+    return
+  fi
+
+  if [ "${mmaPkgSelfExtractableFile}_" != "_" ] ; then
+    if [ "${mmaPkgSelfExtractableFile}_" != "_" ] ; then 
+      opDoComplain mkdir -p ${mmaPkgExtractionBase}
+      opDoComplain cd ${mmaPkgExtractionBase} || return
+    else
+      EH_problem "mmaPkgExtractionBase Not Specified"
+      return
+    fi
+    opDoComplain ${mmaPkgSelfExtractableFile}
+    return
+  fi
+
+  if [[ "${opRunOsType}_" == "Linux_" ]] ; then
+    # NOTYET, Method is new. Needs testing and work
+    if [ ${mmaPkgDebianMethod}_ == "apt_" ] ; then
+      opDoComplain apt-get -y install ${mmaPkgDebianName}
+      return 
+    fi
+    if [ ${mmaPkgDebianMethod}_ == "custom_" ] ; then
+      opDoComplain customInstallScript
+      return 
+    fi
+    if [ "${mmaPkgDebianName}_" != "_" -a "${mmaPkgDebianVersion}_" != "_" -a "${mmaPkgDebianFile}_" != "_" ] ; then
+      mmaCompDebian_update "${mmaPkgDebianName}" "${mmaPkgDebianVersion}" "${mmaPkgDebianFile}"
+    else
+      EH_problem "mmaPkgDebianName, mmaPkgDebianVersion, or mmaPkgDebianFile is not defined."
+      return 1
+    fi
+  elif [[ "${opRunOsType}_" == "SunOS_" ]] ; then
+    if [ "${mmaPkgSolName}_" != "_" -a "${mmaPkgSolVersion}_" != "_" -a "${mmaPkgSolFile}_" != "_" ] ; then
+      mmaCompSol_update "${mmaPkgSolName}" "${mmaPkgSolVersion}" "${mmaPkgSolFile}"
+    else
+      EH_problem "mmaPkgSolName, mmaPkgSolVersion, or mmaPkgSolFile is not defined."
+      return 1
+    fi
+  else
+    EH_problem "Unsupported OS: ${opRunOsType}"
+    return 1
+  fi
+}
+
+function mmaCompDebian_update {
+  # $1 -  pkgName eg daemontools
+  # $2 -  pkgVersion
+  # $3 -  pkgFile
+
+  EH_assert [[ $# -eq 3 ]]
+  opDoRet opLinuxOnly || return $?
+
+  typeset compVersion=`mmaCompDebian_version ${1}`
+  
+  if [[ "${compVersion}_" == "${2}_" ]] ; then
+    ANT_raw "${1} ver: ${compVersion} is current -- no update needed"
+    return 0
+  else
+    ANT_raw "Updating ${1} to version ${2}"
+    #EH_assert [[ -f ${3} ]]
+
+#     if [[ -e ${3} ]] ; then
+#       opDoRet dpkg -i ${3} || return $?
+#     else
+#       opDoRet apt-get install $1 || return $?
+#     fi
+
+    opDoRet apt-get -y install $1 || return $?
+
+  fi
+  return 0
+}
+
+function mmaCompDebianDpkg_update {
+  # $1 -  pkgName eg daemontools
+  # $2 -  pkgVersion
+  # $3 -  pkgFile
+
+  EH_assert [[ $# -eq 3 ]]
+  opDoRet opLinuxOnly || return $?
+
+  typeset compVersion=`mmaCompDebian_version ${1}`
+  
+  if [[ "${compVersion}_" == "${2}_" ]] ; then
+    ANT_raw "${1} ver: ${compVersion} is current -- no update needed"
+    return 0
+  else
+    ANT_raw "Updating ${1} to version ${2}"
+    #EH_assert [[ -f ${3} ]]
+
+    if [[ -e ${3} ]] ; then
+      opDoRet dpkg -i ${3} || return $?
+    else
+      EH_problem "$3 does not exist"
+      return 1
+      #opDoRet apt-get install $1 || return $?
+    fi
+
+  fi
+  return 0
+}
+
+function mmaCompSol_update {
+  # $1 -  pkgName eg daemontools
+  # $2 -  pkgVersion
+  # $3 -  pkgFile
+
+  EH_assert [[ $# -eq 3 ]]
+  opDoRet opSolarisOnly || return $?
+
+  typeset compVersion=`mmaCompSol_version ${1}`
+
+  if [[ "${compVersion}_" == "${2}_" ]] ; then
+    if [[ "${G_forceMode}_" == "force_" ]] ; then
+      mmaCompSol_delete ${1}
+      G_forceMode=""
+      mmaCompSol_update ${1} ${2} ${3}
+    else
+      ANT_raw "${1} ver: ${compVersion} is current -- no update needed"
+      return 0
+    fi
+  else
+    ANT_raw "Updating ${1} to version ${2}"
+    EH_assert [[ -e ${3} ]]
+    opDoRet pkgadd -d ${3} all <<EOF
+y
+y
+EOF
+  fi
+  return 0
+}
+
+function mmaCompExtractable_update {
+
+  # $1 = the extractable file
+  typeset tarGzFile=`echo $1 | egrep ".tar.gz$"`
+  typeset tarFile=`echo $1 | egrep ".tar$"`
+  typeset zipFile=`echo $1 | egrep ".zip$"`
+
+  ANT_raw "Extract $1 to ${mmaPkgExtractedPath}"
+  if [[ "${tarGzFile}_" != "_" ]] ; then
+    opDo cd ${mmaPkgExtractedPath}
+    opDo gunzip < $1 | tar xvf -
+  elif [[ "${tarFile}_" != "_" ]] ; then
+    opDo cd ${mmaPkgExtractedPath}
+    opDo tar -xvf $1
+  elif [[ "${zipFile}_" != "_" ]] ; then
+    print "This File type is .zip"
+  else
+    EH_problem "Unknown extractable file"
+    return 1
+  fi
+
+}
+
+####################
+# Component Delete #
+####################
+
+function mmaCompAuto_delete {
+
+  if [[ "${opRunOsType}_" == "Linux_" ]] ; then
+    if [ "${mmaPkgDebianName}_" != "_" ] ; then
+      mmaCompDebian_delete "${mmaPkgDebianName}"
+    else
+      EH_problem "mmaPkgDebianName is not defined."
+      return 1
+    fi
+  elif [[ "${opRunOsType}_" == "SunOS_" ]] ; then
+    if [ "${mmaPkgSolName}_" != "_" ] ; then
+      mmaCompSol_delete "${mmaPkgSolName}"
+    else
+      EH_problem "mmaPkgSolName is not defined."
+      return 1
+    fi
+  else
+    EH_problem "Unsupported OS: ${opRunOsType}"
+    return 1
+  fi
+}
+
+function mmaCompDebian_delete {
+  # $1 ... pkgName (eg daemontools)
+
+  #EH_assert [[ $# -eq 1 ]]
+  EH_assert [[ $# -gt 1 ]]
+  opDoRet opLinuxOnly || return $?
+
+  opDoRet dpkg --force-all --purge ${1} || return $?
+}
+
+function mmaCompSol_delete {
+  # $1 ... pkgName (eg daemontools)
+
+  EH_assert [[ $# -eq 1 ]]
+  opDoRet opSolarisOnly || return $?
+
+  opDoExit pkgrm -A ${1} <<EOF
+y
+EOF
+}
+
+################
+# Package Info #
+################
+
+function mmaPkgAuto_info {
+
+  if [ "${mmaPkgExtractableFile}_" != "_" ] ; then
+      opDo ls -l ${mmaPkgExtractableFile}
+      return 
+  fi
+
+  if [ "${mmaPkgSelfExtractableFile}_" != "_" ] ; then
+      opDo ls -l ${mmaPkgSelfExtractableFile}
+      return 
+  fi
+
+  if [[ "${opRunOsType}_" == "Linux_" ]] ; then
+    if [ "${mmaPkgDebianFile}_" != "_" ] ; then
+      mmaPkgDebian_info "${mmaPkgDebianFile}"
+    else
+      EH_problem "mmaPkgDebianFile is not defined."
+      return 1
+    fi
+  elif [[ "${opRunOsType}_" == "SunOS_" ]] ; then
+    if [ "${mmaPkgSolFile}_" != "_" ] ; then
+      mmaPkgSol_info "${mmaPkgSolFile}"
+    else
+      EH_problem "mmaPkgSolFile is not defined."
+      return 1
+    fi
+  else
+    EH_problem "Unsupported OS: ${opRunOsType}"
+    return 1
+  fi
+}
+
+function mmaPkgDebian_info {
+  # $1 ... pkgFile (eg daemontools)
+
+  EH_assert [[ $# -gt 0 ]]
+  opDoRet opLinuxOnly || return $?
+
+  typeset thisOne=""
+  for thisOne in "$@" ; do
+    if [[ -e ${thisOne} ]] ; then 
+      opDoComplain dpkg-deb --info ${thisOne}
+    else
+      EH_problem "Skipping ${thisOne}"
+    fi
+  done
+}
+
+function mmaPkgSol_info {
+  # $1 ... pkgFile (eg daemontools)
+
+  EH_assert [[ $# -gt 0 ]]
+  opDoRet opSolarisOnly || return $?
+
+  typeset thisOne=""
+  for thisOne in "$@" ; do
+    if [[ -e ${thisOne} ]] ; then 
+      opDoComplain pkginfo -l -d ${thisOne}
+    else
+      EH_problem "Skipping ${thisOne}"
+    fi
+  done
+}
+
+##################
+# Package Obtain #
+##################
+
+function mmaPkgAuto_obtain {
+
+  if [[ "${opRunOsType}_" == "Linux_" ]] ; then
+    if [ "${mmaThisPkgName}_" != "_" ] ; then
+      mmaPkgDebian_obtain "${mmaThisPkgName}"
+    else
+      EH_problem "mmaThisPkgName is not defined."
+      return 1
+    fi
+  elif [[ "${opRunOsType}_" == "SunOS_" ]] ; then
+    if [ "${mmaThisPkgName}_" != "_" ] ; then
+      mmaPkgSol_obtain "${mmaThisPkgName}"
+    else
+      EH_problem "mmaThisPkgName is not defined."
+      return 1
+    fi
+  else
+    EH_problem "Unsupported OS: ${opRunOsType}"
+    return 1
+  fi
+}
+
+function mmaPkgDebian_obtain {
+  # $1 ... pkgName (eg daemontools)
+
+  EH_assert [[ $# -gt 0 ]]
+  opDoRet opLinuxOnly || return $?
+
+  typeset thisOne=""
+
+  for thisOne in "$@" ; do
+    opDoExit apt-get -d install ${thisOne}
+  done
+}
+
+function mmaPkgSol_obtain {
+
+  EH_assert [[ $# -gt 0 ]]
+  opDoRet opSolarisOnly || return $?
+
+  typeset thisOne=""
+
+  for thisOne in "$@" ; do
+    opDoExit pkg-get -d ${thisOne}
+  done
+}
+
+###########################
+# Component Custom Verify #
+###########################
+
+function mmaCompCustom_verify {
+  # $1 -  pkgName eg daemontools
+  # $2 -  pkgVersion
+  # $3 -  criticalFile
+
+  EH_assert [[ $# -eq 3 ]]
+
+  if [[ -e $3 ]] ; then 
+    ANT_raw "${G_myName}: ${1} ver: ${2} verified"
+    return 0
+  else 
+    ANT_raw "${G_myName}: $0: ${1} ver: ${2} missing"
+    return 1
+  fi
+}
+
+function mmaCompCustom_isInstalled {
+  # $1 -  pkgName eg daemontools
+  # $2 -  pkgVersion
+  # $3 -  criticalFile
+
+  EH_assert [[ $# -eq 3 ]]
+
+  if [[ -e $3 ]] ; then 
+    return 0
+  else 
+    return 1
+  fi
+}
+
+
+function mmaCompCustom_isInstalled {
+  # $1 -  pkgName eg daemontools
+  # $2 -  pkgVersion
+  # $3 -  criticalFile
+
+  EH_assert [[ $# -eq 3 ]]
+
+  if [[ -e $3 ]] ; then 
+    return 0
+  else 
+    return 1
+  fi
+}
+
+function mmaCompCustom_shouldBeInstalled {
+  # $1 -  pkgName eg daemontools
+  # $2 -  pkgVersion
+  # $3 -  criticalFile
+
+  EH_assert [[ $# -eq 3 ]]
+
+  if mmaCompCustom_isInstalled $1 $2 $3 ; then
+    ANT_raw "${1} ver: ${2} is current -- no update needed"
+    return 1
+  else 
+    return 0
+  fi
+}
+
+
+function  mmaBinsPrep_info {
+  cat  << _EOF_
+mmaThisOriginType=${mmaThisOriginType}
+mmaThisOriginBase=${mmaThisOriginBase}
+mmaThisSrcBase=${mmaThisSrcBase}
+mmaThisSrcFile=${mmaThisSrcFile}
+mmaThisPkgName=${mmaThisPkgName}
+mmaThisPkgVersion=${mmaThisPkgVersion}
+mmaThisPkgBase=${mmaThisPkgBase}
+mmaPkgExtractableFile=${mmaPkgExtractableFile}
+mmaPkgExtractionBase=${mmaPkgExtractionBase}
+mmaThisCompBase=${mmaThisCompBase}
+mmaThisCompCriticalFile=${mmaThisCompCriticalFile}
+_EOF_
+}
+
+# NOTYET, should go in a library
+function bootRcDisable {
+  #EH_assert [[ $# -gt 0 ]]
+
+ filesList="$@"
+	 
+ typeset thisOne=""
+ for thisOne in ${filesList} ; do 
+   typeset dirsPart=`FN_dirsPart ${thisOne}`
+   typeset nonDirsPart=`FN_nonDirsPart ${thisOne}`
+   
+   opDoComplain FN_fileDefunctMake ${thisOne} ${dirsPart}/notused.${nonDirsPart}.${dateTag}
+ done
+}
+
+
+binsPrepSvcNotInitDotD() {
+  EH_assert [[ -f ${1} ]]
+
+  opDoExit FN_fileDefunctMake $1 $1.defunctOn.${dateTag}
+  
+  cat  << _EOF_ > $1
+#!/bin/bash
+echo "$1 now uses svc -- init.d no longer supported"
+exit 0
+# original kept in $1.defunctOn.${dateTag}
+_EOF_
+
+ opDoExit chmod 755 $1
+
+ opDo ls -l $1 $1.defunctOn.${dateTag}  
+}
+
+function itemPre_java {
+  mmaPkgExtractedPath="/opt/public/mmaJava"
+}
+
+function itemPost_java {
+  EH_assert [[ "${mmaThisPkgName}_" != "_" ]]
+}

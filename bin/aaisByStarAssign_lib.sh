@@ -293,16 +293,32 @@ _EOF_
 }
 
 
-function vis_aabis_serviceTypeAssignCorrespondingBxo {
+function vis_aabis_serviceTypeAssignToCorrespondingBxo {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
                       }
    EH_assert [[ $# -eq 0 ]]
    EH_assert [ ! -z "${serviceType}" ]   
-   EH_assert [ ! -z "${correspondingBxo}" ]
 
-   local existingBase=$(lpDo vis_aabis_forCorrespondingBxoFindAssignBase ${correspondingBxo})
+   local existingBase=""
+
+   case "${serviceType}" in
+       ByName|BySmb|ByFamily)
+           EH_assert [ ! -z "${correspondingBxo}" ]
+           existingBase=$(lpDo vis_aabis_forCorrespondingBxoFindAssignBase ${correspondingBxo})
+           ;;
+       ByDomain)
+           EH_assert [ ! -z "${realBpo}" ]
+           EH_assert [ ! -z "${fqdn}" ]
+           existingBase=$(lpDo vis_aabis_forCorrespondingBxoFindAssignBase ${correspondingBxo})
+           ;;
+
+       *)
+           EH_problem "Bad Usage -- serviceType=${serviceType}"
+           ;;
+   esac
+
 
    if [ ! -z "${existingBase}" ] ; then
        if [ "${G_forceMode}" == "force" ] ; then

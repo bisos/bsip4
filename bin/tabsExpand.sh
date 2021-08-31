@@ -110,6 +110,7 @@ ls | ${G_myName} -i filesHaveTabsReport | grep ==FOUND==
 ${G_myName} -i filesHaveTabsReport \$(ls)
 $( examplesSeperatorChapter "Expand Tabs" )
 ${G_myName} ${extraInfo} -i expandTabs ${oneFile}
+${G_myName} ${extraInfo} -i expandTabs *
 echo ${oneFile} | ${G_myName} ${extraInfo} -i expandTabs
 _EOF_
 }

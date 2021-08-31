@@ -85,16 +85,26 @@ _EOF_
    EH_assert [[ $# -eq 0 ]]
 
    EH_assert [ ! -z "${serviceType}" ]   
-   EH_assert [ ! -z "${correspondingBxo}" ]
+
 
    local assignBase=""
    local thisBxoId=""
    
    case "${serviceType}" in
        ByName|BySmb|ByFamily)
-           assignBase=$(lpDo vis_aabis_serviceTypeAssignCorrespondingBxo)
+           EH_assert [ ! -z "${correspondingBxo}" ]
+           assignBase=$(lpDo vis_aabis_serviceTypeAssignToCorrespondingBxo)
            EH_assert [ ! -z "${assignBase}" ]
            
+           thisBxoId=$(lpDo vis_aabis_withAssignBaseBasicBxoRealize ${assignBase})
+           EH_assert [ ! -z "${thisBxoId}" ]
+           ;;
+       ByDomain)
+           EH_assert [ ! -z "${realBpo}" ]
+           EH_assert [ ! -z "${fqdn}" ]
+           assignBase=$(lpDo vis_aabis_serviceTypeAssignToCorrespondingBxo)
+           EH_assert [ ! -z "${assignBase}" ]
+
            thisBxoId=$(lpDo vis_aabis_withAssignBaseBasicBxoRealize ${assignBase})
            EH_assert [ ! -z "${thisBxoId}" ]
            ;;

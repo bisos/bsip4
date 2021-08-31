@@ -154,8 +154,8 @@ $( examplesSeperatorChapter "BISOS LCNT BinsPreps" )
 ${G_myName} ${extraInfo} -i bisosLcntBinsPrep   # invokes lcaLaTexBinsPrep.sh and others
 $( examplesSeperatorChapter "LCNT Bases Setup" )
 ${G_myName} ${extraInfo} -i lcntBaseVcGet # activate the public BISOS pip_lcntBases BPO
-${G_myName} ${extraInfo} -i lcntBasesSetup  # Uses pip_lcntBases BPO and creats links to /de/lcnt and /lcnt 
-${G_myName} ${extraInfo} -i usgBpos_lcntBases_bxoPath  # Passive -- BPO Path containing link to /de/lcnt/lgpc etc
+${G_myName} ${extraInfo} -i lcntBasesSetup  # Uses pip_lcntBases BPO and creats links to /de/sys/lcnt and /lcnt
+${G_myName} ${extraInfo} -i usgBpos_lcntBases_bxoPath  # Passive -- BPO Path containing link to /de/sys/lcnt/lgpc etc
 ${G_myName} ${extraInfo} -i usgBposLcntBasesSetup # 
 $( examplesSeperatorChapter "/lcnt Preparations" )
 ${G_myName} -p uid=lsipusr ${extraInfo} -i lcntBaseFullPrep     # Get + Prep + Build
@@ -268,13 +268,15 @@ function vis_symLinkContent%% {
 function vis_lcntBasesSetup {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Uses pip_lcntBases BPO and creats links to /de/lcnt and /lcnt
+** Uses pip_lcntBases BPO and creats links to /de/sys/lcnt and /lcnt
 _EOF_
                        }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo mkdir /de/lcnt
-    lpDo sudo ln -s /de/lcnt /lcnt
+    lpDo mkdir -p /de/sys/lcnt
+    if [ ! -h /lcnt ] ; then
+      lpDo sudo ln -s /de/sys/lcnt /lcnt
+    fi
 
     # pip_lcntBases should become a public BPO
     local thisBxoHome=$(lpDo FN_absolutePathGet ~pip_lcntBases)
@@ -282,10 +284,10 @@ _EOF_
     EH_assert [ -d ${thisBxoHome}/bxdpt ]
     
     # ~pip_lcntBases/REGISTRY
-    lpDo FN_fileSymlinkUpdate  ${thisBxoHome}/bxdpt /de/lcnt/bxdpt
-    lpDo FN_fileSymlinkUpdate  ${thisBxoHome}/BIB /de/lcnt/BIB
-    lpDo FN_fileSymlinkUpdate  ${thisBxoHome}/CENTRAL /de/lcnt/CENTRAL
-    lpDo FN_fileSymlinkUpdate  ${thisBxoHome}/REGISTRY /de/lcnt/REGISTRY
+    lpDo FN_fileSymlinkUpdate  ${thisBxoHome}/bxdpt /de/sys/lcnt/bxdpt
+    lpDo FN_fileSymlinkUpdate  ${thisBxoHome}/BIB /de/sys/lcnt/BIB
+    lpDo FN_fileSymlinkUpdate  ${thisBxoHome}/CENTRAL /de/sys/lcnt/CENTRAL
+    lpDo FN_fileSymlinkUpdate  ${thisBxoHome}/REGISTRY /de/sys/lcnt/REGISTRY
 
     local thisBxoHomeVarPath="${thisBxoHome}/var"
     
@@ -297,7 +299,7 @@ _EOF_
 
     lpDo mkdir -p  ${thisBxoHomeVarPath}/outputs/all/lists
 
-    lpDo FN_fileSymlinkUpdate  ${thisBxoHomeVarPath}/outputs /de/lcnt/outputs   
+    lpDo FN_fileSymlinkUpdate  ${thisBxoHomeVarPath}/outputs /de/sys/lcnt/outputs
 }
 
 
@@ -339,7 +341,7 @@ _EOF_
 
     EH_assert [ -d "${lcntBasesPath}" ]
 
-    lpDo FN_fileSymlinkUpdate ${lcntBasesPath}/lcnt/lgpc /de/lcnt/lgpc
+    lpDo FN_fileSymlinkUpdate ${lcntBasesPath}/lcnt/lgpc /de/sys/lcnt/lgpc
 }
 
 

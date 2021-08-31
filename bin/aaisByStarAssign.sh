@@ -129,10 +129,10 @@ ${G_myName} ${extraInfo} -i aabis_withIdGetAssignedBase ByN-100001 # [NBF]
 ${G_myName} ${extraInfo} -p serviceType=ByName -i aabis_withNuGetAssignedBase 100001
 ${G_myName} ${extraInfo} -i fromContainerBaseGetContainerNu "${containerBase}"
 $( examplesSeperatorChapter "SET -- Assignment -- Primary Commands" )
-${G_myName} -f ${extraInfo} -p serviceType=ByName -p correspondingBxo=${oneRealIndiv} -i aabis_serviceTypeAssignCorrespondingBxo
-${G_myName} ${extraInfo} -p serviceType=ByName -p correspondingBxo=${oneRealIndiv} -i aabis_serviceTypeAssignCorrespondingBxo
-${G_myName} ${extraInfo} -p serviceType=ByName -p correspondingBxo=${oneRealIndiv} -i aabis_serviceTypeAssignCorrespondingBxoAndPush  # PRIMARY COMMAND
-${G_myName} -f ${extraInfo} -p serviceType=ByName -p correspondingBxo=${oneRealIndiv} -i aabis_serviceTypeAssignCorrespondingBxoAndPush  # PRIMARY COMMAND
+${G_myName} ${extraInfo} -p serviceType=ByName -p correspondingBxo=${oneRealIndiv} -i aabis_serviceTypeAssignToCorrespondingBxo
+${G_myName} -f ${extraInfo} -p serviceType=ByName -p correspondingBxo=${oneRealIndiv} -i aabis_serviceTypeAssignToCorrespondingBxo # FORCED
+${G_myName} ${extraInfo} -p serviceType=ByName -p correspondingBxo=${oneRealIndiv} -i aabis_serviceTypeAssignToCorrespondingBxoAndPush  # PRIMARY COMMAND
+${G_myName} -f ${extraInfo} -p serviceType=ByName -p correspondingBxo=${oneRealIndiv} -i aabis_serviceTypeAssignToCorrespondingBxoAndPush  # FORCED PRIMARY COMMAND
 ${G_myName} ${extraInfo} -p serviceType=ByName -p correspondingBxo=${oneRealIndiv} -i aabis_assignUpdate_atNu 100001 # Internal
 $( examplesSeperatorChapter "UNSET -- Container Box Un Assignment" )
 ${G_myName} ${extraInfo} -i aabis_UnAssign aabisBase

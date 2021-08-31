@@ -76,39 +76,20 @@ function thisFuncNameBashOrKsh {
 
 
 function opBasePathSet {
-  case ${opRunOsType} in
-    'SunOS')
-      export PATH="${opBase}/nedaBin"
-      export PATH="${PATH}:${opBase}/bin:${opBase}/lib:${opBase}/usrEnv"
-      export PATH="${PATH}:/opt/sfw/bin:/usr/local/bin"
-      export PATH="${PATH}:/usr/5bin:/usr/ccs/bin:/usr/sbin:/bin:/usr/bin"
-      if [[ "${opRunOsRev}_" == "5.7_" ]] ; then 
-        # temporary, just to get perl
-        export PATH="${PATH}:/usr/public/foundation/bin"
-      fi
-      export PATH="${PATH}:."
-      ;;
-    'Linux')
-      export PATH="${opBase}/bin:${opBase}/lib:${opBase}/usrEnv"
-      export PATH="${PATH}:/bisos/venv/py3/dev/bisos3/bin:/bisos/venv/py3/bisos3/bin:/bisos/venv/py2/dev/bisos3/bin:/bisos/venv/py2/bisos3/bin"
-      export PATH="${PATH}:/usr/local/bin:/usr/local/sbin"
-      export PATH="${PATH}:/usr/5bin:/usr/ccs/bin:/usr/sbin:/bin:/sbin:/usr/bin"
-      export PATH="${PATH}:${HOME}/.local/bin:$HOME/.poetry/bin"
-      export PATH=".:${PATH}"
-      ;;
-    'Windows_NT' | 'UWIN-NT' | CYGWIN_NT-*)
-      export PATH="${opBase}/nedaBin"
-      export PATH="${PATH}:${opBase}/bin:${opBase}/lib:${opBase}/usrEnv"
-       export PATH="${PATH}:/bin:/usr/local/bin:/usr/bin:/usr/bin/X11:/usr/games:/sbin:/usr/sbin:/usr/local/sbin"
-      ;;
-    *)
-      EH_problem "$0 not Suported on ${opRunOsType}"
-      ;;        
-  esac
-
-#   if [[ "${CURENVBASE}_" != "_" ]] ; then
-#     export PATH="${CURENVBASE}/tools:${CURENVBASE}/tools/bin:${PATH}"
-#   fi
+  export PATH="."
+  export PATH="${PATH}:${HOME}/.local/bin"
+  export PATH="${PATH}:$HOME/.poetry/bin"
+  export PATH="${PATH}:/bisos/venv/py3/dev/bisos3/bin"
+  export PATH="${PATH}:/bisos/venv/py3/bisos3/bin"
+  export PATH="${PATH}:${opBase}/bin:${opBase}/lib:${opBase}/usrEnv"
+  export PATH="${PATH}:/bisos/core/asc/bin"
+  export PATH="${PATH}:/bisos/core/asc/dns/bin"
+  export PATH="${PATH}:/bisos/core/asc/plone3/bin"
+  export PATH="${PATH}:/bisos/core/asc/mail/bin"
+  export PATH="${PATH}:/bisos/core/lcnt/bin"
+  export PATH="${PATH}:/bisos/core/mail/bin"
+  export PATH="${PATH}:/usr/local/bin:/usr/local/sbin"
+  export PATH="${PATH}:/usr/5bin:/usr/ccs/bin:/usr/sbin:/bin:/sbin:/usr/bin"
 }
 
 

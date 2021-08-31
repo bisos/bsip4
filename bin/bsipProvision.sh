@@ -136,6 +136,8 @@ _EOF_
 
     lpDo sudo -u bystar ${bisosBinBase}/blee -v -n showRun -p acctName=bystar -i provisionSetup
 
+    lpDo bisosCurrentsManage.sh -i setParam cur_bxoId_parent pis_defaultSite
+
     lpDo echo "Stuff from bisosMaintainInterim.sh comes here."
 }
 

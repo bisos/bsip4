@@ -131,6 +131,7 @@ $( examplesSeperatorChapter "Blee Upgrade" )
 ${G_myName} ${extraInfo} -i bleeUpgrade
 $( examplesSeperatorChapter "Optional Interim Actions" )
 ${G_myName} ${extraInfo} -i libreInfoBaseAndInitialTemplates # Bring over /libre/ByStar panels
+${G_myName} ${extraInfo} -i optPublicOsmt # Bring over
 _EOF_
 }
 
@@ -355,7 +356,7 @@ _EOF_
 function vis_libreInfoBaseAndInitialTemplates {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Missing apt packages to be sorted out and absorbed
+**
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -371,6 +372,24 @@ _EOF_
     
     lpReturn
 }
+
+function vis_optPublicOsmt {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+**
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo sudo mkdir -p /opt/public
+    lpDo sudo chown bisos:bisos /opt/public
+    lpDo sudo chmod 775 /opt/public
+
+    lpDo scp -r bystar@192.168.0.151:/opt/public/osmt /opt/public
+
+    lpReturn
+}
+
 
 
 function vis_bleeUpgrade {
