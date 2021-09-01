@@ -23,6 +23,8 @@ opSiteControlBase=${opBase}/siteControl
 opSysConfigInputBase=${opBase}/sysConfigInput
 opPoliciesBase=${opBase}/policies
 
+aaisBinBase="/bisos/aais/bin"
+
 #    opVarBase    -- Where files that grow live
 
 if [ "${opVarBase}_" == "_" ] ; then
