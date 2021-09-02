@@ -79,15 +79,16 @@ function vis_postSysBaseExamples {
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
     cat  << _EOF_
-$( examplesSeperatorChapter "Post SysBase -- BISOS Features" )
+$( examplesSeperatorChapter "Post SysBase -- BISOS Materialization Containers" )
 $( examplesSeperatorSection "KVM Hosting" )
 ${G_myName} ${extraInfo} -i kvmHosting_provisionSetup # fgcfgcKvmHosting SW and SVC -- Ready for guestBpo Materialization
+$( examplesSeperatorSection "BISOS-ASC Container -- For AAIS Materialization" )
+${G_myName} ${extraInfo} -i ascContainer_provisionSetup  # fgc-s SW and SVC for adopted service components
+${G_myName} ${extraInfo} -i ascContainer_provisionSetup_sw  # fgc-s SW
+${G_myName} ${extraInfo} -i ascContainer_provisionSetup_svc  # fgc-s SVC
+$( examplesSeperatorChapter "Post SysBase -- BISOS Features" )
 $( examplesSeperatorSection "LCNT BISOS-APP Provisioning" )
 ${G_myName} ${extraInfo} -i lcnt_provisionSetup   # Untested
-$( examplesSeperatorSection "BISOS-ASC Container -- For aais Materialization" )
-${G_myName} ${extraInfo} -i ascContainer_provisionSetup  # fgc-s SW and SVC for adopted service components
-${G_myName} ${extraInfo} -i ascContainer_provisionSetup_sw  # fgc-s SW and SVC for adopted service components
-${G_myName} ${extraInfo} -i ascContainer_provisionSetup_svc  # fgc-s SW and SVC for adopted service components
 _EOF_
 
 # $( examplesSeperatorSection "Base BxioContainer -- Information Object" )
