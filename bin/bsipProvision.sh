@@ -81,13 +81,20 @@ function vis_postSysBaseExamples {
     cat  << _EOF_
 $( examplesSeperatorChapter "Post SysBase -- BISOS Features" )
 $( examplesSeperatorSection "KVM Hosting" )
-${G_myName} ${extraInfo} -i kvmHosting_provisionSetup
-$( examplesSeperatorSection "Base BxioContainer -- Information Object" )
-${G_myName} ${extraInfo} -i bxioContainer_provisionSetup
-$( examplesSeperatorSection "Base BxsoContainer -- Service Object" )
-${G_myName} ${extraInfo} -i bxsoContainer_provisionSetup  # includes bxio
+${G_myName} ${extraInfo} -i kvmHosting_provisionSetup # fgcfgcKvmHosting SW and SVC -- Ready for guestBpo Materialization
+$( examplesSeperatorSection "LCNT BISOS-APP Provisioning" )
+${G_myName} ${extraInfo} -i lcnt_provisionSetup   # Untested
+$( examplesSeperatorSection "BISOS-ASC Container -- For aais Materialization" )
+${G_myName} ${extraInfo} -i ascContainer_provisionSetup  # fgc-s SW and SVC for adopted service components
+${G_myName} ${extraInfo} -i ascContainer_provisionSetup_sw  # fgc-s SW and SVC for adopted service components
+${G_myName} ${extraInfo} -i ascContainer_provisionSetup_svc  # fgc-s SW and SVC for adopted service components
 _EOF_
-    
+
+# $( examplesSeperatorSection "Base BxioContainer -- Information Object" )
+# ${G_myName} ${extraInfo} -i bxioContainer_provisionSetup
+# $( examplesSeperatorSection "Base BxsoContainer -- Service Object" )
+# ${G_myName} ${extraInfo} -i bxsoContainer_provisionSetup  # includes bxio
+
 }
 
 
@@ -142,32 +149,84 @@ _EOF_
 }
 
 
-
-function vis_bxioContainer_provisionSetup {
+function vis_lcnt_provisionSetup {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+** LCNT BISOS-APP Provisioning
+*** Panel: /bisos/panels/bisos-apps/lcnt/_nodeBase_/fullUsagePanel-en.org
+*** TODO: Needs testing
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
     local bisosBinBase="$( bisosBinBaseGet )"
 
-    echo "Setup tex, fonts, tools and needed scripts and preps for bxo old and new"
-    
+    lpDo bisosLcntSetup.sh -h -v -n showRun -i bisosLcntBinsPrep
+    lpDo bisosLcntSetup.sh -h -v -n showRun -i lcntBasesFullSetup
+
     lpReturn
 }
 
-function vis_bxsoContainer_provisionSetup {
+function vis_ascContainer_provisionSetup {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+** fgc-s SW and SVC for adopted service components
+*** Panel:
+*** TODO: needs testing
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    echo "Setup tex, fonts, tools and needed scripts and preps for bxo old and new"
-    
+    lpDo vis_ascContainer_provisionSetup_sw
+
+    lpDo vis_ascContainer_provisionSetup_svc
+
     lpReturn
 }
+
+
+function vis_ascContainer_provisionSetup_sw {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** fgc-s SW and SVC for adopted service components
+*** Panel:
+*** TODO: needs testing
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo lcaApache2BinsPrep.sh -v -n showRun -i fullUpdate
+
+    lpDo fgcDnsSw.sh -v -n showRun -i  fullUpdate
+
+    lpDo fgcMailTransferSw.sh -v -n showRun -i  fullUpdate
+
+    lpDo fgcMailAccessSw.sh -v -n showRun -i  fullUpdate
+
+    lpDo fgcPlone3Sw.sh -v -n showRun -i  fullUpdate
+
+    lpReturn
+}
+
+function vis_ascContainer_provisionSetup_svc {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** fgc-s SW and SVC for adopted service components
+*** Panel:
+*** TODO: needs testing
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo fgcMailTransferSvc.sh -v -n showRun -i fullUpdate
+
+    lpDo fgcMailAccessSvc.sh -v -n showRun -i fullUpdate
+
+    lpDo fgcPlone3Svc.sh -v -n showRun -i fullUpdate
+
+    lpReturn
+}
+
 
 function vis_gitlabServer_provisionSetup {
     G_funcEntry
@@ -176,7 +235,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    echo "Setup tex, fonts, tools and needed scripts and preps for bxo old and new"
+    echo ""
     
     lpReturn
 }
@@ -184,6 +243,7 @@ _EOF_
 function vis_kvmHosting_provisionSetup {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+** fgcfgcKvmHosting SW and SVC -- Ready for guestBpo Materialization
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
