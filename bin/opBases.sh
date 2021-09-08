@@ -1,4 +1,7 @@
-
+#
+# Mon 06 Sep 2021 06:18:01 PM PDT -- NOTYET, This File Should Be Revisitied Soon
+# It needs to be updated to refelct /bisos/core/bsip.
+#
 # Assumes the following configuration 
 # Basic variables
 #
@@ -113,17 +116,17 @@ fi
 ####
 
 
-lpBaseDir_mapfiles="/usr/mapFiles"                              # /libre/vc/mapFiles
-lpBaseDir_lsip="/opt/public/osmt"                               # /libre/vc/lsip
-lpBaseDir_blee="/opt/public/eoe"                                # /libre/vc/ble
-lpBaseDir_lcnt="/lcnt"                                          # /libre/vc/lcnt
-lpBaseDir_bystar="/libre/ByStar"                                # /libre/vc/bystar
-lpBaseDir_bystarCentral="/libre/ByStar/InfoBase"                # /libre/vc/bystar/central
-lpBaseDir_bystarTemplates="/libre/ByStar/InitialTemplates"      # /libre/vc/bystar/central
+lpBaseDir_mapfiles="OBSOLEDTED_MAPFILES"                              # /libre/vc/mapFiles
+lpBaseDir_lsip="/bisos/core/bsip"                               # /libre/vc/lsip
+lpBaseDir_blee="/bisos/blee"                                # /libre/vc/ble
+lpBaseDir_lcnt="/de/bx/lcnt"                                          # /libre/vc/lcnt
+lpBaseDir_bystar="OBSOLTED_BYSTAR"                                # /libre/vc/bystar
+lpBaseDir_bystarCentral="OBSOLTED_BYSTAR_CENTRAL"                # /libre/vc/bystar/central
+lpBaseDir_bystarTemplates="OBSOLETED_BYSTAR_TEMPLATES"      # /libre/vc/bystar/central
 
 lpAcct_user="bystar"                          #  
-lpAcct_admin="lsipusr"                        #
-lpAcct_bystarGroup="employee"                 #
+lpAcct_admin="bystar"                        #
+lpAcct_bystarGroup="bisos"                 #
 
 # set-u fix
 Id=""
