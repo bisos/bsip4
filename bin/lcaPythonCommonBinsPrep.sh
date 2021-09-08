@@ -119,25 +119,25 @@ _EOF_
     }
 
     itemOrderedList=( 
-	python_xlrd
-	python_xlwt
-	python_pexpect       # send/receive expect and respond
-	"python_argparse" 
-	"pychecker"
-	"pyflakes"
-	"ipython"
-	"pylint"
-	"graphviz"            # For Profiling
-	"python_pip"
-	"pep8"
-	"python_flake8"
-	"python_zsi"          # - Zolera Soap Infrastructure
-	"python_suds"         # 
-	"python_pypdf"        # 
-	"libxml2_dev"         #  Used by lxml
-	"libxslt1_dev"        #  Used by lxml
-	"zlib1g_dev"          #  Used by lxml -- Was: zlib1g-dev:i386
-	python_sphinx
+        python_xlrd
+        python_xlwt
+        python_pexpect       # send/receive expect and respond
+        "python_argparse" 
+        "pychecker"
+        "pyflakes"
+        "ipython"
+        "pylint"
+        "graphviz"            # For Profiling
+        "python_pip"
+        "pep8"
+        "python_flake8"
+        "python_zsi"          # - Zolera Soap Infrastructure
+        "python_suds"         # 
+        "python_pypdf"        # 
+        "libxml2_dev"         #  Used by lxml
+        "libxslt1_dev"        #  Used by lxml
+        "zlib1g_dev"          #  Used by lxml -- Was: zlib1g-dev:i386
+        python_sphinx
     )
 }
 

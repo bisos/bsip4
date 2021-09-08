@@ -481,22 +481,20 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    if [ -z "${sr}" ] ; then
-        EH_problem "Missing Service Realiztion Specification"
-        lpReturn 101
-    fi
+    EH_assert bxoIdPrep
+    EH_assert [ -n "${ss}" ]
 
-    srBaseDir="${bystarUidHome}/${sr}"
+    srBaseDir="${bxoHome}/${ss}"
 
     if [ ! -d ${srBaseDir} ] ; then 
         EH_problem "Missing srBaseDir=${srBaseDir}"
         lpReturn 101
     fi
 
-    srAgent="${bystarUidHome}/${sr}/bsrAgent.sh"
+    srAgent="${bxoHome}/${ss}/bsrAgent.sh"
 
-    if [ ! -f ${srAgent} ] ; then 
-        srAgent="${bystarUidHome}/${sr}/srAgent.sh"
+    if [ ! -f ${srAgent} ] ; then
+        srAgent="${bxoHome}/${ss}/srAgent.sh"
         if [ ! -f ${srAgent} ] ; then 
             EH_problem "Missing srAgent=${srAgent} and also missing bsrAgent.sh"
             lpReturn 101
@@ -627,12 +625,13 @@ function vis_srA2LogBaseDirGet {
 _EOF_
     }
     EH_assert [[ $# -eq 1 ]]
-    EH_assert bystarUidCentralPrep
-    opDoRet bystarAcctAnalyze ${bystarUid}
+
+    EH_assert bxoIdPrep
+    EH_assert [ -n "${ss}" ]
 
     typeset srFqdn=$1
 
-    echo ${bystarUidHome}/var/log/apache2/${srFqdn}
+    echo ${bxoHome}/var/log/apache2/${srFqdn}
 
     lpReturn
 }

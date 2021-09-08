@@ -1128,6 +1128,11 @@ function bxoAcctAnalyze {
 }
 
 function bxoIdPrepValidate {
+    # Backwards compatibility
+    bxoIdPrep $@
+}
+
+function bxoIdPrepValidate%% {
     if [ $# -eq 0 ] && [ -n ${bxoId} ] ; then
        lpReturn
     fi

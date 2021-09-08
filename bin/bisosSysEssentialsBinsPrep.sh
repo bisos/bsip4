@@ -128,7 +128,7 @@ _EOF_
             fi
             ;;
         "DEBIAN")
-	    # NOTYET, this should not be done to laptops. Only to servers.
+            # NOTYET, this should not be done to laptops. Only to servers.
             lpDo sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
             ;;
         *)

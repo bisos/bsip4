@@ -53,7 +53,8 @@ else
     echo "UnknownShell"
 fi
 
-alias _CommentBegin_='cat << _CommentEnd_ > /dev/null'
+
+alias _CommentBegin_=": <<'_CommentEnd_'" # '_CommentEnd_' is important -- it prevents evaluations of ${var} and $(cmnd)
 
 
 # Alias did not work write in Bash
@@ -82,12 +83,13 @@ function opBasePathSet {
   export PATH="${PATH}:/bisos/venv/py3/dev/bisos3/bin"
   export PATH="${PATH}:/bisos/venv/py3/bisos3/bin"
   export PATH="${PATH}:${opBase}/bin:${opBase}/lib:${opBase}/usrEnv"
-  export PATH="${PATH}:/bisos/core/asc/bin"
-  export PATH="${PATH}:/bisos/core/asc/dns/bin"
-  export PATH="${PATH}:/bisos/core/asc/plone3/bin"
-  export PATH="${PATH}:/bisos/core/asc/mail/bin"
+  export PATH="${PATH}:/bisos/asc/bin"
+  export PATH="${PATH}:/bisos/asc/dns/bin"
+  export PATH="${PATH}:/bisos/asc/plone3/bin"
+  export PATH="${PATH}:/bisos/asc/mail/bin"
   export PATH="${PATH}:/bisos/core/lcnt/bin"
   export PATH="${PATH}:/bisos/core/mail/bin"
+  export PATH="${PATH}:/bisos/aais/bx/bin"
   export PATH="${PATH}:/usr/local/bin:/usr/local/sbin"
   export PATH="${PATH}:/usr/5bin:/usr/ccs/bin:/usr/sbin:/bin:/sbin:/usr/bin"
 }

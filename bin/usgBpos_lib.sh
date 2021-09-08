@@ -418,6 +418,86 @@ _EOF_
 }
 
 
+
+function vis_usgBpos_aais_bydomain_bxoId_fpWrite {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+**
+_EOF_
+                      }
+    EH_assert [[ $# -eq 1 ]]
+    local bxoIdValue=$1
+
+    bxoIdValue=$(bxoIdPrep ${bxoIdValue})
+    EH_assert [ ! -z ${bxoIdValue} ]
+
+    local curUsgBposBase=$( vis_curUsgBposBase )
+    lpDo mkdir -p ${curUsgBposBase}/aais
+    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/aais bydomain.bpoFp ${bxoIdValue}
+}
+
+
+function vis_usgBpos_aais_bydomain_bxoId_fpRead {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** returns on stdout:
+_EOF_
+                      }
+    EH_assert [[ $# -eq 0 ]]
+
+    local curUsgBposBase=$( vis_curUsgBposBase )
+
+    local resultBxoId=$( fileParamManage.py -i fileParamRead  ${curUsgBposBase}/aais bydomain.bpoFp )
+    EH_assert [ ! -z "${resultBxoId}" ]
+
+    echo ${resultBxoId}
+}
+
+
+function vis_usgBpos_aais_bydomain_update {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+                      }
+   EH_assert [[ $# -eq 1 ]]
+   local bxoIdValue=$1
+
+   bxoIdValue=$(lpDo bxoIdPrep ${bxoIdValue})
+   EH_assert [ ! -z "${bxoIdValue}" ]
+
+   bxoPath=$(lpDo vis_bxoPathObtainForBxoId "${bxoIdValue}")
+   EH_assert [ ! -z "${bxoIdValue}" ]
+
+   local curUsgBposBase=$(lpDo vis_curUsgBposBase)
+
+   lpDo vis_usgBpos_aais_bydomain_bxoId_fpWrite ${bxoIdValue}
+   lpDo FN_fileSymlinkUpdate ${bxoPath} ${curUsgBposBase}/aais/bydomain
+}
+
+
+function vis_usgBpos_aais_bydomain_bxoPath {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+                      }
+   EH_assert [[ $# -eq 0 ]]
+   local curUsgBposBase=$(lpDo vis_curUsgBposBase)
+   EH_assert [ -e ${curUsgBposBase}/aais/bydomain ]
+   lpDo FN_absolutePathGet ${curUsgBposBase}/aais/bydomain
+}
+
+
+function vis_usgBpos_aais_bydomain_bxoId {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+                      }
+   EH_assert [[ $# -eq 0 ]]
+   local bxoId=$(lpDo vis_usgBpos_aais_bydomain_bxoId_fpRead)
+   echo ${bxoId}
+}
+
+
 function vis_usgBpos_controller_bxoId_fpWrite {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_

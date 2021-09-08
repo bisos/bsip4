@@ -225,22 +225,22 @@ _EOF_
 
     if [ $# -eq 0 ] ; then
        argsList="prpList_main"
-    fi	
+    fi  
 
     for name in "${argsList}" ; do
-	typeset nameEvaled=$( eval echo '$'{${name}[@]} )
+        typeset nameEvaled=$( eval echo '$'{${name}[@]} )
 
-	if [ -z "${nameEvaled}" ] ; then
-	    EH_problem "Empty ${name} -- Skipped"
-	    continue
-	else
-	    ANT_raw "name=${name} -- nameEvaled=${nameEvaled}"
-	fi
+        if [ -z "${nameEvaled}" ] ; then
+            EH_problem "Empty ${name} -- Skipped"
+            continue
+        else
+            ANT_raw "name=${name} -- nameEvaled=${nameEvaled}"
+        fi
 
-	typeset thisItem
-	for thisItem in ${nameEvaled} ; do
-	    opDo ${applyFunc} "${thisItem}"
-	done
+        typeset thisItem
+        for thisItem in ${nameEvaled} ; do
+            opDo ${applyFunc} "${thisItem}"
+        done
     done
 }
 
@@ -260,31 +260,31 @@ _EOF_
     
     typeset name=""
     for name in "$@" ; do
-	prpPrep "${name}"
+        prpPrep "${name}"
 
-	typeset localPath=$( vis_prpLocalPath ${name} )
-	typeset localBaseDir=$( FN_dirsPart ${localPath} )
-	typeset thisPkgName=$( vis_prpName ${name} )
+        typeset localPath=$( vis_prpLocalPath ${name} )
+        typeset localBaseDir=$( FN_dirsPart ${localPath} )
+        typeset thisPkgName=$( vis_prpName ${name} )
 
-	typeset thisBaseDir=${opVarBase}/distPkgs/${prp_pkgRePubArchType}
+        typeset thisBaseDir=${opVarBase}/distPkgs/${prp_pkgRePubArchType}
 
-	g_resultsCapture  vis_prpBxVerify ${name}
+        g_resultsCapture  vis_prpBxVerify ${name}
 
-	if [ "${g_resultsExitValue}" == 0 ] ; then
-	    EH_problem_g_resultsShow 
-	    ANT_raw "${G_myName} $0: There seems to be in place a good:"
-	    ANT_raw "http://${binObtainFromServer}/republish/${cononDistFamily}/${cononDistGeneration}/${prp_pkgRePubArchType}/${thisPkgName}"
-	    continue
-	fi
+        if [ "${g_resultsExitValue}" == 0 ] ; then
+            EH_problem_g_resultsShow 
+            ANT_raw "${G_myName} $0: There seems to be in place a good:"
+            ANT_raw "http://${binObtainFromServer}/republish/${cononDistFamily}/${cononDistGeneration}/${prp_pkgRePubArchType}/${thisPkgName}"
+            continue
+        fi
 
-	ANT_raw "${G_myName} $0 -- About to get the package from src publisher" 
-	continueAfterThis
-	opDo vis_prpSrcObtain ${name}
+        ANT_raw "${G_myName} $0 -- About to get the package from src publisher" 
+        continueAfterThis
+        opDo vis_prpSrcObtain ${name}
 
-	ANT_raw "Will next Publish the binaries" 
-	continueAfterThis
-	opDo vis_prpBxPublish ${name}
-	opDo vis_prpBxVerify ${name}
+        ANT_raw "Will next Publish the binaries" 
+        continueAfterThis
+        opDo vis_prpBxPublish ${name}
+        opDo vis_prpBxVerify ${name}
 
     done
     lpReturn
@@ -301,30 +301,30 @@ _EOF_
     
     typeset name=""
     for name in "$@" ; do
-	prpPrep "${name}"
+        prpPrep "${name}"
 
-	typeset localPath=$( vis_prpLocalPath ${name} )
-	typeset localBaseDir=$( FN_dirsPart ${localPath} )
-	typeset thisPkgName=$( vis_prpName ${name} )
+        typeset localPath=$( vis_prpLocalPath ${name} )
+        typeset localBaseDir=$( FN_dirsPart ${localPath} )
+        typeset thisPkgName=$( vis_prpName ${name} )
 
-	typeset thisBaseDir=${opVarBase}/distPkgs/${prp_pkgRePubArchType}
+        typeset thisBaseDir=${opVarBase}/distPkgs/${prp_pkgRePubArchType}
 
-	vis_prpBxVerify ${name} > /dev/null 2>&1 ;   retVal=$?
-	if [[ ${retVal} -eq 0 ]] ; then
-	    ANT_raw "${G_myName} $0: There seems to be in place a good:"
-	    ANT_raw "http://${binObtainFromServer}/republish/${cononDistFamily}/${cononDistGeneration}/${prp_pkgRePubArchType}/${thisPkgName}"
-	    ANT_raw "Are you sure you want to run this?"
-	    continueAfterThis
-	fi 
+        vis_prpBxVerify ${name} > /dev/null 2>&1 ;   retVal=$?
+        if [[ ${retVal} -eq 0 ]] ; then
+            ANT_raw "${G_myName} $0: There seems to be in place a good:"
+            ANT_raw "http://${binObtainFromServer}/republish/${cononDistFamily}/${cononDistGeneration}/${prp_pkgRePubArchType}/${thisPkgName}"
+            ANT_raw "Are you sure you want to run this?"
+            continueAfterThis
+        fi 
 
-	ANT_raw "${G_myName} $0 -- About to get the package from src publisher" 
-	continueAfterThis
-	opDo vis_prpSrcObtain ${name}
+        ANT_raw "${G_myName} $0 -- About to get the package from src publisher" 
+        continueAfterThis
+        opDo vis_prpSrcObtain ${name}
 
-	ANT_raw "Will next Publish the binaries" 
-	continueAfterThis
-	opDo vis_prpBxPublish ${name}
-	opDo vis_prpBxVerify ${name}
+        ANT_raw "Will next Publish the binaries" 
+        continueAfterThis
+        opDo vis_prpBxPublish ${name}
+        opDo vis_prpBxVerify ${name}
 
     done
     lpReturn
@@ -351,10 +351,10 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
     vis_binPkgVerify > /dev/null 2>&1 ;   retVal=$?
     if [[ ${retVal} -eq 0 ]] ; then
-	ANT_raw "${G_myName} $0: There seems to be in place a good:"
-	ANT_raw "http://${binObtainFromServer}/republish/${cononDistFamily}/${cononDistGeneration}/${pkgRePubArchType}/${thisPkgName}"
-	ANT_raw "Are you sure you want to run this?"
-	continueAfterThis
+        ANT_raw "${G_myName} $0: There seems to be in place a good:"
+        ANT_raw "http://${binObtainFromServer}/republish/${cononDistFamily}/${cononDistGeneration}/${pkgRePubArchType}/${thisPkgName}"
+        ANT_raw "Are you sure you want to run this?"
+        continueAfterThis
     fi 
 
     ANT_raw "${G_myName} $0 -- About to get the package from src publisher" 
@@ -383,8 +383,8 @@ _EOF_
     
     typeset name=""
     for name in "$@" ; do
-	prpPrep "${name}"
-	echo ${prp_pkgRePubSrcStableUrl}
+        prpPrep "${name}"
+        echo ${prp_pkgRePubSrcStableUrl}
     done
 }
 
@@ -408,8 +408,8 @@ _EOF_
     
     typeset name=""
     for name in "$@" ; do
-	prpPrep "${name}"
-	echo ${prp_pkgRePubName}
+        prpPrep "${name}"
+        echo ${prp_pkgRePubName}
     done
 }
 
@@ -433,9 +433,9 @@ _EOF_
     
     typeset name=""
     for name in "$@" ; do
-	prpPrep "${name}"
-	thisPkgName=$( vis_prpName ${name} )
-	echo ${opVarBase}/distPkgs/${prp_pkgRePubArchType}/${thisPkgName}
+        prpPrep "${name}"
+        thisPkgName=$( vis_prpName ${name} )
+        echo ${opVarBase}/distPkgs/${prp_pkgRePubArchType}/${thisPkgName}
     done
 }
 
@@ -459,9 +459,9 @@ _EOF_
     
     typeset name=""
     for name in "$@" ; do
-	prpPrep "${name}"
-	thisPkgName=$( vis_prpName ${name} )
-	echo http://${binObtainFromServer}/republish/${cononDistFamily}/${cononDistGeneration}/${prp_pkgRePubArchType}/${thisPkgName}
+        prpPrep "${name}"
+        thisPkgName=$( vis_prpName ${name} )
+        echo http://${binObtainFromServer}/republish/${cononDistFamily}/${cononDistGeneration}/${prp_pkgRePubArchType}/${thisPkgName}
     done
 }
 
@@ -491,9 +491,9 @@ _EOF_
     
     typeset name=""
     for name in "$@" ; do
-	prpPrep "${name}"
-	opDo mkdir -p ${opVarBase}/distPkgs/${prp_pkgRePubArchType}
-	opDo sudo chown lsipusr:employee ${opVarBase}/distPkgs/${prp_pkgRePubArchType}
+        prpPrep "${name}"
+        opDo mkdir -p ${opVarBase}/distPkgs/${prp_pkgRePubArchType}
+        opDo sudo chown lsipusr:employee ${opVarBase}/distPkgs/${prp_pkgRePubArchType}
     done
 }
 
@@ -507,29 +507,29 @@ _EOF_
     
     typeset name=""
     for name in "$@" ; do
-	prpPrep "${name}"
+        prpPrep "${name}"
 
-	vis_prpLocalBasePrep ${name}
+        vis_prpLocalBasePrep ${name}
 
-	typeset localPath=$( vis_prpLocalPath ${name} )
-	typeset localBaseDir=$( FN_dirsPart ${localPath} )
-	typeset localName=$( vis_prpName ${name} )
-	typeset srcUrl=$( vis_prpStableUrl ${name} )
+        typeset localPath=$( vis_prpLocalPath ${name} )
+        typeset localBaseDir=$( FN_dirsPart ${localPath} )
+        typeset localName=$( vis_prpName ${name} )
+        typeset srcUrl=$( vis_prpStableUrl ${name} )
 
-	typeset firstChar=${srcUrl::1}
+        typeset firstChar=${srcUrl::1}
 
-	if [ "${firstChar}" == "/" ] ; then
-	    downloadedFile=${srcUrl}
-	    if [ ! -f ${downloadedFile} ] ; then
-		EH_problem "Missing ${downloadedFile}"
-		lpReturn 101
-	    fi
-	    opDo cp ${downloadedFile} ${localBaseDir}/${localName}
-	else
-	    inBaseDirDo  ${localBaseDir}  wget -O ${localPath} ${srcUrl}
-	fi
-	
-	opDo ls -l ${localPath}
+        if [ "${firstChar}" == "/" ] ; then
+            downloadedFile=${srcUrl}
+            if [ ! -f ${downloadedFile} ] ; then
+                EH_problem "Missing ${downloadedFile}"
+                lpReturn 101
+            fi
+            opDo cp ${downloadedFile} ${localBaseDir}/${localName}
+        else
+            inBaseDirDo  ${localBaseDir}  wget -O ${localPath} ${srcUrl}
+        fi
+        
+        opDo ls -l ${localPath}
     done
     lpReturn
 }
@@ -565,36 +565,36 @@ _EOF_
     typeset name=""
 
     if [ ! -z "${srcFile}" ] ; then 
-	if [ ! -f "${srcFile}" ] ; then
-	    EH_problem "Missing ${srcFile}"
-	    lpReturn 101
-	fi	    
+        if [ ! -f "${srcFile}" ] ; then
+            EH_problem "Missing ${srcFile}"
+            lpReturn 101
+        fi          
 
-	EH_assert [[ $# -eq 1 ]]
-	name=$1
-    	prpPrep "${name}"
+        EH_assert [[ $# -eq 1 ]]
+        name=$1
+        prpPrep "${name}"
 
-	vis_prpLocalBasePrep ${name}
+        vis_prpLocalBasePrep ${name}
 
-	typeset thisPkgName=$( vis_prpName ${name} )
+        typeset thisPkgName=$( vis_prpName ${name} )
 
-	opDo echo distPkgPublish.sh -v -n showRun -p publishServer=${binPublishToServer} -p relativeUrl="/republish/${cononDistFamily}/${cononDistGeneration}/${prp_pkgRePubArchType}/${thisPkgName}" -i pkgPublish ${srcFile}
+        opDo echo distPkgPublish.sh -v -n showRun -p publishServer=${binPublishToServer} -p relativeUrl="/republish/${cononDistFamily}/${cononDistGeneration}/${prp_pkgRePubArchType}/${thisPkgName}" -i pkgPublish ${srcFile}
 
     else
-	for name in "$@" ; do
-	    prpPrep "${name}"
+        for name in "$@" ; do
+            prpPrep "${name}"
 
-	    vis_prpLocalBasePrep ${name}
+            vis_prpLocalBasePrep ${name}
 
-	    typeset localPath=$( vis_prpLocalPath ${name} )
-	    typeset localBaseDir=$( FN_dirsPart ${localPath} )
-	    typeset thisPkgName=$( vis_prpName ${name} )
+            typeset localPath=$( vis_prpLocalPath ${name} )
+            typeset localBaseDir=$( FN_dirsPart ${localPath} )
+            typeset thisPkgName=$( vis_prpName ${name} )
 
-	    opDo distPkgPublish.sh -v -n showRun -p publishServer=${binPublishToServer} -p relativeUrl="/republish/${cononDistFamily}/${cononDistGeneration}/${prp_pkgRePubArchType}/${thisPkgName}" -i pkgPublish ${localPath}
-	    
-	done
+            opDo distPkgPublish.sh -v -n showRun -p publishServer=${binPublishToServer} -p relativeUrl="/republish/${cononDistFamily}/${cononDistGeneration}/${prp_pkgRePubArchType}/${thisPkgName}" -i pkgPublish ${localPath}
+            
+        done
     fi
-		
+                
     lpReturn
 }
 
@@ -621,16 +621,16 @@ _EOF_
 
     typeset localPath
     if [ $# -eq 1 ] ; then 
-	typeset localPath=$1
+        typeset localPath=$1
     else
-	typeset localPath=$( vis_pkgRePubLocalPath )
+        typeset localPath=$( vis_pkgRePubLocalPath )
     fi
 
     typeset thisPkgName=$( vis_pkgRePubName )
 
     if [ ! -f ${localPath} ] ; then
-	EH_problem "Missing ${localPath} -- Aborting"
-	lpReturn
+        EH_problem "Missing ${localPath} -- Aborting"
+        lpReturn
     fi
 
     opDo distPkgPublish.sh -v -n showRun -p publishServer=${binPublishToServer} -p relativeUrl="/republish/${cononDistFamily}/${cononDistGeneration}/${prp_pkgRePubArchType}/${thisPkgName}" -i pkgPublish ${localPath}
@@ -656,23 +656,23 @@ _EOF_
     
     typeset name=""
     for name in "$@" ; do
-	prpPrep "${name}"
+        prpPrep "${name}"
 
-	typeset localPath=$( vis_prpLocalPath ${name} )
-	typeset localBaseDir=$( FN_dirsPart ${localPath} )
-	typeset thisPkgName=$( vis_prpName ${name} )
+        typeset localPath=$( vis_prpLocalPath ${name} )
+        typeset localBaseDir=$( FN_dirsPart ${localPath} )
+        typeset thisPkgName=$( vis_prpName ${name} )
 
     
-	opDo wget --spider http://${binObtainFromServer}/republish/${cononDistFamily}/${cononDistGeneration}/${prp_pkgRePubArchType}/${thisPkgName}
+        opDo wget --spider http://${binObtainFromServer}/republish/${cononDistFamily}/${cononDistGeneration}/${prp_pkgRePubArchType}/${thisPkgName}
 
-	retVal=$?
+        retVal=$?
 
-	if [[ ${retVal} -ne 0 ]] ; then
-	    EH_problem "Missing http://${binObtainFromServer}/republish/${cononDistFamily}/${cononDistGeneration}/${prp_pkgRePubArchType}/${thisPkgName}"
-	    funcRetVal=${retVal}
-	else
-	    ANT_raw "In Place: http://${binObtainFromServer}/republish/${cononDistFamily}/${cononDistGeneration}/${prp_pkgRePubArchType}/${thisPkgName}"
-	fi 
+        if [[ ${retVal} -ne 0 ]] ; then
+            EH_problem "Missing http://${binObtainFromServer}/republish/${cononDistFamily}/${cononDistGeneration}/${prp_pkgRePubArchType}/${thisPkgName}"
+            funcRetVal=${retVal}
+        else
+            ANT_raw "In Place: http://${binObtainFromServer}/republish/${cononDistFamily}/${cononDistGeneration}/${prp_pkgRePubArchType}/${thisPkgName}"
+        fi 
     
     done
     lpReturn ${funcRetVal}
@@ -699,9 +699,9 @@ vis_pkgRePubBxVerify () {
     retVal=$?
 
     if [[ ${retVal} -ne 0 ]] ; then
-	EH_problem "Missing http://${binObtainFromServer}/republish/${cononDistFamily}/${cononDistGeneration}/${pkgRePubArchType}/${thisPkgName}"
+        EH_problem "Missing http://${binObtainFromServer}/republish/${cononDistFamily}/${cononDistGeneration}/${pkgRePubArchType}/${thisPkgName}"
 else
-	ANT_raw "In Place: http://${binObtainFromServer}/republish/${cononDistFamily}/${cononDistGeneration}/${pkgRePubArchType}/${thisPkgName}"
+        ANT_raw "In Place: http://${binObtainFromServer}/republish/${cononDistFamily}/${cononDistGeneration}/${pkgRePubArchType}/${thisPkgName}"
     fi 
     
     return ${retVal}
@@ -725,18 +725,18 @@ _EOF_
     
     typeset name=""
     for name in "$@" ; do
-	prpPrep "${name}"
+        prpPrep "${name}"
 
-	typeset localPath=$( vis_prpLocalPath ${name} )
-	typeset localBaseDir=$( FN_dirsPart ${localPath} )
-	typeset thisPkgName=$( vis_prpName ${name} )
+        typeset localPath=$( vis_prpLocalPath ${name} )
+        typeset localBaseDir=$( FN_dirsPart ${localPath} )
+        typeset thisPkgName=$( vis_prpName ${name} )
 
-	typeset thisBaseDir=${opVarBase}/distPkgs/${prp_pkgRePubArchType}
+        typeset thisBaseDir=${opVarBase}/distPkgs/${prp_pkgRePubArchType}
     
-	#inBaseDirDo  ${thisBaseDir} wget http://${binObtainFromServer}/republish/${cononDistFamily}/${cononDistGeneration}/${prp_pkgRePubArchType}/${thisPkgName}
+        #inBaseDirDo  ${thisBaseDir} wget http://${binObtainFromServer}/republish/${cononDistFamily}/${cononDistGeneration}/${prp_pkgRePubArchType}/${thisPkgName}
     inBaseDirDo  ${thisBaseDir} wget http://www.bybinary.org/republish/ubuntu/1804/all/${thisPkgName}
 
-	opDo ls -l ${thisBaseDir}/${thisPkgName}
+        opDo ls -l ${thisBaseDir}/${thisPkgName}
     done
     lpReturn
 }

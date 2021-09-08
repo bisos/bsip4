@@ -129,7 +129,8 @@ function vis_examples {
 
     local oneRealIndiv=$(bxoGitlab.py -v 30  -i acctList  | grep pri_ | head -1)    
 
-    local oneAaipByname=$(bxoGitlab.py -v 30  -i acctList  | grep pmi_ | head -1)    
+    local oneAaipByname=$(bxoGitlab.py -v 30  -i acctList  | grep pmi_ByN | head -1)
+    local oneAaipBydomain=$(bxoGitlab.py -v 30  -i acctList  | grep pmi_ByD | head -1)
 
     local oneFullUse=$(bxoGitlab.py -v 30  -i acctList  | grep piu_ | grep -i full | head -1)    
     
@@ -166,6 +167,11 @@ ${G_myName} ${extraInfo} -i usgBpos_aais_byname_bxoId_fpRead
 ${G_myName} ${extraInfo} -i usgBpos_aais_byname_update ${oneAaipByname} # Main Entry -- Sets 
 ${G_myName} ${extraInfo} -i usgBpos_aais_byname_bxoPath # Main Entry -- Gets
 ${G_myName} ${extraInfo} -i usgBpos_aais_byname_bxoId
+${G_myName} ${extraInfo} -i usgBpos_aais_bydomain_bxoId_fpWrite ${oneAaipBydomain} # Low Level Function
+${G_myName} ${extraInfo} -i usgBpos_aais_bydomain_bxoId_fpRead
+${G_myName} ${extraInfo} -i usgBpos_aais_bydomain_update ${oneAaipBydomain} # Main Entry -- Sets
+${G_myName} ${extraInfo} -i usgBpos_aais_bydomain_bxoPath # Main Entry -- Gets
+${G_myName} ${extraInfo} -i usgBpos_aais_bydomain_bxoId
 $( examplesSeperatorSection "LCNT Bases BPOs -- LCNT (Libre-Halaal Content)  BPO" )
 ${G_myName} ${extraInfo} -i usgBpos_lcntBases_update pip_credsSpecify # Main Entry -- Sets 
 ${G_myName} ${extraInfo} -i usgBpos_lcntBases_bxoPath # Main Entry -- Gets

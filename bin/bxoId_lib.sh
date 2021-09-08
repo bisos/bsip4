@@ -245,10 +245,19 @@ _EOF_
           interactiveBxoId=$( bxoIdPrep "${interactiveBxoId}" )
           lpDo setOutBxoId "${interactiveBxoId}"
           ;;
+      "aaisByDomain")
+          gotBxoId=$(vis_usgBpos_aais_bydomain_bxoId_fpRead)
+          lpDo setOutBxoId "${gotBxoId}"
+          ;;    
+      "aaisByName")
+          gotBxoId=$(vis_usgBpos_aais_byname_bxoId_fpRead)
+          lpDo setOutBxoId "${gotBxoId}"
+          ;;
       "sysChar")
           gotBxoId=$( vis_bxoIdFpsRead "sysChar" )
           lpDo setOutBxoId "${gotBxoId}"
-          ;;    
+          ;;
+
       "site")
           gotBxoId=$( vis_bxoIdFpsRead "site" )
           lpDo setOutBxoId "${gotBxoId}"
