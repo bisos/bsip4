@@ -82,8 +82,10 @@ $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "BISOS Bases Initialization" )
 ${G_myName} ${extraInfo} -i pyVenv_provisionSetup  # virtenvsPrep + venvPy3_pipInstalls etc
 $( examplesSeperatorSection "Create virtenvs and install packages" )
-${G_myName} ${extraInfo} -i virtenvsPrep py2
-${G_myName} ${extraInfo} -f -i virtenvsPrep py3
+${G_myName} ${extraInfo} -i virtenvsPrep py3
+${G_myName} ${extraInfo} -f -i virtenvsPrep py3  # force mode
+${G_myName} ${extraInfo} -i virtenvsPrep py3/dev
+${G_myName} ${extraInfo} -f -i virtenvsPrep py3/dev # force mode
 $( examplesSeperatorSection "BISOS Install packages" )
 ${G_myName} ${extraInfo} -i venvPy2_pipInstalls
 ${G_myName} ${extraInfo} -i venvPy3_pipInstalls
@@ -122,14 +124,12 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
+    #lpDo vis_venvPy2_pipInstalls
+    #lpDo vis_venvPy2Dev_pipInstalls
 
     lpDo vis_virtenvsPrep py3
 
-    #lpDo vis_venvPy2_pipInstalls
     lpDo vis_venvPy3_pipInstalls
-
-
-    #lpDo vis_venvPy2Dev_pipInstalls
 
     lpDo vis_virtenvsPrep py3/dev
 
@@ -183,13 +183,13 @@ _EOF_
             lpDo venvCmnd python2 venv/py2/bisos3 $@
             ;;
         py2/dev)
-            lpDo venvCmnd python2 venv/py2/dev/bisos3 $@
+            lpDo venvCmnd python2 venv/py2/dev-bisos3 $@
             ;;
         py3)
             lpDo venvCmnd python3 venv/py3/bisos3 $@
             ;;
         py3/dev)
-            lpDo venvCmnd python3 venv/py3/dev/bisos3 $@
+            lpDo venvCmnd python3 venv/py3/dev-bisos3 $@
             ;;
         *)
             EH_problem "UnKnown virtenvLabel=${virtenvLabel}"
@@ -239,13 +239,13 @@ _EOF_
             lpDo virtenvReInstall python2 venv/py2/bisos3
             ;;
         py2/dev)
-            lpDo virtenvReInstall python2 venv/py2/dev/bisos3
+            lpDo virtenvReInstall python2 venv/py2/dev-bisos3
             ;;
         py3)
             lpDo virtenvReInstall python3 venv/py3/bisos3
             ;;
         py3/dev)
-            lpDo virtenvReInstall python3 venv/py3/dev/bisos3
+            lpDo virtenvReInstall python3 venv/py3/dev-bisos3
             ;;
         *)
             EH_problem "UnKnown virtenvLabel=${virtenvLabel}"
@@ -423,8 +423,8 @@ _EOF_
     source ${py3ActivateFile}
 
     lpDo echo ${VIRTUAL_ENV}
-    
-    lpDo echo NOTYEY ftoWalk throug the bisos-pip repo
+
+    inBaseDirDo /bisos/git/bxRepos ftoProc-pip.sh -i ftoWalkRunCmnd pypiProc.sh -i pkgInstall edit ${pdb_venv_py3Bisos3Dev}
 
     lpDo pip3 list 
     

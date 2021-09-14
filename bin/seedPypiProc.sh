@@ -82,8 +82,8 @@ function G_postParamHook {
 # }}}
 
 
-installDestBase="/usr/local/lib/python2.7/dist-packages"
-
+# installDestBase="/usr/local/lib/python2.7/dist-packages"
+installDestBase="/bisos/venv/py3/dev-bisos3/lib/python3.9/site-packages"
 
 # {{{ Examples
 
@@ -98,10 +98,9 @@ function vis_examples {
       icmPreps
     local pipPkgFile="./dist/${pypiPkgName}-${pypiPkgVersion}.tar.gz"
 
-    #local devPy2Bisos3="/bystar/dist/venv/dev-py2-bisos-3"
-    local devPy2Bisos3="/bisos/venv/dev-py2-bisos-3"    
-    #local relPy2Bisos3="/bystar/dist/venv/py2-bisos-3"
-    local relPy2Bisos3="/bisos/venv/py2-bisos-3"
+    local devPy3Bisos3="/bisos/venv/py3/dev-bisos3"
+    #local relPy3Bisos3="/bystar/dist/venv/py2-bisos-3"
+    local relPy3Bisos3="/bisos/venv/py3/bisos3"
 
     opDo icmPreps
 
@@ -134,14 +133,14 @@ ${G_myName} ${extraInfo} -p repo=test -i twineUpload
 ls -ld /de/bx/nne/dev-py/pypi/pkgs/fptb/pypiProfile/default
 python setup.py --long-description | rst2html.py > output.html
 $( examplesSeperatorChapter "Un Installation" )
-${G_myName} ${extraInfo} -i pkgUnInstall ${relPy2Bisos3}
-${G_myName} ${extraInfo} -i pkgUnInstall ${devPy2Bisos3}
+${G_myName} ${extraInfo} -i pkgUnInstall ${relPy3Bisos3}
+${G_myName} ${extraInfo} -i pkgUnInstall ${devPy3Bisos3}
 ${G_myName} ${extraInfo} -i pkgUnInstall sys
 $( examplesSeperatorChapter "Installation" )
-${G_myName} ${extraInfo} -i pkgInstall local ${relPy2Bisos3}   # pip install  ${pipPkgFile}
-${G_myName} ${extraInfo} -i pkgInstall edit ${devPy2Bisos3}  # pip install --editable $(pwd)
+${G_myName} ${extraInfo} -i pkgInstall local ${relPy3Bisos3}   # pip install  ${pipPkgFile}
+${G_myName} ${extraInfo} -i pkgInstall edit ${devPy3Bisos3}  # pip install --editable $(pwd)
 ${G_myName} ${extraInfo} -i pkgInstall edit sys  # pip install --editable $(pwd)
-${G_myName} ${extraInfo} -i pkgInstall pypi ${relPy2Bisos3}  # pip install ${pypiPkgName}
+${G_myName} ${extraInfo} -i pkgInstall pypi ${relPy3Bisos3}  # pip install ${pypiPkgName}
 pip install --no-cache-dir --install-option="--install-scripts=/bystar/bin" --install-option="--install-data=/bystar/data" ${pipPkgFile}
 pip install --no-cache-dir --index-url https://test.pypi.org/simple/ ${pypiPkgName}
 pip install --no-cache-dir --editable ${pypiPkgName}
@@ -321,13 +320,17 @@ _CommentEnd_
 function vis_pkgLocalUsageMode {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+** Manage symlinks at ${installDestBase}/${pypiPkgNamespace}/${pypiPkgModule}.
+** With no args, show current symlink
+** With \$1=rel (release mode), remove symlink
+** With \$1=dev (development mode), create symlink
 _EOF_
     }
     EH_assert [[ $# -lt 2 ]]
 
     opDo icmPreps
 
-    local moduleLink="${installDestBase}/${pypiPkgModule}"
+    local moduleLink="${installDestBase}/${pypiPkgNamespace}/${pypiPkgModule}"
     
     if [ $# -eq 0 ] ; then
         if [ -h "${moduleLink}" ] ; then
@@ -344,6 +347,9 @@ _EOF_
     if [ "${mode}" == "rel" ] ; then
         opDo FN_fileSymlinkRemoveIfThere "${moduleLink}"
     elif [ "${mode}" == "dev" ] ; then
+        if [ ! -d "${installDestBase}/${pypiPkgNamespace}" ] ; then
+            lpDo mkdir -p  "${installDestBase}/${pypiPkgNamespace}"
+        fi
         opDo FN_fileSymlinkUpdate $(FN_absolutePathGet $(vis_pkgModuleBase)) "${moduleLink}"
     else
         EH_oops ""

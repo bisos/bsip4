@@ -91,6 +91,12 @@ _EOF_
         "nose"        # Used by blee and doom
         "black"       # Used by blee and doom
         "isort"       # Used by blee and doom
+        #
+        "mypy"        # Used in python mode
+        "pylint"      # Used in python mode
+        "flake8"      # Used in python mode
+        "pyflakes"
+        "pep8"
     )
 }
 

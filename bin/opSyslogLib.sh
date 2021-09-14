@@ -8,6 +8,8 @@
 
 
 function vis_examplesBxSvcLogInfo {
+     EH_assert [[ $# -eq 1 ]]
+  oneSs=$1
  cat  << _EOF_
 $( examplesSeperatorChapter "Logs" )
 ${G_myName} ${extraInfo} -p bxoId="${oneBystarAcct}" -p ss=${oneSs} -i bxSvcLogFilesList

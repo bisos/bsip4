@@ -774,7 +774,7 @@ _EOF_
 
 
 #
-# Left Over From OSMT -- To be sorted.
+# Left Over From OSMT -- called bystarLib.sh -- To be sorted.
 #
 
 function bxoNextDisposableScopeAcctNu {
@@ -836,14 +836,14 @@ function bxoBacpBaseDirVerifyAndFix {
     EH_assert [[ "${bxoUid}_" != "MANDATORY_" ]]
     EH_assert [[ "${bxoUid}_" != "_" ]]
 
-    bxoUidHome=$( FN_absolutePathGet ~${bxoUid} )
-    if [ ! -d ${bxoUidHome} ] ; then
-        EH_problem "Missing ${bxoUidHome}"
+    bxoHome=$( FN_absolutePathGet ~${bxoUid} )
+    if [ ! -d ${bxoHome} ] ; then
+        EH_problem "Missing ${bxoHome}"
         return 101
     fi
 
-    if [ ! -d ${bxoUidHome}/BACP ] ; then
-        FN_dirCreatePathIfNotThere ${bxoUidHome}/BACP
+    if [ ! -d ${bxoHome}/BACP ] ; then
+        FN_dirCreatePathIfNotThere ${bxoHome}/BACP
     fi
 }
 
@@ -853,19 +853,19 @@ function bxoBagpLoad {
     EH_assert [[ "${bxoUid}_" != "_" ]]
 
 
-    bxoUidHome=$( FN_absolutePathGet ~${bxoUid} )
+    bxoHome=$( FN_absolutePathGet ~${bxoUid} )
 
-    if [ ! -d ${bxoUidHome} ] ; then
-        EH_problem "Missing ${bxoUidHome}"
+    if [ ! -d ${bxoHome} ] ; then
+        EH_problem "Missing ${bxoHome}"
         return 101
     fi
 
-    if [ ! -d ${bxoUidHome}/BAGP ] ; then
-        EH_problem "Missing ${bxoUidHome}/BAGP"
+    if [ ! -d ${bxoHome}/BAGP ] ; then
+        EH_problem "Missing ${bxoHome}/BAGP"
         return 101
     fi
 
-    opDo fileParamsLoadVarsFromBaseDir  ${bxoUidHome}/BAGP 2> /dev/null
+    opDo fileParamsLoadVarsFromBaseDir  ${bxoHome}/BAGP 2> /dev/null
 }
 
 
@@ -939,6 +939,14 @@ function bxoBacsAcctsList {
 function bxoAcctPrefixAnalyze {
   EH_assert [[ $# -eq 1 ]]
   bxo_acct_acctTypePrefix=$1
+
+            bxoServiceType="BYSMB"
+            bxoServiceSupportType="COMMITTED"
+            bxoDomainsList=("bysmb.net" "bysmb.com" "libresite.org")
+            thisHomeDir="NOTYET"  # "${iv_uidPolicy_homeDir}/${cp_Domain1}/${cp_Domain2}"
+
+            lpReturn
+
 
     case ${bxo_acct_acctTypePrefix} in 
       "ea")
@@ -1064,7 +1072,12 @@ function bxoAcctAnalyze {
   bxo_acct_decryptedPasswd="MissingBystarAcctAdmin.sh"
   bxoUidPasswdDecrypted=${bxo_acct_decryptedPasswd}
 
-    bxoAcctPrefixAnalyze ${bxo_acct_acctTypePrefix}
+  bxoAcctPrefixAnalyze ${bxo_acct_acctTypePrefix}
+
+            bxoServiceType="BYSMB"
+            bxoServiceSupportType="COMMITTED"
+            lpReturn
+
     case ${bxo_acct_acctTypePrefix} in 
       "ea")
             bxoServiceType="BYSMB"
@@ -1111,8 +1124,10 @@ function bxoAcctAnalyze {
             return 101
     esac
 
-   bxoUidHome=$( FN_absolutePathGet ~${bxoUid} )
-   opDo fileParamsLoadVarsFromBaseDir  ${bxoUidHome}/BAGP 2> /dev/null
+    # NOTYET, BAGP needs to be absorbed.
+
+   bxoHome=$( FN_absolutePathGet ~${bxoUid} )
+   opDo fileParamsLoadVarsFromBaseDir  ${bxoHome}/BAGP 2> /dev/null
 
 
   #. ${bxo_acct_NSPdir}/bxoSubscriberProfiles.nsp
@@ -1334,22 +1349,22 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    if [ -z "${sr}" ] ; then
+    if [ -z "${ss}" ] ; then
         EH_problem "Missing Service Realiztion Specification"
         lpReturn 101
     fi
 
-    srBaseDir="${bxoUidHome}/${sr}"
+    srBaseDir="${bxoHome}/${ss}"
 
     if [ ! -d ${srBaseDir} ] ; then 
         EH_problem "Missing srBaseDir=${srBaseDir}"
         lpReturn 101
     fi
 
-    srAgent="${bxoUidHome}/${sr}/bsrAgent.sh"
+    srAgent="${bxoHome}/${ss}/bsrAgent.sh"
 
     if [ ! -f ${srAgent} ] ; then 
-        srAgent="${bxoUidHome}/${sr}/srAgent.sh"
+        srAgent="${bxoHome}/${sr}/srAgent.sh"
         if [ ! -f ${srAgent} ] ; then 
             EH_problem "Missing srAgent=${srAgent} and also missing bsrAgent.sh"
             lpReturn 101
@@ -1426,7 +1441,7 @@ _EOF_
     fi
 
 
-    #echo ${bxoUid} ${bxoUidHome} ${sr} ${srFqdn}
+    #echo ${bxoUid} ${bxoHome} ${sr} ${srFqdn}
 
     return
 }
@@ -1440,19 +1455,19 @@ _CommentEnd_
 function vis_srBaseDirGet {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-With \${bxoUidHome} and \${sr} using bsrAgent.sh get srFqdn
+With \${bxoHome} and \${sr} using bsrAgent.sh get srFqdn
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert bxoUidCentralPrep
-    opDoRet bxoAcctAnalyze ${bxoUid}
+    EH_assert bxoIdPrep
+    # opDoRet bxoAcctAnalyze ${bxoId}
 
-    if [ -z "${sr}" ] ; then
+    if [ -z "${ss}" ] ; then
         EH_problem ""
         lpReturn
     fi
 
-    echo ${bxoUidHome}/${sr}
+    echo ${bxoHome}/${ss}
 
     lpReturn
 }
@@ -1461,7 +1476,7 @@ _EOF_
 function vis_srFqdnGet {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-With \${bxoUidHome} and \${sr} using bsrAgent.sh get srFqdn
+With \${bxoHome} and \${sr} using bsrAgent.sh get srFqdn
 _EOF_
     }
     EH_assert [[ $# -eq 1 ]]
@@ -1480,12 +1495,12 @@ function vis_srA2LogBaseDirGet {
 _EOF_
     }
     EH_assert [[ $# -eq 1 ]]
-    EH_assert bxoUidCentralPrep
-    opDoRet bxoAcctAnalyze ${bxoUid}
+    EH_assert bxoIdPrep
+    opDoRet bxoAcctAnalyze ${bxoId}
 
     typeset srFqdn=$1
 
-    echo ${bxoUidHome}/var/log/apache2/${srFqdn}
+    echo ${bxoHome}/var/log/apache2/${srFqdn}
 
     lpReturn
 }
