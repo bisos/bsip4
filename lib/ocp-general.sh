@@ -92,7 +92,7 @@ function opBasePathSet {
   export PATH="${PATH}:/bisos/core/bpip/bin"
   export PATH="${PATH}:/bisos/core/lcnt/bin"
   export PATH="${PATH}:/bisos/core/mail/bin"
-  export PATH="${PATH}:/bisos/aais/bx/bin"
+  export PATH="${PATH}:/bisos/aais/bin"
   export PATH="${PATH}:/usr/local/bin:/usr/local/sbin"
   export PATH="${PATH}:/usr/5bin:/usr/ccs/bin:/usr/sbin:/bin:/sbin:/usr/bin"
 }
