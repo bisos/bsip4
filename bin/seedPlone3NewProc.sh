@@ -69,7 +69,7 @@ _EOF_
 # ./bystarLib.sh
 . ${opBinBase}/bystarLib.sh
 # ./bystarHereAcct.libSh
-. ${opBinBase}/bystarHereAcct.libSh
+#. ${opBinBase}/bystarHereAcct.libSh
 
 . ${opBinBase}/lpInBaseDirDo.libSh
 

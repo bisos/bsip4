@@ -41,24 +41,24 @@ _EOF_
     cat  << _EOF_
 $( examplesSeperatorChapter "BxIO Common Actions" )
 $( examplesSeperatorChapter "Assemble And Push Initial Bxo Repo Bases" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i assembleInitialBxoCommonRepoBases
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i pushInitialBxoCommonRepoBases
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i assembleInitialBxoCommonRepoBases
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i pushInitialBxoCommonRepoBases
 $( examplesSeperatorChapter "Assemble And Push Initial bxeTree Base" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i assembleInitial_bxeTree leaf
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -f -i assembleInitial_bxeTree leaf
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i assembleInitial_bxeTree leaf
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -f -i assembleInitial_bxeTree leaf
 ${G_myName} ${extraInfo} -i repoCreateAndPushBasedOnPath "${oneBxoHome}/bxeTree"
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoCreateAndPush "bxeTree" "${oneBxoHome}/bxeTree" "priv"
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i repoCreateAndPush "bxeTree" "${oneBxoHome}/bxeTree" "priv"
 $( examplesSeperatorChapter "Specific Initial Repo Realizition" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBasesList
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i kindTypeRealizeRepoBasesCreate   # Based on repoBasesList
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i kindTypeRealizeRepoBasesPush     # Based on repoBasesList
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i repoBasesList
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i kindTypeRealizeRepoBasesCreate   # Based on repoBasesList
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i kindTypeRealizeRepoBasesPush     # Based on repoBasesList
 $( examplesSeperatorChapter "Assemble And Push Initial Sys Base -- Mandatory" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i assembleInitial_sys
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoCreateAndPush "sys" "${oneBxoHome}/sys" "priv"
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i assembleInitial_sys
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i repoCreateAndPush "sys" "${oneBxoHome}/sys" "priv"
 $( examplesSeperatorSection "BxO Panels Root -- Mandatory" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBaseCreate_panel
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i repoBaseCreate_panel
 ${G_myName} ${extraInfo} -p bxoPath="." -i repoBaseCreate_panel
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBasePush panel
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i repoBasePush panel
 ${G_myName} ${extraInfo} -p bxoPath="." -i repoBasePush panel
 _EOF_
 }
@@ -72,8 +72,8 @@ _EOF_
     local bxoRealizationScope=$1   
     EH_assert bxoRealizationScopeIsValid "${bxoRealizationScope}"
     
-    EH_assert [ ! -z "${bxoId}" ]
-    EH_assert vis_bxoAcctVerify "${bxoId}"
+    EH_assert [ ! -z "${bpoId}" ]
+    EH_assert vis_bxoAcctVerify "${bpoId}"
 
     case ${bxoRealizationScope} in
         full)
@@ -99,17 +99,17 @@ function vis_repoBasePush {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** To be obsoleted by vis_bxoRealize_repoBasesPush
-** Based on -p bxoId and \$1=repoName, creates a repo in bxoId.
+** Based on -p bpoId and \$1=repoName, creates a repo in bpoId.
 _EOF_
     }
     EH_assert [[ $# -eq 1 ]]
-    EH_assert bxoIdAssert
+    EH_assert bpoIdAssert
 
-    EH_assert  vis_userAcctExists "${bxoId}"
+    EH_assert  vis_userAcctExists "${bpoId}"
 
     local repoName=$1
 
-    local repoBase="${bxoHome}/${repoName}"
+    local repoBase="${bpoHome}/${repoName}"
 
     lpDo vis_repoCreateAndPushBasedOnPath "${repoBase}"
     
@@ -127,7 +127,7 @@ function vis_bxoRealize_repoBasesPush {
 _EOF_
                        }
     local thisFunc=${G_thisFunc}
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
 
     function processEach {
@@ -137,7 +137,7 @@ _EOF_
         # For example, par_live will become par.live
         repoName=$(lpDo eval  echo ${repoName} \|  sed -e 's/_/./g')
 
-        local repoBase="${bxoHome}/${repoName}"
+        local repoBase="${bpoHome}/${repoName}"
 
         lpDo vis_repoCreateAndPushBasedOnPath "${repoBase}"
     }
@@ -174,7 +174,7 @@ function vis_bxoRealize_repoBasesCreate {
 _EOF_
                        }
     EH_assert [[ $# -eq 1 ]]
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
     # \$1 becomes \$2 in processEach
     
@@ -217,7 +217,7 @@ function vis_bxoRealize_nonRepoBasesCreate {
 _EOF_
                        }
     EH_assert [[ $# -eq 1 ]]
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
     
     local thisFunc=${G_thisFunc}
 
@@ -258,9 +258,9 @@ function vis_kindTypeRealizeRepoBasesCreate {
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${bpoId}" ]
 
-    EH_assert  vis_userAcctExists "${bxoId}"
+    EH_assert  vis_userAcctExists "${bpoId}"
 
     for each in $(vis_repoBasesList) ; do
         lpDo vis_repoBaseCreate_${each}
@@ -276,12 +276,12 @@ function vis_kindTypeRealizeRepoBasesPush {
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${bpoId}" ]
 
-    EH_assert  vis_userAcctExists "${bxoId}"
+    EH_assert  vis_userAcctExists "${bpoId}"
 
     for each in $(vis_repoBasesList) ; do
-        inBaseDirDo ${bxoHome} vis_repoCreateAndPushBasedOnPath ${each}
+        inBaseDirDo ${bpoHome} vis_repoCreateAndPushBasedOnPath ${each}
     done
 
     lpReturn
@@ -290,17 +290,17 @@ _EOF_
 function vis_repoBasePush {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-Based on -p bxoId and \$1=repoName, creates a repo in bxoId.
+Based on -p bpoId and \$1=repoName, creates a repo in bpoId.
 _EOF_
     }
     EH_assert [[ $# -eq 1 ]]
-    EH_assert bxoIdAssert
+    EH_assert bpoIdAssert
 
-    EH_assert  vis_userAcctExists "${bxoId}"
+    EH_assert  vis_userAcctExists "${bpoId}"
 
     local repoName=$1
 
-    local repoBase="${bxoHome}/${repoName}"
+    local repoBase="${bpoHome}/${repoName}"
 
     lpDo vis_repoCreateAndPushBasedOnPath "${repoBase}"
     
@@ -314,11 +314,11 @@ function vis_repoBaseCreate_panel {
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert bxoIdAssert
+    EH_assert bpoIdAssert
 
-    EH_assert  vis_userAcctExists "${bxoId}"
+    EH_assert  vis_userAcctExists "${bpoId}"
 
-    local repoBase="${bxoHome}/panel"
+    local repoBase="${bpoHome}/panel"
 
     if [ -d "${repoBase}" ] ; then
         EH_problem "${repoBase} already exists -- creation skipped"
@@ -346,14 +346,14 @@ function vis_pushInitialBxoCommonRepoBases {
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${bpoId}" ]
 
-    EH_assert  vis_userAcctExists "${bxoId}"    
+    EH_assert  vis_userAcctExists "${bpoId}"    
 
-    lpDo vis_repoCreateAndPush "bxeTree" "${bxoHome}/bxeTree" "priv"
+    lpDo vis_repoCreateAndPush "bxeTree" "${bpoHome}/bxeTree" "priv"
 
-    lpDo vis_repoCreateAndPush "sys" "${bxoHome}/sys" "priv"        
-    #lpDo vis_repoCreateAndPush "mapFiles" "${bxoHome}/mapFiles" "priv"    
+    lpDo vis_repoCreateAndPush "sys" "${bpoHome}/sys" "priv"        
+    #lpDo vis_repoCreateAndPush "mapFiles" "${bpoHome}/mapFiles" "priv"    
     
     lpReturn
 }
@@ -365,9 +365,9 @@ In addition to bxo, the bxeDesc param is needed for the rbxeSetup.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${bpoId}" ]
 
-    EH_assert  vis_userAcctExists "${bxoId}"
+    EH_assert  vis_userAcctExists "${bpoId}"
     
     lpDo vis_assembleInitial_bxeTree leaf
 
@@ -385,32 +385,32 @@ Node could be leaf or branch.
 _EOF_
     }
     EH_assert [[ $# -eq 1 ]]
-    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${bpoId}" ]
 
-    EH_assert  vis_userAcctExists "${bxoId}"
+    EH_assert  vis_userAcctExists "${bpoId}"
     
     local node=$1
 
-    bxoHome=$( FN_absolutePathGet ~${bxoId} )
+    bpoHome=$( FN_absolutePathGet ~${bpoId} )
 
     function doThis {
-        lpDo mkdir ${bxoHome}/bxeTree
+        lpDo mkdir ${bpoHome}/bxeTree
         if [ "${node}" == "leaf" ] ; then
-            lpDo fileParamManage.py -i fileParamWrite ${bxoHome}/bxeTree node leaf
+            lpDo fileParamManage.py -i fileParamWrite ${bpoHome}/bxeTree node leaf
         elif [ "${node}" == "branch" ] ; then
-            lpDo fileParamManage.py -i fileParamWrite ${bxoHome}/bxeTree node branch
-            lpDo mkdir ${bxoHome}/bxeTree/regReq
-            lpDo mkdir ${bxoHome}/bxeTree/bxeDesc
+            lpDo fileParamManage.py -i fileParamWrite ${bpoHome}/bxeTree node branch
+            lpDo mkdir ${bpoHome}/bxeTree/regReq
+            lpDo mkdir ${bpoHome}/bxeTree/bxeDesc
         else
             EH_problem ""
         fi
     }
 
-    if [ -d "${bxoHome}/bxeTree" ] ; then
+    if [ -d "${bpoHome}/bxeTree" ] ; then
         if [ "${G_forceMode}" == "force" ] ; then
             lpDo doThis
         else
-            ANT_raw "${bxoHome}/bxeTree exists and forceMode is not specified."
+            ANT_raw "${bpoHome}/bxeTree exists and forceMode is not specified."
         fi
     else
         lpDo doThis
@@ -426,25 +426,25 @@ function vis_assembleInitial_mapFiles%% {
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${bpoId}" ]
 
-    EH_assert  vis_userAcctExists "${bxoId}"
+    EH_assert  vis_userAcctExists "${bpoId}"
     
     local bxoRepoBase="mapFiles"
 
-    bxoHome=$( FN_absolutePathGet ~${bxoId} )
+    bpoHome=$( FN_absolutePathGet ~${bpoId} )
 
     function doThis {
-        lpDo FN_dirCreatePathIfNotThere ${bxoHome}/${bxoRepoBase}
+        lpDo FN_dirCreatePathIfNotThere ${bpoHome}/${bxoRepoBase}
 
-        lpDo FN_FileCreateIfNotThere ${bxoHome}/${bxoRepoBase}/fullMap.sh
+        lpDo FN_FileCreateIfNotThere ${bpoHome}/${bxoRepoBase}/fullMap.sh
     }
 
-    if [ -d "${bxoHome}/${bxoRepoBase}" ] ; then
+    if [ -d "${bpoHome}/${bxoRepoBase}" ] ; then
         if [ "${G_forceMode}" == "force" ] ; then
             lpDo doThis
         else
-            ANT_raw "${bxoHome}/${bxoRepoBase} exists and forceMode is not specified."
+            ANT_raw "${bpoHome}/${bxoRepoBase} exists and forceMode is not specified."
         fi
     else
         lpDo doThis
@@ -460,13 +460,13 @@ function vis_assembleInitial_sys {
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${bpoId}" ]
 
-    EH_assert  vis_userAcctExists "${bxoId}"
+    EH_assert  vis_userAcctExists "${bpoId}"
     
     local bxoRepoBase="sys"
 
-    bxoHome=$( FN_absolutePathGet ~${bxoId} )
+    bpoHome=$( FN_absolutePathGet ~${bpoId} )
 
     function file_bxoPathsExtend.sh {
         EH_assert [[ $# -eq 1 ]]
@@ -487,20 +487,20 @@ _EOF_
     }
     
     function doThis {
-        lpDo FN_dirCreatePathIfNotThere ${bxoHome}/${bxoRepoBase}
+        lpDo FN_dirCreatePathIfNotThere ${bpoHome}/${bxoRepoBase}
 
-        lpDo FN_dirCreatePathIfNotThere ${bxoHome}/${bxoRepoBase}/bin   
+        lpDo FN_dirCreatePathIfNotThere ${bpoHome}/${bxoRepoBase}/bin   
 
-        lpDo file_bxoPathsExtend.sh ${bxoHome}/${bxoRepoBase}/bin/bxoPathsExtend.sh
-        lpDo file_placeHolder ${bxoHome}/${bxoRepoBase}/bin/bxoSetup.sh
-        lpDo file_placeHolder ${bxoHome}/${bxoRepoBase}/bin/mapFull.sh          
+        lpDo file_bxoPathsExtend.sh ${bpoHome}/${bxoRepoBase}/bin/bxoPathsExtend.sh
+        lpDo file_placeHolder ${bpoHome}/${bxoRepoBase}/bin/bxoSetup.sh
+        lpDo file_placeHolder ${bpoHome}/${bxoRepoBase}/bin/mapFull.sh          
     }
 
-    if [ -d "${bxoHome}/${bxoRepoBase}" ] ; then
+    if [ -d "${bpoHome}/${bxoRepoBase}" ] ; then
         if [ "${G_forceMode}" == "force" ] ; then
             lpDo doThis
         else
-            ANT_raw "${bxoHome}/${bxoRepoBase} exists and forceMode is not specified."
+            ANT_raw "${bpoHome}/${bxoRepoBase} exists and forceMode is not specified."
         fi
     else
         lpDo doThis

@@ -68,7 +68,7 @@ _CommentEnd_
 . ${opBinBase}/platformBases_lib.sh
 
 
-. ${opBinBase}/bxo_lib.sh
+. ${opBinBase}/bpo_lib.sh
 
 # ./lcnFileParams.libSh
 . ${opBinBase}/lcnFileParams.libSh

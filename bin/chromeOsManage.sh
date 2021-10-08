@@ -70,8 +70,8 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
-. ${opBinBase}/bxo_lib.sh
-. ${opBinBase}/bxoId_lib.sh
+. ${opBinBase}/bpo_lib.sh
+. ${opBinBase}/bpoId_lib.sh
 
 . ${opBinBase}/bxeDesc_lib.sh
 
@@ -104,17 +104,17 @@ _CommentEnd_
 
 # PRE parameters
 
-typeset -t bxoId=""
+typeset -t bpoId=""
 
 typeset -t correspondingBxo=""
 
 
 function G_postParamHook {
     lpReturn
-    bxoIdPrepValidate    
+    bpoIdPrepValidate    
 
-    if [ ! -z "${bxoId}" ] ; then
-        bxoHome=$( FN_absolutePathGet ~${bxoId} )
+    if [ ! -z "${bpoId}" ] ; then
+        bpoHome=$( FN_absolutePathGet ~${bpoId} )
     fi
     
     bisosCurrentsGet

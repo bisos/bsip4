@@ -95,10 +95,10 @@ _EOF_
        lpDo bxmeProvision.sh -h -v -n showRun -p privacy="priv" -p kind="materialization" -p type="scs" -p parent="${parentBxoId}" -p name="${bxoName}" -i startToPrivRealize ${bxoRealizationScope}
    fi
 
-   bxoId="${scsBxoId}"
-   EH_assert vis_bxoAcctVerify "${bxoId}"
+   bpoId="${scsBxoId}"
+   EH_assert vis_bxoAcctVerify "${bpoId}"
 
-   echo "${bxoId}"
+   echo "${bpoId}"
 }
 
 function vis_scs_repoBasesList {
@@ -128,7 +128,7 @@ function vis_scs_repoBasesAllCreate {
 _EOF_
                        }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
     lpDo eval vis_scs_repoBasesList \| vis_bxoRealize_repoBasesCreate scs
 }       
@@ -140,7 +140,7 @@ function vis_scs_repoBasesAllPush {
 _EOF_
                        }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
     lpDo eval vis_scs_repoBasesList \| vis_bxoRealize_repoBasesPush
 }       
@@ -152,7 +152,7 @@ function vis_scs_nonRepoBasesAllCreate {
 _EOF_
                        }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
     lpDo eval vis_scs_nonRepoBasesList \| vis_bxoRealize_nonRepoBasesCreate scs
 }       
@@ -161,16 +161,16 @@ _EOF_
 function vis_scs_nonRepoBaseCreate_var {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-Create /bisos/var/bxoId/${bxoId} and symlink to it.
+Create /bisos/var/bpoId/${bpoId} and symlink to it.
 _EOF_
                        }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
     local baseName=${FUNCNAME##vis_scs_nonRepoBaseCreate_}
-    local basePath="${bxoHome}/${baseName}"
+    local basePath="${bpoHome}/${baseName}"
     
-    local bisosVarBaseDir="/bisos/var/bxoId/${bxoId}"
+    local bisosVarBaseDir="/bisos/var/bpoId/${bpoId}"
 
     lpDo FN_dirCreatePathIfNotThere ${bisosVarBaseDir}
     
@@ -187,10 +187,10 @@ function vis_scs_repoBaseCreate_BAGP%% {
 _EOF_
                        }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
     local repoName=${FUNCNAME##vis_scs_repoBaseCreate_}
-    local repoBase="${bxoHome}/${repoName}"
+    local repoBase="${bpoHome}/${repoName}"
 
     lpDo FN_dirCreatePathIfNotThere "${repoBase}"
 

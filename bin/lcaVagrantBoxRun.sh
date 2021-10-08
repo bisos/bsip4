@@ -318,9 +318,9 @@ NAT + genesis target.
 _EOF_
     }
     EH_assert [[ $# -lt 2 ]]    
-    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${bpoId}" ]
 
-    EH_assert  vis_bxoAcctVerify "${bxoId}"
+    EH_assert  vis_bxoAcctVerify "${bpoId}"
 
     local dirsPart=$( FN_dirsPart $(vis_vagrantFile_path) )
     EH_assert [ ! -z "${dirsPart}" ]
@@ -382,7 +382,7 @@ _EOF_
 function vis_vagrantFile_path {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-Returns stdout path to Vagrantfile's base directory of the bxoHome.
+Returns stdout path to Vagrantfile's base directory of the bpoHome.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]

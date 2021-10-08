@@ -121,7 +121,7 @@ ${G_myName} ${extraInfo} -i bxoAcctVerify ${oneAutonomousBxoAcct}
 $( examplesSeperatorChapter "BxISO (Info and Service Objects) List Accounts" )
 ${G_myName} ${extraInfo} -i bxoAcctNextLocalUidNu
 ${G_myName} ${extraInfo} -i bxoAcctsList
-${G_myName} ${extraInfo} -i bxoIdsList
+${G_myName} ${extraInfo} -i bpoIdsList
 _EOF_
 }
 
@@ -368,7 +368,7 @@ _EOF_
 }
 
 
-function vis_bxoIdsList {
+function vis_bpoIdsList {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Based on vis_bxoAcctsList

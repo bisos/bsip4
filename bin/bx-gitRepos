@@ -511,8 +511,8 @@ _EOF_
         local gitUrl=$( vis_gitUrlAtBase ${here} )
         local gitHostname=$( vis_parseGitUrl_getHostname ${gitUrl} )
 
-        local userName=$( usgBxoSshManage.sh -p usg=$(id -u -n) -i usgAcctCustomGitInfoRead ${gitHostname} userName )
-        local userEmail=$( usgBxoSshManage.sh -p usg=$(id -u -n) -i usgAcctCustomGitInfoRead ${gitHostname} userEmail )
+        local userName=$( usgBpoSshManage.sh -p usg=$(id -u -n) -i usgAcctCustomGitInfoRead ${gitHostname} userName )
+        local userEmail=$( usgBpoSshManage.sh -p usg=$(id -u -n) -i usgAcctCustomGitInfoRead ${gitHostname} userEmail )
 
         lpDo git config user.name "${userName}"
         lpDo git config user.email "${userEmail}"       

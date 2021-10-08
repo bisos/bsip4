@@ -108,7 +108,7 @@ _EOF_
     
     lpDo echo skipping vis_provisionEmacsFromSrc
 
-    lpDo echo obtain this containers bxoId
+    lpDo echo obtain this containers bpoId
 
     lpDo echo then setup static ip addresses
 }

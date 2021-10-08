@@ -61,8 +61,8 @@ _CommentEnd_
 # ./platformBases_lib.sh
 . ${opBinBase}/platformBases_lib.sh
 
-. ${opBinBase}/bxo_lib.sh
-. ${opBinBase}/bxoId_lib.sh
+. ${opBinBase}/bpo_lib.sh
+. ${opBinBase}/bpoId_lib.sh
 
 # ./lcnFileParams.libSh
 . ${opBinBase}/lcnFileParams.libSh
@@ -167,10 +167,10 @@ ${G_myName} ${extraInfo} -i releaseBoxAddr privA ${thisBoxNu}
 ${G_myName} ${extraInfo} -i assignVirtAddr privA 1009
 ${G_myName} ${extraInfo} -i releaseVirtAddr privA 1009
 $( examplesSeperatorChapter "This Network Actions" )
-${G_myName} ${extraInfo} -p bxoId=sysChar -i cntnr_netName_ipAddr pubA
-${G_myName} ${extraInfo} -p bxoId=sysChar -i cntnr_netName_ipAddr pubB
-${G_myName} ${extraInfo} -p bxoId=sysChar -i cntnr_netName_ipAddr privA
-${G_myName} ${extraInfo} -p bxoId=sysChar -i cntnr_netName_ipAddr perimA
+${G_myName} ${extraInfo} -p bpoId=sysChar -i cntnr_netName_ipAddr pubA
+${G_myName} ${extraInfo} -p bpoId=sysChar -i cntnr_netName_ipAddr pubB
+${G_myName} ${extraInfo} -p bpoId=sysChar -i cntnr_netName_ipAddr privA
+${G_myName} ${extraInfo} -p bpoId=sysChar -i cntnr_netName_ipAddr perimA
 _EOF_
 }
 

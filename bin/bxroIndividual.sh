@@ -70,7 +70,7 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
-. ${opBinBase}/bxo_lib.sh
+. ${opBinBase}/bpo_lib.sh
 
 . ${opBinBase}/bxeDesc_lib.sh
 
@@ -92,14 +92,14 @@ _CommentEnd_
 
 # PRE parameters
 
-typeset -t bxoId=""
+typeset -t bpoId=""
 # usg=""
 
 function G_postParamHook {
-    bxoIdPrepValidate    
+    bpoIdPrepValidate    
 
-    if [ ! -z "${bxoId}" ] ; then
-        bxoHome=$( FN_absolutePathGet ~${bxoId} )
+    if [ ! -z "${bpoId}" ] ; then
+        bpoHome=$( FN_absolutePathGet ~${bpoId} )
     fi
     
     bisosCurrentsGet
@@ -133,11 +133,11 @@ $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
 $( examplesSeperatorChapter "Initial Bxe Realize" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i kindTypeRealizeRepoBasesCreate
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i kindTypeRealizeRepoBasesPush
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i kindTypeRealizeRepoBasesCreate
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i kindTypeRealizeRepoBasesPush
 $( examplesSeperatorChapter "Specialized SubTypes" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i regBxeBasesCreate
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i regBxeBasesPush
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i regBxeBasesCreate
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i regBxeBasesPush
 $( examplesSeperatorChapter "Using Facilities" )
 registrarCentralBxe.sh  # Need not be visible to BISOS
 registrarPrivBxe.sh

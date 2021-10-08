@@ -60,7 +60,7 @@ _EOF_
 # . ${opBinBase}/mmaDnsLib.sh
 
 # bxo_lib.sh
-. ${opBinBase}/bxo_lib.sh
+. ${opBinBase}/bpo_lib.sh
 
 # bystarHereAcct.libSh
 # . ${opBinBase}/bystarHereAcct.libSh
@@ -76,7 +76,7 @@ _EOF_
 # . ${opBinBase}/bystarHook.libSh
 
 # ./bxo_lib.sh
-. ${opBinBase}/bxo_lib.sh
+. ${opBinBase}/bpo_lib.sh
 
 . ${opBinBase}/bisosCurrents_lib.sh
 

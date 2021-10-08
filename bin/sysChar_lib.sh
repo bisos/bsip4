@@ -191,14 +191,14 @@ _EOF_
    local virtualizationType=$( facter virtual )
    local boxId=""
 
-   # lpDo vis_bxoIdPrep "sysChar"
+   # lpDo vis_bpoIdPrep "sysChar"
    
     if [ "${virtualizationType}" == "physical" ] ; then
         boxId=$( siteBoxAssign.sh -i thisBoxFindId )
         lpDo vis_withBoxIdFindContainerBase "${boxId}"
     else
-        bxoId=$( vis_bxoIdPrep "sysChar" )
-        lpDo vis_fromBxoIdFindContainerBase ${bxoId}
+        bpoId=$( vis_bpoIdPrep "sysChar" )
+        lpDo vis_fromBxoIdFindContainerBase ${bpoId}
     fi
 }
 
@@ -210,9 +210,9 @@ _EOF_
                       }
    
    EH_assert [[ $# -eq 1 ]]
-   local bxoId="$1"
-   local bxoHome=$( FN_absolutePathGet ~${bxoId} )
-   echo ${bxoHome}/siteContainersRepo
+   local bpoId="$1"
+   local bpoHome=$( FN_absolutePathGet ~${bpoId} )
+   echo ${bpoHome}/siteContainersRepo
 }
 
 
@@ -368,9 +368,9 @@ _EOF_
     local sysCharContainerBxoId=$( vis_sysCharContainerBxoIdName ${containerBase} )
     local selectedSiteBxoId=$( vis_selectedSiteBxoId )
 
-    bxoId=${sysCharContainerBxoId}
-    EH_assert vis_bxoAcctVerify "${bxoId}"
-    bxoHome=$( FN_absolutePathGet ~${bxoId} )
+    bpoId=${sysCharContainerBxoId}
+    EH_assert vis_bxoAcctVerify "${bpoId}"
+    bpoHome=$( FN_absolutePathGet ~${bpoId} )
 
     lpDo vis_sysCharReport
     
@@ -384,18 +384,18 @@ function vis_sysCharReport {
 _EOF_
                        }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${bpoId}" ]
 
-    EH_assert  vis_userAcctExists "${bxoId}"
+    EH_assert  vis_userAcctExists "${bpoId}"
 
-    fileParamManage.py -i fileParamDictReadDeep ${bxoHome} | grep -v bxeTree | grep -v bxeDesc
+    fileParamManage.py -i fileParamDictReadDeep ${bpoHome} | grep -v bxeTree | grep -v bxeDesc
     
-    lpDo fileParamManage.py -i fileParamDictReadDeep ${bxoHome}/siteContainersRepo/assign
+    lpDo fileParamManage.py -i fileParamDictReadDeep ${bpoHome}/siteContainersRepo/assign
 
-    lpDo fileParamManage.py -i fileParamDictReadDeep ${bxoHome}/siteContainersRepo
+    lpDo fileParamManage.py -i fileParamDictReadDeep ${bpoHome}/siteContainersRepo
 
-    lpDo fileParamManage.py -i fileParamDictReadDeep ${bxoHome}/siteContainersRepo/steady/net/networks
-    lpDo fileParamManage.py -i fileParamDictReadDeep ${bxoHome}/siteContainersRepo/steady/net/routes        
+    lpDo fileParamManage.py -i fileParamDictReadDeep ${bpoHome}/siteContainersRepo/steady/net/networks
+    lpDo fileParamManage.py -i fileParamDictReadDeep ${bpoHome}/siteContainersRepo/steady/net/routes        
     
     lpReturn
 }       
@@ -404,7 +404,7 @@ _EOF_
 function vis_containerAssignRead {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-bxoId is the sysChar. From which the link to assign is followed.
+bpoId is the sysChar. From which the link to assign is followed.
 When boxId is "virt", virtSpec.fps become effective.
 _EOF_
                       }
@@ -414,12 +414,12 @@ _EOF_
     local containerAssignBase=""
     
     if [ $# -eq 0 ] ; then
-        EH_assert [ ! -z "${bxoId}" ]
+        EH_assert [ ! -z "${bpoId}" ]
 
-        EH_assert vis_bxoAcctVerify "${bxoId}"
-        bxoHome=$( FN_absolutePathGet ~${bxoId} )
+        EH_assert vis_bxoAcctVerify "${bpoId}"
+        bpoHome=$( FN_absolutePathGet ~${bpoId} )
   
-        containerAssignBase=${bxoHome}/siteContainersRepo/assign
+        containerAssignBase=${bpoHome}/siteContainersRepo/assign
     elif [ $# -eq 1 ] ; then
         containerAssignBase=$1
     else
@@ -437,17 +437,17 @@ _EOF_
 function vis_containerSteadyRead {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
-bxoId is the sysChar. From which the link to the steady dir of container repo is followed.
+bpoId is the sysChar. From which the link to the steady dir of container repo is followed.
 From there links to networks and routes are also followed.
 _EOF_
                       }
    EH_assert [[ $# -eq 0 ]]
-   EH_assert [ ! -z "${bxoId}" ]
+   EH_assert [ ! -z "${bpoId}" ]
 
-   EH_assert vis_bxoAcctVerify "${bxoId}"
-   bxoHome=$( FN_absolutePathGet ~${bxoId} )
+   EH_assert vis_bxoAcctVerify "${bpoId}"
+   bpoHome=$( FN_absolutePathGet ~${bpoId} )
   
-   local containerSteadyBase=${bxoHome}/siteContainersRepo/steady
+   local containerSteadyBase=${bpoHome}/siteContainersRepo/steady
 
    containerSteady_networkMode=$( fileParamManage.py -i fileParamRead  ${containerSteadyBase}/net networkMode.fp )
 
@@ -494,28 +494,28 @@ _EOF_
 function vis_sysChar_netIfsRead%% {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** bxoId is the sysChar and can be specified through -p or as \$1. Reads value of applicable net interfaces.
+** bpoId is the sysChar and can be specified through -p or as \$1. Reads value of applicable net interfaces.
 _EOF_
                        }
 
     EH_assert [[ $# -lt 2 ]]
 
-    local thisBxoId="${bxoId}"
+    local thisBxoId="${bpoId}"
     
     if [ $# -eq 1 ] ; then
         thisBxoId=$1
     fi
 
-    thisBxoId=$( bxoIdPrep ${thisBxoId} )
+    thisBxoId=$( bpoIdPrep ${thisBxoId} )
 
     EH_assert [ ! -z "${thisBxoId}" ]
 
     EH_assert vis_bxoAcctVerify "${thisBxoId}"
-    bxoHome=$( FN_absolutePathGet ~${thisBxoId} )
+    bpoHome=$( FN_absolutePathGet ~${thisBxoId} )
   
-    local sysCharBase=${bxoHome}/sysChar
+    local sysCharBase=${bpoHome}/sysChar
     local repoName="sysChar"
-    local repoBase="${bxoHome}/${repoName}"
+    local repoBase="${bpoHome}/${repoName}"
 
     local sysInfoFps=${repoBase}/sysInfo.fps
     local virtSpecFps=${repoBase}/virtSpec.fps
@@ -540,7 +540,7 @@ _EOF_
 function vis_sysCharConveyInfoWrite {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-bxoId is the sysChar.
+bpoId is the sysChar.
 sysInfo.fps of sysChar overwrites sysInfo.fps of siteContainersRepo.
 _EOF_
                        }
@@ -550,16 +550,16 @@ _EOF_
     local paramName=$1
     local paramValue=$2
 
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
     
-    # local thisBxoId="${bxoId}"
+    # local thisBxoId="${bpoId}"
 
     # EH_assert [ ! -z "${thisBxoId}" ]
 
     # EH_assert vis_bxoAcctVerify "${thisBxoId}"
-    # bxoHome=$( FN_absolutePathGet ~${thisBxoId} )
+    # bpoHome=$( FN_absolutePathGet ~${thisBxoId} )
 
-    local sysCharConveyInfoBase="${bxoHome}/var/sysCharConveyInfo"
+    local sysCharConveyInfoBase="${bpoHome}/var/sysCharConveyInfo"
     
     if [ ! -d "${sysCharConveyInfoBase}" ] ; then
         lpDo mkdir "${sysCharConveyInfoBase}"
@@ -579,14 +579,14 @@ _EOF_
 function vis_sysCharConveyInfoRead {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-bxoId is the sysChar.
+bpoId is the sysChar.
 sysInfo.fps of sysChar overwrites sysInfo.fps of siteContainersRepo.
 _EOF_
                        }
 
     EH_assert [[ $# -lt 2 ]]
 
-    local thisBxoId="${bxoId}"
+    local thisBxoId="${bpoId}"
     
     if [ $# -eq 1 ] ; then
         thisBxoId=$1
@@ -595,9 +595,9 @@ _EOF_
     EH_assert [ ! -z "${thisBxoId}" ]
 
     EH_assert vis_bxoAcctVerify "${thisBxoId}"
-    bxoHome=$( FN_absolutePathGet ~${thisBxoId} )
+    bpoHome=$( FN_absolutePathGet ~${thisBxoId} )
 
-    local sysCharConveyInfoBase="${bxoHome}/var/sysCharConveyInfo"
+    local sysCharConveyInfoBase="${bpoHome}/var/sysCharConveyInfo"
     
     if [ -d "${sysCharConveyInfoBase}" ] ; then
         sysChar_conveyInfo_vmNameQualifier=$( fileParamManage.py -i fileParamRead  ${sysCharConveyInfoBase} vmNameQualifier )
@@ -623,14 +623,14 @@ _EOF_
 function vis_sysCharRead {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-bxoId is the sysChar.
+bpoId is the sysChar.
 sysInfo.fps of sysChar overwrites sysInfo.fps of siteContainersRepo.
 _EOF_
                        }
 
     EH_assert [[ $# -lt 2 ]]
 
-    local thisBxoId="${bxoId}"
+    local thisBxoId="${bpoId}"
     
     if [ $# -eq 1 ] ; then
         thisBxoId=$1
@@ -639,11 +639,11 @@ _EOF_
     EH_assert [ ! -z "${thisBxoId}" ]
 
     EH_assert vis_bxoAcctVerify "${thisBxoId}"
-    bxoHome=$( FN_absolutePathGet ~${thisBxoId} )
+    bpoHome=$( FN_absolutePathGet ~${thisBxoId} )
   
-    local sysCharBase=${bxoHome}/sysChar
+    local sysCharBase=${bpoHome}/sysChar
     local repoName="sysChar"
-    local repoBase="${bxoHome}/${repoName}"
+    local repoBase="${bpoHome}/${repoName}"
 
     local sysInfoFps=${repoBase}/sysInfo.fps
     local virtSpecFps=${repoBase}/virtSpec.fps
@@ -678,19 +678,19 @@ function vis_sysCharWrite {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Writes into ~containerBxo/sysChar
-*** bxoId is the sysChar.
+*** bpoId is the sysChar.
 *** sysInfo.fps of sysChar overwrites sysInfo.fps of siteContainersRepo.
 *** TODO Needs to be developed in conjunction with siteNetworks_lib.sh
 _EOF_
                       }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
     local repoName="sysChar"
-    local repoBase="${bxoHome}/${repoName}"
+    local repoBase="${bpoHome}/${repoName}"
 
-    local siteContainersRepo="${bxoHome}/siteContainersRepo"
+    local siteContainersRepo="${bpoHome}/siteContainersRepo"
     local containerAssignBase="${siteContainersRepo}/assign"
 
     local model=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} model )
@@ -764,12 +764,12 @@ _EOF_
                       }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
     local repoName="sysChar"
-    local repoBase="${bxoHome}/${repoName}"
+    local repoBase="${bpoHome}/${repoName}"
 
-    local siteContainersRepo="${bxoHome}/siteContainersRepo"
+    local siteContainersRepo="${bpoHome}/siteContainersRepo"
     local containerAssignBase="${siteContainersRepo}/assign"
 
     local abode=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} abode )
@@ -786,18 +786,18 @@ _EOF_
                       }
     EH_assert [[ $# -lt 3 ]]
 
-    local thisBxoId="${bxoId}"
+    local thisBxoId="${bpoId}"
     
     if [ $# -eq 2 ] ; then
         thisBxoId=$2
     fi
 
-    thisBxoId=$( bxoIdPrep ${thisBxoId} )
+    thisBxoId=$( bpoIdPrep ${thisBxoId} )
 
     EH_assert [ ! -z "${thisBxoId}" ]
 
     EH_assert vis_bxoAcctVerify "${thisBxoId}"
-    bxoHome=$( FN_absolutePathGet ~${thisBxoId} )
+    bpoHome=$( FN_absolutePathGet ~${thisBxoId} )
 
     local netName="$1"
     EH_assert [ ! -z "${netName}" ]
@@ -809,9 +809,9 @@ _EOF_
     fi
     
     local repoName="sysChar"
-    local repoBase="${bxoHome}/${repoName}"
+    local repoBase="${bpoHome}/${repoName}"
 
-    local siteContainersRepo="${bxoHome}/siteContainersRepo"
+    local siteContainersRepo="${bpoHome}/siteContainersRepo"
     local containerAssignBase="${siteContainersRepo}/assign"
 
     local model=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} model )
@@ -836,8 +836,8 @@ _EOF_
             # Result is something like eth0  and is obtained from
             # sysCharBxoHome/var
 
-            interfaceOfNet=$( fileParamManage.py -v 30 -i fileParamRead ${bxoHome}/var/sysCharConveyInfo/netIfs "${netName}" )
-            interfaceOfNetControl=$( fileParamManage.py -v 30 -i fileParamRead ${bxoHome}/var/sysCharConveyInfo/netIfs "${netName}-control" )               
+            interfaceOfNet=$( fileParamManage.py -v 30 -i fileParamRead ${bpoHome}/var/sysCharConveyInfo/netIfs "${netName}" )
+            interfaceOfNetControl=$( fileParamManage.py -v 30 -i fileParamRead ${bpoHome}/var/sysCharConveyInfo/netIfs "${netName}-control" )               
             ;;
         Host|Pure)
             # Result is something like en0 and is obtained from
@@ -871,7 +871,7 @@ _EOF_
                       }
     EH_assert [[ $# -eq 3 ]]
 
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
     local netName="$1"
     local interfaceOfNet="$2"
@@ -885,9 +885,9 @@ _EOF_
     fi
     
     local repoName="sysChar"
-    local repoBase="${bxoHome}/${repoName}"
+    local repoBase="${bpoHome}/${repoName}"
 
-    local siteContainersRepo="${bxoHome}/siteContainersRepo"
+    local siteContainersRepo="${bpoHome}/siteContainersRepo"
     local containerAssignBase="${siteContainersRepo}/assign"
 
     local model=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} model )
@@ -909,8 +909,8 @@ _EOF_
             # Result is something like eth0  and is obtained from
             # sysCharBxoHome/var
 
-            lpDo fileParamManage.py -v 30 -i fileParamWrite ${bxoHome}/var/sysCharConveyInfo/netIfs "${netName}" "${interfaceOfNet}"
-            lpDo fileParamManage.py -v 30 -i fileParamWrite ${bxoHome}/var/sysCharConveyInfo/netIfs "${netName}-control" "${interfaceOfNetControl}"         
+            lpDo fileParamManage.py -v 30 -i fileParamWrite ${bpoHome}/var/sysCharConveyInfo/netIfs "${netName}" "${interfaceOfNet}"
+            lpDo fileParamManage.py -v 30 -i fileParamWrite ${bpoHome}/var/sysCharConveyInfo/netIfs "${netName}-control" "${interfaceOfNetControl}"         
             ;;
         Host|Pure)
             # Result is something like en0 and is obtained from
@@ -941,14 +941,14 @@ _EOF_
                       }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
     local line=""
     local netName=""
     local netInterface=""
 
     local repoName="sysChar"
-    local repoBase="${bxoHome}/${repoName}"
+    local repoBase="${bpoHome}/${repoName}"
     local containerAssignBase="${siteContainersRepo}/assign"
 
     local model=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} model )
@@ -1000,7 +1000,7 @@ _EOF_
                       }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
     # local netName="$1"
     # local interfaceOfNet="$2"
@@ -1013,9 +1013,9 @@ _EOF_
     # fi
     
     local repoName="sysChar"
-    local repoBase="${bxoHome}/${repoName}"
+    local repoBase="${bpoHome}/${repoName}"
 
-    local siteContainersRepo="${bxoHome}/siteContainersRepo"
+    local siteContainersRepo="${bpoHome}/siteContainersRepo"
     local containerAssignBase="${siteContainersRepo}/assign"
 
     local model=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} model )
@@ -1061,9 +1061,9 @@ _EOF_
                        }
     local thisDescribeF=$(describeF)
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${bpoId}" ]
 
-    EH_assert vis_bxoAcctVerify "${bxoId}"
+    EH_assert vis_bxoAcctVerify "${bpoId}"
 
     lpDo printf ${thisDescribeF}
     

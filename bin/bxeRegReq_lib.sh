@@ -121,133 +121,133 @@ function vis_examplesBxRealSysTest {
 
 
 function vis_examplesBxInfoRegistrar {
-    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"registrar\" -p parent=\"${cur_bxoId_parent}\" -p name=\"privRegistrar\" "
-    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"registrar\" -p parent=\"${cur_bxoId_parent}\" -p name=\"privRegistrar\" "
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"registrar\" -p parent=\"${cur_bpoId_parent}\" -p name=\"privRegistrar\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"registrar\" -p parent=\"${cur_bpoId_parent}\" -p name=\"privRegistrar\" "
 }
 
 function vis_examplesBxInfoSite {
-    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"site\" -p parent=\"${cur_bxoId_parent}\" -p name=\"privSite\" "
-    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"site\" -p parent=\"${cur_bxoId_parent}\" -p name=\"privSite\" "    
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"site\" -p parent=\"${cur_bpoId_parent}\" -p name=\"privSite\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"site\" -p parent=\"${cur_bpoId_parent}\" -p name=\"privSite\" "    
 }
 
 function vis_examplesBxInfoSysChar {
-    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"sysChar\" -p parent=\"${cur_bxoId_parent}\" -p name=\"gitlabServer\" "
-    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"sysChar\" -p parent=\"${cur_bxoId_parent}\" -p name=\"gitlabServer\" "
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"sysChar\" -p parent=\"${cur_bpoId_parent}\" -p name=\"gitlabServer\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"sysChar\" -p parent=\"${cur_bpoId_parent}\" -p name=\"gitlabServer\" "
 }
 
 function vis_examplesBxInfoAais {
-    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"aais\" -p parent=\"${cur_bxoId_parent}\" -p name=\"ByN-000\" "
-    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"aais\" -p parent=\"${cur_bxoId_parent}\" -p name=\"ByN-000\" "
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"aais\" -p parent=\"${cur_bpoId_parent}\" -p name=\"ByN-000\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"aais\" -p parent=\"${cur_bpoId_parent}\" -p name=\"ByN-000\" "
 }
 
 function vis_examplesBxInfoScs {
-    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"scs\" -p parent=\"${cur_bxoId_parent}\" -p name=\"DNSS-priv1\" "
-    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"scs\" -p parent=\"${cur_bxoId_parent}\" -p name=\"DNSS-priv1\" "
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"scs\" -p parent=\"${cur_bpoId_parent}\" -p name=\"DNSS-priv1\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"scs\" -p parent=\"${cur_bpoId_parent}\" -p name=\"DNSS-priv1\" "
 }
 
 function vis_examplesBxInfoUsgAcct {
-    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"usage\" -p parent=\"${cur_bxoId_parent}\" -p name=\"usg_name\" "
-    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"usage\" -p parent=\"${cur_bxoId_parent}\" -p name=\"usg_name\" "
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"usage\" -p parent=\"${cur_bpoId_parent}\" -p name=\"usg_name\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"usage\" -p parent=\"${cur_bpoId_parent}\" -p name=\"usg_name\" "
 }
 
 function vis_examplesBxInfoUsage {
-    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"usage\" -p parent=\"${cur_bxoId_parent}\" -p name=\"full\" "
-    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"usage\" -p parent=\"${cur_bxoId_parent}\" -p name=\"full\" "
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"usage\" -p parent=\"${cur_bpoId_parent}\" -p name=\"full\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"usage\" -p parent=\"${cur_bpoId_parent}\" -p name=\"full\" "
 }
 
 function vis_examplesBxInfoProject {
-    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"project\" -p parent=\"${cur_bxoId_parent}\" -p name=\"home\" "
-    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"project\" -p parent=\"${cur_bxoId_parent}\" -p name=\"home\" "
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"project\" -p parent=\"${cur_bpoId_parent}\" -p name=\"home\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"project\" -p parent=\"${cur_bpoId_parent}\" -p name=\"home\" "
 }
 
 function vis_examplesBxInfoVirtGuest {
-    bxeParamsMini="-p privacy=\"all\" -p kind=\"info\" -p type=\"virtGuest\" -p parent=\"${cur_bxoId_parent}\" -p name=\"ubCur\" "
-    bxeParamsFull="-p privacy=\"all\" -p kind=\"info\" -p type=\"virtGuest\" -p parent=\"${cur_bxoId_parent}\" -p name=\"ubCur\" "
+    bxeParamsMini="-p privacy=\"all\" -p kind=\"info\" -p type=\"virtGuest\" -p parent=\"${cur_bpoId_parent}\" -p name=\"ubCur\" "
+    bxeParamsFull="-p privacy=\"all\" -p kind=\"info\" -p type=\"virtGuest\" -p parent=\"${cur_bpoId_parent}\" -p name=\"ubCur\" "
 }
 
 function vis_examplesBxSvcByname {
-    bxeParamsMini="-p privacy=\"priv\" -p kind=\"svc\" -p type=\"byname\" -p parent=\"${cur_bxoId_parent}\" -p name=\"first.last\" "
-    bxeParamsFull="-p privacy=\"priv\" -p kind=\"svc\" -p type=\"byname\" -p parent=\"${cur_bxoId_parent}\" -p name=\"first.last\" "
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"svc\" -p type=\"byname\" -p parent=\"${cur_bpoId_parent}\" -p name=\"first.last\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"svc\" -p type=\"byname\" -p parent=\"${cur_bpoId_parent}\" -p name=\"first.last\" "
 }
 
 function vis_examplesBxSvcBysmb {
-    bxeParamsMini="-p privacy=\"priv\" -p kind=\"svc\" -p type=\"bysmb\" -p parent=\"${cur_bxoId_parent}\" -p name=\"exampleCom\" "
-    bxeParamsFull="-p privacy=\"priv\" -p kind=\"svc\" -p type=\"bysmb\" -p parent=\"${cur_bxoId_parent}\" -p name=\"exampleCom\" "
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"svc\" -p type=\"bysmb\" -p parent=\"${cur_bpoId_parent}\" -p name=\"exampleCom\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"svc\" -p type=\"bysmb\" -p parent=\"${cur_bpoId_parent}\" -p name=\"exampleCom\" "
 }
 
 function vis_examplesBxContainerVmHost {
-    bxeParamsMini="-p privacy=\"priv\" -p kind=\"container\" -p type=\"vmHost\" -p parent=\"${cur_bxoId_parent}\" -p name=\"vmhc\" "
-    bxeParamsFull="-p privacy=\"priv\" -p kind=\"container\" -p type=\"vmHost\" -p parent=\"${cur_bxoId_parent}\" -p name=\"vmhc\" "    
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"container\" -p type=\"vmHost\" -p parent=\"${cur_bpoId_parent}\" -p name=\"vmhc\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"container\" -p type=\"vmHost\" -p parent=\"${cur_bpoId_parent}\" -p name=\"vmhc\" "    
 }
 
 function vis_examplesBxContainerExposed {
-    bxeParamsMini="-p privacy=\"priv\" -p kind=\"container\" -p type=\"exposed\" -p parent=\"${cur_bxoId_parent}\" -p name=\"bacs\" "
-    bxeParamsFull="-p privacy=\"priv\" -p kind=\"container\" -p type=\"exposed\" -p parent=\"${cur_bxoId_parent}\" -p name=\"bacs\" "    
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"container\" -p type=\"exposed\" -p parent=\"${cur_bpoId_parent}\" -p name=\"bacs\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"container\" -p type=\"exposed\" -p parent=\"${cur_bpoId_parent}\" -p name=\"bacs\" "    
 }
 
 function vis_examplesBxContainerPerimeter {
-    bxeParamsMini="-p privacy=\"priv\" -p kind=\"container\" -p type=\"perimeter\" -p parent=\"${cur_bxoId_parent}\" -p name=\"bpsc\" "
-    bxeParamsFull="-p privacy=\"priv\" -p kind=\"container\" -p type=\"perimeter\" -p parent=\"${cur_bxoId_parent}\" -p name=\"bpsc\" "    
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"container\" -p type=\"perimeter\" -p parent=\"${cur_bpoId_parent}\" -p name=\"bpsc\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"container\" -p type=\"perimeter\" -p parent=\"${cur_bpoId_parent}\" -p name=\"bpsc\" "    
 }
 
 function vis_examplesBxContainerIntra {
-    bxeParamsMini="-p privacy=\"priv\" -p kind=\"container\" -p type=\"intra\" -p parent=\"${cur_bxoId_parent}\" -p name=\"bisp\" "
-    bxeParamsFull="-p privacy=\"priv\" -p kind=\"container\" -p type=\"intra\" -p parent=\"${cur_bxoId_parent}\" -p name=\"bisp\" "    
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"container\" -p type=\"intra\" -p parent=\"${cur_bpoId_parent}\" -p name=\"bisp\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"container\" -p type=\"intra\" -p parent=\"${cur_bpoId_parent}\" -p name=\"bisp\" "    
 }
 
 function vis_examplesBxContainerUsage {
-    bxeParamsMini="-p privacy=\"priv\" -p kind=\"container\" -p type=\"usage\" -p parent=\"${cur_bxoId_parent}\" -p name=\"bue\" "
-    bxeParamsFull="-p privacy=\"priv\" -p kind=\"container\" -p type=\"usage\" -p parent=\"${cur_bxoId_parent}\" -p name=\"bue\" "    
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"container\" -p type=\"usage\" -p parent=\"${cur_bpoId_parent}\" -p name=\"bue\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"container\" -p type=\"usage\" -p parent=\"${cur_bpoId_parent}\" -p name=\"bue\" "    
 }
 
 function vis_examplesBxContainerDev {
-    bxeParamsMini="-p privacy=\"priv\" -p kind=\"container\" -p type=\"dev\" -p parent=\"${cur_bxoId_parent}\" -p name=\"bdev\" "
-    bxeParamsFull="-p privacy=\"priv\" -p kind=\"container\" -p type=\"dev\" -p parent=\"${cur_bxoId_parent}\" -p name=\"bdev\" "    
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"container\" -p type=\"dev\" -p parent=\"${cur_bpoId_parent}\" -p name=\"bdev\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"container\" -p type=\"dev\" -p parent=\"${cur_bpoId_parent}\" -p name=\"bdev\" "    
 }
 
 
 function vis_examplesBxContainerAndroid {
-    bxeParamsMini="-p privacy=\"priv\" -p kind=\"container\" -p type=\"Android\" -p parent=\"${cur_bxoId_parent}\" -p name=\"andrd\" "
-    bxeParamsFull="-p privacy=\"priv\" -p kind=\"container\" -p type=\"Android\" -p parent=\"${cur_bxoId_parent}\" -p name=\"andrd\" "    
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"container\" -p type=\"Android\" -p parent=\"${cur_bpoId_parent}\" -p name=\"andrd\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"container\" -p type=\"Android\" -p parent=\"${cur_bpoId_parent}\" -p name=\"andrd\" "    
 }
 
 function vis_examplesBxMaterializationSite {
-    bxeParamsMini="-p privacy=\"priv\" -p kind=\"materialization\" -p type=\"site\" -p parent=\"${cur_bxoId_parent}\" -p name=\"clusterName\" "
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"materialization\" -p type=\"site\" -p parent=\"${cur_bpoId_parent}\" -p name=\"clusterName\" "
     bxeParamsFull=${bxeParamsMini}
 }
 
 function vis_examplesBxMaterializationNets {
-    bxeParamsMini="-p privacy=\"priv\" -p kind=\"materialization\" -p type=\"nets\" -p parent=\"${cur_bxoId_parent}\" -p name=\"clusterName-nets\" "
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"materialization\" -p type=\"nets\" -p parent=\"${cur_bpoId_parent}\" -p name=\"clusterName-nets\" "
     bxeParamsFull=${bxeParamsMini}
 }
 
 function vis_examplesBxMaterializationDomains {
-    bxeParamsMini="-p privacy=\"priv\" -p kind=\"materialization\" -p type=\"domains\" -p parent=\"${cur_bxoId_parent}\" -p name=\"clusterName-domains\" "
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"materialization\" -p type=\"domains\" -p parent=\"${cur_bpoId_parent}\" -p name=\"clusterName-domains\" "
     bxeParamsFull=${bxeParamsMini}
 }
 
 function vis_examplesBxMaterializationBoxes {
-    bxeParamsMini="-p privacy=\"priv\" -p kind=\"materialization\" -p type=\"boxes\" -p parent=\"${cur_bxoId_parent}\" -p name=\"clusterName-boxes\" "
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"materialization\" -p type=\"boxes\" -p parent=\"${cur_bpoId_parent}\" -p name=\"clusterName-boxes\" "
     bxeParamsFull=${bxeParamsMini}
 }
 
 function vis_examplesBxMaterializationContainers {
-    bxeParamsMini="-p privacy=\"priv\" -p kind=\"materialization\" -p type=\"containers\" -p parent=\"${cur_bxoId_parent}\" -p name=\"clusterName-containers\" "
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"materialization\" -p type=\"containers\" -p parent=\"${cur_bpoId_parent}\" -p name=\"clusterName-containers\" "
     bxeParamsFull=${bxeParamsMini}
 }
 
 function vis_examplesBxMaterializationSysChar {
-    bxeParamsMini="-p privacy=\"priv\" -p kind=\"materialization\" -p type=\"sysChar\" -p parent=\"${cur_bxoId_parent}\" -p name=\"HSS-1001\" "
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"materialization\" -p type=\"sysChar\" -p parent=\"${cur_bpoId_parent}\" -p name=\"HSS-1001\" "
     bxeParamsFull=${bxeParamsMini}
 }
 
 function vis_examplesBxMaterializationAais {
-    bxeParamsMini="-p privacy=\"priv\" -p kind=\"materialization\" -p type=\"aais\" -p parent=\"${cur_bxoId_parent}\" -p name=\"ByN-000\" "
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"materialization\" -p type=\"aais\" -p parent=\"${cur_bpoId_parent}\" -p name=\"ByN-000\" "
     bxeParamsFull=${bxeParamsMini}
 }
 
 function vis_examplesBxMaterializationScs {
-    bxeParamsMini="-p privacy=\"priv\" -p kind=\"materialization\" -p type=\"scs\" -p parent=\"${cur_bxoId_parent}\" -p name=\"DNSS-priv1\" "
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"materialization\" -p type=\"scs\" -p parent=\"${cur_bpoId_parent}\" -p name=\"DNSS-priv1\" "
     bxeParamsFull=${bxeParamsMini}
 }
 
@@ -707,7 +707,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    local bxoHome=""
+    local bpoHome=""
     local bxeTreeDir=""
     local regReqBaseDir=""    
 
@@ -719,15 +719,15 @@ _EOF_
         regReqBaseDir="${regReqInfoBasePath}/${kind}/${type}"
     else
         if ! unisosAccts.sh -i userAcctExists "${parent}" ; then
-            EH_problem "Missing bxoId -- parent=${parent}"
+            EH_problem "Missing bpoId -- parent=${parent}"
             lpReturn 101
         fi
-        bxoHome=$( FN_absolutePathGet ~${parent} )
-        if [ -z "${bxoHome}" ] ; then
-            EH_problem "Missing bxoHome -- parent=${parent}"
+        bpoHome=$( FN_absolutePathGet ~${parent} )
+        if [ -z "${bpoHome}" ] ; then
+            EH_problem "Missing bpoHome -- parent=${parent}"
             lpReturn 101
         fi
-        bxeTreeDir="${bxoHome}/bxeTree"
+        bxeTreeDir="${bpoHome}/bxeTree"
         if [ ! -d "${bxeTreeDir}" ] ; then
             EH_problem "Missing bxeTreeDir=${bxeTreeDir}"
             lpReturn 101
@@ -748,7 +748,7 @@ _EOF_
 
     local nameOrTag="$1"
 
-    local bxoHome=""
+    local bpoHome=""
     local bxeTreeDir=""
     local regReqBaseDir=""    
 
@@ -760,15 +760,15 @@ _EOF_
         regReqBaseDir="${regReqInfoBasePath}/${kind}/${type}"
     else
         if ! unisosAccts.sh -i userAcctExists "${parent}" ; then
-            EH_problem "Missing bxoId -- parent=${parent}"
+            EH_problem "Missing bpoId -- parent=${parent}"
             lpReturn 101
         fi
-        bxoHome=$( FN_absolutePathGet ~${parent} )
-        if [ -z "${bxoHome}" ] ; then
-            EH_problem "Missing bxoHome -- parent=${parent}"
+        bpoHome=$( FN_absolutePathGet ~${parent} )
+        if [ -z "${bpoHome}" ] ; then
+            EH_problem "Missing bpoHome -- parent=${parent}"
             lpReturn 101
         fi
-        bxeTreeDir="${bxoHome}/bxeTree"
+        bxeTreeDir="${bpoHome}/bxeTree"
         if [ ! -d "${bxeTreeDir}" ] ; then
             EH_problem "Missing bxeTreeDir=${bxeTreeDir}"
             lpReturn 101

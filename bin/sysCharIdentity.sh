@@ -73,8 +73,8 @@ _CommentEnd_
 # ./platformBases_lib.sh
 . ${opBinBase}/platformBases_lib.sh
 
-. ${opBinBase}/bxo_lib.sh
-. ${opBinBase}/bxoId_lib.sh
+. ${opBinBase}/bpo_lib.sh
+. ${opBinBase}/bpoId_lib.sh
 
 . ${opBinBase}/bxeDesc_lib.sh
 
@@ -102,15 +102,15 @@ _CommentEnd_
 
 # PRE parameters
 
-typeset -t bxoId=""
+typeset -t bpoId=""
 # usg=""
 
 function G_postParamHook {
-    if [ ! -z "${bxoId}" ] ; then
-        bxoIdPrepValidate    
+    if [ ! -z "${bpoId}" ] ; then
+        bpoIdPrepValidate    
 
-        if [ ! -z "${bxoId}" ] ; then
-            bxoHome=$( FN_absolutePathGet ~${bxoId} )
+        if [ ! -z "${bpoId}" ] ; then
+            bpoHome=$( FN_absolutePathGet ~${bpoId} )
         fi
     fi
     bisosCurrentsGet
@@ -147,40 +147,40 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vmRun                 # on host
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vmRun                 # on host
 $( examplesSeperatorChapter "Ssh Based Cusomizations -- Bx Based (not vagrant based)" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i postCustomize  # on host - bx-ssh
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i secureSeal     # on host - bx-ssh
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i recordDeployment      # inside of parent bxo
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i postCustomize  # on host - bx-ssh
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i secureSeal     # on host - bx-ssh
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i recordDeployment      # inside of parent bxo
 $( examplesSeperatorChapter "FULL SYSTEM Identity LEVEL SETUPS" )
 $( examplesSeperatorSection "Update" )
-${G_myName} ${extraInfo} -p bxoId=sysChar -i identityUpdate
+${G_myName} ${extraInfo} -p bpoId=sysChar -i identityUpdate
 $( examplesSeperatorChapter "General Identity Parameters" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i motdSet
-${G_myName} ${extraInfo} -p bxoId=sysChar -i motdSet
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i nodename
-${G_myName} ${extraInfo} -p bxoId=sysChar -i nodename
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i motdSet
+${G_myName} ${extraInfo} -p bpoId=sysChar -i motdSet
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i nodename
+${G_myName} ${extraInfo} -p bpoId=sysChar -i nodename
 $( examplesSeperatorChapter "Network Interfaces" )
 ${G_myName} ${extraInfo} -i loopback_stdout
 ${G_myName} ${extraInfo} -i loopback_update
-${G_myName} -p bxoId="${oneBxoId}" -i privA_stdout
-${G_myName} -p bxoId=sysChar -i privA_stdout
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i privA_update
-${G_myName} -p bxoId="${oneBxoId}" -i perimA_stdout
-${G_myName} -p bxoId=sysChar -i perimA_stdout
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i perimA_update
-${G_myName} -p bxoId="${oneBxoId}" -i pubA_stdout
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i pubA_update
-${G_myName} -p bxoId="${oneBxoId}" -i interface_stdout
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i interface_update
+${G_myName} -p bpoId="${oneBxoId}" -i privA_stdout
+${G_myName} -p bpoId=sysChar -i privA_stdout
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i privA_update
+${G_myName} -p bpoId="${oneBxoId}" -i perimA_stdout
+${G_myName} -p bpoId=sysChar -i perimA_stdout
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i perimA_update
+${G_myName} -p bpoId="${oneBxoId}" -i pubA_stdout
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i pubA_update
+${G_myName} -p bpoId="${oneBxoId}" -i interface_stdout
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i interface_update
 $( examplesSeperatorChapter "Container Abode Based Full Network Interfaces Update" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i netL3InterfacesUpdate  # above updates
-${G_myName} ${extraInfo} -p bxoId=sysChar -i netL3InterfacesUpdate
-${G_myName} ${extraInfo} -p bxoId=sysChar -i netL3InterfacesStdout
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i netL3InterfacesUpdate  # above updates
+${G_myName} ${extraInfo} -p bpoId=sysChar -i netL3InterfacesUpdate
+${G_myName} ${extraInfo} -p bpoId=sysChar -i netL3InterfacesStdout
 $( examplesSeperatorChapter "Network Identity Parameters" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i netEtcHosts
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i netEtcHosts
 $( examplesSeperatorChapter "Overview Report And Summary" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i sysCharReport
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i sysCharReport
 ${G_myName} ${extraInfo} -i identitySetAscertain
 _EOF_
 }
@@ -194,9 +194,9 @@ _EOF_
                        }
     local thisDescribeF=$(describeF)
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${bpoId}" ]
 
-    EH_assert vis_bxoAcctVerify "${bxoId}"
+    EH_assert vis_bxoAcctVerify "${bpoId}"
 
     lpDo printf ${thisDescribeF}
     
@@ -214,7 +214,7 @@ _EOF_
 
     # if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
 
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
     
     ANT_raw "About To identityUpdate"    
 
@@ -274,7 +274,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
     opDo vis_fileDotDistOrDateTagKeep /etc/hostname
 
@@ -322,10 +322,10 @@ _EOF_
     if [ "${hostName}" == "intra" ] ; then
         ANT_raw "sysChar Identity Has Not Been Set"
     else
-        if [ -e /bisos/var/bxoId/sysChar.fp/value ] ; then
-            lpDo cat /bisos/var/bxoId/sysChar.fp/value
+        if [ -e /bisos/var/bpoId/sysChar.fp/value ] ; then
+            lpDo cat /bisos/var/bpoId/sysChar.fp/value
         else
-            EH_problem "Missing /bisos/var/bxoId/sysChar.fp/value"
+            EH_problem "Missing /bisos/var/bpoId/sysChar.fp/value"
             echo "unknown"
         fi
     fi
@@ -339,7 +339,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
     opDo vis_fileDotDistOrDateTagKeep /etc/hostname
 
@@ -376,7 +376,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
     lpDo vis_containerAssignRead
 
@@ -480,7 +480,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 3 ]]
     
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
     local netName="$1"
     local netIfControl="$2"
@@ -507,7 +507,7 @@ _EOF_
     }
    EH_assert [[ $# -eq 0 ]]
 
-   EH_assert bxoIdPrep
+   EH_assert bpoIdPrep
 
    local netIf=""
    local netIfControl=""
@@ -563,7 +563,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
     local netIf=""
     local netIfControl=""
@@ -619,7 +619,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
     local netIf=""
     local netIfControl=""
@@ -676,7 +676,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
     local netIf=""
     local netIfControl=""
@@ -731,8 +731,8 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert [ ! -z "${bxoId}" ]
-    EH_assert vis_bxoAcctVerify "${bxoId}"
+    EH_assert [ ! -z "${bpoId}" ]
+    EH_assert vis_bxoAcctVerify "${bpoId}"
 
     lpDo vis_containerAssignRead
     lpDo vis_containerSteadyRead    
@@ -783,11 +783,11 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
     local repoName="sysChar"
-    local repoBase="${bxoHome}/${repoName}"
-    local siteContainersRepo="${bxoHome}/siteContainersRepo"
+    local repoBase="${bpoHome}/${repoName}"
+    local siteContainersRepo="${bpoHome}/siteContainersRepo"
     local containerAssignBase="${siteContainersRepo}/assign"
 
     local abode=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} abode )
@@ -817,11 +817,11 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
     local repoName="sysChar"
-    local repoBase="${bxoHome}/${repoName}"
-    local siteContainersRepo="${bxoHome}/siteContainersRepo"
+    local repoBase="${bpoHome}/${repoName}"
+    local siteContainersRepo="${bpoHome}/siteContainersRepo"
     local containerAssignBase="${siteContainersRepo}/assign"
 
     local abode=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} abode )

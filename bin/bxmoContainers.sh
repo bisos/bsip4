@@ -70,7 +70,7 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
-. ${opBinBase}/bxo_lib.sh
+. ${opBinBase}/bpo_lib.sh
 
 . ${opBinBase}/bxeDesc_lib.sh
 
@@ -92,14 +92,14 @@ _CommentEnd_
 
 # PRE parameters
 
-typeset -t bxoId=""
+typeset -t bpoId=""
 # usg=""
 
 function G_postParamHook {
-    bxoIdPrepValidate    
+    bpoIdPrepValidate    
 
-    if [ ! -z "${bxoId}" ] ; then
-        bxoHome=$( FN_absolutePathGet ~${bxoId} )
+    if [ ! -z "${bpoId}" ] ; then
+        bpoHome=$( FN_absolutePathGet ~${bpoId} )
     fi
     
     bisosCurrentsGet
@@ -134,8 +134,8 @@ function vis_examples {
         local description=$2
         cat  << _EOF_
 $( examplesSeperatorSection "${description}" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBaseCreate_${repoName}
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBasePush ${repoName}
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i repoBaseCreate_${repoName}
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i repoBasePush ${repoName}
 _EOF_
     }   
     
@@ -145,12 +145,12 @@ $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
 $( examplesSeperatorChapter "Provisioning: Initial BxE Realize -- Full Actions" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i fullCreateAndPush
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i kindTypeRealizeRepoBasesCreate
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i kindTypeRealizeRepoBasesPush
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i basesFullCreate
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i fullCreateAndPush
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i kindTypeRealizeRepoBasesCreate
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i kindTypeRealizeRepoBasesPush
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i basesFullCreate
 $( examplesSeperatorChapter "Specific Initial Repo Realizition" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBasesList
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i repoBasesList
 $( repoBaseCreateAndPushExamples svcsSpec "svcsSpec Repo (Services Specifications)" )
 $( repoBaseCreateAndPushExamples sysSpec "sysSpec Repo (System Specifications)" )
 $( repoBaseCreateAndPushExamples sysSpec "sysChar Repo (System Character)" )
@@ -158,7 +158,7 @@ $( repoBaseCreateAndPushExamples containerBxO "Container BxO Repo" )
 $( repoBaseCreateAndPushExamples deploymentRecords "Deployment Records Repo" )
 $( repoBaseCreateAndPushExamples panel "BxO Panel Repo" )
 $( examplesSeperatorChapter "Bases Create" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i baseCreate_var
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i baseCreate_var
 _EOF_
 }
 
@@ -190,9 +190,9 @@ function vis_basesFullCreate {
 _EOF_
                        }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${bpoId}" ]
 
-    EH_assert  vis_userAcctExists "${bxoId}"
+    EH_assert  vis_userAcctExists "${bpoId}"
 
     local each
 
@@ -210,12 +210,12 @@ function vis_repoBaseCreate_assign {
 _EOF_
                        }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${bpoId}" ]
 
-    EH_assert  vis_userAcctExists "${bxoId}"
+    EH_assert  vis_userAcctExists "${bpoId}"
 
     local repoName=${FUNCNAME##vis_repoBaseCreate_}
-    local repoBase="${bxoHome}/${repoName}"
+    local repoBase="${bpoHome}/${repoName}"
 
     lpDo FN_dirCreatePathIfNotThere "${repoBase}"
 
@@ -237,12 +237,12 @@ function vis_repoBaseCreate_containerSpec%% {
 _EOF_
                        }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${bpoId}" ]
 
-    EH_assert  vis_userAcctExists "${bxoId}"
+    EH_assert  vis_userAcctExists "${bpoId}"
 
     local repoName=${FUNCNAME##vis_repoBaseCreate_}
-    local repoBase="${bxoHome}/${repoName}"
+    local repoBase="${bpoHome}/${repoName}"
 
     lpDo FN_dirCreatePathIfNotThere "${repoBase}"
 

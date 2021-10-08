@@ -12,11 +12,11 @@ function vis_examplesBxSvcLogInfo {
   oneSs=$1
  cat  << _EOF_
 $( examplesSeperatorChapter "Logs" )
-${G_myName} ${extraInfo} -p bxoId="${oneBystarAcct}" -p ss=${oneSs} -i bxSvcLogFilesList
-${G_myName} ${extraInfo} -p bxoId="${oneBystarAcct}" -p ss=${oneSs} -i bxSvcLogTail
-${G_myName} ${extraInfo} -p bxoId="${oneBystarAcct}" -p ss=${oneSs} -i bxSvcLogGrep
-${G_myName} ${extraInfo} -p bxoId="${oneBystarAcct}" -p ss=${oneSs} -i bxSvcLogErrTail
-${G_myName} ${extraInfo} -p bxoId="${oneBystarAcct}" -p ss=${oneSs} -i bxSvcLogErrGrep
+${G_myName} ${extraInfo} -p bpoId="${oneBystarAcct}" -p ss=${oneSs} -i bxSvcLogFilesList
+${G_myName} ${extraInfo} -p bpoId="${oneBystarAcct}" -p ss=${oneSs} -i bxSvcLogTail
+${G_myName} ${extraInfo} -p bpoId="${oneBystarAcct}" -p ss=${oneSs} -i bxSvcLogGrep
+${G_myName} ${extraInfo} -p bpoId="${oneBystarAcct}" -p ss=${oneSs} -i bxSvcLogErrTail
+${G_myName} ${extraInfo} -p bpoId="${oneBystarAcct}" -p ss=${oneSs} -i bxSvcLogErrGrep
 _EOF_
 }
 
@@ -31,11 +31,11 @@ _EOF_
 
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
 
-    EH_assert bxoIdCentralPrep
-    bystarAcctAnalyze ${bxoId}
+    EH_assert bpoIdCentralPrep
+    bystarAcctAnalyze ${bpoId}
     EH_assert bystarSrAnalyze
 
-    EH_assert bxSvcLogParamsObtain ${bxoIdHome}
+    EH_assert bxSvcLogParamsObtain ${bpoIdHome}
     cat  << _EOF_
 bxSvcLogDir="${bxSvcLogDir}"
 bxSvcLogFile="${bxSvcLogFile}"
@@ -64,10 +64,10 @@ _EOF_
 
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
 
-    EH_assert bxoIdCentralPrep
-    bystarAcctAnalyze ${bxoId}
+    EH_assert bpoIdCentralPrep
+    bystarAcctAnalyze ${bpoId}
  
-    EH_assert bxSvcLogParamsObtain  ${bxoIdHome}
+    EH_assert bxSvcLogParamsObtain  ${bpoIdHome}
 
     if [ "${bxSvcLogFile}_" != "_" ] ; then 
         opDo tail -50 ${bxSvcLogFile} 
@@ -83,10 +83,10 @@ _EOF_
 
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
 
-    EH_assert bxoIdCentralPrep
-    bystarAcctAnalyze ${bxoId}
+    EH_assert bpoIdCentralPrep
+    bystarAcctAnalyze ${bpoId}
  
-    EH_assert bxSvcLogParamsObtain  ${bxoIdHome}
+    EH_assert bxSvcLogParamsObtain  ${bpoIdHome}
 
     if [ "${bxSvcLogFile}_" != "_" -a ! -z "${daemonName}" ] ; then 
         opDo grep -i ${daemonName} ${bxSvcLogFile} 
@@ -103,10 +103,10 @@ _EOF_
 
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
 
-    EH_assert bxoIdCentralPrep
-    bystarAcctAnalyze ${bxoId}
+    EH_assert bpoIdCentralPrep
+    bystarAcctAnalyze ${bpoId}
  
-    EH_assert bxSvcLogParamsObtain  ${bxoIdHome}
+    EH_assert bxSvcLogParamsObtain  ${bpoIdHome}
 
     if [ "${bxSvcLogErrFile}_" != "_" ] ; then 
         opDo tail -50 ${bxSvcLogErrFile} 
@@ -122,10 +122,10 @@ _EOF_
 
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
 
-    EH_assert bxoIdCentralPrep
-    bystarAcctAnalyze ${bxoId}
+    EH_assert bpoIdCentralPrep
+    bystarAcctAnalyze ${bpoId}
  
-    EH_assert bxSvcLogParamsObtain  ${bxoIdHome}
+    EH_assert bxSvcLogParamsObtain  ${bpoIdHome}
 
     if [ "${bxSvcLogErrFile}_" != "_" -a ! -z ${daemonName} ] ; then 
         opDo grep -i ${daemonName} ${bxSvcLogErrFile} 

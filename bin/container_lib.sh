@@ -82,14 +82,14 @@ _EOF_
 
     lpDo FN_fileSymlinkUpdate ${containerBxoIdHome} ${bisosContainerBase}/selected
 
-    lpDo bxoIdManage.sh -h -v -n showRun -i bxoIdFpsWrite sysChar "${containerBxoId}"
+    lpDo bpoIdManage.sh -h -v -n showRun -i bpoIdFpsWrite sysChar "${containerBxoId}"
 }
 
 
 function vis_selectedContainerBxoId {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** With stdout return: bxoId of selected container.
+** With stdout return: bpoId of selected container.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -118,7 +118,7 @@ _EOF_
 function vis_selectedContainerBxoPath {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** With stdout return: bxoId of selected container.
+** With stdout return: bpoId of selected container.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -144,7 +144,7 @@ _EOF_
 function vis_activate_sysBxo {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Create the specified bxoId. 
+** Create the specified bpoId. 
 *** For backwards compatibility. Will be OBSOLETED in due course. 
 _EOF_
     }
@@ -157,31 +157,31 @@ _EOF_
 function vis_activate_sysContainerBxo {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Create the specified bxoId. 
+** Create the specified bpoId. 
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${bpoId}" ]
 
-    if vis_bxoAcctVerify "${bxoId}" ; then
-        ANT_cooked "WARNING: Did not expect ${bxoId} to exist -- Activation skipped"
+    if vis_bxoAcctVerify "${bpoId}" ; then
+        ANT_cooked "WARNING: Did not expect ${bpoId} to exist -- Activation skipped"
     else
-        lpDo bxoManage.sh -p bxoId="${bxoId}" -i fullConstruct
+        lpDo bpoManage.sh -p bpoId="${bpoId}" -i fullConstruct
     fi
 
-    EH_assert vis_bxoAcctVerify "${bxoId}"
-    bxoHome=$( FN_absolutePathGet ~${bxoId} )
+    EH_assert vis_bxoAcctVerify "${bpoId}"
+    bpoHome=$( FN_absolutePathGet ~${bpoId} )
 
-    local containerId=$( vis_containerBxoId_getContainerId "${bxoId}" )
+    local containerId=$( vis_containerBxoId_getContainerId "${bpoId}" )
 
     # make sure the repo for the container is in place at site
     lpDo siteContainerRepo.sh -v -n showRun -i containerRepoNamedClone ${containerId}
     
     # Create all bases and make symlinks
-    lpDo sysCharRealize.sh -h -v -n showRun -p bxoId="${bxoId}" -i basesFullCreate
+    lpDo sysCharRealize.sh -h -v -n showRun -p bpoId="${bpoId}" -i basesFullCreate
 
-    local sysCharConveyInfoBase="${bxoHome}/var/sysCharConveyInfo"
+    local sysCharConveyInfoBase="${bpoHome}/var/sysCharConveyInfo"
 
     lpDo FN_dirCreatePathIfNotThere ${sysCharConveyInfoBase}
 }
@@ -200,7 +200,7 @@ _EOF_
    local containersBxoId=$( vis_fromSiteBxoIdGet_containersBxoId "${siteBxoId}")
    EH_assert [ ! -z ${containersBxoId} ]
 
-   local reposList=$( bxoGitlab.py --bxoId="${containersBxoId}"  -i reposList )
+   local reposList=$( bxoGitlab.py --bpoId="${containersBxoId}"  -i reposList )
 
    local nonContainersRepos="assign panel sys bxeTree rbxe"
 
@@ -224,7 +224,7 @@ _EOF_
    local containerReposList=$( vis_containerReposList )
 
    for each in ${containerReposList} ; do
-       bxoId="${each}"
+       bpoId="${each}"
        lpDo vis_activate_sysContainerBxo
    done
 }       
@@ -239,7 +239,7 @@ _EOF_
    local containerReposList="pmp_VAG-deb11_ pmp_VSG-deb11_"
        
    for each in ${containerReposList} ; do
-       bxoId="${each}"
+       bpoId="${each}"
        lpDo vis_activate_sysContainerBxo
    done
 }       

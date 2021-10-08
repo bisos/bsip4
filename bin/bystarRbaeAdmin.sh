@@ -10,7 +10,7 @@ fi
 
 
 . ${opBinBase}/opAcctLib.sh
-. ${opBinBase}/bxo_lib.sh
+. ${opBinBase}/bpo_lib.sh
 
 # /opt/public/osmt/bin/bystarBarc.libSh 
 . ${opBinBase}/bystarBarc.libSh

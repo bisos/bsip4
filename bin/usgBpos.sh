@@ -64,8 +64,8 @@ _CommentEnd_
 
 . ${opBinBase}/bxeDesc_lib.sh
 
-. ${opBinBase}/bxo_lib.sh
-. ${opBinBase}/bxoId_lib.sh
+. ${opBinBase}/bpo_lib.sh
+. ${opBinBase}/bpoId_lib.sh
 
 . ${opBinBase}/bystarHook.libSh
 
@@ -80,20 +80,20 @@ _CommentEnd_
 . ${opBinBase}/usgBpos_lib.sh
 
 . ${opBinBase}/niche_lib.sh
-. ${opBinBase}/bxoManage_lib.sh
+. ${opBinBase}/bpoManage_lib.sh
 
 # PRE parameters
 
-typeset -t bxoId=""
+typeset -t bpoId=""
 typeset -t privacy=""
 # usg=""
 
 function G_postParamHook {
     # lpCurrentsGet
 
-    if [ ! -z "${bxoId}" ] ; then
-        # NOTYET -- This is unreliable as bxoId may not exist
-        bxoHome=$( FN_absolutePathGet ~${bxoId} )
+    if [ ! -z "${bpoId}" ] ; then
+        # NOTYET -- This is unreliable as bpoId may not exist
+        bpoHome=$( FN_absolutePathGet ~${bpoId} )
     fi
 
     return 0
@@ -150,53 +150,53 @@ ${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDevBxoId_write ${thisBisosDevB
 ${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDevBxoId_read
 ${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDev_update ${thisBisosDevBxoId} # Main Sets up 
 ${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDev_bxoPath
-${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDev_bxoId
+${G_myName} ${extraInfo} -i usgBposUsageEnvs_bisosDev_bpoId
 $( examplesSeperatorSection "Real BPOs -- Real Individual BPO" )
 ${G_myName} ${extraInfo} -i usgBpos_real_indivBxoId_write ${oneRealIndiv} # Low Level Function
 ${G_myName} ${extraInfo} -i usgBpos_real_indivBxoId_read 
 ${G_myName} ${extraInfo} -i usgBpos_real_indiv_update ${oneRealIndiv} # Main Entry -- Sets 
 ${G_myName} ${extraInfo} -i usgBpos_real_indiv_bxoPath # Main Entry -- Gets
-${G_myName} ${extraInfo} -i usgBpos_real_indiv_bxoId
+${G_myName} ${extraInfo} -i usgBpos_real_indiv_bpoId
 $( examplesSeperatorSection "UsageEnv -- Full Use BPO" )
 ${G_myName} ${extraInfo} -i usgBpos_usageEnvs_fullUse_update ${oneFullUse} # Main Entry -- Sets 
 ${G_myName} ${extraInfo} -i usgBpos_usageEnvs_fullUse_bxoPath # Main Entry -- Gets
-${G_myName} ${extraInfo} -i usgBpos_usageEnvs_fullUse_bxoId
+${G_myName} ${extraInfo} -i usgBpos_usageEnvs_fullUse_bpoId
 $( examplesSeperatorSection "AAIS BPOs -- Asserted Autonomy Internet Services  BPO" )
-${G_myName} ${extraInfo} -i usgBpos_aais_byname_bxoId_fpWrite ${oneAaipByname} # Low Level Function
-${G_myName} ${extraInfo} -i usgBpos_aais_byname_bxoId_fpRead 
+${G_myName} ${extraInfo} -i usgBpos_aais_byname_bpoId_fpWrite ${oneAaipByname} # Low Level Function
+${G_myName} ${extraInfo} -i usgBpos_aais_byname_bpoId_fpRead 
 ${G_myName} ${extraInfo} -i usgBpos_aais_byname_update ${oneAaipByname} # Main Entry -- Sets 
 ${G_myName} ${extraInfo} -i usgBpos_aais_byname_bxoPath # Main Entry -- Gets
-${G_myName} ${extraInfo} -i usgBpos_aais_byname_bxoId
-${G_myName} ${extraInfo} -i usgBpos_aais_bydomain_bxoId_fpWrite ${oneAaipBydomain} # Low Level Function
-${G_myName} ${extraInfo} -i usgBpos_aais_bydomain_bxoId_fpRead
+${G_myName} ${extraInfo} -i usgBpos_aais_byname_bpoId
+${G_myName} ${extraInfo} -i usgBpos_aais_bydomain_bpoId_fpWrite ${oneAaipBydomain} # Low Level Function
+${G_myName} ${extraInfo} -i usgBpos_aais_bydomain_bpoId_fpRead
 ${G_myName} ${extraInfo} -i usgBpos_aais_bydomain_update ${oneAaipBydomain} # Main Entry -- Sets
 ${G_myName} ${extraInfo} -i usgBpos_aais_bydomain_bxoPath # Main Entry -- Gets
-${G_myName} ${extraInfo} -i usgBpos_aais_bydomain_bxoId
+${G_myName} ${extraInfo} -i usgBpos_aais_bydomain_bpoId
 $( examplesSeperatorSection "LCNT Bases BPOs -- LCNT (Libre-Halaal Content)  BPO" )
 ${G_myName} ${extraInfo} -i usgBpos_lcntBases_update pip_credsSpecify # Main Entry -- Sets 
 ${G_myName} ${extraInfo} -i usgBpos_lcntBases_bxoPath # Main Entry -- Gets
-${G_myName} ${extraInfo} -i usgBpos_lcntBases_bxoId
+${G_myName} ${extraInfo} -i usgBpos_lcntBases_bpoId
 $( examplesSeperatorSection "Site Configs BPOs -- Site Confihurations BPO" )
 ${G_myName} ${extraInfo} -i usgBpos_siteConfigs_update pip_TBD # Main Entry -- Sets 
 ${G_myName} ${extraInfo} -i usgBpos_siteConfigs_bxoPath # Main Entry -- Gets
-${G_myName} ${extraInfo} -i usgBpos_siteConfigs_bxoId
+${G_myName} ${extraInfo} -i usgBpos_siteConfigs_bpoId
 $( examplesSeperatorSection "Credentials BPOs -- Credentials (External Accounts)  BPO" )
 ${G_myName} ${extraInfo} -i usgBpos_credentials_update pip_credsSpecify # Main Entry -- Sets 
 ${G_myName} ${extraInfo} -i usgBpos_credentials_bxoPath # Main Entry -- Gets
-${G_myName} ${extraInfo} -i usgBpos_credentials_bxoId
+${G_myName} ${extraInfo} -i usgBpos_credentials_bpoId
 $( examplesSeperatorSection "Controller BPO -- Used To Set Other usgBpos" )
-${G_myName} ${extraInfo} -i usgBpos_controller_bxoId_fpWrite ${oneRealIndiv} # Low Level Function
-${G_myName} ${extraInfo} -i usgBpos_controller_bxoId_fpRead 
+${G_myName} ${extraInfo} -i usgBpos_controller_bpoId_fpWrite ${oneRealIndiv} # Low Level Function
+${G_myName} ${extraInfo} -i usgBpos_controller_bpoId_fpRead 
 ${G_myName} ${extraInfo} -i usgBpos_controller_update ${oneRealIndiv} # Main Entry Controller -- Sets
 ${G_myName} ${extraInfo} -i usgBpos_controller_bxoPath # Main Entry -- Gets
-${G_myName} ${extraInfo} -i usgBpos_controller_bxoId
+${G_myName} ${extraInfo} -i usgBpos_controller_bpoId
 $( examplesSeperatorChapter "Associate usgBpo With usgAcct" )
 ${G_myName} ${extraInfo} -i usgAcctWithUsgBpoAssociate
 _EOF_
 
   cat  << _EOF_
 $( examplesSeperatorChapter "Related -- See Also" )
-bpoActivate.sh -h -v -n showRun -p privacy="priv" -p bxoId="${oneRealIndiv}" -i bpoActivate
+bpoActivate.sh -h -v -n showRun -p privacy="priv" -p bpoId="${oneRealIndiv}" -i bpoActivate
 _EOF_
 
   vis_examplesNicheRun usage

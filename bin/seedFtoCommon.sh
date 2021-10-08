@@ -78,7 +78,7 @@ _CommentEnd_
 
 
 . ${opBinBase}/opAcctLib.sh
-#. ${opBinBase}/bxo_lib.sh
+#. ${opBinBase}/bpo_lib.sh
 . ${opBinBase}/opDoAtAsLib.sh
 # ./lcnFileParams.libSh
 . ${opBinBase}/lcnFileParams.libSh
@@ -90,7 +90,7 @@ _CommentEnd_
 # . ${opBinBase}/bystarHook.libSh
 
 # ./bxo_lib.sh
-# . ${opBinBase}/bxo_lib.sh
+# . ${opBinBase}/bpo_lib.sh
 # ./bystarHereAcct.libSh
 # . ${opBinBase}/bystarHereAcct.libSh
 

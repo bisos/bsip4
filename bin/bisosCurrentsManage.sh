@@ -120,7 +120,7 @@ ${G_myName} ${extraInfo} -i setParam currentBxoAutonomousUname ${currentBxoAuton
 ${G_myName} ${extraInfo} -i setParam currentBxoUeUname ${currentBxoUeUname}
 ${G_myName} ${extraInfo} -i setParam currentBxoSiteUname ${currentBxoSiteUname}
 ${G_myName} ${extraInfo} -i setParam currentUsgUname ${currentUsgUname}
-${G_myName} ${extraInfo} -i setParam cur_bxoId_parent pis_defaultSite
+${G_myName} ${extraInfo} -i setParam cur_bpoId_parent pis_defaultSite
 _EOF_
 }
 

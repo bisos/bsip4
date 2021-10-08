@@ -179,7 +179,7 @@ _EOF_
     if [ "${virtualizationType}" == "physical" ] ; then
 
         # activate the aip_vagrantBaseBoxes BxO
-        lpDo bxoPubGithubManage.sh -h -v -n showRun -p privacy="allGithub" -p bxoId="aip_vagrantBaseBoxes" -i fullConstruct
+        lpDo bpoPubGithubManage.sh -h -v -n showRun -p privacy="allGithub" -p bpoId="aip_vagrantBaseBoxes" -i fullConstruct
         
         lpDo lcaVagrantBoxBuild.sh -h -v -n showRun -i bvdbb_deb11_desktopBuild
         #
@@ -215,9 +215,9 @@ _EOF_
 
         echo "Build the guest based on BxO and run the Guest"
         echo "Generic Guest To Be Materialized"
-        lpDo sysCharActivate.sh -h -v -n showRun -p bxoId="pmp_VAG-deb11_" -i activate_sysContainerBxo
+        lpDo sysCharActivate.sh -h -v -n showRun -p bpoId="pmp_VAG-deb11_" -i activate_sysContainerBxo
 
-        lpDo sysCharGuestMaterialize.sh -h -v -n showRun -p bxoId="pmp_VAG-deb11_" -i vagrantFile_run
+        lpDo sysCharGuestMaterialize.sh -h -v -n showRun -p bpoId="pmp_VAG-deb11_" -i vagrantFile_run
     else
         lpDo echo "This is a virtual machine and we need NOTYET"
     fi

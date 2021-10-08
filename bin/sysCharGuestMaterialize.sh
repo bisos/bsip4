@@ -73,8 +73,8 @@ _CommentEnd_
 # ./platformBases_lib.sh
 . ${opBinBase}/platformBases_lib.sh
 
-. ${opBinBase}/bxo_lib.sh
-. ${opBinBase}/bxoId_lib.sh
+. ${opBinBase}/bpo_lib.sh
+. ${opBinBase}/bpoId_lib.sh
 
 . ${opBinBase}/bxeDesc_lib.sh
 
@@ -105,7 +105,7 @@ _CommentEnd_
 
 # PRE parameters
 
-typeset -t bxoId=""
+typeset -t bpoId=""
 # usg=""
 
 # Associative Array
@@ -124,10 +124,10 @@ vmNetIf_pubB="blank"
 vmNetIf_perimA="blank"
 
 function G_postParamHook {
-    bxoIdPrepValidate    
+    bpoIdPrepValidate    
 
-    if [ ! -z "${bxoId}" ] ; then
-        bxoHome=$( FN_absolutePathGet ~${bxoId} )
+    if [ ! -z "${bpoId}" ] ; then
+        bpoHome=$( FN_absolutePathGet ~${bpoId} )
     fi
     
     bisosCurrentsGet
@@ -165,22 +165,22 @@ bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VAG-deb11_  # 
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VSG-deb11_  # Generic, Shielded, StaticIP
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VSS-1009    # Specific, Shielded, StaticIP
 $( examplesSeperatorChapter "Activate Subject sysContainerBxo" )
-sysCharActivate.sh -h -v -n showRun -p bxoId="${oneBxoId}" -i activate_sysContainerBxo
+sysCharActivate.sh -h -v -n showRun -p bpoId="${oneBxoId}" -i activate_sysContainerBxo
 $( examplesSeperatorChapter "Specialized Actions" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantBaseBoxFromSysChar   # which vagrantBaseBox will be used
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantBase_last     # on host
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_run       # on host - ends with image
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vagrantBaseBoxFromSysChar   # which vagrantBaseBox will be used
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vagrantBase_last     # on host
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vagrantFile_run       # on host - ends with image
 $( examplesSeperatorChapter "Vagrantfile Stdout and Creation " )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_bottomPart
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vagrantFile_stdout    # on host
-${G_myName} -p bxoId="${oneBxoId}" -i vagrantFile_stdout    # on host
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vagrantFile_bottomPart
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vagrantFile_stdout    # on host
+${G_myName} -p bpoId="${oneBxoId}" -i vagrantFile_stdout    # on host
 $( examplesSeperatorChapter "Post Vagrant Virsh Activities" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vmCustomize           # using virsh sets up guest ip addrs
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i vmRun                 # on host
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vmCustomize           # using virsh sets up guest ip addrs
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vmRun                 # on host
 $( examplesSeperatorChapter "Ssh Based Cusomizations -- Bx Based (not vagrant based)" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i postCustomize  # on host - bx-ssh
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i secureSeal     # on host - bx-ssh
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i recordDeployment      # inside of parent bxo
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i postCustomize  # on host - bx-ssh
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i secureSeal     # on host - bx-ssh
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i recordDeployment      # inside of parent bxo
 $( examplesSeperatorChapter "Generic Container Materialization" )
 ${G_myName} -i containerGenericMaterialize examples
 ${G_myName} ${extraInfo} -i containerGenericMaterialize doIt
@@ -248,11 +248,11 @@ _EOF_
 
        if [ "${examplesOrDoIt}" == "examples" ] ; then
            cat  << _EOF_
-${G_myName} ${extraInfo} -p bxoId="${sysCharContainerBxoId}" -i vagrantFile_run
-$( ${G_myName} -p bxoId="${sysCharContainerBxoId}" -i vagrantBase_last )
+${G_myName} ${extraInfo} -p bpoId="${sysCharContainerBxoId}" -i vagrantFile_run
+$( ${G_myName} -p bpoId="${sysCharContainerBxoId}" -i vagrantBase_last )
 _EOF_
        elif [ "${examplesOrDoIt}" == "doIt" ] ; then
-           bxoId="${sysCharContainerBxoId}"
+           bpoId="${sysCharContainerBxoId}"
            lpDo vis_vagrantFile_run
        else
            EH_problem "Bad Usage -- ${examplesOrDoIt}"
@@ -266,17 +266,17 @@ _EOF_
 function vis_vagrantBaseObtain%% {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-Return stdout path to Vagrantfile's base directory of the bxoHome.
+Return stdout path to Vagrantfile's base directory of the bpoHome.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${bpoId}" ]
 
-    EH_assert  vis_bxoAcctVerify "${bxoId}"
+    EH_assert  vis_bxoAcctVerify "${bpoId}"
 
-    lpDo FN_dirCreatePathIfNotThere ${bxoHome}/var/vagrantBase
+    lpDo FN_dirCreatePathIfNotThere ${bpoHome}/var/vagrantBase
 
-    echo ${bxoHome}/var/vagrantBase
+    echo ${bpoHome}/var/vagrantBase
     
     lpReturn
 }       
@@ -284,21 +284,21 @@ _EOF_
 function vis_vagrantBaseObtain {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-Return stdout path to Vagrantfile's base directory of the bxoHome.
+Return stdout path to Vagrantfile's base directory of the bpoHome.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    local hostCntnr=$( vis_bxoIdPrep "sysChar" )    
-    EH_assert [ ! -z "${bxoId}" ]
+    local hostCntnr=$( vis_bpoIdPrep "sysChar" )    
+    EH_assert [ ! -z "${bpoId}" ]
 
     # NOTYET 
-    # EH_assert  vis_bxoHasBeenRealized "${bxoId}"
+    # EH_assert  vis_bxoHasBeenRealized "${bpoId}"
     
     hostCntnrHome=$( FN_absolutePathGet ~${hostCntnr} )
 
-    lpDo FN_dirCreatePathIfNotThere ${hostCntnrHome}/var/vagrantBase/${bxoId}
+    lpDo FN_dirCreatePathIfNotThere ${hostCntnrHome}/var/vagrantBase/${bpoId}
 
-    echo ${hostCntnrHome}/var/vagrantBase/${bxoId}
+    echo ${hostCntnrHome}/var/vagrantBase/${bpoId}
     
     lpReturn
 }       
@@ -311,9 +311,9 @@ NAT + genesis target.
 _EOF_
     }
     EH_assert [[ $# -lt 2 ]]    
-    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${bpoId}" ]
 
-    EH_assert  vis_bxoAcctVerify "${bxoId}"
+    EH_assert  vis_bxoAcctVerify "${bpoId}"
 
     local dirsPart=$( vis_vagrantBaseObtain )
     EH_assert [ ! -z "${dirsPart}" ]
@@ -343,9 +343,9 @@ NAT + genesis target.
 _EOF_
     }
     EH_assert [[ $# -lt 2 ]]    
-    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${bpoId}" ]
 
-    # EH_assert  vis_bxoAcctVerify "${bxoId}"
+    # EH_assert  vis_bxoAcctVerify "${bpoId}"
 
     local dirsPart=$( vis_vagrantBaseObtain )
     EH_assert [ ! -z "${dirsPart}" ]
@@ -375,9 +375,9 @@ NAT + genesis target.
 _EOF_
     }
     EH_assert [[ $# -lt 2 ]]    
-    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${bpoId}" ]
 
-    EH_assert  vis_bxoAcctVerify "${bxoId}"
+    EH_assert  vis_bxoAcctVerify "${bpoId}"
 
     local dirsPart=$( vis_vagrantBaseObtain )
     EH_assert [ ! -z "${dirsPart}" ]
@@ -419,9 +419,9 @@ function vis_vagrantFile_run {
 _EOF_
     }
     EH_assert [[ $# -lt 2 ]]
-    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${bpoId}" ]
 
-    # EH_assert  vis_bxoAcctVerify "${bxoId}"
+    # EH_assert  vis_bxoAcctVerify "${bpoId}"
 
     local dirsPart=$( vis_vagrantBaseObtain )
     EH_assert [ ! -z "${dirsPart}" ]
@@ -462,9 +462,9 @@ function vis_vmCustomize {
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${bpoId}" ]
 
-    EH_assert  vis_bxoAcctVerify "${bxoId}"
+    EH_assert  vis_bxoAcctVerify "${bpoId}"
 
     lpDo describeF
     
@@ -481,9 +481,9 @@ _EOF_
                        }
     local thisDescribeF=describeF
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${bpoId}" ]
 
-    EH_assert  vis_bxoAcctVerify "${bxoId}"
+    EH_assert  vis_bxoAcctVerify "${bpoId}"
 
     lpDo echo ${thisDescribeF}
     
@@ -503,8 +503,8 @@ _EOF_
                        }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert [ ! -z "${bxoId}" ]
-    EH_assert vis_bxoAcctVerify "${bxoId}"
+    EH_assert [ ! -z "${bpoId}" ]
+    EH_assert vis_bxoAcctVerify "${bpoId}"
 
     lpDo vis_containerAssignRead
     lpDo vis_containerSteadyRead    
@@ -551,9 +551,9 @@ _EOF_
                        }
     local thisDescribeF=$(describeF)
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${bpoId}" ]
 
-    EH_assert  vis_bxoAcctVerify "${bxoId}"
+    EH_assert  vis_bxoAcctVerify "${bpoId}"
 
     lpDo printf ${thisDescribeF}
     
@@ -568,8 +568,8 @@ _EOF_
                        }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert [ ! -z "${bxoId}" ]
-    EH_assert vis_bxoAcctVerify "${bxoId}"
+    EH_assert [ ! -z "${bpoId}" ]
+    EH_assert vis_bxoAcctVerify "${bpoId}"
 
     lpDo vis_containerAssignRead
     lpDo vis_containerSteadyRead    
@@ -648,7 +648,7 @@ _EOF_
                        }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
     #lpDo vis_containerSteadyRead    
 
@@ -736,11 +736,11 @@ _EOF_
                        }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert [ ! -z "${bxoId}" ]
-    # EH_assert vis_bxoAcctVerify "${bxoId}"
+    EH_assert [ ! -z "${bpoId}" ]
+    # EH_assert vis_bxoAcctVerify "${bpoId}"
 
 
-    hostCntnr=$( vis_bxoIdPrep "sysChar" )
+    hostCntnr=$( vis_bpoIdPrep "sysChar" )
 
     cat  << _OUTER_EOF_
         cat   << _EOF_
@@ -802,8 +802,8 @@ _EOF_
                        }
     EH_assert [[ $# -eq 1 ]]
 
-    EH_assert [ ! -z "${bxoId}" ]
-    EH_assert vis_bxoAcctVerify "${bxoId}"
+    EH_assert [ ! -z "${bpoId}" ]
+    EH_assert vis_bxoAcctVerify "${bpoId}"
 
     #lpDo vis_containerAssignRead
     #lpDo vis_containerSteadyRead
@@ -833,7 +833,7 @@ _EOF_
     #
     # No longer needed:: /bisos/core/bsip/bin/bisosSiteGitServer.sh -h -v -n showRun -p gitServerName=${site_gitServerName} -p gitServerUrl=${site_gitServerUrl} -p gitServerPrivToken=${site_gitServerPrivToken} -i gitServerInfoSet
 
-    hostCntnr=$( vis_bxoIdPrep "sysChar" )
+    hostCntnr=$( vis_bpoIdPrep "sysChar" )
 
     cat  << _OUTER_EOF_
         cat   << _EOF_
@@ -841,9 +841,9 @@ _EOF_
 _EOF_
         sudo -u bystar ${binPath} ${runInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -p siteBxoId="${siteBxoId}" -i bisosBasePlatform_siteSetup
         sudo -u bystar ${binPath} ${runInfo} -p bisosDevBxoId=${bisosDevBxoId} -i usgConvey_bisosDeveloper
-        sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -i siteBasePlatform_sysBxoActivate
-        sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpVmNameQualifier=\"${vmNameQualifier}\" -i conveyInfoStore
-        sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpHostCntnr=\"${hostCntnr}\" -i conveyInfoStore
+        sudo -u bystar ${binPath} ${runInfo} -p bpoId="${bpoId}" -i siteBasePlatform_sysBxoActivate
+        sudo -u bystar ${binPath} ${runInfo} -p bpoId="${bpoId}" -p cfpVmNameQualifier=\"${vmNameQualifier}\" -i conveyInfoStore
+        sudo -u bystar ${binPath} ${runInfo} -p bpoId="${bpoId}" -p cfpHostCntnr=\"${hostCntnr}\" -i conveyInfoStore
 _OUTER_EOF_
 
 
@@ -866,9 +866,9 @@ _OUTER_EOF_
         local vmNetIfControl=$(netNameInfoRead ${netName}-control)
 
         cat  << _OUTER_EOF_
-        sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpNetIf="${vmNetIf}" -i conveyNetInfoStore ${netName}
-        sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpNetIfControl="${vmNetIfControl}" -i conveyNetInfoStore ${netName}
-        sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpHostNetIf="${hostNetIf}" -i conveyNetInfoStore ${netName}
+        sudo -u bystar ${binPath} ${runInfo} -p bpoId="${bpoId}" -p cfpNetIf="${vmNetIf}" -i conveyNetInfoStore ${netName}
+        sudo -u bystar ${binPath} ${runInfo} -p bpoId="${bpoId}" -p cfpNetIfControl="${vmNetIfControl}" -i conveyNetInfoStore ${netName}
+        sudo -u bystar ${binPath} ${runInfo} -p bpoId="${bpoId}" -p cfpHostNetIf="${hostNetIf}" -i conveyNetInfoStore ${netName}
 _OUTER_EOF_
 
         cat  << _OUTER_EOF_
@@ -881,7 +881,7 @@ _OUTER_EOF_
             cfpNetAddr="$( vis_getIpAddr_${netName} )"
             if [ ! -z "${cfpNetAddr}" ] ; then
                 cat  << _OUTER_EOF_
-        sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -p cfpNetAddr="${cfpNetAddr}" -i conveyNetInfoStore ${netName}
+        sudo -u bystar ${binPath} ${runInfo} -p bpoId="${bpoId}" -p cfpNetAddr="${cfpNetAddr}" -i conveyNetInfoStore ${netName}
 _OUTER_EOF_
             fi
         fi
@@ -904,7 +904,7 @@ _OUTER_EOF_
         cat   << _EOF_
 ######### PHASE 2.3: Deploy The SysChar Based On Abobe Provided ConveyInfo
 _EOF_
-        sudo -u bystar ${binPath} ${runInfo} -p bxoId="${bxoId}" -i deployWithSysCharConveyInfo
+        sudo -u bystar ${binPath} ${runInfo} -p bpoId="${bpoId}" -i deployWithSysCharConveyInfo
 _OUTER_EOF_
     
 
@@ -921,8 +921,8 @@ _EOF_
                        }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert [ ! -z "${bxoId}" ]
-    EH_assert vis_bxoAcctVerify "${bxoId}"
+    EH_assert [ ! -z "${bpoId}" ]
+    EH_assert vis_bxoAcctVerify "${bpoId}"
     
     function platformBinsRun {
     EH_assert [[ $# -eq 0 ]]
@@ -950,8 +950,8 @@ _EOF_
                        }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert [ ! -z "${bxoId}" ]
-    EH_assert vis_bxoAcctVerify "${bxoId}"
+    EH_assert [ ! -z "${bpoId}" ]
+    EH_assert vis_bxoAcctVerify "${bpoId}"
 
     lpDo vis_containerAssignRead
     lpDo vis_containerSteadyRead    
@@ -1026,8 +1026,8 @@ _EOF_
                        }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert [ ! -z "${bxoId}" ]
-    EH_assert vis_bxoAcctVerify "${bxoId}"
+    EH_assert [ ! -z "${bpoId}" ]
+    EH_assert vis_bxoAcctVerify "${bpoId}"
 
     lpDo vis_containerAssignRead
     lpDo vis_containerSteadyRead    
@@ -1105,8 +1105,8 @@ _EOF_
     local thisFunc=${G_thisFunc}
     EH_assert [[ $# -lt 3 ]]
 
-    EH_assert [ ! -z "${bxoId}" ]
-    EH_assert vis_bxoAcctVerify "${bxoId}"
+    EH_assert [ ! -z "${bpoId}" ]
+    EH_assert vis_bxoAcctVerify "${bpoId}"
 
     lpDo vis_containerAssignRead
     lpDo vis_containerSteadyRead    
@@ -1123,7 +1123,7 @@ _EOF_
 
     local dateTag=$( date +%Y%m%d%H%M%S )
 
-    #local containerBxoRef=$( fileParamManage.py -v 30 -i fileParamRead  ${bxoHome}/containerBxO/bxoRef.fps bxoId )
+    #local containerBxoRef=$( fileParamManage.py -v 30 -i fileParamRead  ${bpoHome}/containerBxO/bxoRef.fps bpoId )
 
     local sizing=$sysChar_virtSpec_sizing
 
@@ -1147,10 +1147,10 @@ _EOF_
     cat  << _EOF_
 # -*- mode: ruby -*-
 
-# Vagrantfile for ${bxoId} -- 
+# Vagrantfile for ${bpoId} -- 
 # Generated with ${G_myName}:${thisFunc} on $(hostname) at ${dateTag} -- Do Not Hand Edit
 # 
-# bxoHome=${bxoHome}  -- bxoId=${bxoId}
+# bpoHome=${bpoHome}  -- bpoId=${bpoId}
 # 
 
 # The "2" in Vagrant.configure is for configuration version. Don't change it.
@@ -1191,9 +1191,9 @@ _EOF_
     local thisFunc=${G_thisFunc}
     EH_assert [[ $# -lt 3 ]]
     EH_assert [[ $# -gt 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${bpoId}" ]
 
-    EH_assert  vis_bxoAcctVerify "${bxoId}"
+    EH_assert  vis_bxoAcctVerify "${bpoId}"
 
     local vmNameQualifier="$1"
     shift

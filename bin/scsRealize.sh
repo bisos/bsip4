@@ -70,8 +70,8 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
-. ${opBinBase}/bxo_lib.sh
-. ${opBinBase}/bxoId_lib.sh
+. ${opBinBase}/bpo_lib.sh
+. ${opBinBase}/bpoId_lib.sh
 
 . ${opBinBase}/bxeDesc_lib.sh
 
@@ -104,16 +104,16 @@ _CommentEnd_
 
 # PRE parameters
 
-typeset -t bxoId=""
+typeset -t bpoId=""
 
 typeset -t correspondingBxo=""
 
 
 function G_postParamHook {
-    bxoIdPrepValidate    
+    bpoIdPrepValidate    
 
-    if [ ! -z "${bxoId}" ] ; then
-        bxoHome=$( FN_absolutePathGet ~${bxoId} )
+    if [ ! -z "${bpoId}" ] ; then
+        bpoHome=$( FN_absolutePathGet ~${bpoId} )
     fi
     
     bisosCurrentsGet
@@ -147,8 +147,8 @@ function vis_examples {
         local description=$2
         cat  << _EOF_
 $( examplesSeperatorSubSection "${description}" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i scs_repoBaseCreate_${repoName}
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i bxoRealize_repoBasesPush ${repoName}
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i scs_repoBaseCreate_${repoName}
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i bxoRealize_repoBasesPush ${repoName}
 _EOF_
     }   
 
@@ -158,7 +158,7 @@ _EOF_
         local description=$2
         cat  << _EOF_
 $( examplesSeperatorSubSection "${description}" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i scs_nonRepoBaseCreate_${repoName}
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i scs_nonRepoBaseCreate_${repoName}
 _EOF_
     }   
 
@@ -182,17 +182,17 @@ _EOF_
 $( examplesSeperatorChapter "Specific Initial Repo Realizition" )
 $( examplesSeperatorSection "Repo Bases List And Create -- Realizition" )
 ${G_myName} ${extraInfo} -i scs_repoBasesList
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i scs_repoBasesAllCreate
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i scs_repoBasesAllPush
-${G_myName} -i scs_repoBasesList | ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i bxoRealize_repoBasesCreate scs
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i scs_repoBasesAllCreate
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i scs_repoBasesAllPush
+${G_myName} -i scs_repoBasesList | ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i bxoRealize_repoBasesCreate scs
 $( repoBaseCreateAndPushExamples panel "Panel Repo (Basic Panel)" )
 $( repoBaseCreateAndPushExamples BAGP "Repo" )
 $( repoBaseCreateAndPushExamples NSP "Repo" )
 $( repoBaseCreateAndPushExamples par_live "Repo" )
 $( examplesSeperatorSection "Non Repo Bases List And Create -- Realizition" )
 ${G_myName} ${extraInfo} -i scs_nonRepoBasesList
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i scs_nonRepoBasesAllCreate
-${G_myName} -i scs_nonRepoBasesList | ${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i bxoRealize_nonRepoBasesCreate scs
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i scs_nonRepoBasesAllCreate
+${G_myName} -i scs_nonRepoBasesList | ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i bxoRealize_nonRepoBasesCreate scs
 $( nonRepoBaseCreateAndPushExamples var "Var BaseDir Link" )
 _EOF_
 

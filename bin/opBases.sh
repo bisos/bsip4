@@ -26,7 +26,7 @@ opSiteControlBase=${opBase}/siteControl
 opSysConfigInputBase=${opBase}/sysConfigInput
 opPoliciesBase=${opBase}/policies
 
-aabisBinBase="/bisos/aais/bx/bin"
+aaisBinBase="/bisos/aais/bin"
 
 #    opVarBase    -- Where files that grow live
 

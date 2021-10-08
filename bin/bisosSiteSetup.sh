@@ -114,7 +114,7 @@ $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "FULL Site Deployment" )
 ${G_myName} ${extraInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -i fullUpdate  # currents + siteFullUpdate
 ${G_myName} ${extraInfo} -i fullUpdate   # currents + siteFullUpdate
-${G_myName} ${extraInfo} -p bxoId="${siteBxoId}" -i activate_siteBxoPlusAndSelect 
+${G_myName} ${extraInfo} -p bpoId="${siteBxoId}" -i activate_siteBxoPlusAndSelect 
 $( examplesSeperatorChapter "Full Operations" )
 ${G_myName} ${extraInfo} -i siteFullUpdate
 ${G_myName} ${extraInfo} -p registrar=TBD -p id=TBD -p password=TBD -i siteFullUpdate
@@ -180,10 +180,10 @@ _EOF_
     inBaseDirDo /bisos/var/sites/selected/sys/bin siteBisosSetup.sh -h -v -n showRun -i fullUpdate
 
     # Activate "bisos" Real-System BxO
-    lpDo bxoManage.sh -h -v -n showRun -p privacy="priv" -p bxoId="prs_bisos" -i fullConstruct
+    lpDo bpoManage.sh -h -v -n showRun -p privacy="priv" -p bpoId="prs_bisos" -i fullConstruct
 
     # Activate "defaultSite" BxO
-    lpDo bxoManage.sh -h -v -n showRun -p privacy="priv" -p bxoId="pis_defaultSite" -i fullConstruct
+    lpDo bpoManage.sh -h -v -n showRun -p privacy="priv" -p bpoId="pis_defaultSite" -i fullConstruct
 
     local siteBootstrapDir=$( FN_absolutePathGet ~pis_defaultSite/bootstrap )
 
@@ -210,16 +210,16 @@ _EOF_
 function vis_activate_siteBxoPlusAndSelect {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Create the specified bxoId 
+** Create the specified bpoId 
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    # EH_assert [ ! -z "${bxoId}" ]
-    # EH_assert vis_bxoAcctVerify "${bxoId}"
-    # bxoHome=$( FN_absolutePathGet ~${bxoId} )
+    # EH_assert [ ! -z "${bpoId}" ]
+    # EH_assert vis_bxoAcctVerify "${bpoId}"
+    # bpoHome=$( FN_absolutePathGet ~${bpoId} )
 
-    local siteBxoId="${bxoId}"
+    local siteBxoId="${bpoId}"
 
     lpDo vis_activate_siteBxoPlus "${siteBxoId}"
 

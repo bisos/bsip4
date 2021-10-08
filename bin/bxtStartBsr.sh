@@ -166,7 +166,7 @@ _EOF_
 
     typeset bystarUid=$( vis_bisoIdGetThere ${here} )
     if [ -z "${bystarUid}" ] ; then
-        EH_problem "Missing bxoId"
+        EH_problem "Missing bpoId"
         EH_problem "You Are Likely Not Under A bxoBaseDir"
         lpReturn 101
     fi

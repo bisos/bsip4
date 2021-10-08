@@ -138,7 +138,7 @@ $( examplesSeperatorSection "INFO" )
 ${G_myName} ${extraInfo} -i bxeDescBase_obtain
 ${G_myName} ${extraInfo} -p bxeDesc="${oneRegBxeDesc}" -i bxceBxeDescBaseGet
 ${G_myName} ${extraInfo} -p bxeDesc="${oneBxeDesc}" -i bxeDescInfo
-${G_myName} ${extraInfo} -i bxoIdFromBxeDesc "${oneRegBxeDesc}"
+${G_myName} ${extraInfo} -i bpoIdFromBxeDesc "${oneRegBxeDesc}"
 ${G_myName} ${extraInfo} -i parentBxoIdFromBxeDesc "${oneRegBxeDesc}"
 _EOF_
 }

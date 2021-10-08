@@ -89,8 +89,8 @@ _CommentEnd_
 . ${opBinBase}/lpReRunAs.libSh
 
 
-. ${opBinBase}/bxo_lib.sh
-. ${opBinBase}/bxoId_lib.sh
+. ${opBinBase}/bpo_lib.sh
+. ${opBinBase}/bpoId_lib.sh
 
 . ${opBinBase}/bxeDesc_lib.sh
 
@@ -164,17 +164,17 @@ ${G_myName} -i siteSynergyClientsAvailable | bpoActivate.sh -i bpoActivate
 $( examplesSeperatorChapter "Synergy GUI" )
 synergy  # Only use it for creation/edition of config file
 $( examplesSeperatorChapter "BxContainer Synergy Features" )
-${G_myName} ${extraInfo} -p bxoId=${oneServerBpo} -i bxCntnr_synergy_featureBase
-${G_myName} ${extraInfo} -p bxoId=${oneServerBpo} -i bxCntnr_synergy_server_screensTopologyFile
-${G_myName} ${extraInfo} -p bxoId=${oneClientBpo} -i bxCntnr_synergy_client_screenName
-${G_myName} ${extraInfo} -p bxoId=${oneClientBpo} -i bxCntnr_synergy_client_serversBpos
-${G_myName} ${extraInfo} -p bxoId=${oneClientBpo} -i bpoCntnr_ipAddr_get privA wifi
+${G_myName} ${extraInfo} -p bpoId=${oneServerBpo} -i bxCntnr_synergy_featureBase
+${G_myName} ${extraInfo} -p bpoId=${oneServerBpo} -i bxCntnr_synergy_server_screensTopologyFile
+${G_myName} ${extraInfo} -p bpoId=${oneClientBpo} -i bxCntnr_synergy_client_screenName
+${G_myName} ${extraInfo} -p bpoId=${oneClientBpo} -i bxCntnr_synergy_client_serversBpos
+${G_myName} ${extraInfo} -p bpoId=${oneClientBpo} -i bpoCntnr_ipAddr_get privA wifi
 ${G_myName} ${extraInfo} -i listBposAtBaseSansAvailable ~pip_clusterNeda-configs/synergy/clients/available
-${G_myName} -p bxoId=${oneClientBpo} -i bxCntnr_synergy_client_serversBpos
+${G_myName} -p bpoId=${oneClientBpo} -i bxCntnr_synergy_client_serversBpos
 $( examplesSeperatorChapter "Container On Display Side -- Run Synergy Server And Clients" )
-${G_myName} -p bxoId=sysChar -i containerStartUpRun  # Main/Primary Entry Point
-${G_myName} ${extraInfo} -p bxoId=${oneServerBpo} -i containerStartUpRun  # Server
-${G_myName} ${extraInfo} -p bxoId=${oneClientBpo} -i containerStartUpRun  # Client
+${G_myName} -p bpoId=sysChar -i containerStartUpRun  # Main/Primary Entry Point
+${G_myName} ${extraInfo} -p bpoId=${oneServerBpo} -i containerStartUpRun  # Server
+${G_myName} ${extraInfo} -p bpoId=${oneClientBpo} -i containerStartUpRun  # Client
 $( examplesSeperatorSection "PROCESSS" )
 ps -wwef | grep -i synergyc
 ps -wwfp \$( echo \$( pgrep synergyc) )
@@ -183,25 +183,25 @@ ps -wwfp \$( pgrep synergys) | cat   # running server process details
 $( examplesSeperatorSection "DISPLAY CLIENT CONNECTS: (Each)" )
 synergyc --debug INFO --log /tmp/synergyc.log --name dinningroom --no-daemon 192.168.0.81
 $( examplesSeperatorSection "DISPLAY CLIENT CONNECTS: (All Clients)" )
-${G_myName} ${extraInfo} -p bxoId=sysChar -i clientsStartUpRun   # Main Entry Point
+${G_myName} ${extraInfo} -p bpoId=sysChar -i clientsStartUpRun   # Main Entry Point
 ${G_myName} ${extraInfo} -i synergycStop
 ${G_myName} ${extraInfo} -i synergycStatus
-${G_myName} -p bxoId=sysChar -i synergycLogs
+${G_myName} -p bpoId=sysChar -i synergycLogs
 $( examplesSeperatorChapter "On Laptop/Keyboard Side -- Run Synergy Server" )
 synergys --config ~pip_clusterNeda-configs/synergy/servers/default/synergyScreensTopology.config --name center --debug INFO --log /tmp/synergys.log --no-daemon
-${G_myName} ${extraInfo} -p bxoId=sysChar -i serverStartUpRun   # Main Entry Point
+${G_myName} ${extraInfo} -p bpoId=sysChar -i serverStartUpRun   # Main Entry Point
 ${G_myName} ${extraInfo} -i synergysStop
 ${G_myName} ${extraInfo} -i synergysStatus
-${G_myName} -p bxoId=sysChar -i synergysLogs
+${G_myName} -p bpoId=sysChar -i synergysLogs
 $( examplesSeperatorChapter "Setup Systemd User Environment" )
 https://www.unixsysadmin.com/systemd-user-services/
 https://www.brendanlong.com/systemd-user-services-are-amazing.html
 mkdir -p ~/.config/systemd/user/
 ls -l ~/.config/systemd/user/synergy.service
-${G_myName} -p bxoId=sysChar -i synergySystemdSvcUpdate  # Main Entry Point
-${G_myName} -p bxoId=${oneServerBpo} -i synergySystemdSvcStdout  # For Server testing
-${G_myName} -p bxoId=${oneClientBpo} -i clientsSystemdSvcStdout  # For Client testing
-${G_myName} -p bxoId=${oneServerBpo} -i serverSystemdSvcStdout   # For Server testing
+${G_myName} -p bpoId=sysChar -i synergySystemdSvcUpdate  # Main Entry Point
+${G_myName} -p bpoId=${oneServerBpo} -i synergySystemdSvcStdout  # For Server testing
+${G_myName} -p bpoId=${oneClientBpo} -i clientsSystemdSvcStdout  # For Client testing
+${G_myName} -p bpoId=${oneServerBpo} -i serverSystemdSvcStdout   # For Server testing
 # initializations
 sudo loginctl enable-linger bystar
 systemd-analyze --user security synergy.service
@@ -237,14 +237,14 @@ _EOF_
     local logFilePath=""
     
     if [ $# -eq 0 ] ; then
-        EH_assert bxoIdPrep
+        EH_assert bpoIdPrep
 
         local availableServersList=$(lpDo vis_siteSynergyServersAvailable)
         
-        if IS_inList ${bxoId} "${availableServersList}" ; then
-            logFilePath=${synergyLogsBaseDir}/server-${bxoId}.log
+        if IS_inList ${bpoId} "${availableServersList}" ; then
+            logFilePath=${synergyLogsBaseDir}/server-${bpoId}.log
         else
-            EH_problem "Not a server ${bxoId}"
+            EH_problem "Not a server ${bpoId}"
             lpReturn 101
         fi
     else
@@ -283,12 +283,12 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     local siteConfigs_bxoPath=$(lpDo vis_usgBpos_siteConfigs_bxoPath)
-    local siteConfigs_bxoId=$(lpDo vis_usgBpos_siteConfigs_bxoId)
+    local siteConfigs_bpoId=$(lpDo vis_usgBpos_siteConfigs_bpoId)
 
     ANT_raw "usgBpos_siteConfigs_bxoPath=${siteConfigs_bxoPath}"
-    ANT_raw "usgBpos_siteConfigs_bxoId=${siteConfigs_bxoId}"
+    ANT_raw "usgBpos_siteConfigs_bpoId=${siteConfigs_bpoId}"
 
-    EH_assert [ -n "${siteConfigs_bxoId}" ]
+    EH_assert [ -n "${siteConfigs_bpoId}" ]
     
     local synergyBase="${siteConfigs_bxoPath}/synergy"
 
@@ -313,9 +313,9 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     local siteConfigs_bxoPath=$(lpDo vis_usgBpos_siteConfigs_bxoPath)
-    local siteConfigs_bxoId=$(lpDo vis_usgBpos_siteConfigs_bxoId)
+    local siteConfigs_bpoId=$(lpDo vis_usgBpos_siteConfigs_bpoId)
 
-    EH_assert [ -n "${siteConfigs_bxoId}" ]
+    EH_assert [ -n "${siteConfigs_bpoId}" ]
     
     local synergyBase="${siteConfigs_bxoPath}/synergy"
 
@@ -515,7 +515,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
     
     local logFilePath=$(vis_logFilePath)
 
@@ -536,17 +536,17 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
     local availableServersList=$(lpDo vis_siteSynergyServersAvailable)
     local availableClientsList=$(lpDo vis_siteSynergyClientsAvailable)
 
-    if IS_inList ${bxoId} "${availableServersList}" ; then
+    if IS_inList ${bpoId} "${availableServersList}" ; then
         lpDo vis_serverStartUpRun
-    elif IS_inList ${bxoId} "${availableClientsList}" ; then
+    elif IS_inList ${bpoId} "${availableClientsList}" ; then
         lpDo vis_clientsStartUpRun
     else
-        EH_problem "Not a client or a server ${bxoId}"
+        EH_problem "Not a client or a server ${bpoId}"
         lpReturn 101
     fi
 
@@ -561,12 +561,12 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
     local availableClientsList=$(lpDo vis_siteSynergyClientsAvailable)
 
-    if ! IS_inList ${bxoId} "${availableClientsList}" ; then
-        EH_problem "not an available client -- ${bxoId}"
+    if ! IS_inList ${bpoId} "${availableClientsList}" ; then
+        EH_problem "not an available client -- ${bpoId}"
         lpReturn 101
     fi
 
@@ -580,7 +580,7 @@ _EOF_
     local logFilePath=""
     
     for each in ${availableServersList} ; do
-        bxoId=${each}
+        bpoId=${each}
         serverIpAddr=$(lpDo vis_bpoCntnr_ipAddr_get privA wifi)
 
         if [ -z "${serverIpAddr}" ] ; then
@@ -605,12 +605,12 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
     local availableServersList=$(lpDo vis_siteSynergyServersAvailable)
 
-    if ! IS_inList ${bxoId} "${availableServersList}" ; then
-        EH_problem "not an available server -- ${bxoId}"
+    if ! IS_inList ${bpoId} "${availableServersList}" ; then
+        EH_problem "not an available server -- ${bpoId}"
         lpReturn 101
     fi
 
@@ -644,13 +644,13 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
-    # echo ${bxoId} ${bxoHome}
-    local bxCntnrBase=${bxoHome}
+    # echo ${bpoId} ${bpoHome}
+    local bxCntnrBase=${bpoHome}
     EH_assert [ -d "${bxCntnrBase}" ]
 
-    local bxCntnrSvcsSpecBase=${bxoHome}/svcsSpec
+    local bxCntnrSvcsSpecBase=${bpoHome}/svcsSpec
     EH_assert [ -d "${bxCntnrSvcsSpecBase}" ]
 
     if [ -d "${bxCntnrSvcsSpecBase}/synergyServer" ] ; then
@@ -671,7 +671,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
     local synergyServerBase=$(lpDo vis_bxCntnr_synergy_featureBase)
     EH_assert [ -d "${synergyServerBase}" ]
@@ -691,7 +691,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
     local synergyClientBase=$(lpDo vis_bxCntnr_synergy_featureBase)
     EH_assert [ -d "${synergyClientBase}" ]
@@ -726,7 +726,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
     local synergyClientBase=$(lpDo vis_bxCntnr_synergy_featureBase)
     EH_assert [ -d "${synergyClientBase}" ]
@@ -752,11 +752,11 @@ _EOF_
     }
     EH_assert [[ $# -eq 2 ]]
 
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
     local siteSynergyServersBase=$(lpDo vis_siteSynergyServersBase)
 
-    local siteIpAddr=$(lpDo fileParamManage.py -v 30 -i fileParamRead  "${siteSynergyServersBase}/available/${bxoId}/ipv4" wifi )
+    local siteIpAddr=$(lpDo fileParamManage.py -v 30 -i fileParamRead  "${siteSynergyServersBase}/available/${bpoId}/ipv4" wifi )
 
     EH_assert [ -n "${siteIpAddr}" ]
 
@@ -772,17 +772,17 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
     local availableServersList=$(lpDo vis_siteSynergyServersAvailable)
     local availableClientsList=$(lpDo vis_siteSynergyClientsAvailable)
 
-    if IS_inList ${bxoId} "${availableServersList}" ; then
+    if IS_inList ${bpoId} "${availableServersList}" ; then
         lpDo doNothing
-    elif IS_inList ${bxoId} "${availableClientsList}" ; then
+    elif IS_inList ${bpoId} "${availableClientsList}" ; then
         lpDo doNothing
     else
-        EH_problem "Not a client or a server ${bxoId}"
+        EH_problem "Not a client or a server ${bpoId}"
         lpReturn 101
     fi
 
@@ -810,17 +810,17 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
     local availableServersList=$(lpDo vis_siteSynergyServersAvailable)
     local availableClientsList=$(lpDo vis_siteSynergyClientsAvailable)
 
-    if IS_inList ${bxoId} "${availableServersList}" ; then
+    if IS_inList ${bpoId} "${availableServersList}" ; then
         lpDo vis_serverSystemdSvcStdout
-    elif IS_inList ${bxoId} "${availableClientsList}" ; then
+    elif IS_inList ${bpoId} "${availableClientsList}" ; then
         lpDo vis_clientsSystemdSvcStdout
     else
-        EH_problem "Not a client or a server ${bxoId}"
+        EH_problem "Not a client or a server ${bpoId}"
         lpReturn 101
     fi
 
@@ -834,12 +834,12 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
     local availableClientsList=$(lpDo vis_siteSynergyClientsAvailable)
 
-    if ! IS_inList ${bxoId} "${availableClientsList}" ; then
-        EH_problem "not an available client -- ${bxoId}"
+    if ! IS_inList ${bpoId} "${availableClientsList}" ; then
+        EH_problem "not an available client -- ${bpoId}"
         lpReturn 101
     fi
 
@@ -855,7 +855,7 @@ Description=Synergy Clients For ${screenName}
 
 [Service]
 Type=forking
-ExecStart=/bisos/bsip/bin/siteSynergyManage.sh -p bxoId=${bxoId} -i containerStartUpRun
+ExecStart=/bisos/bsip/bin/siteSynergyManage.sh -p bpoId=${bpoId} -i containerStartUpRun
 Restart=always
 
 [Install]
@@ -873,12 +873,12 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
     local availableServersList=$(lpDo vis_siteSynergyServersAvailable)
 
-    if ! IS_inList ${bxoId} "${availableServersList}" ; then
-        EH_problem "not an available server -- ${bxoId}"
+    if ! IS_inList ${bpoId} "${availableServersList}" ; then
+        EH_problem "not an available server -- ${bpoId}"
         lpReturn 101
     fi
 
@@ -889,7 +889,7 @@ _EOF_
 Description=Synergy Server
 
 [Service]
-ExecStart=/bisos/bsip/bin/siteSynergyManage.sh -p bxoId=${bxoId} -i containerStartUpRun
+ExecStart=/bisos/bsip/bin/siteSynergyManage.sh -p bpoId=${bpoId} -i containerStartUpRun
 Restart=always
 
 [Install]

@@ -93,8 +93,8 @@ _CommentEnd_
 . ${opBinBase}/lpReRunAs.libSh
 
 
-. ${opBinBase}/bxo_lib.sh
-. ${opBinBase}/bxoId_lib.sh
+. ${opBinBase}/bpo_lib.sh
+. ${opBinBase}/bpoId_lib.sh
 
 . ${opBinBase}/bystarHook.libSh
 
@@ -252,7 +252,7 @@ function vis_lcntBaseGetPrep%% {
 function vis_lcntBaseVcGet {
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo bpoActivate.sh -h -v -n showRun -p privacy="priv" -p bxoId="pip_lcntBases" -i bpoActivate
+    lpDo bpoActivate.sh -h -v -n showRun -p privacy="priv" -p bpoId="pip_lcntBases" -i bpoActivate
 }
 
 
@@ -291,7 +291,7 @@ _EOF_
 
     local thisBxoHomeVarPath="${thisBxoHome}/var"
     
-    local varBaseDirBxoId="/bisos/var/bxoId/pip_lcntBases"
+    local varBaseDirBxoId="/bisos/var/bpoId/pip_lcntBases"
 
     lpDo FN_dirCreatePathIfNotThere ${varBaseDirBxoId}
     

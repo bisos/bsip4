@@ -66,7 +66,7 @@ _EOF_
     typeset there=$( pwd )
     
     #vis_bisoIdFromBase $( vis_bisoBaseGetThere "${there}" )
-    vis_bxoIdObtainForPath "${there}"
+    vis_bpoIdObtainForPath "${there}"
 }
 
 
@@ -79,7 +79,7 @@ _EOF_
 
     typeset there="$1"
 
-    vis_bxoIdObtainForPath "${there}"
+    vis_bpoIdObtainForPath "${there}"
     #vis_bisoIdFromBase $( vis_bisoBaseGetThere "${there}" )
 }
 
@@ -174,7 +174,7 @@ _EOF_
         EH_assert [[ $# -eq 1 ]]
         typeset  baseDir=$1
 
-        lpDo vis_bxoPathObtainForBxoId $(vis_bxoIdObtainForPath "${baseDir}")
+        lpDo vis_bxoPathObtainForBxoId $(vis_bpoIdObtainForPath "${baseDir}")
     }
 
     # bisoIdGetThere can end with a cd anywhere, but we will end here

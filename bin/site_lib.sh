@@ -107,7 +107,7 @@ _docStringEnd_
 
 function vis_siteUsgAdd {
     G_funcEntry; function describeF {  G_funcEntryShow; cat  << _EOF_
-** Activate the specified bxoId 
+** Activate the specified bpoId 
 _EOF_
                                     }
     EH_assert [[ $# -eq 1 ]]
@@ -122,7 +122,7 @@ _EOF_
 function vis_siteUsgSelect {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Activate the specified bxoId 
+** Activate the specified bpoId 
 _EOF_
                        }
     EH_assert [[ $# -eq 1 ]]
@@ -138,7 +138,7 @@ _EOF_
 function vis_selectedSiteBxoId {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** With stdout return: bxoId of selected site based for current user (usgHome).
+** With stdout return: bpoId of selected site based for current user (usgHome).
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -171,7 +171,7 @@ _EOF_
 function vis_selectedSiteBxoPath {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** With stdout return: bxoId of selected site based for current user (usgHome).
+** With stdout return: bpoId of selected site based for current user (usgHome).
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -199,7 +199,7 @@ _EOF_
 function vis_activate_siteBxoPlus {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Activate the specified bxoId 
+** Activate the specified bpoId 
 _EOF_
     }
     EH_assert [[ $# -eq 1 ]]
@@ -209,18 +209,18 @@ _EOF_
     if vis_bxoAcctVerify "${siteBxoId}" ; then
         ANT_cooked "WARNING: Did not expect ${siteBxoId} to exist -- Activation skipped"
     else
-        lpDo bxoManage.sh -p bxoId="${siteBxoId}" -i fullConstruct
+        lpDo bpoManage.sh -p bpoId="${siteBxoId}" -i fullConstruct
     fi
 
     EH_assert vis_bxoAcctVerify "${siteBxoId}"
-    bxoHome=$( FN_absolutePathGet ~${siteBxoId} )
+    bpoHome=$( FN_absolutePathGet ~${siteBxoId} )
 
     local boxesBxoId=$( vis_fromSiteBxoIdGet_boxesBxoId "${siteBxoId}")
     EH_assert [ ! -z "${boxesBxoId}" ]
     if vis_bxoAcctVerify "${boxesBxoId}" ; then
         ANT_cooked "WARNING: Did not expect ${boxesBxoId} to exist -- Activation skipped"
     else
-        lpDo bxoManage.sh -p bxoId="${boxesBxoId}" -i fullConstruct
+        lpDo bpoManage.sh -p bpoId="${boxesBxoId}" -i fullConstruct
     fi
 
     local containersBxoId=$( vis_fromSiteBxoIdGet_containersBxoId "${siteBxoId}")
@@ -228,7 +228,7 @@ _EOF_
     if vis_bxoAcctVerify "${containersBxoId}" ; then
         ANT_cooked "WARNING: Did not expect ${containersBxoId} to exist -- Activation skipped"
     else
-        lpDo bxoManage.sh -p bxoId="${containersBxoId}" -i fullConstruct
+        lpDo bpoManage.sh -p bpoId="${containersBxoId}" -i fullConstruct
     fi
 
     local networksBxoId=$( vis_fromSiteBxoIdGet_networksBxoId "${siteBxoId}")
@@ -236,7 +236,7 @@ _EOF_
     if vis_bxoAcctVerify "${networksBxoId}" ; then
         ANT_cooked "WARNING: Did not expect ${networksBxoId} to exist -- Activation skipped"
     else
-        lpDo bxoManage.sh -p bxoId="${networksBxoId}" -i fullConstruct
+        lpDo bpoManage.sh -p bpoId="${networksBxoId}" -i fullConstruct
     fi
 
     local domainsBxoId=$( vis_fromSiteBxoIdGet_domainsBxoId "${siteBxoId}")
@@ -254,12 +254,12 @@ _EOF_
                       }
     EH_assert [[ $# -eq 2 ]]
     local siteBxoId=$1
-    local bxoIdValue=$2
+    local bpoIdValue=$2
 
     EH_assert vis_bxoAcctVerify "${siteBxoId}"
     siteBxoHome=$( FN_absolutePathGet ~${siteBxoId} )
 
-    lpDo fileParamManage.py -i fileParamRead  ${siteBxoHome}/siteBpos/boxes.bpoFp bpoId ${bxoIdValue}
+    lpDo fileParamManage.py -i fileParamRead  ${siteBxoHome}/siteBpos/boxes.bpoFp bpoId ${bpoIdValue}
 }
 
 
@@ -271,12 +271,12 @@ _EOF_
                       }
     EH_assert [[ $# -eq 2 ]]
     local siteBxoId=$1
-    local bxoIdValue=$2
+    local bpoIdValue=$2
 
     EH_assert vis_bxoAcctVerify "${siteBxoId}"
     siteBxoHome=$( FN_absolutePathGet ~${siteBxoId} )
 
-    lpDo fileParamManage.py -i fileParamWrite  ${siteBxoHome}/siteBpos/containers.bpoFp bpoId ${bxoIdValue}
+    lpDo fileParamManage.py -i fileParamWrite  ${siteBxoHome}/siteBpos/containers.bpoFp bpoId ${bpoIdValue}
 }
 
 function vis_withSiteBxoId_write_networksBxoId {
@@ -287,12 +287,12 @@ _EOF_
                       }
     EH_assert [[ $# -eq 2 ]]
     local siteBxoId=$1
-    local bxoIdValue=$2        
+    local bpoIdValue=$2        
 
     EH_assert vis_bxoAcctVerify "${siteBxoId}"
     siteBxoHome=$( FN_absolutePathGet ~${siteBxoId} )
 
-    lpDo fileParamManage.py -i fileParamWrite  ${siteBxoHome}/siteBpos networks.bpoFp ${bxoIdValue}
+    lpDo fileParamManage.py -i fileParamWrite  ${siteBxoHome}/siteBpos networks.bpoFp ${bpoIdValue}
 }
 
 function vis_withSiteBxoId_write_domainsBxoId {
@@ -303,12 +303,12 @@ _EOF_
                       }
     EH_assert [[ $# -eq 2 ]]
     local siteBxoId=$1
-    local bxoIdValue=$2            
+    local bpoIdValue=$2            
 
     EH_assert vis_bxoAcctVerify "${siteBxoId}"
     siteBxoHome=$( FN_absolutePathGet ~${siteBxoId} )
 
-    lpDo fileParamManage.py -i fileParamWrite ${siteBxoHome}/siteBpos domains.bpoFp ${bxoIdValue}
+    lpDo fileParamManage.py -i fileParamWrite ${siteBxoHome}/siteBpos domains.bpoFp ${bpoIdValue}
 }
 
 
@@ -392,9 +392,9 @@ _EOF_
 function vis_sysCharContainerBxoIdName {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
-** returns on stdout: bxoId of container corresponding to \$1 as a containerPath.
+** returns on stdout: bpoId of container corresponding to \$1 as a containerPath.
 *** Typical usage is \$1=container base of this system obtained from siteContainerAssign.sh -i forThisSysFindContainerBase
-*** The sysCharContainerBxoId is just a bxoId derived from containerId assignment. It may or may not exist
+*** The sysCharContainerBxoId is just a bpoId derived from containerId assignment. It may or may not exist
 *** The sysCharContainerBxoId may or may not have been realized or activated.
 _EOF_
                       }
@@ -409,7 +409,7 @@ _EOF_
 function withContainerIdGetBxoId {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
-** returns on stdout, bxoId of container corresponding to \$1 as containerId
+** returns on stdout, bpoId of container corresponding to \$1 as containerId
 *** The sysCharContainerBxoId may or may not have been realized or activated.
 _EOF_
                       }

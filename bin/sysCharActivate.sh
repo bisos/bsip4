@@ -73,7 +73,7 @@ _CommentEnd_
 # ./platformBases_lib.sh
 . ${opBinBase}/platformBases_lib.sh
 
-. ${opBinBase}/bxo_lib.sh
+. ${opBinBase}/bpo_lib.sh
 
 . ${opBinBase}/bxeDesc_lib.sh
 
@@ -103,7 +103,7 @@ _CommentEnd_
 
 # PRE parameters
 
-typeset -t bxoId=""
+typeset -t bpoId=""
 typeset -t privA=""
 typeset -t registrar=""
 typeset -t id=""
@@ -111,10 +111,10 @@ typeset -t password=""
 
 
 function G_postParamHook {
-    bxoIdPrepValidate    
+    bpoIdPrepValidate    
 
-    if [ ! -z "${bxoId}" ] ; then
-        bxoHome=$( FN_absolutePathGet ~${bxoId} )
+    if [ ! -z "${bpoId}" ] ; then
+        bpoHome=$( FN_absolutePathGet ~${bpoId} )
     fi
     
     # bisosCurrentsGet
@@ -168,8 +168,8 @@ ${G_myName} -i containerBposList  # grep -i pmp_ to bxoGitlab.py -i acctList
 $( examplesSeperatorChapter "SysChar Container Activate" )
 ${G_myName} ${extraInfo}  -i activate_virtGenerics  # pmp_VAG-deb11_ pmp_VSG-deb11_
 $( examplesSeperatorChapter "SysChar Container Activate" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i activate_sysContainerBxo
-${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i activate_sysContainerBxo
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i activate_sysContainerBxo
+${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i activate_sysContainerBxo
 ${G_myName} ${extraInfo} -i activate_containersAll # Activates each of containerReposList
 $( examplesSeperatorChapter "BISOS Container Add and Select Information" )
 ${G_myName} ${extraInfo} -i bisosContainerBase
@@ -180,7 +180,7 @@ ${G_myName} ${extraInfo} -i bisosContainerSelect "${effectiveContainerBxoId}"
 ${G_myName} ${extraInfo} -i selectedContainerBxoId
 ${G_myName} ${extraInfo} -i selectedContainerBxoPath
 $( examplesSeperatorChapter "Overview Report And Summary" )
-${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i sysCharContainerReport
+${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i sysCharContainerReport
 _EOF_
 }
 

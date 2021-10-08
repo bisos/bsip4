@@ -73,8 +73,8 @@ _CommentEnd_
 # ./platformBases_lib.sh
 . ${opBinBase}/platformBases_lib.sh
 
-. ${opBinBase}/bxo_lib.sh
-. ${opBinBase}/bxoId_lib.sh
+. ${opBinBase}/bpo_lib.sh
+. ${opBinBase}/bpoId_lib.sh
 
 . ${opBinBase}/bxeDesc_lib.sh
 
@@ -108,7 +108,7 @@ _CommentEnd_
 
 # PRE parameters
 
-typeset -t bxoId=""
+typeset -t bpoId=""
 typeset -t privA=""
 typeset -t registrar=""
 typeset -t id=""
@@ -131,10 +131,10 @@ sshCmnd="ssh -o StrictHostKeyChecking=no"
 
 
 function G_postParamHook {
-    bxoIdPrepValidate    
+    bpoIdPrepValidate    
 
-    if [ ! -z "${bxoId}" ] ; then
-        bxoHome=$( FN_absolutePathGet ~${bxoId} )
+    if [ ! -z "${bpoId}" ] ; then
+        bpoHome=$( FN_absolutePathGet ~${bpoId} )
     fi
     
 }
@@ -171,7 +171,7 @@ function vis_examples {
     local oneTargetName=${curTargetBox:-}
     # local oneTargetName="localhost"
 
-    bxoId=sysChar
+    bpoId=sysChar
     local oneInterface=$( vis_cntnr_netName_applicables | head -1 )
 
     oneBxoId="${currentBxoId}"
@@ -183,30 +183,30 @@ bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${effectiveContainerBxoId}"
 ${currentBxoId:-}
 $( examplesSeperatorChapter "Ssh Based Cusomizations -- Bx Based (not vagrant based)" )
-${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i postCustomize  # on host - bx-ssh
-${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i secureSeal     # on host - bx-ssh
-${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i recordDeployment      # inside of parent bxo
+${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i postCustomize  # on host - bx-ssh
+${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i secureSeal     # on host - bx-ssh
+${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i recordDeployment      # inside of parent bxo
 $( examplesSeperatorChapter "Full Update" )
 ${G_myName} ${extraInfo} -i fullUpdate
 $( examplesSeperatorChapter "Overview Report And Summary" )
-${G_myName} ${extraInfo} -p bxoId=sysChar -i bxoIdShow  # from  bxoIdManage.sh 
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i sysCharReport
-${G_myName} ${extraInfo} -p bxoId=sysChar -i sysCharReport
+${G_myName} ${extraInfo} -p bpoId=sysChar -i bpoIdShow  # from  bpoIdManage.sh 
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i sysCharReport
+${G_myName} ${extraInfo} -p bpoId=sysChar -i sysCharReport
 ${G_myName} ${extraInfo} -i containerBoxSysCharReport
 $( examplesSeperatorChapter "Container Networks Info" )
-${G_myName} -p bxoId=sysChar -i cntnr_netName_applicables
-${G_myName} ${extraInfo} -p bxoId=sysChar -i cntnr_netName_interfaceObtain ${oneInterface}
-${G_myName} -p bxoId=sysChar -i cntnr_netName_applicables | xargs -n1 -- ${G_myName} -p bxoId=sysChar -i cntnr_netName_interfaceObtain
+${G_myName} -p bpoId=sysChar -i cntnr_netName_applicables
+${G_myName} ${extraInfo} -p bpoId=sysChar -i cntnr_netName_interfaceObtain ${oneInterface}
+${G_myName} -p bpoId=sysChar -i cntnr_netName_applicables | xargs -n1 -- ${G_myName} -p bpoId=sysChar -i cntnr_netName_interfaceObtain
 $( examplesSeperatorChapter "Container Networks Set/Update" )
-${G_myName} -p bxoId=sysChar -i cntnr_netName_applicables
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i cntnr_netName_interfaceUpdate ${oneInterface} enSomeNu enabled
-${G_myName} ${extraInfo} -p bxoId=sysChar -i cntnr_netName_interfaceUpdate ${oneInterface} enSomeNu enabled
-${G_myName} -p bxoId="${oneBxoId}" -i cntnr_netName_interfacesConject
-${G_myName} -p bxoId=sysChar -i cntnr_netName_interfacesConject
-${G_myName} ${extraInfo} -p bxoId=sysChar -i cntnr_netName_interfacesUpdateBasedOnConjecture
+${G_myName} -p bpoId=sysChar -i cntnr_netName_applicables
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i cntnr_netName_interfaceUpdate ${oneInterface} enSomeNu enabled
+${G_myName} ${extraInfo} -p bpoId=sysChar -i cntnr_netName_interfaceUpdate ${oneInterface} enSomeNu enabled
+${G_myName} -p bpoId="${oneBxoId}" -i cntnr_netName_interfacesConject
+${G_myName} -p bpoId=sysChar -i cntnr_netName_interfacesConject
+${G_myName} ${extraInfo} -p bpoId=sysChar -i cntnr_netName_interfacesUpdateBasedOnConjecture
 $( examplesSeperatorChapter "Container File Set/Update" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i sysCharWrite  # Initially invoked in sysCharRealize.sh
-${G_myName} ${extraInfo} -p bxoId=sysChar -i sysCharWrite  # Initially invoked in sysCharRealize.sh
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i sysCharWrite  # Initially invoked in sysCharRealize.sh
+${G_myName} ${extraInfo} -p bpoId=sysChar -i sysCharWrite  # Initially invoked in sysCharRealize.sh
 _EOF_
 }
 

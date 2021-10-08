@@ -64,8 +64,8 @@ _CommentEnd_
 
 . ${opBinBase}/bxeDesc_lib.sh
 
-. ${opBinBase}/bxo_lib.sh
-. ${opBinBase}/bxoId_lib.sh
+. ${opBinBase}/bpo_lib.sh
+. ${opBinBase}/bpoId_lib.sh
 
 . ${opBinBase}/bystarHook.libSh
 
@@ -77,23 +77,23 @@ _CommentEnd_
 
 . ${opBinBase}/bisosCurrents_lib.sh
 
-. ${opBinBase}/bxoManage_lib.sh
+. ${opBinBase}/bpoManage_lib.sh
 
 . ${opBinBase}/niche_lib.sh
 
 
 # PRE parameters
 
-typeset -t bxoId=""
+typeset -t bpoId=""
 typeset -t privacy=""
 # usg=""
 
 function G_postParamHook {
     # lpCurrentsGet
 
-    if [ ! -z "${bxoId}" ] ; then
-        # NOTYET -- This is unreliable as bxoId may not exist
-        bxoHome=$( FN_absolutePathGet ~${bxoId} )
+    if [ ! -z "${bpoId}" ] ; then
+        # NOTYET -- This is unreliable as bpoId may not exist
+        bpoHome=$( FN_absolutePathGet ~${bpoId} )
     fi
 
     return 0
@@ -143,42 +143,42 @@ bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId ${oneBxoId}
 ${G_myName} ${extraInfo} -i bxoConstructBaseDir_obtain "${priv}"
 $( examplesSeperatorChapter "Delete A BxO Local Acct" )
-bxoAcctManage.sh
-bxoAcctManage.sh ${extraInfo} -i bxoAcctDelete ${oneBxoId}
-usgBxoSshManage.sh
-usgBxoSshManage.sh ${extraInfo}  -p bxoId="${oneBxoId}"  -i usgBxoFullDelete
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i fullRemove $(vis_bxoConstructBaseDir_obtain priv)/${oneBxoId}/home # noAcct
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i fullRemove # Delete Acct and remove ${oneBxoHome}
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i fullDelete # _ALERT_ FullRemove + bxoGitServerFullDelete
+bpoAcctManage.sh
+bpoAcctManage.sh ${extraInfo} -i bxoAcctDelete ${oneBxoId}
+usgBpoSshManage.sh
+usgBpoSshManage.sh ${extraInfo}  -p bpoId="${oneBxoId}"  -i usgBxoFullDelete
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i fullRemove $(vis_bxoConstructBaseDir_obtain priv)/${oneBxoId}/home # noAcct
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i fullRemove # Delete Acct and remove ${oneBxoHome}
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i fullDelete # _ALERT_ FullRemove + bxoGitServerFullDelete
 $( examplesSeperatorChapter "Construct A BxO From Its Realized BxE" )
 $( examplesSeperatorSection "Obtain A Snapshot Of RBxE At $(vis_bxoConstructBaseDir_obtain priv)" )
-${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i obtainRepoSnapshot rbxe
+${G_myName} ${extraInfo} -p privacy="${priv}" -p bpoId="${oneBxoId}" -i obtainRepoSnapshot rbxe
 $( examplesSeperatorSection "BxO Ssh Config Update" )
-usgBxoSshManage.sh
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -p usg=current -i usgSshConfigUpdate   # Sets up ~usg/.ssh/config
+usgBpoSshManage.sh
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -p usg=current -i usgSshConfigUpdate   # Sets up ~usg/.ssh/config
 $( examplesSeperatorSection "BxO Creation Based On ISO Info" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i bxoAcctCreate
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i bxoAcctCreate
 $( examplesSeperatorSection "BxO Repos Clone Map" )
-${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i initialReposClone $(vis_bxoConstructBaseDir_obtain priv)/${oneBxoId}/home
-${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i initialReposClone
+${G_myName} ${extraInfo} -p privacy="${priv}" -p bpoId="${oneBxoId}" -i initialReposClone $(vis_bxoConstructBaseDir_obtain priv)/${oneBxoId}/home
+${G_myName} ${extraInfo} -p privacy="${priv}" -p bpoId="${oneBxoId}" -i initialReposClone
 $( examplesSeperatorSection "BxO Construct Full Update -- All Of The Above" )
-${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i fullConstruct $(vis_bxoConstructBaseDir_obtain priv)/${oneBxoId}/home # noAcct
-${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneBxoId}" -i fullConstruct # Creats Acct & clones in ${oneBxoHome}
+${G_myName} ${extraInfo} -p privacy="${priv}" -p bpoId="${oneBxoId}" -i fullConstruct $(vis_bxoConstructBaseDir_obtain priv)/${oneBxoId}/home # noAcct
+${G_myName} ${extraInfo} -p privacy="${priv}" -p bpoId="${oneBxoId}" -i fullConstruct # Creats Acct & clones in ${oneBxoHome}
 $( examplesSeperatorChapter "Activate Selected Real Individual" )
-${G_myName} ${extraInfo} -p privacy="${priv}" -p bxoId="${oneRealIndivBxoId}" -i bpoActivate  # Real Individual
+${G_myName} ${extraInfo} -p privacy="${priv}" -p bpoId="${oneRealIndivBxoId}" -i bpoActivate  # Real Individual
 usgBpos.sh ${extraInfo} -i usgBpos_real_indivBxoId_read
 usgBpos.sh ${extraInfo} -i usgBpos_real_indivBxoId_write "${oneRealIndivBxoId}"
 ${G_myName} ${extraInfo} -p privacy="${priv}" -i bpoActivate ${oneRealIndivBxoId} 
 echo ${oneRealIndivBxoId} | ${G_myName} ${extraInfo} -p privacy="${priv}" -i bpoActivate
-${G_myName} ${extraInfo} -p bxoId=${oneRealIndivBxoId} -i bxoTreeDescendantsList
-${G_myName} ${extraInfo} -p bxoId=${oneRealIndivBxoId} -i bxoTreeDescendantsList | ${G_myName} ${extraInfo} -p privacy="${priv}" -i bpoActivate
+${G_myName} ${extraInfo} -p bpoId=${oneRealIndivBxoId} -i bxoTreeDescendantsList
+${G_myName} ${extraInfo} -p bpoId=${oneRealIndivBxoId} -i bxoTreeDescendantsList | ${G_myName} ${extraInfo} -p privacy="${priv}" -i bpoActivate
 $( examplesSeperatorChapter "Overview Report And Summary" )
 ${G_myName} -i containerReposList  # listAvaiableSysChars
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i sysCharContainerReport
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i sysCharContainerReport
 $( examplesSeperatorChapter "Related -- See Also" )
-bxoAcctManage.sh # Bxo Accts
-bxoManage.sh # usg Keys managements
-bxoReposManage.sh # BxO Repos Create And Push And Pull
+bpoAcctManage.sh # Bxo Accts
+bpoManage.sh # usg Keys managements
+bpoReposManage.sh # BxO Repos Create And Push And Pull
 _EOF_
     
    vis_examplesNicheRun container

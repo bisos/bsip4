@@ -70,7 +70,7 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
-. ${opBinBase}/bxo_lib.sh
+. ${opBinBase}/bpo_lib.sh
 
 . ${opBinBase}/bxeDesc_lib.sh
 
@@ -92,14 +92,14 @@ _CommentEnd_
 
 # PRE parameters
 
-typeset -t bxoId=""
+typeset -t bpoId=""
 # usg=""
 
 function G_postParamHook {
-    bxoIdPrepValidate    
+    bpoIdPrepValidate    
 
-    if [ ! -z "${bxoId}" ] ; then
-        bxoHome=$( FN_absolutePathGet ~${bxoId} )
+    if [ ! -z "${bpoId}" ] ; then
+        bpoHome=$( FN_absolutePathGet ~${bpoId} )
     fi
     
     bisosCurrentsGet
@@ -139,11 +139,11 @@ _EOF_
     cat  << _EOF_
 $( examplesSeperatorChapter "Optional Type Specific Initial Repo Realizition" )
 $( examplesSeperatorSection "Realm Panels Repo Realization -- Optional" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBaseCreate_realmPanels
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBasePush realmPanels
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i repoBaseCreate_realmPanels
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i repoBasePush realmPanels
 $( examplesSeperatorSection "Blee InfoBase Repo Realization -- Optional" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBaseCreate_bleeInfoBase
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBasePush bleeInfoBase
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i repoBaseCreate_bleeInfoBase
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i repoBasePush bleeInfoBase
 _EOF_
 }
 
@@ -175,11 +175,11 @@ The don't belong in other BxEs.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${bpoId}" ]
 
-    EH_assert  vis_userAcctExists "${bxoId}"
+    EH_assert  vis_userAcctExists "${bpoId}"
 
-    local repoBase="${bxoHome}/realmPanels"
+    local repoBase="${bpoHome}/realmPanels"
 
     lpDo FN_dirCreatePathIfNotThere "${repoBase}"
 

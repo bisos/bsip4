@@ -63,8 +63,8 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
-. ${opBinBase}/bxo_lib.sh
-. ${opBinBase}/bxoId_lib.sh
+. ${opBinBase}/bpo_lib.sh
+. ${opBinBase}/bpoId_lib.sh
 
 . ${opBinBase}/bxeDesc_lib.sh
 
@@ -103,7 +103,7 @@ _CommentEnd_
 # PRE parameters
 typeset -t bystarUid="MANDATORY"
 
-typeset -t bxoId=""
+typeset -t bpoId=""
 
 typeset -t correspondingBxo=""
 
@@ -149,7 +149,7 @@ ${G_myName} -i currentAssociatedShow
 ${G_myName} -p user=${oneUser} -i bystarAccountsShow
 ${G_myName} ${extraInfo} -i showCurrentDeveloper
 $( examplesSeperatorSection "Full Updates" )
-# clones in gatherer/bxo/bxoId if needed -- Then 
+# clones in gatherer/bxo/bpoId if needed -- Then 
 ${G_myName} ${uidInfo} ${extraInfo} -p bystarUid=${oneBystarUid} -p user=${oneUser} -i bueFullUpdate
 $( examplesSeperatorSection "ASSOCIATE ~/BUE (ByStar User Account)  TO BxO-BUE" )
 ${G_myName} ${uidInfo} ${extraInfo} -i usgEnvWithAaisBynameAssociate  # Do the symlinks

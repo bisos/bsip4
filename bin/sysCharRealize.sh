@@ -70,8 +70,8 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
-. ${opBinBase}/bxo_lib.sh
-. ${opBinBase}/bxoId_lib.sh
+. ${opBinBase}/bpo_lib.sh
+. ${opBinBase}/bpoId_lib.sh
 
 . ${opBinBase}/bxeDesc_lib.sh
 
@@ -103,7 +103,7 @@ _CommentEnd_
 
 # PRE parameters
 
-typeset -t bxoId=""
+typeset -t bpoId=""
 typeset -t containerAssignBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
 
 typeset -t model=""     # one of [HPV]
@@ -112,10 +112,10 @@ typeset -t function=""  # one of [LASD]
 
 
 function G_postParamHook {
-    bxoIdPrepValidate    
+    bpoIdPrepValidate    
 
-    if [ ! -z "${bxoId}" ] ; then
-        bxoHome=$( FN_absolutePathGet ~${bxoId} )
+    if [ ! -z "${bpoId}" ] ; then
+        bpoHome=$( FN_absolutePathGet ~${bpoId} )
     fi
     
     bisosCurrentsGet
@@ -159,8 +159,8 @@ function vis_examples {
         local description=$2
         cat  << _EOF_
 $( examplesSeperatorSection "${description}" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBaseCreate_${repoName}
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBasePush ${repoName}
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i repoBaseCreate_${repoName}
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i repoBasePush ${repoName}
 _EOF_
     }   
     
@@ -171,7 +171,7 @@ $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Site Container Bases" )
 ls -l ~${sysCharContainerBxoId}    # This Container (Host)
 ${G_myName} ${extraInfo} -i selectedSiteBxoId
-${selectedSiteBxoId}               # Selected Site bxoId
+${selectedSiteBxoId}               # Selected Site bpoId
 ${containersBase}                  # Selected Site Containers Base
 $( examplesSeperatorChapter "Container Assignment" )
 siteContainerAssign.sh   # Prerequisite for sysCharRealize.sh
@@ -207,20 +207,20 @@ $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
 $( examplesSeperatorChapter "Provisioning: Initial BxE Realize -- Full Actions" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i fullCreateAndPush # NOTYET, perhaps kindTypeRealizeRepoBases 
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i kindTypeRealizeRepoBasesCreate
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i kindTypeRealizeRepoBasesPush
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i basesFullCreate
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i fullCreateAndPush # NOTYET, perhaps kindTypeRealizeRepoBases 
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i kindTypeRealizeRepoBasesCreate
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i kindTypeRealizeRepoBasesPush
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i basesFullCreate
 $( examplesSeperatorChapter "Specific Initial Repo Realizition" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i repoBasesList
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i repoBasesList
 $( repoBaseCreateAndPushExamples sysChar "sysChar Repo (System Character)" )
 $( repoBaseCreateAndPushExamples svcsSpec "svcsSpec Repo (Services Specifications)" )
 $( repoBaseCreateAndPushExamples deploymentRecords "Deployment Records Repo" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i sysCharWrite   # Temporary -- This is not the right place
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i sysCharWrite   # Temporary -- This is not the right place
 $( examplesSeperatorChapter "Bases Create" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i baseCreate_var
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i baseCreate_var
 $( examplesSeperatorChapter "Overview Report And Summary" )
-${G_myName} ${extraInfo} -p bxoId="${oneBxoId}" -i sysCharReport
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i sysCharReport
 ${G_myName} ${extraInfo} -i containerBoxSysCharReport
 ${G_myName} ${extraInfo} -i sysCharNetInterfaceSet privA eth0   # NOTYET, placeholder
 _EOF_
@@ -443,7 +443,7 @@ _EOF_
    EH_assert bxoRealizationScopeIsValid "${bxoRealizationScope}"
    EH_assert [ -d ${containerAssignBase} ]
 
-   # sysCharContainerBxoId is just a bxoId derived from containerId assignment. It may or may not exist
+   # sysCharContainerBxoId is just a bpoId derived from containerId assignment. It may or may not exist
    local sysCharContainerBxoId=$( vis_sysCharContainerBxoIdName "${containerAssignBase}" )
    EH_assert [ ! -z "${sysCharContainerBxoId}" ]
 
@@ -458,9 +458,9 @@ _EOF_
        lpDo bxmeProvision.sh -h -v -n showRun -p privacy="priv" -p kind="materialization" -p type="sysChar" -p parent="${selectedSiteBxoId}" -p name="${containerId}" -i startToPrivRealize ${bxoRealizationScope}
    fi
 
-   bxoId="${sysCharContainerBxoId}"
-   EH_assert vis_bxoAcctVerify "${bxoId}"
-   bxoHome=$( FN_absolutePathGet ~${bxoId} )
+   bpoId="${sysCharContainerBxoId}"
+   EH_assert vis_bxoAcctVerify "${bpoId}"
+   bpoHome=$( FN_absolutePathGet ~${bpoId} )
 
    # vis_basesFullCreate needs to run before vis_kindTypeRealizeRepoBases
    vis_basesFullCreate # Creates symlinks in ~bxo   
@@ -496,18 +496,18 @@ _EOF_
 function vis_baseCreate_var {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-Create /bisos/var/bxoId/${bxoId} and symlink to it.
+Create /bisos/var/bpoId/${bpoId} and symlink to it.
 _EOF_
                        }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${bpoId}" ]
 
-    EH_assert vis_bxoAcctVerify "${bxoId}"
+    EH_assert vis_bxoAcctVerify "${bpoId}"
 
     local baseName=${FUNCNAME##vis_baseCreate_}
-    local basePath="${bxoHome}/${baseName}"
+    local basePath="${bpoHome}/${baseName}"
     
-    local bisosVarBaseDir="/bisos/var/bxoId/${bxoId}"
+    local bisosVarBaseDir="/bisos/var/bpoId/${bpoId}"
 
     lpDo FN_dirCreatePathIfNotThere ${bisosVarBaseDir}
     
@@ -525,15 +525,15 @@ Symlink to site containers.
 _EOF_
                        }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${bpoId}" ]
 
-    EH_assert vis_bxoAcctVerify "${bxoId}"
+    EH_assert vis_bxoAcctVerify "${bpoId}"
 
     local baseName=${FUNCNAME##vis_baseCreate_}
-    local basePath="${bxoHome}/${baseName}"
+    local basePath="${bpoHome}/${baseName}"
 
     local siteContainersBase=$( siteContainerRepo.sh -i containersBaseObtain )
-    local containersRepoPath="${siteContainersBase}/${bxoId##pmp_}"
+    local containersRepoPath="${siteContainersBase}/${bpoId##pmp_}"
     EH_assert [ -d "${containersRepoPath}" ]
 
     lpDo FN_fileSymlinkUpdate "${containersRepoPath}" "${basePath}"
@@ -548,9 +548,9 @@ function vis_basesFullCreate {
 _EOF_
                        }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${bpoId}" ]
 
-    EH_assert vis_bxoAcctVerify "${bxoId}"
+    EH_assert vis_bxoAcctVerify "${bpoId}"
 
     for each in $(vis_basesList) ; do
         lpDo vis_baseCreate_${each}
@@ -567,12 +567,12 @@ function vis_repoBaseCreate_deploymentRecords {
 _EOF_
                        }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${bpoId}" ]
 
-    EH_assert  vis_userAcctExists "${bxoId}"
+    EH_assert  vis_userAcctExists "${bpoId}"
 
     local repoName=${FUNCNAME##vis_repoBaseCreate_}
-    local repoBase="${bxoHome}/${repoName}"
+    local repoBase="${bpoHome}/${repoName}"
 
     lpDo FN_dirCreatePathIfNotThere "${repoBase}"
 
@@ -593,10 +593,10 @@ function vis_repoBaseCreate_svcsSpec {
 _EOF_
                        }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
     local repoName=${FUNCNAME##vis_repoBaseCreate_}
-    local repoBase="${bxoHome}/${repoName}"
+    local repoBase="${bpoHome}/${repoName}"
 
     lpDo FN_dirCreatePathIfNotThere "${repoBase}"
 
@@ -606,7 +606,7 @@ includes a list of BxSO's which provide the expected services
 _EOF_
 
     lpDo FN_dirCreatePathIfNotThere ${repoBase}/fps
-    lpDo fileParamManage.py -i fileParamWrite ${repoBase}/fps bxoId UnSpecified
+    lpDo fileParamManage.py -i fileParamWrite ${repoBase}/fps bpoId UnSpecified
 
     lpDo bx-gitRepos -h -v -n showRun -i baseUpdateDotIgnore "${repoBase}"
 
@@ -620,10 +620,10 @@ function vis_repoBaseCreate_sysChar {
 _EOF_
                        }
     EH_assert [[ $# -eq 0 ]]
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
     local repoName=${FUNCNAME##vis_repoBaseCreate_}
-    local repoBase="${bxoHome}/${repoName}"
+    local repoBase="${bpoHome}/${repoName}"
 
     lpDo FN_dirCreatePathIfNotThere "${repoBase}"
 

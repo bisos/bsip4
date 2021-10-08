@@ -220,11 +220,11 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    local vagrantBaseBoxes_bxoId=aip_vagrantBaseBoxes
-    EH_assert vis_bxoAcctVerify "${vagrantBaseBoxes_bxoId}"
+    local vagrantBaseBoxes_bpoId=aip_vagrantBaseBoxes
+    EH_assert vis_bxoAcctVerify "${vagrantBaseBoxes_bpoId}"
     
-    local vagrantBaseBoxes_bxoHome=$( FN_absolutePathGet ~${vagrantBaseBoxes_bxoId} )
-    local bisos_packerBoxesBase=${vagrantBaseBoxes_bxoHome}/vagrants/packerBaseBoxes
+    local vagrantBaseBoxes_bpoHome=$( FN_absolutePathGet ~${vagrantBaseBoxes_bpoId} )
+    local bisos_packerBoxesBase=${vagrantBaseBoxes_bpoHome}/vagrants/packerBaseBoxes
 
     EH_assert [ -d "${bisos_packerBoxesBase}" ]
 

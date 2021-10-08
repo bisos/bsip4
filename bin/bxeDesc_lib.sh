@@ -38,7 +38,7 @@ _EOF_
     EH_assert [[ ! -z "${bxeDesc}" ]]
 
     local parentBxoId=$1
-    local bxoHome=""
+    local bpoHome=""
     local bxeTreeDir=""
 
     if [ -z "${parentBxoId}" ] ; then
@@ -49,19 +49,19 @@ _EOF_
         echo "$(vis_bxeDescBase_obtain)/${cp_bxePrivacy}/${cp_bxeKind}/${cp_bxeType}"
     else
         if ! unisosAccts.sh -i userAcctExists "${parentBxoId}" ; then
-            EH_problem "Missing bxoId -- parentBxoId=${parentBxoId}"
+            EH_problem "Missing bpoId -- parentBxoId=${parentBxoId}"
             lpReturn 101
         fi
-        bxoHome=$( FN_absolutePathGet ~${parentBxoId} )
-        if [ -z "${bxoHome}" ] ; then
-            EH_problem "Missing bxoHome -- parentBxoId=${parentBxoId}"
+        bpoHome=$( FN_absolutePathGet ~${parentBxoId} )
+        if [ -z "${bpoHome}" ] ; then
+            EH_problem "Missing bpoHome -- parentBxoId=${parentBxoId}"
             lpReturn 101
         fi
-        bxeTreeDir="${bxoHome}/bxeTree"
+        bxeTreeDir="${bpoHome}/bxeTree"
         if [ ! -d "${bxeTreeDir}" ] ; then
             lpDo mkdir -p ${bxeTreeDir}
         fi
-        bxeTreeDescDir="${bxoHome}/bxeTree/bxeDesc"
+        bxeTreeDescDir="${bpoHome}/bxeTree/bxeDesc"
         if [ ! -d "${bxeTreeDescDir}" ] ; then
             lpDo mkdir -p ${bxeTreeDescDir}
         fi
@@ -286,7 +286,7 @@ _EOF_
 }
 
 
-function vis_bxoIdFromBxeDesc  {
+function vis_bpoIdFromBxeDesc  {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -308,8 +308,8 @@ _EOF_
 function vis_bxeDescStash {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-Stash destination is parentBxoId/bxeDesc/bxoId
-When no parentBxoId stash destination is /bisos/var/bxe/bxeDesc/priv/kind/type/bxoId
+Stash destination is parentBxoId/bxeDesc/bpoId
+When no parentBxoId stash destination is /bisos/var/bxe/bxeDesc/priv/kind/type/bpoId
 Stash src (${bxeDesc}) is either /bisos/var/init/privRegistrar/ or ~pir_privRegistrar
 _EOF_
     }
@@ -317,7 +317,7 @@ _EOF_
     EH_assert [ ! -z "${bxeDesc}" ]
 
     local parentBxoId="$(vis_parentBxoIdFromBxeDesc ${bxeDesc})"   
-    local bxeLocalName="$(vis_bxoIdFromBxeDesc ${bxeDesc})"
+    local bxeLocalName="$(vis_bpoIdFromBxeDesc ${bxeDesc})"
     
     local stashedBxeDescBase="$( vis_bxceBxeDescBaseGet "${parentBxoId}" )/${bxeLocalName}"
 

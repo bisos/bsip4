@@ -86,7 +86,7 @@ _CommentEnd_
 # . ${opBinBase}/bystarHook.libSh
 
 # bxo_lib.sh
-. ${opBinBase}/bxo_lib.sh
+. ${opBinBase}/bpo_lib.sh
 
 . ${opBinBase}/opAcctLib.sh
 

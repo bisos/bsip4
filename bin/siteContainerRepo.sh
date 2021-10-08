@@ -57,7 +57,7 @@ _CommentEnd_
 # ./platformBases_lib.sh
 . ${opBinBase}/platformBases_lib.sh
 
-. ${opBinBase}/bxo_lib.sh
+. ${opBinBase}/bpo_lib.sh
 
 # ./lcnFileParams.libSh
 . ${opBinBase}/lcnFileParams.libSh
@@ -397,7 +397,7 @@ _EOF_
 function vis_containerRepoUpdate%% {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
-With $1=containerId (eg HSS-1001), update the repo at bxoId base.
+With $1=containerId (eg HSS-1001), update the repo at bpoId base.
 - record: model, abode, function.
 - Based on abode, determine, interfaces/nets and assign ipAddrs
 _EOF_

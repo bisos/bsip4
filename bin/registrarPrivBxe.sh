@@ -140,20 +140,20 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     readonly privRegistrarBxoId="pir_privRegistrar"
-    local bxoHome=""
+    local bpoHome=""
     
     if ! unisosAccts.sh -i userAcctExists "${privRegistrarBxoId}" ; then
-        # Missing bxoId
+        # Missing bpoId
         # Before creation of privRegistrarBxoId, /bisos/var/init is used.
         echo "/bisos/var/init/privRegistrar"
         lpReturn 
     else
-        bxoHome=$( FN_absolutePathGet ~${privRegistrarBxoId} )
-        if [ -z "${bxoHome}" ] ; then
-            EH_problem "Missing bxoHome -- privRegistrarBxoId=${privRegistrarBxoId}"
+        bpoHome=$( FN_absolutePathGet ~${privRegistrarBxoId} )
+        if [ -z "${bpoHome}" ] ; then
+            EH_problem "Missing bpoHome -- privRegistrarBxoId=${privRegistrarBxoId}"
             lpReturn 101
         fi
-        bxePrivRegBase="${bxoHome}/regBxe"
+        bxePrivRegBase="${bpoHome}/regBxe"
         if [ ! -d "${bxePrivRegBase}" ] ; then
             lpDo mkdir "${bxePrivRegBase}"
             lpDo eval echo 102 \> ${bxePrivRegBase}
@@ -170,7 +170,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    local bxoHome=""
+    local bpoHome=""
     local bxeTreeDir=""
     local regReqBaseDir=""
 
@@ -178,15 +178,15 @@ _EOF_
         lpDo cat $(registrarBaseGet)/registrar.roid    
     else
         if ! unisosAccts.sh -i userAcctExists "${parent}" ; then
-            EH_problem "Missing bxoId -- parent=${parent}"
+            EH_problem "Missing bpoId -- parent=${parent}"
             lpReturn 101
         fi
-        bxoHome=$( FN_absolutePathGet ~${parent} )
-        if [ -z "${bxoHome}" ] ; then
-            EH_problem "Missing bxoHome -- parent=${parent}"
+        bpoHome=$( FN_absolutePathGet ~${parent} )
+        if [ -z "${bpoHome}" ] ; then
+            EH_problem "Missing bpoHome -- parent=${parent}"
             lpReturn 101
         fi
-        bxeDescDir="${bxoHome}/rbxe/bxeDesc"
+        bxeDescDir="${bpoHome}/rbxe/bxeDesc"
         if [ ! -d "${bxeDescDir}" ] ; then
             EH_problem "Missing bxeDescDir=${bxeDescDir}"
             lpReturn 101

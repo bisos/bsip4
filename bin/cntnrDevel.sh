@@ -73,8 +73,8 @@ _CommentEnd_
 # ./platformBases_lib.sh
 . ${opBinBase}/platformBases_lib.sh
 
-. ${opBinBase}/bxo_lib.sh
-. ${opBinBase}/bxoId_lib.sh
+. ${opBinBase}/bpo_lib.sh
+. ${opBinBase}/bpoId_lib.sh
 
 . ${opBinBase}/bxeDesc_lib.sh
 
@@ -103,14 +103,14 @@ _CommentEnd_
 
 # PRE parameters
 
-typeset -t bxoId=""
+typeset -t bpoId=""
 # usg=""
 
 function G_postParamHook {
-    bxoIdPrepValidate    
+    bpoIdPrepValidate    
 
-    if [ ! -z "${bxoId}" ] ; then
-        bxoHome=$( FN_absolutePathGet ~${bxoId} )
+    if [ ! -z "${bpoId}" ] ; then
+        bpoHome=$( FN_absolutePathGet ~${bpoId} )
     fi
     
     bisosCurrentsGet
@@ -159,9 +159,9 @@ ${G_myName} ${extraInfo} -i bisosDevBxo_actuate    # clone  auth based bxRepos w
 $( examplesSeperatorChapter "Developer Git Credentials Deactivate" )
 ${G_myName} ${extraInfo} -i bisosDevBxo_delete
 $( examplesSeperatorChapter "Mode Selection" )
-sysCharDeploy.sh -p bxoId="sysChar" -i conveyInfoShow
-${G_myName} ${extraInfo} -p bxoId="sysChar" -i sysCharConveyInfoWrite securityMode developer
-${G_myName} ${extraInfo} -p bxoId="sysChar" -i sysCharConveyInfoWrite securityMode stable
+sysCharDeploy.sh -p bpoId="sysChar" -i conveyInfoShow
+${G_myName} ${extraInfo} -p bpoId="sysChar" -i sysCharConveyInfoWrite securityMode developer
+${G_myName} ${extraInfo} -p bpoId="sysChar" -i sysCharConveyInfoWrite securityMode stable
 ${G_myName} ${extraInfo} -i securityMode developer
 ${G_myName} ${extraInfo} -i securityMode stable
 ${G_myName} ${extraInfo} -i securityMode sealed
@@ -233,8 +233,8 @@ _EOF_
     EH_assert [ ! -z "${bisosDevBxoId}" ]
 
     # Activate bisosDev usage env bpo
-    lpDo bxoManage.sh ${G_commandPrefs} \
-         -p privacy=priv -p bxoId=${bisosDevBxoId} \
+    lpDo bpoManage.sh ${G_commandPrefs} \
+         -p privacy=priv -p bpoId=${bisosDevBxoId} \
          -i fullConstruct
 
     local bisosDevBxoHome=$( FN_absolutePathGet ~${bisosDevBxoId} )

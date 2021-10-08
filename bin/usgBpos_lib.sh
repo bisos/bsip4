@@ -101,16 +101,16 @@ function vis_usgBposUsageEnvs_bisosDevBxoId_write {
 _EOF_
                       }
     EH_assert [[ $# -eq 1 ]]
-    local bxoIdValue=$1
+    local bpoIdValue=$1
 
-    # NOTYET bxoIdValue=$(bxoIdPrep ${bxoIdValue})
-    EH_assert [ ! -z ${bxoIdValue} ]
+    # NOTYET bpoIdValue=$(bpoIdPrep ${bpoIdValue})
+    EH_assert [ ! -z ${bpoIdValue} ]
 
     local curUsgBposBase=$( vis_curUsgBposBase )
 
     lpDo mkdir -p ${curUsgBposBase}/usageEnvs
     
-    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/usageEnvs bisosDevel.bpoFp ${bxoIdValue}
+    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/usageEnvs bisosDevel.bpoFp ${bpoIdValue}
 }
 
 
@@ -163,16 +163,16 @@ _EOF_
    echo ${curUsgBposBase}/usageEnvs/bisosDev
 }
 
-function vis_usgBposUsageEnvs_bisosDev_bxoId {
+function vis_usgBposUsageEnvs_bisosDev_bpoId {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
                       }
    EH_assert [[ $# -eq 0 ]]
 
-   local bxoId=$( vis_bxoIdObtainForPath $( vis_usgBposUsageEnvs_bisosDev_bxoPath ) )
+   local bpoId=$( vis_bpoIdObtainForPath $( vis_usgBposUsageEnvs_bisosDev_bxoPath ) )
 
-   echo ${bxoId}
+   echo ${bpoId}
 }
 
 
@@ -183,14 +183,14 @@ function vis_usgBpos_real_indivBxoId_write {
 _EOF_
                       }
     EH_assert [[ $# -eq 1 ]]
-    local bxoIdValue=$1
+    local bpoIdValue=$1
 
-    bxoIdValue=$(bxoIdPrep ${bxoIdValue})
-    EH_assert [ ! -z ${bxoIdValue} ]
+    bpoIdValue=$(bpoIdPrep ${bpoIdValue})
+    EH_assert [ ! -z ${bpoIdValue} ]
 
     local curUsgBposBase=$( vis_curUsgBposBase )
     lpDo mkdir -p ${curUsgBposBase}/real
-    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/real realIndiv.bpoFp ${bxoIdValue}
+    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/real realIndiv.bpoFp ${bpoIdValue}
 }
 
 
@@ -217,17 +217,17 @@ function vis_usgBpos_real_indiv_update {
 _EOF_
                       }
    EH_assert [[ $# -eq 1 ]]
-   local bxoIdValue=$1
+   local bpoIdValue=$1
 
-   bxoIdValue=$(lpDo bxoIdPrep ${bxoIdValue})
-   EH_assert [ ! -z "${bxoIdValue}" ]
+   bpoIdValue=$(lpDo bpoIdPrep ${bpoIdValue})
+   EH_assert [ ! -z "${bpoIdValue}" ]
 
-   bxoPath=$(lpDo vis_bxoPathObtainForBxoId "${bxoIdValue}")
-   EH_assert [ ! -z "${bxoIdValue}" ]
+   bxoPath=$(lpDo vis_bxoPathObtainForBxoId "${bpoIdValue}")
+   EH_assert [ ! -z "${bpoIdValue}" ]
    
    local curUsgBposBase=$(lpDo vis_curUsgBposBase)
 
-   lpDo vis_usgBpos_real_indivBxoId_write ${bxoIdValue}
+   lpDo vis_usgBpos_real_indivBxoId_write ${bpoIdValue}
    lpDo FN_fileSymlinkUpdate ${bxoPath} ${curUsgBposBase}/real/realIndiv
 }
 
@@ -244,14 +244,14 @@ _EOF_
 }
 
 
-function vis_usgBpos_real_indiv_bxoId {
+function vis_usgBpos_real_indiv_bpoId {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
                       }
    EH_assert [[ $# -eq 0 ]]
-   local bxoId=$(lpDo vis_usgBpos_real_indivBxoId_read)
-   echo ${bxoId}
+   local bpoId=$(lpDo vis_usgBpos_real_indivBxoId_read)
+   echo ${bpoId}
 }
 
 
@@ -262,14 +262,14 @@ function vis_usgBpos_usageEnvs_fullUse_write {
 _EOF_
                       }
     EH_assert [[ $# -eq 1 ]]
-    local bxoIdValue=$1
+    local bpoIdValue=$1
 
-    bxoIdValue=$(bxoIdPrep ${bxoIdValue})
-    EH_assert [ ! -z ${bxoIdValue} ]
+    bpoIdValue=$(bpoIdPrep ${bpoIdValue})
+    EH_assert [ ! -z ${bpoIdValue} ]
 
     local curUsgBposBase=$( vis_curUsgBposBase )
     lpDo mkdir -p ${curUsgBposBase}/usageEnvs
-    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/usageEnvs fullUse.bpoFp ${bxoIdValue}
+    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/usageEnvs fullUse.bpoFp ${bpoIdValue}
 }
 
 
@@ -296,12 +296,12 @@ function vis_usgBpos_usageEnvs_fullUse_update {
 _EOF_
                       }
    EH_assert [[ $# -eq 1 ]]
-   local bxoIdValue=$1
+   local bpoIdValue=$1
 
-   bxoIdValue=$(lpDo bxoIdPrep ${bxoIdValue})
-   EH_assert [ ! -z "${bxoIdValue}" ]
+   bpoIdValue=$(lpDo bpoIdPrep ${bpoIdValue})
+   EH_assert [ ! -z "${bpoIdValue}" ]
 
-   bxoPath=$(lpDo vis_bxoPathObtainForBxoId "${bxoIdValue}")
+   bxoPath=$(lpDo vis_bxoPathObtainForBxoId "${bpoIdValue}")
    EH_assert [ ! -z "${bxoPath}" ]
 
    local curUsgAcctHome=$(vis_curUsgAcctHome)
@@ -310,7 +310,7 @@ _EOF_
    
    local curUsgBposBase=$(lpDo vis_curUsgBposBase)
 
-   lpDo vis_usgBpos_usageEnvs_fullUse_write ${bxoIdValue}
+   lpDo vis_usgBpos_usageEnvs_fullUse_write ${bpoIdValue}
    lpDo FN_fileSymlinkUpdate ${bxoPath} ${curUsgBposBase}/usageEnvs/fullUse
 }
 
@@ -327,37 +327,37 @@ _EOF_
 }
 
 
-function vis_usgBpos_usageEnvs_fullUse_bxoId {
+function vis_usgBpos_usageEnvs_fullUse_bpoId {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
                       }
    EH_assert [[ $# -eq 0 ]]
-   local bxoId=$(lpDo vis_usgBpos_usageEnvs_fullUse_read)
-   echo ${bxoId}
+   local bpoId=$(lpDo vis_usgBpos_usageEnvs_fullUse_read)
+   echo ${bpoId}
 }
 
 
 
-function vis_usgBpos_aais_byname_bxoId_fpWrite {
+function vis_usgBpos_aais_byname_bpoId_fpWrite {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** 
 _EOF_
                       }
     EH_assert [[ $# -eq 1 ]]
-    local bxoIdValue=$1
+    local bpoIdValue=$1
 
-    bxoIdValue=$(bxoIdPrep ${bxoIdValue})
-    EH_assert [ ! -z ${bxoIdValue} ]
+    bpoIdValue=$(bpoIdPrep ${bpoIdValue})
+    EH_assert [ ! -z ${bpoIdValue} ]
 
     local curUsgBposBase=$( vis_curUsgBposBase )
     lpDo mkdir -p ${curUsgBposBase}/aais
-    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/aais byname.bpoFp ${bxoIdValue}
+    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/aais byname.bpoFp ${bpoIdValue}
 }
 
 
-function vis_usgBpos_aais_byname_bxoId_fpRead {
+function vis_usgBpos_aais_byname_bpoId_fpRead {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** returns on stdout: 
@@ -380,17 +380,17 @@ function vis_usgBpos_aais_byname_update {
 _EOF_
                       }
    EH_assert [[ $# -eq 1 ]]
-   local bxoIdValue=$1
+   local bpoIdValue=$1
 
-   bxoIdValue=$(lpDo bxoIdPrep ${bxoIdValue})
-   EH_assert [ ! -z "${bxoIdValue}" ]
+   bpoIdValue=$(lpDo bpoIdPrep ${bpoIdValue})
+   EH_assert [ ! -z "${bpoIdValue}" ]
 
-   bxoPath=$(lpDo vis_bxoPathObtainForBxoId "${bxoIdValue}")
-   EH_assert [ ! -z "${bxoIdValue}" ]
+   bxoPath=$(lpDo vis_bxoPathObtainForBxoId "${bpoIdValue}")
+   EH_assert [ ! -z "${bpoIdValue}" ]
    
    local curUsgBposBase=$(lpDo vis_curUsgBposBase)
 
-   lpDo vis_usgBpos_aais_byname_bxoId_fpWrite ${bxoIdValue}
+   lpDo vis_usgBpos_aais_byname_bpoId_fpWrite ${bpoIdValue}
    lpDo FN_fileSymlinkUpdate ${bxoPath} ${curUsgBposBase}/aais/byname
 }
 
@@ -407,37 +407,37 @@ _EOF_
 }
 
 
-function vis_usgBpos_aais_byname_bxoId {
+function vis_usgBpos_aais_byname_bpoId {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
                       }
    EH_assert [[ $# -eq 0 ]]
-   local bxoId=$(lpDo vis_usgBpos_aais_byname_bxoId_fpRead)
-   echo ${bxoId}
+   local bpoId=$(lpDo vis_usgBpos_aais_byname_bpoId_fpRead)
+   echo ${bpoId}
 }
 
 
 
-function vis_usgBpos_aais_bydomain_bxoId_fpWrite {
+function vis_usgBpos_aais_bydomain_bpoId_fpWrite {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 **
 _EOF_
                       }
     EH_assert [[ $# -eq 1 ]]
-    local bxoIdValue=$1
+    local bpoIdValue=$1
 
-    bxoIdValue=$(bxoIdPrep ${bxoIdValue})
-    EH_assert [ ! -z ${bxoIdValue} ]
+    bpoIdValue=$(bpoIdPrep ${bpoIdValue})
+    EH_assert [ ! -z ${bpoIdValue} ]
 
     local curUsgBposBase=$( vis_curUsgBposBase )
     lpDo mkdir -p ${curUsgBposBase}/aais
-    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/aais bydomain.bpoFp ${bxoIdValue}
+    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/aais bydomain.bpoFp ${bpoIdValue}
 }
 
 
-function vis_usgBpos_aais_bydomain_bxoId_fpRead {
+function vis_usgBpos_aais_bydomain_bpoId_fpRead {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** returns on stdout:
@@ -460,17 +460,17 @@ function vis_usgBpos_aais_bydomain_update {
 _EOF_
                       }
    EH_assert [[ $# -eq 1 ]]
-   local bxoIdValue=$1
+   local bpoIdValue=$1
 
-   bxoIdValue=$(lpDo bxoIdPrep ${bxoIdValue})
-   EH_assert [ ! -z "${bxoIdValue}" ]
+   bpoIdValue=$(lpDo bpoIdPrep ${bpoIdValue})
+   EH_assert [ ! -z "${bpoIdValue}" ]
 
-   bxoPath=$(lpDo vis_bxoPathObtainForBxoId "${bxoIdValue}")
-   EH_assert [ ! -z "${bxoIdValue}" ]
+   bxoPath=$(lpDo vis_bxoPathObtainForBxoId "${bpoIdValue}")
+   EH_assert [ ! -z "${bpoIdValue}" ]
 
    local curUsgBposBase=$(lpDo vis_curUsgBposBase)
 
-   lpDo vis_usgBpos_aais_bydomain_bxoId_fpWrite ${bxoIdValue}
+   lpDo vis_usgBpos_aais_bydomain_bpoId_fpWrite ${bpoIdValue}
    lpDo FN_fileSymlinkUpdate ${bxoPath} ${curUsgBposBase}/aais/bydomain
 }
 
@@ -487,35 +487,35 @@ _EOF_
 }
 
 
-function vis_usgBpos_aais_bydomain_bxoId {
+function vis_usgBpos_aais_bydomain_bpoId {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
                       }
    EH_assert [[ $# -eq 0 ]]
-   local bxoId=$(lpDo vis_usgBpos_aais_bydomain_bxoId_fpRead)
-   echo ${bxoId}
+   local bpoId=$(lpDo vis_usgBpos_aais_bydomain_bpoId_fpRead)
+   echo ${bpoId}
 }
 
 
-function vis_usgBpos_controller_bxoId_fpWrite {
+function vis_usgBpos_controller_bpoId_fpWrite {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** 
 _EOF_
                       }
     EH_assert [[ $# -eq 1 ]]
-    local bxoIdValue=$1
+    local bpoIdValue=$1
 
-    bxoIdValue=$(bxoIdPrep ${bxoIdValue})
-    EH_assert [ ! -z ${bxoIdValue} ]
+    bpoIdValue=$(bpoIdPrep ${bpoIdValue})
+    EH_assert [ ! -z ${bpoIdValue} ]
 
     local curUsgBposBase=$( vis_curUsgBposBase )
     lpDo mkdir -p ${curUsgBposBase}/controller
-    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/controller controller.bpoFp ${bxoIdValue}
+    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/controller controller.bpoFp ${bpoIdValue}
 }
 
-function vis_usgBpos_controller_bxoId_fpRead {
+function vis_usgBpos_controller_bpoId_fpRead {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** returns on stdout: 
@@ -538,17 +538,17 @@ function vis_usgBpos_controller_update {
 _EOF_
                       }
    EH_assert [[ $# -eq 1 ]]
-   local bxoIdValue=$1
+   local bpoIdValue=$1
 
-   bxoIdValue=$(lpDo bxoIdPrep ${bxoIdValue})
-   EH_assert [ ! -z "${bxoIdValue}" ]
+   bpoIdValue=$(lpDo bpoIdPrep ${bpoIdValue})
+   EH_assert [ ! -z "${bpoIdValue}" ]
 
-   bxoPath=$(lpDo vis_bxoPathObtainForBxoId "${bxoIdValue}")
-   EH_assert [ ! -z "${bxoIdValue}" ]
+   bxoPath=$(lpDo vis_bxoPathObtainForBxoId "${bpoIdValue}")
+   EH_assert [ ! -z "${bpoIdValue}" ]
    
    local curUsgBposBase=$(lpDo vis_curUsgBposBase)
 
-   lpDo vis_usgBpos_controller_bxoId_fpWrite ${bxoIdValue}
+   lpDo vis_usgBpos_controller_bpoId_fpWrite ${bpoIdValue}
    lpDo FN_fileSymlinkUpdate ${bxoPath} ${curUsgBposBase}/controller/controller
 }
 
@@ -565,35 +565,35 @@ _EOF_
 }
 
 
-function vis_usgBpos_controller_bxoId {
+function vis_usgBpos_controller_bpoId {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
                       }
    EH_assert [[ $# -eq 0 ]]
-   local bxoId=$(lpDo vis_usgBpos_controller_bxoId_fpRead)
-   echo ${bxoId}
+   local bpoId=$(lpDo vis_usgBpos_controller_bpoId_fpRead)
+   echo ${bpoId}
 }
 
 
-function vis_usgBpos_credentials_bxoId_fpWrite {
+function vis_usgBpos_credentials_bpoId_fpWrite {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** 
 _EOF_
                       }
     EH_assert [[ $# -eq 1 ]]
-    local bxoIdValue=$1
+    local bpoIdValue=$1
 
-    bxoIdValue=$(bxoIdPrep ${bxoIdValue})
-    EH_assert [ ! -z ${bxoIdValue} ]
+    bpoIdValue=$(bpoIdPrep ${bpoIdValue})
+    EH_assert [ ! -z ${bpoIdValue} ]
 
     local curUsgBposBase=$( vis_curUsgBposBase )
     lpDo mkdir -p ${curUsgBposBase}/credentials
-    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/credentials credentials.bpoFp ${bxoIdValue}
+    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/credentials credentials.bpoFp ${bpoIdValue}
 }
 
-function vis_usgBpos_credentials_bxoId_fpRead {
+function vis_usgBpos_credentials_bpoId_fpRead {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** returns on stdout: 
@@ -616,17 +616,17 @@ function vis_usgBpos_credentials_update {
 _EOF_
                       }
    EH_assert [[ $# -eq 1 ]]
-   local bxoIdValue=$1
+   local bpoIdValue=$1
 
-   bxoIdValue=$(lpDo bxoIdPrep ${bxoIdValue})
-   EH_assert [ ! -z "${bxoIdValue}" ]
+   bpoIdValue=$(lpDo bpoIdPrep ${bpoIdValue})
+   EH_assert [ ! -z "${bpoIdValue}" ]
 
-   bxoPath=$(lpDo vis_bxoPathObtainForBxoId "${bxoIdValue}")
-   EH_assert [ ! -z "${bxoIdValue}" ]
+   bxoPath=$(lpDo vis_bxoPathObtainForBxoId "${bpoIdValue}")
+   EH_assert [ ! -z "${bpoIdValue}" ]
    
    local curUsgBposBase=$(lpDo vis_curUsgBposBase)
 
-   lpDo vis_usgBpos_credentials_bxoId_fpWrite ${bxoIdValue}
+   lpDo vis_usgBpos_credentials_bpoId_fpWrite ${bpoIdValue}
    lpDo FN_fileSymlinkUpdate ${bxoPath} ${curUsgBposBase}/credentials/credentials
 }
 
@@ -643,35 +643,35 @@ _EOF_
 }
 
 
-function vis_usgBpos_credentials_bxoId {
+function vis_usgBpos_credentials_bpoId {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
                       }
    EH_assert [[ $# -eq 0 ]]
-   local bxoId=$(lpDo vis_usgBpos_credentials_bxoId_fpRead)
-   echo ${bxoId}
+   local bpoId=$(lpDo vis_usgBpos_credentials_bpoId_fpRead)
+   echo ${bpoId}
 }
 
 
-function vis_usgBpos_lcntBases_bxoId_fpWrite {
+function vis_usgBpos_lcntBases_bpoId_fpWrite {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** 
 _EOF_
                       }
     EH_assert [[ $# -eq 1 ]]
-    local bxoIdValue=$1
+    local bpoIdValue=$1
 
-    bxoIdValue=$(bxoIdPrep ${bxoIdValue})
-    EH_assert [ ! -z ${bxoIdValue} ]
+    bpoIdValue=$(bpoIdPrep ${bpoIdValue})
+    EH_assert [ ! -z ${bpoIdValue} ]
 
     local curUsgBposBase=$( vis_curUsgBposBase )
     lpDo mkdir -p ${curUsgBposBase}/lcntBases
-    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/lcntBases lcntBases.bpoFp ${bxoIdValue}
+    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/lcntBases lcntBases.bpoFp ${bpoIdValue}
 }
 
-function vis_usgBpos_lcntBases_bxoId_fpRead {
+function vis_usgBpos_lcntBases_bpoId_fpRead {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** returns on stdout: 
@@ -694,17 +694,17 @@ function vis_usgBpos_lcntBases_update {
 _EOF_
                       }
    EH_assert [[ $# -eq 1 ]]
-   local bxoIdValue=$1
+   local bpoIdValue=$1
 
-   bxoIdValue=$(lpDo bxoIdPrep ${bxoIdValue})
-   EH_assert [ ! -z "${bxoIdValue}" ]
+   bpoIdValue=$(lpDo bpoIdPrep ${bpoIdValue})
+   EH_assert [ ! -z "${bpoIdValue}" ]
 
-   bxoPath=$(lpDo vis_bxoPathObtainForBxoId "${bxoIdValue}")
-   EH_assert [ ! -z "${bxoIdValue}" ]
+   bxoPath=$(lpDo vis_bxoPathObtainForBxoId "${bpoIdValue}")
+   EH_assert [ ! -z "${bpoIdValue}" ]
    
    local curUsgBposBase=$(lpDo vis_curUsgBposBase)
 
-   lpDo vis_usgBpos_lcntBases_bxoId_fpWrite ${bxoIdValue}
+   lpDo vis_usgBpos_lcntBases_bpoId_fpWrite ${bpoIdValue}
    lpDo FN_fileSymlinkUpdate ${bxoPath} ${curUsgBposBase}/lcntBases/lcntBases
 }
 
@@ -721,35 +721,35 @@ _EOF_
 }
 
 
-function vis_usgBpos_lcntBases_bxoId {
+function vis_usgBpos_lcntBases_bpoId {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
                       }
    EH_assert [[ $# -eq 0 ]]
-   local bxoId=$(lpDo vis_usgBpos_lcntBases_bxoId_fpRead)
-   echo ${bxoId}
+   local bpoId=$(lpDo vis_usgBpos_lcntBases_bpoId_fpRead)
+   echo ${bpoId}
 }
 
 
-function vis_usgBpos_siteConfigs_bxoId_fpWrite {
+function vis_usgBpos_siteConfigs_bpoId_fpWrite {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** 
 _EOF_
                       }
     EH_assert [[ $# -eq 1 ]]
-    local bxoIdValue=$1
+    local bpoIdValue=$1
 
-    bxoIdValue=$(bxoIdPrep ${bxoIdValue})
-    EH_assert [ ! -z ${bxoIdValue} ]
+    bpoIdValue=$(bpoIdPrep ${bpoIdValue})
+    EH_assert [ ! -z ${bpoIdValue} ]
 
     local curUsgBposBase=$( vis_curUsgBposBase )
     lpDo mkdir -p ${curUsgBposBase}/sites
-    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/sites siteConfigs.bpoFp ${bxoIdValue}
+    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/sites siteConfigs.bpoFp ${bpoIdValue}
 }
 
-function vis_usgBpos_siteConfigs_bxoId_fpRead {
+function vis_usgBpos_siteConfigs_bpoId_fpRead {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** returns on stdout: 
@@ -772,17 +772,17 @@ function vis_usgBpos_siteConfigs_update {
 _EOF_
                       }
    EH_assert [[ $# -eq 1 ]]
-   local bxoIdValue=$1
+   local bpoIdValue=$1
 
-   bxoIdValue=$(lpDo bxoIdPrep ${bxoIdValue})
-   EH_assert [ ! -z "${bxoIdValue}" ]
+   bpoIdValue=$(lpDo bpoIdPrep ${bpoIdValue})
+   EH_assert [ ! -z "${bpoIdValue}" ]
 
-   bxoPath=$(lpDo vis_bxoPathObtainForBxoId "${bxoIdValue}")
-   EH_assert [ ! -z "${bxoIdValue}" ]
+   bxoPath=$(lpDo vis_bxoPathObtainForBxoId "${bpoIdValue}")
+   EH_assert [ ! -z "${bpoIdValue}" ]
    
    local curUsgBposBase=$(lpDo vis_curUsgBposBase)
 
-   lpDo vis_usgBpos_siteConfigs_bxoId_fpWrite ${bxoIdValue}
+   lpDo vis_usgBpos_siteConfigs_bpoId_fpWrite ${bpoIdValue}
    lpDo FN_fileSymlinkUpdate ${bxoPath} ${curUsgBposBase}/sites/siteConfigs
 }
 
@@ -799,14 +799,14 @@ _EOF_
 }
 
 
-function vis_usgBpos_siteConfigs_bxoId {
+function vis_usgBpos_siteConfigs_bpoId {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
                       }
    EH_assert [[ $# -eq 0 ]]
-   local bxoId=$(lpDo vis_usgBpos_siteConfigs_bxoId_fpRead)
-   echo ${bxoId}
+   local bpoId=$(lpDo vis_usgBpos_siteConfigs_bpoId_fpRead)
+   echo ${bpoId}
 }
 
 

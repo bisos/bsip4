@@ -73,8 +73,8 @@ _CommentEnd_
 # ./platformBases_lib.sh
 . ${opBinBase}/platformBases_lib.sh
 
-. ${opBinBase}/bxo_lib.sh
-. ${opBinBase}/bxoId_lib.sh
+. ${opBinBase}/bpo_lib.sh
+. ${opBinBase}/bpoId_lib.sh
 
 . ${opBinBase}/bxeDesc_lib.sh
 
@@ -106,7 +106,7 @@ _CommentEnd_
 
 # PRE parameters
 
-typeset -t bxoId=""
+typeset -t bpoId=""
 typeset -t privA=""
 typeset -t registrar=""
 typeset -t id=""
@@ -140,10 +140,10 @@ sshCmnd="ssh -o StrictHostKeyChecking=no"
 
 
 function G_postParamHook {
-    bxoIdPrepValidate    
+    bpoIdPrepValidate    
 
-    if [ ! -z "${bxoId}" ] ; then
-        bxoHome=$( FN_absolutePathGet ~${bxoId} )
+    if [ ! -z "${bpoId}" ] ; then
+        bpoHome=$( FN_absolutePathGet ~${bpoId} )
     fi
     
 }
@@ -188,9 +188,9 @@ bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${effectiveContai
 bisosCurrentsManage.sh  ${extraInfo} -i setParam curTargetBox 192.168.0.45
 ${curTargetBox:-}
 $( examplesSeperatorChapter "Ssh Based Cusomizations -- Bx Based (not vagrant based)" )
-${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i postCustomize  # on host - bx-ssh
-${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i secureSeal     # on host - bx-ssh
-${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i recordDeployment      # inside of parent bxo
+${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i postCustomize  # on host - bx-ssh
+${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i secureSeal     # on host - bx-ssh
+${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i recordDeployment      # inside of parent bxo
 $( examplesSeperatorChapter "Full Update" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i fullUpdate
 $( examplesSeperatorChapter "Distro Actions -- On Manager -- Ssh In Target" )
@@ -206,19 +206,19 @@ ${G_myName} ${extraInfo} -p registrar="${registrar}" -p id="${id}" -p password="
 $( examplesSeperatorChapter "SysChar Setup -- siteBasePlatform Actions" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_fullUpdate  # onManager
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_sysBxoActivate  # onManager
-${G_myName} ${extraInfo} -p bxoId="${bxoId}" -i siteBasePlatform_sysBxoActivate  # onTarget
+${G_myName} ${extraInfo} -p bpoId="${bpoId}" -i siteBasePlatform_sysBxoActivate  # onTarget
 $( examplesSeperatorChapter "Specify ConveyInfo -- sysCharBasePlatform Actions" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p bxoId="${effectiveContainerBxoId}" -p cfpSecurityMode=bisosDev -i conveyInfoStore
-${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -p cfpPrivA=192.168.0.121 -i conveyInfoStore # For Generic Guests
-${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -p cfpSecurityMode=bisosDev -i conveyInfoStore
-${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -p cfpNetIf=eth2 -i conveyNetInfoStore pubA
-${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -p cfpHostNetIf=eno1 -i conveyNetInfoStore pubA
-${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i conveyInfoShow
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p bpoId="${effectiveContainerBxoId}" -p cfpSecurityMode=bisosDev -i conveyInfoStore
+${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -p cfpPrivA=192.168.0.121 -i conveyInfoStore # For Generic Guests
+${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -p cfpSecurityMode=bisosDev -i conveyInfoStore
+${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -p cfpNetIf=eth2 -i conveyNetInfoStore pubA
+${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -p cfpHostNetIf=eno1 -i conveyNetInfoStore pubA
+${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i conveyInfoShow
 $( examplesSeperatorChapter "Deploy With Convey Info -- FULL SYSTEM Deployment" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p bxoId="${effectiveContainerBxoId}" -i deployWithSysCharConveyInfo # onManager
-${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i deployWithSysCharConveyInfo # onTarget
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p bxoId="${effectiveContainerBxoId}" -i deploySysChar_sysBin_setup # NOTYET, placeHolder
-${G_myName} ${extraInfo} -p bxoId="${effectiveContainerBxoId}" -i deploySysChar_sysBin_setup  # NOTYET, placeHolder
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p bpoId="${effectiveContainerBxoId}" -i deployWithSysCharConveyInfo # onManager
+${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i deployWithSysCharConveyInfo # onTarget
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p bpoId="${effectiveContainerBxoId}" -i deploySysChar_sysBin_setup # NOTYET, placeHolder
+${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i deploySysChar_sysBin_setup  # NOTYET, placeHolder
 $( examplesSeperatorChapter "sysCharedPlatform Service Actions" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i sysCharedPlatform_fullUpdate
 ${G_myName} ${extraInfo} -i sysCharedPlatform_fullUpdate
@@ -452,7 +452,7 @@ _EOF_
              -i fullUpdate
 
         lpDo bisosSiteSetup.sh ${G_commandPrefs} \
-             -p bxoId="${siteBxoId}" \
+             -p bpoId="${siteBxoId}" \
              -i activate_siteBxoPlusAndSelect 
     }
 
@@ -501,35 +501,35 @@ _EOF_
 function vis_siteBasePlatform_sysBxoActivate {
      G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Activates the specified bxoId. Not intended to be used with a Box.
+** Activates the specified bpoId. Not intended to be used with a Box.
 *** For a box, run vis_boxActivateAtSiteBasePlatform instead.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
     function onManagerRun {
-        if [ -z "${bxoId}" ] ; then
-            EH_problem "Missing bxoId"
+        if [ -z "${bpoId}" ] ; then
+            EH_problem "Missing bpoId"
             lpReturn
         fi
     }
 
     function onTargetRun {
         lpDo sysCharActivate.sh ${G_commandPrefs} \
-             -p bxoId="${bxoId}" \
+             -p bpoId="${bpoId}" \
              -i activate_sysContainerBxo
 
         lpDo sysCharActivate.sh ${G_commandPrefs} \
-             -i bisosContainerSelect "${bxoId}"
+             -i bisosContainerSelect "${bpoId}"
     }
 
     if [ "${targetName}" != "onTargetRun" ] && [ ! -z "${targetName}" ] ; then
         lpDo onManagerRun
     fi
 
-    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${bpoId}" ]
 
-    G_paramCmndOption="-p bxoId=${bxoId}"
+    G_paramCmndOption="-p bpoId=${bpoId}"
     
 ####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" :cmndOption t
     if [ "${targetName}" == "onTargetRun" ] ; then
@@ -678,22 +678,22 @@ _EOF_
     EH_assert [ ! -z "${boxBpoId}" ]
 
     if vis_bxoNameExists "${boxBpoId}" ; then
-        bxoId="${boxBpoId}"
-        ANT_cooked "boxBpoId=${boxBpoId} -- bxoId=${bxoId} has already been Realized, it can be Activated."
+        bpoId="${boxBpoId}"
+        ANT_cooked "boxBpoId=${boxBpoId} -- bpoId=${bpoId} has already been Realized, it can be Activated."
         
         lpDo sysCharActivate.sh ${G_commandPrefs} \
-             -p bxoId="${bxoId}" -i activate_sysContainerBxo
+             -p bpoId="${bpoId}" -i activate_sysContainerBxo
     else        
         EH_assert [ ! -z "${model}" ]
         EH_assert [ ! -z "${abode}" ]
         EH_assert [ ! -z "${function}" ]
 
         lpDo vis_siteBasePlatform_sysCharContainerBoxRealize
-        bxoId=$( vis_containerBoxBpoId )
+        bpoId=$( vis_containerBoxBpoId )
     fi
 
     lpDo sysCharActivate.sh ${G_commandPrefs} \
-         -i bisosContainerSelect "${bxoId}"
+         -i bisosContainerSelect "${bpoId}"
 
     local identityIsSet=$( sysCharIdentity.sh -i identitySetAscertain )
     if [ -z "${identityIsSet}" ] ; then
@@ -920,14 +920,14 @@ _EOF_
         fi
 
         local sysCharContainerBpoId=$( vis_sysCharContainerBxoIdName ${containerAssignBase} )
-        local bxoHome=""
+        local bpoHome=""
         
         if vis_userAcctExists ${sysCharContainerBpoId} ; then
-            bxoHome=$( FN_absolutePathGet ~${sysCharContainerBpoId} )
+            bpoHome=$( FN_absolutePathGet ~${sysCharContainerBpoId} )
         else
             EH_problem "${sysCharContainerBpoId} Account Does Not Exist"
         fi
-        echo ${bxoHome}
+        echo ${bpoHome}
 
     }
 
@@ -950,7 +950,7 @@ _EOF_
 function vis_deployWithSysCharConveyInfo {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-Activate essential site BxOs. Activate bxoId.
+Activate essential site BxOs. Activate bpoId.
 Set identity. Set Mode (dev vs prod). deploy svcs.
 _EOF_
     }
@@ -959,14 +959,14 @@ _EOF_
     function onManagerRun { doNothing; }
 
     function onTargetRun {
-        EH_assert bxoIdPrep
+        EH_assert bpoIdPrep
 
         lpDo vis_deploySysChar_identitySet
     }
 
     if [ "${targetName}" != "onTargetRun" ] && [ ! -z "${targetName}" ] ; then lpDo onManagerRun; fi
 
-    G_paramCmndOption="-p bxoId=${bxoId}"
+    G_paramCmndOption="-p bpoId=${bpoId}"
     
 ####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" :cmndOption t
     if [ "${targetName}" == "onTargetRun" ] ; then
@@ -985,7 +985,7 @@ _EOF_
 function vis_deploySysChar_identitySet {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Set container's identity based on sysChar. -p targetName -p bxoId.
+** Set container's identity based on sysChar. -p targetName -p bpoId.
 *** onTargetRun :sshAcct "bystar" :managerOrTarget "both"
 _EOF_
     }
@@ -994,16 +994,16 @@ _EOF_
     function onManagerRun { doNothing; }
 
     function onTargetRun {
-        EH_assert bxoIdPrep
+        EH_assert bpoIdPrep
 
         lpDo sysCharIdentity.sh ${G_commandPrefs} \
-             -p bxoId="${bxoId}" -i identityUpdate
+             -p bpoId="${bpoId}" -i identityUpdate
         # sysCharIdentity.sh: Sets up motdSet, hostname, netL3Interface, netEtcHosts
     }
 
     if [ "${targetName}" != "onTargetRun" ] && [ ! -z "${targetName}" ] ; then lpDo onManagerRun; fi
 
-    G_paramCmndOption="-p bxoId=${bxoId}"
+    G_paramCmndOption="-p bpoId=${bpoId}"
     
 ####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" :cmndOption t
     if [ "${targetName}" == "onTargetRun" ] ; then
@@ -1028,14 +1028,14 @@ _EOF_
 function vis_deploySysChar_identitySet_forBox {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Set container's identity based on sysChar. -p targetName -p bxoId.
+** Set container's identity based on sysChar. -p targetName -p bpoId.
 *** onTargetRun :sshAcct "bystar" :managerOrTarget "both"
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
     function onTargetRun {
-        # determin bxoId for box
+        # determin bpoId for box
 
         local containerBase=$( vis_forThisSysFindContainerBase )
         EH_assert [ ! -z "${containerBase}" ]
@@ -1045,8 +1045,8 @@ _EOF_
 
         local hostContainerId="${containerAssign_containerId}"
     
-        bxoId=$( withContainerIdGetBxoId ${hostContainerId} )
-        EH_assert vis_bxoAcctVerify "${bxoId}"
+        bpoId=$( withContainerIdGetBxoId ${hostContainerId} )
+        EH_assert vis_bxoAcctVerify "${bpoId}"
 
         lpDo vis_deployWithSysCharConveyInfo
     }
@@ -1068,16 +1068,16 @@ _EOF_
 function vis_deploySysChar_sysBin_setup {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Set container's identity based on sysChar. -p targetName -p bxoId.
+** Set container's identity based on sysChar. -p targetName -p bpoId.
 *** onTargetRun :sshAcct "bystar" :managerOrTarget "both"
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
     function onTargetRun {
-        EH_assert bxoIdPrep
+        EH_assert bpoIdPrep
 
-        ${bxoHome}/sys/bin/bxoSysSetup.sh ${G_commandPrefs} \
+        ${bpoHome}/sys/bin/bxoSysSetup.sh ${G_commandPrefs} \
                   -i setup
     }
 
@@ -1193,9 +1193,9 @@ _EOF_
     }
 
     function onTargetRun {
-        EH_assert bxoIdPrep
+        EH_assert bpoIdPrep
 
-        local sysCharConveyInfoBase="${bxoHome}/var/sysCharConveyInfo"
+        local sysCharConveyInfoBase="${bpoHome}/var/sysCharConveyInfo"
 
         lpDo FN_dirCreatePathIfNotThere ${sysCharConveyInfoBase}
 
@@ -1230,8 +1230,8 @@ _EOF_
 
     # Empty values are passed along
 
-    # G_paramCmndOption="-p bxoId=\"${bxoId}\" -p cfpVmNameQualifier=\"${cfpVmNameQualifier}\" -p cfpPrivA=\"${cfpPrivA}\" -p cfpPubA=\"${cfpPubA}\" -p cfpSecurityMode=\"${cfpSecurityMode}\""
-    G_paramCmndOption="-p bxoId=\"${bxoId}\" -p cfpVmNameQualifier=\"${cfpVmNameQualifier}\" -p cfpHostCntnr=\"${cfpHostCntnr}\" -p cfpSecurityMode=\"${cfpSecurityMode}\""
+    # G_paramCmndOption="-p bpoId=\"${bpoId}\" -p cfpVmNameQualifier=\"${cfpVmNameQualifier}\" -p cfpPrivA=\"${cfpPrivA}\" -p cfpPubA=\"${cfpPubA}\" -p cfpSecurityMode=\"${cfpSecurityMode}\""
+    G_paramCmndOption="-p bpoId=\"${bpoId}\" -p cfpVmNameQualifier=\"${cfpVmNameQualifier}\" -p cfpHostCntnr=\"${cfpHostCntnr}\" -p cfpSecurityMode=\"${cfpSecurityMode}\""
     
 ####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" :cmndOption t
     if [ "${targetName}" == "onTargetRun" ] ; then
@@ -1262,10 +1262,10 @@ _EOF_
     }
 
     function onTargetRun {
-        EH_assert bxoIdPrep
+        EH_assert bpoIdPrep
         local netName="$1"
         
-        local sysCharConveyNetInfoBase="${bxoHome}/var/sysCharConveyInfo/netIfs"
+        local sysCharConveyNetInfoBase="${bpoHome}/var/sysCharConveyInfo/netIfs"
 
         lpDo FN_dirCreatePathIfNotThere ${sysCharConveyNetInfoBase}
 
@@ -1289,7 +1289,7 @@ _EOF_
 
     # Empty values are passed along
 
-    G_paramCmndOption="-p bxoId=\"${bxoId}\" -p cfpNetIf=\"${cfpNetIf}\" -p cfpHostNetIf=\"${cfpHostNetIf}\""
+    G_paramCmndOption="-p bpoId=\"${bpoId}\" -p cfpNetIf=\"${cfpNetIf}\" -p cfpHostNetIf=\"${cfpHostNetIf}\""
 
     g_args=$@
     
@@ -1318,16 +1318,16 @@ _EOF_
     function onManagerRun { doNothing; }
 
     function onTargetRun {
-        EH_assert bxoIdPrep
+        EH_assert bpoIdPrep
 
-        local sysCharConveyInfoBase="${bxoHome}/var/sysCharConveyInfo"
+        local sysCharConveyInfoBase="${bpoHome}/var/sysCharConveyInfo"
 
         lpDo  fileParamManage.py -i fileParamDictReadDeep ${sysCharConveyInfoBase}
     }
 
     if [ "${targetName}" != "onTargetRun" ] && [ ! -z "${targetName}" ] ; then lpDo onManagerRun; fi
 
-    G_paramCmndOption="-p bxoId=${bxoId}"
+    G_paramCmndOption="-p bpoId=${bpoId}"
     
 ####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" :cmndOption t
     if [ "${targetName}" == "onTargetRun" ] ; then
@@ -1352,9 +1352,9 @@ _EOF_
                        }
     local thisDescribeF=$(describeF)
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bxoId}" ]
+    EH_assert [ ! -z "${bpoId}" ]
 
-    EH_assert vis_bxoAcctVerify "${bxoId}"
+    EH_assert vis_bxoAcctVerify "${bpoId}"
 
     lpDo printf ${thisDescribeF}
     

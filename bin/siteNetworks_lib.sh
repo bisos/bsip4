@@ -426,7 +426,7 @@ _EOF_
                        }
     EH_assert [[ $# -eq 1 ]]
 
-    EH_assert bxoIdPrep
+    EH_assert bpoIdPrep
 
     local netName="$1"
     EH_assert [ ! -z "${netName}" ]
@@ -438,7 +438,7 @@ _EOF_
      
     # Generics one way, auto one way, assigned one way
 
-    local siteContainersRepo="${bxoHome}/siteContainersRepo"
+    local siteContainersRepo="${bpoHome}/siteContainersRepo"
     local containerAssignBase="${siteContainersRepo}/assign"
 
     local model=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} model )
@@ -446,9 +446,9 @@ _EOF_
     local function=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} function )
     local containerId=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} containerId )    
 
-    local sysCharBase=${bxoHome}/sysChar
+    local sysCharBase=${bpoHome}/sysChar
     local repoName="sysChar"
-    local repoBase="${bxoHome}/${repoName}"
+    local repoBase="${bpoHome}/${repoName}"
     
     # local sysInfoFps=${repoBase}/sysInfo.fps
     # EH_assert [ -d "${sysInfoFps}" ]
@@ -459,7 +459,7 @@ _EOF_
     local containerSpecFps=${repoBase}/containerSpec.fps  
     local containerSpecFps_netIfs=${containerSpecFps}/netIfs
 
-    local sysCharConveyInfoBase="${bxoHome}/var/sysCharConveyInfo"
+    local sysCharConveyInfoBase="${bpoHome}/var/sysCharConveyInfo"
     
     local result=""
     

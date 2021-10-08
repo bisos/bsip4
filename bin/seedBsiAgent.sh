@@ -66,7 +66,7 @@ _CommentEnd_
 . ${opBinBase}/lpReRunAs.libSh
 
 # /opt/public/osmt/bin/biso.libSh
-. ${opBinBase}/bxo_lib.sh
+. ${opBinBase}/bpo_lib.sh
 . ${opBinBase}/biso.libSh
 
 
@@ -541,10 +541,10 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     typeset svcCapabilityAgent=$( vis_svcCapabilityAgentGet )
-    typeset bxoId=$( vis_bisoIdGetHere )    
+    typeset bpoId=$( vis_bisoIdGetHere )    
     typeset srBase=$( vis_bisoSrGetHere )
 
-    lpDo echo ${svcCapabilityAgent} -h -v -n showRun -p bystarUid=${bxoId} -p sr=${srBase} -i fullUpdate     
+    lpDo echo ${svcCapabilityAgent} -h -v -n showRun -p bystarUid=${bpoId} -p sr=${srBase} -i fullUpdate     
     EH_retOnFail
 
     lpReturn
@@ -564,10 +564,10 @@ _EOF_
     EH_assert [[ $# -gt 0 ]]
 
     typeset svcCapabilityAgent=$( vis_svcCapabilityAgentGet )
-    typeset bxoId=$( vis_bisoIdGetHere )    
+    typeset bpoId=$( vis_bisoIdGetHere )    
     typeset srBase=$( vis_bisoSrGetHere )
 
-    lpDo ${svcCapabilityAgent} -h -v -n showRun -p bystarUid=${bxoId} -p sr=${srBase} -i "$@"  
+    lpDo ${svcCapabilityAgent} -h -v -n showRun -p bystarUid=${bpoId} -p sr=${srBase} -i "$@"  
     EH_retOnFail
 
     lpReturn
