@@ -27,6 +27,7 @@ opSysConfigInputBase=${opBase}/sysConfigInput
 opPoliciesBase=${opBase}/policies
 
 aaisBinBase="/bisos/aais/bin"
+lcntBinBase="/bisos/core/lcnt/bin"
 
 #    opVarBase    -- Where files that grow live
 
