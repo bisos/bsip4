@@ -129,7 +129,6 @@ _EOF_
     local thisFunc=${G_thisFunc}
     EH_assert bpoIdPrep
 
-
     function processEach {
         EH_assert [[ $# -eq 1 ]]
         local repoName=$1
