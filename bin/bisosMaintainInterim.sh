@@ -112,9 +112,8 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "FULL Site Deployment" )
 ${G_myName} ${extraInfo} -i fullUpdate # Run all the full ICMs
-${G_myName} ${extraInfo} -i fullBeforeBisosBasesReClone
-${G_myName} ${extraInfo} -i fullMissingUpdate  # missingPipInstals and missingAptPkgsInstall
 ${G_myName} ${extraInfo} -i fullUpgrades # pip and apt
+${G_myName} ${extraInfo} -i fullMissingUpdate  # missingPipInstals and missingAptPkgsInstall
 ${G_myName} ${extraInfo} -i fullBisosBasesUpdate # ReClone and GitPull
 $( examplesSeperatorChapter "Package Upgrades" )
 ${G_myName} ${extraInfo} -i pipUpgrades
@@ -154,24 +153,11 @@ _EOF_
     lpDo vis_bleeUpgrade
 }
 
-function vis_fullUpdate {
+
+function vis_fullUpgrades {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Run all the full ICMs in turn.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    lpDo vis_fullUpgrades
-    lpDo vis_fullMissingUpdate
-}
-
-
-
-function vis_fullBeforeBisosBasesReClone {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** Run all missing packages interim commands.
+** fullBeforeBisosBasesReClone -- Run all missing packages interim commands.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -217,6 +203,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
+    lpDo bx-bases -v 20 --baseDir="/bisos" --pbdName="bisosRoot"  -i pbdUpdate all
     lpDo bx-bases -v 20 --baseDir="/bisos" --pbdName="bleeRoot"  -i pbdUpdate all
 
     lpReturn
@@ -233,9 +220,12 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
+    lpDo cntnrDevel.sh -h -v -n showRun -i securityMode developer
+
     ANT_raw "Run this only after you have pushed all your changes."
     ANT_raw "Not automated as part of batch full update as it can be dangerous."
     ANT_raw "/bisos/git/bxRepos and moved and re-cloned."
+
     lpDo echo cntnrDevel.sh -h -v -n showRun -i bisosDevBxo_fullSetup
 
     lpReturn
@@ -249,7 +239,9 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo eval bx-gitRepos -i cachedLs \| bx-gitRepos -i gitRemPull
+    lpDo eval  bx-gitRepos -p vcMode=anon -i cachedLs \| bx-gitRepos -i gitRemPull
+
+    lpDo eval  bx-gitRepos -p vcMode=auth -i cachedLs \| bx-gitRepos -i gitRemPull
 
     lpReturn
 }
