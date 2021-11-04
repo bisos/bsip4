@@ -126,8 +126,10 @@ $( examplesSeperatorChapter "Bisos Bases Update" )
 ${G_myName} ${extraInfo} -i bisosBasesReClone  # with cntnrDevel.sh
 ${G_myName} ${extraInfo} -i bisosBasesPull  # with bx-gitRepos
 ${G_myName} ${extraInfo} -i bisosBasesReDirAndReLink # with bx-bases
-$( examplesSeperatorChapter "Blee Upgrade" )
+$( examplesSeperatorChapter "Blee And Usage Environment Upgrade" )
 ${G_myName} ${extraInfo} -i bleeUpgrade
+${G_myName} ${extraInfo} -i bashRcVerify
+${G_myName} ${extraInfo} -f -i bashRcVerify  # forceMode updates
 $( examplesSeperatorChapter "Optional Interim Actions" )
 ${G_myName} ${extraInfo} -i libreInfoBaseAndInitialTemplates # Bring over /libre/ByStar panels
 ${G_myName} ${extraInfo} -i optPublicOsmt # Bring over
@@ -283,30 +285,19 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
+    # In case there are new ones that have not been installed
+    lpDo lcaPythonCommonBinsPrep.sh -v -n showRun -i fullUpdate
+
     lpDo bisosPyVenvSetup.sh -h -v -n showRun -i venvPy3_pipInstalls
     
-    # lpDo /bisos/venv/py2/bisos3/bin/pip2 install --upgrade unisos.gcipher
-    # lpDo /bisos/venv/py2/bisos3/bin/pip2 install --upgrade twine
+    # lpDo /bisos/venv/py3/bisos3/bin/pip3 install --upgrade unisos.gcipher
 
-    lpDo /bisos/venv/py3/bisos3/bin/pip3 install --upgrade unisos.gcipher
-    lpDo /bisos/venv/py3/bisos3/bin/pip3 install --upgrade twine
-    
-    lpDo sudo apt-get install python3-venv  # needed for pipx
-    lpDo /bisos/venv/py3/bisos3/bin/pip install --upgrade pipx
-    # NOTYET, Run pipx --help and setup env vars in bashrc
 
-    # lpDo lcaJsBinsPrep.sh -v -n showRun -i fullUpdate
 
     function toBeAbsorbedIn_bleeBinsPrep {
-        sudo npm install --global pyright
-
-        # See github.com/hlissner/doom-emacs/blob/develop/modules/lang/python/README.org
-        # For details
-        #
-        lpDo pipx install pytest
-        lpDo pipx install nose
-        lpDo pipx install black
-        lpDo pipx install isort
+        # sudo npm install --global pyright
+        #lpDo pipx install pytest
+        return
     }
     lpDo toBeAbsorbedIn_bleeBinsPrep
 
@@ -383,7 +374,6 @@ _EOF_
 }
 
 
-
 function vis_bleeUpgrade {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -404,6 +394,37 @@ _EOF_
 
     lpDo blee -h -v -n showRun -i chemacs2FullUpdate    
     
+    lpReturn
+}
+
+
+function vis_bashRcVerify {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** If _bashrc needs updating, do so.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local diffResults=$(lpDo diff /bisos/apps/defaults/bashrc/usg/_bashrc ~/_bashrc)
+
+    if [ -z "${diffResults}" ] ; then
+        ANT_raw "_bashrc is current -- updating skipped"
+        if [ "${G_forceMode}" == "force" ] ; then
+            ANT_raw "_bashrc forceMode ignored -- skipped"
+        fi
+        lpReturn
+    else
+        echo "${diffResults}"
+    fi
+
+    if [ "${G_forceMode}" == "force" ] ; then
+        lpDo mv ~/_bashrc  ~/_bashrc.$(DATE_nowTag)
+        lpDo cp /bisos/apps/defaults/bashrc/usg/_bashrc ~/_bashrc
+    else
+        EH_problem "_bashrc needs updating but forceMode was not specified."
+    fi
+
     lpReturn
 }
 

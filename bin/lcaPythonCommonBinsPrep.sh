@@ -81,11 +81,16 @@ _EOF_
 
     itemPy3Bisos3PipOrderedList=(
         "pipx"
-        "unisos.gcipher"       # 
-        "twine"                #
+        "unisos.gcipher"       #
+        "yolk3k"               # Did not work with pipx
+        # "twine"                #
     )
 
     itemPipxOrderedList=(
+        "twine"       # for pypi uploading
+        "pipreqs"     # for requirements creation
+        "johnnydep"    # dependency tree
+        "pipdeptree"  # dependency tree
         # See github.com/hlissner/doom-emacs/blob/develop/modules/lang/python/README.org
         "pytest"      # Used by blee and doom
         "nose"        # Used by blee and doom

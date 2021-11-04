@@ -62,6 +62,7 @@ _CommentEnd_
 # ./platformBases_lib.sh
 . ${opBinBase}/platformBases_lib.sh
 
+. ${opBinBase}/bisosPyVenv_lib.sh
 
 function G_postParamHook {
      return 0
@@ -81,20 +82,15 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "BISOS Bases Initialization" )
 ${G_myName} ${extraInfo} -i pyVenv_provisionSetup  # virtenvsPrep + venvPy3_pipInstalls etc
+${G_myName} ${extraInfo} -f -i pyVenv_provisionSetup  # forceMode virtenvsPrep + venvPy3_pipInstalls etc
 $( examplesSeperatorSection "Create virtenvs and install packages" )
 ${G_myName} ${extraInfo} -i virtenvsPrep py3
 ${G_myName} ${extraInfo} -f -i virtenvsPrep py3  # force mode
-${G_myName} ${extraInfo} -i virtenvsPrep py3/dev
-${G_myName} ${extraInfo} -f -i virtenvsPrep py3/dev # force mode
 $( examplesSeperatorSection "BISOS Install packages" )
-${G_myName} ${extraInfo} -i venvPy2_pipInstalls
 ${G_myName} ${extraInfo} -i venvPy3_pipInstalls
-${G_myName} ${extraInfo} -i venvPy2Dev_pipInstalls
-${G_myName} ${extraInfo} -i venvPy3Dev_pipInstalls
 $( examplesSeperatorSection "BISOS Uninstall packages" )
 ${G_myName} ${extraInfo} -i venvPy3_bisosUninstalls
 $( examplesSeperatorChapter "BISOS Upgrade Packages" )
-${G_myName} ${extraInfo} -i venvPy2_pipUpgrades
 ${G_myName} ${extraInfo} -i venvPy3_pipUpgrades
 $( examplesSeperatorChapter "BISOS List Packages" )
 ${G_myName} ${extraInfo} -f -i venvDo py3 pip list
@@ -104,6 +100,14 @@ ${G_myName} ${extraInfo} -f -i venvDo py3/dev install ${onePip3Pkg}
 ${G_myName} ${extraInfo} -f -i venvDo py3 reInstall ${onePip3Pkg}  # reinstall
 ${G_myName} ${extraInfo} -f -i venvDo py3 unInstall ${onePip3Pkg}
 ${G_myName} ${extraInfo} -f -i venvDo py3 pip list
+$( examplesSeperatorChapter "Py3 Dev Manage Environment" )
+${G_myName} ${extraInfo} -i pyVenv_DevSetup # Create Virtual Environment and dev pipInstalls
+${G_myName} ${extraInfo} -i virtenvsPrep py3/dev  # Create Virtual Environment
+${G_myName} ${extraInfo} -f -i virtenvsPrep py3/dev # force mode
+${G_myName} ${extraInfo} -i venvPy3Dev_pipInstalls # editable installed with ftoWalkThrough
+$(vis_venvPy3Dev_stashStatus)
+${G_myName} ${extraInfo} -i venvPy3Dev_stash
+${G_myName} ${extraInfo} -i venvPy3Dev_unStash
 $( examplesSeperatorChapter "Direct Examples" )
 ${pdb_venv_py3Bisos3}/bin/pip list --outdated --format=freeze
 ${pdb_venv_py3Bisos3}/bin/pip list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 ${pdb_venv_py3Bisos3}/bin/pip install --upgrade
@@ -119,22 +123,31 @@ noArgsHook() {
 function vis_pyVenv_provisionSetup {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-echo someParam and args 
+** py3/dev is not done here
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-
-    #lpDo vis_venvPy2_pipInstalls
-    #lpDo vis_venvPy2Dev_pipInstalls
 
     lpDo vis_virtenvsPrep py3
 
     lpDo vis_venvPy3_pipInstalls
 
+    lpReturn
+}
+
+
+function vis_pyVenv_DevSetup {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** TODO needs to check for stashed
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
     lpDo vis_virtenvsPrep py3/dev
 
-    lpDo vis_venvPy3Dev_pipInstalls    
-    
+    lpDo vis_venvPy3Dev_pipInstalls
+
     lpReturn
 }
 
@@ -179,12 +192,6 @@ _EOF_
     }
 
     case ${virtenvLabel} in
-        py2)
-            lpDo venvCmnd python2 venv/py2/bisos3 $@
-            ;;
-        py2/dev)
-            lpDo venvCmnd python2 venv/py2/dev-bisos3 $@
-            ;;
         py3)
             lpDo venvCmnd python3 venv/py3/bisos3 $@
             ;;
@@ -202,7 +209,7 @@ _EOF_
 function vis_virtenvsPrep {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Installs or Reinstalls venv. virtenvLabel is one of py2 py2/dev py3 py3/dev.
+** Installs or Reinstalls venv. virtenvLabel is one of py3 py3/dev.
 _EOF_
     }
     EH_assert [[ $# -eq 1 ]]
@@ -235,12 +242,6 @@ _EOF_
     }
 
     case ${virtenvLabel} in
-        py2)
-            lpDo virtenvReInstall python2 venv/py2/bisos3
-            ;;
-        py2/dev)
-            lpDo virtenvReInstall python2 venv/py2/dev-bisos3
-            ;;
         py3)
             lpDo virtenvReInstall python3 venv/py3/bisos3
             ;;
@@ -259,33 +260,10 @@ _CommentBegin_
 _CommentEnd_
 
 
-function vis_venvPy2_pipUpgrades%% {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** Upgrade py2 packages.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    local upgradeSubjectPkgs=$(lpDo eval ${pdb_venv_py2Bisos3}/bin/pip2 list --outdated --format=freeze \| grep -v flufl.bounce)
-
-    if [ -z "${upgradeSubjectPkgs}" ] ; then
-        ANT_raw "No packages needed to be upgraded for ${pdb_venv_py2Bisos3}."
-        lpReturn
-    fi
-
-    ANT_raw "Upgrade Subject Packages For ${pdb_venv_py2Bisos3}:"
-    ANT_raw "${upgradeSubjectPkgs}"
-
-    lpDo eval echo ${upgradeSubjectPkgs} \| grep -v '^\-e' \| cut -d = -f 1  \| xargs -n1 ${pdb_venv_py2Bisos3}/bin/pip2 install --upgrade
-
-    lpReturn
-}
-
 function vis_venvPy3_pipUpgrades {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Upgrade py2 packages.
+** Updates only packages that need to be updated. Applies to py3 and py3/dev
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -300,7 +278,7 @@ _EOF_
     ANT_raw "Upgrade Subject Packages For ${pdb_venv_py3Bisos3}:"
     ANT_raw "${upgradeSubjectPkgs}"
 
-    lpDo eval printf '%s\\n' ${upgradeSubjectPkgs} \| grep -v '^\-e' \| cut -d = -f 1  \| xargs -n1 ${pdb_venv_py3Bisos3}/bin/pip install --upgrade
+    lpDo eval printf '%s\\n' ${upgradeSubjectPkgs} \| grep -v '^\-e' \| cut -d = -f 1  \| xargs -n1 ${pdb_venv_py3Bisos3}/bin/pip install --no-cache-dir --force-reinstall --upgrade
 
     lpReturn
 }
@@ -308,7 +286,8 @@ _EOF_
 function vis_venvPy3_bisosUninstalls {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Upgrade py2 packages.
+** Uninstalls packages -- Unverified
+*** TODO needs testing and cleanup. It is UNVERIFIED.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -329,35 +308,10 @@ _EOF_
 }
 
 
-
-function vis_venvPy2_pipInstalls%% {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-Make sure python2 and python3 and their pips are in place
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-
-    local py2ActivateFile="${pdb_venv_py2Bisos3}/bin/activate"
-
-    if [ ! -f "${py2ActivateFile}" ] ; then
-        EH_problem "Missing ${py2ActivateFile} -- BISOS Provisioners venv pip installs aborted"
-        lpReturn 101
-    fi
-
-    lpDo sudo -u bisos ${pdb_venv_py2Bisos3}/bin/pip2 install --no-cache-dir --force-reinstall --upgrade bisos.py2-all
-
-    lpDo sudo -u bisos ${pdb_venv_py2Bisos3}/bin/pip2 list 
-
-    lpReturn
-}
-
-
 function vis_venvPy3_pipInstalls {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-Make sure python2 and python3 and their pips are in place
+** Applies only to py3. Not py3/dev. Uses bisos.py3-all virtual package.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -377,38 +331,10 @@ _EOF_
     lpReturn
 }
 
-function vis_venvPy2Dev_pipInstalls {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-Make sure python2 and python3 and their pips are in place
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-
-    local py2ActivateFile="${pdb_venv_py2Bisos3Dev}/bin/activate"
-
-    if [ ! -f "${py2ActivateFile}" ] ; then
-        EH_problem "Missing ${py2ActivateFile} -- BISOS Provisioners venv pip installs aborted"
-        lpReturn 101
-    fi
-
-    source ${py2ActivateFile}
-
-    lpDo echo ${VIRTUAL_ENV}
-    
-    lpDo echo NOTYEY ftoWalk throug the bisos-pip repo
-
-    lpDo pip2 list 
-    
-    lpReturn
-}
-
-
 function vis_venvPy3Dev_pipInstalls {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-Make sure python2 and python3 and their pips are in place
+** Applies only to py3/dev. Not py3. Installs packages as editable. Uses ftoWalkRunCmnd pypiProc.sh
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -431,7 +357,6 @@ _EOF_
     
     lpReturn
 }
-
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*

@@ -437,7 +437,10 @@ _EOF_
 
     lpDo echo "git pull in ${here}"
 
-    lpDo git pull origin master
+    #lpDo git pull origin master # github changed master to main
+    #lpDo git pull origin main
+
+    lpDo git pull
 }       
 
 

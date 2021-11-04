@@ -104,6 +104,7 @@ function vis_examples {
 
     opDo icmPreps
 
+    pypiPkgInfoExtract
 
   typeset visLibExamples=`visLibExamplesOutput ${G_myName} ${extraInfo}`
  cat  << _EOF_
@@ -161,6 +162,12 @@ fileParamManage.py -i fileParamWritePath ../fptb/docTitle "Pkg's Human Oriented 
 fileParamManage.py -i fileParamWritePath ../fptb/docVersion "0.1"
 $( examplesSeperatorChapter "REAME.rst Creation" )
 pandoc --from=latex -s -t rst --toc README.tex -o README.rst
+$( examplesSeperatorChapter "Requirements And Dependencies" )
+pipreqs --force .
+johnnydep -v 0 $pypiPkgName
+pipdeptree -r -p $pypiPkgName # Needs a virtEnv
+pipdeptree -fl -p $pypiPkgName # Needs a virtEnv
+yolk -U $pypiPkgName # show if update available at PyPI
 _EOF_
 
 
