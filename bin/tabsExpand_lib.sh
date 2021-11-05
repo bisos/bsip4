@@ -118,7 +118,7 @@ _EOF_
         fi
     }
 
-####+BEGIN: bx:bsip:bash/processEachArgsOrStdin
+####+BEGIN: bx:bsip:bash/processArgsAndStdin :noParams t
     if [ $# -gt 0 ] ; then
         local each=""
         for each in ${inputsList} ; do
@@ -158,7 +158,7 @@ _EOF_
         lpDo FILE_expandTabsEach $1
     }
 
-####+BEGIN: bx:bsip:bash/processEachArgsOrStdin
+####+BEGIN: bx:bsip:bash/processArgsAndStdin :noParams t
     if [ $# -gt 0 ] ; then
         local each=""
         for each in ${inputsList} ; do

@@ -128,7 +128,7 @@ _EOF_
         lpDo sudo rm -r ${userAcctHome}
     }
 
-####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
+####+BEGIN: bx:bsip:bash/processArgsAndStdin :noParams t 
     if [ $# -gt 0 ] ; then
         local each=""
         for each in ${inputsList} ; do
@@ -176,7 +176,7 @@ _EOF_
         lpDo sudo chmod 000 ${userAcctHome}.defunct
     }
 
-####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
+####+BEGIN: bx:bsip:bash/processArgsAndStdin :noParams t 
     if [ $# -gt 0 ] ; then
         local each=""
         for each in ${inputsList} ; do
@@ -222,7 +222,7 @@ _EOF_
         lpDo sudo userdel ${userAcctName}       
     }
 
-####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
+####+BEGIN: bx:bsip:bash/processArgsAndStdin :noParams t 
     if [ $# -gt 0 ] ; then
         local each=""
         for each in ${inputsList} ; do
@@ -269,7 +269,7 @@ _EOF_
         lpDo sudo groupadd ${groupName}         
     }
 
-####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
+####+BEGIN: bx:bsip:bash/processArgsAndStdin :noParams t 
     if [ $# -gt 0 ] ; then
         local each=""
         for each in ${inputsList} ; do
@@ -338,7 +338,7 @@ _EOF_
         lpDo sudo groupdel ${groupName}         
     }
 
-####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
+####+BEGIN: bx:bsip:bash/processArgsAndStdin :noParams t 
     if [ $# -gt 0 ] ; then
         local each=""
         for each in ${inputsList} ; do
@@ -393,7 +393,7 @@ _EOF_
         lpDo sudo grep ${userAcctName} /etc/sudoers
     }
 
-####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
+####+BEGIN: bx:bsip:bash/processArgsAndStdin :noParams t 
     if [ $# -gt 0 ] ; then
         local each=""
         for each in ${inputsList} ; do
@@ -566,7 +566,7 @@ _EOF_
         lpDo getent group ${groupName}
     }
 
-####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
+####+BEGIN: bx:bsip:bash/processArgsAndStdin :noParams t 
     if [ $# -gt 0 ] ; then
         local each=""
         for each in ${inputsList} ; do

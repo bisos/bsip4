@@ -473,7 +473,7 @@ _EOF_
             hereDo
     }
 
-####+BEGIN: bx:bsip:bash/processArgsAndStdin 
+####+BEGIN: bx:bsip:bash/processArgsAndStdin :noParams t
      function processArgsAndStdin {
         local effectiveArgs=( "$@" )
         local stdinArgs
@@ -530,7 +530,7 @@ _EOF_
             hereDo
     }
 
-####+BEGIN: bx:bsip:bash/processArgsAndStdin 
+####+BEGIN: bx:bsip:bash/processArgsAndStdin :noParams t
      function processArgsAndStdin {
         local effectiveArgs=( "$@" )
         local stdinArgs
@@ -633,7 +633,7 @@ _EOF_
             hereDo "$@"
     }
 
-####+BEGIN: bx:bsip:bash/processStdinWithArgs 
+####+BEGIN: bx:bsip:bash/processStdinWithArgs :noParams t 
     function processStdinWithArgs {
         local stdinArgs
         local each
@@ -731,7 +731,7 @@ _EOF_
             hereDo
     }
 
-####+BEGIN: bx:bsip:bash/processArgsAndStdin 
+####+BEGIN: bx:bsip:bash/processArgsAndStdin :noParams t
      function processArgsAndStdin {
         local effectiveArgs=( "$@" )
         local stdinArgs
@@ -959,7 +959,7 @@ _EOF_
         fi
     }
 
-####+BEGIN: bx:bsip:bash/processStdinWithArgs 
+####+BEGIN: bx:bsip:bash/processStdinWithArgs :noParams t 
     function processStdinWithArgs {
         local stdinArgs
         local each
@@ -1039,7 +1039,7 @@ _EOF_
         fi
     }
 
-####+BEGIN: bx:bsip:bash/processStdinWithArgs 
+####+BEGIN: bx:bsip:bash/processStdinWithArgs :noParams t 
     function processStdinWithArgs {
         local stdinArgs
         local each
@@ -1085,7 +1085,7 @@ _EOF_
             hereDo "$@"
     }
 
-####+BEGIN: bx:bsip:bash/processStdinWithArgs 
+####+BEGIN: bx:bsip:bash/processStdinWithArgs :noParams t 
     function processStdinWithArgs {
         local stdinArgs
         local each
@@ -1158,7 +1158,7 @@ _EOF_
             hereDo
     }
 
-####+BEGIN: bx:bsip:bash/processArgsAndStdin 
+####+BEGIN: bx:bsip:bash/processArgsAndStdin :noParams t
      function processArgsAndStdin {
         local effectiveArgs=( "$@" )
         local stdinArgs
@@ -1224,7 +1224,7 @@ _EOF_
             hereDo
     }
 
-####+BEGIN: bx:bsip:bash/processArgsAndStdin 
+####+BEGIN: bx:bsip:bash/processArgsAndStdin :noParams t
      function processArgsAndStdin {
         local effectiveArgs=( "$@" )
         local stdinArgs

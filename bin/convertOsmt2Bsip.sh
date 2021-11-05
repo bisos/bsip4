@@ -153,10 +153,10 @@ _EOF_
         lpReturn 0
     }
 
-####+BEGIN: bx:bsip:bash/processArgsAndStdin 
+####+BEGIN: bx:bsip:bash/processArgsAndStdin :noParams t
      function processArgsAndStdin {
         local effectiveArgs=( "$@" )
-        local stdinArgs
+        local stdinArgs=()
         local each
         if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
             readarray stdinArgs < /dev/stdin
@@ -208,10 +208,10 @@ _EOF_
         lpReturn 0
     }
 
-####+BEGIN: bx:bsip:bash/processArgsAndStdin 
+####+BEGIN: bx:bsip:bash/processArgsAndStdin :noParams t
      function processArgsAndStdin {
         local effectiveArgs=( "$@" )
-        local stdinArgs
+        local stdinArgs=()
         local each
         if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
             readarray stdinArgs < /dev/stdin
@@ -253,15 +253,15 @@ _EOF_
         lpDo FN_fileSafeCopy "${each}" "${each}.${eachDateTag}"
 
         cat ${each}.${eachDateTag} | \
-            sed -e "s@subBxe@bxeTree@g" > ${each}
+            sed -e "s@bx:bsip:bash/processArgsAndStdin \$@bx:bsip:bash/processArgsAndStdin :noParams t@g" > ${each}
         
         lpReturn 0
     }
 
-####+BEGIN: bx:bsip:bash/processArgsAndStdin 
+####+BEGIN: bx:bsip:bash/processArgsAndStdin :noParams t
      function processArgsAndStdin {
         local effectiveArgs=( "$@" )
-        local stdinArgs
+        local stdinArgs=()
         local each
         if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
             readarray stdinArgs < /dev/stdin

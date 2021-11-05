@@ -162,7 +162,7 @@ _EOF_
         lpDo eval "cat ${thisOne} >> /etc/fstab"
     }
 
-####+BEGIN: bx:bsip:bash/processArgsAndStdin 
+####+BEGIN: bx:bsip:bash/processArgsAndStdin :noParams t
      function processArgsAndStdin {
         local effectiveArgs=( "$@" )
         local stdinArgs
