@@ -95,11 +95,6 @@ _EOF_
         EH_assert [[ $# -eq 1 ]]
         bpoId=$1
 
-        echo "ZZZ"
-        echo ${bpoId}
-
-        lpReturn
-
         if [ "${G_verbose}_" == "verbose_" ] ; then
             ANT_raw "Activating bpoId=${bpoId}"
         fi
@@ -124,28 +119,22 @@ _EOF_
         processEach "${bpoId}"
     fi
 
-    echo "YYY"
-
 ####+BEGIN:  bx:bsip:bash/processArgsAndStdin :noParams t
      function processArgsAndStdin {
-	local effectiveArgs=( "$@" )
-	local stdinArgs=()
-	local each
-	if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
-	    readarray stdinArgs < /dev/stdin ; stdinArgs=$(echo "${stdinArgs}")
-        echo "ccc${stdinArgs[@]}CCC"
-	    effectiveArgs=( "$@" "${stdinArgs[@]}" )
-	fi
-	if [ ${#effectiveArgs[@]} -eq 0 ] ; then
-	    ANT_raw "No Args And Stdin Is Empty"
-	    lpReturn
-	fi
-	for each in "${effectiveArgs[@]}"; do
-        echo "XXX"
-        echo "aaa${each}AAA"
-        echo "bbb${each%$'\n'}BBB"
-	    lpDo processEach "${each}"
-	done
+        local effectiveArgs=( "$@" )
+        local stdinArgs=()
+        local each
+        if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
+            readarray stdinArgs < /dev/stdin
+            effectiveArgs=( "$@" "${stdinArgs[@]}" )
+        fi
+        if [ ${#effectiveArgs[@]} -eq 0 ] ; then
+            ANT_raw "No Args And Stdin Is Empty"
+            lpReturn
+        fi
+        for each in "${effectiveArgs[@]}"; do
+            lpDo processEach "${each%$'\n'}"
+        done
     }
     lpDo processArgsAndStdin "$@"
 ####+END:
