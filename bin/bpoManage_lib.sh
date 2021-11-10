@@ -117,6 +117,8 @@ _EOF_
 
     if [ ! -z "${bpoId}" ] ; then
         processEach "${bpoId}"
+	# We just used the bpoId parameter, So both Args and stdin are ignored.
+	lpReturn
     fi
 
 ####+BEGIN:  bx:bsip:bash/processArgsAndStdin :noParams t
