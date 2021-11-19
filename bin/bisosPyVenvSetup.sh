@@ -107,7 +107,10 @@ ${G_myName} ${extraInfo} -f -i virtenvsPrep py3/dev # force mode
 ${G_myName} ${extraInfo} -i venvPy3Dev_pipInstalls # editable installed with ftoWalkThrough
 $(vis_venvPy3Dev_stashStatus)
 ${G_myName} ${extraInfo} -i venvPy3Dev_stash
-${G_myName} ${extraInfo} -i venvPy3Dev_unStash
+${G_myName} ${extraInfo} -i venvPy3Dev_unStas
+$( examplesSeperatorChapter "Py3 Tmp Manage Environment" )
+${G_myName} ${extraInfo} -i virtenvsPrep py3/tmp  # Create Virtual Environment
+${G_myName} ${extraInfo} -f -i virtenvsPrep py3/tmp # force mode
 $( examplesSeperatorChapter "Direct Examples" )
 ${pdb_venv_py3Bisos3}/bin/pip list --outdated --format=freeze
 ${pdb_venv_py3Bisos3}/bin/pip list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 ${pdb_venv_py3Bisos3}/bin/pip install --upgrade
@@ -154,7 +157,7 @@ _EOF_
 function vis_venvDo  {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-**
+** \$1 is virtenvLabel
 _EOF_
     }
     EH_assert [[ $# -gt 2 ]]
@@ -217,36 +220,39 @@ _EOF_
 
     local bisosBaseDir="/bisos"
 
-
     function virtenvReInstall {
         EH_assert [[ $# -eq 2 ]]
         local pythonVersion="$1"
-        local relBaseDir="$2"
-
-        local absBaseDir=${bisosBaseDir}/${relBaseDir}
+        local baseDir="$2"
 
         if [ "${G_forceMode}" != "force" ]  ; then
-                if [ -d "${absBaseDir}" ] ; then
-                EH_problem "${absBaseDir} exists and forceMode not specified."
+                if [ -d "${baseDir}" ] ; then
+                EH_problem "${baseDir} exists and forceMode not specified."
                 lpReturn
                 fi
         fi
 
-        if [ -d "${absBaseDir}" ] ; then
-            lpDo mv "${absBaseDir}" "${absBaseDir}.$(DATE_nowTag)"
+        if [ -d "${baseDir}" ] ; then
+            lpDo mv "${baseDir}" "${baseDir}.$(DATE_nowTag)"
         fi
 
-        inBaseDirDo ${bisosBaseDir} virtualenv --python=${pythonVersion} "${relBaseDir}"
+        lpDo  virtualenv --python=${pythonVersion} "${baseDir}"
 
-        lpDo ${absBaseDir}/bin/python -m pip install --upgrade pip
+        lpDo ${baseDir}/bin/python -m pip install --upgrade pip
+        lpDo ls -ld "${baseDir}"
     }
 
     case ${virtenvLabel} in
         py3)
-            lpDo virtenvReInstall python3 venv/py3/bisos3
+            lpDo virtenvReInstall python3 ${bisosBaseDir}/venv/py3/bisos3
             ;;
         py3/dev)
-            lpDo virtenvReInstall python3 venv/py3/dev-bisos3
+            lpDo virtenvReInstall python3 ${bisosBaseDir}/venv/py3/dev-bisos3
+            ;;
+        py3/tmp)
+            local tmpBaseDir=${bisosBaseDir}/tmp/venv
+            lpDo FN_dirCreatePathIfNotThere ${tmpBaseDir}
+            lpDo virtenvReInstall python3 ${tmpBaseDir}/py3-tmp
             ;;
         *)
             EH_problem "UnKnown virtenvLabel=${virtenvLabel}"
