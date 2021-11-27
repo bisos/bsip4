@@ -259,7 +259,7 @@ _EOF_
     # Install bisosDev dev crentials in ~/.ssh and
     # auth clone using bisosDev credentials
     # switch to auth based bxRepos 
-    lpDo ${bisosDevBxoHome}/sys/bin/bxoSysSetup.sh ${G_commandPrefs} \
+    lpDo ${bisosDevBxoHome}/sys/bin/bpoSysSetup.sh ${G_commandPrefs} \
          -i developerMode
 }
 

@@ -130,6 +130,8 @@ $( examplesSeperatorChapter "Blee And Usage Environment Upgrade" )
 ${G_myName} ${extraInfo} -i bleeUpgrade
 ${G_myName} ${extraInfo} -i bashRcVerify
 ${G_myName} ${extraInfo} -f -i bashRcVerify  # forceMode updates
+$( examplesSeperatorChapter "Blee ReBuild And Update" )
+emacsDoomsManage.sh -h -v -n showRun -p profile=blee2 -i reBuild
 $( examplesSeperatorChapter "Optional Interim Actions" )
 ${G_myName} ${extraInfo} -i libreInfoBaseAndInitialTemplates # Bring over /libre/ByStar panels
 ${G_myName} ${extraInfo} -i optPublicOsmt # Bring over
