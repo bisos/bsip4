@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# From: https://forums.linuxmint.com/viewtopic.php?t=344639
+# url https://gitlab.freedesktop.org/pulseaudio/pulseaudio/raw/master/src/utils/pa-info?inline=false | bash | nc termbin.com 9999
+#
+# The first thing you should always try when working audio stops performing
+# properly is to delete the files in /home/YourUserName/.config/pulse then run
+# pulseaudio -k in the terminal to restart the sound daemon.
+
+
 # This file is part of PulseAudio.
 #
 # Copyright 2019 Russell Treleaven <rtreleaven@bunnykick.ca>
