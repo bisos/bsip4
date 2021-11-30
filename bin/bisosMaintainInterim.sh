@@ -127,11 +127,9 @@ ${G_myName} ${extraInfo} -i bisosBasesReClone  # with cntnrDevel.sh
 ${G_myName} ${extraInfo} -i bisosBasesPull  # with bx-gitRepos
 ${G_myName} ${extraInfo} -i bisosBasesReDirAndReLink # with bx-bases
 $( examplesSeperatorChapter "Blee And Usage Environment Upgrade" )
-${G_myName} ${extraInfo} -i bleeUpgrade
+${G_myName} ${extraInfo} -i bleeUpgrade # emacsDoomsManage.sh -i reBuild + blee -i chemacs2FullUpdate
 ${G_myName} ${extraInfo} -i bashRcVerify
 ${G_myName} ${extraInfo} -f -i bashRcVerify  # forceMode updates
-$( examplesSeperatorChapter "Blee ReBuild And Update" )
-emacsDoomsManage.sh -h -v -n showRun -p profile=blee2 -i reBuild
 $( examplesSeperatorChapter "Optional Interim Actions" )
 ${G_myName} ${extraInfo} -i libreInfoBaseAndInitialTemplates # Bring over /libre/ByStar panels
 ${G_myName} ${extraInfo} -i optPublicOsmt # Bring over
