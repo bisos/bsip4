@@ -130,6 +130,48 @@ _EOF_
 }
 
 
+function vis_venvPy3Dev_exists {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Applies only to py3/dev. Not py3. Installs packages as editable. Uses ftoWalkRunCmnd pypiProc.sh
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    if [ -d "${pdb_venv_py3Bisos3Dev}" ] ; then
+        echo "venvPy3Dev Exists: ${pdb_venv_py3Bisos3Dev}"
+        lpReturn 0
+    else
+        echo "venvPy3Dev Does Not Exist: Missing ${pdb_venv_py3Bisos3Dev}."
+        lpReturn 1
+    fi
+
+    lpReturn
+}
+
+
+function vis_venvPy3Dev_stashExists {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Applies only to py3/dev. Not py3. Installs packages as editable. Uses ftoWalkRunCmnd pypiProc.sh
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local py3BisosDevStashBase="${pdb_venv_py3Bisos3Dev}-stash"
+
+    if [ -d "${py3BisosDevStashBase}" ] ; then
+        echo "venvPy3Dev_stash Exists: ${py3BisosDevStashBase}"
+        lpReturn 0
+    else
+        echo "venvPy3Dev_stach Does Not Exist: Missing ${py3BisosDevStashBase}."
+        lpReturn 1
+    fi
+
+    lpReturn
+}
+
+
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*
 _CommentEnd_

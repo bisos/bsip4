@@ -81,6 +81,9 @@ _CommentEnd_
 
 . ${opBinBase}/siteRegistrar_lib.sh
 
+. ${opBinBase}/platformBases_lib.sh
+
+. ${opBinBase}/bisosPyVenv_lib.sh
 
 # PRE parameters
 typeset -t registrar=""
@@ -115,17 +118,19 @@ ${G_myName} ${extraInfo} -i fullUpdate # Run all the full ICMs
 ${G_myName} ${extraInfo} -i fullUpgrades # pip and apt
 ${G_myName} ${extraInfo} -i fullMissingUpdate  # missingPipInstals and missingAptPkgsInstall
 ${G_myName} ${extraInfo} -i fullBisosBasesUpdate # ReClone and GitPull
-$( examplesSeperatorChapter "Package Upgrades" )
-${G_myName} ${extraInfo} -i pipUpgrades
-${G_myName} ${extraInfo} -i aptUpgrades
-$( examplesSeperatorChapter "Missing Pip And Apt Packages" )
+$( examplesSeperatorChapter "Apt-Packages Update And New Installs" )
+${G_myName} ${extraInfo} -i aptUpgrades    # apt-get -y upgrade
+${G_myName} ${extraInfo} -i missingAptPkgsInstall  # apt-s needed for recent features
+$( examplesSeperatorChapter "Python And Pip Update And New Installs" )
+${G_myName} ${extraInfo} -i venvPy3Dev_stash # deactivte development environment
+${G_myName} ${extraInfo} -i pipUnDevAndUpgrades
 ${G_myName} ${extraInfo} -i missingPipInstall
-${G_myName} ${extraInfo} -i missingAptPkgsInstall
-${G_myName} ${extraInfo} -i missingBxRepos
+$( examplesSeperatorChapter "Missing Pip And Apt Packages" )
 $( examplesSeperatorChapter "Bisos Bases Update" )
 ${G_myName} ${extraInfo} -i bisosBasesReClone  # with cntnrDevel.sh
 ${G_myName} ${extraInfo} -i bisosBasesPull  # with bx-gitRepos
 ${G_myName} ${extraInfo} -i bisosBasesReDirAndReLink # with bx-bases
+${G_myName} ${extraInfo} -i missingBxRepos # not in bx-bases yet -- Very remporary
 $( examplesSeperatorChapter "Blee And Usage Environment Upgrade" )
 ${G_myName} ${extraInfo} -i bleeUpgrade # emacsDoomsManage.sh -i reBuild + blee -i chemacs2FullUpdate
 ${G_myName} ${extraInfo} -i bashRcVerify
@@ -164,7 +169,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo vis_pipUpgrades
+    lpDo vis_pipUnDevAndUpgrades
     lpDo vis_aptUpgrades
 }
 
@@ -263,13 +268,15 @@ _EOF_
     lpReturn
 }
 
-function vis_pipUpgrades {
+function vis_pipUnDevAndUpgrades {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 **
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
+
+    lpDo vis_venvPy3Dev_stash
 
     lpDo bisosPyVenvSetup.sh -h -v -n showRun -i venvPy3_pipUpgrades
 
@@ -325,7 +332,7 @@ _EOF_
 function vis_missingBxRepos {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Missing apt packages to be sorted out and absorbed
+** Missing bxRepos not in bx-bases yet.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]

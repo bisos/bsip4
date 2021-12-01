@@ -105,6 +105,9 @@ ${G_myName} ${extraInfo} -i pyVenv_DevSetup # Create Virtual Environment and dev
 ${G_myName} ${extraInfo} -i virtenvsPrep py3/dev  # Create Virtual Environment
 ${G_myName} ${extraInfo} -f -i virtenvsPrep py3/dev # force mode
 ${G_myName} ${extraInfo} -i venvPy3Dev_pipInstalls # editable installed with ftoWalkThrough
+${G_myName} ${extraInfo} -i venvPy3Dev_exists
+${G_myName} ${extraInfo} -i venvPy3Dev_stashExists
+${G_myName} ${extraInfo} -i venvPy3Dev_stashStatus
 $(vis_venvPy3Dev_stashStatus)
 ${G_myName} ${extraInfo} -i venvPy3Dev_stash
 ${G_myName} ${extraInfo} -i venvPy3Dev_unStas
