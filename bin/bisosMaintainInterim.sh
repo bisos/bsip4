@@ -128,6 +128,7 @@ ${G_myName} ${extraInfo} -i missingPipInstall
 $( examplesSeperatorChapter "Missing Pip And Apt Packages" )
 $( examplesSeperatorChapter "Bisos Bases Update" )
 ${G_myName} ${extraInfo} -i bisosBasesReClone  # with cntnrDevel.sh
+${G_myName} ${extraInfo} -f -i bisosBasesReClone  # forceMode with cntnrDevel.sh
 ${G_myName} ${extraInfo} -i bisosBasesPull  # with bx-gitRepos
 ${G_myName} ${extraInfo} -i bisosBasesReDirAndReLink # with bx-bases
 ${G_myName} ${extraInfo} -i missingBxRepos # not in bx-bases yet -- Very remporary
@@ -227,13 +228,20 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
+    # NOTYET Check to see if this is needed
     lpDo cntnrDevel.sh -h -v -n showRun -i securityMode developer
 
-    ANT_raw "Run this only after you have pushed all your changes."
-    ANT_raw "Not automated as part of batch full update as it can be dangerous."
-    ANT_raw "/bisos/git/bxRepos and moved and re-cloned."
+    if [ "${G_forceMode}" == "force" ] ; then
+        lpDo echo cntnrDevel.sh -h -v -n showRun -i bisosDevBxo_fullSetup
+        # NOTYET, rerun cachedls
+    else
+        ANT_raw "Run this only after you have pushed all your changes."
+        ANT_raw "Not automated as part of batch full update as it can be dangerous."
+        ANT_raw "/bisos/git/bxRepos and moved and re-cloned."
 
-    lpDo echo cntnrDevel.sh -h -v -n showRun -i bisosDevBxo_fullSetup
+        lpDo echo cntnrDevel.sh -h -v -n showRun -i bisosDevBxo_fullSetup
+        # NOTYET, rerun cachedls
+    fi
 
     lpReturn
 }
@@ -246,9 +254,15 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo eval  bx-gitRepos -p vcMode=anon -i cachedLs \| bx-gitRepos -i gitRemPull
+    local bxReposEnd=$(FN_fileSymlinkEndGet /bisos/git/bxRepos)
 
-    lpDo eval  bx-gitRepos -p vcMode=auth -i cachedLs \| bx-gitRepos -i gitRemPull
+    if [ "${bxReposEnd}" == "/bisos/git/auth/bxRepos" ] ; then
+        lpDo eval  bx-gitRepos -p vcMode=auth -i cachedLs \| bx-gitRepos -i gitRemPull
+    elif [ "${bxReposEnd}" == "/bisos/git/anon/bxRepos" ] ; then
+        lpDo eval  bx-gitRepos -p vcMode=auth -i cachedLs \| bx-gitRepos -i gitRemPull
+    else
+        EH_problem "OOPS, unexpected bxReposEnd=${bxReposEnd}"
+    fi
 
     lpReturn
 }
