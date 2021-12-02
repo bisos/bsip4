@@ -95,8 +95,8 @@ _CommentEnd_
 
 . ${opBinBase}/usgBpos_lib.sh
 
-. ${opBinBase}/aaisByStarAssign_lib.sh
-. ${opBinBase}/aaisByStarRealize_lib.sh
+# . ${opBinBase}/palsByStarAssign_lib.sh
+# . ${opBinBase}/palsByStarRealize_lib.sh
 
 
 
@@ -152,7 +152,7 @@ $( examplesSeperatorSection "Full Updates" )
 # clones in gatherer/bxo/bpoId if needed -- Then 
 ${G_myName} ${uidInfo} ${extraInfo} -p bystarUid=${oneBystarUid} -p user=${oneUser} -i bueFullUpdate
 $( examplesSeperatorSection "ASSOCIATE ~/BUE (ByStar User Account)  TO BxO-BUE" )
-${G_myName} ${uidInfo} ${extraInfo} -i usgEnvWithAaisBynameAssociate  # Do the symlinks
+${G_myName} ${uidInfo} ${extraInfo} -i usgEnvWithPalsBynameAssociate  # PRIMARY Do the symlinks
 ${G_myName} ${uidInfo} ${extraInfo} -p bystarHome=/acct/subs/banan/1/mohsen -p bystarUid=${oneBystarUid} -p user=${thisUserAcct} -i userServiceAssociateCurrent # Do symlinks
 $( examplesSeperatorSection "BxU-BxISo-UE Setup For Offlineimap" )
 ${G_myName} ${extraInfo} -p bystarUid=all -p user=${oneUser} -i offlineimapUpdate
@@ -188,7 +188,7 @@ _CommentEnd_
 # 
 
 
-function vis_usgEnvWithAaisBynameAssociate {
+function vis_usgEnvWithPalsBynameAssociate {
     G_funcEntry
     function describeF {  cat  << _EOF_
 ${G_myName}:${G_thisFunc}:
@@ -198,7 +198,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    local bynameBxoPath=$(lpDo vis_usgBpos_aais_byname_bxoPath)
+    local bynameBxoPath=$(lpDo vis_usgBpos_pals_byname_bxoPath)
 
     # lpDo vis_usgAcctWithUsgBpoAssociate  # NOTYET, does this belong here
     
@@ -396,7 +396,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    local bynameBxoPath=$(lpDo vis_usgBpos_aais_byname_bxoPath)
+    local bynameBxoPath=$(lpDo vis_usgBpos_pals_byname_bxoPath)
     local usgEnvBxoPath=$(lpDo vis_usgBpos_usageEnvs_fullUse_bxoPath)
 
     local curUsgAcctHome=$( vis_curUsgAcctHome )
@@ -426,7 +426,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    local bynameBxoPath=$(lpDo vis_usgBpos_aais_byname_bxoPath)
+    local bynameBxoPath=$(lpDo vis_usgBpos_pals_byname_bxoPath)
     local usgEnvBxoPath=$(lpDo vis_usgBpos_usageEnvs_fullUse_bxoPath)
 
     local curUsgAcctHome=$( vis_curUsgAcctHome )
@@ -455,7 +455,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    local bynameBxoPath=$(lpDo vis_usgBpos_aais_byname_bxoPath)
+    local bynameBxoPath=$(lpDo vis_usgBpos_pals_byname_bxoPath)
     local usgEnvBxoPath=$(lpDo vis_usgBpos_usageEnvs_fullUse_bxoPath)
 
     local curUsgAcctHome=$( vis_curUsgAcctHome )
@@ -483,7 +483,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    local bynameBxoPath=$(lpDo vis_usgBpos_aais_byname_bxoPath)
+    local bynameBxoPath=$(lpDo vis_usgBpos_pals_byname_bxoPath)
     local usgEnvBxoPath=$(lpDo vis_usgBpos_usageEnvs_fullUse_bxoPath)
 
     local curUsgAcctHome=$( vis_curUsgAcctHome )
@@ -530,7 +530,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    local bynameBxoPath=$(lpDo vis_usgBpos_aais_byname_bxoPath)
+    local bynameBxoPath=$(lpDo vis_usgBpos_pals_byname_bxoPath)
     local usgEnvBxoPath=$(lpDo vis_usgBpos_usageEnvs_fullUse_bxoPath)
 
     local curUsgAcctHome=$( vis_curUsgAcctHome )
@@ -549,7 +549,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    local bynameBxoPath=$(lpDo vis_usgBpos_aais_byname_bxoPath)
+    local bynameBxoPath=$(lpDo vis_usgBpos_pals_byname_bxoPath)
     local usgEnvBxoPath=$(lpDo vis_usgBpos_usageEnvs_fullUse_bxoPath)
 
     local curUsgAcctHome=$( vis_curUsgAcctHome )
@@ -601,7 +601,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    local bynameBxoPath=$(lpDo vis_usgBpos_aais_byname_bxoPath)
+    local bynameBxoPath=$(lpDo vis_usgBpos_pals_byname_bxoPath)
     local usgEnvBxoPath=$(lpDo vis_usgBpos_usageEnvs_fullUse_bxoPath)
 
     local curUsgAcctHome=$( vis_curUsgAcctHome )

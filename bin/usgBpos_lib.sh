@@ -87,7 +87,7 @@ _EOF_
    lpDo FN_dirCreatePathIfNotThere ${curUsgBposBase}/sites
    lpDo FN_dirCreatePathIfNotThere ${curUsgBposBase}/usageEnvs
    lpDo FN_dirCreatePathIfNotThere ${curUsgBposBase}/projs
-   lpDo FN_dirCreatePathIfNotThere ${curUsgBposBase}/aais
+   lpDo FN_dirCreatePathIfNotThere ${curUsgBposBase}/pals
    lpDo FN_dirCreatePathIfNotThere ${curUsgBposBase}/real
    lpDo FN_dirCreatePathIfNotThere ${curUsgBposBase}/credentials
    lpDo FN_dirCreatePathIfNotThere ${curUsgBposBase}/controller   
@@ -339,7 +339,7 @@ _EOF_
 
 
 
-function vis_usgBpos_aais_byname_bpoId_fpWrite {
+function vis_usgBpos_pals_byname_bpoId_fpWrite {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** 
@@ -352,12 +352,12 @@ _EOF_
     EH_assert [ ! -z ${bpoIdValue} ]
 
     local curUsgBposBase=$( vis_curUsgBposBase )
-    lpDo mkdir -p ${curUsgBposBase}/aais
-    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/aais byname.bpoFp ${bpoIdValue}
+    lpDo mkdir -p ${curUsgBposBase}/pals
+    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/pals byname.bpoFp ${bpoIdValue}
 }
 
 
-function vis_usgBpos_aais_byname_bpoId_fpRead {
+function vis_usgBpos_pals_byname_bpoId_fpRead {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** returns on stdout: 
@@ -367,14 +367,14 @@ _EOF_
 
     local curUsgBposBase=$( vis_curUsgBposBase )
     
-    local resultBxoId=$( fileParamManage.py -i fileParamRead  ${curUsgBposBase}/aais byname.bpoFp )
+    local resultBxoId=$( fileParamManage.py -i fileParamRead  ${curUsgBposBase}/pals byname.bpoFp )
     EH_assert [ ! -z "${resultBxoId}" ]
 
     echo ${resultBxoId}
 }
 
 
-function vis_usgBpos_aais_byname_update {
+function vis_usgBpos_pals_byname_update {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -390,36 +390,36 @@ _EOF_
    
    local curUsgBposBase=$(lpDo vis_curUsgBposBase)
 
-   lpDo vis_usgBpos_aais_byname_bpoId_fpWrite ${bpoIdValue}
-   lpDo FN_fileSymlinkUpdate ${bxoPath} ${curUsgBposBase}/aais/byname
+   lpDo vis_usgBpos_pals_byname_bpoId_fpWrite ${bpoIdValue}
+   lpDo FN_fileSymlinkUpdate ${bxoPath} ${curUsgBposBase}/pals/byname
 }
 
 
-function vis_usgBpos_aais_byname_bxoPath {
+function vis_usgBpos_pals_byname_bxoPath {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
                       }
    EH_assert [[ $# -eq 0 ]]
    local curUsgBposBase=$(lpDo vis_curUsgBposBase)   
-   EH_assert [ -e ${curUsgBposBase}/aais/byname ]
-   lpDo FN_absolutePathGet ${curUsgBposBase}/aais/byname
+   EH_assert [ -e ${curUsgBposBase}/pals/byname ]
+   lpDo FN_absolutePathGet ${curUsgBposBase}/pals/byname
 }
 
 
-function vis_usgBpos_aais_byname_bpoId {
+function vis_usgBpos_pals_byname_bpoId {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
                       }
    EH_assert [[ $# -eq 0 ]]
-   local bpoId=$(lpDo vis_usgBpos_aais_byname_bpoId_fpRead)
+   local bpoId=$(lpDo vis_usgBpos_pals_byname_bpoId_fpRead)
    echo ${bpoId}
 }
 
 
 
-function vis_usgBpos_aais_bydomain_bpoId_fpWrite {
+function vis_usgBpos_pals_bydomain_bpoId_fpWrite {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 **
@@ -432,12 +432,12 @@ _EOF_
     EH_assert [ ! -z ${bpoIdValue} ]
 
     local curUsgBposBase=$( vis_curUsgBposBase )
-    lpDo mkdir -p ${curUsgBposBase}/aais
-    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/aais bydomain.bpoFp ${bpoIdValue}
+    lpDo mkdir -p ${curUsgBposBase}/pals
+    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/pals bydomain.bpoFp ${bpoIdValue}
 }
 
 
-function vis_usgBpos_aais_bydomain_bpoId_fpRead {
+function vis_usgBpos_pals_bydomain_bpoId_fpRead {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** returns on stdout:
@@ -447,14 +447,14 @@ _EOF_
 
     local curUsgBposBase=$( vis_curUsgBposBase )
 
-    local resultBxoId=$( fileParamManage.py -i fileParamRead  ${curUsgBposBase}/aais bydomain.bpoFp )
+    local resultBxoId=$( fileParamManage.py -i fileParamRead  ${curUsgBposBase}/pals bydomain.bpoFp )
     EH_assert [ ! -z "${resultBxoId}" ]
 
     echo ${resultBxoId}
 }
 
 
-function vis_usgBpos_aais_bydomain_update {
+function vis_usgBpos_pals_bydomain_update {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -470,30 +470,30 @@ _EOF_
 
    local curUsgBposBase=$(lpDo vis_curUsgBposBase)
 
-   lpDo vis_usgBpos_aais_bydomain_bpoId_fpWrite ${bpoIdValue}
-   lpDo FN_fileSymlinkUpdate ${bxoPath} ${curUsgBposBase}/aais/bydomain
+   lpDo vis_usgBpos_pals_bydomain_bpoId_fpWrite ${bpoIdValue}
+   lpDo FN_fileSymlinkUpdate ${bxoPath} ${curUsgBposBase}/pals/bydomain
 }
 
 
-function vis_usgBpos_aais_bydomain_bxoPath {
+function vis_usgBpos_pals_bydomain_bxoPath {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
                       }
    EH_assert [[ $# -eq 0 ]]
    local curUsgBposBase=$(lpDo vis_curUsgBposBase)
-   EH_assert [ -e ${curUsgBposBase}/aais/bydomain ]
-   lpDo FN_absolutePathGet ${curUsgBposBase}/aais/bydomain
+   EH_assert [ -e ${curUsgBposBase}/pals/bydomain ]
+   lpDo FN_absolutePathGet ${curUsgBposBase}/pals/bydomain
 }
 
 
-function vis_usgBpos_aais_bydomain_bpoId {
+function vis_usgBpos_pals_bydomain_bpoId {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
                       }
    EH_assert [[ $# -eq 0 ]]
-   local bpoId=$(lpDo vis_usgBpos_aais_bydomain_bpoId_fpRead)
+   local bpoId=$(lpDo vis_usgBpos_pals_bydomain_bpoId_fpRead)
    echo ${bpoId}
 }
 

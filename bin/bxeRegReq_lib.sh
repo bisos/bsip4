@@ -135,9 +135,9 @@ function vis_examplesBxInfoSysChar {
     bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"sysChar\" -p parent=\"${cur_bpoId_parent}\" -p name=\"gitlabServer\" "
 }
 
-function vis_examplesBxInfoAais {
-    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"aais\" -p parent=\"${cur_bpoId_parent}\" -p name=\"ByN-000\" "
-    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"aais\" -p parent=\"${cur_bpoId_parent}\" -p name=\"ByN-000\" "
+function vis_examplesBxInfoPals {
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"info\" -p type=\"pals\" -p parent=\"${cur_bpoId_parent}\" -p name=\"ByN-000\" "
+    bxeParamsFull="-p privacy=\"priv\" -p kind=\"info\" -p type=\"pals\" -p parent=\"${cur_bpoId_parent}\" -p name=\"ByN-000\" "
 }
 
 function vis_examplesBxInfoScs {
@@ -241,8 +241,8 @@ function vis_examplesBxMaterializationSysChar {
     bxeParamsFull=${bxeParamsMini}
 }
 
-function vis_examplesBxMaterializationAais {
-    bxeParamsMini="-p privacy=\"priv\" -p kind=\"materialization\" -p type=\"aais\" -p parent=\"${cur_bpoId_parent}\" -p name=\"ByN-000\" "
+function vis_examplesBxMaterializationPals {
+    bxeParamsMini="-p privacy=\"priv\" -p kind=\"materialization\" -p type=\"pals\" -p parent=\"${cur_bpoId_parent}\" -p name=\"ByN-000\" "
     bxeParamsFull=${bxeParamsMini}
 }
 
@@ -394,7 +394,7 @@ regReqContainerStdoutSpecific_info_sysChar () {
 _EOF_
 }
 
-regReqContainerStdoutSpecific_info_aais () {
+regReqContainerStdoutSpecific_info_pals () {
     EH_assert [[ $# -eq 1 ]]
 
     if [ "$1" = "passive" ] ; then
@@ -667,7 +667,7 @@ regReqContainerStdoutSpecific_materialization_sysChar () {
 _EOF_
 }
 
-regReqContainerStdoutSpecific_materialization_aais () {
+regReqContainerStdoutSpecific_materialization_pals () {
     EH_assert [[ $# -eq 1 ]]
 
     if [ "$1" = "passive" ] ; then
