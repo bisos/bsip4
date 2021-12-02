@@ -129,7 +129,6 @@ _EOF_
     local thisFunc=${G_thisFunc}
     EH_assert bpoIdPrep
 
-
     function processEach {
         EH_assert [[ $# -eq 1 ]]
         local repoName=$1
@@ -142,7 +141,7 @@ _EOF_
         lpDo vis_repoCreateAndPushBasedOnPath "${repoBase}"
     }
 
-####+BEGIN: bx:bsip:bash/processArgsAndStdin  
+####+BEGIN: bx:bsip:bash/processArgsAndStdin :noParams t
      function processArgsAndStdin {
         local effectiveArgs=( "$@" )
         local stdinArgs=()
@@ -190,7 +189,7 @@ _EOF_
         lpDo vis_${moduleName}_repoBaseCreate_${eachRepoName}
     }
 
-####+BEGIN: bx:bsip:bash/processStdinWithArgs 
+####+BEGIN: bx:bsip:bash/processStdinWithArgs :noParams t 
     function processStdinWithArgs {
         local stdinArgs=()
         local each
@@ -231,7 +230,7 @@ _EOF_
         lpDo vis_${moduleName}_nonRepoBaseCreate_${eachRepoName}
     }
 
-####+BEGIN: bx:bsip:bash/processStdinWithArgs 
+####+BEGIN: bx:bsip:bash/processStdinWithArgs :noParams t 
     function processStdinWithArgs {
         local stdinArgs=()
         local each

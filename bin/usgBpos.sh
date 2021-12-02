@@ -199,7 +199,7 @@ $( examplesSeperatorChapter "Related -- See Also" )
 bpoActivate.sh -h -v -n showRun -p privacy="priv" -p bpoId="${oneRealIndiv}" -i bpoActivate
 _EOF_
 
-  vis_examplesNicheRun usage
+  vis_examplesNicheRun controller
 }
 
 _CommentBegin_

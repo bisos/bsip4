@@ -81,6 +81,9 @@ _CommentEnd_
 
 . ${opBinBase}/siteRegistrar_lib.sh
 
+. ${opBinBase}/platformBases_lib.sh
+
+. ${opBinBase}/bisosPyVenv_lib.sh
 
 # PRE parameters
 typeset -t registrar=""
@@ -112,23 +115,27 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "FULL Site Deployment" )
 ${G_myName} ${extraInfo} -i fullUpdate # Run all the full ICMs
-${G_myName} ${extraInfo} -i fullBeforeBisosBasesReClone
-${G_myName} ${extraInfo} -i fullMissingUpdate  # missingPipInstals and missingAptPkgsInstall
 ${G_myName} ${extraInfo} -i fullUpgrades # pip and apt
+${G_myName} ${extraInfo} -i fullMissingUpdate  # missingPipInstals and missingAptPkgsInstall
 ${G_myName} ${extraInfo} -i fullBisosBasesUpdate # ReClone and GitPull
-$( examplesSeperatorChapter "Package Upgrades" )
-${G_myName} ${extraInfo} -i pipUpgrades
-${G_myName} ${extraInfo} -i aptUpgrades
-$( examplesSeperatorChapter "Missing Pip And Apt Packages" )
+$( examplesSeperatorChapter "Apt-Packages Update And New Installs" )
+${G_myName} ${extraInfo} -i aptUpgrades    # apt-get -y upgrade
+${G_myName} ${extraInfo} -i missingAptPkgsInstall  # apt-s needed for recent features
+$( examplesSeperatorChapter "Python And Pip Update And New Installs" )
+${G_myName} ${extraInfo} -i venvPy3Dev_stash # deactivte development environment
+${G_myName} ${extraInfo} -i pipUnDevAndUpgrades
 ${G_myName} ${extraInfo} -i missingPipInstall
-${G_myName} ${extraInfo} -i missingAptPkgsInstall
-${G_myName} ${extraInfo} -i missingBxRepos
+$( examplesSeperatorChapter "Missing Pip And Apt Packages" )
 $( examplesSeperatorChapter "Bisos Bases Update" )
 ${G_myName} ${extraInfo} -i bisosBasesReClone  # with cntnrDevel.sh
+${G_myName} ${extraInfo} -f -i bisosBasesReClone  # forceMode with cntnrDevel.sh
 ${G_myName} ${extraInfo} -i bisosBasesPull  # with bx-gitRepos
 ${G_myName} ${extraInfo} -i bisosBasesReDirAndReLink # with bx-bases
-$( examplesSeperatorChapter "Blee Upgrade" )
-${G_myName} ${extraInfo} -i bleeUpgrade
+${G_myName} ${extraInfo} -i missingBxRepos # not in bx-bases yet -- Very remporary
+$( examplesSeperatorChapter "Blee And Usage Environment Upgrade" )
+${G_myName} ${extraInfo} -i bleeUpgrade # emacsDoomsManage.sh -i reBuild + blee -i chemacs2FullUpdate
+${G_myName} ${extraInfo} -i bashRcVerify
+${G_myName} ${extraInfo} -f -i bashRcVerify  # forceMode updates
 $( examplesSeperatorChapter "Optional Interim Actions" )
 ${G_myName} ${extraInfo} -i libreInfoBaseAndInitialTemplates # Bring over /libre/ByStar panels
 ${G_myName} ${extraInfo} -i optPublicOsmt # Bring over
@@ -154,29 +161,16 @@ _EOF_
     lpDo vis_bleeUpgrade
 }
 
-function vis_fullUpdate {
+
+function vis_fullUpgrades {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Run all the full ICMs in turn.
+** fullBeforeBisosBasesReClone -- Run all missing packages interim commands.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo vis_fullUpgrades
-    lpDo vis_fullMissingUpdate
-}
-
-
-
-function vis_fullBeforeBisosBasesReClone {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** Run all missing packages interim commands.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    lpDo vis_pipUpgrades
+    lpDo vis_pipUnDevAndUpgrades
     lpDo vis_aptUpgrades
 }
 
@@ -217,6 +211,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
+    lpDo bx-bases -v 20 --baseDir="/bisos" --pbdName="bisosRoot"  -i pbdUpdate all
     lpDo bx-bases -v 20 --baseDir="/bisos" --pbdName="bleeRoot"  -i pbdUpdate all
 
     lpReturn
@@ -233,10 +228,20 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    ANT_raw "Run this only after you have pushed all your changes."
-    ANT_raw "Not automated as part of batch full update as it can be dangerous."
-    ANT_raw "/bisos/git/bxRepos and moved and re-cloned."
-    lpDo echo cntnrDevel.sh -h -v -n showRun -i bisosDevBxo_fullSetup
+    # NOTYET Check to see if this is needed
+    lpDo cntnrDevel.sh -h -v -n showRun -i securityMode developer
+
+    if [ "${G_forceMode}" == "force" ] ; then
+        lpDo echo cntnrDevel.sh -h -v -n showRun -i bisosDevBxo_fullSetup
+        # NOTYET, rerun cachedls
+    else
+        ANT_raw "Run this only after you have pushed all your changes."
+        ANT_raw "Not automated as part of batch full update as it can be dangerous."
+        ANT_raw "/bisos/git/bxRepos and moved and re-cloned."
+
+        lpDo echo cntnrDevel.sh -h -v -n showRun -i bisosDevBxo_fullSetup
+        # NOTYET, rerun cachedls
+    fi
 
     lpReturn
 }
@@ -249,7 +254,15 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo eval bx-gitRepos -i cachedLs \| bx-gitRepos -i gitRemPull
+    local bxReposEnd=$(FN_fileSymlinkEndGet /bisos/git/bxRepos)
+
+    if [ "${bxReposEnd}" == "/bisos/git/auth/bxRepos" ] ; then
+        lpDo eval  bx-gitRepos -p vcMode=auth -i cachedLs \| bx-gitRepos -i gitRemPull
+    elif [ "${bxReposEnd}" == "/bisos/git/anon/bxRepos" ] ; then
+        lpDo eval  bx-gitRepos -p vcMode=auth -i cachedLs \| bx-gitRepos -i gitRemPull
+    else
+        EH_problem "OOPS, unexpected bxReposEnd=${bxReposEnd}"
+    fi
 
     lpReturn
 }
@@ -269,13 +282,15 @@ _EOF_
     lpReturn
 }
 
-function vis_pipUpgrades {
+function vis_pipUnDevAndUpgrades {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 **
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
+
+    lpDo vis_venvPy3Dev_stash
 
     lpDo bisosPyVenvSetup.sh -h -v -n showRun -i venvPy3_pipUpgrades
 
@@ -291,30 +306,19 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
+    # In case there are new ones that have not been installed
+    lpDo lcaPythonCommonBinsPrep.sh -v -n showRun -i fullUpdate
+
     lpDo bisosPyVenvSetup.sh -h -v -n showRun -i venvPy3_pipInstalls
     
-    # lpDo /bisos/venv/py2/bisos3/bin/pip2 install --upgrade unisos.gcipher
-    # lpDo /bisos/venv/py2/bisos3/bin/pip2 install --upgrade twine
+    # lpDo /bisos/venv/py3/bisos3/bin/pip3 install --upgrade unisos.gcipher
 
-    lpDo /bisos/venv/py3/bisos3/bin/pip3 install --upgrade unisos.gcipher
-    lpDo /bisos/venv/py3/bisos3/bin/pip3 install --upgrade twine
-    
-    lpDo sudo apt-get install python3-venv  # needed for pipx
-    lpDo /bisos/venv/py3/bisos3/bin/pip install --upgrade pipx
-    # NOTYET, Run pipx --help and setup env vars in bashrc
 
-    # lpDo lcaJsBinsPrep.sh -v -n showRun -i fullUpdate
 
     function toBeAbsorbedIn_bleeBinsPrep {
-        sudo npm install --global pyright
-
-        # See github.com/hlissner/doom-emacs/blob/develop/modules/lang/python/README.org
-        # For details
-        #
-        lpDo pipx install pytest
-        lpDo pipx install nose
-        lpDo pipx install black
-        lpDo pipx install isort
+        # sudo npm install --global pyright
+        #lpDo pipx install pytest
+        return
     }
     lpDo toBeAbsorbedIn_bleeBinsPrep
 
@@ -342,7 +346,7 @@ _EOF_
 function vis_missingBxRepos {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Missing apt packages to be sorted out and absorbed
+** Missing bxRepos not in bx-bases yet.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -391,7 +395,6 @@ _EOF_
 }
 
 
-
 function vis_bleeUpgrade {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -412,6 +415,37 @@ _EOF_
 
     lpDo blee -h -v -n showRun -i chemacs2FullUpdate    
     
+    lpReturn
+}
+
+
+function vis_bashRcVerify {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** If _bashrc needs updating, do so.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local diffResults=$(lpDo diff /bisos/apps/defaults/bashrc/usg/_bashrc ~/_bashrc)
+
+    if [ -z "${diffResults}" ] ; then
+        ANT_raw "_bashrc is current -- updating skipped"
+        if [ "${G_forceMode}" == "force" ] ; then
+            ANT_raw "_bashrc forceMode ignored -- skipped"
+        fi
+        lpReturn
+    else
+        echo "${diffResults}"
+    fi
+
+    if [ "${G_forceMode}" == "force" ] ; then
+        lpDo mv ~/_bashrc  ~/_bashrc.$(DATE_nowTag)
+        lpDo cp /bisos/apps/defaults/bashrc/usg/_bashrc ~/_bashrc
+    else
+        EH_problem "_bashrc needs updating but forceMode was not specified."
+    fi
+
     lpReturn
 }
 

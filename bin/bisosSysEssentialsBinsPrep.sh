@@ -106,6 +106,7 @@ function examplesHookPost {
   cat  << _EOF_
 ----- ADDITIONS -------
 ${G_myName} ${extraInfo} -i sysPreps
+${G_myName} ${extraInfo} -i sysPreps laptop
 _EOF_
 }
 
@@ -119,7 +120,15 @@ sleep-inactive-ac-type='blank'
 
 _EOF_
     }
-    EH_assert [[ $# -eq 0 ]]
+    EH_assert [[ $# -lt 2 ]]
+
+    local isLaptop=""
+
+    if [  $# -eq 1 ] ; then
+        if [ "${1}" == "laptop" ] ; then
+            isLaptop="true"
+        fi
+    fi
 
     case ${opRunDistFamily} in
         "UBUNTU")
@@ -129,7 +138,11 @@ _EOF_
             ;;
         "DEBIAN")
             # NOTYET, this should not be done to laptops. Only to servers.
-            lpDo sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
+            if [ -z "${isLaptop}" ] ; then
+                lpDo sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
+            else
+                lpDo sudo systemctl unmask sleep.target suspend.target hibernate.target hybrid-sleep.target
+            fi
             ;;
         *)
             opRunDistGeneration="UNSUPPORTED"

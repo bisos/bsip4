@@ -142,157 +142,36 @@ function vis_examples {
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
-bisosCurrentsManage.sh
-bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
-bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VAG-deb11_
-$( examplesSeperatorChapter "Identify or Locate bisosDevBxo" )
-usgBpos.sh
-usgBpos.sh -i usgBposUsageEnvs_bisosDevBxoId_read
-$( examplesSeperatorChapter "Specialized Actions" )
-${G_myName} ${extraInfo} -i fullUpdate
-${G_myName} ${extraInfo} -i vagrantBaseBoxesBuild
-${G_myName} ${extraInfo} -i siteContainersAssignGenerics
-$( examplesSeperatorChapter "Developer Git Credentials Activate" )
-${G_myName} ${extraInfo} -i bisosDevBxo_fullSetup  # activate bisosDevBxoId and actuate it
-${G_myName} ${extraInfo} -i bisosDevBxo_activate   # activate bisosDevBxoId
-${G_myName} ${extraInfo} -i bisosDevBxo_actuate    # clone  auth based bxRepos with bisosDev credentials
-$( examplesSeperatorChapter "Developer Git Credentials Deactivate" )
-${G_myName} ${extraInfo} -i bisosDevBxo_delete
-$( examplesSeperatorChapter "Mode Selection" )
-sysCharDeploy.sh -p bpoId="sysChar" -i conveyInfoShow
-${G_myName} ${extraInfo} -p bpoId="sysChar" -i sysCharConveyInfoWrite securityMode developer
-${G_myName} ${extraInfo} -p bpoId="sysChar" -i sysCharConveyInfoWrite securityMode stable
-${G_myName} ${extraInfo} -i securityMode developer
-${G_myName} ${extraInfo} -i securityMode stable
-${G_myName} ${extraInfo} -i securityMode sealed
+${G_myName} ${extraInfo} -i userConfigReset
 _EOF_
 }
 
-function vis_fullUpdate {
+function vis_userConfigReset {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+# From: https://forums.linuxmint.com/viewtopic.php?t=344639
+# url https://gitlab.freedesktop.org/pulseaudio/pulseaudio/raw/master/src/utils/pa-info?inline=false | bash | nc termbin.com 9999
+#
+# The first thing you should always try when working audio stops performing
+# properly is to delete the files in /home/YourUserName/.config/pulse then run
+# pulseaudio -k in the terminal to restart the sound daemon.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo vis_vagrantBaseBoxesBuild
+    homeConfigPulseBase="${HOME}/.config/pulse"
 
-    lpDo vis_siteContainersAssignGenerics
-    
+    if [ ! -d "${homeConfigPulseBase}" ] ; then
+        EH_problem "Missing ${homeConfigPulseBase} -- further processing abandoned."
+        lpReturn 101
+    fi
+
+    lpDo mv ${homeConfigPulseBase} /tmp/pulse-$(DATE_nowTag)
+
+    lpDo pulseaudio -k
+
     lpReturn
 }       
-
-function vis_vagrantBaseBoxesBuild {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    lpDo echo run lcaVagrantBoxRun.sh
-    
-    lpReturn
-}       
-
-function vis_siteContainersAssignGenerics {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    lpDo siteContainerAssign.sh -h -v -n showRun -i assignGenerics doIt
-
-    lpDo siteContainerRepo.sh -h -v -n showRun -i containerRepoGenericsUpdate full    
-    
-    lpReturn
-}       
-
-function vis_bisosDevBxo_fullSetup {    
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** Activate the bisosDev usage env bpo. authClone using credentials of bisosDev.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    lpDo vis_bisosDevBxo_activate
-
-    lpDo vis_bisosDevBxo_actuate
-}
-
-function vis_bisosDevBxo_activate {    
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** Activate the bisosDev usage env bpo. authClone using credentials of bisosDev.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    local bisosDevBxoId=$( vis_usgBposUsageEnvs_bisosDevBxoId_read )
-    EH_assert [ ! -z "${bisosDevBxoId}" ]
-
-    # Activate bisosDev usage env bpo
-    lpDo bpoManage.sh ${G_commandPrefs} \
-         -p privacy=priv -p bpoId=${bisosDevBxoId} \
-         -i fullConstruct
-
-    local bisosDevBxoHome=$( FN_absolutePathGet ~${bisosDevBxoId} )
-    
-    # record the activated bpo as bisosDev
-    lpDo usgBpos.sh ${G_commandPrefs} \
-         -i usgBposUsageEnvs_bisosDev_update ${bisosDevBxoHome}
-}
-
-
-function vis_bisosDevBxo_actuate {    
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** actuate
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    bisosDevBxoHome=$( vis_usgBposUsageEnvs_bisosDev_bxoPath )
-    EH_assert [ ! -z "${bisosDevBxoHome}" ]
-    
-    # Install bisosDev dev crentials in ~/.ssh and
-    # auth clone using bisosDev credentials
-    # switch to auth based bxRepos 
-    lpDo ${bisosDevBxoHome}/sys/bin/bpoSysSetup.sh ${G_commandPrefs} \
-         -i developerMode
-}
-
-
-function vis_securityMode {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 1 ]]
-
-    local secMode="$1"
-
-    case ${secMode} in
-        developer)
-            lpDo bisosBaseDirs.sh ${G_commandPrefs} -i bxReposAuthSet
-            lpDo vis_sysCharConveyInfoWrite securityMode developer
-            ;;
-        stable)
-            lpDo bisosBaseDirs.sh ${G_commandPrefs} -i bxReposAnonSet
-            lpDo vis_sysCharConveyInfoWrite securityMode stable    
-            ;;
-        sealed)
-            EH_problem "NOTYET"
-            ;;
-        *)
-            EH_problem "Bad Usage -- ${secMode}"
-            ;;
-    esac
-        
-    lpReturn
-}
-
 
 
 _CommentBegin_

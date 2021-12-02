@@ -550,6 +550,10 @@ _EOF_
     local paramName=$1
     local paramValue=$2
 
+    if [ -z "${bpoId}" ] ; then
+        bpoId="sysChar"
+    fi
+
     EH_assert bpoIdPrep
     
     # local thisBxoId="${bpoId}"

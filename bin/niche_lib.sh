@@ -137,9 +137,9 @@ ${nicheExamplesFile}
 _EOF_
             fi
             ;;
-        usage)
+        controller)
             cat  << _EOF_
-$( examplesSeperatorChapter "Selected Usage Niche Examples" )
+$( examplesSeperatorChapter "Selected Controller Niche Examples" )
 $(vis_usgBpos_controller_bxoPath)/sys/bin/$(G_myNicheNameGet) # Niche ICM
 _EOF_
 
@@ -150,8 +150,21 @@ ${nicheExamplesFile}
 _EOF_
             fi
             ;;
+        usageEnvs)
+            cat  << _EOF_
+$( examplesSeperatorChapter "Selected Usage Niche Examples" )
+$(vis_usgBposUsageEnvs_bisosDev_bxoPath)/sys/bin/$(G_myNicheNameGet) # Niche ICM
+_EOF_
+
+            nicheExamplesFile="$(dirname $(dirname ${G_myFullName}))/examples/$(G_myNicheNameGet)"
+            if [ -e "${nicheExamplesFile}" ] ; then
+                cat  << _EOF_
+${nicheExamplesFile}
+_EOF_
+            fi
+            ;;
         *)
-            EH_problem "Unimplemented yet -- ${function}"
+            EH_problem "Unimplemented yet -- nicheScope=${nicheScope}"
             ;;
     esac
     

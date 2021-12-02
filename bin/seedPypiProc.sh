@@ -104,6 +104,7 @@ function vis_examples {
 
     opDo icmPreps
 
+    pypiPkgInfoExtract
 
   typeset visLibExamples=`visLibExamplesOutput ${G_myName} ${extraInfo}`
  cat  << _EOF_
@@ -139,6 +140,8 @@ ${G_myName} ${extraInfo} -i pkgUnInstall sys
 $( examplesSeperatorChapter "Installation" )
 ${G_myName} ${extraInfo} -i pkgInstall local ${relPy3Bisos3}   # pip install  ${pipPkgFile}
 ${G_myName} ${extraInfo} -i pkgInstall edit ${devPy3Bisos3}  # pip install --editable $(pwd)
+${G_myName} ${extraInfo} -i pkgInstall local /bisos/tmp/venv/py3-tmp  # pip install --editable $(pwd)
+${G_myName} ${extraInfo} -i pkgInstall edit /bisos/tmp/venv/py3-tmp
 ${G_myName} ${extraInfo} -i pkgInstall edit sys  # pip install --editable $(pwd)
 ${G_myName} ${extraInfo} -i pkgInstall pypi ${relPy3Bisos3}  # pip install ${pypiPkgName}
 pip install --no-cache-dir --install-option="--install-scripts=/bystar/bin" --install-option="--install-data=/bystar/data" ${pipPkgFile}
@@ -161,6 +164,13 @@ fileParamManage.py -i fileParamWritePath ../fptb/docTitle "Pkg's Human Oriented 
 fileParamManage.py -i fileParamWritePath ../fptb/docVersion "0.1"
 $( examplesSeperatorChapter "REAME.rst Creation" )
 pandoc --from=latex -s -t rst --toc README.tex -o README.rst
+xelatex README.tex
+$( examplesSeperatorChapter "Requirements And Dependencies" )
+pipreqs --force .
+johnnydep -v 0 $pypiPkgName
+pipdeptree -r -p $pypiPkgName # Needs a virtEnv
+pipdeptree -fl -p $pypiPkgName # Needs a virtEnv
+yolk -U $pypiPkgName # show if update available at PyPI
 _EOF_
 
 
@@ -499,6 +509,8 @@ _EOF_
 
     inBaseDirDo ${pypiPkgNamespace} FN_fileRmIfThere -v *.pyc    
     inBaseDirDo ${pypiPkgNamespace} FN_fileRmIfThere -v *~
+
+    opDo FN_fileRmIfThere -v README.aux README.out README.log
 
     opDo FN_fileRmIfThere ./auto/*
     if [ -d ./auto ] ; then

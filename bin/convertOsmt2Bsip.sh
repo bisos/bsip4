@@ -98,6 +98,7 @@ $( examplesSeperatorSection "Current Dir And Below" )
 find . -type f -print | egrep '/ftoProc\.sh$' | wc
 find . -type f -print | egrep '/ftoProc\.sh$' | ${G_myName} -i report
 find . -type f -print | grep -v ${G_myName} | ${G_myName} ${extraInfo} -i miscFix
+find . -type f -print | grep -v ${G_myName} | ${G_myName} ${extraInfo} -i libreByStar
 echo /bisos/panels/bisos-dev/_nodeBase_/fullUsagePanel-en.org | ${G_myName} ${extraInfo} -i miscFix
 find /bisos/panels/ -type f -print | xargs grep -l /bisos/panels/bisos/ | ${G_myName} ${extraInfo} -i miscFix
 find . -type f -print | egrep '/ftoProc\.sh$' | ${G_myName} ${extraInfo} -i commonAspects
@@ -153,10 +154,10 @@ _EOF_
         lpReturn 0
     }
 
-####+BEGIN: bx:bsip:bash/processArgsAndStdin 
+####+BEGIN: bx:bsip:bash/processArgsAndStdin :noParams t
      function processArgsAndStdin {
         local effectiveArgs=( "$@" )
-        local stdinArgs
+        local stdinArgs=()
         local each
         if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
             readarray stdinArgs < /dev/stdin
@@ -208,10 +209,10 @@ _EOF_
         lpReturn 0
     }
 
-####+BEGIN: bx:bsip:bash/processArgsAndStdin 
+####+BEGIN: bx:bsip:bash/processArgsAndStdin :noParams t
      function processArgsAndStdin {
         local effectiveArgs=( "$@" )
-        local stdinArgs
+        local stdinArgs=()
         local each
         if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
             readarray stdinArgs < /dev/stdin
@@ -253,15 +254,17 @@ _EOF_
         lpDo FN_fileSafeCopy "${each}" "${each}.${eachDateTag}"
 
         cat ${each}.${eachDateTag} | \
-            sed -e "s@subBxe@bxeTree@g" > ${each}
+            sed -e "s@unisos.webScraping@unisos.wsf@g" > ${each}
+
+            #sed -e "s@bx:bsip:bash/processArgsAndStdin \$@bx:bsip:bash/processArgsAndStdin :noParams t@g" > ${each}
         
         lpReturn 0
     }
 
-####+BEGIN: bx:bsip:bash/processArgsAndStdin 
+####+BEGIN: bx:bsip:bash/processArgsAndStdin :noParams t
      function processArgsAndStdin {
         local effectiveArgs=( "$@" )
-        local stdinArgs
+        local stdinArgs=()
         local each
         if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
             readarray stdinArgs < /dev/stdin
@@ -280,6 +283,58 @@ _EOF_
     
     lpReturn
 }
+
+
+function vis_libreByStar {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Function description.
+Design Pattern: processEach based on args or stdin.
+Examples:
+      ${G_myName} -i userAcctsReport bisos
+      echo bisos bystar | ${G_myName} -i userAcctsReport
+_EOF_
+    }
+    local thisFunc=${G_thisFunc}
+
+    function processEach {
+        EH_assert [[ $# -eq 1 ]]
+        local each="$1"
+        local eachDateTag="${dateTag}"
+
+        #echo "${thisFunc}" "${each}"
+        lpDo FN_fileSafeCopy "${each}" "${each}.${eachDateTag}"
+
+        cat ${each}.${eachDateTag} | \
+            sed -e "s@/libre/ByStar/InitialTemplates/@/bisos/apps/defaults/@g" > ${each}
+
+        lpReturn 0
+    }
+
+####+BEGIN: bx:bsip:bash/processArgsAndStdin :noParams t
+     function processArgsAndStdin {
+        local effectiveArgs=( "$@" )
+        local stdinArgs=()
+        local each
+        if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
+            readarray stdinArgs < /dev/stdin
+            effectiveArgs=( "$@" "${stdinArgs[@]}" )
+        fi
+        if [ ${#effectiveArgs[@]} -eq 0 ] ; then
+            ANT_raw "No Args And Stdin Is Empty"
+            lpReturn
+        fi
+        for each in "${effectiveArgs[@]}"; do
+            lpDo processEach "${each%$'\n'}"
+        done
+    }
+    lpDo processArgsAndStdin "$@"
+####+END:
+
+    lpReturn
+}
+
+
 
 
 _CommentBegin_

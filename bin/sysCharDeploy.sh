@@ -1077,7 +1077,7 @@ _EOF_
     function onTargetRun {
         EH_assert bpoIdPrep
 
-        ${bpoHome}/sys/bin/bxoSysSetup.sh ${G_commandPrefs} \
+        ${bpoHome}/sys/bin/bpoSysSetup.sh ${G_commandPrefs} \
                   -i setup
     }
 

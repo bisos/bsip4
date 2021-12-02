@@ -117,26 +117,28 @@ _EOF_
 
     if [ ! -z "${bpoId}" ] ; then
         processEach "${bpoId}"
+	# We just used the bpoId parameter, So both Args and stdin are ignored.
+	lpReturn
     fi
 
-####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
-    if [ $# -gt 0 ] ; then
-        local each=""
-        for each in ${inputsList} ; do
-            lpDo processEach ${each}
+####+BEGIN:  bx:bsip:bash/processArgsAndStdin :noParams t
+     function processArgsAndStdin {
+        local effectiveArgs=( "$@" )
+        local stdinArgs=()
+        local each
+        if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
+            readarray stdinArgs < /dev/stdin
+            effectiveArgs=( "$@" "${stdinArgs[@]}" )
+        fi
+        if [ ${#effectiveArgs[@]} -eq 0 ] ; then
+            ANT_raw "No Args And Stdin Is Empty"
+            lpReturn
+        fi
+        for each in "${effectiveArgs[@]}"; do
+            lpDo processEach "${each%$'\n'}"
         done
-    else
-        local eachLine=""
-        while read -r -t 1 eachLine ; do
-            if [ ! -z "${eachLine}" ] ; then
-                local each=""
-                for each in ${eachLine} ; do
-                    lpDo processEach ${each}
-                done
-            fi
-        done
-    fi
-
+    }
+    lpDo processArgsAndStdin "$@"
 ####+END:
     
     lpReturn
