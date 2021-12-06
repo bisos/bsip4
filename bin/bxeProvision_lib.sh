@@ -450,8 +450,8 @@ _EOF_
             vis_examplesBxInfoSite
             vis_examplesApplyProvisioners "ByStar Site Information Entity" ${provisioningScope} ${paramsDetail}
             ;;
-        aais)
-            vis_examplesBxInfoAais
+        pals)
+            vis_examplesBxInfoPals
             vis_examplesApplyProvisioners "Asserted Autonomy Internet Service" ${provisioningScope} ${paramsDetail}
             ;;
         scs)
@@ -483,7 +483,7 @@ _EOF_
             vis_examplesApplyProvisioners "ByStar Registrar Information Entity" ${provisioningScope} ${paramsDetail} 
             vis_examplesBxInfoSite
             vis_examplesApplyProvisioners "ByStar Site Information Entity" ${provisioningScope} ${paramsDetail}
-            vis_examplesBxInfoAais
+            vis_examplesBxInfoPals
             vis_examplesApplyProvisioners "Asserted Autonomy Internet Service" ${provisioningScope} ${paramsDetail}
             vis_examplesBxInfoScs
             vis_examplesApplyProvisioners "Self Contained Internet Service" ${provisioningScope} ${paramsDetail}
@@ -755,8 +755,8 @@ _EOF_
             vis_examplesBxMaterializationSysChar
             vis_examplesApplyProvisioners "ByStar SysChar Materialization Entity" ${provisioningScope}  ${paramsDetail}
             ;;
-        aais)
-            vis_examplesBxMaterializationAais
+        pals)
+            vis_examplesBxMaterializationPals
             vis_examplesApplyProvisioners "Asserted Autonomy Internet Service Materialization Entity" ${provisioningScope}  ${paramsDetail}
             ;;
         scs)
@@ -776,7 +776,7 @@ _EOF_
             vis_examplesApplyProvisioners "ByStar Container Materialization Entity" ${provisioningScope}  ${paramsDetail}
             vis_examplesBxMaterializationSysChar
             vis_examplesApplyProvisioners "ByStar SysChar Materialization Entity" ${provisioningScope}  ${paramsDetail}
-            vis_examplesBxMaterializationAais
+            vis_examplesBxMaterializationPals
             vis_examplesApplyProvisioners "Asserted Autonomy Internet Service Materialization Entity" ${provisioningScope}  ${paramsDetail}
             vis_examplesBxMaterializationScs
             vis_examplesApplyProvisioners "Self Contained Service Materialization Entity" ${provisioningScope}  ${paramsDetail}

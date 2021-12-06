@@ -1,6 +1,6 @@
 # -*- mode: sh; -*-
 
-echo "bystarHereAcct.libSh:: moved to /bisos/aais/bin and renamed as aaisCommon_lib.sh"
+echo "bystarHereAcct.libSh:: moved to /bisos/pals/bin and renamed as palsCommon_lib.sh"
 
 exit
 

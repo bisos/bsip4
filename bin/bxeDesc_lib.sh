@@ -205,7 +205,7 @@ _EOF_
                     alpha="mp"
                     numeric=96
                     ;;
-                "aais")
+                "pals")
                     alpha="mi"
                     numeric=97
                     ;;

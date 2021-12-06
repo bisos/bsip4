@@ -162,16 +162,16 @@ ${G_myName} ${extraInfo} -i usgBpos_usageEnvs_fullUse_update ${oneFullUse} # Mai
 ${G_myName} ${extraInfo} -i usgBpos_usageEnvs_fullUse_bxoPath # Main Entry -- Gets
 ${G_myName} ${extraInfo} -i usgBpos_usageEnvs_fullUse_bpoId
 $( examplesSeperatorSection "AAIS BPOs -- Asserted Autonomy Internet Services  BPO" )
-${G_myName} ${extraInfo} -i usgBpos_aais_byname_bpoId_fpWrite ${oneAaipByname} # Low Level Function
-${G_myName} ${extraInfo} -i usgBpos_aais_byname_bpoId_fpRead 
-${G_myName} ${extraInfo} -i usgBpos_aais_byname_update ${oneAaipByname} # Main Entry -- Sets 
-${G_myName} ${extraInfo} -i usgBpos_aais_byname_bxoPath # Main Entry -- Gets
-${G_myName} ${extraInfo} -i usgBpos_aais_byname_bpoId
-${G_myName} ${extraInfo} -i usgBpos_aais_bydomain_bpoId_fpWrite ${oneAaipBydomain} # Low Level Function
-${G_myName} ${extraInfo} -i usgBpos_aais_bydomain_bpoId_fpRead
-${G_myName} ${extraInfo} -i usgBpos_aais_bydomain_update ${oneAaipBydomain} # Main Entry -- Sets
-${G_myName} ${extraInfo} -i usgBpos_aais_bydomain_bxoPath # Main Entry -- Gets
-${G_myName} ${extraInfo} -i usgBpos_aais_bydomain_bpoId
+${G_myName} ${extraInfo} -i usgBpos_pals_byname_bpoId_fpWrite ${oneAaipByname} # Low Level Function
+${G_myName} ${extraInfo} -i usgBpos_pals_byname_bpoId_fpRead 
+${G_myName} ${extraInfo} -i usgBpos_pals_byname_update ${oneAaipByname} # Main Entry -- Sets 
+${G_myName} ${extraInfo} -i usgBpos_pals_byname_bxoPath # Main Entry -- Gets
+${G_myName} ${extraInfo} -i usgBpos_pals_byname_bpoId
+${G_myName} ${extraInfo} -i usgBpos_pals_bydomain_bpoId_fpWrite ${oneAaipBydomain} # Low Level Function
+${G_myName} ${extraInfo} -i usgBpos_pals_bydomain_bpoId_fpRead
+${G_myName} ${extraInfo} -i usgBpos_pals_bydomain_update ${oneAaipBydomain} # Main Entry -- Sets
+${G_myName} ${extraInfo} -i usgBpos_pals_bydomain_bxoPath # Main Entry -- Gets
+${G_myName} ${extraInfo} -i usgBpos_pals_bydomain_bpoId
 $( examplesSeperatorSection "LCNT Bases BPOs -- LCNT (Libre-Halaal Content)  BPO" )
 ${G_myName} ${extraInfo} -i usgBpos_lcntBases_update pip_credsSpecify # Main Entry -- Sets 
 ${G_myName} ${extraInfo} -i usgBpos_lcntBases_bxoPath # Main Entry -- Gets
