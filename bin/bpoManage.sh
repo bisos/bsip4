@@ -145,6 +145,7 @@ ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i fullRemove # Delete Acct and 
 ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i fullDelete # _ALERT_ FullRemove + bxoGitServerFullDelete
 $( examplesSeperatorChapter "Delete A BxO At privGitServer" )
 bxoGitlab.py
+bxoGitlab.py -v 20  -i acctList  # List all existing accounts
 bxoGitlab.py -v 20 --bpoId="${oneBxoId}" -i reposDelete repoName1
 bxoGitlab.py -v 20 --bpoId="${oneBxoId}" --keyName="_priv-pubkey"  -i pubkeyDelete 
 bxoGitlab.py -v 20 --bpoId="${oneBxoId}" -i acctDelete
