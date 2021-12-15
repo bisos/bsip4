@@ -36,8 +36,6 @@ _EOF_
 }
 
 
-
-
 supplementaryGroupsList=()
 
 
@@ -46,6 +44,12 @@ function vis_bisosAcct_bystarUid { echo 2001; }
 
 function vis_bisosAcct_usgGid { vis_bisosGroup_bisosGid; }
 function vis_bisosAcct_usgHomeBase { echo "${bxp_rootDir_bxo}/usg"; }
+
+function vis_bisosAcct_bxSysGid { vis_bisosGroup_bisosGid; }
+function vis_bisosAcct_bxSysHomeBase { echo "${bxp_rootDir_bxo}/bxSys"; }
+
+function vis_bisosAcct_gitShName { echo "gitSh"; }
+function vis_bisosAcct_gitShUid { echo 10001; }
 
 function vis_bisosAcct_bxisoDelimiterName { echo bxisoDelimiter; }
 function vis_bisosAcct_bxisoDelimiterUid { echo 1000000; }
@@ -69,6 +73,24 @@ _EOF_
 }
 
 
+function vis_bxSysAccountsExamples {
+    typeset extraInfo="-h -v -n showRun"
+    #typeset extraInfo=""
+    typeset runInfo="-p ri=lsipusr:passive"
+
+    typeset examplesInfo="${extraInfo} ${runInfo}"
+
+  cat  << _EOF_
+$( examplesSeperatorChapter "BISOS System  (bxSys) Accounts" )
+${G_myName} ${extraInfo} -i bisosAcct_gitShName   # $(vis_bisosAcct_gitShName)
+${G_myName} ${extraInfo} -i bisosAcct_gitShUid    # $(vis_bisosAcct_gitShUid)
+${G_myName} ${extraInfo} -i gitShBxSysAcctVerify  # Info
+${G_myName} ${extraInfo} -i gitShBxSysAcctAdd     #
+${G_myName} ${extraInfo} -i gitShBxSysAcctCreate  # acctAdd, report
+${G_myName} ${extraInfo} -i userAcctsDelete $(vis_bisosAcct_gitShName)
+_EOF_
+}
+
 function vis_usgAccountsExamples {
     typeset extraInfo="-h -v -n showRun"
     #typeset extraInfo=""
@@ -90,6 +112,7 @@ ${G_myName} ${extraInfo} -i usgAcctVerify bystar
 ${G_myName} ${extraInfo} -i usgAcctVerify oneUsgAcct
 ${G_myName} ${extraInfo} -i usgAcct_supplementaryGroupsUpdate bystar
 ${G_myName} ${extraInfo} -i usgAcct_sshKeysUpdate bystar
+${G_myName} ${extraInfo} -i bisosAcct_sshKeysUpdate gitSh
 ${G_myName} ${extraInfo} -i usgAcct_gitConfigUpdate bystar
 $( examplesSeperatorChapter "Usage (usg) List Accounts" )
 ${G_myName} ${extraInfo} -i usgAcctNextLocalUidNu
@@ -268,7 +291,9 @@ _EOF_
    lpDo vis_usgAcctPasswdSet "${acctName}"
 }
 
-function vis_usgAcctPasswdSet {
+function vis_usgAcctPasswdSet { vis_bisosAcctPasswdSet $@; }
+
+function vis_bisosAcctPasswdSet {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 When acctUidIncrement is 0, use bystarUid for uid.
@@ -297,15 +322,94 @@ _EOF_
 }
 
 
-function vis_usgAcctAdd {
+
+function vis_gitShBxSysAcctVerify {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+gitshell Account
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+
+    local acctName=$(vis_bisosAcct_gitShName)
+
+    local acctUid=$(vis_bisosAcct_gitShUid)
+    local acctGid="$(vis_bisosAcct_bxSysGid )"
+    local acctHome="$(vis_bisosAcct_bxSysHomeBase)/${acctName}"
+
+    if vis_userAcctExists "${acctName}" ; then
+        acctUid=$(forAcctNameGetUid ${acctName})
+    else
+        ANT_raw "${acctName} account entry does not exist in /etc/passwd"
+        lpReturn 101
+    fi
+
+    if ! vis_bisosGroupVerify ; then
+        EH_problem "${acctGid} Group is missing or misconfigured -- Re-run bisosGroupAdd"
+        lpReturn 101
+    fi
+
+    lpDo vis_accountVerify ${acctName} ${acctUid} ${acctGid} ${acctHome}
+}
+
+
+
+function vis_gitShBxSysAcctCreate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+When acctUidIncrement is 0, use bystarUid for uid.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local acctName=$(vis_bisosAcct_gitShName)
+
+    local acctUid=$(vis_bisosAcct_gitShUid)
+    local acctGid="$(vis_bisosAcct_bxSysGid )"
+    local acctHome="$(vis_bisosAcct_bxSysHomeBase)/${acctName}"
+
+    if vis_groupExists ${acctGid} ; then
+        if ! vis_bisosGroupVerify ; then
+            EH_problem "${acctGid} group is misconfigured -- Re-run bisosGroupAdd"
+            lpReturn 101
+        fi
+    else
+        EH_problem "${acctGid} group is missing Re-run bisosGroupAdd"
+        lpReturn 101
+    fi
+
+   if vis_userAcctExists "${acctName}" ; then
+       if vis_gitShBxSysusgAcctVerify "${acctName}" ; then
+           ANT_raw "${acctName} exists and is properly configured. It will be used"
+       else
+           EH_problem "${acctName} account is misconfigured"
+           lpReturn 101
+       fi
+   else
+       opDo vis_gitShBxSysAcctAdd
+   fi
+
+   lpDo vis_acct_createHome ${acctName}
+
+   lpDo vis_bisosAcct_sshKeysUpdate ${acctName}
+
+   # the sudo -u ${acctName} id -- results in creation of the homeDir
+   opDo vis_userAcctsReport ${acctName}
+
+   lpDo vis_bisosAcctPasswdSet "${acctName}"
+}
+
+
+function vis_gitShBxSysAcctAdd {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Add the USG account if it does not exist.
 _EOF_
     }
-    EH_assert [[ $# -eq 1 ]]
+    EH_assert [[ $# -eq 0 ]]
 
-    local acctName="$1"
+    local acctName=$(vis_bisosAcct_gitShName)
 
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;        
     
@@ -314,23 +418,15 @@ _EOF_
         lpReturn 101
     fi
 
-    local acctGid="$( vis_bisosAcct_usgGid )"
-    local acctUid=""
-    local acctComment=""
-    local acctHome="$( vis_bisosAcct_usgHomeBase )/${acctName}"
-
-    if [ "${acctName}" == "$( vis_bisosAcct_bystarName )" ] ; then
-        acctUid=$( vis_bisosAcct_bystarUid )
-        acctComment="bystar -- Default BISOS Acct"
-    else
-        acctUid=$( vis_usgAcctNextLocalUidNu )
-        acctComment="BISOS Named Usage Acct"    
-    fi
+    local acctUid=$(vis_bisosAcct_gitShUid)
+    local acctGid="$(vis_bisosAcct_bxSysGid )"
+    local acctHome="$(vis_bisosAcct_bxSysHomeBase)/${acctName}"
+    local acctComment="BISOS System "
 
     lpDo useradd \
          --uid "${acctUid}" \
          --gid "${acctGid}" \
-         --shell /bin/bash \
+         --shell /bin/git-shell \
          --home-dir "${acctHome}" \
          --comment "${acctComment}" \
          ${acctName}
@@ -351,6 +447,22 @@ _EOF_
 
     vis_uidRangePasswdFile
 }
+
+function vis_bxSysAcctsList {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+List all BISOS System accounts
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    uidMinSpec=10001
+    uidMaxSpec=15000
+
+    vis_uidRangePasswdFile
+}
+
+
 
 function vis_bxoAcctsList {
     G_funcEntry
@@ -400,7 +512,9 @@ _EOF_
     done
 }
 
-function vis_usgAcct_sshKeysUpdate {
+function vis_usgAcct_sshKeysUpdate { vis_bisosAcct_sshKeysUpdate $@; }
+
+function vis_bisosAcct_sshKeysUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Add sshKeys if not there, with forceMode update existing ones.
@@ -422,8 +536,6 @@ _EOF_
     else
         opDo lcaSshAdmin.sh -p localUser="${acctName}" -i userKeyUpdate
     fi
-
-
 }
 
 function vis_usgAcct_gitConfigUpdate {
