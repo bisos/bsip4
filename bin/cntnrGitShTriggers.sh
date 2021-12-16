@@ -152,8 +152,17 @@ bisosAccounts.sh -h -v -n showRun -i userAcctsDelete gitSh
 $( examplesSeperatorChapter "Full Actions" )
 ${G_myName} ${extraInfo} -i fullUpdate
 $( examplesSeperatorChapter "Home Account And Keys Setup" )
+${G_myName} ${extraInfo} -i gitShAccountCreate
 ${G_myName} ${extraInfo} -i noInteractiveShellSetup
-$( examplesSeperatorChapter "Repos Create And Triggers Setup" )
+$( examplesSeperatorChapter "Invoker (client) Side:: SSH Setup" )
+${G_myName} ${extraInfo} -i gitSh_invoker_sshUsgSetup performerCntnrId
+${G_myName} ${extraInfo} -i gitSh_invoker_sshUsgLogin performerCntnrId
+$( examplesSeperatorChapter "Performer (server) Side:: SSH Setup" )
+${G_myName} ${extraInfo} -i gitSh_performer_sshSetup cntnrName pubKeyFile
+$( examplesSeperatorChapter "Performer (server) Side:: Repos Create And Triggers Setup" )
+${G_myName} ${extraInfo} -i gitSh_performer_repo_jekyll
+$( examplesSeperatorChapter "Invoker (client) Side:: Trigger With Git Push" )
+${G_myName} ${extraInfo} -i gitSh_invoke_trigger_jekyll
 _EOF_
 }
 
@@ -168,6 +177,18 @@ _EOF_
 
     lpReturn
 }       
+
+function vis_gitShAccountCreate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+* NOTYET, create the account if needed.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpReturn
+}
+
 
 function vis_noInteractiveShellSetup {
     G_funcEntry
@@ -200,6 +221,63 @@ _EOF_
 
     lpReturn
 }       
+
+function vis_gitSh_invoker_sshUsgSetup {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+* Add to ~/.ssh/config file as tested -- Use existing usgSshCustom
+** \$1 is performer cntnrId
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    lpReturn
+}
+
+function vis_gitSh_invoker_sshUsgLogin {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+* Arg1 is performer address. No password prompt. Login declined.
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    lpReturn
+}
+
+function vis_gitSh_performer_sshSetup {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+* arg1 is cntnrName, arg2 is pubKeyFile.
+** Add pub key to authorized file. Change permissions.
+_EOF_
+    }
+    EH_assert [[ $# -eq 2 ]]
+
+    lpReturn
+}
+
+function vis_gitSh_performer_repo_jekyll {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+* Repo Create; Create post-./post-receive
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpReturn
+}
+
+function vis_gitSh_invoke_trigger_jekyll {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+* update file. add .; commit; push
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpReturn
+}
 
 
 _CommentBegin_
