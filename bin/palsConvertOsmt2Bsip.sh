@@ -100,6 +100,7 @@ find . -type f -print | egrep './bss' | ${G_myName} ${extraInfo} -i commonAspect
 find . -type f -print | grep -v ${G_myName} | ${G_myName} -i commonAspects
 find . -type f -print | grep -v ${G_myName} | ${G_myName} -i miscFix
 find . -type f -print | grep -v ${G_myName} | ${G_myName} -i aalsToPals
+find . -type f -print | egrep '\.py$' | grep -v ${G_myName} | ${G_myName} -i toPy3Bpf
 $( examplesSeperatorSection "Report" )
 ${G_myName} ${extraInfo} -i report *
 find . -type f -print | egrep './bss' | ${G_myName} -i report
@@ -352,6 +353,58 @@ _EOF_
     lpDo processArgsAndStdin "$@"
 ####+END:
     
+    lpReturn
+}
+
+
+function vis_toPy3Bpf  {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Function description.
+Design Pattern: processEach based on args or stdin.
+Examples:
+      ${G_myName} -i userAcctsReport bisos
+      echo bisos bystar | ${G_myName} -i userAcctsReport
+_EOF_
+    }
+    local thisFunc=${G_thisFunc}
+
+    function processEach {
+        EH_assert [[ $# -eq 1 ]]
+        local each="$1"
+        local eachDateTag="${dateTag}"
+
+        #echo "${thisFunc}" "${each}"
+        lpDo FN_fileSafeCopy "${each}" "${each}.${eachDateTag}"
+
+        cat ${each}.${eachDateTag} | \
+            sed -e "s@subBxeIGNORE@bxeTreeIGNORE@g" \
+            -e "s@bx:icm:python:section@bx:icm:py3:section@g" \
+            -e "s@aabis@aais@g" > ${each}
+
+        lpReturn 0
+    }
+
+####+BEGIN: bx:bsip:bash/processArgsAndStdin :noParams t
+     function processArgsAndStdin {
+        local effectiveArgs=( "$@" )
+        local stdinArgs
+        local each
+        if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
+            readarray stdinArgs < /dev/stdin
+            effectiveArgs=( "$@" "${stdinArgs[@]}" )
+        fi
+        if [ ${#effectiveArgs[@]} -eq 0 ] ; then
+            ANT_raw "No Args And Stdin Is Empty"
+            lpReturn
+        fi
+        for each in "${effectiveArgs[@]}"; do
+            lpDo processEach "${each%$'\n'}"
+        done
+    }
+    lpDo processArgsAndStdin "$@"
+####+END:
+
     lpReturn
 }
 

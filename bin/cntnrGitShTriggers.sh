@@ -186,6 +186,11 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
+    if bisosAccounts.sh -h -v -n showRun -i gitShBxSysAcctVerify ; then
+        ANT_raw "gitSh acct is in place -- creation skipped"
+        lpReturn
+    fi
+
     lpReturn
 }
 
@@ -204,7 +209,7 @@ _EOF_
     if [ -d  "${gitShellCommands}" ] ; then
         ANT_raw "${gitShellCommands} is in place, creation skipped"
     else
-        lpDo sudo -u gitSh  mkdir ${gitShellCommands}~gitSh/git-shell-commands
+        lpDo sudo -u gitSh  mkdir ${gitShellCommands}
     fi
     ls -ld ${gitShellCommands}
 
