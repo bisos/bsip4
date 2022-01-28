@@ -126,7 +126,7 @@ $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorSection "BxO Ssh Keys Full Actions" )
 ${G_myName} ${examplesInfo} -p usg=${oneUsg} -i usgBxoFullRebuild
 $( examplesSeperatorSection "Custom Ssh Keys Full Actions" )
-${G_myName} ${examplesInfo} -p usg=${oneUsg} -i usgCustomFullUpdate sshConfLabel keysBasePath sshDestServer sshUser sshPort
+${G_myName} ${examplesInfo} -p usg=${oneUsg} -i usgCustomFullUpdate sshConfLabel sshKeysBaseOrFile sshDestServer sshUser sshPort
 ${G_myName} ${examplesInfo} -p usg=${oneUsg} -i usgCustomFullDelete sshConfLabel
 $( examplesSeperatorChapter "Bxo Ssh Private Keys" )
 $( examplesSeperatorSection "lcaSshAdmin.sh" )
@@ -144,9 +144,9 @@ ${G_myName} ${extraInfo} -i usgSshConfigSegBasePrep
 ${G_myName} -i usgSshConfigSegBaseList
 $( examplesSeperatorSection "USG Ssh Custom Config Segment File Update" )
 ${G_myName} -i customConfigSegStdout sshConfLabel sshDestServerName
-${G_myName} ${extraInfo} -i customConfigSegStdout sshConfLabel sshDestServerName  # Verbose
+${G_myName} ${extraInfo} -i customConfigSegStdout sshConfLabel sshKeyFile sshDestServerName sshUser sshPort  # Verbose
 ${G_myName} ${extraInfo} -i customConfigSegFileName sshConfLabel sshDestServerName
-${G_myName} ${extraInfo} -i customConfigSegUpdate sshConfLabel sshDestServerName sshUser sshPort
+${G_myName} ${extraInfo} -i customConfigSegUpdate sshConfLabel sshKeyFile sshDestServerName sshUser sshPort
 ${G_myName} ${extraInfo} -i customConfigSegDelete sshConfLabel
 ${G_myName} ${extraInfo} -i customConfigSegExists sshConfLabel
 $( examplesSeperatorSection "Tests And Verifications" )
@@ -177,14 +177,24 @@ _EOF_
     EH_assert [ ! -z "${usg}" ]
 
     local sshConfLabel="$1"
-    local sshKeysBase="$2"
+    local sshKeysBaseOrFile="$2"
     local sshDestServer="$3"
     local sshUser="$4"
     local sshPort="$5"
 
-    opDo vis_usgAcctCustomCredentialsUpdate ${sshConfLabel} ${sshKeysBase}
+    local privKeyFile=""
 
-    opDo vis_customConfigSegUpdate ${sshConfLabel} ${sshDestServer} ${sshUser} ${sshPort}
+    if [ -d "${sshKeysBaseOrFile}" ] ; then
+        opDo vis_usgAcctCustomCredentialsUpdate ${sshConfLabel} ${sshKeysBase}
+        privKeyFile=${usgHome}/.ssh/${sshConfLabel}_rsa
+    elif [ -f "${sshKeysBaseOrFile}" ] ; then
+        privKeyFile="${sshKeysBaseOrFile}"
+    else
+        EH_problem "OOPS"
+        lpReturn 101
+    fi
+
+    opDo vis_customConfigSegUpdate ${sshConfLabel} ${privKeyFile} ${sshDestServer} ${sshUser} ${sshPort}
     
     opDo usgBpoSshManage.sh -h -v -n showRun -i configFileUpdate
 
@@ -378,7 +388,6 @@ _EOF_
 }
 
 
-
 _CommentBegin_
 *      ======[[elisp:(org-cycle)][Fold]]====== Custom Config File Generate/Update
 _CommentEnd_
@@ -389,12 +398,13 @@ function vis_customConfigSegStdout {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
-    EH_assert [[ $# -eq 4 ]]
+    EH_assert [[ $# -eq 5 ]]
 
     local customGitLabel="$1"
-    local customGitServerName="$2"
-    local sshUser="$3"
-    local sshPort="$4"
+    local sshKeyFile="$2"
+    local customGitServerName="$3"
+    local sshUser="$4"
+    local sshPort="$5"
 
     cat  << _EOF_
 # at $( DATE_nowTag ) by $(id -u -n) on $(hostname)
@@ -403,7 +413,7 @@ Host ${customGitLabel}
         Hostname ${customGitServerName}
         User ${sshUser}
         Port ${sshPort}
-        IdentityFile ~/.ssh/${customGitLabel}_rsa
+        IdentityFile ${sshKeyFile}
 _EOF_
 
     lpReturn
@@ -428,16 +438,17 @@ function vis_customConfigSegUpdate {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
-    EH_assert [[ $# -eq 4 ]]
+    EH_assert [[ $# -eq 5 ]]
 
     local customGitLabel="$1"
-    local customGitServerName="$2"
-    local sshUser="$3"
-    local sshPort="$4"
+    local sshKeyFile="$2"
+    local customGitServerName="$3"
+    local sshUser="$4"
+    local sshPort="$5"
 
     local outFileName="$(vis_customConfigSegFileName ${customGitLabel} ${customGitServerName})"
 
-    lpDo eval vis_customConfigSegStdout ${customGitLabel} ${customGitServerName}  ${sshUser} ${sshPort} \>  "${outFileName}"
+    lpDo eval vis_customConfigSegStdout ${customGitLabel} ${sshKeyFile} ${customGitServerName}  ${sshUser} ${sshPort} \>  "${outFileName}"
 
     lpReturn
 }

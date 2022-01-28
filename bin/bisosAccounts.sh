@@ -103,6 +103,7 @@ _EOF_
     vis_bisosGroupAcctProvisionExamples    
     vis_unisosAccountsExamples
     vis_bisosGroupExamples
+    vis_bxSysAccountsExamples
     vis_usgAccountsExamples
     vis_bxoAccountsExamples
 }

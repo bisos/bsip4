@@ -750,6 +750,7 @@ _EOF_
 function vis_customConfigSegUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+* TODO Revisit this as it conflicts with same name in usgBpoSshCustomManage.sh
 _EOF_
     }
     EH_assert [[ $# -eq 2 ]]
