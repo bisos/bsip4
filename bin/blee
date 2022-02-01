@@ -121,7 +121,7 @@ diff ~/.emacs.d/init.el /bisos/blee/env/init/dotEmacs_dInit
 $( examplesSeperatorChapter "Development And Libraries And History" )
 $( vis_examples_bleeLibLine )
 ${G_myName} ${extraInfo} -p acctName=bystar -i provisionSetup
-${G_myName} ${extraInfo}  -i doomReBuildBlee2
+emacsDoomsManage.sh ${extraInfo} -p profile=blee2 -i reBuild    # doomReBuildBlee2
 _EOF_
 }
 
