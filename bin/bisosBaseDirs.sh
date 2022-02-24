@@ -88,6 +88,7 @@ _EOF_
 # Import Libraries
 
 #
+. ${opBinBase}/lpInBaseDirDo.libSh
 
 . ${opBinBase}/platformBases_lib.sh
 
@@ -132,12 +133,29 @@ ${G_myName} ${extraInfo} -i bxReposAuthSet
 ${G_myName} ${extraInfo} -i bxReposAnonSet
 $( examplesSeperatorChapter "Initial Setup" )
 ssh-keygen -F github.com || ssh-keyscan github.com >> ~/.ssh/known_hosts
+${G_myName} ${extraInfo} -i detectNewlyAddedRepos
 _EOF_
 }
 
 noArgsHook() {
   vis_examples_general "general"
 }
+
+
+function vis_detectNewlyAddedRepos {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Runs as bisos user.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    inBaseDirDo /bisos/git/anon/bxRepos find . -maxdepth 2 -type d -print  | grep -v '/\.git' | sort  > /tmp/anonDirs
+    inBaseDirDo /bisos/git/auth/bxRepos find . -maxdepth 2 -type d -print  | grep -v '/\.git' | sort  > /tmp/authDirs
+
+    lpDo diff /tmp/anonDirs /tmp/authDirs
+ }
+
 
 
 function vis_bxGitReposAnonReCloneBisos {
