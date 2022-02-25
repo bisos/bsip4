@@ -540,9 +540,9 @@ _EOF_
 
 function vis_usgAcct_gitConfigUpdate {
     G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
+    function describeF {  G_funcEntryShow; cat  << _EOOB_ #+begin_org
 Configure git pars -- just a starting point for now.
-_EOF_
+_EOOB_
                        }
     EH_assert [[ $# -lt 4 ]]
     EH_assert [[ $# -gt 0 ]]

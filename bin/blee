@@ -271,7 +271,7 @@ _EOF_
     lpDo vis_emacsProfilesUpdate
 }
 
-####+BEGIN: bx:shList/chemacsProfilesNames :noParams ""
+####+BEGIN-NOT: bx:shList/chemacsProfilesNames :noParams ""
 chemacsProfilesNamesCache=(
 default
 blee1
