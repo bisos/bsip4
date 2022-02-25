@@ -146,7 +146,7 @@ _EOF_
 
     lpDo bisosCurrentsManage.sh -i setParam cur_bpoId_parent pis_defaultSite
 
-    lpDo echo "Stuff from bisosMaintainInterim.sh comes here."
+    lpDo echo "Stuff from bisosUpdateInterim.sh comes here."
 }
 
 
