@@ -566,7 +566,7 @@ _EOF_
     local sysCharConveyInfoBase="${bpoHome}/var/sysCharConveyInfo"
     
     if [ ! -d "${sysCharConveyInfoBase}" ] ; then
-        lpDo mkdir "${sysCharConveyInfoBase}"
+        lpDo mkdir -p "${sysCharConveyInfoBase}"
     fi
 
     case ${paramName} in
