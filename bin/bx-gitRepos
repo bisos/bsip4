@@ -262,7 +262,7 @@ _EOF_
     lpReturn
 }       
 
-function vis_cachedLs {
+function vis_cachedLs%% {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -281,8 +281,22 @@ _EOF_
     lpReturn
 }       
 
+function vis_cachedLs {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
 
-function vis_cachedLsAtomsRefresh {
+    # lpDo ${G_myName} -h -v -n showRun -p baseDir="${baseDir}" -p vcMode=${vcMode} -i bxReposList
+    lpDo vis_bxReposList
+
+    lpReturn
+}
+
+
+
+function vis_cachedLsAtomsRefresh%% {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -297,6 +311,23 @@ _EOF_
 
     lpReturn
 }       
+
+function vis_cachedLsAtomsRefresh {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local bxReposListFileName=$( vis_cachedLsAtomsFileName )
+    EH_assert [[ "${bxReposListFileName}X" != "X" ]]
+
+    ANT_cooked "Creating The Cache File at ${bxReposListFileName}:"
+    lpDo eval  vis_bxReposList \| vis_gitBaseIsCollection \| egrep -v '^COLLECTION:' \| cut -d : -f 2 \| tee "${bxReposListFileName}"
+
+    lpReturn
+}
+
 
 function vis_cachedLsAtoms {
    G_funcEntry
@@ -316,7 +347,6 @@ _EOF_
 
     lpReturn
 }       
-
 
 
 
@@ -349,9 +379,11 @@ _EOF_
 }       
 
 
-function vis_bxReposList {
+function vis_bxReposList%% {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+This is the old version that actually walk through the repos one by one.
+Do not delete this yet.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -370,6 +402,24 @@ _EOF_
 
     lpReturn
 }       
+
+function vis_bxReposList {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local baseDir=$( vis_bxReposBaseDir )
+
+    EH_assert [[ "${baseDir}X" != "X" ]]
+
+    lpDo bx-gitReposBases -v 30 --baseDir="${baseDir}" --pbdName="bxReposRoot" --vcMode="auth"  -i pbdVerify all
+
+    lpReturn
+}
+
+
 
 
 
