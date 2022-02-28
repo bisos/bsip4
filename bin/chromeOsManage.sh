@@ -143,13 +143,85 @@ function vis_examples {
 $( examplesSeperatorChapter "Chrome OS Specific Facilities" )
 $( examplesSeperatorSection "Identify ChromeOs" )
 ${G_myName} ${extraInfo} -i runningInChromeOsContainer # are we running in ChromeOs
+$( examplesSeperatorSection "Ssh into ChromeOs" )
 ${G_myName} ${extraInfo} -i sshd_runAt3333
 sudo service sshd restart
 sudo service sshd status
 ssh -X -p 3333 bystar@localhost
-${G_myName} ${extraInfo} -i functionKeys
+$( examplesSeperatorSection "ChromeOs Instructions" )
+${G_myName} ${extraInfo} -i instructions_functionKeys
+$( examplesSeperatorSection "ChromeOs Natal Account For ByStar" )
+${G_myName} ${extraInfo} -i natalAcctForByStar
 _EOF_
 
+}
+
+function vis_bisosAcct_natalUid { echo 1000; }   # typically intra or chromeOs default acct
+function vis_bisosAcct_natalName { echo $(id -un -- $(vis_bisosAcct_natalUid)); }
+
+
+function vis_natalAcctForByStar {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** These are steps needed to make the default Debain-ChromeOS account
+** to be equivalent of bystar account.
+_EOF_
+                       }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert [ vis_runningInChromeOsContainer ]
+
+    local acctName=$(vis_bisosAcct_natalName)
+    local acctHome=$(eval echo ~${acctName})
+    local dateTag=$( DATE_nowTag )     
+
+    lpDo sudo usermod -G $(vis_bisosGroup_bisosGid) --append ${acctName}
+
+    lpDo sudo usermod -g $(vis_bisosGroup_bisosGid) ${acctName}    
+
+    lpDo ls -ld ${acctHome}
+
+    local sshBase="${acctHome}/.ssh"
+
+    if [ ! -h "${sshBase}" ] ; then
+	if [ -d ${acctHome}/.ssh ] ; then
+	    lpDo sudo mv ${acctHome}/.ssh ${acctHome}/.ssh.${dateTag}
+	fi
+	lpDo ln -s ~bystar/.ssh  ${sshBase}	
+    fi
+
+    local bashrcPath="${acctHome}/.bashrc"
+
+    if [ ! -h "${bashrcPath}" ] ; then
+	if [ -f "${bashrcPath}" ] ; then
+	    lpDo sudo mv ${bashrcPath} ${bashrcPath}.${dateTag}
+	fi
+	lpDo ln -s ~bystar/.bashrc ${bashrcPath}
+    fi
+
+    local bashrcPath="${acctHome}/.bashrc"
+
+    if [ ! -h "${bashrcPath}" ] ; then
+	if [ -f "${bashrcPath}" ] ; then
+	    lpDo sudo mv ${bashrcPath} ${bashrcPath}.${dateTag}
+	fi
+	lpDo ln -s ~bystar/.bashrc ${bashrcPath}
+    fi
+
+    local emacsdPath="${acctHome}/.emacs.d"
+
+    if [ ! -h "${emacsdPath}" ] ; then
+	if [ -f "${emacsdPath}" ] ; then
+	    lpDo sudo mv ${emacsdPath} ${emacsdPath}.${dateTag}
+	fi
+	lpDo ln -s ~bystar/.emacs.d ${emacsdPath}
+    fi
+    
+    lpDo sudo chmod -R ugo+rw ${emacsdPath}/auto-save-list
+    lpDo sudo chmod -R ugo+rw ${emacsdPath}/emms
+    lpDo sudo chmod -R ugo+rw ${emacsdPath}/transient    
+    
+    lpReturn
 }
 
 
@@ -218,7 +290,7 @@ _EOF_
 }
 
 
-function vis_sshd_portForwardTo3333 {
+function vis_instructions_functionKeys {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Function Keys
