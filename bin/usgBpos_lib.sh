@@ -716,8 +716,17 @@ _EOF_
                       }
    EH_assert [[ $# -eq 0 ]]
    local curUsgBposBase=$(lpDo vis_curUsgBposBase)   
-   EH_assert [ -e ${curUsgBposBase}/lcntBases/lcntBases ]
-   lpDo FN_absolutePathGet ${curUsgBposBase}/lcntBases/lcntBases
+   EH_assert [ -e ${curUsgBposBase} ]
+   EH_assert [ -e ${curUsgBposBase}/lcntBases ]
+
+    local bpoIdValue=$( vis_usgBpos_lcntBases_bpoId_fpRead )
+    EH_assert [ ! -z "${bpoIdValue}" ]
+
+    bpoPath=$(lpDo vis_bxoPathObtainForBxoId "${bpoIdValue}")
+    EH_assert [ ! -z "${bpoPath}" ]
+
+    EH_assert [ -e ${bpoPath} ]
+    lpDo FN_absolutePathGet ${bpoPath}
 }
 
 
