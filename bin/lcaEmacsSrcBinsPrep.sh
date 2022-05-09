@@ -99,7 +99,7 @@ srcObtainForm="git"
 #srcPkgName="emacs-24.5"
 #srcPkgName="emacs-25.1"
 
-emacsVerLatest="emacs28"
+emacsVerLatest="emacs29"
 emacsVerCurrent="emacs27"
 
 srcPkgName="${emacsVerCurrent}"
@@ -150,50 +150,50 @@ srcPkgSelector is one of: emacsVer =  latest current emacs27 emacs26 emacs25 ema
 $( examplesSeperatorSection "srcEnvSetup:: Setup (apt install) Needed Packages For Buidling" )
 ${G_myName} ${extraInfo} -i srcEnvSetup # defaults to latest
 ${G_myName} ${extraInfo} -i srcEnvSetup current
-${G_myName} ${extraInfo} -i srcEnvSetup emacs28
+${G_myName} ${extraInfo} -i srcEnvSetup emacs29
 ${G_myName} ${extraInfo} -i srcEnvSetup emacs27
 ${G_myName} ${extraInfo} -i srcEnvSetup emacs26
 $( examplesSeperatorSection "srcPkgSpecPrep:: determine key params for specified emacs version" )
 ${G_myName} ${extraInfo} -i srcPkgSpecPrep # defaults to latest
 ${G_myName} ${extraInfo} -i srcPkgSpecPrep current
-${G_myName} ${extraInfo} -i srcPkgSpecPrep emacs28
+${G_myName} ${extraInfo} -i srcPkgSpecPrep emacs29
 ${G_myName} ${extraInfo} -i srcPkgSpecPrep emacs27
 ${G_myName} ${extraInfo} -i srcPkgSpecPrep emacs26
 $( examplesSeperatorSection "srcPkgObtain:: git clone or wget file.tar -- Get The Sources" )
 ${G_myName} ${extraInfo} -i srcPkgObtain # defaults to latest
 ${G_myName} ${extraInfo} -i srcPkgObtain current
-${G_myName} ${extraInfo} -i srcPkgObtain emacs28
+${G_myName} ${extraInfo} -i srcPkgObtain emacs29
 ${G_myName} ${extraInfo} -i srcPkgObtain emacs27
 ${G_myName} ${extraInfo} -i srcPkgObtain emacs26
 $( examplesSeperatorSection "srcBuild:: make config; make bootstrap -- Build With Sources" )
 ${G_myName} ${extraInfo} -i srcBuild # defaults to latest
 ${G_myName} ${extraInfo} -i srcBuild current
-${G_myName} ${extraInfo} -i srcBuild emacs28
+${G_myName} ${extraInfo} -i srcBuild emacs29
 ${G_myName} ${extraInfo} -i srcBuild emacs27
 ${G_myName} ${extraInfo} -i srcBuild emacs26
 $( examplesSeperatorChapter "srcBinInstall:: sudo make install -- Install Build Results" )
 ${G_myName} ${extraInfo} -i srcBinInstall # defaults to latest
 ${G_myName} ${extraInfo} -i srcBinInstall current
-${G_myName} ${extraInfo} -i srcBinInstall emacs28
+${G_myName} ${extraInfo} -i srcBinInstall emacs29
 ${G_myName} ${extraInfo} -i srcBinInstall emacs27
 ${G_myName} ${extraInfo} -i srcBinInstall emacs26
 $( examplesSeperatorChapter "postInstall:: " )
 ${G_myName} ${extraInfo} -i postInstall # defaults to latest
 ${G_myName} ${extraInfo} -i postInstall current
-${G_myName} ${extraInfo} -i postInstall emacs28
+${G_myName} ${extraInfo} -i postInstall emacs29
 ${G_myName} ${extraInfo} -i postInstall emacs27
 ${G_myName} ${extraInfo} -i postInstall emacs26
 $( examplesSeperatorChapter "srcFullBuild:: srcEnvSetup + obtain + build + install -- Full Service" )
 $( examplesSeperatorChapter "srcFullBuild:: when rebuilding is desired specify -f (forceMode) " )
 ${G_myName} ${extraInfo} -i srcFullBuild # defaults to latest
 ${G_myName} ${extraInfo} -i srcFullBuild current
-${G_myName} ${extraInfo} -i srcFullBuild emacs28
+${G_myName} ${extraInfo} -i srcFullBuild emacs29
 ${G_myName} ${extraInfo} -i srcFullBuild emacs27
 ${G_myName} ${extraInfo} -i srcFullBuild emacs26
 $( examplesSeperatorChapter "Installation Verification:: Is Specified Emacs Installed?" )
 ${G_myName} ${extraInfo} -i installedVerify # defaults to latest
 ${G_myName} ${extraInfo} -i installedVerify current
-${G_myName} ${extraInfo} -i installedVerify emacs28
+${G_myName} ${extraInfo} -i installedVerify emacs29
 ${G_myName} ${extraInfo} -i installedVerify emacs27
 ${G_myName} ${extraInfo} -i installedVerify emacs26
 _EOF_
@@ -224,7 +224,7 @@ function vis_srcPkgSpecPrep {
 $1 is one of:
 latest
 current
-emacs28
+emacs29
 emacs27
 emacs26
 _EOF_
@@ -241,8 +241,8 @@ _EOF_
    
     opDo emacsVerCanonicalized    
 
-    function srcPkgSpecPrep_emacs28_git {
-        srcPkgName="emacs-28"
+    function srcPkgSpecPrep_emacs29_git {
+        srcPkgName="emacs-29"
        
         srcBuildScript=""
         srcBuildScriptTmpDir=/tmp/"${srcPkgName}"
@@ -250,7 +250,7 @@ _EOF_
         srcObtainBaseDir="/bisos/var/srcPkgs/${srcPkgName}"
         # -- depth 1 of git clone, copies only the latest revision 
         #obtainCmndLine="git clone --depth 1 git://git.sv.gnu.org/emacs.git"
-        obtainCmndLine="obtainOrUpdateSrc_emacs28"
+        obtainCmndLine="obtainOrUpdateSrc_emacs29"
 
         srcBuildBaseDir="/bisos/var/srcPkgs/${srcPkgName}/emacs"        
     }
@@ -291,8 +291,8 @@ _EOF_
         fi
     }
 
-    if [ "${srcPkgSelector}" == "emacs28" ] ; then
-        opDoRet srcPkgSpecPrep_dispatch emacs28
+    if [ "${srcPkgSelector}" == "emacs29" ] ; then
+        opDoRet srcPkgSpecPrep_dispatch emacs29
 
     elif [ "${srcPkgSelector}" == "emacs27" ] ; then
         opDoRet srcPkgSpecPrep_dispatch emacs27
@@ -668,7 +668,67 @@ _EOF_
         opDo apt-get -y install  libxrender1
         opDo apt-get -y install  zlib1g
         # ----- END  (emacs (26) on Debian 10) ------------
-        
+
+    elif [ "${opRunDistGeneration}" == "11" ] ; then
+
+        #
+        # This is debain 11 (buster_
+        # -------- Development Pkgs -----------
+        #
+        opDo apt-get -y build-dep emacs
+
+        # emacs (26) as distributed with Debian 11
+        #  apt-cache depends emacs-gtk | grep Depends: | grep -v emacs | cut -d ':' -f 2 | sed -e 's/^/opDo apt-get -y install /'
+        # ----- BEGIN  (emacs 26 on Debian 11) ------------
+        # -------- Run Time Pkgs -----------
+
+        opDo apt-get -y install  libacl1
+        opDo apt-get -y install  libasound2
+        opDo apt-get -y install  libatk1.0-0
+        opDo apt-get -y install  libc6
+        opDo apt-get -y install  libcairo-gobject2
+        opDo apt-get -y install  libcairo2
+        opDo apt-get -y install  libdbus-1-3
+        opDo apt-get -y install  libfontconfig1
+        opDo apt-get -y install  libfreetype6
+        opDo apt-get -y install  libgdk-pixbuf2.0-0
+        opDo apt-get -y install  libgif7
+        opDo apt-get -y install  libglib2.0-0
+        opDo apt-get -y install  libgnutls30
+        opDo apt-get -y install  libgomp1
+        opDo apt-get -y install  libgpm2
+        opDo apt-get -y install  libgtk-3-0
+        opDo apt-get -y install  libice6
+        opDo apt-get -y install  libjpeg62-turbo
+        opDo apt-get -y install  liblcms2-2
+        opDo apt-get -y install  libm17n-0
+        opDo apt-get -y install  libmagickcore-6.q16-6
+        opDo apt-get -y install  libmagickwand-6.q16-6
+        opDo apt-get -y install  libotf0
+        opDo apt-get -y install  libpango-1.0-0
+        opDo apt-get -y install  libpangocairo-1.0-0
+        opDo apt-get -y install  libpng16-16
+        opDo apt-get -y install  librsvg2-2
+        opDo apt-get -y install  libselinux1
+        opDo apt-get -y install  libsm6
+        opDo apt-get -y install  libsystemd0
+        opDo apt-get -y install  libtiff5
+        opDo apt-get -y install  libtinfo6
+        opDo apt-get -y install  libx11-6
+        opDo apt-get -y install  libx11-xcb1
+        opDo apt-get -y install  libxcb1
+        opDo apt-get -y install  libxext6
+        opDo apt-get -y install  libxfixes3
+        opDo apt-get -y install  libxft2
+        opDo apt-get -y install  libxinerama1
+        opDo apt-get -y install  libxml2
+        opDo apt-get -y install  libxpm4
+        opDo apt-get -y install  libxrandr2
+        opDo apt-get -y install  libxrender1
+        opDo apt-get -y install  zlib1g
+        # ----- END  (emacs (26) on Debian 11) ------------
+
+
     else
         EH_problem "Unsupported Distro and DistroGeneration=${opRunDistGeneration}"
     fi
@@ -676,7 +736,7 @@ _EOF_
 
 
 
-function vis_srcEnvSetup_emacs28 { opDo vis_srcEnvSetup_emacs27; }
+function vis_srcEnvSetup_emacs29 { opDo vis_srcEnvSetup_emacs27; }
     
 
 _CommentBegin_
@@ -736,6 +796,24 @@ _EOF_
         opDo apt-get -y install  libm17n-dev
         opDo apt-get -y install  libharfbuzz-dev     # shaping for farsi/arabic
 
+    elif [ "${opRunDistGeneration}" == "11" ] ; then
+        #
+
+        opDo apt-get -y install  libjpeg-dev
+        opDo apt-get -y install  libtiff-dev
+        opDo apt-get -y install  libncurses5-dev
+        opDo apt-get -y install  libgif-dev
+        opDo apt-get -y install  libpng-dev
+        opDo apt-get -y install  librsvg2-dev
+        opDo apt-get -y install  libotf-dev
+
+        opDo apt-get -y install  libgnutls28-dev # NOTYET double check on need for this
+
+        opDo apt-get -y install  libwebkit2gtk-4.0-dev
+        opDo apt-get -y install  libwebkit2gtk-4.0-37-gtk2  # NOTYET, is this needed
+
+        opDo apt-get -y install  libm17n-dev
+        opDo apt-get -y install  libharfbuzz-dev     # shaping for farsi/arabic
         
     elif [ "${opRunDistGeneration}" == "1804" ] ; then
         #
@@ -896,11 +974,11 @@ _EOF_
 }
 
 _CommentBegin_
-*  [[elisp:(org-cycle)][| ]] [[elisp:(org-show-subtree)][|=]] [[elisp:(show-children 10)][|V]] [[elisp:(blee:ppmm:org-mode-toggle)][|N]] [[elisp:(bx:orgm:indirectBufOther)][|>]] [[elisp:(bx:orgm:indirectBufMain)][|I]] [[elisp:(beginning-of-buffer)][|^]] [[elisp:(org-top-overview)][|O]] [[elisp:(progn (org-shifttab) (org-content))][|C]] [[elisp:(delete-other-windows)][|1]] || IIC       ::  vis_obtainOrUpdateSrc_emacs28    [[elisp:(org-cycle)][| ]]
+*  [[elisp:(org-cycle)][| ]] [[elisp:(org-show-subtree)][|=]] [[elisp:(show-children 10)][|V]] [[elisp:(blee:ppmm:org-mode-toggle)][|N]] [[elisp:(bx:orgm:indirectBufOther)][|>]] [[elisp:(bx:orgm:indirectBufMain)][|I]] [[elisp:(beginning-of-buffer)][|^]] [[elisp:(org-top-overview)][|O]] [[elisp:(progn (org-shifttab) (org-content))][|C]] [[elisp:(delete-other-windows)][|1]] || IIC       ::  vis_obtainOrUpdateSrc_emacs29    [[elisp:(org-cycle)][| ]]
 _CommentEnd_
 
 
-function obtainOrUpdateSrc_emacs28 {
+function obtainOrUpdateSrc_emacs29 {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -988,7 +1066,7 @@ _EOF_
 }
 
 
-function vis_srcBuild_emacs28 { opDo vis_srcBuild_default; }
+function vis_srcBuild_emacs29 { opDo vis_srcBuild_default; }
 function vis_srcBuild_emacs27 { opDo vis_srcBuild_default; }
 
 _CommentBegin_
@@ -1196,7 +1274,7 @@ For example, for emacs-28 take care of the following:
 _EOF_
                        }
 
-    local emacsVersion=${srcPkgSelector##emacs}  # eg, 28 - emacs front stripped from emacs28 
+    local emacsVersion=${srcPkgSelector##emacs}  # eg, 28 - emacs front stripped from emacs29
     
     local emacsProg=$( ls -t /usr/local/bin/emacs-${emacsVersion}.* | head -1 )
     local emacsClientFullVersion=$( /usr/local/bin/emacsclient --version | cut -d ' ' -f 2 )
@@ -1257,7 +1335,7 @@ function installedVerify {
 _EOF_
                        }
 
-    local emacsVersion=${srcPkgSelector##emacs}  # eg, 28 - emacs front stripped from emacs28 
+    local emacsVersion=${srcPkgSelector##emacs}  # eg, 28 - emacs front stripped from emacs29
     
     local emacsProg=$( echo /usr/local/bin/emacs-${emacsVersion}.* )
 
