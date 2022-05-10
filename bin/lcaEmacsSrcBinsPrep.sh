@@ -151,36 +151,42 @@ $( examplesSeperatorSection "srcEnvSetup:: Setup (apt install) Needed Packages F
 ${G_myName} ${extraInfo} -i srcEnvSetup # defaults to latest
 ${G_myName} ${extraInfo} -i srcEnvSetup current
 ${G_myName} ${extraInfo} -i srcEnvSetup emacs29
+${G_myName} ${extraInfo} -i srcEnvSetup emacs28
 ${G_myName} ${extraInfo} -i srcEnvSetup emacs27
 ${G_myName} ${extraInfo} -i srcEnvSetup emacs26
 $( examplesSeperatorSection "srcPkgSpecPrep:: determine key params for specified emacs version" )
 ${G_myName} ${extraInfo} -i srcPkgSpecPrep # defaults to latest
 ${G_myName} ${extraInfo} -i srcPkgSpecPrep current
 ${G_myName} ${extraInfo} -i srcPkgSpecPrep emacs29
+${G_myName} ${extraInfo} -i srcPkgSpecPrep emacs28
 ${G_myName} ${extraInfo} -i srcPkgSpecPrep emacs27
 ${G_myName} ${extraInfo} -i srcPkgSpecPrep emacs26
 $( examplesSeperatorSection "srcPkgObtain:: git clone or wget file.tar -- Get The Sources" )
 ${G_myName} ${extraInfo} -i srcPkgObtain # defaults to latest
 ${G_myName} ${extraInfo} -i srcPkgObtain current
 ${G_myName} ${extraInfo} -i srcPkgObtain emacs29
+${G_myName} ${extraInfo} -i srcPkgObtain emacs28
 ${G_myName} ${extraInfo} -i srcPkgObtain emacs27
 ${G_myName} ${extraInfo} -i srcPkgObtain emacs26
 $( examplesSeperatorSection "srcBuild:: make config; make bootstrap -- Build With Sources" )
 ${G_myName} ${extraInfo} -i srcBuild # defaults to latest
 ${G_myName} ${extraInfo} -i srcBuild current
 ${G_myName} ${extraInfo} -i srcBuild emacs29
+${G_myName} ${extraInfo} -i srcBuild emacs28
 ${G_myName} ${extraInfo} -i srcBuild emacs27
 ${G_myName} ${extraInfo} -i srcBuild emacs26
 $( examplesSeperatorChapter "srcBinInstall:: sudo make install -- Install Build Results" )
 ${G_myName} ${extraInfo} -i srcBinInstall # defaults to latest
 ${G_myName} ${extraInfo} -i srcBinInstall current
 ${G_myName} ${extraInfo} -i srcBinInstall emacs29
+${G_myName} ${extraInfo} -i srcBinInstall emacs28
 ${G_myName} ${extraInfo} -i srcBinInstall emacs27
 ${G_myName} ${extraInfo} -i srcBinInstall emacs26
 $( examplesSeperatorChapter "postInstall:: " )
 ${G_myName} ${extraInfo} -i postInstall # defaults to latest
 ${G_myName} ${extraInfo} -i postInstall current
 ${G_myName} ${extraInfo} -i postInstall emacs29
+${G_myName} ${extraInfo} -i postInstall emacs28
 ${G_myName} ${extraInfo} -i postInstall emacs27
 ${G_myName} ${extraInfo} -i postInstall emacs26
 $( examplesSeperatorChapter "srcFullBuild:: srcEnvSetup + obtain + build + install -- Full Service" )
@@ -188,12 +194,14 @@ $( examplesSeperatorChapter "srcFullBuild:: when rebuilding is desired specify -
 ${G_myName} ${extraInfo} -i srcFullBuild # defaults to latest
 ${G_myName} ${extraInfo} -i srcFullBuild current
 ${G_myName} ${extraInfo} -i srcFullBuild emacs29
+${G_myName} ${extraInfo} -i srcFullBuild emacs28
 ${G_myName} ${extraInfo} -i srcFullBuild emacs27
 ${G_myName} ${extraInfo} -i srcFullBuild emacs26
 $( examplesSeperatorChapter "Installation Verification:: Is Specified Emacs Installed?" )
 ${G_myName} ${extraInfo} -i installedVerify # defaults to latest
 ${G_myName} ${extraInfo} -i installedVerify current
 ${G_myName} ${extraInfo} -i installedVerify emacs29
+${G_myName} ${extraInfo} -i installedVerify emacs28
 ${G_myName} ${extraInfo} -i installedVerify emacs27
 ${G_myName} ${extraInfo} -i installedVerify emacs26
 _EOF_
@@ -225,6 +233,7 @@ $1 is one of:
 latest
 current
 emacs29
+emacs28
 emacs27
 emacs26
 _EOF_
@@ -254,6 +263,18 @@ _EOF_
 
         srcBuildBaseDir="/bisos/var/srcPkgs/${srcPkgName}/emacs"        
     }
+
+
+    function srcPkgSpecPrep_emacs28_tar {
+        srcPkgName="emacs-28"
+        srcBuildScript=""
+        srcBuildScriptTmpDir=/tmp/"${srcPkgName}"
+        srcBuildBaseDir="/bisos/var/srcPkgs/${srcPkgName}-tar"
+
+        distEmacsTarFile=${srcPkgName}.tar
+        distEmacsTarUrl="http://ftp.gnu.org/pub/gnu/emacs/${distEmacsTarFile}.gz"
+    }
+
 
     function srcPkgSpecPrep_emacs27_git {
         srcPkgName="emacs-27"
@@ -294,9 +315,12 @@ _EOF_
     if [ "${srcPkgSelector}" == "emacs29" ] ; then
         opDoRet srcPkgSpecPrep_dispatch emacs29
 
+    elif [ "${srcPkgSelector}" == "emacs28" ] ; then
+        opDoRet srcPkgSpecPrep_dispatch emacs27
+
     elif [ "${srcPkgSelector}" == "emacs27" ] ; then
         opDoRet srcPkgSpecPrep_dispatch emacs27
-        
+
     elif [ "${srcPkgSelector}" == "emacs-26" ] ; then
         # http://ftp.gnu.org/pub/gnu/emacs/
         srcPkgName="emacs-26.3"
@@ -737,6 +761,8 @@ _EOF_
 
 
 function vis_srcEnvSetup_emacs29 { opDo vis_srcEnvSetup_emacs27; }
+
+function vis_srcEnvSetup_emacs28 { opDo vis_srcEnvSetup_emacs27; }
     
 
 _CommentBegin_
@@ -810,7 +836,7 @@ _EOF_
         opDo apt-get -y install  libgnutls28-dev # NOTYET double check on need for this
 
         opDo apt-get -y install  libwebkit2gtk-4.0-dev
-        opDo apt-get -y install  libwebkit2gtk-4.0-37-gtk2  # NOTYET, is this needed
+        opDo apt-get -y install  libwebkit2gtk-4.0-37  # NOTYET, is this needed
 
         opDo apt-get -y install  libm17n-dev
         opDo apt-get -y install  libharfbuzz-dev     # shaping for farsi/arabic
