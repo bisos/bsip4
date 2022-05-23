@@ -44,7 +44,8 @@ function vis_examples_bleeLib {
 
     local thisEmacsClient=$( vis_thisEmacsClient )
     local emacsServerSocket=$(vis_emacsServerSocketFromEnv)
-    local emacsServerVersion=$(vis_emacsServerSocketEmacsVersion ${emacsServerSocket})    
+    local emacsServerVersion=$(vis_emacsServerSocketEmacsVersion ${emacsServerSocket})
+    local emacsCmndLine=$(cat /proc/${G_emacsServerPid}/cmdline | xargs -0 echo | cut -f 1 -d " ")
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
@@ -58,6 +59,12 @@ ${G_myName} ${extraInfo} -i emacsServerSocketBleeVersion ${emacsServerSocket}   
 ${G_myName} ${extraInfo} -i emacsServerSocketEmacsVersion ${emacsServerSocket}         # Obtain EmacsVersion in Bash
 ${G_myName} ${extraInfo} -i emacsServerSocketFromEnv                                   # Obtain ServerSocket from environement
 ${G_myName} ${extraInfo} -i emacsServerPidFromEnv                                      # Obatin ServerPid from environment
+$( examplesSeperatorSection "Matching emacs-server and  emacsclient" )
+cat /proc/\${G_emacsServerPid}/cmdline | xargs -0 echo | cut -f 1 -d " "
+${emacsCmndLine} --version | head -1 | cut -f 3 -d " "
+emacsclient --version | cut -f 2 -d " "
+${G_myName} ${extraInfo} -i emacsClientMatching
+${G_myName} ${extraInfo} -i emacsClientMatchingSet
 $( examplesSeperatorSection "Raw emacsclient Invocations" )
 $( vis_thisEmacsClient ) --eval "(emacs-version)"
 $( vis_examples_bleeLibLine )
@@ -237,6 +244,57 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     echo $( ps ho ppid $(ps ho ppid $(ps ho ppid $$ ) ))
+}
+
+
+function vis_emacsClientMatching {
+    function describeF {  cat  << _EOF_
+Based on emacsServer set emacsclient to point to the same version.
+_EOF_
+  }
+    EH_assert [[ $# -eq 0 ]]
+
+    local emacsCmndLine=$(cat /proc/${G_emacsServerPid}/cmdline | xargs -0 echo | cut -f 1 -d " ")
+    local emacsCmndLineVersion=$(${emacsCmndLine} --version | head -1 | cut -f 3 -d " ")
+    local emacsCmndLinePath=$(which ${emacsCmndLine})
+    local emacsCmndLineEndPath=$(readlink -f ${emacsCmndLinePath})
+    local emacsClientMatching=$(echo ${emacsCmndLineEndPath} | sed -e 's/emacs-\(..\).*/emacsclient-\1/')
+
+    echo ${emacsClientMatching}
+}
+
+
+function vis_emacsClientMatchingSet {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+Based on emacsServer set emacsclient to point to the same version.
+_EOF_
+  }
+    EH_assert [[ $# -eq 0 ]]
+
+    local emacsClientMatching=$(vis_emacsClientMatching)
+
+    if [ ! -f "${emacsClientMatching}" ] ; then
+        EH_problem "Missing ${emacsClientMatching}"
+        return 101
+    fi
+
+    lpDo vis_emacsClientMatchingSetSudo ${emacsClientMatching}
+}
+
+
+function vis_emacsClientMatchingSetSudo {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+Based on emacsServer set emacsclient to point to the same version.
+_EOF_
+  }
+    EH_assert [[ $# -eq 1 ]]
+    local emacsClientMatching="$1"
+
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;    
+    lpDo FN_fileSymlinkRemoveIfThere /usr/local/bin/emacs
+    lpDo FN_fileSymlinkUpdate ${emacsClientMatching} /usr/local/bin/emacsclient
 }
 
 

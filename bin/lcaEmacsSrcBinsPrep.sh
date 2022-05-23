@@ -95,9 +95,6 @@ srcObtainForm="git"
 
 #
 # BEGIN PKG Base Variables
-#
-#srcPkgName="emacs-24.5"
-#srcPkgName="emacs-25.1"
 
 emacsVerLatest="emacs29"
 emacsVerCurrent="emacs27"
@@ -146,7 +143,14 @@ $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Full Service" )
 ${G_myName} ${extraInfo} -i srcFullBuild
 $( examplesSeperatorChapter "Build In Steps With srcPkgSelector" )
-srcPkgSelector is one of: emacsVer =  latest current emacs27 emacs26 emacs25 emacs24
+As of 2022-05-22 srcPkgSelector is one of: emacsVer =  latest current emacs29 emacs28 emacs27 emacs26
+$( examplesSeperatorSection "srcPkgSpecPrep:: determine driving params for specified emacs version" )
+${G_myName} ${extraInfo} -i srcPkgSpecPrep # defaults to latest
+${G_myName} ${extraInfo} -i srcPkgSpecPrep current
+${G_myName} ${extraInfo} -i srcPkgSpecPrep emacs29
+${G_myName} ${extraInfo} -i srcPkgSpecPrep emacs28
+${G_myName} ${extraInfo} -i srcPkgSpecPrep emacs27
+${G_myName} ${extraInfo} -i srcPkgSpecPrep emacs26 tar
 $( examplesSeperatorSection "srcEnvSetup:: Setup (apt install) Needed Packages For Buidling" )
 ${G_myName} ${extraInfo} -i srcEnvSetup # defaults to latest
 ${G_myName} ${extraInfo} -i srcEnvSetup current
@@ -154,13 +158,6 @@ ${G_myName} ${extraInfo} -i srcEnvSetup emacs29
 ${G_myName} ${extraInfo} -i srcEnvSetup emacs28
 ${G_myName} ${extraInfo} -i srcEnvSetup emacs27
 ${G_myName} ${extraInfo} -i srcEnvSetup emacs26
-$( examplesSeperatorSection "srcPkgSpecPrep:: determine key params for specified emacs version" )
-${G_myName} ${extraInfo} -i srcPkgSpecPrep # defaults to latest
-${G_myName} ${extraInfo} -i srcPkgSpecPrep current
-${G_myName} ${extraInfo} -i srcPkgSpecPrep emacs29
-${G_myName} ${extraInfo} -i srcPkgSpecPrep emacs28
-${G_myName} ${extraInfo} -i srcPkgSpecPrep emacs27
-${G_myName} ${extraInfo} -i srcPkgSpecPrep emacs26
 $( examplesSeperatorSection "srcPkgObtain:: git clone or wget file.tar -- Get The Sources" )
 ${G_myName} ${extraInfo} -i srcPkgObtain # defaults to latest
 ${G_myName} ${extraInfo} -i srcPkgObtain current
@@ -204,6 +201,13 @@ ${G_myName} ${extraInfo} -i installedVerify emacs29
 ${G_myName} ${extraInfo} -i installedVerify emacs28
 ${G_myName} ${extraInfo} -i installedVerify emacs27
 ${G_myName} ${extraInfo} -i installedVerify emacs26
+$( examplesSeperatorChapter "Set as default:: /usr/local/bin/{emacs,emacsclient}" )
+${G_myName} ${extraInfo} -i setAsDefault  # defaults to latest
+${G_myName} ${extraInfo} -i setAsDefault current
+${G_myName} ${extraInfo} -i setAsDefault emacs29
+${G_myName} ${extraInfo} -i setAsDefault emacs28
+${G_myName} ${extraInfo} -i setAsDefault emacs27
+${G_myName} ${extraInfo} -i setAsDefault emacs26
 _EOF_
 }
 
@@ -229,23 +233,25 @@ _CommentEnd_
 function vis_srcPkgSpecPrep {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-$1 is one of:
-latest
-current
-emacs29
-emacs28
-emacs27
-emacs26
+$1 is one of: latest current emacs29 emacs28 emacs27 emacs26
+$2 is one of "git" or "tar"
 _EOF_
     }
-    EH_assert [[ $# -lt 2 ]]
+    EH_assert [[ $# -lt 3 ]]
 
     local srcPkgSelector=""
 
     if [ $# -eq 0 ] ; then
         srcPkgSelector="latest"
-    else
+        srcObtainForm="git"
+    elif [ $# -eq 1 ] ; then
         srcPkgSelector="$1"
+        srcObtainForm="git"
+    elif [ $# -eq 2 ] ; then
+        srcPkgSelector="$1"
+        srcObtainForm="$2"
+    else
+        EH_problem "OOPS"
     fi
    
     opDo emacsVerCanonicalized    
@@ -260,21 +266,39 @@ _EOF_
         # -- depth 1 of git clone, copies only the latest revision 
         #obtainCmndLine="git clone --depth 1 git://git.sv.gnu.org/emacs.git"
         obtainCmndLine="obtainOrUpdateSrc_emacs29"
+        prepCmndLine="echo Git cloned"
 
         srcBuildBaseDir="/bisos/var/srcPkgs/${srcPkgName}/emacs"        
     }
 
-
-    function srcPkgSpecPrep_emacs28_tar {
+    function srcPkgSpecPrep_emacs28_git {
         srcPkgName="emacs-28"
         srcBuildScript=""
         srcBuildScriptTmpDir=/tmp/"${srcPkgName}"
-        srcBuildBaseDir="/bisos/var/srcPkgs/${srcPkgName}-tar"
+
+        srcObtainBaseDir="/bisos/var/srcPkgs/${srcPkgName}"
+        # -- depth 1 of git clone, copies only the latest revision
+        obtainCmndLine="git clone --single-branch -b ${srcPkgName} git://git.sv.gnu.org/emacs.git"
+
+        srcBuildBaseDir="/bisos/var/srcPkgs/${srcPkgName}/emacs"
+    }
+
+    function srcPkgSpecPrep_emacs28_tar {
+        srcPkgName="emacs-28.1"
+
+        srcObtainForm="tar"
+        srcObtainBaseDir="/bisos/var/srcPkgs/${srcPkgName}"
 
         distEmacsTarFile=${srcPkgName}.tar
         distEmacsTarUrl="http://ftp.gnu.org/pub/gnu/emacs/${distEmacsTarFile}.gz"
-    }
 
+        obtainCmndLine="wget ${distEmacsTarUrl}"
+        prepCmndLine="tar -zxf ${distEmacsTarFile}.gz"
+
+        srcBuildScriptTmpDir=/tmp/"${srcPkgName}"
+        srcBuildBaseDir="/bisos/var/srcPkgs/${srcPkgName}/${srcPkgName}"
+        srcBuildScript="vis_srcBuild_28"
+    }
 
     function srcPkgSpecPrep_emacs27_git {
         srcPkgName="emacs-27"
@@ -301,6 +325,7 @@ _EOF_
     
     function srcPkgSpecPrep_dispatch {
         local emacsVer="$1"
+        local srcObtainForm="$2"
         
         if [ "${srcObtainForm}" == "git" ] ; then
             opDo srcPkgSpecPrep_${emacsVer}_git
@@ -313,13 +338,13 @@ _EOF_
     }
 
     if [ "${srcPkgSelector}" == "emacs29" ] ; then
-        opDoRet srcPkgSpecPrep_dispatch emacs29
+        opDoRet srcPkgSpecPrep_dispatch emacs29 ${srcObtainForm}
 
     elif [ "${srcPkgSelector}" == "emacs28" ] ; then
-        opDoRet srcPkgSpecPrep_dispatch emacs27
+        opDoRet srcPkgSpecPrep_dispatch emacs28 ${srcObtainForm}
 
     elif [ "${srcPkgSelector}" == "emacs27" ] ; then
-        opDoRet srcPkgSpecPrep_dispatch emacs27
+        opDoRet srcPkgSpecPrep_dispatch emacs27 ${srcObtainForm}
 
     elif [ "${srcPkgSelector}" == "emacs-26" ] ; then
         # http://ftp.gnu.org/pub/gnu/emacs/
@@ -758,10 +783,7 @@ _EOF_
     fi
 }
 
-
-
 function vis_srcEnvSetup_emacs29 { opDo vis_srcEnvSetup_emacs27; }
-
 function vis_srcEnvSetup_emacs28 { opDo vis_srcEnvSetup_emacs27; }
     
 
@@ -996,6 +1018,7 @@ _EOF_
     opDoExit mkdir -p ${srcObtainBaseDir}
 
     inBaseDirDo ${srcObtainBaseDir} ${obtainCmndLine}
+    inBaseDirDo ${srcObtainBaseDir} ${prepCmndLine}
 
 }
 
@@ -1007,6 +1030,8 @@ _CommentEnd_
 function obtainOrUpdateSrc_emacs29 {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+Temporary support for inclusion of Farsi Tutorial
+is included.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -1015,16 +1040,32 @@ _EOF_
     local emacsDir=$( FN_absolutePathGet ./emacs )
     local gitDir=$( inBaseDirDo ${emacsDir} git rev-parse --show-toplevel )
 
+    # https://github.com/bx-blee/tutorials
+    local tutorialsBase="/bisos/git/bxRepos/blee/tutorials/emacs"
+
+    function tutorialPersianAdd {
+       lpDo cp ${tutorialsBase}/persian.el ${emacsDir}/lisp/language/persian.el
+       lpDo cp ${tutorialsBase}/TUTORIAL.fa ${emacsDir}/etc/tutorials/TUTORIAL.fa
+       lpDo cp ${tutorialsBase}/loadup.el ${emacsDir}/lisp/loadup.el
+    }
+
+    function tutorialPersianDelete {
+        inBaseDirDo ${emacsDir} rm lisp/loadup.el  # git pull brings over the original
+    }
+
     if [ -d "${emacsDir}" ] ; then
         if [ "${emacsDir}" == "${gitDir}" ] ; then
+            lpDo tutorialPersianDelete
             inBaseDirDo ${emacsDir} git pull
+            lpDo tutorialPersianAdd
         else
             EH_problem "${emacsDir} is not a git base"
             lpReturn 101
         fi
     else
         # -- depth 1 of git clone, copies only the latest revision      
-        opDo git clone --depth 1 git://git.sv.gnu.org/emacs.git
+        lpDo git clone --depth 1 git://git.sv.gnu.org/emacs.git
+        lpDo tutorialPersianAdd
     fi
     lpReturn
 }       
@@ -1093,6 +1134,7 @@ _EOF_
 
 
 function vis_srcBuild_emacs29 { opDo vis_srcBuild_default; }
+function vis_srcBuild_emacs28 { opDo vis_srcBuild_default; }
 function vis_srcBuild_emacs27 { opDo vis_srcBuild_default; }
 
 _CommentBegin_
@@ -1300,7 +1342,7 @@ For example, for emacs-28 take care of the following:
 _EOF_
                        }
 
-    local emacsVersion=${srcPkgSelector##emacs}  # eg, 28 - emacs front stripped from emacs29
+    local emacsVersion=${srcPkgSelector##emacs}  # eg, 28 - emacs front stripped from emacs28
     
     local emacsProg=$( ls -t /usr/local/bin/emacs-${emacsVersion}.* | head -1 )
     local emacsClientFullVersion=$( /usr/local/bin/emacsclient --version | cut -d ' ' -f 2 )
@@ -1312,6 +1354,7 @@ _EOF_
 
     if [ -z "${emacsClientFullVersion}" ] ; then
         EH_problem "Missing /usr/local/bin/emacsclient"
+        EH_problem "You should reinstall emacs-${emacsVersion} and re-run -i postInstall"
         lpReturn
     fi       
     
@@ -1434,6 +1477,55 @@ _EOF_
 
     opDoAfterPause vis_postInstall ${srcPkgSelector}
 }
+
+function vis_setAsDefault {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+
+    EH_assert [[ $# -lt 2 ]]
+
+    local srcPkgSelector=""
+
+    if [ $# -eq 0 ] ; then
+        srcPkgSelector="latest"
+    else
+        srcPkgSelector="$1"
+    fi
+
+    lpDo emacsVerCanonicalized
+
+    lpDo vis_srcPkgSpecPrep ${srcPkgSelector}
+
+    local emacsCmndPath=$(which ${srcPkgName})
+    local emacsCmndEndPath=$(readlink -f ${emacsCmndPath})
+
+    if [ ! -f "${emacsCmndEndPath}" ] ; then
+        EH_problem "Missing ${emacsCmndEndPath}"
+        return 101
+    fi
+
+    vis_setAsDefaultSudo ${emacsCmndEndPath}
+
+    lpDo bleeclient -h -v -n showRun -i emacsClientMatchingSet
+}
+
+function vis_setAsDefaultSudo {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+Based on emacsServer set emacsclient to point to the same version.
+_EOF_
+  }
+    EH_assert [[ $# -eq 1 ]]
+    local emacsCmndEndPath="$1"
+
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
+    lpDo FN_fileSymlinkRemoveIfThere /usr/local/bin/emacs
+    lpDo FN_fileSymlinkUpdate ${emacsCmndEndPath} /usr/local/bin/emacs
+}
+
+
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*
