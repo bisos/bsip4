@@ -121,8 +121,21 @@ _EOF_
     echo "${emacsClientProg} --socket-name=${emacsServerSocket}"
 }
 
-
 function vis_emacsclientProgOfEmacsServerVersion {
+    function describeF {  cat  << _EOF_
+_EOF_
+  }
+    EH_assert [[ $# -eq 1 ]]
+
+    local emacsVersion="$1"  # UNUSED
+    local emacsClient="$(vis_emacsClientMatching)"
+
+    echo "${emacsClient}"
+}
+
+
+
+function vis_emacsclientProgOfEmacsServerVersion%%Defunct {
     function describeF {  cat  << _EOF_
 Given EmacsVersion determine path to emacsclient
 ** TODO do this based on blee-version and INSIDE_EMACS variable
@@ -293,7 +306,7 @@ _EOF_
     local emacsClientMatching="$1"
 
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;    
-    lpDo FN_fileSymlinkRemoveIfThere /usr/local/bin/emacs
+    lpDo FN_fileSymlinkRemoveIfThere /usr/local/bin/emacsclient
     lpDo FN_fileSymlinkUpdate ${emacsClientMatching} /usr/local/bin/emacsclient
 }
 
