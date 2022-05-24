@@ -244,8 +244,16 @@ _EOF_
 
     EH_assert profilePrep
 
+    local emacsExec=$(vis_getEmacsExec ${emacs})
+
+    if [ -z "${emacsExec}" ] ; then
+        EH_problem "Bad emacsExec=${emacsExec}"
+        lpReturn 1
+    fi
+
     export DOOMDIR="${doomDirBase}"
     export YES=y
+    export EMACS="${emacsExec}"
 
     lpDo vis_switchInitTo sansBlee
 
