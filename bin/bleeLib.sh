@@ -65,6 +65,11 @@ ${emacsCmndLine} --version | head -1 | cut -f 3 -d " "
 emacsclient --version | cut -f 2 -d " "
 ${G_myName} ${extraInfo} -i emacsClientMatching
 ${G_myName} ${extraInfo} -i emacsClientMatchingSet
+$( examplesSeperatorSection "Emacs Version Locating" )
+${G_myName} ${extraInfo} -i getEmacsVer 0
+${G_myName} ${extraInfo} -i getEmacsVer 27
+${G_myName} ${extraInfo} -i getEmacsExec 0
+${G_myName} ${extraInfo} -i getEmacsExec 27
 $( examplesSeperatorSection "Raw emacsclient Invocations" )
 $( vis_thisEmacsClient ) --eval "(emacs-version)"
 $( vis_examples_bleeLibLine )
@@ -309,6 +314,76 @@ _EOF_
     lpDo FN_fileSymlinkRemoveIfThere /usr/local/bin/emacsclient
     lpDo FN_fileSymlinkUpdate ${emacsClientMatching} /usr/local/bin/emacsclient
 }
+
+
+function vis_getEmacsExec {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local emacsVer="$1"
+    local result=""
+
+    case $emacsVer in
+        "0")
+            result=$(which emacs)
+            ;;
+        "26"|"27"|"28"|"29")
+            result="/usr/local/bin/emacs-${emacsVer}"
+            if [ ! -z "${result}" ] ; then
+                if [ ! -e "${result}" ] ; then
+                    result=""
+                fi
+            fi
+            ;;
+        *)
+            EH_problem
+            lpReturn 1
+            ;;
+    esac
+
+    echo ${result}
+    
+    lpReturn
+}
+
+
+function vis_getEmacsVer {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local emacsVer="$1"
+    local result=""
+    local emacsCmnd=$(which emacs)
+
+    case $emacsVer in
+        "0")
+            result=$(${emacsCmnd} --version | head -1 | cut -f 3 -d " " | sed -e 's/\(..\).*/\1/')
+            ;;
+        "26"|"27"|"28"|"29")
+            result=$(vis_getEmacsExec $emacsVer)
+            if [ ! -z "${result}" ] ; then
+                result="${emacsVer}"
+            fi
+            ;;
+        *)
+            EH_problem
+            lpReturn 1
+            ;;
+    esac
+
+    echo ${result}
+    
+    lpReturn
+}
+
+
+
 
 
 _CommentBegin_

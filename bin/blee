@@ -75,6 +75,7 @@ _CommentEnd_
 
 baseDir=""
 acctName=""
+emacs="0"
 
 function G_postParamHook {
      return 0
@@ -111,6 +112,8 @@ ${G_myName} ${extraInfo} -i chemacs2ProfilesNamesList
 ${G_myName} ${extraInfo} -i chemacs2ProfilesNamesCache # $(vis_chemacs2ProfilesNamesCache)
 ${G_myName} ${extraInfo} -i run blee1
 ${G_myName} ${extraInfo} -i run doom
+${G_myName} ${extraInfo} -p emacs=0 -i run blee2
+${G_myName} ${extraInfo} -p emacs=28 -i run blee2
 ${G_myName} ${extraInfo} -i run blee2
 $( examplesSeperatorChapter "Blee Provisioing Setup" )
 ${G_myName} ${extraInfo} -i blee1InitSetup
@@ -271,6 +274,7 @@ _EOF_
     lpDo vis_emacsProfilesUpdate
 }
 
+# NOTYET, should become a dblock based on vis_chemacs2ProfilesNamesList
 ####+BEGIN-NOT: bx:shList/chemacsProfilesNames :noParams ""
 chemacsProfilesNamesCache=(
 default
@@ -284,7 +288,7 @@ blee2
 function vis_chemacs2ProfilesNamesCache {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Safekeep .emacs.d. Gitclone chemacs2 in .emacs.d.
+** List existing chemacs profiles.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -297,7 +301,7 @@ _EOF_
 function vis_chemacs2ProfilesNamesList {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Safekeep .emacs.d. Gitclone chemacs2 in .emacs.d.
+** From ~/.emacs-profiles.el, read the profiles names as a list.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]

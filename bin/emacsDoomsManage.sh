@@ -62,9 +62,12 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
+. ${opBinBase}/bleeLib.sh
+
 # PRE parameters
 
 profile=""
+emacs="0"
 
 function G_postParamHook {
      return 0
@@ -91,7 +94,7 @@ $( examplesSeperatorChapter "Doom Main Deploy -- profile=blee2" )
 ${G_myName} ${extraInfo} -p profile=blee2 -i buildInstall
 ${G_myName} ${extraInfo} -p profile=blee2 -i doomSync
 ${G_myName} ${extraInfo} -p profile=blee2 -i unMain
-${G_myName} ${extraInfo} -p profile=blee2 -i reBuild
+${G_myName} ${extraInfo} -p emacs=28 -p profile=blee2 -i reBuild
 ${G_myName} ${extraInfo} -p profile=blee2 -i switchInitTo sansBlee
 ${G_myName} ${extraInfo} -p profile=blee2 -i switchInitTo withBlee
 ls -l /bisos/blee/doom-blee-base/init.el
@@ -118,6 +121,7 @@ _CommentBegin_
 _CommentEnd_
 
 
+
 function profilePrep {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -128,17 +132,23 @@ _EOF_
     if [ -z "${profile}" ] ; then
         lpReturn 1
     fi
+    local emacsVer=$(vis_getEmacsVer ${emacs})
+
+    if [ -z "${emacsVer}" ] ; then
+        EH_problem "Bad emacsVer=${emacsVer}"
+        lpReturn 1
+    fi
 
     doomFrameworkBase=/bisos/blee/doom-emacs-framework
     case $profile in
         blee2)
             doomInitBase="/bisos/blee/doom-blee-init"
-            doomMainBase="/bisos/blee/27f/doom-blee-main"
+            doomMainBase="/bisos/blee/${emacsVer}f/doom-blee-main"
             doomDirBase="/bisos/blee/doom-blee-base"
             ;;
         sysDoom)
             doomInitBase="/bisos/blee/doom-emacs-init"
-            doomMainBase="/bisos/blee/27f/doom-emacs-main"
+            doomMainBase="/bisos/blee/${emacsVer}f/doom-emacs-main"
             doomDirBase="/bisos/blee/doom-base"
             ;;
         *)
@@ -262,7 +272,16 @@ _EOF_
 
     EH_assert profilePrep
 
+    local emacsExec=$(vis_getEmacsExec ${emacs})
+
+    if [ -z "${emacsExec}" ] ; then
+        EH_problem "Bad emacsExec=${emacsExec}"
+        lpReturn 1
+    fi
+
+
     export DOOMDIR="${doomDirBase}"
+    export EMACS="${emacsExec}"
 
     lpDo vis_switchInitTo sansBlee
 
