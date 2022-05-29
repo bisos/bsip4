@@ -99,6 +99,15 @@ ${G_myName} ${extraInfo} -p profile=blee2 -i switchInitTo sansBlee
 ${G_myName} ${extraInfo} -p profile=blee2 -i switchInitTo withBlee
 ls -l /bisos/blee/doom-blee-base/init.el
 emacs --debug-init --with-profile blee2 &
+$( examplesSeperatorChapter "Doom Main Deploy -- profile=blee3" )
+${G_myName} ${extraInfo} -p profile=blee3 -i buildInstall
+${G_myName} ${extraInfo} -p profile=blee3 -i doomSync
+${G_myName} ${extraInfo} -p profile=blee3 -i unMain
+${G_myName} ${extraInfo} -p emacs=28 -p profile=blee3 -i reBuild
+${G_myName} ${extraInfo} -p profile=blee3 -i switchInitTo sansBlee
+${G_myName} ${extraInfo} -p profile=blee3 -i switchInitTo withBlee
+ls -l /bisos/blee/doom-blee-base/init.el
+emacs --debug-init --with-profile blee3 &
 $( examplesSeperatorChapter "Doom Main Deploy -- profile=sysDoom" )
 ${G_myName} ${extraInfo} -p profile=sysDoom -i buildInstall
 ${G_myName} ${extraInfo} -p profile=sysDoom -i doomSync
@@ -142,17 +151,19 @@ _EOF_
     doomFrameworkBase=/bisos/blee/doom-emacs-framework
     case $profile in
         blee2)
-            doomInitBase="/bisos/blee/doom-blee-init"
-            doomMainBase="/bisos/blee/${emacsVer}f/doom-blee-main"
-            doomDirBase="/bisos/blee/doom-blee-base"
+            doomMainBase="/bisos/blee/${emacsVer}f/doom-main-blee2"
+            doomDirBase="/bisos/blee/dooms/doom-base-blee2"
+            ;;
+        blee3)
+            doomMainBase="/bisos/blee/${emacsVer}f/doom-main-blee3"
+            doomDirBase="/bisos/blee/dooms/doom-base-blee3"
             ;;
         sysDoom)
-            doomInitBase="/bisos/blee/doom-emacs-init"
-            doomMainBase="/bisos/blee/${emacsVer}f/doom-emacs-main"
-            doomDirBase="/bisos/blee/doom-base"
+            doomMainBase="/bisos/blee/${emacsVer}f/doom-main-emacs"
+            doomDirBase="/bisos/blee/dooms/doom-base-emacs"
             ;;
         *)
-            EH_problem
+            EH_problem "Unknown profile=$profile"
             lpReturn 1
             ;;
     esac
@@ -203,33 +214,33 @@ _EOF_
     case ${switchTo} in
         sansBlee)
             case $profile in
-                blee2)
+                blee2|blee3)
                     lpDo chmod ug+rw ${doomDirBase}/init.el
                     # /bisos/blee/doom-blee-base/initSansBlee.el
                     lpDo cp ${doomDirBase}/initSansBlee.el ${doomDirBase}/init.el
                     lpDo chmod 444 ${doomDirBase}/init.el
                     ;;
                 *)
-                    lpDo doNothing
+                    EH_problem "Unknown profile=${profile} -- sansBlee skipped"
                     ;;
             esac
             ;;
         withBlee)
             case $profile in
-                blee2)
+                blee2|blee3)
                     lpDo chmod ug+rw ${doomDirBase}/init.el                 
                     # /bisos/blee/doom-blee-base/initSansBlee.el
-                        # /bisos/blee/doom-blee-base/loadBlee.el
-                        lpDo eval cat ${doomDirBase}/initSansBlee.el ${doomDirBase}/loadBlee.el \> ${doomDirBase}/init.el
+                    # /bisos/blee/doom-blee-base/loadBlee.el
+                    lpDo eval cat ${doomDirBase}/initSansBlee.el ${doomDirBase}/loadBlee.el \> ${doomDirBase}/init.el
                     lpDo chmod 444 ${doomDirBase}/init.el
                     ;;
                 *)
-                    lpDo doNothing
+                    EH_problem "Unknown profile=${profile} -- withBlee skipped"
                     ;;
             esac
             ;;
         *)
-            EH_problem "Bad Input: ${switchTo}"
+            EH_problem "Bad Input: switchTo=${switchTo}"
             ;;
     esac
 }
@@ -260,9 +271,13 @@ _EOF_
     lpDo mkdir ${doomMainBase}
 
     lpDo cp -r ${doomFrameworkBase}/* ${doomMainBase}
-    lpDo cp ${doomInitBase}/init.el ${doomMainBase}
-    lpDo cp ${doomInitBase}/early-init.el ${doomMainBase}
-    lpDo cp ${doomInitBase}/init.example.el ${doomMainBase}
+
+    # lpDo cp ${doomInitBase}/init.el ${doomMainBase}
+    # lpDo cp ${doomInitBase}/early-init.el ${doomMainBase}
+    # lpDo cp ${doomInitBase}/init.example.el ${doomMainBase}
+
+    lpDo echo DOOMDIR=${DOOMDIR}
+    lpDo echo EMACS=${EMACS}
 
     lpDo ${doomMainBase}/bin/doom install
 
@@ -286,7 +301,6 @@ _EOF_
         EH_problem "Bad emacsExec=${emacsExec}"
         lpReturn 1
     fi
-
 
     export DOOMDIR="${doomDirBase}"
     export EMACS="${emacsExec}"
