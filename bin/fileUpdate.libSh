@@ -124,7 +124,7 @@ function vis_emacsProfilesStdout {
 ** Example of stdout
 _EOF_
     }
-    EH_assert [[ $# -eq 2 ]]
+    EH_assert [[ $# -eq 0 ]]
 
   cat  << _EOF_
 ;;;

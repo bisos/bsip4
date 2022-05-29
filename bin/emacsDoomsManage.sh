@@ -107,8 +107,7 @@ ${G_myName} ${extraInfo} -p emacs=28 -p profile=blee3 -i reBuild
 ${G_myName} ${extraInfo} -p profile=blee3 -i switchInitTo sansBlee
 ${G_myName} ${extraInfo} -p profile=blee3 -i switchInitTo withBlee
 ls -l /bisos/blee/doom-blee-base/init.el
-emacs --debug-init --with-profile blee3 &
-$( examplesSeperatorChapter "Doom Main Deploy -- profile=sysDoom" )
+emacs --debug-init --with-profile blee3 &( examplesSeperatorChapter "Doom Main Deploy -- profile=sysDoom" )
 ${G_myName} ${extraInfo} -p profile=sysDoom -i buildInstall
 ${G_myName} ${extraInfo} -p profile=sysDoom -i doomSync
 ${G_myName} ${extraInfo} -p profile=sysDoom -i unMain
