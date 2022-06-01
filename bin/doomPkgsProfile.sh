@@ -98,6 +98,8 @@ ${G_myName} ${extraInfo} -p reposBase="/bisos/blee/29f/doom-main-blee3/.local/st
 ${G_myName} ${extraInfo} -f -p reposBase="/bisos/blee/29f/doom-main-blee3/.local/straight/repos" -i doomPkgsUpdate
 ${G_myName} -f -p reposBase="/bisos/blee/29f/doom-main-blee3/.local/straight/repos" -i doomPkgsUpdate
 ${G_myName} ${extraInfo} -p reposBase="/bisos/blee/29f/doom-main-blee3/.local/straight/repos" -i emacsProfilesVerify
+$( examplesSeperatorChapter "Doom Straight clone/checkout" )
+${G_myName} ${extraInfo} -i doom3Blee3StraightCloneCheckout /bisos/git/anon/ext/blee3
 _EOF_
 }
 
@@ -167,6 +169,36 @@ function vis_doomPkgsVerify {
 
   lpDo vis_verifyFileWithStdoutFunc  ${updateStdoutFunc} ${updateFileName}
 }
+
+
+function vis_doom3Blee3StraightCloneCheckout {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** We clone straight.el with doom3's commitHash.
+This is then used by Blee's b:straight:doom3|bootstrap.
+For blee3, bleeBaseDir is expected to be /bisos/git/anon/ext/blee3
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local bleeBaseDir="$1"
+    local doom3CommitHash="b45dd00408ff8e922f2d7f75441fd5603e5222fa"
+
+    if [ ! -d "${bleeBaseDir}" ] ; then
+      EH_problem "Missing  ${bleeBaseDir} -- Will Create It."
+      lpDo mkdir -p ${bleeBaseDir}
+    fi
+    if [ ! -d "${bleeBaseDir}" ] ; then
+      EH_problem "Missing  ${bleeBaseDir} -- Will Abort."
+      lpReturn 101
+    fi
+    inBaseDirDo ${bleeBaseDir} git clone https://github.com/radian-software/straight.el.git
+    inBaseDirDo ${bleeBaseDir}/straight.el git show | egrep '^commit'
+    inBaseDirDo ${bleeBaseDir}/straight.el git checkout "${doom3CommitHash}"
+    inBaseDirDo ${bleeBaseDir}/straight.el git show | egrep '^commit'
+    lpDo echo "expected ${doom3CommitHash}"
+}
+
 
 
 _CommentBegin_

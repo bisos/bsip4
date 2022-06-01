@@ -76,6 +76,7 @@ _CommentEnd_
 baseDir=""
 acctName=""
 emacs="0"
+backupP="t"  ## blank is false
 
 function G_postParamHook {
      return 0
@@ -156,19 +157,25 @@ _EOF_
     #opDoExit  FN_dirCreatePathIfNotThere ${dirsPart}
 
     if [[ "${G_forceMode}" == "force" ]] ; then
-        FN_fileSafeKeep ${updateFileName}
+        if [ -n "${backupP}" ] ; then
+            FN_fileSafeKeep ${updateFileName}
+        fi
         ${updateStdoutFunc} > ${updateFileName} # 2> /dev/null
     else
         if [ -f ${updateFileName} ] ; then
             ANT_raw "File: ${updateFileName} exists -- no action taken"
         else
-            FN_fileSafeKeep ${updateFileName}
+            if [ -n "${backupP}" ] ; then
+                FN_fileSafeKeep ${updateFileName}
+            fi
             ${updateStdoutFunc} > ${updateFileName} # 2> /dev/null
         fi
     fi
 
     # opDoComplain chmod ugo+x ${updateFileName}
-    opDoComplain ls -l ${updateFileName}
+    if [ -n "${backupP}" ] ; then
+        opDoComplain ls -l ${updateFileName}
+    fi
 }
 
 function vis_verifyFileWithStdoutFunc {
@@ -356,11 +363,12 @@ _EOF_
     fi
 
     G_forceMode="force"
+    backupP=""
     lpDo vis_emacsProfilesUpdate
 
     for each in $@ ; do
         # echo $PATH
-        lpDo ${emacsExec} --with-profile ${each} &
+        lpDo ${emacsExec} --with-profile ${each} --debug-init  &
     done
 }
 
