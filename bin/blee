@@ -77,6 +77,7 @@ baseDir=""
 acctName=""
 emacs="0"
 backupP="t"  ## blank is false
+bleeName="blee3"
 
 function G_postParamHook {
      return 0
@@ -120,6 +121,10 @@ ${G_myName} ${extraInfo} -i run doom
 ${G_myName} ${extraInfo} -p emacs=0 -i run blee2
 ${G_myName} ${extraInfo} -p emacs=28 -i run blee2
 ${G_myName} ${extraInfo} -i run blee2
+$( examplesSeperatorChapter "Pure Blee DeStraight --- Delete All elcs and cloned repos" )
+${G_myName} ${extraInfo} -p emacs=0 -i deStraight blee2
+${G_myName} ${extraInfo} -p emacs=28.1 -i deStraight blee2
+${G_myName} ${extraInfo} -p emacs=28.1 -i deStraight blee3
 $( examplesSeperatorChapter "Blee Provisioing Setup" )
 ${G_myName} ${extraInfo} -i blee1InitSetup
 ${G_myName} ${extraInfo} -p acctName=bystar -i provisionSetup # runs prepUpdateInit
@@ -371,6 +376,45 @@ _EOF_
         lpDo ${emacsExec} --with-profile ${each} --debug-init  &
     done
 }
+
+
+function vis_deStraight {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Move base of blee-straight out of the way. As if we are starting with a virgin blee.
+_EOF_
+    }
+    if [ $# -eq 0  ] ; then
+        ANT_raw "Usage: No arguments were specified."
+        lpDo describeF
+    fi
+
+    local emacsVer=${emacs}
+    if [ -z "${emacsVer}" ] ; then
+        EH_problem "Bad emacsVer=${emacsVer}"
+        lpReturn 1
+    fi
+
+    local emacsVerBaseDir="/bisos/blee/emacsVers/${emacsVer}"
+
+    if [ ! -d "${emacsVerBaseDir}" ] ; then
+        EH_problem "Missing ${emacsVerBaseDir}"
+        lpReturn 101
+    fi
+
+    local bleeBaseDir=""
+
+    for each in $@ ; do
+        bleeBaseDir="${emacsVerBaseDir}/${each}"
+        if [ ! -d "${bleeBaseDir}" ] ; then
+            EH_problem "Missing ${bleeBaseDir} --- skipped"
+            continue
+        fi
+        # NOTYET, if not force mode get user's confirmation
+        lpDo /bin/rm -r -f "${bleeBaseDir}"
+    done
+}
+
 
 
 function vis_blee1InitSetup {
