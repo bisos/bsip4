@@ -378,7 +378,8 @@ _EOF_
 
     for each in $@ ; do
         # echo $PATH
-        lpDo ${emacsExec} --with-profile ${each} --debug-init  &
+        #lpDo ${emacsExec} --with-profile ${each} --debug-init  &
+	lpDo ${emacsExec} --with-profile ${each} &	
     done
 }
 
