@@ -34,7 +34,8 @@ function opRunEnvOutputGeneric {
   opRunOsRev=`uname -r`
   opRunMachineArch=`uname -m`
   opRunParamStandalone=strict
-  opRunDomainName=genericDomain
+  # opRunDomainName=genericDomain
+  opRunDomainName=$(hostname)
 
   vis_opRunDistFamilySet > /dev/null  
   

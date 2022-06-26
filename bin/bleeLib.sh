@@ -35,7 +35,7 @@ function vis_moduleDescription {  cat  << _EOF_
 _EOF_
 }
 
-
+# G_emacsServerPid=$(vis_emacsServerPidFromEnv ${G_emacsServerPid})
 
 function vis_examples_bleeLib {
     typeset extraInfo="-h -v -n showRun"
@@ -272,6 +272,8 @@ _EOF_
   }
     EH_assert [[ $# -eq 0 ]]
 
+    local gEmacsServerPid=$(echo ${G_emacsServerPid})  # get rid of spaces in the var
+
     local emacsCmndLine=$(cat /proc/${G_emacsServerPid}/cmdline | xargs -0 echo | cut -f 1 -d " ")
     local emacsCmndLineVersion=$(${emacsCmndLine} --version | head -1 | cut -f 3 -d " ")
     local emacsCmndLinePath=$(which ${emacsCmndLine})
@@ -318,7 +320,10 @@ _EOF_
 
 function vis_getEmacsExec {
    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+** Given an emacs version (28, 28.1 29.0.50), find the corresponding exec in /usr/local.
+For example ${funcName} 28, produces /usr/local/bin/emacs-28.
+When 0, default emacs executable. Likely /usr/local/bin/emacs.
 _EOF_
     }
     EH_assert [[ $# -eq 1 ]]
@@ -330,17 +335,12 @@ _EOF_
         "0")
             result=$(which emacs)
             ;;
-        "26"|"27"|"28"|"29")
+	*)
             result="/usr/local/bin/emacs-${emacsVer}"
-            if [ ! -z "${result}" ] ; then
-                if [ ! -e "${result}" ] ; then
-                    result=""
-                fi
-            fi
-            ;;
-        *)
-            EH_problem
-            lpReturn 1
+            if [ ! -e "${result}" ] ; then
+		EH_problem "Bad input: ${emacsVer} -- Missing ${result}"
+                result=""
+	    fi
             ;;
     esac
 
@@ -349,6 +349,28 @@ _EOF_
     lpReturn
 }
 
+function vis_getEmacsVerFromExec {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+** Given an emacs executable, get the full emacs version.
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local result=""
+    local emacsCmnd="$1"
+
+    if [ -e "${emacsCmnd}" ] ; then
+	result=$(${emacsCmnd} --version | head -1 | cut -f 3 -d " ")
+    else
+	EH_problem "Bad Input: ${emacsCmnd} -- Missing ${emacsCmnd}"
+        result=""
+    fi
+
+    echo ${result}
+    
+    lpReturn
+}
 
 function vis_getEmacsVer {
    G_funcEntry
@@ -358,31 +380,22 @@ _EOF_
     EH_assert [[ $# -eq 1 ]]
 
     local emacsVer="$1"
+    local emacsExec=$(vis_getEmacsExec  ${emacsVer})    
     local result=""
-    local emacsCmnd=$(which emacs)
 
-    case $emacsVer in
-        "0")
-            result=$(${emacsCmnd} --version | head -1 | cut -f 3 -d " " | sed -e 's/\(..\).*/\1/')
-            ;;
-        "26"|"27"|"28"|"29")
-            result=$(vis_getEmacsExec $emacsVer)
-            if [ ! -z "${result}" ] ; then
-                result="${emacsVer}"
-            fi
-            ;;
-        *)
-            EH_problem
-            lpReturn 1
-            ;;
-    esac
-
+    if [ -z "${emacsExec}" ] ; then
+	EH_problem "Bad Result from vis_getEmacsExec"
+	result=""
+    else
+	result=$(vis_getEmacsVerFromExec "${emacsExec}")
+	if [ -z "${result}" ] ; then
+	    EH_problem "Bad Result from is_getEmacsVerFromExec"
+	    result=""
+	fi
+    fi
     echo ${result}
-    
     lpReturn
 }
-
-
 
 
 

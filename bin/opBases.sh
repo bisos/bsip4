@@ -21,13 +21,16 @@ fi
 
 opBinBase=${opBase}/bin
 opLibBase=${opBase}/lib
-opManBase=${opBase}/man
+opManBase=$/opt/public/osmt/bin/seedSubjectAction.sh{opBase}/man
 opSiteControlBase=${opBase}/siteControl
 opSysConfigInputBase=${opBase}/sysConfigInput
 opPoliciesBase=${opBase}/policies
 
 palsBinBase="/bisos/pals/bin"
 lcntBinBase="/bisos/core/lcnt/bin"
+mailBinBase="/bisos/asc/mail/bin"
+dnsBinBase="/bisos/asc/dns/bin"
+bedrockBinBase="/bisos/asc/bedrock/bin"
 
 #    opVarBase    -- Where files that grow live
 

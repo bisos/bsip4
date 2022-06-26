@@ -28,6 +28,8 @@ opRunDistGeneration=""
 skipIt=""
 tm_setFile=""
 
+typeset retVal=0
+
 #OSMTROOT="/opt/public/osmt"
 OSMTROOT="/bisos/core/bsip"
 

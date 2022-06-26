@@ -116,7 +116,7 @@ function do_itemActions  {
     targetSubject=item_${subject}
     subjectValidVerify
     ${targetSubject}
-    TM_trace 7 "${itemActions}"
+    # TM_trace 7 "${itemActions}"  # OBSOLETED? MB-2022
     
     typeset thisAction=""
     # if the item has a list of itemActions, then perform them all

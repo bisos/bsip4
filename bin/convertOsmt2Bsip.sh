@@ -254,7 +254,7 @@ _EOF_
         lpDo FN_fileSafeCopy "${each}" "${each}.${eachDateTag}"
 
         cat ${each}.${eachDateTag} | \
-            sed -e "s@unisos.webScraping@unisos.wsf@g" > ${each}
+            sed -e "s@unisos.marme@bisos.marmee@g" > ${each}
 
             #sed -e "s@bx:bsip:bash/processArgsAndStdin \$@bx:bsip:bash/processArgsAndStdin :noParams t@g" > ${each}
         

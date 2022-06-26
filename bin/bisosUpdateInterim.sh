@@ -133,7 +133,7 @@ ${G_myName} ${extraInfo} -i bisosBasesPull  # with bx-gitRepos
 ${G_myName} ${extraInfo} -i bisosBasesReDirAndReLink # with bx-bases
 ${G_myName} ${extraInfo} -i missingBxRepos # not in bx-bases yet -- Very remporary
 $( examplesSeperatorChapter "Blee And Usage Environment Upgrade" )
-${G_myName} ${extraInfo} -i bleeUpgrade # emacsDoomsManage.sh -i reBuild + blee -i chemacs2FullUpdate
+${G_myName} ${extraInfo} -i bleeUpgrade # bleeDoomsManage.sh -i reBuild + blee -i chemacs2FullUpdate
 ${G_myName} ${extraInfo} -i bashRcVerify
 ${G_myName} ${extraInfo} -f -i bashRcVerify  # forceMode updates
 $( examplesSeperatorChapter "Optional Interim Actions" )
@@ -408,8 +408,8 @@ _EOF_
     inBaseDirDo /bisos/blee/extPkgs/emacs-application-framework git reset --hard 4ce9b1cab0f4894adcb1710917f96279cccd401b
 
 
-    lpDo emacsDoomsManage.sh -h -v -n showRun -p profile=blee2 -i reBuild
-    # lpDo emacsDoomsManage.sh -h -v -n showRun -p profile=sysDoom -i reBuild
+    lpDo bleeDoomsManage.sh -h -v -n showRun -p profile=blee2 -i reBuild
+    # lpDo bleeDoomsManage.sh -h -v -n showRun -p profile=sysDoom -i reBuild
 
     lpDo blee -h -v -n showRun -i blee1InitSetup
 
