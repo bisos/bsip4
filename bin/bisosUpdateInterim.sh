@@ -122,6 +122,7 @@ $( examplesSeperatorChapter "Apt-Packages Update And New Installs" )
 ${G_myName} ${extraInfo} -i aptUpgrades    # apt-get -y upgrade
 ${G_myName} ${extraInfo} -i missingAptPkgsInstall  # apt-s needed for recent features
 $( examplesSeperatorChapter "Python And Pip Update And New Installs" )
+bisosPyVenvSetup.sh -h -v -n showRun -i venvPy3Dev_exists # Is dev env in effect
 ${G_myName} ${extraInfo} -i venvPy3Dev_stash # deactivte development environment
 ${G_myName} ${extraInfo} -i pipUnDevAndUpgrades
 ${G_myName} ${extraInfo} -i missingPipInstall
@@ -277,7 +278,11 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     lpDo sudo apt-get update
+    lpDo sudo apt-get -y --with-new-pkgs upgrade
+    lpDo sudo apt -y autoremove
     lpDo sudo apt-get -y upgrade
+
+    echo "Last line should have been: 0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded."
 
     lpReturn
 }
