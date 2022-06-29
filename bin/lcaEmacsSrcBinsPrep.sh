@@ -279,7 +279,8 @@ _EOF_
         srcObtainBaseDir="/bisos/var/srcPkgs/${srcPkgName}"
         # -- depth 1 of git clone, copies only the latest revision
         obtainCmndLine="git clone --single-branch -b ${srcPkgName} git://git.sv.gnu.org/emacs.git"
-
+        prepCmndLine="echo Git cloned"
+	
         srcBuildBaseDir="/bisos/var/srcPkgs/${srcPkgName}/emacs"
     }
 
