@@ -273,9 +273,16 @@ function vis_venvPy3_pipUpgrades {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Updates only packages that need to be updated. Applies to py3 and py3/dev
+** Order of upgrades is important. pip does not enforce that. 
+** So, we force the ones that should happen first before the automated --outdated.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
+
+    #/bisos/venv/py3/bisos3/bin/python -m pip install --upgrade pip
+    lpDo ${pdb_venv_py3Bisos3}/bin/python -m pip install --upgrade pip
+
+    lpDo ${pdb_venv_py3Bisos3}/bin/pip install --no-cache-dir --force-reinstall --upgrade charset-normalizer
 
     local upgradeSubjectPkgs=$(lpDo eval ${pdb_venv_py3Bisos3}/bin/pip list --outdated --format=freeze \| grep -v flufl.bounce)
 
