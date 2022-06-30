@@ -110,7 +110,7 @@ ${G_myName} ${extraInfo} -i venvPy3Dev_stashExists
 ${G_myName} ${extraInfo} -i venvPy3Dev_stashStatus
 $(vis_venvPy3Dev_stashStatus)
 ${G_myName} ${extraInfo} -i venvPy3Dev_stash
-${G_myName} ${extraInfo} -i venvPy3Dev_unStas
+${G_myName} ${extraInfo} -i venvPy3Dev_unStash
 $( examplesSeperatorChapter "Py3 Tmp Manage Environment" )
 ${G_myName} ${extraInfo} -i virtenvsPrep py3/tmp  # Create Virtual Environment
 ${G_myName} ${extraInfo} -f -i virtenvsPrep py3/tmp # force mode
