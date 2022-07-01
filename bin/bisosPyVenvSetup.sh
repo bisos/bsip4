@@ -105,12 +105,15 @@ ${G_myName} ${extraInfo} -i pyVenv_DevSetup # Create Virtual Environment and dev
 ${G_myName} ${extraInfo} -i virtenvsPrep py3/dev  # Create Virtual Environment
 ${G_myName} ${extraInfo} -f -i virtenvsPrep py3/dev # force mode
 ${G_myName} ${extraInfo} -i venvPy3Dev_pipInstalls # editable installed with ftoWalkThrough
+$( examplesSeperatorSection "Py3 Dev Venv Stash" )
 ${G_myName} ${extraInfo} -i venvPy3Dev_exists
 ${G_myName} ${extraInfo} -i venvPy3Dev_stashExists
 ${G_myName} ${extraInfo} -i venvPy3Dev_stashStatus
 $(vis_venvPy3Dev_stashStatus)
 ${G_myName} ${extraInfo} -i venvPy3Dev_stash
 ${G_myName} ${extraInfo} -i venvPy3Dev_unStash
+$( examplesSeperatorSection "Py3 Dev Venv For LSP Adjustments" )
+${G_myName} ${extraInfo} -i venvPy3Dev_lspBisosSymLinks
 $( examplesSeperatorChapter "Py3 Tmp Manage Environment" )
 ${G_myName} ${extraInfo} -i virtenvsPrep py3/tmp  # Create Virtual Environment
 ${G_myName} ${extraInfo} -f -i virtenvsPrep py3/tmp # force mode
@@ -267,6 +270,46 @@ _EOF_
 _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
 _CommentEnd_
+
+function vis_venvPy3Dev_lspBisosSymLinks {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Go to the dev-bisos3 lib directory and create symlink in there for bisos namespaces.
+** Without these lsp won't work.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local sitePkgsBase="/bisos/venv/py3/dev-bisos3/lib/python3.9/site-packages"
+
+    local bisosPyNamespaces="bisos unisos blee"
+
+    for eachNamespace in ${bisosPyNamespaces} ; do
+        echo ${eachNamespace}
+
+        # /bisos/venv/py3/dev-bisos3/lib/python3.9/site-packages/bisos
+        lpDo ls -l  /bisos/venv/py3/dev-bisos3/lib/python3.9/site-packages/${eachNamespace}
+        if [ -h "${sitePkgsBase}/${eachNamespace}" ] ; then
+            lpDo echo "${sitePkgsBase}/${eachNamespace} is a link and we assume it is all good"
+        else
+            if [ ! -d "${sitePkgsBase}/${eachNamespace}" ] ; then
+                EH_problem "Not a link and not a dir, is bad: ${sitePkgsBase}/${eachNamespace} --- Look into it"
+                lpReturn 101
+            else
+                lpDo rmdir "${sitePkgsBase}/${eachNamespace}"
+                if [ -d "${sitePkgsBase}/${eachNamespace}" ] ; then
+                    EH_problem "rmdir failed.  ${sitePkgsBase}/${eachNamespace} --- Look into it"
+                    lpReturn 101
+                fi
+
+                lpDo FN_fileSymlinkUpdate /bisos/git/auth/bxRepos/${eachNamespace}-pip/namespace/py3/${eachNamespace} ${sitePkgsBase}/${eachNamespace}
+            fi
+        fi
+        lpDo ls -l  /bisos/venv/py3/dev-bisos3/lib/python3.9/site-packages/${eachNamespace}
+    done
+
+    lpReturn
+}
 
 
 function vis_venvPy3_pipUpgrades {
