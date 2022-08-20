@@ -103,7 +103,7 @@ ${G_myName} ${extraInfo} -p profile=blee2 -i switchInitTo withBlee
 ls -l /bisos/blee/doom-blee-base/init.el
 emacs --debug-init --with-profile blee2 &
 $( examplesSeperatorChapter "Doom Main Deploy -- profile=blee3" )
-${G_myName} ${extraInfo} -p emacs=28.1 -p profile=blee3 -i buildInstall
+${G_myName} ${extraInfo} -p emacs=28 -p profile=blee3 -i buildInstall
 ${G_myName} ${extraInfo} -p profile=blee3 -i doomSync
 ${G_myName} ${extraInfo} -p profile=blee3 -i unMain
 ${G_myName} ${extraInfo} -p emacs=28 -p profile=blee3 -i reBuild
@@ -238,7 +238,9 @@ _EOF_
                     lpDo chmod ug+rw ${doomDirBase}/init.el                 
                     # /bisos/blee/doom-blee-base/initSansBlee.el
                     # /bisos/blee/doom-blee-base/loadBlee.el
-                    lpDo eval cat ${doomDirBase}/initSansBlee.el ${doomDirBase}/loadBlee.el \> ${doomDirBase}/init.el
+                    # /bisos/blee/dooms/doom-base-blee3/blee-init.el
+                    # lpDo eval cat ${doomDirBase}/initSansBlee.el ${doomDirBase}/loadBlee.el \> ${doomDirBase}/init.el
+                    lpDo eval cat ${doomDirBase}/initSansBlee.el ${doomDirBase}/blee-init.el \> ${doomDirBase}/init.el
                     lpDo chmod 444 ${doomDirBase}/init.el
                     ;;
                 *)

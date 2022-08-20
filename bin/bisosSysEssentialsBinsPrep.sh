@@ -87,6 +87,7 @@ _EOF_
         "linux_headers_generic"
         "nmap"
         "pandoc"
+        "gnupg"   # Keywords: GPG PGP
     )
 
     itemOptionalOrderedList=()
@@ -153,6 +154,17 @@ _EOF_
     
     lpReturn
 }
+
+####+BEGIN: bx:dblock:lsip:binsprep:apt :module "gnupg"
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || Apt-Pkg       :: gnupg [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+item_gnupg () { distFamilyGenerationHookRun binsPrep_gnupg; }
+
+binsPrep_gnupg_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "gnupg"; }
+
+####+END:
+
 
 ####+BEGIN: bx:dblock:lsip:binsprep:apt :module "nmap"
 _CommentBegin_
