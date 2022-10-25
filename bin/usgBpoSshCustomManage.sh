@@ -185,7 +185,7 @@ _EOF_
     local privKeyFile=""
 
     if [ -d "${sshKeysBaseOrFile}" ] ; then
-        opDo vis_usgAcctCustomCredentialsUpdate ${sshConfLabel} ${sshKeysBase}
+        opDo vis_usgAcctCustomCredentialsUpdate ${sshConfLabel} ${sshKeysBaseOrFile}
         privKeyFile=${usgHome}/.ssh/${sshConfLabel}_rsa
     elif [ -f "${sshKeysBaseOrFile}" ] ; then
         privKeyFile="${sshKeysBaseOrFile}"
