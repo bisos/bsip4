@@ -118,11 +118,14 @@ ${G_myName} ${extraInfo} -i chemacs2ProfilesNamesList
 ${G_myName} ${extraInfo} -i chemacs2ProfilesNamesCache # $(vis_chemacs2ProfilesNamesCache)
 ${G_myName} ${extraInfo} -i run blee1
 ${G_myName} ${extraInfo} -i run doom
+${G_myName} ${extraInfo} -i getEmacsVer 0
+${G_myName} ${extraInfo} -i getEmacsVer 28
 ${G_myName} ${extraInfo} -p emacs=0 -i run blee2
 ${G_myName} ${extraInfo} -p emacs=28 -i run blee2
 ${G_myName} ${extraInfo} -i run blee2
+${G_myName} ${extraInfo} -p emacs=sys -i run blee3
 ${G_myName} ${extraInfo} -i run blee3
-${G_myName} ${extraInfo} -p emacs=28.1 -i run doom-blee3
+${G_myName} ${extraInfo} -p emacs=28 -i run doom-blee3
 $( examplesSeperatorChapter "Pure Blee DeStraight --- Delete All elcs and cloned repos" )
 ${G_myName} ${extraInfo} -p emacs=0 -i deStraight blee2
 ${G_myName} ${extraInfo} -p emacs=28.1 -i deStraight blee2

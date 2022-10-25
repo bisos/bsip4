@@ -333,7 +333,14 @@ _EOF_
 
     case $emacsVer in
         "0")
-            result=$(which emacs)
+	    if [ -f "/usr/local/bin/emacs-28" ] ; then
+		result="/usr/local/bin/emacs-28"
+	    else
+		result=$(which emacs)
+	    fi
+            ;;
+        "sys")
+	    result=$(which emacs)
             ;;
 	*)
             result="/usr/local/bin/emacs-${emacsVer}"
