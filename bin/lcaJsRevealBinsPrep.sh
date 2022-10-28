@@ -103,6 +103,7 @@ function examplesHookPost {
 ${G_myName} -i moduleDescription
 node -v
 npm -v
+sudo npm install -g --save --prefix=/usr/local reveal.js-plugins
 _EOF_
 }
 
