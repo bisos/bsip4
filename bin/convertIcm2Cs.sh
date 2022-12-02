@@ -198,12 +198,85 @@ _EOF_
         #echo "${thisFunc}" "${each}"   
         lpDo FN_fileSafeCopy "${each}" "${each}.${eachDateTag}"
 
+        # TODOs:
+        # icm.ANN_here, icm.ANN_write, icm.OUT_write
+
         cat ${each}.${eachDateTag} | \
-            sed -e "s/@icm.subjectToTracking/@io.track.subjectToTracking/g" \
-                -e "s@icm.Cmnd@cs.Cmnd@g" \
-                -e "s@icm.OpOutcome@bpf.op.Outcome@g" \
-                -e "s@icm.g_icmMain@cs.g_icmMain@g" \
-                -e "s@icm.cmndCallParamsValidate@cs.cmndCallParamsValidate@g"  > ${each}
+            sed \
+            -e "s/@icm.subjectToTracking/@io.track.subjectToTracking/g" \
+            -e "s@icm.Cmnd@cs.Cmnd@g" \
+            -e "s@icm.OpOutcome@bpf.op.Outcome@g" \
+            -e "s@icm.g_icmMain@cs.g_csMain@g" \
+            -e "s@bx:icm:py3:method@bx:cs:py3:method@g" \
+            -e "s@bx:icm:py3:func@bx:cs:py3:func@g" \
+            -e "s@G = IcmGlobalContext()@G = cs.globalContext.get()@g" \
+            -e "s@G = icm.IcmGlobalContext()@G = cs.globalContext.get()@g" \
+            -e "s@icm.ICM_ParamDict()@cs.ICM_ParamDict()@g" \
+            -e "s@icm.ex_gCmndMenuItem@cs.examples.cmndInsert@g" \
+            -e "s@icm.ex_gExecMenuItem@cs.examples.execInsert@g" \
+            -e "s@icm.icmExampleMyName@cs.examples.myName@g" \
+            -e "s@icm.G_commonBriefExamples@cs.examples.commonBrief@g" \
+            -e "s@icm.cmndExampleMenuChapter@cs.examples.menuChapter@g" \
+            -e "s@icm.argsparseBasedOnIcmParams@cs.argsparseBasedOnIcmParams@g" \
+            -e "s@icm:py3:cmnd:classHead@bx:cs:py3:cmnd:classHead@g" \
+            -e "s@bx:dblock:python:icm:cmnd:classHead@bx:cs:py3:cmnd:classHead@g" \
+            -e "s@bx:icm:python:cmnd:classHead@bx:cs:py3:cmnd:classHead@g" \
+            -e "s@bx:icm:python:method@bx:cs:py3:method@g" \
+            -e "s@icm.LOG_Control@io.log.Control@g" \
+            -e "s@LOG_Control@io.log.Control@g" \
+            -e "s@icm.OpError.Success@cs.OpError.Success@g" \
+            -e "s@argsparseBasedOnIcmParams@argsparseBasedOnCsParams@g" \
+            -e "s@ucf.stackFrameInfoGet@bpf.ast.stackFrameInfoGet@g" \
+            -e "s@ucf.FUNC_currentGet@bpf.ast.FUNC_currentGet@g" \
+            -e "s@ucf.FUNC_argsLength@bpf.ast.FUNC_argsLength@g" \
+            -e "s@icm.EH_@io.eh.@g" \
+            -e "s@EH_@io.eh.@g" \
+            -e "s@icm.CmndArgsSpecDict@cs.arg.CmndArgsSpecDict@g" \
+            -e "s@icmInfo@csInfo@g" \
+            -e "s@bx:icm:py@bx:cs:py@g" \
+            -e "s@ICM_Param@CmndParam@g" \
+            -e "s@FILE_ParamWriteTo@bpf.fp.FileParamWriteTo@g" \
+            -e "s@FILE_ParamWriteToPath@bpf.fp.FileParamWriteToPath@g" \
+            -e "s@FV_writeToFilePathAndCreate@bpf.fv.writeToFilePathAndCreate@g" \
+            -e "s@FV_writeToBaseDirAndCreate@bpf.fv.writeToBaseDirAndCreate@g" \
+            -e "s@+BEGIN: bx:cs:python:section :title \"End Of Editable Text\"@+BEGIN: blee:bxPanel:foldingSection :outLevel 0 :title \" ~End Of Editable Text~ \"@g" \
+            -e "s@ :interactiveP \"\"@@g" \
+            -e "s@\" :asFunc@ :pyInv@g" \
+            -e "s@:argsMin \"@:argsMin @g" \
+            -e "s@\" :argsMax \"@ :argsMax @g" \
+            -e "s@bx:cs:py3:cmnd:classHead@b:py3:cs:cmnd/classHead@g" \
+            -e "s@bx:icm:python:func@bx:cs:python:func@g" \
+            -e "s@icm.cmndCallParamsValidate@cs.cmndCallParamsValidate@g" \
+            -e "s@bpf@b@g"\
+            -e "s@bx:cs:py3:func@b:py3:cs:func/typing@g" \
+            -e "s@bx:dblock:python:class@b:py3:class/decl@g" \
+            -e "s@bx:icm:py3:method@b:py3:cs:method/typing@g" \
+            -e "s@bx:cs:py3:method@b:py3:cs:method/typing@g" \
+            -e "s@^from bisos import cs@from bisos.b import cs@g" \
+            -e "s@^from bisos import io@from bisos.b import b_io@g" \
+            -e "s@icmParams@csParams@g" \
+            -e "s@icmCmnds@csCmnds@g" \
+            -e "s@b:py3t:cs:method@b:py3:cs:method/typing@g" \
+            -e "s@\([ \t]\)io.log.@\1b_io.log.@g"\
+            -e "s@(io.log.@(b_io.log.@g"\
+            -e "s@\([ \t]\)io.eh.@\1b_io.eh.@g"\
+            -e "s@icm.LOG_here@b_io.tm.here@g"\
+            -e "s@icm.TM_here@b_io.tm.here@g"\
+            -e "s@icm.notAsFailure@b.op.notAsFailure@g"\
+            -e "s@cs.OpError.Success@b.OpError.Success@g"\
+            -e "s@if interactive:@if rtInv.outs:@g"\
+            -e "s@icm.eh_problem_usageError@icm.eh_problem_usageError_wOp@g"\
+            -e "s@icm.cmndExampleMenuSection@cs.examples.menuSection@g"\
+            -e "s@icm.cmndExampleMenuChapter@cs.examples.menuChapter@g"\
+            -e "s@icm.ANN_write@b_io.ann.write@g"\
+            -e "s@icm.ANN_here@b_io.ann.here@g"\
+            -e "s@effectiveArgsList)@argsList)@g"\
+            -e "s@icm.FILE_ParamValueReadFrom@b.fp.FileParamValueReadFrom@g"\
+            -e "s@FILE_ParamValueReadFrom@FileParamValueReadFrom@g"\
+            -e "s@icm.subjectToTracking(fnLoc=True, fnEntry=True, fnExit=True)@@g"\
+            -e "s@(G.icmMyName()@(cs.G.icmMyName()@g"\
+            -e "s@ G.icmMyFullName@ cs.G.icmMyFullName@g"\
+            > ${each}
         
         lpReturn 0
     }
@@ -253,7 +326,10 @@ _EOF_
         lpDo FN_fileSafeCopy "${each}" "${each}.${eachDateTag}"
 
         cat ${each}.${eachDateTag} | \
-            sed -e "s@####+BEGIN: bx:dblock:python:section @####+BEGIN: blee:bxPanel:foldingSection :outLevel 1 @g" > ${each}
+            sed \
+            -e "s@\([ \t]\)io.log.@\1b_io.log.@g"\
+            -e "s@(io.log.@(b_io.log.@g"\
+            > ${each}
 
             # sed -e "s@unisos.marme@bisos.marmee@g" > ${each}
             #sed -e "s@bx:bsip:bash/processArgsAndStdin \$@bx:bsip:bash/processArgsAndStdin :noParams t@g" > ${each}

@@ -1045,8 +1045,16 @@ _EOF_
     local tutorialsBase="/bisos/git/bxRepos/blee/tutorials/emacs"
 
     function tutorialPersianAdd {
+        # lpDo echo SKIPPING tutorialPersianAddReal
+        lpDo tutorialPersianAddReal
+    }
+
+
+    function tutorialPersianAddReal {
        lpDo cp ${tutorialsBase}/persian.el ${emacsDir}/lisp/language/persian.el
        lpDo cp ${tutorialsBase}/TUTORIAL.fa ${emacsDir}/etc/tutorials/TUTORIAL.fa
+       # Make sure ${tutorialsBase}/loadup.el is up-to-date
+       # diff ${tutorialsBase}/loadup.el ${emacsDir}/lisp/loadup.el ## should only be (load "language/persian")
        lpDo cp ${tutorialsBase}/loadup.el ${emacsDir}/lisp/loadup.el
     }
 

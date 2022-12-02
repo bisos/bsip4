@@ -99,7 +99,11 @@ ${G_myName} ${extraInfo} -i hereFiles grep -i
 ${G_myName} ${extraInfo} -i here ls -l
 $( examplesSeperatorSection "At Bisos Places" )
 ${G_myName} ${extraInfo} -i homeOrg grep -i 
-${G_myName} ${extraInfo} -i bleePanels grep -i 
+${G_myName} ${extraInfo} -i bleePanels grep -i
+$( examplesSeperatorSection "Raw find Examples" )
+find -L . -type f -print | grep -v '\.git/' | grep -v '\.mypy' | grep -v __pycache__ | grep -i
+find -L . -type f -print | grep -v '\.git/' | grep -v '\.mypy' | grep -v __pycache__ | tr '\n' '\0' |  xargs -0 grep -i
+find -L . -type f -print0 | xargs -0 grep -i
 _EOF_
 }
 

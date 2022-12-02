@@ -717,8 +717,4 @@ function vis_bueDespam {
   opDo fileParamsLoadVarsFromBaseDir  ${infoBaseAcctBase} 2> /dev/null
 
   opDoComplain isbg.py --imaphost imap.${cp_acctMainBaseDomain} --imapuser ${cp_acctUid} --imappassword ${cp_currentPasswd} 
-
-#isbg.py --imaphost imap.mohsen.1.banan.byname.net --imapuser sa-20000 --imappassword mb2neda --imapinbox INBOX.job --spaminbox INBOX.spam.one --delete --expunge --verbose --spamc --flag
 }
-
-
