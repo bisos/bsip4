@@ -89,33 +89,35 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
-    local selectedBxoBase="~/bxo/usageEnv/selected"
+    local selectedBxoBase="~/bpos/usageEnv/selected"
     local mailingDefaultsBase="/bisos/apps/defaults/mailing"
 
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
-$( examplesSeperatorChapter "Static Mailings Starting Point Generator" )
-$( examplesSeperatorSection "Start -- With Default Parameters" )
-${G_myName} ${extraInfo} -i composeStart                    # Mailing Name Will Be Date Tagged
-${G_myName} ${extraInfo} -i composeStart dated                   # Mailing Name Will Be Date Tagged
-${G_myName} ${extraInfo} -i composeStart mailingName ""       # mailingName is specified
+$( examplesSeperatorChapter "LaTeX-Static Mailings Starting Point Generator" )
+$( examplesSeperatorSection "LaTeX-Mailing Start -- With Default Parameters" )
+${G_myName} ${extraInfo} -i composeStart                    # Creates Dir -- Mailing Name Will Be Date Tagged
+${G_myName} ${extraInfo} -i composeStart dated                   # Creates Dir -- Mailing Name Will Be Date Tagged
+${G_myName} ${extraInfo} -i composeStart mailingName ""       # Creates Dir -- mailingName is specified
 ${G_myName} ${extraInfo} -p base=. -i composeStart mailingName ""       # mailingName is specified
 ${G_myName} ${extraInfo} -p base=~/bxo/usageEnv/selected/mailings/compose -p template="/bisos/apps/defaults/mailing/compose/enFa/generic" -p header=~/bxo/usageEnv/selected/mailings/mohsenProfessional/consulting/lookingForProjs/2013/content.mail -i composeStart mailingName
 ${G_myName} ${extraInfo} -p base=~/bxo/usageEnv/selected/mailings/compose -p template="/bisos/apps/defaults/mailing/compose/enFa/generic" -p header=~/bxo/usageEnv/selected/mailings/mohsenProfessional/consulting/lookingForProjs/2013/content.mail -i composeStart mailingName ""
 ${G_myName} ${extraInfo} -p pdf=pdf -p base=~/bxo/usageEnv/selected/mailings/compose -p template="/bisos/apps/defaults/mailing/compose/enFa/generic" -p header=~/bxo/usageEnv/selected/mailings/mohsenProfessional/consulting/lookingForProjs/2013/content.mail -i composeStart mailingName "qualifier"
 ${G_myName} ${extraInfo} -p base=. -p template="/bisos/apps/defaults/mailing/compose/enFa/generic" -p header=~/bxo/usageEnv/selected/mailings/mohsenProfessional/consulting/lookingForProjs/2013/content.mail -i composeStart mailingName
 ${G_myName} ${extraInfo} -p base=. -p template="/bisos/apps/defaults/mailing/compose/faEn/generic" -p header=~/bxo/usageEnv/selected/mailings/mohsenProfessional/consulting/lookingForProjs/2013/content.mail -i composeStart mailingName
-$( examplesSeperatorSection "Start Globish -- EnFa -- With Specified Parameters" )
+$( examplesSeperatorSection "LaTeX-Mailing Start Globish -- EnFa -- With Specified Parameters" )
 ${G_myName} ${extraInfo} -p base=~/bxo/usageEnv/selected/mailings/compose -p template="/bisos/apps/defaults/mailing/compose/enFa/generic" -p header="~/bxo/usageEnv/selected/mailings/headers/enFa-office.mail" -i composeStart mailingName 
 ${G_myName} ${extraInfo} -p base=~/bxo/usageEnv/selected/mailings/compose -p template="/bisos/apps/defaults/mailing/compose/enFa/generic" -i composeStart mailingName ""
 ${G_myName} ${extraInfo} -p pdf=pdf -p base=. -p template="/bisos/apps/defaults/mailing/compose/enFa/generic" -i composeStart basicLaTeX pdf
 ${G_myName} ${extraInfo} -p base=. -p template="/bisos/apps/defaults/mailing/compose/enFa/generic" -i composeStart basicLaTeX ""
-$( examplesSeperatorSection "Start Farsi -- FaEn -- With Specified Parameters" )
+$( examplesSeperatorSection "LaTeX-Mailing Start Farsi -- FaEn -- With Specified Parameters" )
 ${G_myName} ${extraInfo} -p base=${selectedBxoBase}/mailings/compose -p template="/bisos/apps/defaults/mailing/compose/faEn/generic" -i composeStart mailingName 
 ${G_myName} ${extraInfo} -p base=${selectedBxoBase}/mailings/compose -p template="/bisos/apps/defaults/mailing/compose/faEn/generic" -i composeStart mailingName ""
 ${G_myName} ${extraInfo} -p pdf=pdf -p base=. -p template="/bisos/apps/defaults/mailing/compose/faEn/generic" -i composeStart basicLaTeX pdf
 ${G_myName} ${extraInfo} -p base=. -p template="/bisos/apps/defaults/mailing/compose/faEn/generic" -i composeStart basicLaTeX ""
+$( examplesSeperatorChapter "OrgMsg Mailings Starting Point Generator" )
+${G_myName} ${extraInfo} -p base=. -i composeOrgStart mailingName ""       # Creates Dir -- mailingName is specified
 _EOF_
 }
 
@@ -132,7 +134,7 @@ _CommentEnd_
 function vis_composeStart {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Example:  ${G_myName} -p base=~/bxo/usageEnv/selected/mailings/com/example/statics -p header=~/bxo/usageEnv/selected/mailings/com/example/pabloLopez/content.mail -p template=baseDir -i composeStart mailName
+** Example:  ${G_myName} -p base=~/bxo/usageEnv/selected/mailings/com/example/statics -p header=~/bxo/usageEnv/selected/mailings/com/example/johnDoe/content.mail -p template=baseDir -i composeStart mailName
 ** 
 ** -p base=~/bxo/usageEnv/selected/mailings/compose  -- Specifies where the mailing will be created in
 ** -p header=~/bxo/usageEnv/selected/mailings/mohsenProfessional/common/content.mail  -- Mail header fields will be extracted from this -- Body will be ignored
@@ -241,10 +243,89 @@ _EOF_
 }
 
 
+function vis_composeOrgStart {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Example:  ${G_myName} -i composeOrgStart mailName
+_EOF_
+    }
+    EH_assert [[ $# -le 2 ]]  # 0=dateTagIt 1=nameIt+datTag 2=nameIt+Qualifier
+
+    local thisEmacsClient=$( vis_thisEmacsClient )
+
+    # Output base directory
+    typeset baseDir="$( FN_absolutePathGet ~/bpos/usageEnvs/selected/mailings/compose )"
+    if [ ! -z "${base:-}" ] ; then
+        baseDir="$( FN_absolutePathGet ${base} )"
+    fi
+
+    # mailingName and mailingBaseDir
+    typeset mailingBaseDir
+    typeset mailingName
+    typeset dateTag=$( DATE_nowTag )
+    if [ $# -gt  0 ] ; then
+        mailingName=$1
+        if [ -z mailingName ] ; then
+            mailingName=${dateTag}
+            mailingBaseDir=${baseDir}/${mailingName}
+        else
+            mailingBaseDir=${baseDir}/${mailingName}-${dateTag}  # The specified name is also date tagged.
+        fi
+    else  # Which means $# == 0
+        mailingName=${dateTag}
+        mailingBaseDir=${baseDir}/${mailingName}
+    fi
+
+    if [ $# == 2 ] ; then
+        if [ -z "$2" ] ; then
+            mailingBaseDir=${baseDir}/${mailingName}
+        else
+            mailingBaseDir=${baseDir}/${mailingName}-${2}
+        fi
+    fi
+
+    ### headerFile
+    typeset headerFile="$( FN_absolutePathGet ./content.orgMsg )"
+    if [ ! -f "${headerFile}" ] ; then
+        headerFile="$( FN_absolutePathGet /bisos/apps/defaults/mailing/compose/headers/blank.orgMsg )"
+        if [ ! -f ${headerFile} ] ; then
+            EH_problem "Missing Header File: ${headerFile}"
+            lpReturn 101
+        fi
+    fi
+
+    if [ -d  "${mailingBaseDir}" ] ; then
+        EH_problem "${mailingBaseDir} Already In Place -- Will Not Overwrite, Force It With:"
+        ANT_raw "rm -r -f ${mailingBaseDir}"
+        lpReturn
+    else
+        opDoRet mkdir -p ${mailingBaseDir}
+    fi
+
+    ls -ldt ${mailingBaseDir}
+    ls -ldt ${headerFile}
+
+    # inBaseDirDo ${templateBaseDir} eval "find . -print | grep -v CVS | egrep -v ~\$ | cpio -o | (cd ${mailingBaseDir}; cpio -imdv)"
+    #inBaseDirDo ${templateBaseDir} eval "find . -print | grep -v CVS | egrep -v ~\$ | cpio -o | (cd ${mailingBaseDir}; cpio -imd)"
+
+    inBaseDirDo ${mailingBaseDir}  cp "${headerFile}" content.orgMsg
+
+    #opDo ${thisEmacsClient} -n -e "(progn (find-file \"${mailingBaseDir}/mailing.ttytex\") (blee:ppmm:org-mode-content-list))"
+    # opDo ${thisEmacsClient} -n -e "(progn (find-file \"${mailingBaseDir}/content.mail\"))"
+
+    echo "===================="
+    echo "$( FN_nonDirsPart ${mailingBaseDir} ) is ready to be configured."
+    echo "+ ${mailingBaseDir}; lsf"
+
+    lpReturn
+}
+
+
+
 function vis_composeStartOLD {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Example:  ${G_myName} -p base=~/bxo/usageEnv/selected/mailings/com/example/statics -p header=~/bxo/usageEnv/selected/mailings/com/example/pabloLopez/content.mail -p template=baseDir -i composeStart mailName
+** Example:  ${G_myName} -p base=~/bxo/usageEnv/selected/mailings/com/example/statics -p header=~/bxo/usageEnv/selected/mailings/com/example/johnDoe/content.mail -p template=baseDir -i composeStart mailName
 ** 
 ** -p base=~/bxo/usageEnv/selected/mailings/compose  -- Specifies where the mailing will be created in
 ** -p header=~/bxo/usageEnv/selected/mailings/mohsenProfessional/common/content.mail  -- Mail header fields will be extracted from this -- Body will be ignored

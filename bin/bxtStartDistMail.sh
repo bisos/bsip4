@@ -43,7 +43,7 @@ function vis_examples {
   #typeset extraInfo=""
   typeset extraInfo="-v -n showRun"
 
-  sitePagesList=`echo ${sitePages}`
+  # sitePagesList=`echo ${sitePages}`
 
   typeset visLibExamples=`visLibExamplesOutput ${G_myName} ${extraInfo}`
 
