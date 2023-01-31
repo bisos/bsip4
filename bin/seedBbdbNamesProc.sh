@@ -214,7 +214,7 @@ function vis_bbdbProcShStdout {
   done
 
  cat  << _EOF_
-#!/bin/osmtKsh
+#!/bin/bash
 
 typeset RcsId="\$Id: seedBbdbNamesProc.sh,v 1.2 2018-04-26 19:14:10 lsipusr Exp $"
 

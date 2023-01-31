@@ -145,7 +145,6 @@ _EOF_
         echo "Processing ${thisFunc}:: ${each}"
 
         lpDo egrep "^IimBriefDescription=" ${each}
-        lpDo egrep "^\#\!/bin/osmtKsh" ${each}
         lpDo egrep bx:dblock:lsip:bash:seed-spec ${each}
         lpDo egrep bx:dblock:bash:top-of-file ${each}
         lpDo egrep lpCurrents.libSh ${each}

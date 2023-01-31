@@ -1185,7 +1185,7 @@ _EOF_
         # else
             echo "REPO-ATOM:${here}"
             if [ ! -f .gitignore ] ; then
-                lpDo cp /bisos/apps/defaults/begin/templates/moded/git/gitignore/emacs+py .gitignore
+                lpDo cp /bisos/apps/defaults/begin/templates/moded/git/gitignore/emacs+py+tex .gitignore
             else
                 echo "${here}/.gitignore in place -- updating skipped"
             fi
@@ -1265,7 +1265,7 @@ _EOF_
         EH_assert [[ $# -eq 1 ]]
         local thisOne="$1"
 
-        # lpDo cp /bisos/apps/defaults/begin/templates/moded/git/gitignore/emacs+py .gitignore
+        # lpDo cp /bisos/apps/defaults/begin/templates/moded/git/gitignore/emacs+py+tex .gitignore
 
         # lpDo cp /bisos/apps/defaults/begin/templates/moded/git/gitattributes/py .gitattributes    
 

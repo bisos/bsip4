@@ -107,6 +107,7 @@ find . -type f -print | egrep '/ftoProc\.sh\.2020[0-9]+$' | wc
 $( examplesSeperatorSection "Current Dir" )
 ${G_myName} ${extraInfo} -i commonAspects *
 find . -type f -print | grep -v ${G_myName} | ${G_myName} ${extraInfo} -i commonAspects
+${G_myName} ${extraInfo} -i commonAspects files
 $( examplesSeperatorSection "Report" )
 ${G_myName} ${extraInfo} -i report *
 find . -type f -print | grep -v ${G_myName} | ${G_myName} -i report
