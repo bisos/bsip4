@@ -101,6 +101,7 @@ ${G_myName} ${extraInfo} -i dblockDirsAll oneDirectory
 ${G_myName} ${extraInfo} -i dblockUpdateOneFileOrIgnore oneFile
 ${G_myName} ${extraInfo} -i dblockUpdateFiles file1 file2
 find  . -type f -print | ${G_myName} ${extraInfo} -i dblockUpdateFiles
+find -L . -type f -print | grep '/lcntProc.sh$' | ${G_myName} ${extraInfo} -i dblockUpdateFiles
 $( examplesSeperatorChapter "ACTIONS: Blank (UnExpand)" )
 ${G_myName} ${extraInfo} -i dblockBlankFiles file1 file2
 find  . -type f -print | ${G_myName} ${extraInfo} -i dblockBlankFiles

@@ -120,8 +120,8 @@ _EOF_
 	opDo vis_updateDirCommit ${here}/$1
     else
         #filesList=$( find $1 -type f -print | grep -v CVS)
-	dirsList=$( find $1 -type d -print )
-	filesList=$( find $1 -type f -print )
+	dirsList=$( find -L $1 -type d -print )
+	filesList=$( find -L $1 -type f -print )
 
 	opDoComplain  cvs -f add -m "New" ${dirsList} 
 
@@ -181,8 +181,8 @@ vis_newAddDir () {
     fi
 
     #filesList=$( find $1 -type f -print | grep -v CVS)
-    dirsList=$( find $1 -type d -print )
-    filesList=$( find $1 -type f -print )
+    dirsList=$( find -L $1 -type d -print )
+    filesList=$( find -L $1 -type f -print )
 
     opDoComplain  cvs -f add -m "New" ${dirsList} 
 
@@ -226,8 +226,8 @@ vis_newAddFileHere () {
     fi
 
     #filesList=$( find $1 -type f -print | grep -v CVS)
-    #dirsList=$( find $1 -type d -print )
-    filesList=$( find $1 -type f -print )
+    #dirsList=$( find -L $1 -type d -print )
+    filesList=$( find -L $1 -type f -print )
 
     #opDoComplain  cvs -f add -m "New" ${dirsList} 
 
@@ -401,7 +401,7 @@ vis_cvsedDirsList () {
 
     thisTmp=/tmp/${G_myName}.vis_cvsedDirsList.$$
         
-    opDoRet eval "( find ${here} -type d -print | egrep '/CVS$'  1>${thisTmp}  )"
+    opDoRet eval "( find -L ${here} -type d -print | egrep '/CVS$'  1>${thisTmp}  )"
 
     cat ${thisTmp} | 
     while read  thisLine  ; do
@@ -527,7 +527,7 @@ vis_allRecurseDeCvs () {
 
     thisTmp=/tmp/${G_myName}.vis_cvsedRecurseDeCvs.$$
         
-    opDoRet eval "( find . -type d -print | egrep '/CVS$'  1>${thisTmp}  )"
+    opDoRet eval "( find -L . -type d -print | egrep '/CVS$'  1>${thisTmp}  )"
 
     cat ${thisTmp} | 
     while read  thisLine  ; do

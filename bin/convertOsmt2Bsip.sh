@@ -106,7 +106,7 @@ find . -type f -print | egrep '/ftoProc\.sh$' | bx-dblock -i dblockUpdateFiles
 find . -type f -print | egrep '/ftoProc\.sh\.2020[0-9]+$' | wc
 $( examplesSeperatorSection "Current Dir" )
 ${G_myName} ${extraInfo} -i commonAspects *
-find . -type f -print | grep -v ${G_myName} | ${G_myName} ${extraInfo} -i commonAspects
+find -L . -type f -print | grep -v ${G_myName} | ${G_myName} ${extraInfo} -i commonAspects
 ${G_myName} ${extraInfo} -i commonAspects files
 $( examplesSeperatorSection "Report" )
 ${G_myName} ${extraInfo} -i report *
@@ -203,6 +203,7 @@ _EOF_
             sed -e "s@\#\!/bin/osmtKsh@#!/bin/bash@g" \
                 -e "s@IimBriefDescription=@IcmBriefDescription=@g" \
                 -e "s@bx:dblock:lsip:bash:seed-spec@bx:bsip:bash:seed-spec@g" \
+                -e "s@bx:bsip:bash:seed-spec :types \"seedLcntProc.sh\"@bx:bisos:bash:seed-spec :types \"/bisos/core/lcnt/bin/seedLcntProc.sh\"@g"\
                 -e "s@lpCurrents.libSh@bisosCurrents_lib.sh@g" \
                 -e "s@bystarLib.sh@bxo_lib.sh@g" \
                 -e "s@bx:dblock:bash:top-of-file@bx:bash:top-of-file@g"  > ${each}
