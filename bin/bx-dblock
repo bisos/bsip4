@@ -99,15 +99,16 @@ $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "ACTIONS: Update (Expand)" )
 ${G_myName} ${extraInfo} -i dblockDirsAll oneDirectory
 ${G_myName} ${extraInfo} -i dblockUpdateOneFileOrIgnore oneFile
-${G_myName} ${extraInfo} -i dblockUpdateFiles file1 file2
+${G_myName} ${extraInfo} -i dblockUpdateFiles file1 fileN
 find  . -type f -print | ${G_myName} ${extraInfo} -i dblockUpdateFiles
 find -L . -type f -print | grep '/lcntProc.sh$' | ${G_myName} ${extraInfo} -i dblockUpdateFiles
 $( examplesSeperatorChapter "ACTIONS: Blank (UnExpand)" )
 ${G_myName} ${extraInfo} -i dblockBlankFiles file1 file2
 find  . -type f -print | ${G_myName} ${extraInfo} -i dblockBlankFiles
 $( examplesSeperatorChapter "Verify" )
-${G_myName} ${extraInfo} -i reUpdateDiffFiles file1 file2
-${G_myName} ${extraInfo} -i diffBlankedFiles  file1 file2
+${G_myName} ${extraInfo} -i reUpdateDiffFiles file1 fileN
+${G_myName} ${extraInfo} -i reUpdateBisDiffFiles file1 fileN   # runs dblockupdate twice
+${G_myName} ${extraInfo} -i diffBlankedFiles  file1 fileN
 $( examplesSeperatorChapter "Under Development" )
 NOTYET  Add (org-dblock-bx-blank-then-update-file
 #${thisEmacsClient} -e "(org-dblock-bx-blank-then-update-file \"${thisOne}\")"
@@ -173,10 +174,10 @@ function vis_dblockUpdateFileOrIgnore {
 
 
 _CommentBegin_
-*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || IIF       ::  vis_reUpdateDiffFiles    [[elisp:(org-cycle)][| ]]
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || IIF       ::  vis_reUpdateDiffBisFiles    [[elisp:(org-cycle)][| ]]
 _CommentEnd_
 
-function vis_reUpdateDiffFiles {
+function vis_reUpdateBisDiffFiles {
     function describeF {  cat  << _EOF_
 If there are any args, process those.
 If there are no args, process stdin.
@@ -196,10 +197,16 @@ _EOF_
 
         opDo cp -p ${thisOne} ${thisSafeOne}
 
-        opDo vis_dblockBlankFiles ${thisOne}
+        #opDo vis_dblockBlankFiles ${thisOne}
+        opDo vis_dblockUpdateFiles ${thisOne}
         opDo vis_dblockUpdateFiles ${thisOne}
 
-        opDo echo diff ${thisOne} ${thisSafeOne}
+        if cmp ${thisOne} ${thisSafeOne} ; then
+            ANT_raw "No Changes Detected --- Marked as same"
+            lpDo mv ${thisSafeOne} ${thisSafeOne}.same
+        else
+            opDo echo diff ${thisOne} ${thisSafeOne}
+        fi
     }
 
     if [ $# -gt 0 ] ; then
@@ -219,6 +226,55 @@ _EOF_
 
     lpReturn
 }
+
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || IIF       ::  vis_reUpdateDiffFiles    [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+
+function vis_reUpdateDiffFiles {
+    function describeF {  cat  << _EOF_
+If there are any args, process those.
+If there are no args, process stdin.
+_EOF_
+                       }
+
+    function processOne {
+        EH_assert [[ $# -eq 1 ]]
+        local thisOne="$1"
+
+        if [ ! -f "${thisOne}" ] ; then
+            EH_problem "Missing Input File ${thisOne}"
+            lpReturn 101
+        fi
+
+        local thisSafeOne="${thisOne}-${dateTag}"
+
+        opDo cp -p ${thisOne} ${thisSafeOne}
+
+        opDo vis_dblockBlankFiles ${thisOne}
+        opDo vis_dblockUpdateFiles ${thisOne}
+
+        opDo echo diff ${thisOne} ${thisSafeOne}
+    }
+
+    if [ $# -gt 0 ] ; then
+        typeset thisOne=""
+        for thisOne in ${@} ; do
+            opDo processOne ${thisOne}
+        done
+    else
+        typeset thisLine=""
+
+        while read thisLine ; do
+            if [ "${thisLine}" != "" ] ; then
+                opDo processOne ${thisLine}
+            fi
+        done
+    fi
+
+    lpReturn
+}
+
 
 
 function vis_diffBlankedFiles {
