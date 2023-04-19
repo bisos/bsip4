@@ -177,6 +177,13 @@
   )
 
 
+(defun bx:fix:6x9cleanup ()
+  (interactive)
+  (goto-char (point-min))
+  (replace-string  "<p>6x9</p>" "")
+  )
+
+
 ;;;
 ;;; Hevea Html
 ;;;
@@ -200,6 +207,7 @@
   ;;;(heveaHtmlEndReplace)
   ;;;(heveaHtmlDeTitle)
   (heveaHtmlDeFooter)
+  (bx:fix:6x9cleanup)
   )
 
 (defun mainDeTitle ()

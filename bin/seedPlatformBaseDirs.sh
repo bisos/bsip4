@@ -601,8 +601,9 @@ _EOF_
         opDoRet  pbdPrep "${name}"
         localFullPath=${pbd_srcPath}
         if [ -z "${localFullPath}" ] ; then
-            EH_problem ""
-            continue
+            localFullPath="${baseDir}/${pbd_destPathRel}"
+            #EH_problem "Missing localFullPath"
+            #continue
         fi
 
         if [ ! -d "${localFullPath}" ] ; then
@@ -619,7 +620,7 @@ _EOF_
         if [ "${remBaseDir}" == "default" ] ; then
             remFullPath="/dd/this/${remPathBeforeHead}/${remPathHead}"
         else
-            remFullPath=${remBaseDir}/${destPathHead}
+            remFullPath=${remBaseDir}/${pbd_destPathRel}
         fi
 
         #opDo echo ${remAddr}:${remFullPath}  ${destFullPath}  nfs ro,hard,intr 0 0

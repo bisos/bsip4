@@ -1,0 +1,1 @@
+/bisos/core/lcnt/bin/seedLcntProc.sh
