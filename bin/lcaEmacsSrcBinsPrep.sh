@@ -96,8 +96,9 @@ srcObtainForm="git"
 #
 # BEGIN PKG Base Variables
 
-emacsVerLatest="emacs29"
-emacsVerCurrent="emacs27"
+#emacsVerLatest="emacs29"
+emacsVerLatest="emacs30"
+emacsVerCurrent="emacs28"
 
 srcPkgName="${emacsVerCurrent}"
 
@@ -1073,7 +1074,8 @@ _EOF_
         fi
     else
         # -- depth 1 of git clone, copies only the latest revision      
-        lpDo git clone --depth 1 git://git.sv.gnu.org/emacs.git
+        #lpDo git clone --depth 1 git://git.sv.gnu.org/emacs.git
+        lpDo git clone --single-branch -b emacs-29 git://git.sv.gnu.org/emacs.git
         lpDo tutorialPersianAdd
     fi
     lpReturn
