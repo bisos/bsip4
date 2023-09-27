@@ -266,7 +266,9 @@ _EOF_
         srcObtainBaseDir="/bisos/var/srcPkgs/${srcPkgName}"
         # -- depth 1 of git clone, copies only the latest revision 
         #obtainCmndLine="git clone --depth 1 git://git.sv.gnu.org/emacs.git"
-        obtainCmndLine="obtainOrUpdateSrc_emacs29"
+        #obtainCmndLine="obtainOrUpdateSrc_emacs29"
+        #
+        obtainCmndLine="git clone -b ${srcPkgName} git://git.sv.gnu.org/emacs.git"
         prepCmndLine="echo Git cloned"
 
         srcBuildBaseDir="/bisos/var/srcPkgs/${srcPkgName}/emacs"        
@@ -1029,7 +1031,7 @@ _CommentBegin_
 _CommentEnd_
 
 
-function obtainOrUpdateSrc_emacs29 {
+function obtainOrUpdateSrc_emacs29_OBSOLETE {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Temporary support for inclusion of Farsi Tutorial
@@ -1456,7 +1458,6 @@ _EOF_
     }
 
     EH_assert [[ $# -lt 2 ]]
-
     local srcPkgSelector=""
 
     if [ $# -eq 0 ] ; then

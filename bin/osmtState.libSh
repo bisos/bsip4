@@ -1,0 +1,415 @@
+# 
+
+lsipStatesOrderedList="idle baseOsLoaded lpGenesisObtained lsipEnabled baseOsVerifyAndFix lpDeveloperReady lpDeveloperAssigned identitySelected specificSoftwareUpdated identitySet specificServiceUpdated audited sealed unSealed"
+
+
+lsipStateFile=/etc/lsipState
+
+function lsipState_idle {
+  lsipState_current="idle"
+  lsipState_prevList="idle"
+  lsipState_nextList="baseOsLoaded"
+
+  function lsipState_description {
+  cat  << _EOF_
+Nothing has been done to this box.
+_EOF_
+}
+
+  function lsipState_enterAction {
+     doNothing
+  }
+  function lsipState_exitAction {
+    doNothing
+  }
+  function lsipState_verify {
+    doNothing
+  }
+
+}
+
+
+function lsipState_baseOsLoaded {
+  lsipState_current="baseOsLoaded"
+  lsipState_prevList="idle"
+  lsipState_nextList="lpGenesisObtained"
+
+  function lsipState_description {
+    lsipStateDesc_BaseOsLoaded	
+  }
+
+  function lsipState_enterAction {
+    echo Enter
+    lsipStateEnter_BaseOsLoaded
+  }
+
+  function lsipState_exitAction {
+    lsipStateExit_BaseOsLoaded
+  }
+
+  function lsipState_verify {
+    lsipStateVerify_BaseOsLoaded
+  }
+}
+
+function lsipState_lpGenesisObtained {
+  lsipState_current="lpGenesisObtained"
+  lsipState_prevList="baseOsLoaded"
+  lsipState_nextList="lsipEnabled"
+
+  function lsipState_description {
+    lsipStateDesc_lpGenesisObtained
+  }
+
+  function lsipState_enterAction {
+    lsipStateEnter_lpGenesisObtained
+  }
+
+  function lsipState_exitAction {
+    lsipStateExit_lpGenesisObtained
+  }
+
+  function lsipState_verify {
+    lsipStateVerify_lpGenesisObtained
+  }
+}
+
+function lsipState_lsipEnabled {
+  lsipState_current="lsipEnabled"
+  lsipState_prevList="lpGenesisObtained"
+  lsipState_nextList="baseOsVerifyAndFix"
+
+  function lsipState_description {
+    lsipStateDesc_lsipEnabled
+  }
+
+  function lsipState_enterAction {
+    lsipStateEnter_lsipEnabled
+  }
+
+  function lsipState_exitAction {
+    lsipStateExit_lsipEnabled
+  }
+
+  function lsipState_verify {
+    lsipStateVerify_lsipEnabled
+  }
+}
+
+function lsipState_baseOsVerifyAndFix {
+  lsipState_current="baseOsVerifyAndFix"
+  lsipState_prevList="lsipEnabled"
+  lsipState_nextList="lpDeveloperReady"
+
+  function lsipState_description {
+    lsipStateDesc_baseOsVerifyAndFix
+  }
+
+  function lsipState_enterAction {
+    lsipStateEnter_baseOsVerifyAndFix
+  }
+
+  function lsipState_exitAction {
+    lsipStateExit_baseOsVerifyAndFix
+  }
+
+  function lsipState_verify {
+    lsipStateVerify_baseOsVerifyAndFix
+  }
+}
+
+function lsipState_lpDeveloperReady {
+  lsipState_current="lpDeveloperReady"
+  lsipState_prevList="baseOsVerifyAndFix"
+  lsipState_nextList="lpDeveloperAssigned"
+
+  function lsipState_description {
+    lsipStateDesc_lpDeveloperReady
+  }
+
+  function lsipState_enterAction {
+    lsipStateEnter_lpDeveloperReady
+  }
+
+  function lsipState_exitAction {
+    lsipStateExit_lpDeveloperReady
+  }
+
+  function lsipState_verify {
+    lsipStateVerify_lpDeveloperReady
+  }
+}
+
+function lsipState_lpDeveloperAssigned {
+  lsipState_current="lpDeveloperAssigned"
+  lsipState_prevList="lpDeveloperReady"
+  lsipState_nextList="identitySelected"
+
+  function lsipState_description {
+    lsipStateDesc_lpDeveloperAssigned
+  }
+
+  function lsipState_enterAction {
+    lsipStateEnter_lpDeveloperAssigned
+  }
+
+  function lsipState_exitAction {
+    lsipStateExit_lpDeveloperAssigned
+  }
+
+  function lsipState_verify {
+    lsipStateVerify_lpDeveloperAssigned
+  }
+}
+
+function lsipState_identitySelected {
+  lsipState_current="identitySelected"
+  lsipState_prevList="lpDeveloperAssigned"
+  lsipState_nextList="specificSoftwareUpdated"
+
+  function lsipState_description {
+    lsipStateDesc_identitySelected
+  }
+
+  function lsipState_enterAction {
+    lsipStateEnter_identitySelected
+  }
+  function lsipState_exitAction {
+    lsipStateExit_identitySelected
+  }
+
+  function lsipState_verify {
+    lsipStateVerify_identitySelected
+  }
+
+}
+
+function lsipState_specificSoftwareUpdated {
+  lsipState_current="specificSoftwareUpdated"
+  lsipState_prevList="identitySelected"
+  lsipState_nextList="identitySet"
+
+  function lsipState_description {
+    lsipStateDesc_specificSoftwareUpdated
+  }
+
+  function lsipState_enterAction {
+    lsipStateEnter_specificSoftwareUpdated
+  }
+
+  function lsipState_exitAction {
+    lsipStateExit_specificSoftwareUpdated
+  }
+
+  function lsipState_verify {
+    lsipStateVerify_specificSoftwareUpdated
+  }
+}
+
+
+function lsipState_identitySet {
+  lsipState_current="identitySet"
+  lsipState_prevList="specificSoftwareUpdated"
+  lsipState_nextList="specificServiceUpdated"
+
+  function lsipState_description {
+    lsipStateDesc_identitySet
+  }
+
+  function lsipState_enterAction {
+    lsipStateEnter_identitySet
+  }
+  function lsipState_exitAction {
+    lsipStateExit_identitySet
+  }
+
+  function lsipState_verify {
+    lsipStateVerify_identitySet
+  }
+
+}
+
+
+function lsipState_specificServiceUpdated {
+  lsipState_current="specificServiceUpdated"
+  lsipState_prevList="specificSoftwareUpdated"
+  lsipState_nextList="audited"
+
+  function lsipState_description {
+    lsipStateDesc_specificServiceUpdated
+  }
+
+  function lsipState_enterAction {
+    lsipStateEnter_specificServiceUpdated
+  }
+
+  function lsipState_exitAction {
+    lsipStateExit_specificServiceUpdated
+  }
+
+  function lsipState_verify {
+    lsipStateVerify_specificServiceUpdated
+  }
+}
+
+function lsipState_audited {
+  lsipState_current="audited"
+  lsipState_prevList="specificServiceUpdated"
+  lsipState_nextList="sealed"
+
+  function lsipState_description {
+    lsipStateDesc_audited
+  }
+
+  function lsipState_enterAction {
+    lsipStateEnter_audited
+  }
+
+  function lsipState_exitAction {
+    lsipStateExit_audited
+  }
+
+  function lsipState_verify {
+    lsipStateVerify_audited
+  }
+}
+
+function lsipState_sealed {
+  lsipState_current="sealed"
+  lsipState_prevList="audited"
+  lsipState_nextList="unSealed"
+
+  function lsipState_description {
+    lsipStateDesc_sealed
+  }
+
+  function lsipState_enterAction {
+    lsipStateEnter_sealed
+  }
+  function lsipState_exitAction {
+    lsipStateExit_sealed
+  }
+
+  function lsipState_verify {
+    lsipStateVerify_sealed
+  }
+
+}
+
+function lsipState_unSealed {
+  lsipState_current="unSealed"
+  lsipState_prevList="sealed"
+  lsipState_nextList="audited"
+
+  function lsipState_description {
+    lsipStateDesc_unSealed
+  }
+
+  function lsipState_enterAction {
+    lsipStateEnter_unSealed
+  }
+
+  function lsipState_exitAction {
+    lsipStateExit_unSealed
+  }
+
+  function lsipState_verify {
+    lsipStateVerify_unSealed
+  }
+}
+
+function lsipStateCurrentShow {
+  if [ ! -f ${lsipStateFile} ] ; then
+	return 100
+  fi	
+  thisState=`head -1 ${lsipStateFile} | cut -d ' ' -f 1`
+  echo "${thisState}"
+}
+
+function lsipStateNextShow {
+  currentState=`lsipStateCurrentShow` || return $?
+  lsipState_${currentState}
+  echo ${lsipState_nextList}
+}
+
+function lsipStatePrevShow {
+  currentState=`lsipStateCurrentShow` || return $?
+  lsipState_${currentState}
+  echo ${lsipState_prevList}
+}
+
+function lsipStateRunEnterAction {
+  currentState=`lsipStateCurrentShow` || return $?
+  lsipState_${currentState}
+  lsipState_enterAction
+}
+
+function lsipStateRunExitAction {
+  currentState=`lsipStateCurrentShow` || return $?
+  lsipState_${currentState}
+  lsipState_exitAction
+}
+
+function lsipStateRunVerify {
+  currentState=`lsipStateCurrentShow` || return $?
+  lsipState_${currentState}
+  lsipState_verify
+}
+
+function lsipStateGoNext {
+  opDo lsipStateRunExitAction
+  thisState=`lsipStateNextShow` || return $?
+  opDo lsipState_${thisState}
+  opDo lsipState_enterAction
+  opDo lsipStateSet ${thisState}
+}
+
+function lsipStateSetNext {
+  thisState=`lsipStateNextShow` || return $?
+  opDo lsipStateSet ${thisState}
+}
+
+function lsipStateGoCurrent {
+
+  thisState=`lsipStatePrevShow` || return $?
+  opDo lsipState_${thisState}
+  opDo lsipState_exitAction
+
+  opDo lsipStateRunEnterAction
+}
+
+function lsipStateHistoryShow {
+  cat ${lsipStateFile}
+}
+
+
+function lsipStateSet {
+  # $1 is state to set
+
+  EH_assert [[ $# -eq 1 ]]
+
+  stateName=$1
+
+  IS_inList "${stateName}" "${lsipStatesOrderedList}" || retVal=$?
+
+  if [[ ${retVal} -ne 0 ]] ; then
+    EH_problem "Invalid State Name ${stateName}"
+    return ${retVal}
+  fi
+
+  # Validate running as root
+
+  if [ ! -f ${lsipStateFile} ] ; then 
+    touch ${lsipStateFile}
+    #chown lsipusr:employee ${lsipStateFile}
+    #chmod ug+w ${lsipStateFile}
+  fi
+
+  # VALIDATE state transition
+
+  echo "${stateName} \t#`date`" > /tmp/$$.thisStateLine
+  cat /tmp/$$.thisStateLine ${lsipStateFile} > /tmp/$$.thisStateFile
+
+  opDo mv /tmp/$$.thisStateFile ${lsipStateFile}
+  opDo rm /tmp/$$.thisStateLine
+}

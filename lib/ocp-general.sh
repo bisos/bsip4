@@ -83,6 +83,7 @@ function opBasePathSet {
   export PATH="${PATH}:$HOME/.poetry/bin"
   export PATH="${PATH}:/bisos/venv/py3/dev-bisos3/bin"
   export PATH="${PATH}:/bisos/venv/py3/bisos3/bin"
+  export PATH="${PATH}:/bisos/venv/py3/adopted/bin"
   export PATH="${PATH}:${opBase}/bin:${opBase}/lib:${opBase}/usrEnv"
   export PATH="${PATH}:/bisos/core/dev/bin"
   export PATH="${PATH}:/bisos/asc/bin"

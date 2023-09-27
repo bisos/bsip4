@@ -197,7 +197,7 @@ This is $FUNCNAME of ${G_thisFunc}.
 _EOF_
     }
     local iifArgsLen=0 iifParamsMandatory="par1,par2"
-    iifAuxInvocation
+    # iifAuxInvocation
 
     typeset itemsList=""
     #itemsList=$( typeset +f | egrep '^vis_' )  # KSH
@@ -209,6 +209,27 @@ _EOF_
         if [ ${thisItem} == "{" ] ; then  continue; fi
         print -- ${thisItem##vis_} 
     done
+}
+
+function vis_funcIsDefined {
+    G_funcEntry
+    function describeF { cat  << _EOF_
+This is $FUNCNAME of ${G_thisFunc}.
+_EOF_
+    }
+
+    EH_assert [[ $# -eq 1 ]]
+
+    local subjFunc="$1"
+    local foundFuncs=$( typeset +f |  grep ' ()' | egrep "^${subjFunc} ()")
+
+    if [ -z "${foundFuncs}" ] ; then
+       #echo "NOTFOUND"
+       return 1
+    else
+       #echo "found ${foundFuncs}"
+       return 0
+    fi
 }
 
 

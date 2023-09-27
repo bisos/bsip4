@@ -143,7 +143,7 @@ _EOF_
     }
     #EH_assert [[ $# -eq 0 ]]
 
-    lpDo eval find -L . -type f  -print0 \| xargs -0 $*
+    lpDo eval find -L . -type f  -print0 \| grep -z -v mypy_cache \| grep -z -v __pycache__ \|  xargs -0 $*
     
     lpReturn
 }       

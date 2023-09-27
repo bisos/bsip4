@@ -114,6 +114,7 @@ pdb_bsipBase="${bxp_rootDir_bisos}/core/bsip"
 #pdb_venv_py2Bisos3Dev="${bxp_rootDir_bisos}/venv/py2/dev/bisos3"
 pdb_venv_py3Bisos3="${bxp_rootDir_bisos}/venv/py3/bisos3"
 pdb_venv_py3Bisos3Dev="${bxp_rootDir_bisos}/venv/py3/dev-bisos3"
+pdb_venv_py3Adopted="${bxp_rootDir_bisos}/venv/py3/adopted"
 
 pdb_bsip_base="${bxp_rootDir_bisos}/core/bsip"
 pdb_bsip_bin="${pdb_bsip_base}/bin"

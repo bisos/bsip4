@@ -201,6 +201,7 @@ _EOF_
 
         cat ${each}.${eachDateTag} | \
             sed -e "s@\#\!/bin/osmtKsh@#!/bin/bash@g" \
+                -e "s@shellscript-mode@sh-mode@g" \
                 -e "s@IimBriefDescription=@IcmBriefDescription=@g" \
                 -e "s@bx:dblock:lsip:bash:seed-spec@bx:bsip:bash:seed-spec@g" \
                 -e "s@bx:bsip:bash:seed-spec :types \"seedLcntProc.sh\"@bx:bisos:bash:seed-spec :types \"/bisos/core/lcnt/bin/seedLcntProc.sh\"@g"\

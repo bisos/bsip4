@@ -70,6 +70,7 @@ function vis_examples {
   typeset oneDoc=`echo ${docsList} | cut -d ' ' -f 1 `
   typeset visLibExamples=`visLibExamplesOutput ${G_myName} ${extraInfo}`
  cat  << _EOF_
+XXX Perhaps this has been obsoleted by seedNameDistProc.sh XXX
 EXAMPLES:
 ${visLibExamples}
 --- Initial Template Generators ---

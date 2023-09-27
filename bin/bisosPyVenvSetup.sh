@@ -100,6 +100,11 @@ ${G_myName} ${extraInfo} -f -i venvDo py3/dev install ${onePip3Pkg}
 ${G_myName} ${extraInfo} -f -i venvDo py3 reInstall ${onePip3Pkg}  # reinstall
 ${G_myName} ${extraInfo} -f -i venvDo py3 unInstall ${onePip3Pkg}
 ${G_myName} ${extraInfo} -f -i venvDo py3 pip list
+$( examplesSeperatorChapter "Py3 Adopted Manage Environment" )
+${G_myName} ${extraInfo} -i pyVenv_AdoptedSetup # Create Virtual Environment and dev pipInstalls
+${G_myName} ${extraInfo} -i virtenvsPrep py3/adopted  # Create Virtual Environment
+${G_myName} ${extraInfo} -f -i virtenvsPrep py3/adopted # force mode
+${G_myName} ${extraInfo} -i venvPy3Adopted_pipInstalls # editable installed with ftoWalkThrough
 $( examplesSeperatorChapter "Py3 Dev Manage Environment" )
 ${G_myName} ${extraInfo} -i pyVenv_DevSetup # Create Virtual Environment and dev pipInstalls
 ${G_myName} ${extraInfo} -i virtenvsPrep py3/dev  # Create Virtual Environment
@@ -140,6 +145,21 @@ _EOF_
     lpDo vis_virtenvsPrep py3
 
     lpDo vis_venvPy3_pipInstalls
+
+    lpReturn
+}
+
+function vis_pyVenv_adoptedSetup {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+**
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo vis_virtenvsPrep py3/adopted
+
+    lpDo vis_venvPy3Adopted_pipInstalls
 
     lpReturn
 }
@@ -254,6 +274,9 @@ _EOF_
             ;;
         py3/dev)
             lpDo virtenvReInstall python3 ${bisosBaseDir}/venv/py3/dev-bisos3
+            ;;
+        py3/adopted)
+            lpDo virtenvReInstall python3 ${bisosBaseDir}/venv/py3/adopted
             ;;
         py3/tmp)
             local tmpBaseDir=${bisosBaseDir}/tmp/venv
@@ -416,6 +439,31 @@ _EOF_
     
     lpReturn
 }
+
+
+function vis_venvPy3Adopted_pipInstalls {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Applies only to py3. Not py3/dev. Uses bisos.py3-all virtual package.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+
+    local py3ActivateFile="${pdb_venv_py3Adopted}/bin/activate"
+
+    if [ ! -f "${py3ActivateFile}" ] ; then
+            EH_problem "Missing ${py3ActivateFile} -- BISOS Provisioners venv pip installs aborted"
+            lpReturn 101
+    fi
+
+    # lpDo sudo -u bisos ${pdb_venv_py3Adopted}/bin/pip3 install --no-cache-dir --force-reinstall --upgrade bisos.py3Adopted
+
+    lpDo sudo -u bisos ${pdb_venv_py3Adopted}/bin/pip3 list
+
+    lpReturn
+}
+
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*
