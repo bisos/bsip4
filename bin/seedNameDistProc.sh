@@ -42,9 +42,9 @@ function vis_describe {
 **  /opt/public/osmt/bin/bystarDistStart.sh
 *      ================  Notable Libraries
 *      ================  For Full Documentation ad Orientation and Model See  
-** [[elisp:(find-file "/libre/ByStar/InitialTemplates/activeDocs/blee/mailCompose/mailings/fullUsagePanel-en.org")][This Activity]]
-** [[elisp:(find-file "/libre/ByStar/InitialTemplates/activeDocs/blee/mailCompose/mailings/devStableAgenda.org")][Stable Dev Agenda]]
-** [[elisp:(blee:find-file "/libre/ByStar/InitialTemplates/activeDocs/blee/mailCompose/mailings/devUnStableAgenda.org")][UnStable Dev Agenda]] 
+** [[elisp:(find-file "/bisos/apps/defaults/activeDocs/blee/mailCompose/mailings/fullUsagePanel-en.org")][This Activity]]
+** [[elisp:(find-file "/bisos/apps/defaults/activeDocs/blee/mailCompose/mailings/devStableAgenda.org")][Stable Dev Agenda]]
+** [[elisp:(blee:find-file "/bisos/apps/defaults/activeDocs/blee/mailCompose/mailings/devUnStableAgenda.org")][UnStable Dev Agenda]]
 _EOF_
 }
 
@@ -77,10 +77,19 @@ _EOF_
 # . ${opBinBase}/mmaQmailLib.sh
 # . ${opBinBase}/mmaDnsLib.sh
 
+
 # /opt/public/osmt/bin/bystarInfoBase.libSh 
 # . ${opBinBase}/bystarInfoBase.libSh
 
 # . ${opBinBase}/lpCurrents.libSh
+
+###
+###   #### 2023 Additions
+###
+
+. ${opBinBase}/bleeLib.sh
+. ${lcntBinBase}/lcnLcntMailingLib.sh
+
 
 # PRE parameters
 
@@ -89,6 +98,49 @@ function G_postParamHook {
 }
 
 # }}}
+
+
+
+# {{{ Describe
+
+function vis_describeLocalNdo {
+    cat  << _EOF_
+Name Distribution Object (ndo) Definitions
+_EOF_
+}
+
+# }}}
+
+# {{{ Mailing Object (ndo)Definitions
+
+typeset    ndoObjectTypeFileName="objectType"
+typeset -A ndoObjectTypeEnum=(
+    [nativeNode]=nativeNode
+    [auxNode]=auxNode
+    [auxLeaf]=auxLeaf
+    [basic]=basic
+    [namesList]=namesList
+    [distribution]=distribution
+    [custom]=custom
+)
+
+# Name Distribution Object File Parameters
+
+typeset    ndoExcludeFromAutoloadFileName="excludeFromAutoload"
+typeset -A ndoExcludeFromAutoloadEnum=(
+    [true]=true
+    [false]=false
+    [default]=true
+)
+
+# }}}
+
+includeList=""
+excludeList=""
+namesBaseDir="/bxo/usg/bystar/bpos/usageEnvs/fullUse/names"
+distKeepBaseDir="${namesBaseDir}/DistKeep"
+
+startsBaseDir="/bisos/apps/defaults/nameDist/starts"
 
 # {{{ Examples
 
@@ -146,24 +198,25 @@ _EOF_
     local procBaseName="names"
 
     case ${procBaseName} in
-	"names")
-	    vis_examplesName
-	    cat  << _EOF_
---- DISTRIBUTIONS PROCESSING ---
-${G_myName} ${extraInfo} -i examplesDistribution
-_EOF_
-	    ;;
-	"mailings"|"mailing")
-	    vis_examplesDistribution
-	    cat  << _EOF_
+        "names")
+            vis_examplesName
+#             cat  << _EOF_
+# --- DISTRIBUTIONS PROCESSING ---
+# ${G_myName} ${extraInfo} -i examplesDistribution
+# _EOF_
+            vis_examplesDistribution
+            ;;
+        "mailings"|"mailing")
+            vis_examplesDistribution
+            cat  << _EOF_
 --- NamesList PROCESSING ---
 ${G_myName} ${extraInfo} -i examplesName
 _EOF_
-	    ;;
-	*)
-	    EH_problem "Unexpected procBaseName=${procBaseName} -- Processing Skipped"
-	    lpReturn 1
-	    ;;
+            ;;
+        *)
+            EH_problem "Unexpected procBaseName=${procBaseName} -- Processing Skipped"
+            lpReturn 1
+            ;;
     esac
 
     vis_examplesDevelopment
@@ -216,7 +269,7 @@ function vis_examplesDistribution {
 --- DISTRIBUTIONS PROCESSING ---
 ${G_myName} ${extraInfo} -i distNamesOutputToFileWith vis_distHereNames  # = namesOutputToFilesWith dist vis_examplesAndTests
 ${G_myName} ${extraInfo} -i namesOutputListWith vis_examplesAndTests
-${G_myName} ${extraInfo} -i mailingNameGet                            # Look through preceding ".." and locate first mailingName
+${G_myName} ${extraInfo} -i mailingNamesGet                            # Look through preceding ".." and locate first mailingName
 ${G_myName} ${extraInfo} -i logsToNames                               # Based on mailingNameGet
 ${G_myName} ${extraInfo} -i distNextBatch                             # After distNamesGenWith + logsToNames = namesResultFor dist
 ${G_myName} ${extraInfo} -i distPrepWith vis_distHereNames            # distNamesOutputWith + logsToNames + distNextBatch  = namesOutputToFilesWithAndResult dist vis_examplesAndTests
@@ -224,6 +277,11 @@ ${G_myName} ${extraInfo} -i bbdbNamesInput  ./dist-result.names       # Visit Fi
 ${G_myName} ${extraInfo} -i namesResultFor dist                       # After namesOutputToFilesWith tag1 vis_examplesAndTests
 ${G_myName} ${extraInfo} -i namesOutputToFilesWithAndResult dist vis_distHereNames
 ${G_myName} ${extraInfo} -i namesOutputToFilesWithAndResult tag1 vis_examplesAndTests  # namesOutputToFilesWith + namesResultFor
+--------- 2023 Revisions -----------
+${G_myName} ${extraInfo} -i fileVarsUpdate
+${G_myName} ${extraInfo} -i resultNamesAsAddrRecipsAndSelect
+${G_myName} ${extraInfo} -i mtdtSelectRecips $(ls *-recips.el | head -1)
+${G_myName} ${extraInfo} -i mtdtSelectMailing
 _EOF_
 }
 
@@ -301,7 +359,7 @@ function vis_initialTemplatesDevelopment {
   typeset extraInfo="-v -n showRun"
 
   typeset thisProcFile="./nameDistProc.sh"
-  typeset initialTemplateProcFile="/libre/ByStar/InitialTemplates/nameDist/starts/nameDistProc.sh"
+  typeset initialTemplateProcFile="/bisos/apps/defaults/nameDist/starts/nameDistProc.sh"
 
 cat  << _EOF_
 ---- Initial Templates Development ----
@@ -379,9 +437,9 @@ ${G_myName} ${extraInfo} -i cleanForVcUpload    # Delete symlinks and remove .ge
 --- Version Control ---
 ${G_myName} ${extraInfo} -i vcUpdate
 ---- Initial Templates Development ----
-diff ./nameDistProc.sh  /libre/ByStar/InitialTemplates/lcaPlone/NewInitialContentTree/Base/Poly/DEFAULT/nameDistProc.sh.start 
-cp ./nameDistProc.sh  /libre/ByStar/InitialTemplates/lcaPlone/NewInitialContentTree/Base/Poly/DEFAULT/nameDistProc.sh.start 
-cp /libre/ByStar/InitialTemplates/lcaPlone/NewInitialContentTree/Base/Poly/DEFAULT/nameDistProc.sh.start  ./nameDistProc.sh  
+diff ./nameDistProc.sh  /bisos/apps/defaults/lcaPlone/NewInitialContentTree/Base/Poly/DEFAULT/nameDistProc.sh.start
+cp ./nameDistProc.sh  /bisos/apps/defaults/lcaPlone/NewInitialContentTree/Base/Poly/DEFAULT/nameDistProc.sh.start
+cp /bisos/apps/defaults/lcaPlone/NewInitialContentTree/Base/Poly/DEFAULT/nameDistProc.sh.start  ./nameDistProc.sh
 _EOF_
  return
 }
@@ -400,7 +458,7 @@ function vis_howTo {
   cat  << _EOF_
 
 TODO
-See: /libre/ByStar/InitialTemplates/activeDocs/blee/bystarContinuum/ploneProc/fullUsagePanel-en.org
+See: /bisos/apps/defaults/activeDocs/blee/bystarContinuum/ploneProc/fullUsagePanel-en.org
 
 _EOF_
 }
@@ -436,11 +494,11 @@ _EOF_
     fileVarName="$1"
 
     if [ -f "${fileVarName}" ] ; then
-	opDo cat "${fileVarName}"
-	lpReturn 0
+        opDo cat "${fileVarName}"
+        lpReturn 0
     else
-	ANV_cooked "Missing ${fileVarName}, should become objectType specific and detect defaults"
-	lpReturn 101
+        ANV_cooked "Missing ${fileVarName}, should become objectType specific and detect defaults"
+        lpReturn 101
     fi
     
     lpReturn
@@ -459,19 +517,19 @@ _EOF_
     bystarAcctPathAnalyze ${cwd}
 
     case ${procBaseName} in
-	"names")
-	    procFileName="nameProc.sh"
-	    ;;
-	"mailings")
-	    procFileName="distProc.sh"
-	    ;;
-	"mailing")
-	    procFileName="distProc.sh"
-	    ;;
-	*)
-	    EH_problem "Unexpected procBaseName=${procBaseName} -- Processing Skipped"
-	    lpReturn 1
-	    ;;
+        "names")
+            procFileName="nameProc.sh"
+            ;;
+        "mailings")
+            procFileName="distProc.sh"
+            ;;
+        "mailing")
+            procFileName="distProc.sh"
+            ;;
+        *)
+            EH_problem "Unexpected procBaseName=${procBaseName} -- Processing Skipped"
+            lpReturn 1
+            ;;
     esac
 
     echo ${procFileName}
@@ -591,34 +649,34 @@ _EOF_
     bystarAcctPathAnalyze ${cwd}
 
     case ${procBaseName} in
-	"names")
-	    procFileName="nameProc.sh"
-	    notesFileName="nameNotes.org"
-	    ;;
-	"mailings"|"mailing")
-	    procFileName="distProc.sh"
-	    notesFileName="distNotes.org"
-	    ;;
-	*)
-	    EH_problem "Unexpected procBaseName=${procBaseName} -- Processing Skipped"
-	    lpReturn 1
-	    ;;
+        "names")
+            procFileName="nameProc.sh"
+            notesFileName="nameNotes.org"
+            ;;
+        "mailings"|"mailing")
+            procFileName="distProc.sh"
+            notesFileName="distNotes.org"
+            ;;
+        *)
+            EH_problem "Unexpected procBaseName=${procBaseName} -- Processing Skipped"
+            lpReturn 1
+            ;;
     esac
     
     if [ -f ${procFileName} ] ; then
-	ANT_raw "${procFileName}  Already exists"
-	FN_fileSafeKeep ${procFileName}
+        ANT_raw "${procFileName}  Already exists"
+        FN_fileSafeKeep ${procFileName}
     fi
-    opDo cp /libre/ByStar/InitialTemplates/nameDist/starts/${procFileName}  ${procFileName}
+    opDo cp /bisos/apps/defaults/nameDist/starts/${procFileName}  ${procFileName}
     opDo vis_dblockUpdateFile ${procFileName}
     opDo chmod 775 ${procFileName}
 
 
     if [ -f Notes.org ] ; then
-	ANT_raw "Notes.org  Already exists -- Doing Nothing"
+        ANT_raw "Notes.org  Already exists -- Doing Nothing"
     else
-	opDo cp /libre/ByStar/InitialTemplates/nameDist/starts/${notesFileName} Notes.org
-	opDo vis_dblockUpdateFile Notes.org
+        opDo cp /bisos/apps/defaults/nameDist/starts/${notesFileName} Notes.org
+        opDo vis_dblockUpdateFile Notes.org
     fi
 
     lpReturn
@@ -642,10 +700,10 @@ _EOF_
     opDo commonStartFiles_startUpdate
 
     if [ -f ${ndoObjectTypeFileName} ] ; then
-	ANT_raw "${ndoObjectTypeFileName}  Already exists -- Doing Nothing"
+        ANT_raw "${ndoObjectTypeFileName}  Already exists -- Doing Nothing"
     else
-	thisObjectType=${ndoObjectTypeEnum[nativeNode]}
-	opDo eval echo "${thisObjectType}" \> "${ndoObjectTypeFileName}"
+        thisObjectType=${ndoObjectTypeEnum[nativeNode]}
+        opDo eval echo "${thisObjectType}" \> "${ndoObjectTypeFileName}"
     fi
 
     lpReturn
@@ -809,10 +867,10 @@ _EOF_
     opDo commonStartFiles_startUpdate
 
     if [ -f ${ndoObjectTypeFileName} ] ; then
-	ANT_raw "${ndoObjectTypeFileName}  Already exists -- Doing Nothing"
+        ANT_raw "${ndoObjectTypeFileName}  Already exists -- Doing Nothing"
     else
-	thisObjectType=${ndoObjectTypeEnum[auxNode]}
-	opDo eval echo "${thisObjectType}" \> "${ndoObjectTypeFileName}"
+        thisObjectType=${ndoObjectTypeEnum[auxNode]}
+        opDo eval echo "${thisObjectType}" \> "${ndoObjectTypeFileName}"
     fi
 
     lpReturn
@@ -969,10 +1027,10 @@ _EOF_
     opDo commonStartFiles_startUpdate
 
     if [ -f ${ndoObjectTypeFileName} ] ; then
-	ANT_raw "${ndoObjectTypeFileName}  Already exists -- Doing Nothing"
+        ANT_raw "${ndoObjectTypeFileName}  Already exists -- Doing Nothing"
     else
-	thisObjectType=${ndoObjectTypeEnum[auxLeaf]}
-	opDo eval echo "${thisObjectType}" \> "${ndoObjectTypeFileName}"
+        thisObjectType=${ndoObjectTypeEnum[auxLeaf]}
+        opDo eval echo "${thisObjectType}" \> "${ndoObjectTypeFileName}"
     fi
 
     lpReturn
@@ -1162,10 +1220,10 @@ _EOF_
     opDo commonStartFiles_startUpdate
 
     if [ -f ${ndoObjectTypeFileName} ] ; then
-	ANT_cooked "${ndoObjectTypeFileName}  Already exists -- Doing Nothing"
+        ANT_cooked "${ndoObjectTypeFileName}  Already exists -- Doing Nothing"
     else
-	thisObjectType=${ndoObjectTypeEnum[basic]}
-	opDo eval echo "${thisObjectType}" \> "${ndoObjectTypeFileName}"
+        thisObjectType=${ndoObjectTypeEnum[basic]}
+        opDo eval echo "${thisObjectType}" \> "${ndoObjectTypeFileName}"
     fi
 
     # Now with everything in place in the mailingBaseDir generate the mailing lisp code.
@@ -1187,9 +1245,9 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if [ -f excludeFromAutoload ] ; then
-	fv_excludeFromAutoload=$( cat excludeFromAutoload ) 
+        fv_excludeFromAutoload=$( cat excludeFromAutoload ) 
     else
-	fv_excludeFromAutoload="true"
+        fv_excludeFromAutoload="true"
     fi
 
     lpReturn
@@ -1253,11 +1311,11 @@ _EOF_
     bystarAcctPathAnalyze ${here}
 
     if [ -f ${here}/custom-mailing.el ] ; then
-	opDo emacsclient -e "(load-file \"${here}/custom-mailing.el\")"
+        opDo emacsclient -e "(load-file \"${here}/custom-mailing.el\")"
     elif [ -f ${here}/generated-mailing.el ] ; then
-	opDo emacsclient -e "(load-file \"${here}/generated-mailing.el\")"
+        opDo emacsclient -e "(load-file \"${here}/generated-mailing.el\")"
     else
-	EH_problem "Missing custom-mailing.el or generated-mailing.el"
+        EH_problem "Missing custom-mailing.el or generated-mailing.el"
     fi
     
     lpReturn
@@ -1280,9 +1338,9 @@ _EOF_
     opDo vis_basic_method_varsPrep
 
     if [[ "${G_forceMode}_" == "force_" ]] ; then
-	opDo emacsclient -e "(mbatch-from-base-to-to \"${here}\")"
+        opDo emacsclient -e "(mbatch-from-base-to-to \"${here}\")"
     else
-	opDo emacsclient -e "(msend-from-base-to-blank \"${here}\")"
+        opDo emacsclient -e "(msend-from-base-to-blank \"${here}\")"
     fi
 }
 
@@ -1375,10 +1433,10 @@ _EOF_
     EH_assert [[ $# -gt 0 ]]
 
     if [ -f ${ndoObjectTypeFileName} ] ; then
-	ANT_cooked "${ndoObjectTypeFileName}  Already exists -- Doing Nothing"
+        ANT_cooked "${ndoObjectTypeFileName}  Already exists -- Doing Nothing"
     else
-	thisObjectType=${ndoObjectTypeEnum[namesList]}
-	opDo eval echo "${thisObjectType}" \> "${ndoObjectTypeFileName}"
+        thisObjectType=${ndoObjectTypeEnum[namesList]}
+        opDo eval echo "${thisObjectType}" \> "${ndoObjectTypeFileName}"
     fi
 
     opDo vis_namesList_method_startUpdate "$@"
@@ -1547,10 +1605,10 @@ _EOF_
     EH_assert [[ $# -gt 0 ]]
 
     if [ -f ${ndoObjectTypeFileName} ] ; then
-	ANT_cooked "${ndoObjectTypeFileName}  Already exists -- Doing Nothing"
+        ANT_cooked "${ndoObjectTypeFileName}  Already exists -- Doing Nothing"
     else
-	thisObjectType=${ndoObjectTypeEnum[distribution]}
-	opDo eval echo "${thisObjectType}" \> "${ndoObjectTypeFileName}"
+        thisObjectType=${ndoObjectTypeEnum[distribution]}
+        opDo eval echo "${thisObjectType}" \> "${ndoObjectTypeFileName}"
     fi
 
     opDo vis_distribution_method_startUpdate "$@"
@@ -1566,15 +1624,15 @@ _EOF_
     opDo vis_basic_method_startUpdate "$@"
 
     # if [ -f mailBodyStart.distribution ] ; then
-    # 	ANT_cooked "mailBodyStart.distribution  Already exists -- Doing Nothing"
+    #   ANT_cooked "mailBodyStart.distribution  Already exists -- Doing Nothing"
     # else
-    # 	opDo cp /libre/ByStar/InitialTemplates/mailing/starts/mailBodyStart-en.distribution ./mailBodyStart.distribution
+    #   opDo cp /bisos/apps/defaults/mailing/starts/mailBodyStart-en.distribution ./mailBodyStart.distribution
     # fi
 
     # if [ -f dblockProcess.el ] ; then
-    # 	ANT_cooked "dblockProcess.el  Already exists -- Doing Nothing"
+    #   ANT_cooked "dblockProcess.el  Already exists -- Doing Nothing"
     # else
-    # 	opDo cp /libre/ByStar/InitialTemplates/mailing/starts/dblockProcess.el ./dblockProcess.el
+    #   opDo cp /bisos/apps/defaults/mailing/starts/dblockProcess.el ./dblockProcess.el
     # fi
 
     lpReturn
@@ -1735,10 +1793,10 @@ _EOF_
     EH_assert [[ $# -gt 0 ]]
 
     if [ -f ${ndoObjectTypeFileName} ] ; then
-	ANT_cooked "${ndoObjectTypeFileName}  Already exists -- Doing Nothing"
+        ANT_cooked "${ndoObjectTypeFileName}  Already exists -- Doing Nothing"
     else
-	thisObjectType=${ndoObjectTypeEnum[custom]}
-	opDo eval echo "${thisObjectType}" \> "${ndoObjectTypeFileName}"
+        thisObjectType=${ndoObjectTypeEnum[custom]}
+        opDo eval echo "${thisObjectType}" \> "${ndoObjectTypeFileName}"
     fi
 
     opDo vis_custom_method_startUpdate "$@"
@@ -1764,32 +1822,32 @@ _EOF_
     opDo commonStartFiles_startUpdate
 
     if [ -f ${ndoObjectTypeFileName} ] ; then
-	ANT_cooked "${ndoObjectTypeFileName}  Already exists -- Doing Nothing"
+        ANT_cooked "${ndoObjectTypeFileName}  Already exists -- Doing Nothing"
     else
-	thisObjectType=${ndoObjectTypeEnum[basic]}
-	opDo eval echo "${thisObjectType}" \> "${ndoObjectTypeFileName}"
+        thisObjectType=${ndoObjectTypeEnum[basic]}
+        opDo eval echo "${thisObjectType}" \> "${ndoObjectTypeFileName}"
     fi
 
     if [ -f ${moMailingNameFileName} ] ; then
-	ANT_cooked "${moMailingNameFileName} Already exists -- Doing Nothing"
+        ANT_cooked "${moMailingNameFileName} Already exists -- Doing Nothing"
     else
-	if [ "${thisMailingName}" == "path" ] ; then
-	    opDo eval echo "${procNamePath}" \> ${moMailingNameFileName}
-	else
-	    opDo eval echo "${thisMailingName}" \> ${moMailingNameFileName}
-	fi
+        if [ "${thisMailingName}" == "path" ] ; then
+            opDo eval echo "${procNamePath}" \> ${moMailingNameFileName}
+        else
+            opDo eval echo "${thisMailingName}" \> ${moMailingNameFileName}
+        fi
     fi
 
     if [ -f ${moExcludeFromAutoloadFileName} ] ; then
-	ANT_cooked "${moExcludeFromAutoloadFileName} Already exists -- Doing Nothing"
+        ANT_cooked "${moExcludeFromAutoloadFileName} Already exists -- Doing Nothing"
     else
-	opDo eval echo "${moExcludeFromAutoloadEnum[default]}" \> ${moExcludeFromAutoloadFileName}
+        opDo eval echo "${moExcludeFromAutoloadEnum[default]}" \> ${moExcludeFromAutoloadFileName}
     fi
 
     if [ -f ${moContentMailFileName} ] ; then
-	ANT_cooked "${moContentMailFileName} Already exists -- Doing Nothing"
+        ANT_cooked "${moContentMailFileName} Already exists -- Doing Nothing"
     else
-	opDo vis_mailContent_startGen
+        opDo vis_mailContent_startGen
     fi
 
     destFilePath=${cwd}/custom-mailing.el
@@ -1993,8 +2051,8 @@ function bystarAcctPathAnalyzeDo {
    if [[ "${thisElem}_" == "Mailings_" || 
          "${thisElem}_" == "mailings_" ||
          "${thisElem}_" == "names_"    ||
-         "${thisElem}_" == "mailing_" || 	       
-	 "${thisElem}_" == "Mailing_"  ]] ; then
+         "${thisElem}_" == "mailing_" ||               
+         "${thisElem}_" == "Mailing_"  ]] ; then
        procBaseName="${thisElem}"
      acctBaseIndex=${count}
      #echo ${relPath} Got IT
@@ -2013,15 +2071,15 @@ function bystarAcctPathAnalyzeDo {
       procNamePath=""
     else
       # if [ "${thisElem}_" == "index_html_" ] ; then 
-      # 	  doNothing
+      #           doNothing
       #elif [ "${thisElem}_" != "Home_" ] ; then 
       if [ "${thisElem}_" != "Home_" ] ; then 
-	  procPath="${procPath}/${thisElem}"
-	  if [ -z ${procNamePath} ] ; then
-	      procNamePath="${thisElem}"
-	  else
-	      procNamePath="${procNamePath}-${thisElem}"
-	  fi
+          procPath="${procPath}/${thisElem}"
+          if [ -z ${procNamePath} ] ; then
+              procNamePath="${thisElem}"
+          else
+              procNamePath="${procNamePath}-${thisElem}"
+          fi
       fi
     fi
    fi
@@ -2052,15 +2110,15 @@ function bystarAcctPathAnalyzeDo {
     bystarServiceSupportHookParamsSet ${cp_ServiceType} ${cp_ServiceSupportType}
 
     function acctBasePasswdGet {
-	# DUPLICATES bystarAcctAdmin.sh should stay in sync
+        # DUPLICATES bystarAcctAdmin.sh should stay in sync
         # bystarPasswd=$( bystarAcctAdmin.sh -p bystarUid="${bystarUid}" -i acctPasswdGet )
-	EH_assert [[ $# -eq 0 ]]
+        EH_assert [[ $# -eq 0 ]]
 
-	thisKey=$( STR_toLower ${cp_ServiceType} )
+        thisKey=$( STR_toLower ${cp_ServiceType} )
         #ANT_raw decryptedPasswd=$(  echo ${cp_currentPasswd}  | gcipher -C Vigenere -k ${thisKey} - )
-	decryptedPasswd=$(  echo ${cp_currentPasswd}  | gcipher -C Vigenere -k ${thisKey} - )
+        decryptedPasswd=$(  echo ${cp_currentPasswd}  | gcipher -C Vigenere -k ${thisKey} - )
 
-	echo ${decryptedPasswd}
+        echo ${decryptedPasswd}
     }
 
     #bystarPasswd=$( bystarDevelopers.sh -p bystarUid="${bystarUid}" -i acctPasswdGet )
@@ -2070,7 +2128,7 @@ function bystarAcctPathAnalyzeDo {
     # This is temporary -- NOTYET, IMPORTANT/URGENT to fix 090219
     bystarSiteFqdn=${acctPloneBaseDomain}
  else
-    EH_problem "Bad Config: ${bystarAcctBase} -- Faking Default"
+    ANT_raw "Not the old  bystarAcctBase, ${bystarAcctBase} -- Faking Default"
     bystarSiteFqdn="default"
     bystarPasswd="default"
     bystarUid="default"
@@ -2088,31 +2146,31 @@ _EOF_
     bystarAcctPathAnalyze $( pwd )
 
     if [ $#  -eq 1 ] ; then 
-	typeset thisParam=$1
-	
-	eval echo '$'${thisParam}
+        typeset thisParam=$1
+        
+        eval echo '$'${thisParam}
     else
-	echo procEndPath=${procEndPath}
-	if [ "${procPath}_" == "_" ] ; then
-	    echo procPath="/ -- ROOT"
-	else
-	    echo procPath=${procPath}
-	fi
+        echo procEndPath=${procEndPath}
+        if [ "${procPath}_" == "_" ] ; then
+            echo procPath="/ -- ROOT"
+        else
+            echo procPath=${procPath}
+        fi
 
-	if [ "${procNamePath}_" == "_" ] ; then
-	    echo procNamePath="/ -- ROOT"
-	else
-	    echo procNamePath=${procNamePath}
-	fi
+        if [ "${procNamePath}_" == "_" ] ; then
+            echo procNamePath="/ -- ROOT"
+        else
+            echo procNamePath=${procNamePath}
+        fi
 
-	echo procBaseName=${procBaseName}
+        echo procBaseName=${procBaseName}
 
-	echo bystarAcctBase=${bystarAcctBase}
-	echo bystarUid=${bystarUid}
-	echo bystarPasswd=${bystarPasswd}
-	echo bystarAcctType=${bystarAcctType}
+        echo bystarAcctBase=${bystarAcctBase}
+        echo bystarUid=${bystarUid}
+        echo bystarPasswd=${bystarPasswd}
+        echo bystarAcctType=${bystarAcctType}
 
-	echo bystarSiteFqdn=${bystarSiteFqdn}
+        echo bystarSiteFqdn=${bystarSiteFqdn}
     fi
 }
 
@@ -2153,8 +2211,8 @@ _EOF_
     # Validate specified objectType
     thisEnumObjectType="${ndoObjectTypeEnum[${thisObjectType}]}"
     if [ -z "${thisEnumObjectType}" ] ; then
-	EH_problem "Invalid objectType=${thisObjectType}"
-	lpReturn
+        EH_problem "Invalid objectType=${thisObjectType}"
+        lpReturn
     fi
     
     startGenFunc=$( eval echo '$'{object_${thisObjectType}[startGen]} )
@@ -2182,24 +2240,24 @@ _EOF_
     bystarAcctPathAnalyze ${here}
 
     if [ $# -eq 1 ] ; then
-	thisObjectType=$1
+        thisObjectType=$1
 
-	if [ -f ${ndoObjectTypeFileName} ] ; then
-	    currentObjectType=$( cat ${ndoObjectTypeFileName} )
-	    if [ "${thisObjectType}" != "${currentObjectType}" ] ; then
-		EH_problem "objectType Mis-Match -- ${thisObjectType} != ${currentObjectType}"
-		EH_retOnFail
-	    fi
-	else
-	    opDo eval echo "${thisObjectType}" \> "${ndoObjectTypeFileName}"
-	fi
+        if [ -f ${ndoObjectTypeFileName} ] ; then
+            currentObjectType=$( cat ${ndoObjectTypeFileName} )
+            if [ "${thisObjectType}" != "${currentObjectType}" ] ; then
+                EH_problem "objectType Mis-Match -- ${thisObjectType} != ${currentObjectType}"
+                EH_retOnFail
+            fi
+        else
+            opDo eval echo "${thisObjectType}" \> "${ndoObjectTypeFileName}"
+        fi
     else
-	if [ -f ${ndoObjectTypeFileName} ] ; then
-	    thisObjectType=$( cat ${ndoObjectTypeFileName} )
-	else
-	    thisObjectType=$( vis_objectTypeInCwdGuess )
-	    opDo eval echo "${thisObjectType}" \> "${ndoObjectTypeFileName}"
-	fi
+        if [ -f ${ndoObjectTypeFileName} ] ; then
+            thisObjectType=$( cat ${ndoObjectTypeFileName} )
+        else
+            thisObjectType=$( vis_objectTypeInCwdGuess )
+            opDo eval echo "${thisObjectType}" \> "${ndoObjectTypeFileName}"
+        fi
     fi
 
     startUpdateFunc=$( eval echo '$'{object_${thisObjectType}[startUpdate]} )
@@ -2244,7 +2302,7 @@ _EOF_
 
     FN_fileSafeKeep  nameDistProc.sh
 
-    opDo cp /libre/ByStar/InitialTemplates/nameDist/starts/nameDistProc.sh nameDistProc.sh
+    opDo cp /bisos/apps/defaults/nameDist/starts/nameDistProc.sh nameDistProc.sh
     opDo vis_dblockUpdateFile nameDistProc.sh
     opDo chmod 775 nameDistProc.sh
 }
@@ -2283,8 +2341,8 @@ _EOF_
     # Validate specified objectType
     thisEnumObjectType="${ndoObjectTypeEnum[${thisObjectType}]}"
     if [ -z "${thisEnumObjectType}" ] ; then
-	EH_problem "Invalid objectType=$1"
-	lpReturn
+        EH_problem "Invalid objectType=$1"
+        lpReturn
     fi
     
     updateFunc=$( eval echo '$'{object_${thisObjectType}[update]} )
@@ -2312,8 +2370,8 @@ _EOF_
     # Validate specified objectType
     thisEnumObjectType="${ndoObjectTypeEnum[${thisObjectType}]}"
     if [ -z "${thisEnumObjectType}" ] ; then
-	EH_problem "Invalid objectType=$1"
-	lpReturn
+        EH_problem "Invalid objectType=$1"
+        lpReturn
     fi
     
     updateFunc=$( eval echo '$'{object_${thisObjectType}[execute]} )
@@ -2341,8 +2399,8 @@ _EOF_
     # Validate specified objectType
     thisEnumObjectType="${ndoObjectTypeEnum[${thisObjectType}]}"
     if [ -z "${thisEnumObjectType}" ] ; then
-	EH_problem "Invalid objectType=$1"
-	lpReturn
+        EH_problem "Invalid objectType=$1"
+        lpReturn
     fi
     
     updateFunc=$( eval echo '$'{object_${thisObjectType}[examplesMenu]} )
@@ -2369,8 +2427,8 @@ _EOF_
     # Validate specified objectType
     thisEnumObjectType="${ndoObjectTypeEnum[${thisObjectType}]}"
     if [ -z "${thisEnumObjectType}" ] ; then
-	EH_problem "Invalid objectType=$1"
-	lpReturn
+        EH_problem "Invalid objectType=$1"
+        lpReturn
     fi
     
     updateFunc=$( eval echo '$'{object_${thisObjectType}[validate]} )
@@ -2399,8 +2457,8 @@ _EOF_
     # Validate specified objectType
     thisEnumObjectType="${ndoObjectTypeEnum[${thisObjectType}]}"
     if [ -z "${thisEnumObjectType}" ] ; then
-	EH_problem "Invalid objectType=$1"
-	lpReturn
+        EH_problem "Invalid objectType=$1"
+        lpReturn
     fi
     
     updateFunc=$( eval echo '$'{object_${thisObjectType}[load]} )
@@ -2428,17 +2486,17 @@ _EOF_
     # Validate specified objectType
     thisEnumObjectType="${ndoObjectTypeEnum[${thisObjectType}]}"
     if [ -z "${thisEnumObjectType}" ] ; then
-	EH_problem "Invalid objectType=$1"
-	lpReturn
+        EH_problem "Invalid objectType=$1"
+        lpReturn
     fi
 
     if [  "${fv_excludeFromAutoload}" == "true" ] ; then
-	ANT_raw "excludeFromAutoload=true -- Excluded -- Skipped"
+        ANT_raw "excludeFromAutoload=true -- Excluded -- Skipped"
     else
-	if [ "${thisObjectType}" != "nativeNode" ] ; then
-	    updateFunc=$( eval echo '$'{object_${thisObjectType}[load]} )
-	    opDo ${updateFunc} "${@}"
-	fi
+        if [ "${thisObjectType}" != "nativeNode" ] ; then
+            updateFunc=$( eval echo '$'{object_${thisObjectType}[load]} )
+            opDo ${updateFunc} "${@}"
+        fi
     fi
 
     lpReturn
@@ -2478,22 +2536,22 @@ _EOF_
     EH_assert [[ $# -le 1 ]]
 
     if [ $# -eq 1 ] ; then
-	thisObjectType=$1
+        thisObjectType=$1
 
-	if [ -f ${ndoObjectTypeFileName} ] ; then
-	    currentObjectType=$( cat ${ndoObjectTypeFileName} )
-	    if [ "${thisObjectType}" != "${currentObjectType}" ] ; then
-		EH_problem "objectType Mis-Match -- ${thisObjectType} != ${currentObjectType}"
-		EH_retOnFail
-	    fi
-	fi
+        if [ -f ${ndoObjectTypeFileName} ] ; then
+            currentObjectType=$( cat ${ndoObjectTypeFileName} )
+            if [ "${thisObjectType}" != "${currentObjectType}" ] ; then
+                EH_problem "objectType Mis-Match -- ${thisObjectType} != ${currentObjectType}"
+                EH_retOnFail
+            fi
+        fi
     else
-	if [ -f ${ndoObjectTypeFileName} ] ; then
-	    thisObjectType=$( cat ${ndoObjectTypeFileName} )
-	else
-	    EH_problem "Missing ${ndoObjectTypeFileName}"
-	    EH_retOnFail
-	fi
+        if [ -f ${ndoObjectTypeFileName} ] ; then
+            thisObjectType=$( cat ${ndoObjectTypeFileName} )
+        else
+            EH_problem "Missing ${ndoObjectTypeFileName}"
+            EH_retOnFail
+        fi
     fi
 
     varsPrepFunc=$( eval echo '$'{object_${thisObjectType}[varsPrep]} ) 
@@ -2532,25 +2590,25 @@ _EOF_
     bystarAcctPathAnalyze ${here}
 
     if [ $# -eq 1 ] ; then
-	thisObjectType=$1
+        thisObjectType=$1
 
-	if [ -f ${ndoObjectTypeFileName} ] ; then
-	    currentObjectType=$( cat ${ndoObjectTypeFileName} )
-	    if [ "${thisObjectType}" != "${currentObjectType}" ] ; then
-		EH_problem "objectType Mis-Match -- ${thisObjectType} != ${currentObjectType}"
-		EH_retOnFail
-	    fi
-	else
-	    opDo eval echo "${thisObjectType}" \> "${ndoObjectTypeFileName}"
-	fi
+        if [ -f ${ndoObjectTypeFileName} ] ; then
+            currentObjectType=$( cat ${ndoObjectTypeFileName} )
+            if [ "${thisObjectType}" != "${currentObjectType}" ] ; then
+                EH_problem "objectType Mis-Match -- ${thisObjectType} != ${currentObjectType}"
+                EH_retOnFail
+            fi
+        else
+            opDo eval echo "${thisObjectType}" \> "${ndoObjectTypeFileName}"
+        fi
     else
-	if [ -f ${ndoObjectTypeFileName} ] ; then
-	    thisObjectType=$( cat ${ndoObjectTypeFileName} )
-	else
-	    # NOTYET -- Try to better determine
-	    thisObjectType=${ndoObjectTypeEnum[page]}
-	    opDo eval echo "${thisObjectType}" \> "${ndoObjectTypeFileName}"
-	fi
+        if [ -f ${ndoObjectTypeFileName} ] ; then
+            thisObjectType=$( cat ${ndoObjectTypeFileName} )
+        else
+            # NOTYET -- Try to better determine
+            thisObjectType=${ndoObjectTypeEnum[page]}
+            opDo eval echo "${thisObjectType}" \> "${ndoObjectTypeFileName}"
+        fi
     fi
 
     infoFunc=$( eval echo '$'{object_${thisObjectType}[info]} )
@@ -2576,8 +2634,8 @@ function vis_objectLocalPrep {
     # Validate specified objectType
     thisEnumObjectType="${ndoObjectTypeEnum[${thisObjectType}]}"
     if [ -z "${thisEnumObjectType}" ] ; then
-	EH_problem "Invalid objectType=${thisObjectType}"
-	lpReturn
+        EH_problem "Invalid objectType=${thisObjectType}"
+        lpReturn
     fi
     
     prepFunc=$( eval echo '$'{object_${thisObjectType}[prep]} )
@@ -2602,10 +2660,10 @@ _EOF_
     # print "%%%%% ${currentDir} %%%%%"
 
     for thisOne in $( vis_effectiveSitePages ) ; do
-	opDoComplain cd ${currentDir}/${thisOne} || continue
-	print "%%%%%% ${currentDir}/${thisOne} %%%%%"
+        opDoComplain cd ${currentDir}/${thisOne} || continue
+        print "%%%%%% ${currentDir}/${thisOne} %%%%%"
     
-	opDo vis_startObjectUpdateInCwd
+        opDo vis_startObjectUpdateInCwd
     done
 }
 
@@ -2688,7 +2746,7 @@ function vis_emacsClientFiles {
     typeset thisOne=""
 
     for thisOne in ${*} ; do
-	emacsclient "${thisOne}"
+        emacsclient "${thisOne}"
     done
 }
 
@@ -2698,8 +2756,8 @@ function vis_dblockUpdateFile {  # NOTYET, to be obsoleted by bx-dblock -i dbloc
 
     typeset thisOne=""
 
-    for thisOne in ${*} ; do
-	emacsclient -e "(org-dblock-update-file-bx \"${thisOne}\")"
+    for each in ${*} ; do
+        lpDo bx-dblock -i dblockUpdateFiles ${each}
     done
 }
 
@@ -2744,8 +2802,8 @@ _EOF_
     opDoExit  pushd ${here}
     
     if [[ -d ${thisFolder} ]] ; then
-	EH_problem "${thisFolder} Already exists"
-	lpReturn 101
+        EH_problem "${thisFolder} Already exists"
+        lpReturn 101
     fi
 
     opDo vis_startObjectGen folder ${thisFolder}
@@ -2944,20 +3002,20 @@ _EOF_
     
     echo "###INCLUDE LIST:" #  ${includeList}
     if [ ! -z "${includeList}" ] ; then
-	for thisOne in ${includeList} ; do
-	    echo ${thisOne}
-	done
+        for thisOne in ${includeList} ; do
+            echo ${thisOne}
+        done
     else
-	echo "####Empty INCLUDE LIST"
+        echo "####Empty INCLUDE LIST"
     fi
 
     echo "###EXCLUDE LIST:" #  ${excludeList}
     if [ ! -z "${excludeList}" ] ; then
-	for thisOne in ${excludeList} ; do
-	    echo ${thisOne}
-	done
+        for thisOne in ${excludeList} ; do
+            echo ${thisOne}
+        done
     else
-	echo "####Empty EXCLUDE LIST"
+        echo "####Empty EXCLUDE LIST"
     fi
 }
 
@@ -2980,23 +3038,23 @@ _EOF_
     FN_fileSafeKeep ${excludeNamesFilePath}
 
     if [ "${includeList}" != "" ] ;  then
-	for thisOne in ${includeList} ; do
-	    echo "###BEGIN INCLUDING -- ${thisOne}" >>  ${includeNamesFilePath}
-	    cat ${thisOne} >>  ${includeNamesFilePath}
-	    echo "###END INCLUDING -- ${thisOne}" >>  ${includeNamesFilePath}
-	done
+        for thisOne in ${includeList} ; do
+            echo "###BEGIN INCLUDING -- ${thisOne}" >>  ${includeNamesFilePath}
+            cat ${thisOne} >>  ${includeNamesFilePath}
+            echo "###END INCLUDING -- ${thisOne}" >>  ${includeNamesFilePath}
+        done
     else
-	touch ${includeNamesFilePath}
+        touch ${includeNamesFilePath}
     fi
 
     if [ "${excludeList}" != "" ] ;  then
-	for thisOne in ${includeList} ; do
-	    echo "###BEGIN EXCLUDING -- ${thisOne}" >>  ${excludeNamesFilePath}
-	    cat ${thisOne} >>  ${excludeNamesFilePath}
-	    echo "###END EXCLUDING -- ${thisOne}" >>  ${excludeNamesFilePath}
-	done
+        for thisOne in ${includeList} ; do
+            echo "###BEGIN EXCLUDING -- ${thisOne}" >>  ${excludeNamesFilePath}
+            cat ${thisOne} >>  ${excludeNamesFilePath}
+            echo "###END EXCLUDING -- ${thisOne}" >>  ${excludeNamesFilePath}
+        done
     else
-	touch ${excludeNamesFilePath}
+        touch ${excludeNamesFilePath}
     fi
     
     opDo ls -l ${includeNamesFilePath} ${excludeNamesFilePath} 1>&2
@@ -3013,18 +3071,18 @@ _EOF_
     typeset namesListGenCommand=""
 
     if [ $# -gt 0 ] ; then
-	namesListGenCommand="$@"
+        namesListGenCommand="$@"
     else
-	EH_problem "Bad Number Of Args: $#"
-	lpReturn 101
+        EH_problem "Bad Number Of Args: $#"
+        lpReturn 101
     fi
 
     if [ "${namesListGenCommand}" != "" ] ; then
-	echo "Running: ${namesListGenCommand}"
-	${namesListGenCommand} 
+        echo "Running: ${namesListGenCommand}"
+        ${namesListGenCommand} 
     else
-	EH_problem "Blank namesListGenCommand -- $0: skipped"
-	lpReturn 101
+        EH_problem "Blank namesListGenCommand -- $0: skipped"
+        lpReturn 101
     fi
 
     includeAndExcludeLists
@@ -3044,20 +3102,20 @@ _EOF_
     typeset namesListGenCommand=""
 
     if [ $# -gt 1 ] ; then
-	outFileTag=$1
-	shift
-	namesListGenCommand="$@"
+        outFileTag=$1
+        shift
+        namesListGenCommand="$@"
     else
-	EH_problem "Bad NUmber Of Args: $#"
-	lpReturn 101
+        EH_problem "Bad NUmber Of Args: $#"
+        lpReturn 101
     fi
 
     if [ "${namesListGenCommand}" != "" ] ; then
-	echo "Running: ${namesListGenCommand}"
-	${namesListGenCommand} 
+        echo "Running: ${namesListGenCommand}"
+        ${namesListGenCommand} 
     else
-	EH_problem "Blank namesListGenCommand -- $0: skipped"
-	lpReturn 101
+        EH_problem "Blank namesListGenCommand -- $0: skipped"
+        lpReturn 101
     fi
 
     outputIncludeAndExcludeListsToFiles ${outFileTag}
@@ -3109,17 +3167,17 @@ _EOF_
     # BEGIN includeList
     thisFile=${contentDistDir}/${includeExcludeTag}-include.names
     if test -f ${thisFile} ; then
-	includeList="${includeList} ${thisFile}"
+        includeList="${includeList} ${thisFile}"
     else
-	echo "Missing ${thisFile}" 1>&2
+        echo "Missing ${thisFile}" 1>&2
     fi
     
     thisFile=${contentDistDir}/specials-include.names 
     
     if test -f ${thisFile} ; then
-	includeList="${includeList} ${thisFile}"
+        includeList="${includeList} ${thisFile}"
     else
-	echo "Missing ${thisFile}" 1>&2
+        echo "Missing ${thisFile}" 1>&2
     fi
     # END includeList
 
@@ -3127,37 +3185,37 @@ _EOF_
     # BEGIN excludeList
     thisFile=${contentDistDir}/${includeExcludeTag}-exclude.names
     if test -f ${thisFile} ; then
-	excludeList="${excludeList} ${thisFile}"
+        excludeList="${excludeList} ${thisFile}"
     else
-	echo "Missing ${thisFile}"
+        echo "Missing ${thisFile}"
     fi
 
     thisFile=${contentDistDir}/specials-exclude.names 
 
     if test -f ${thisFile} ; then
-	excludeList="${excludeList} ${thisFile}"
+        excludeList="${excludeList} ${thisFile}"
     else
-	echo "Missing ${thisFile}" 1>&2
+        echo "Missing ${thisFile}" 1>&2
     fi
 
     thisFile=${contentDistDir}/dist-sentLog.names
     if test -f ${thisFile} ; then
-	excludeList="${excludeList} ${thisFile}"
+        excludeList="${excludeList} ${thisFile}"
     else
-	echo "Missing ${thisFile}" 1>&2
+        echo "Missing ${thisFile}" 1>&2
     fi
     # END excludeList
 
 
     if [ "${includeList}" != "" ] ;  then
-	#ANT_raw "Watch For case conversion -- Notyet"
-	cat ${includeList} |  /usr/bin/tr   "[:upper:]" "[:lower:]" | sort | uniq > ${contentDistDir}/${dateTag}-include.sorted
+        #ANT_raw "Watch For case conversion -- Notyet"
+        cat ${includeList} |  /usr/bin/tr   "[:upper:]" "[:lower:]" | sort | uniq > ${contentDistDir}/${dateTag}-include.sorted
     fi
 
     if [ "${excludeList}" != "" ] ;  then
-	#ANT_raw "Watch For case conversion -- Notyet"
-	ANT_raw "excludeList=${excludeList}"
-	cat ${excludeList} | /usr/bin/tr   "[:upper:]" "[:lower:]" | sort | uniq > ${contentDistDir}/${dateTag}-exclude.sorted
+        #ANT_raw "Watch For case conversion -- Notyet"
+        ANT_raw "excludeList=${excludeList}"
+        cat ${excludeList} | /usr/bin/tr   "[:upper:]" "[:lower:]" | sort | uniq > ${contentDistDir}/${dateTag}-exclude.sorted
     fi
 
     typeset resultFileName=${contentDistDir}/${includeExcludeTag}-result.names
@@ -3206,13 +3264,22 @@ _EOF_
     lpReturn
 }
 
-function vis_mailingNameGet {
+function vis_mailingNamesGet {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
+    if [ -f "mailingNames.fv" ] ; then
+        cat mailingNames.fv
+    else
+        EH_problem "Missing mailingNames.fv"
+    fi
+
+    lpReturn
+
+    echo "OBSOLETED"
     typeset here=$( pwd -P )
     bystarAcctPathAnalyze ${here}
 
@@ -3220,15 +3287,15 @@ _EOF_
     typeset thisBaseName=$( FN_nonDirsPart ${thisBase} )
 
     while [ "${thisBaseName}" != "${procBaseName}" ] ; do
-	cd ..
-	thisBase=$( pwd -P ) 
-	thisBaseName=$( FN_nonDirsPart ${thisBase} )
+        cd ..
+        thisBase=$( pwd -P ) 
+        thisBaseName=$( FN_nonDirsPart ${thisBase} )
 
-	if [ -f "./mailingName" ] ; then
-	    cat ./mailingName
-	    break
-	fi
-	#echo ${thisBase}
+        if [ -f "./mailingName" ] ; then
+            cat ./mailingName
+            break
+        fi
+        #echo ${thisBase}
     done
 
     cd ${here}
@@ -3241,13 +3308,14 @@ _EOF_
 function vis_logsToNames {
 
     #msendLogsFile="/usr/devenv/bbdbNames/Logs/bbdb-msend.sent"
-    msendLogsFile="/acct/employee/lsipusr/BUE/mailings/logs/mailings.sent"
+    #msendLogsFile="/acct/employee/lsipusr/BUE/mailings/logs/mailings.sent"
+    msendLogsFile="/bxo/usg/bystar/bpos/usageEnvs/fullUse/blee/mailings/logs/mailings.sent"
 
-    typeset mailingDistTag=$( vis_mailingNameGet )
+    typeset mailingDistTag=$( vis_mailingNamesGet )
 
     if [ -z "${mailingDistTag}" ] ; then
-	EH_problem "Missing Or Empty mailingDistTag"
-	lpReturn 101
+        EH_problem "Missing Or Empty mailingDistTag"
+        lpReturn 101
     fi
 
     logSentFilePath="dist-sentLog.names"
@@ -3256,11 +3324,11 @@ function vis_logsToNames {
 
 
     if [ -s /tmp/${G_myName}.$$  ] ;  then
-	cat /tmp/${G_myName}.$$ | cut -d: -f3 > ${logSentFilePath}
-	opDo ls -l $( pwd )/${logSentFilePath}	
-	opDo wc ${logSentFilePath}	
+        cat /tmp/${G_myName}.$$ | cut -d: -f4 > ${logSentFilePath}
+        opDo ls -l $( pwd )/${logSentFilePath}  
+        opDo wc ${logSentFilePath}      
     else
-	echo "Empty Logs: ${mailingDistTag}"
+        echo "Empty Logs: ${mailingDistTag}"
     fi
     /bin/rm /tmp/${G_myName}.$$
 }
@@ -3287,9 +3355,9 @@ _EOF_
     typeset namesListFile=$1
 
     if [ -f ${namesListFile} ] ; then
-	opDo emacsclient -e "(bx-bbdb-names-input-from-file \"${namesListFile}\")"
+        opDo emacsclient -e "(bx-bbdb-names-input-from-file \"${namesListFile}\")"
     else
-	EH_problem "Missing ${namesListFile}"
+        EH_problem "Missing ${namesListFile}"
     fi
     
     lpReturn
@@ -3311,6 +3379,80 @@ _EOF_
 
     lpReturn
 }
+
+###
+###  #########   2023 Updates  #####
+###
+
+function vis_fileVarsUpdateOld {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+
+_EOF_
+    }
+    local mailingFileName=$(vis_mailingFileName)
+    local mailingName=$(vis_mailingNameOfFile "${mailingFileName}")
+
+    lpDo eval echo ${mailingFileName} \> mailingFileName.fv
+    lpDo eval echo ${mailingName} > mailingName.fv
+}
+
+
+function vis_fileVarsUpdate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+
+_EOF_
+    }
+    local mailingFileNames=$(vis_mailingFileNames)
+    local mailingNames=""
+    for each in ${mailingFileNames} ; do
+        mailingNames=${mailingNames}$(vis_mailingNameOfFile "${each}")" "
+    done
+
+    lpDo eval echo ${mailingFileNames} \> mailingFileNames.fv
+    lpDo eval echo ${mailingNames} \> mailingNames.fv
+}
+
+
+function vis_resultNamesAsAddrRecipsAndSelect {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+
+_EOF_
+    }
+
+    local thisEmacsClient=$( vis_thisEmacsClient )
+
+    lpDo ${thisEmacsClient} -e  "(b:mtdt:names|recipsAddrConvertFileAndSelect :inFile \"./dist-result.names\")"
+}
+
+function vis_mtdtSelectRecips {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+    local recipsFileName="$1"
+    local thisEmacsClient=$( vis_thisEmacsClient )
+
+    lpDo ${thisEmacsClient} -e  "(b:mtdt:distr|recipsFormsFileSelect  \"${recipsFileName}\")"
+}
+
+function vis_mtdtSelectMailing {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+
+_EOF_
+    }
+    local mailingFileNames=$( cat mailingFileNames.fv )
+
+    local thisEmacsClient=$( vis_thisEmacsClient )
+
+    lpDo ${thisEmacsClient} -e  "(b:mtdt:derive/fromFilesAndSelect  \"${mailingFileNames}\")"
+}
+
 
 
 # }}}

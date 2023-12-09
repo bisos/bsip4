@@ -1,26 +1,26 @@
 #!/bin/bash
 
-####+BEGIN: bx:dblock:bash:top-of-file :vc "cvs" :partof "bystar" :copyleft "halaal+brief"
-# {{{ DBLOCK-top-of-file
-
-typeset RcsId="$Id: seedMailingProc.sh,v 1.2 2018-03-06 06:26:16 lsipusr Exp $"
+####+BEGIN: bx:bash:top-of-file :vc "cvs" :partof "bystar" :copyleft "halaal+brief"
+### Args: :control "enabled|disabled|hide|release|fVar"  :vc "cvs|git|nil" :partof "bystar|nil" :copyleft "halaal+minimal|halaal+brief|nil"
+typeset RcsId="$Id: dblock-iim-bash.el,v 1.4 2017-02-08 06:42:32 lsipusr Exp $"
+# *CopyLeft*
+__copying__="
+* Libre-Halaal Software"
 #  This is part of ByStar Libre Services. http://www.by-star.net
 # Copyright (c) 2011 Neda Communications, Inc. -- http://www.neda.com
 # See PLPC-120001 for restrictions.
-# This is a Halaal Poly-Existential intended to remain perpetually Halaal. 
-
-# }}} DBLOCK-top-of-file
+# This is a Halaal Poly-Existential intended to remain perpetually Halaal.
 ####+END:
 
 ####+BEGIN: bx:bsip:bash:seed-spec :types "seedActions.bash"
 SEED="
-*  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] |
+*  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
 "
 FILE="
-*  /This File/ :: /bisos/git/auth/bxRepos/bisos/bsip4/bin/seedMailingProc.sh
+*  /This File/ :: /bisos/asc/mail/bin/seedMailingProc.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
-    /bisos/core/bsip/bin/seedActions.bash -l $0 "$@"
+    /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
     exit $?
 fi
 ####+END:
@@ -56,7 +56,7 @@ _EOF_
 # {{{ Prefaces
 
 . ${opBinBase}/opAcctLib.sh
-. ${opBinBase}/bystarLib.sh
+. ${opBinBase}/bxo_lib.sh
 . ${opBinBase}/opDoAtAsLib.sh
 # ./lcnFileParams.libSh
 . ${opBinBase}/lcnFileParams.libSh
@@ -67,22 +67,22 @@ _EOF_
 
 . ${opBinBase}/bystarHook.libSh
 
-# ./bystarLib.sh
-. ${opBinBase}/bystarLib.sh
+# ./bxo_lib.sh
+. ${opBinBase}/bxo_lib.sh
 # ./bystarHereAcct.libSh
-#. ${opBinBase}/bystarHereAcct.libSh
+. ${opBinBase}/bystarHereAcct.libSh
 
 
 . ${opBinBase}/lpInBaseDirDo.libSh
 
 . ${opBinBase}/mmaLib.sh
-#. ${opBinBase}/mmaQmailLib.sh
-#. ${opBinBase}/mmaDnsLib.sh
+. ${opBinBase}/mmaQmailLib.sh
+. ${opBinBase}/mmaDnsLib.sh
 
 # /opt/public/osmt/bin/bystarInfoBase.libSh 
-#. ${opBinBase}/bystarInfoBase.libSh
+. ${opBinBase}/bystarInfoBase.libSh
 
-#. ${opBinBase}/lpCurrents.libSh
+. ${opBinBase}/bisosCurrents_lib.sh
 
 # PRE parameters
 
@@ -371,11 +371,11 @@ _EOF_
     fileVarName="$1"
 
     if [ -f "${fileVarName}" ] ; then
-	opDo cat "${fileVarName}"
-	lpReturn 0
+        opDo cat "${fileVarName}"
+        lpReturn 0
     else
-	ANV_cooked "Missing ${fileVarName}, should become objectType specific and detect defaults"
-	lpReturn 101
+        ANV_cooked "Missing ${fileVarName}, should become objectType specific and detect defaults"
+        lpReturn 101
     fi
     
     lpReturn
@@ -514,13 +514,13 @@ _EOF_
     bystarAcctPathAnalyze ${cwd}
 
     function importFile {
-	local fileName="$1"
-	if [ -f "${fileName}" ] ; then
-	    ANT_raw "${fileName}  Already exists -- Doing Nothing"
-	else
-	    opDo cp /libre/ByStar/InitialTemplates/mailing/starts/${fileName} ${fileName}
-	    opDo vis_dblockUpdateFile ${fileName}
-	fi
+        local fileName="$1"
+        if [ -f "${fileName}" ] ; then
+            ANT_raw "${fileName}  Already exists -- Doing Nothing"
+        else
+            opDo cp /libre/ByStar/InitialTemplates/mailing/starts/${fileName} ${fileName}
+            opDo vis_dblockUpdateFile ${fileName}
+        fi
     }
 
     opDo importFile Panel.org
@@ -529,18 +529,18 @@ _EOF_
     #opDo chmod 775 ${fileName}
 
     if [ -f mailingProc.sh ] ; then
-	ANT_raw "mailingProc.sh  Already exists -- Doing Nothing"
+        ANT_raw "mailingProc.sh  Already exists -- Doing Nothing"
     else
-	opDo cp /libre/ByStar/InitialTemplates/mailing/starts/mailingProc.sh mailingProc.sh
-	opDo vis_dblockUpdateFile mailingProc.sh
-	opDo chmod 775 mailingProc.sh
+        opDo cp /libre/ByStar/InitialTemplates/mailing/starts/mailingProc.sh mailingProc.sh
+        opDo vis_dblockUpdateFile mailingProc.sh
+        opDo chmod 775 mailingProc.sh
     fi
 
     if [ -f Notes.org ] ; then
-	ANT_raw "Notes.org  Already exists -- Doing Nothing"
+        ANT_raw "Notes.org  Already exists -- Doing Nothing"
     else
-	opDo cp /libre/ByStar/InitialTemplates/mailing/starts/Notes.org Notes.org
-	opDo vis_dblockUpdateFile Notes.org
+        opDo cp /libre/ByStar/InitialTemplates/mailing/starts/Notes.org Notes.org
+        opDo vis_dblockUpdateFile Notes.org
     fi
 
     lpReturn
@@ -564,10 +564,10 @@ _EOF_
     opDo commonStartFiles_startUpdate
 
     if [ -f ${moObjectTypeFileName} ] ; then
-	ANT_raw "${moObjectTypeFileName}  Already exists -- Doing Nothing"
+        ANT_raw "${moObjectTypeFileName}  Already exists -- Doing Nothing"
     else
-	thisObjectType=${moObjectTypeEnum[nativeNode]}
-	opDo eval echo "${thisObjectType}" \> "${moObjectTypeFileName}"
+        thisObjectType=${moObjectTypeEnum[nativeNode]}
+        opDo eval echo "${thisObjectType}" \> "${moObjectTypeFileName}"
     fi
 
     lpReturn
@@ -732,10 +732,10 @@ _EOF_
     opDo commonStartFiles_startUpdate
 
     if [ -f ${moObjectTypeFileName} ] ; then
-	ANT_raw "${moObjectTypeFileName}  Already exists -- Doing Nothing"
+        ANT_raw "${moObjectTypeFileName}  Already exists -- Doing Nothing"
     else
-	thisObjectType=${moObjectTypeEnum[auxNode]}
-	opDo eval echo "${thisObjectType}" \> "${moObjectTypeFileName}"
+        thisObjectType=${moObjectTypeEnum[auxNode]}
+        opDo eval echo "${thisObjectType}" \> "${moObjectTypeFileName}"
     fi
 
     lpReturn
@@ -893,10 +893,10 @@ _EOF_
     opDo commonStartFiles_startUpdate
 
     if [ -f ${moObjectTypeFileName} ] ; then
-	ANT_raw "${moObjectTypeFileName}  Already exists -- Doing Nothing"
+        ANT_raw "${moObjectTypeFileName}  Already exists -- Doing Nothing"
     else
-	thisObjectType=${moObjectTypeEnum[auxLeaf]}
-	opDo eval echo "${thisObjectType}" \> "${moObjectTypeFileName}"
+        thisObjectType=${moObjectTypeEnum[auxLeaf]}
+        opDo eval echo "${thisObjectType}" \> "${moObjectTypeFileName}"
     fi
 
     lpReturn
@@ -1086,32 +1086,32 @@ _EOF_
     opDo commonStartFiles_startUpdate
 
     if [ -f ${moObjectTypeFileName} ] ; then
-	ANT_cooked "${moObjectTypeFileName}  Already exists -- Doing Nothing"
+        ANT_cooked "${moObjectTypeFileName}  Already exists -- Doing Nothing"
     else
-	thisObjectType=${moObjectTypeEnum[basic]}
-	opDo eval echo "${thisObjectType}" \> "${moObjectTypeFileName}"
+        thisObjectType=${moObjectTypeEnum[basic]}
+        opDo eval echo "${thisObjectType}" \> "${moObjectTypeFileName}"
     fi
 
     if [ -f ${moMailingNameFileName} ] ; then
-	ANT_cooked "${moMailingNameFileName} Already exists -- Doing Nothing"
+        ANT_cooked "${moMailingNameFileName} Already exists -- Doing Nothing"
     else
-	if [ "${thisMailingName}" == "path" ] ; then
-	    opDo eval echo "${mailingNamePath}" \> ${moMailingNameFileName}
-	else
-	    opDo eval echo "${thisMailingName}" \> ${moMailingNameFileName}
-	fi
+        if [ "${thisMailingName}" == "path" ] ; then
+            opDo eval echo "${mailingNamePath}" \> ${moMailingNameFileName}
+        else
+            opDo eval echo "${thisMailingName}" \> ${moMailingNameFileName}
+        fi
     fi
 
     if [ -f ${moExcludeFromAutoloadFileName} ] ; then
-	ANT_cooked "${moExcludeFromAutoloadFileName} Already exists -- Doing Nothing"
+        ANT_cooked "${moExcludeFromAutoloadFileName} Already exists -- Doing Nothing"
     else
-	opDo eval echo "${moExcludeFromAutoloadEnum[default]}" \> ${moExcludeFromAutoloadFileName}
+        opDo eval echo "${moExcludeFromAutoloadEnum[default]}" \> ${moExcludeFromAutoloadFileName}
     fi
 
     if [ -f ${moContentMailFileName} ] ; then
-	ANT_cooked "${moContentMailFileName} Already exists -- Doing Nothing"
+        ANT_cooked "${moContentMailFileName} Already exists -- Doing Nothing"
     else
-	opDo vis_mailContent_startGen
+        opDo vis_mailContent_startGen
     fi
 
     # Now with everything in place in the mailingBaseDir generate the mailing lisp code.
@@ -1153,6 +1153,7 @@ _EOF_
 To: 
 From: Mohsen BANAN <desk@mohsen.1.banan.byname.net>
 ####+BEGIN: bx:dblock:global:file-insert-process :file "/dev/null" :load "./dblockProcess.el" :exec "bx:dblock:subject-process"
+
 ####+END:
 X-Envelope: envelop@mohsen.1.banan.byname.net
 X-MailingName: ${fv_mailingName}
@@ -1172,43 +1173,43 @@ _EOF_
     typeset objectType=$( cat ./objectType )
 
     case ${objectType} in
-	"basic")
-	    opDo vis_mailContent_headerStartGen
-	    cat  << _EOF_ >> ${moContentMailFileName}
+        "basic")
+            opDo vis_mailContent_headerStartGen
+            cat  << _EOF_ >> ${moContentMailFileName}
 
 Basic Body Goes Here.
 _EOF_
-	    ;;
-	"text")
-	    opDo vis_mailContent_headerStartGen
-	    cat  << _EOF_ >> ${moContentMailFileName}
+            ;;
+        "text")
+            opDo vis_mailContent_headerStartGen
+            cat  << _EOF_ >> ${moContentMailFileName}
 
 Text Body Goes Here.
 _EOF_
-	    ;;
-	"html")
-	    opDo vis_mailContent_headerStartGenDblock
-	    cat  << _EOF_ >> ${moContentMailFileName}
+            ;;
+        "html")
+            opDo vis_mailContent_headerStartGenDblock
+            cat  << _EOF_ >> ${moContentMailFileName}
 <#part type="text/html" disposition=inline>
 <!-- ####+BEGIN: bx:dblock:global:copy-file :source "${cwd}/mailBodyStart.html" :destination "${cwd}/mailBodyEdit.html" -->
 <!-- ####+END: -->
 <!-- ####+BEGIN: bx:dblock:global:file-insert-process :file "${cwd}/mailBodyEdit.html" :load "./dblockProcess.el" :exec "bx:dblock:body-process"  -->
 <!-- ####+END: -->
 _EOF_
-	    ;;
-	"htmlLcnt")
-	    opDo vis_mailContent_headerStartGen
-	    cat  << _EOF_ >> ${moContentMailFileName}
+            ;;
+        "htmlLcnt")
+            opDo vis_mailContent_headerStartGen
+            cat  << _EOF_ >> ${moContentMailFileName}
 <#part type="text/html" disposition=inline>
 <!-- ####+BEGIN: bx:dblock:global:file-insert-process :file "${cwd}/mailBody.html" :load "/dev/null" :exec  "org-dblock-bx-strip-begin-end" -->
 <!-- ####+END: -->
 _EOF_
-	    # Used To Be: <!-- ####+BEGIN: bx:dblock:global:file-insert :file "${cwd}/mailLcnt/heveaHtml-mailLcnt/index.html" -->
-	    ;;
-	
-	"lcntHtml")
-	    opDo vis_mailContent_headerStartGen
-	    cat  << _EOF_ >> ${moContentMailFileName}
+            # Used To Be: <!-- ####+BEGIN: bx:dblock:global:file-insert :file "${cwd}/mailLcnt/heveaHtml-mailLcnt/index.html" -->
+            ;;
+        
+        "lcntHtml")
+            opDo vis_mailContent_headerStartGen
+            cat  << _EOF_ >> ${moContentMailFileName}
 <#part type="text/html" disposition=inline>
 <!--  [[elisp:(find-file "../mailLcnt.ttytex")][Visit ../mailLcnt.ttytex]]  -->
 <!-- ####+BEGIN: bx:dblock:global:file-insert-process :file "../rel/mailLcnt-html/index.html" :load "./dblockProcess.el" :exec "bx:dblock:body-process"  -->
@@ -1218,21 +1219,21 @@ _EOF_
 <#part type="application/pdf" filename="../rel/mailLcnt.pdf" disposition=attachment>
 <#/part>
 _EOF_
-	    ;;
-	
-	"htmlPubLcnt")
-	    opDo vis_mailContent_headerStartGen
-	    cat  << _EOF_ >> ${moContentMailFileName}
+            ;;
+        
+        "htmlPubLcnt")
+            opDo vis_mailContent_headerStartGen
+            cat  << _EOF_ >> ${moContentMailFileName}
 <#part type="text/html" disposition=inline>
 <!-- ####+BEGIN: bx:dblock:global:file-insert-process :file "${cwd}/mailBody.html" :load "/dev/null" :exec  "org-dblock-bx-strip-begin-end" -->
 <!-- ####+END: -->
 _EOF_
-	    ;;
-	
-	*)
-	    EH_problem "Unexpected objectType=${objectType} -- Processing Skipped"
-	    lpReturn 1
-	    ;;
+            ;;
+        
+        *)
+            EH_problem "Unexpected objectType=${objectType} -- Processing Skipped"
+            lpReturn 1
+            ;;
     esac
 
     lpReturn
@@ -1250,15 +1251,15 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if [ -f excludeFromAutoload ] ; then
-	fv_excludeFromAutoload=$( cat excludeFromAutoload ) 
+        fv_excludeFromAutoload=$( cat excludeFromAutoload ) 
     else
-	fv_excludeFromAutoload="true"
+        fv_excludeFromAutoload="true"
     fi
 
     if [ -f mailingName ] ; then
-	fv_mailingName=$( cat mailingName ) 
+        fv_mailingName=$( cat mailingName ) 
     else
-	fv_mailingName="${mailingNamePath}"
+        fv_mailingName="${mailingNamePath}"
     fi
 
     lpReturn
@@ -1306,7 +1307,7 @@ _EOF_
 
     
     cat   ${templateFile} | sed -e "s%@thisMailingName@%${fv_mailingName}%g" \
-	-e "s%@thisMailingBaseDir@%${cwd}%g" >> ${destFilePath}
+        -e "s%@thisMailingBaseDir@%${cwd}%g" >> ${destFilePath}
 
     opDo ls -ld ${destFilePath}
 
@@ -1342,11 +1343,11 @@ _EOF_
     bystarAcctPathAnalyze ${here}
 
     if [ -f ${here}/custom-mailing.el ] ; then
-	opDo emacsclient -e "(load-file \"${here}/custom-mailing.el\")"
+        opDo emacsclient -e "(load-file \"${here}/custom-mailing.el\")"
     elif [ -f ${here}/generated-mailing.el ] ; then
-	opDo emacsclient -e "(load-file \"${here}/generated-mailing.el\")"
+        opDo emacsclient -e "(load-file \"${here}/generated-mailing.el\")"
     else
-	EH_problem "Missing custom-mailing.el or generated-mailing.el"
+        EH_problem "Missing custom-mailing.el or generated-mailing.el"
     fi
     
     lpReturn
@@ -1369,9 +1370,9 @@ _EOF_
     opDo vis_basic_method_varsPrep
 
     if [[ "${G_forceMode}_" == "force_" ]] ; then
-	opDo emacsclient -e "(bxms-batch-from-base-to-to \"${here}\")"
+        opDo emacsclient -e "(bxms-batch-from-base-to-to \"${here}\")"
     else
-	opDo emacsclient -e "(bxms-compose-from-base-to-blank \"${here}\")"
+        opDo emacsclient -e "(bxms-compose-from-base-to-blank \"${here}\")"
     fi
 }
 
@@ -1464,10 +1465,10 @@ _EOF_
     EH_assert [[ $# -gt 0 ]]
 
     if [ -f ${moObjectTypeFileName} ] ; then
-	ANT_cooked "${moObjectTypeFileName}  Already exists -- Doing Nothing"
+        ANT_cooked "${moObjectTypeFileName}  Already exists -- Doing Nothing"
     else
-	thisObjectType=${moObjectTypeEnum[text]}
-	opDo eval echo "${thisObjectType}" \> "${moObjectTypeFileName}"
+        thisObjectType=${moObjectTypeEnum[text]}
+        opDo eval echo "${thisObjectType}" \> "${moObjectTypeFileName}"
     fi
 
     opDo vis_text_method_startUpdate "$@"
@@ -1636,10 +1637,10 @@ _EOF_
     EH_assert [[ $# -gt 0 ]]
 
     if [ -f ${moObjectTypeFileName} ] ; then
-	ANT_cooked "${moObjectTypeFileName}  Already exists -- Doing Nothing"
+        ANT_cooked "${moObjectTypeFileName}  Already exists -- Doing Nothing"
     else
-	thisObjectType=${moObjectTypeEnum[html]}
-	opDo eval echo "${thisObjectType}" \> "${moObjectTypeFileName}"
+        thisObjectType=${moObjectTypeEnum[html]}
+        opDo eval echo "${thisObjectType}" \> "${moObjectTypeFileName}"
     fi
 
     opDo vis_html_method_startUpdate "$@"
@@ -1655,15 +1656,15 @@ _EOF_
     opDo vis_basic_method_startUpdate "$@"
 
     if [ -f mailBodyStart.html ] ; then
-	ANT_cooked "mailBodyStart.html  Already exists -- Doing Nothing"
+        ANT_cooked "mailBodyStart.html  Already exists -- Doing Nothing"
     else
-	opDo cp /libre/ByStar/InitialTemplates/mailing/starts/mailBodyStart-en.html ./mailBodyStart.html
+        opDo cp /libre/ByStar/InitialTemplates/mailing/starts/mailBodyStart-en.html ./mailBodyStart.html
     fi
 
     if [ -f dblockProcess.el ] ; then
-	ANT_cooked "dblockProcess.el  Already exists -- Doing Nothing"
+        ANT_cooked "dblockProcess.el  Already exists -- Doing Nothing"
     else
-	opDo cp /libre/ByStar/InitialTemplates/mailing/starts/dblockProcess.el ./dblockProcess.el
+        opDo cp /libre/ByStar/InitialTemplates/mailing/starts/dblockProcess.el ./dblockProcess.el
     fi
 
     lpReturn
@@ -1822,10 +1823,10 @@ _EOF_
     EH_assert [[ $# -gt 0 ]]
 
     if [ -f ${moObjectTypeFileName} ] ; then
-	ANT_cooked "${moObjectTypeFileName}  Already exists -- Doing Nothing"
+        ANT_cooked "${moObjectTypeFileName}  Already exists -- Doing Nothing"
     else
-	thisObjectType=${moObjectTypeEnum[htmlLcnt]}
-	opDo eval echo "${thisObjectType}" \> "${moObjectTypeFileName}"
+        thisObjectType=${moObjectTypeEnum[htmlLcnt]}
+        opDo eval echo "${thisObjectType}" \> "${moObjectTypeFileName}"
     fi
 
     opDo vis_htmlLcnt_method_startUpdate "$@"
@@ -1999,10 +2000,10 @@ _EOF_
     EH_assert [[ $# -gt 0 ]]
 
     if [ -f ${moObjectTypeFileName} ] ; then
-	ANT_cooked "${moObjectTypeFileName}  Already exists -- Doing Nothing"
+        ANT_cooked "${moObjectTypeFileName}  Already exists -- Doing Nothing"
     else
-	thisObjectType=${moObjectTypeEnum[lcntHtml]}
-	opDo eval echo "${thisObjectType}" \> "${moObjectTypeFileName}"
+        thisObjectType=${moObjectTypeEnum[lcntHtml]}
+        opDo eval echo "${thisObjectType}" \> "${moObjectTypeFileName}"
     fi
 
     opDo vis_lcntHtml_method_startUpdate "$@"
@@ -2207,10 +2208,10 @@ _EOF_
     EH_assert [[ $# -gt 0 ]]
 
     if [ -f ${moObjectTypeFileName} ] ; then
-	ANT_cooked "${moObjectTypeFileName}  Already exists -- Doing Nothing"
+        ANT_cooked "${moObjectTypeFileName}  Already exists -- Doing Nothing"
     else
-	thisObjectType=${moObjectTypeEnum[htmlPubLcnt]}
-	opDo eval echo "${thisObjectType}" \> "${moObjectTypeFileName}"
+        thisObjectType=${moObjectTypeEnum[htmlPubLcnt]}
+        opDo eval echo "${thisObjectType}" \> "${moObjectTypeFileName}"
     fi
 
     opDo vis_htmlPubLcnt_method_startUpdate "$@"
@@ -2233,21 +2234,21 @@ _EOF_
     opDo vis_basic_method_startUpdate ${thisMailingName}
 
     if [ -f lcntControllingDoc ] ; then
-	ANT_cooked "lcntControllingDoc Already exists -- Doing Nothing"
+        ANT_cooked "lcntControllingDoc Already exists -- Doing Nothing"
     else
-	opDo eval echo "Unspecified" \> lcntControllingDoc
+        opDo eval echo "Unspecified" \> lcntControllingDoc
     fi
 
     if [ -f lcntControllingDocForm ] ; then
-	ANT_cooked "lcntControllingDocForm Already exists -- Doing Nothing"
+        ANT_cooked "lcntControllingDocForm Already exists -- Doing Nothing"
     else
-	opDo eval echo "emailContentEnFa" \> lcntControllingDocForm
+        opDo eval echo "emailContentEnFa" \> lcntControllingDocForm
     fi
 
     if [ -f lcntContentsReplacement ] ; then
-	ANT_cooked "lcntContentsReplacement Already exists -- Doing Nothing"
+        ANT_cooked "lcntContentsReplacement Already exists -- Doing Nothing"
     else
-	opDo eval echo "Unspecified" \> lcntContentsReplacement
+        opDo eval echo "Unspecified" \> lcntContentsReplacement
     fi
 
     lpReturn
@@ -2262,21 +2263,21 @@ _EOF_
     opDo vis_basic_method_varsPrep "$@" 2> /dev/null
 
     if [ -f lcntControllingDoc ] ; then
-	fv_lcntControllingDoc=$( cat lcntControllingDoc ) 
+        fv_lcntControllingDoc=$( cat lcntControllingDoc ) 
     else
-	fv_lcntControllingDoc="Unspecified"
+        fv_lcntControllingDoc="Unspecified"
     fi
 
     if [ -f lcntControllingDocForm ] ; then
-	fv_lcntControllingDocForm=$( cat lcntControllingDocForm ) 
+        fv_lcntControllingDocForm=$( cat lcntControllingDocForm ) 
     else
-	fv_lcntControllingDocForm="Unspecified"
+        fv_lcntControllingDocForm="Unspecified"
     fi
 
     if [ -f lcntContentsReplacement ] ; then
-	fv_lcntContentsReplacement=$( cat lcntContentsReplacement ) 
+        fv_lcntContentsReplacement=$( cat lcntContentsReplacement ) 
     else
-	fv_lcntContentsReplacement="Unspecified"
+        fv_lcntContentsReplacement="Unspecified"
     fi
 
     lpReturn
@@ -2445,19 +2446,19 @@ _EOF_
     opDo vis_htmlPubLcnt_method_varsPrep
 
     if [ ! -f "${thisFilesList}" ] ; then
-	EH_problem "Missing ${thisFilesList}"
-	lpReturn 101
+        EH_problem "Missing ${thisFilesList}"
+        lpReturn 101
     fi
 
     fv_thisFilesList=$( cat ${thisFilesList} )
 
     if [ -z "${fv_thisFilesList}" ] ; then
-	EH_problem "Empty ${thisFilesList} -- Skipped"
-	lpReturn 
+        EH_problem "Empty ${thisFilesList} -- Skipped"
+        lpReturn 
     fi
 
     for thisFile in ${fv_thisFilesList} ; do
-	opDo bystarPlone3Features.sh -p bystarUid=${bystarUid} -i uploadFileToFolder "${thisFile}" "${fv_siteFolder}"
+        opDo bystarPlone3Features.sh -p bystarUid=${bystarUid} -i uploadFileToFolder "${thisFile}" "${fv_siteFolder}"
     done
 }
 
@@ -2485,10 +2486,10 @@ _EOF_
     EH_assert [[ $# -gt 0 ]]
 
     if [ -f ${moObjectTypeFileName} ] ; then
-	ANT_cooked "${moObjectTypeFileName}  Already exists -- Doing Nothing"
+        ANT_cooked "${moObjectTypeFileName}  Already exists -- Doing Nothing"
     else
-	thisObjectType=${moObjectTypeEnum[custom]}
-	opDo eval echo "${thisObjectType}" \> "${moObjectTypeFileName}"
+        thisObjectType=${moObjectTypeEnum[custom]}
+        opDo eval echo "${thisObjectType}" \> "${moObjectTypeFileName}"
     fi
 
     opDo vis_custom_method_startUpdate "$@"
@@ -2514,32 +2515,32 @@ _EOF_
     opDo commonStartFiles_startUpdate
 
     if [ -f ${moObjectTypeFileName} ] ; then
-	ANT_cooked "${moObjectTypeFileName}  Already exists -- Doing Nothing"
+        ANT_cooked "${moObjectTypeFileName}  Already exists -- Doing Nothing"
     else
-	thisObjectType=${moObjectTypeEnum[basic]}
-	opDo eval echo "${thisObjectType}" \> "${moObjectTypeFileName}"
+        thisObjectType=${moObjectTypeEnum[basic]}
+        opDo eval echo "${thisObjectType}" \> "${moObjectTypeFileName}"
     fi
 
     if [ -f ${moMailingNameFileName} ] ; then
-	ANT_cooked "${moMailingNameFileName} Already exists -- Doing Nothing"
+        ANT_cooked "${moMailingNameFileName} Already exists -- Doing Nothing"
     else
-	if [ "${thisMailingName}" == "path" ] ; then
-	    opDo eval echo "${mailingNamePath}" \> ${moMailingNameFileName}
-	else
-	    opDo eval echo "${thisMailingName}" \> ${moMailingNameFileName}
-	fi
+        if [ "${thisMailingName}" == "path" ] ; then
+            opDo eval echo "${mailingNamePath}" \> ${moMailingNameFileName}
+        else
+            opDo eval echo "${thisMailingName}" \> ${moMailingNameFileName}
+        fi
     fi
 
     if [ -f ${moExcludeFromAutoloadFileName} ] ; then
-	ANT_cooked "${moExcludeFromAutoloadFileName} Already exists -- Doing Nothing"
+        ANT_cooked "${moExcludeFromAutoloadFileName} Already exists -- Doing Nothing"
     else
-	opDo eval echo "${moExcludeFromAutoloadEnum[default]}" \> ${moExcludeFromAutoloadFileName}
+        opDo eval echo "${moExcludeFromAutoloadEnum[default]}" \> ${moExcludeFromAutoloadFileName}
     fi
 
     if [ -f ${moContentMailFileName} ] ; then
-	ANT_cooked "${moContentMailFileName} Already exists -- Doing Nothing"
+        ANT_cooked "${moContentMailFileName} Already exists -- Doing Nothing"
     else
-	opDo vis_mailContent_startGen
+        opDo vis_mailContent_startGen
     fi
 
     destFilePath=${cwd}/custom-mailing.el
@@ -2742,7 +2743,7 @@ function bystarAcctPathAnalyzeDo {
  for thisElem in ${pathArray[@]} ; do
    if [[ "${thisElem}_" == "Mailings_" || 
          "${thisElem}_" == "mailings_" || 
-	 "${thisElem}_" == "Mailing_"  ]] ; then
+         "${thisElem}_" == "Mailing_"  ]] ; then
      acctBaseIndex=${count}
      #echo ${relPath} Got IT
      bystarAcctBase=`FN_dirsPart ${relPath}`
@@ -2760,15 +2761,15 @@ function bystarAcctPathAnalyzeDo {
       mailingNamePath=""
     else
       # if [ "${thisElem}_" == "index_html_" ] ; then 
-      # 	  doNothing
+      #           doNothing
       #elif [ "${thisElem}_" != "Home_" ] ; then 
       if [ "${thisElem}_" != "Home_" ] ; then 
-	  mailingPath="${mailingPath}/${thisElem}"
-	  if [ -z ${mailingNamePath} ] ; then
-	      mailingNamePath="${thisElem}"
-	  else
-	      mailingNamePath="${mailingNamePath}-${thisElem}"
-	  fi
+          mailingPath="${mailingPath}/${thisElem}"
+          if [ -z ${mailingNamePath} ] ; then
+              mailingNamePath="${thisElem}"
+          else
+              mailingNamePath="${mailingNamePath}-${thisElem}"
+          fi
       fi
     fi
    fi
@@ -2799,15 +2800,15 @@ function bystarAcctPathAnalyzeDo {
     bystarServiceSupportHookParamsSet ${cp_ServiceType} ${cp_ServiceSupportType}
 
     function acctBasePasswdGet {
-	# DUPLICATES bystarAcctAdmin.sh should stay in sync
+        # DUPLICATES bystarAcctAdmin.sh should stay in sync
         # bystarPasswd=$( bystarAcctAdmin.sh -p bystarUid="${bystarUid}" -i acctPasswdGet )
-	EH_assert [[ $# -eq 0 ]]
+        EH_assert [[ $# -eq 0 ]]
 
-	thisKey=$( STR_toLower ${cp_ServiceType} )
+        thisKey=$( STR_toLower ${cp_ServiceType} )
         #ANT_raw decryptedPasswd=$(  echo ${cp_currentPasswd}  | gcipher -C Vigenere -k ${thisKey} - )
-	decryptedPasswd=$(  echo ${cp_currentPasswd}  | gcipher -C Vigenere -k ${thisKey} - )
+        decryptedPasswd=$(  echo ${cp_currentPasswd}  | gcipher -C Vigenere -k ${thisKey} - )
 
-	echo ${decryptedPasswd}
+        echo ${decryptedPasswd}
     }
 
     #bystarPasswd=$( bystarDevelopers.sh -p bystarUid="${bystarUid}" -i acctPasswdGet )
@@ -2832,29 +2833,29 @@ _EOF_
     bystarAcctPathAnalyze $( pwd )
 
     if [ $#  -eq 1 ] ; then 
-	typeset thisParam=$1
-	
-	eval echo '$'${thisParam}
+        typeset thisParam=$1
+        
+        eval echo '$'${thisParam}
     else
-	echo contentEndPath=${contentEndPath}
-	if [ "${mailingPath}_" == "_" ] ; then
-	    echo mailingPath="/ -- ROOT"
-	else
-	    echo mailingPath=${mailingPath}
-	fi
+        echo contentEndPath=${contentEndPath}
+        if [ "${mailingPath}_" == "_" ] ; then
+            echo mailingPath="/ -- ROOT"
+        else
+            echo mailingPath=${mailingPath}
+        fi
 
-	if [ "${mailingNamePath}_" == "_" ] ; then
-	    echo mailingNamePath="/ -- ROOT"
-	else
-	    echo mailingNamePath=${mailingNamePath}
-	fi
+        if [ "${mailingNamePath}_" == "_" ] ; then
+            echo mailingNamePath="/ -- ROOT"
+        else
+            echo mailingNamePath=${mailingNamePath}
+        fi
 
-	echo bystarAcctBase=${bystarAcctBase}
-	echo bystarUid=${bystarUid}
-	echo bystarPasswd=${bystarPasswd}
-	echo bystarAcctType=${bystarAcctType}
+        echo bystarAcctBase=${bystarAcctBase}
+        echo bystarUid=${bystarUid}
+        echo bystarPasswd=${bystarPasswd}
+        echo bystarAcctType=${bystarAcctType}
 
-	echo bystarSiteFqdn=${bystarSiteFqdn}
+        echo bystarSiteFqdn=${bystarSiteFqdn}
     fi
 }
 
@@ -2929,7 +2930,7 @@ _EOF_
       typeset thisDescription=`cat ${thisFolder}/index_html/pageDescription`
     
       if [ "${thisDescription}_" = "_" ] ; then
-	thisDescription=${thisTitle}
+        thisDescription=${thisTitle}
       fi
 
       cat   << _EOF_
@@ -2989,24 +2990,24 @@ _EOF_
     seeAlsoHtmlHead
 
     if [ -s ./seeAlso.info ] ; then
-	cat  ./seeAlso.info |
-	while read thisLine ; do
+        cat  ./seeAlso.info |
+        while read thisLine ; do
 
-	    thisTitle=`echo ${thisLine} | cut -d '&' -f 1`
-	    thisDescription=`echo ${thisLine} | cut -d '&' -f 2`
-	    thisUrl=`echo ${thisLine} | cut -d '&' -f 3`
-	  
-	    if [ "${thisDescription}_" = "_" ] ; then
-		thisDescription=${thisTitle}
-	    fi
+            thisTitle=`echo ${thisLine} | cut -d '&' -f 1`
+            thisDescription=`echo ${thisLine} | cut -d '&' -f 2`
+            thisUrl=`echo ${thisLine} | cut -d '&' -f 3`
+          
+            if [ "${thisDescription}_" = "_" ] ; then
+                thisDescription=${thisTitle}
+            fi
 
-	    cat   << _EOF_
+            cat   << _EOF_
   <li><a href="${thisUrl}" title="${thisTitle}"><span>${thisDescription}</span></a></li>
 _EOF_
 
-	done
+        done
     else
-	EH_problem "Missing ./seeAlso.info -- Skipped"
+        EH_problem "Missing ./seeAlso.info -- Skipped"
     fi
     
     seeAlsoHtmlTail
@@ -3048,8 +3049,8 @@ _EOF_
     # Validate specified objectType
     thisEnumObjectType="${moObjectTypeEnum[${thisObjectType}]}"
     if [ -z "${thisEnumObjectType}" ] ; then
-	EH_problem "Invalid objectType=${thisObjectType}"
-	lpReturn
+        EH_problem "Invalid objectType=${thisObjectType}"
+        lpReturn
     fi
     
     startGenFunc=$( eval echo '$'{object_${thisObjectType}[startGen]} )
@@ -3077,24 +3078,24 @@ _EOF_
     bystarAcctPathAnalyze ${here}
 
     if [ $# -eq 1 ] ; then
-	thisObjectType=$1
+        thisObjectType=$1
 
-	if [ -f ${moObjectTypeFileName} ] ; then
-	    currentObjectType=$( cat ${moObjectTypeFileName} )
-	    if [ "${thisObjectType}" != "${currentObjectType}" ] ; then
-		EH_problem "objectType Mis-Match -- ${thisObjectType} != ${currentObjectType}"
-		EH_retOnFail
-	    fi
-	else
-	    opDo eval echo "${thisObjectType}" \> "${moObjectTypeFileName}"
-	fi
+        if [ -f ${moObjectTypeFileName} ] ; then
+            currentObjectType=$( cat ${moObjectTypeFileName} )
+            if [ "${thisObjectType}" != "${currentObjectType}" ] ; then
+                EH_problem "objectType Mis-Match -- ${thisObjectType} != ${currentObjectType}"
+                EH_retOnFail
+            fi
+        else
+            opDo eval echo "${thisObjectType}" \> "${moObjectTypeFileName}"
+        fi
     else
-	if [ -f ${moObjectTypeFileName} ] ; then
-	    thisObjectType=$( cat ${moObjectTypeFileName} )
-	else
-	    thisObjectType=$( vis_objectTypeInCwdGuess )
-	    opDo eval echo "${thisObjectType}" \> "${moObjectTypeFileName}"
-	fi
+        if [ -f ${moObjectTypeFileName} ] ; then
+            thisObjectType=$( cat ${moObjectTypeFileName} )
+        else
+            thisObjectType=$( vis_objectTypeInCwdGuess )
+            opDo eval echo "${thisObjectType}" \> "${moObjectTypeFileName}"
+        fi
     fi
 
     startUpdateFunc=$( eval echo '$'{object_${thisObjectType}[startUpdate]} )
@@ -3178,8 +3179,8 @@ _EOF_
     # Validate specified objectType
     thisEnumObjectType="${moObjectTypeEnum[${thisObjectType}]}"
     if [ -z "${thisEnumObjectType}" ] ; then
-	EH_problem "Invalid objectType=$1"
-	lpReturn
+        EH_problem "Invalid objectType=$1"
+        lpReturn
     fi
     
     updateFunc=$( eval echo '$'{object_${thisObjectType}[update]} )
@@ -3207,8 +3208,8 @@ _EOF_
     # Validate specified objectType
     thisEnumObjectType="${moObjectTypeEnum[${thisObjectType}]}"
     if [ -z "${thisEnumObjectType}" ] ; then
-	EH_problem "Invalid objectType=$1"
-	lpReturn
+        EH_problem "Invalid objectType=$1"
+        lpReturn
     fi
     
     updateFunc=$( eval echo '$'{object_${thisObjectType}[execute]} )
@@ -3236,8 +3237,8 @@ _EOF_
     # Validate specified objectType
     thisEnumObjectType="${moObjectTypeEnum[${thisObjectType}]}"
     if [ -z "${thisEnumObjectType}" ] ; then
-	EH_problem "Invalid objectType=$1"
-	lpReturn
+        EH_problem "Invalid objectType=$1"
+        lpReturn
     fi
     
     updateFunc=$( eval echo '$'{object_${thisObjectType}[examplesMenu]} )
@@ -3264,8 +3265,8 @@ _EOF_
     # Validate specified objectType
     thisEnumObjectType="${moObjectTypeEnum[${thisObjectType}]}"
     if [ -z "${thisEnumObjectType}" ] ; then
-	EH_problem "Invalid objectType=$1"
-	lpReturn
+        EH_problem "Invalid objectType=$1"
+        lpReturn
     fi
     
     updateFunc=$( eval echo '$'{object_${thisObjectType}[validate]} )
@@ -3294,8 +3295,8 @@ _EOF_
     # Validate specified objectType
     thisEnumObjectType="${moObjectTypeEnum[${thisObjectType}]}"
     if [ -z "${thisEnumObjectType}" ] ; then
-	EH_problem "Invalid objectType=$1"
-	lpReturn
+        EH_problem "Invalid objectType=$1"
+        lpReturn
     fi
     
     updateFunc=$( eval echo '$'{object_${thisObjectType}[load]} )
@@ -3323,17 +3324,17 @@ _EOF_
     # Validate specified objectType
     thisEnumObjectType="${moObjectTypeEnum[${thisObjectType}]}"
     if [ -z "${thisEnumObjectType}" ] ; then
-	EH_problem "Invalid objectType=$1"
-	lpReturn
+        EH_problem "Invalid objectType=$1"
+        lpReturn
     fi
 
     if [  "${fv_excludeFromAutoload}" == "true" ] ; then
-	ANT_raw "excludeFromAutoload=true -- Excluded -- Skipped"
+        ANT_raw "excludeFromAutoload=true -- Excluded -- Skipped"
     else
-	if [ "${thisObjectType}" != "nativeNode" ] ; then
-	    updateFunc=$( eval echo '$'{object_${thisObjectType}[load]} )
-	    opDo ${updateFunc} "${@}"
-	fi
+        if [ "${thisObjectType}" != "nativeNode" ] ; then
+            updateFunc=$( eval echo '$'{object_${thisObjectType}[load]} )
+            opDo ${updateFunc} "${@}"
+        fi
     fi
 
     lpReturn
@@ -3373,22 +3374,22 @@ _EOF_
     EH_assert [[ $# -le 1 ]]
 
     if [ $# -eq 1 ] ; then
-	thisObjectType=$1
+        thisObjectType=$1
 
-	if [ -f ${moObjectTypeFileName} ] ; then
-	    currentObjectType=$( cat ${moObjectTypeFileName} )
-	    if [ "${thisObjectType}" != "${currentObjectType}" ] ; then
-		EH_problem "objectType Mis-Match -- ${thisObjectType} != ${currentObjectType}"
-		EH_retOnFail
-	    fi
-	fi
+        if [ -f ${moObjectTypeFileName} ] ; then
+            currentObjectType=$( cat ${moObjectTypeFileName} )
+            if [ "${thisObjectType}" != "${currentObjectType}" ] ; then
+                EH_problem "objectType Mis-Match -- ${thisObjectType} != ${currentObjectType}"
+                EH_retOnFail
+            fi
+        fi
     else
-	if [ -f ${moObjectTypeFileName} ] ; then
-	    thisObjectType=$( cat ${moObjectTypeFileName} )
-	else
-	    EH_problem "Missing ${moObjectTypeFileName}"
-	    EH_retOnFail
-	fi
+        if [ -f ${moObjectTypeFileName} ] ; then
+            thisObjectType=$( cat ${moObjectTypeFileName} )
+        else
+            EH_problem "Missing ${moObjectTypeFileName}"
+            EH_retOnFail
+        fi
     fi
 
     varsPrepFunc=$( eval echo '$'{object_${thisObjectType}[varsPrep]} ) 
@@ -3427,25 +3428,25 @@ _EOF_
     bystarAcctPathAnalyze ${here}
 
     if [ $# -eq 1 ] ; then
-	thisObjectType=$1
+        thisObjectType=$1
 
-	if [ -f ${moObjectTypeFileName} ] ; then
-	    currentObjectType=$( cat ${moObjectTypeFileName} )
-	    if [ "${thisObjectType}" != "${currentObjectType}" ] ; then
-		EH_problem "objectType Mis-Match -- ${thisObjectType} != ${currentObjectType}"
-		EH_retOnFail
-	    fi
-	else
-	    opDo eval echo "${thisObjectType}" \> "${moObjectTypeFileName}"
-	fi
+        if [ -f ${moObjectTypeFileName} ] ; then
+            currentObjectType=$( cat ${moObjectTypeFileName} )
+            if [ "${thisObjectType}" != "${currentObjectType}" ] ; then
+                EH_problem "objectType Mis-Match -- ${thisObjectType} != ${currentObjectType}"
+                EH_retOnFail
+            fi
+        else
+            opDo eval echo "${thisObjectType}" \> "${moObjectTypeFileName}"
+        fi
     else
-	if [ -f ${moObjectTypeFileName} ] ; then
-	    thisObjectType=$( cat ${moObjectTypeFileName} )
-	else
-	    # NOTYET -- Try to better determine
-	    thisObjectType=${moObjectTypeEnum[page]}
-	    opDo eval echo "${thisObjectType}" \> "${moObjectTypeFileName}"
-	fi
+        if [ -f ${moObjectTypeFileName} ] ; then
+            thisObjectType=$( cat ${moObjectTypeFileName} )
+        else
+            # NOTYET -- Try to better determine
+            thisObjectType=${moObjectTypeEnum[page]}
+            opDo eval echo "${thisObjectType}" \> "${moObjectTypeFileName}"
+        fi
     fi
 
     infoFunc=$( eval echo '$'{object_${thisObjectType}[info]} )
@@ -3471,8 +3472,8 @@ function vis_objectLocalPrep {
     # Validate specified objectType
     thisEnumObjectType="${moObjectTypeEnum[${thisObjectType}]}"
     if [ -z "${thisEnumObjectType}" ] ; then
-	EH_problem "Invalid objectType=${thisObjectType}"
-	lpReturn
+        EH_problem "Invalid objectType=${thisObjectType}"
+        lpReturn
     fi
     
     prepFunc=$( eval echo '$'{object_${thisObjectType}[prep]} )
@@ -3497,10 +3498,10 @@ _EOF_
     # print "%%%%% ${currentDir} %%%%%"
 
     for thisOne in $( vis_effectiveSitePages ) ; do
-	opDoComplain cd ${currentDir}/${thisOne} || continue
-	print "%%%%%% ${currentDir}/${thisOne} %%%%%"
+        opDoComplain cd ${currentDir}/${thisOne} || continue
+        print "%%%%%% ${currentDir}/${thisOne} %%%%%"
     
-	opDo vis_startObjectUpdateInCwd
+        opDo vis_startObjectUpdateInCwd
     done
 }
 
@@ -3516,12 +3517,12 @@ function vis_initialPageContentGen {
 
   case ${contentEndPath} in 
     "Resume")
-	      cat   << _EOF_
+              cat   << _EOF_
    My Resume ;;; Is This and That
 _EOF_
          ;;
       *)
-	cat  << _EOF_
+        cat  << _EOF_
 <html>
 <head>
 <title>${pageName}</title>
@@ -3534,7 +3535,7 @@ Non Specific Initial Page Content. To be edited.
 </body>
 </html>
 _EOF_
-	 ;;
+         ;;
     esac
 }
 
@@ -3550,12 +3551,12 @@ function vis_initialIndexContentGen {
 
   case ${contentEndPath} in 
     "Resume")
-	      cat   << _EOF_
+              cat   << _EOF_
    My Resume ;;; Is This and That
 _EOF_
          ;;
       *)
-	cat  << _EOF_
+        cat  << _EOF_
 <html>
 <head>
 <title>${pageName}</title>
@@ -3568,7 +3569,7 @@ Non Specific Initial Index Content. To be edited.
 </body>
 </html>
 _EOF_
-	 ;;
+         ;;
     esac
 }
 
@@ -3650,8 +3651,8 @@ function vis_emacsClientFiles {
     typeset thisOne=""
 
     for thisOne in ${*} ; do
-	#( emacsclient -e "(find-file \"LCNT-INFO/${thisOne}\")"  & 	wait $! )
-	emacsclient "${thisOne}"
+        #( emacsclient -e "(find-file \"LCNT-INFO/${thisOne}\")"  &     wait $! )
+        emacsclient "${thisOne}"
     done
 }
 
@@ -3662,9 +3663,9 @@ function vis_dblockUpdateFile {  # NOTYET, to be obsoleted by bx-dblock -i dbloc
     typeset thisOne=""
 
     for thisOne in ${*} ; do
-	opDo bx-dblock -i dblockBlankFiles "${thisOne}"
-	opDo bx-dblock -i dblockUpdateFiles "${thisOne}"
-	#emacsclient -e "(org-dblock-bx-blank-then-update-file \"${thisOne}\")"
+        opDo bx-dblock -i dblockBlankFiles "${thisOne}"
+        opDo bx-dblock -i dblockUpdateFiles "${thisOne}"
+        #emacsclient -e "(org-dblock-bx-blank-then-update-file \"${thisOne}\")"
     done
 }
 
@@ -3709,8 +3710,8 @@ _EOF_
     opDoExit  pushd ${here}
     
     if [[ -d ${thisFolder} ]] ; then
-	EH_problem "${thisFolder} Already exists"
-	lpReturn 101
+        EH_problem "${thisFolder} Already exists"
+        lpReturn 101
     fi
 
     opDo vis_startObjectGen folder ${thisFolder}
@@ -3871,8 +3872,8 @@ _EOF_
     processedContent="$( bystarLcntProc.sh -p lcntParam=docModulePath -i lcntParamGet ${controllingPlpcNu} )/emailContentEnFa/index.html"
 
     if [ ! -s "${processedContent}" ] ; then 
-	EH_problem "Missing ${processedContent}"
-	lpReturn 101
+        EH_problem "Missing ${processedContent}"
+        lpReturn 101
     fi
 
     opDo /opt/public/osmt/bin/elispFilterHtml.sh -v -n showRun  -i deTitle ${processedContent}
@@ -3883,9 +3884,9 @@ _EOF_
 
     
     if [ -z "${ContentsReplacement}" ] ; then
-	opDo eval "cat  ${processedContent} >> ${prefaceFile}"
+        opDo eval "cat  ${processedContent} >> ${prefaceFile}"
     else
-	opDo eval "cat  ${processedContent} | sed  's:--SEC ANCHOR --.Contents./H2:--SEC ANCHOR -->${ContentsReplacement}</H2:'>> ${prefaceFile}"
+        opDo eval "cat  ${processedContent} | sed  's:--SEC ANCHOR --.Contents./H2:--SEC ANCHOR -->${ContentsReplacement}</H2:'>> ${prefaceFile}"
     fi
 
     opDo ls -l $( pwd )/${prefaceFile}
@@ -3914,8 +3915,8 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if [ -d mailLcnt ] ; then
-	ANT_cooked "./mailLcnt in place -- processing skipped"
-	lpReturn 1
+        ANT_cooked "./mailLcnt in place -- processing skipped"
+        lpReturn 1
     fi
 
     opDo mkdir ./mailLcnt
@@ -3937,8 +3938,8 @@ _EOF_
     typeset cwd=$( pwd )
 
     if [ ! -d ./mailLcnt ] ; then
-	ANT_cooked "Missing ./mailLcnt -- Skiping It"
-	lpReturn 0
+        ANT_cooked "Missing ./mailLcnt -- Skiping It"
+        lpReturn 0
     fi
 
     inBaseDirDo ./mailLcnt lcntProc.sh -i build mailLcnt.ttytex
@@ -3947,8 +3948,8 @@ _EOF_
     processedContent="${cwd}/mailLcnt/heveaHtml-mailLcnt/index.html"
 
     if [ ! -s "${processedContent}" ] ; then 
-	EH_problem "Missing ${processedContent}"
-	lpReturn 101
+        EH_problem "Missing ${processedContent}"
+        lpReturn 101
     fi
 
     typeset processedContentMailBody="${cwd}/mailBody.html"
@@ -4072,13 +4073,13 @@ _EOF_
     opDo vis_htmlPubLcnt_method_varsPrep
     
     if [ "${fv_lcntControllingDoc}" == "Unspecified" ] ; then
-	EH_problem "Unspecified lcntControllingDoc"
-	lpReturn 101
+        EH_problem "Unspecified lcntControllingDoc"
+        lpReturn 101
     fi
 
     if [ "${fv_lcntControllingDocForm}" == "Unspecified" ] ; then
-	EH_problem "Unspecified lcntControllingDocForm"
-	lpReturn 101
+        EH_problem "Unspecified lcntControllingDocForm"
+        lpReturn 101
     fi
 
     typeset htmlBodyFile="./mailBody.html"
@@ -4091,16 +4092,16 @@ _EOF_
     processedContent="$( bystarLcntProc.sh -p lcntParam=docModulePath -i lcntParamGet ${fv_lcntControllingDoc} )/${fv_lcntControllingDocForm}/index.html"
 
     if [ ! -s "${processedContent}" ] ; then 
-	EH_problem "Missing ${processedContent}"
-	lpReturn 101
+        EH_problem "Missing ${processedContent}"
+        lpReturn 101
     fi
 
     opDo /opt/public/osmt/bin/elispFilterHtml.sh -v -n showRun  -i deTitle ${processedContent}
   
     if [ -z "${fv_lcntContentsReplacement}" ] ; then
-	opDo eval "cat  ${processedContent} >> ${htmlBodyFile}"
+        opDo eval "cat  ${processedContent} >> ${htmlBodyFile}"
     else
-	opDo eval "cat  ${processedContent} | sed  's:--SEC ANCHOR --.Contents./H2:--SEC ANCHOR -->${fv_lcntContentsReplacement}</H2:'>> ${htmlBodyFile}"
+        opDo eval "cat  ${processedContent} | sed  's:--SEC ANCHOR --.Contents./H2:--SEC ANCHOR -->${fv_lcntContentsReplacement}</H2:'>> ${htmlBodyFile}"
     fi
 
     opDo ls -l $( pwd )/${htmlBodyFile}
@@ -4134,15 +4135,15 @@ _EOF_
     printf "$( pwd )/Notes.org\n"
 
     if [ -f ${here}/custom-mailing.el ] ; then
-	printf '****   ====  '
-	printf '[[elisp:(load-file '
-	printf "\"$( pwd )/custom-mailing.el\")]]\n"
+        printf '****   ====  '
+        printf '[[elisp:(load-file '
+        printf "\"$( pwd )/custom-mailing.el\")]]\n"
     elif [ -f ${here}/generated-mailing.el ] ; then
-	printf '****   ====  '
-	printf '[[elisp:(load-file '
-	printf "\"$( pwd )/generated-mailing.el\")]]\n"
+        printf '****   ====  '
+        printf '[[elisp:(load-file '
+        printf "\"$( pwd )/generated-mailing.el\")]]\n"
     else
-	EH_problem "Missing custom-mailing.el or generated-mailing.el"
+        EH_problem "Missing custom-mailing.el or generated-mailing.el"
     fi
 
     printf '****   ====  '
@@ -4190,7 +4191,7 @@ _EOF_
 
 
 ####+BEGIN: bx:dblock:org:parameters  :types "agenda"
-#+STARTUP: showall
+#+STARTUP: lognotestate
 #+SEQ_TODO: TODO WAITING DELEGATED | DONE DEFERRED CANCELLED
 #+TAGS: @desk(d) @home(h) @work(w) @withInternet(i) @road(r) call(c) errand(e)
 ####+END:
@@ -4198,11 +4199,13 @@ _EOF_
 #+CATEGORY: WebSites
 
 ####+BEGIN: bx:dblock:bash:end-of-file :type "basic"
-# {{{ DBLOCK-end-of-file
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  Common        ::  /[dblock] -- End-Of-File Controls/ [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+#+STARTUP: showall
 #local variables:
 #major-mode: sh-mode
 #fill-column: 90
 # end:
-# }}} DBLOCK-end-of-file
 ####+END:
 

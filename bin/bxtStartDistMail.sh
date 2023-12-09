@@ -12,15 +12,15 @@ __copying__="
 # This is a Halaal Poly-Existential intended to remain perpetually Halaal.
 ####+END:
 
-####+BEGIN: bx:bsip:bash:seed-spec :types "seedMailingProc.sh"
+####+BEGIN: bx:bsip:bash:seed-spec :types "seedNameDistProc.sh"
 SEED="
-*  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedMailingProc.sh]] |
+*  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedNameDistProc.sh]] |
 "
 FILE="
-*  /This File/ :: /bisos/git/auth/bxRepos/bisos/bsip4/bin/bxtStartDistMail.sh
+*  /This File/ :: /bisos/core/bsip/bin/bxtStartDistMail.sh
 "
 if [ "${loadFiles}" == "" ] ; then
-    /bisos/core/bsip/bin/seedMailingProc.sh -l $0 "$@"
+    /bisos/core/bsip/bin/seedNameDistProc.sh -l $0 "$@"
     exit $?
 fi
 ####+END:

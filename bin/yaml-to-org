@@ -1,0 +1,54 @@
+#!/usr/bin/awk -f
+
+### Convert input files from yaml to org-mode format.
+
+BEGIN {
+    # A lone dash symbol is not particularly useful as a headline.
+    # When `add_comments = 1`, the script will try to add informative
+    # comments to headlines that would otherwise contain a single dash.
+    add_comments = 1
+    indentation = 2
+}
+
+function depth(dash_pos) {
+    return 1 + int((dash_pos - 1) / indentation)
+}
+
+function prefix(depth) {
+    s = sprintf("%*s", depth, "")
+    gsub(/ /, "*", s)
+    return s " "
+}
+
+function prev_item_flush(split_p) {
+    if (prev_item["pos"]) { # Does `prev_item` exist?
+        if (split_p) {
+            print prev_item["dash"]
+            print prev_item["item"]
+        } else {
+            print prev_item["joined"]
+        }
+        delete prev_item
+    }
+}
+
+/^ *- / {
+    pos = index($0, "-")
+    prev_item_flush(0)
+    prev_item["pos"] = pos
+    d = depth(pos);
+    prev_item["joined"] = prefix(d) "- " substr($0, pos + 2)
+    prev_item["dash"] = prefix(d) "-" (add_comments ? \
+                                       "  # " substr($0, pos + 2) : "")
+    prev_item["item"] = prefix(d + 1) substr($0, pos + 2)
+    next
+}
+
+{
+    pos = match($0, /[^ ]/)
+    prev_item_flush(pos - indentation == prev_item["pos"])
+    if (pos)
+        print prefix(depth(pos)) substr($0, pos)
+}
+
+END { prev_item_flush(0) }

@@ -326,8 +326,12 @@ _EOF_
 
         cat ${each}.${eachDateTag} | \
             sed \
-            -e "s@\([ \t]\)io.log.@\1b_io.log.@g"\
-            -e "s@(io.log.@(b_io.log.@g"\
+            -e "s@b:mtdt:recipients|curSet@b:mtdt:recipients|select@g"\
+            -e "s@b:mtdt:mailings|curSet@b:mtdt:mailings|select@g"\
+            -e "s@b:mtdt:distr|applyRecipientsCurSetListToMailings@b:mtdt:distr|applyRecipientsSelectedListToMailings@g"\
+            -e "s@curSetForms@selectedForms@g"\
+            -e "s@b:mtdt:derive/withFileAndCurSet@b:mtdt:derive/withFileAndSelect@g"\
+            -e "s@CurRecipients@SelRecipients@g"\
             > ${each}
 
             # sed -e "s@unisos.marme@bisos.marmee@g" > ${each}

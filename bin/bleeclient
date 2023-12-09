@@ -46,7 +46,7 @@ function vis_moduleDescription {  cat  << _EOF_
 *  [[elisp:(org-cycle)][| ]]  Xrefs         :: *[Related/Xrefs:]*  <<Xref-Here->>  -- External Documents  [[elisp:(org-cycle)][| ]]
 **  [[elisp:(org-cycle)][| ]]  Panel        :: [[file:/libre/ByStar/InitialTemplates/activeDocs/bxServices/versionControl/fullUsagePanel-en.org::Xref-VersionControl][Panel Roadmap Documentation]] [[elisp:(org-cycle)][| ]]
 *  [[elisp:(org-cycle)][| ]]  Info          :: *[Module Description:]* [[elisp:(org-cycle)][| ]]
-
+>
 _EOF_
 }
 
@@ -63,6 +63,7 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
+. ${opBinBase}/bisosCurrents_lib.sh
 
 # PRE parameters
 
@@ -94,7 +95,10 @@ $( examplesSeperatorTopLabel "${G_myName}" )
 _EOF_
 
     vis_examples_bleeLib
-    
+
+# xauth -f ~/.Xauthority list | grep -v ':0' | while read foo; do xauth add \$foo; done
+# ${G_myName} ${extraInfo} -i emacsRemoteAttachFrame \${audioServerHost}
+
     cat  << _EOF_
 $( examplesSeperatorChapter "Blee Client" )
 $( examplesSeperatorSection "Run Raw Blee Client -- deliver args to emacsclient" )
@@ -106,6 +110,21 @@ ${G_myName} ${extraInfo} -- --no-wait ${oneFileName}
 $( examplesSeperatorSection "Visit File" )
 ${G_myName} ${extraInfo} -i here ${oneFileName}          # Default noArgsHook -- visit file here
 ${G_myName} ${extraInfo} -i other ${oneFileName}         # visit file other window
+$( examplesSeperatorSection "X11 Authentication Fixes" )
+xauth merge ~/.Xauthority    # When server side is running on console
+ls -l ~/.Xauthority
+xauth -f ~/.Xauthority list
+--- Usage: ssh -f is necessary for lsip-shell and xterm -hold is necessary for multi-clients
+ssh -X 192.168.0.181 -f xterm -hold -e bx-bleeClient -i emacsLocalAttachFrame
+---
+${G_myName} ${extraInfo} -i emacsLocalAttachFrame
+${G_myName} ${extraInfo} -i emacsRemoteAttachFrame 127.0.0.1
+--- AUDIO SERVER ---
+${G_myName} ${extraInfo} -i emacsRemoteAttachFrame 192.168.7.149
+--- COMPUTE SEREVR ---
+${G_myName} ${extraInfo} -i emacsRemoteAttachFrame 192.168.0.181
+--- Other Servers ---
+${G_myName} ${extraInfo} -i emacsRemoteAttachFrame 192.168.10.86
 _EOF_
   
 }
@@ -229,6 +248,39 @@ _EOF_
     opDo ${thisEmacsClient} --eval "(describe-variable 'server-name)"
 
     lpReturn
+}
+
+
+function vis_emacsLocalAttachFrame {
+  EH_assert [[ $# -eq 0 ]]
+
+   local thisEmacsClient=$( vis_thisEmacsClient )
+
+  if [ -f "${lpXauthorityFile}" ] ; then
+      opDo export XAUTHORITY=$( cat "${lpXauthorityFile}" )
+      echo Running:  xauth merge ~/.Xauthority
+      opDo xauth merge ~/.Xauthority
+
+      echo Env: XAUTHORITY=${XAUTHORITY}
+  else
+      ANT_raw skipping setting of XAUTHORITY and xauth merge ~/.Xauthority
+  fi
+
+
+  echo Running:  ${thisEmacsClient} --eval "(progn (make-frame-on-display \"$DISPLAY\"))"
+
+  opDo ${thisEmacsClient} --eval "(progn (make-frame-on-display \"$DISPLAY\"))"
+}
+
+
+function vis_emacsRemoteAttachFrame {
+  EH_assert [[ $# -eq 1 ]]
+
+  typeset remoteHost=$1
+
+  # -f puts it in background
+  #opDo ssh -X lsipusr@${remoteHost} -f /opt/public/osmt/bin/${G_myName} -i emacsLocalAttachFrame
+  opDo ssh -X lsipusr@${remoteHost}  /opt/public/osmt/bin/${G_myName} -i emacsLocalAttachFrame &
 }
 
 
