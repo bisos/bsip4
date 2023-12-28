@@ -3352,10 +3352,11 @@ _EOF_
     }
     EH_assert [[ $# -eq 1 ]]
 
+    local thisEmacsClient=$( vis_thisEmacsClient )
     typeset namesListFile=$1
 
     if [ -f ${namesListFile} ] ; then
-        opDo emacsclient -e "(bx-bbdb-names-input-from-file \"${namesListFile}\")"
+        opDo ${thisEmacsClient} -e "(bx-bbdb-names-input-from-file \"${namesListFile}\")"
     else
         EH_problem "Missing ${namesListFile}"
     fi
