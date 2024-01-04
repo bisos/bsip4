@@ -434,6 +434,48 @@ _EOF_
     lpReturn
 }
 
+function vis_usgAcctAdd {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Add the USG account if it does not exist.
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local acctName="$1"
+
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
+
+    if vis_userAcctExists "${acctName}" ; then
+        EH_problem "${acctName} Already Exists -- Addition Skipped"
+        lpReturn 101
+    fi
+
+    local acctGid="$( vis_bisosAcct_usgGid )"
+    local acctUid=""
+    local acctComment=""
+    local acctHome="$( vis_bisosAcct_usgHomeBase )/${acctName}"
+
+    if [ "${acctName}" == "$( vis_bisosAcct_bystarName )" ] ; then
+        acctUid=$( vis_bisosAcct_bystarUid )
+        acctComment="bystar -- Default BISOS Acct"
+    else
+        acctUid=$( vis_usgAcctNextLocalUidNu )
+        acctComment="BISOS Named Usage Acct"
+    fi
+
+    lpDo useradd \
+         --uid "${acctUid}" \
+         --gid "${acctGid}" \
+         --shell /bin/bash \
+         --home-dir "${acctHome}" \
+         --comment "${acctComment}" \
+         ${acctName}
+
+    lpReturn
+}
+
+
 function vis_usgAcctsList {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_

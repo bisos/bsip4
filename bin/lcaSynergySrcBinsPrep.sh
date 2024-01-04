@@ -102,7 +102,7 @@ _EOF_
 item_synergy () {
   distFamilyGenerationHookRun binsPrep_synergy
 }
-hi
+
 binsPrep_synergy_DEFAULT_DEFAULT () {
     mmaThisPkgName="na"
     mmaPkgDebianName="${mmaThisPkgName}"
