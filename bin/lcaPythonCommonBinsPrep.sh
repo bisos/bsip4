@@ -414,7 +414,7 @@ vis_py3Bisos3PipInstalls () {
     ANT_raw "Here we process py3Bisos3PipInstalls one by one."
     local each
     for each in ${itemPy3Bisos3PipOrderedList[@]} ; do
-        lpDo sudo -u bisos /bisos/bsip/bin/bisosPyVenvSetup.sh -h -v -n showRun -f -i venvDo py3 reInstall "${each}"
+        lpDo sudo -u bisos /bisos/core/bsip/bin/bisosPyVenvSetup.sh -h -v -n showRun -f -i venvDo py3 reInstall "${each}"
     done
     print
 }
