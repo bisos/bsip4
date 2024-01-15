@@ -42,9 +42,10 @@ _EOF_
 
 #
 
-. ${opBinBase}//platformBases_lib.sh
+. ${opBinBase}/platformBases_lib.sh
 . ${opBinBase}/bsipProvision_lib.sh
 
+. ${opBinBase}/lpReRunAs.libSh
 
 function G_postParamHook {
      return 0
