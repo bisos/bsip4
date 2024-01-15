@@ -429,12 +429,15 @@ _EOF_
     lpDo echo "Running as root. This Will DELETE ALL OF /bisos /de -- Are You Sure You Want To Proceed? Ctl-C To Abort:"
     read
 
+    userExists(){ id "$1" &>/dev/null; } # silent, it just sets the exit code
+
     if userExists bystar ; then
         lpDo bisosAccounts.sh -h -v -n showRun -i usgAcctDelete bystar
         lpDo bisosAccounts.sh -h -v -n showRun -i bxoAcctDelete bxisoDelimiter
         lpDo bisosAccounts.sh -h -v -n showRun -i bisosGroupAcctDelete
     else
          echo "bystar account does not exists. You should run deBisosIfy not bsipDeBisosIfy"
+         lpReturn
     fi
 
     lpDo rm -r -f /de
