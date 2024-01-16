@@ -691,9 +691,11 @@ _EOF_
 
     EH_assert [ -n "${credentialsBxoPath}" ]
     
-    local userName=$(fileParamManage.py  -i fileParamReadPath ${credentialsBxoPath}/pypi/profiles/default/userName)
+    #local userName=$(fileParamManage.py  -i fileParamReadPath ${credentialsBxoPath}/pypi/profiles/default/userName)
+    local userName="__token__"
     EH_assert [ -n "${userName}" ]
-    local userPasswd=$(fileParamManage.py  -i fileParamReadPath ${credentialsBxoPath}/pypi/profiles/default/userPasswd)
+    #local userPasswd=$(fileParamManage.py  -i fileParamReadPath ${credentialsBxoPath}/pypi/profiles/default/userPasswd)
+    local userPasswd=$(fileParamManage.py  -i fileParamReadPath ${credentialsBxoPath}/pypi/profiles/default/userToken)
     EH_assert [ -n "${userPasswd}" ]
     
     if [ "${repo}" == "main" ] ; then
