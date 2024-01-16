@@ -603,6 +603,9 @@ _EOOB_
 
     lpDo sudo -u ${acctName} git config --global user.name "${userName}"
     lpDo sudo -u ${acctName} git config --global user.email "${userEmail}"
+
+    lpDo sudo -H -u ${acctName} git config --global --add safe.directory '*' # MB-2024 -- Needed with Deb12
+    lpDo sudo -H -u ${acctName} git config --global url.https://.insteadOf git://  # MB-2024
 }
 
 
