@@ -419,7 +419,7 @@ _EOF_
     lpDo vis_usgConvey_bisosDeveloper
 }
 
-function vis_bisosBasePlatform_siteSetup {    
+function vis_bisosBasePlatform_siteSetup {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Preps the site (configs for gitlab server, etc) and activates the siteBxo.

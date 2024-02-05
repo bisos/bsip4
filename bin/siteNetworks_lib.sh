@@ -24,8 +24,8 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
     
     usgHome=$( FN_absolutePathGet ~ )
-    # ~/bisos/sites/selected/siteBpos/networks.bpoFp
-    local selectedNetworksPath="${usgHome}/bisos/sites/selected/siteBpos/networks.bpoFp"
+    # ~/bpos/sites/selected/siteBpos/networks.bpoFp
+    local selectedNetworksPath="${usgHome}/bpos/sites/selected/siteBpos/networks.bpoFp"
     
     local networksBxoId=""
 

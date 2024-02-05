@@ -26,7 +26,7 @@ function vis_moduleDescription {  cat  << _EOF_
 *  [[elisp:(org-cycle)][| ]]  Xrefs         :: *[Related/Xrefs:]*  <<Xref-Here->>  -- External Documents  [[elisp:(org-cycle)][| ]]
 **  [[elisp:(org-cycle)][| ]]  Panel        :: [[file:/libre/ByStar/InitialTemplates/activeDocs/bxServices/versionControl/fullUsagePanel-en.org::Xref-VersionControl][Panel Roadmap Documentation]] [[elisp:(org-cycle)][| ]]
 *  [[elisp:(org-cycle)][| ]]  Info          :: *[Module Description:]* [[elisp:(org-cycle)][| ]]
-** 
+**
 ** Creates a BARC (Bystar Account Request Container) based on command line.
 ** E|
 _EOF_
@@ -54,12 +54,12 @@ function vis_siteBisosBase {
 function vis_siteBisosAdd {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** 
+**
 _EOF_
     }
     EH_assert [[ $# -eq 1 ]]
     local siteBxoId=$1
-    
+
     local siteBisosBase=$( vis_siteBisosBase )
     local siteBxoIdHome=$( FN_absolutePathGet ~${siteBxoId} )
 
@@ -69,11 +69,11 @@ _EOF_
 function vis_siteBisosSelect {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** 
+**
 _EOF_
     }
     local siteBxoId=$1
-    
+
     local siteBisosBase=$( vis_siteBisosBase )
     local siteBxoIdHome=$( FN_absolutePathGet ~${siteBxoId} )
 
@@ -83,36 +83,36 @@ _EOF_
 function vis_siteUsgBase {
     G_funcEntry; function describeF {  G_funcEntryShow;
                                        cat  << _docStringEnd_
-** Defaults to ~/bisos/sites
+** Defaults to ~/bpos/sites
 _docStringEnd_
                                     }
 
     EH_assert [[ $# -lt 2 ]]
     local usgHome=""
-    
+
     if [ $# -eq 0 ] ; then
         usgHome=$( FN_absolutePathGet ~ )
     else
         usgHome="$1"
     fi
 
-    if [ ! -d "${usgHome}/bisos/sites" ] ; then
+    if [ ! -d "${usgHome}/bpos/sites" ] ; then
         # to avoid verbose messages and for efficiency
-        lpDo FN_dirCreatePathIfNotThere ${usgHome}/bisos/sites
+        lpDo FN_dirCreatePathIfNotThere ${usgHome}/bpos/sites
     fi
-     
-    echo ${usgHome}/bisos/sites
+
+    echo ${usgHome}/bpos/sites
 }
 
 
 function vis_siteUsgAdd {
     G_funcEntry; function describeF {  G_funcEntryShow; cat  << _EOF_
-** Activate the specified bpoId 
+** Activate the specified bpoId
 _EOF_
                                     }
     EH_assert [[ $# -eq 1 ]]
     local siteBxoId=$1
-    
+
     local siteUsgBase=$( vis_siteUsgBase )
     local siteBxoIdHome=$( FN_absolutePathGet ~${siteBxoId} )
 
@@ -122,12 +122,12 @@ _EOF_
 function vis_siteUsgSelect {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Activate the specified bpoId 
+** Activate the specified bpoId
 _EOF_
                        }
     EH_assert [[ $# -eq 1 ]]
     local siteBxoId=$1
-    
+
     local siteUsgBase=$( vis_siteUsgBase )
     local siteBxoIdHome=$( FN_absolutePathGet ~${siteBxoId} )
 
@@ -142,10 +142,12 @@ function vis_selectedSiteBxoId {
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    
+
     usgHome=$( FN_absolutePathGet ~ )
-    # ~/bisos/sites/selected/siteBpos/containers.bpoFp/bpoId
+    # ~/bpos/sites/selected/siteBpos/containers.bpoFp/bpoId
     local selectedSitePath="$( vis_siteUsgBase ${usgHome} )/selected"
+
+    # >&2 echo $selectedSitePath
 
     if [ ! -e "${selectedSitePath}" ] ; then
         selectedSitePath="$( vis_siteBisosBase )/selected"
@@ -154,7 +156,7 @@ _EOF_
             lpReturn 101
         fi
     fi
-    
+
     local selectedSiteBxoId="$( FN_nonDirsPart $( readlink -f ${selectedSitePath} ) )"
 
     if ! vis_bxoAcctVerify "${selectedSiteBxoId}" ; then
@@ -165,7 +167,7 @@ _EOF_
     echo "${selectedSiteBxoId}"
 
     lpReturn
-}       
+}
 
 
 function vis_selectedSiteBxoPath {
@@ -175,9 +177,9 @@ function vis_selectedSiteBxoPath {
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    
+
     usgHome=$( FN_absolutePathGet ~ )
-    # ~/bisos/sites/selected/siteBpos/containers.bpoFp/bpoId
+    # ~/bpos/sites/selected/siteBpos/containers.bpoFp/bpoId
     local selectedSitePath="$( vis_siteUsgBase ${usgHome} )/selected"
 
     if [ ! -e "${selectedSitePath}" ] ; then
@@ -187,19 +189,19 @@ _EOF_
             lpReturn 101
         fi
     fi
-    
+
     local selectedSiteBxoPath="$( readlink -f ${selectedSitePath} )"
 
     echo "${selectedSiteBxoPath}"
 
     lpReturn
-}       
+}
 
 
 function vis_activate_siteBxoPlus {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Activate the specified bpoId 
+** Activate the specified bpoId
 _EOF_
     }
     EH_assert [[ $# -eq 1 ]]
@@ -249,7 +251,7 @@ _EOF_
 function vis_withSiteBxoId_write_boxesBxoId {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** returns on stdout: 
+** returns on stdout:
 _EOF_
                       }
     EH_assert [[ $# -eq 2 ]]
@@ -266,7 +268,7 @@ _EOF_
 function vis_withSiteBxoId_write_containersBxoId {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** returns on stdout: 
+** returns on stdout:
 _EOF_
                       }
     EH_assert [[ $# -eq 2 ]]
@@ -282,12 +284,12 @@ _EOF_
 function vis_withSiteBxoId_write_networksBxoId {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** returns on stdout: 
+** returns on stdout:
 _EOF_
                       }
     EH_assert [[ $# -eq 2 ]]
     local siteBxoId=$1
-    local bpoIdValue=$2        
+    local bpoIdValue=$2
 
     EH_assert vis_bxoAcctVerify "${siteBxoId}"
     siteBxoHome=$( FN_absolutePathGet ~${siteBxoId} )
@@ -298,12 +300,12 @@ _EOF_
 function vis_withSiteBxoId_write_domainsBxoId {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** returns on stdout: 
+** returns on stdout:
 _EOF_
                       }
     EH_assert [[ $# -eq 2 ]]
     local siteBxoId=$1
-    local bpoIdValue=$2            
+    local bpoIdValue=$2
 
     EH_assert vis_bxoAcctVerify "${siteBxoId}"
     siteBxoHome=$( FN_absolutePathGet ~${siteBxoId} )
@@ -315,7 +317,7 @@ _EOF_
 function vis_fromSiteBxoIdGet_boxesBxoId {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** returns on stdout: 
+** returns on stdout:
 _EOF_
                       }
     EH_assert [[ $# -eq 1 ]]
@@ -334,7 +336,7 @@ _EOF_
 function vis_fromSiteBxoIdGet_containersBxoId {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** returns on stdout: 
+** returns on stdout:
 _EOF_
                       }
     EH_assert [[ $# -eq 1 ]]
@@ -353,7 +355,7 @@ _EOF_
 function vis_fromSiteBxoIdGet_networksBxoId {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** returns on stdout: 
+** returns on stdout:
 _EOF_
                       }
     EH_assert [[ $# -eq 1 ]]
@@ -371,7 +373,7 @@ _EOF_
 function vis_fromSiteBxoIdGet_domainsBxoId {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** returns on stdout: 
+** returns on stdout:
 _EOF_
                       }
     EH_assert [[ $# -eq 1 ]]
@@ -429,11 +431,11 @@ function containersBaseObtain {
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    
+
     usgHome=$( FN_absolutePathGet ~ )
-    # ~/bisos/sites/selected/siteBpos/containers.bpoFp/bpoId
-    local selectedContainersPath="${usgHome}/bisos/sites/selected/siteBpos/containers.bpoFp/bpoId"
-    
+    # ~/bpos/sites/selected/siteBpos/containers.bpoFp/bpoId
+    local selectedContainersPath="${usgHome}/bpos/sites/selected/siteBpos/containers.bpoFp/bpoId"
+
     local containersBxoId=""
 
     if [ -d "${selectedContainersPath}" ] ; then
@@ -457,7 +459,7 @@ _EOF_
     echo "${containersBase}"
 
     lpReturn
-}       
+}
 
 
 function vis_containersAssignBaseObtain {
@@ -470,13 +472,13 @@ function containersAssignBaseObtain {
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    
+
     usgHome=$( FN_absolutePathGet ~ )
-    # ~/bisos/sites/selected/siteBpos/containers.bpoFp/bpoId
+    # ~/bpos/sites/selected/siteBpos/containers.bpoFp/bpoId
     local selectedSiteBxoId=$( vis_selectedSiteBxoId )
-    
+
     local selectedContainersPath="$( FN_absolutePathGet ~${selectedSiteBxoId} )/siteBpos/containers.bpoFp/bpoId"
-    
+
     local containersBxoId=""
 
     if [ -d "${selectedContainersPath}" ] ; then
@@ -500,7 +502,7 @@ _EOF_
     echo "${containersBase}"
 
     lpReturn
-}       
+}
 
 function container_modelAbodeFunctionBase {
    G_funcEntry
@@ -511,11 +513,11 @@ _EOF_
 
    local containersBase=$( containersAssignBaseObtain )
    EH_assert [ ! -z "${containersBase}" ]
-   
+
    EH_assert [ ! -z "${model}" ]
    EH_assert [ ! -z "${abode}" ]
    EH_assert [ ! -z "${function}" ]
-   
+
    echo "${containersBase}/${model}/${abode}/${function}"
 }
 
@@ -537,9 +539,9 @@ _EOF_
    for each in ${genericBasesList[@]} ;  do
        echo $each
    done
-   
+
    lpReturn
-}       
+}
 
 
 _CommentBegin_

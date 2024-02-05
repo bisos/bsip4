@@ -154,9 +154,9 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
     
     usgHome=$( FN_absolutePathGet ~ )
-    # ~/bisos/sites/selected/siteBpos/boxes.bpoFp/bpoId
-    #local selectedPpBoxesPath="${usgHome}/bisos/sites/selected/siteBpos.fv/ppBoxes"
-    #local selectedPpBoxesPath="${usgHome}/bisos/sites/selected/siteBpos/boxes.bpoFp/bpoId"
+    # ~/bpos/sites/selected/siteBpos/boxes.bpoFp/bpoId
+    #local selectedPpBoxesPath="${usgHome}/bpos/sites/selected/siteBpos.fv/ppBoxes"
+    #local selectedPpBoxesPath="${usgHome}/bpos/sites/selected/siteBpos/boxes.bpoFp/bpoId"
 
     local selectedSiteBxoId=$( vis_selectedSiteBxoId )
     local selectedPpBoxesPath="$( FN_absolutePathGet ~${selectedSiteBxoId} )/siteBpos/boxes.bpoFp/bpoId"    

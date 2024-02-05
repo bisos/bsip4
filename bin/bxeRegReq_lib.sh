@@ -71,12 +71,12 @@ _CommentEnd_
 function vis_regReqInfoBasePath_obtain {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-Check for ~/bisos/sites/selected/bxe/
+Check for ~/bpos/sites/selected/rbxe/bxeDesc/
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    local sitePath="$( FN_absolutePathGet ~ )/bisos/sites/selected/bxe/regReq"    
+    local sitePath="$( FN_absolutePathGet ~ )/bpos/sites/selected/bxe/regReq"
     local sysVarPath="/bisos/var/bxe/regReq"
 
     if [ -d "${sitePath}" ] ; then

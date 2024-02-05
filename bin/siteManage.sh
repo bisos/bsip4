@@ -123,7 +123,7 @@ $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
 $( examplesSeperatorChapter "Site BxO Activate Commands" )
-${G_myName} ${extraInfo} -i selectedSiteBxoId    # based on ~ -- ${usgHome}/bisos/sites/selected
+${G_myName} ${extraInfo} -i selectedSiteBxoId    # based on ~ -- ${usgHome}/bpos/sites/selected
 ${G_myName} ${extraInfo} -i activate_siteBxoPlus ${oneBxoId}
 $( examplesSeperatorChapter "Site FileParam Write Commands" )
 ${G_myName} -i withSiteBxoId_write_boxesBxoId ${oneBxoId} BOXES
@@ -131,7 +131,7 @@ ${G_myName} -i withSiteBxoId_write_containersBxoId ${oneBxoId} CONTAINERS
 ${G_myName} -i withSiteBxoId_write_networksBxoId ${oneBxoId} NETWORKS
 ${G_myName} -i withSiteBxoId_write_domainsBxoId ${oneBxoId} DOMAINS
 $( examplesSeperatorChapter "Site FileParam Read Commands" )
-${G_myName} ${extraInfo} -i selectedSiteBxoId    # based on ~ -- ${usgHome}/bisos/sites/selected
+${G_myName} ${extraInfo} -i selectedSiteBxoId    # based on ~ -- ${usgHome}/bpos/sites/selected
 ${G_myName} ${extraInfo} -i activate_siteBxoPlus ${oneBxoId}
 ${G_myName} -i fromSiteBxoIdGet_boxesBxoId ${oneBxoId}
 ${G_myName} -i fromSiteBxoIdGet_containersBxoId ${oneBxoId}

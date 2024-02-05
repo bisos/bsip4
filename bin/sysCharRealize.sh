@@ -141,7 +141,7 @@ function vis_examples {
 
     local containerBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
     local sysCharContainerBxoId=$( vis_sysCharContainerBxoIdName ${containerBase} )
-    local selectedSiteBxoId=$( vis_selectedSiteBxoId )
+    local selectedSiteBxoId=$( w )
     local containersBase=$( vis_containersBaseObtain )
     
     #oneBxoId="prs-bisos"

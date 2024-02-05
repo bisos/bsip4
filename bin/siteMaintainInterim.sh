@@ -120,7 +120,7 @@ $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
 $( examplesSeperatorChapter "NOTYET Site BxO Activate Commands" )
-${G_myName} ${extraInfo} -i NYselectedSiteBxoId    # based on ~ -- ${usgHome}/bisos/sites/selected
+${G_myName} ${extraInfo} -i NYselectedSiteBxoId    # based on ~ -- ${usgHome}/bpos/sites/selected
 ${G_myName} ${extraInfo} -i NYactivate_siteBxoPlus ${oneBxoId}
 _EOF_
 }
