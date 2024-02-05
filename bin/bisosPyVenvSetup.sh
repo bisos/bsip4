@@ -294,6 +294,31 @@ _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
 _CommentEnd_
 
+function vis_sitePkgsBaseGet {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local sitePkgsBase=""
+
+    # Debian 11
+    if [ -d "/bisos/venv/py3/dev-bisos3/lib/python3.9/site-packages" ] ; then
+	sitePkgsBase="/bisos/venv/py3/dev-bisos3/lib/python3.9/site-packages"
+
+    # Debian 12
+    elif [ -d "/bisos/venv/py3/dev-bisos3/lib/python3.11/site-packages" ] ; then
+	sitePkgsBase="/bisos/venv/py3/dev-bisos3/lib/python3.11/site-packages"
+
+    else
+	EH_problem "Missing /bisos/venv/py3/dev-bisos3/lib/python3.{9,11}/site-packages"
+    fi
+    
+    echo ${sitePkgsBase}
+}
+
+
 function vis_venvPy3Dev_lspBisosSymLinks {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -303,7 +328,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    local sitePkgsBase="/bisos/venv/py3/dev-bisos3/lib/python3.9/site-packages"
+    local sitePkgsBase=$( vis_sitePkgsBaseGet )
 
     local bisosPyNamespaces="bisos unisos blee"
 
@@ -311,7 +336,8 @@ _EOF_
         echo ${eachNamespace}
 
         # /bisos/venv/py3/dev-bisos3/lib/python3.9/site-packages/bisos
-        lpDo ls -l  /bisos/venv/py3/dev-bisos3/lib/python3.9/site-packages/${eachNamespace}
+        # /bisos/venv/py3/dev-bisos3/lib/python3.11/site-packages/bisos	
+        lpDo ls -l  ${sitePkgsBase}/${eachNamespace}
         if [ -h "${sitePkgsBase}/${eachNamespace}" ] ; then
             lpDo echo "${sitePkgsBase}/${eachNamespace} is a link and we assume it is all good"
         else
