@@ -157,14 +157,17 @@ _EOF_
     #doomFrameworkBase=/bisos/blee/doom-emacs-framework
     doomFrameworkBase="/bisos/blee/dooms/doomemacs"
     case $profile in
+        # NOTYET, no longer in real use. Should be obsoleted
         blee2)
             doomMainBase="/bisos/blee/emacsVers/${emacsVer}/doom-main-blee2"
             doomDirBase="/bisos/blee/dooms/doom-base-blee2"
             ;;
+        # NOTYET, TODO, add to this sansBlee3, for testing in parallel with blee3
         blee3)
             doomMainBase="/bisos/blee/emacsVers/${emacsVer}/doom-main-blee3"
             doomDirBase="/bisos/blee/dooms/doom-base-blee3"
             ;;
+        # NOTYET, TODO, Rename this to dist-doom, consistent with chemacs
         sysDoom)
             doomMainBase="/bisos/blee/emacsVers/${emacsVer}/doom-main-emacs"
             doomDirBase="/bisos/blee/dooms/doom-base-emacs"
