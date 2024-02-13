@@ -105,10 +105,10 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Full Operations" )
 ${G_myName} ${extraInfo} -i fullUpdate    # Applies to both physical and virtual systems
-( examplesSeperatorChapter "Step By Step Preps" )
+$( examplesSeperatorChapter "Step By Step Preps" )
 ${G_myName} ${extraInfo} -i sysChar_binsPrep  # installs vagrant ...
 ${G_myName} ${extraInfo} -i sysChar_containerPrep  # creates vag base boxes
-( examplesSeperatorChapter "Actuate Services" )
+$( examplesSeperatorChapter "Actuate Services" )
 ${G_myName} ${extraInfo} -i sysChar_svcsActuate
 _EOF_
 }
