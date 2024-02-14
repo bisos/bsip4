@@ -141,6 +141,9 @@ vis_opRunDistFamilySet () {
               elif grep "11" /etc/issue ; then
                 opRunDistGeneration="11"
                 opRunDistGenNu="11"
+              elif grep "12" /etc/issue ; then
+                opRunDistGeneration="12"
+                opRunDistGenNu="12"
               else
                 opRunDistGeneration="UNSUPPORTED"
                 opRunDistGenNu="UNSUPORTED"
