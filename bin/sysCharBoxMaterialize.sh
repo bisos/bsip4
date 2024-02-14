@@ -204,7 +204,7 @@ _EOF_
 }
 
 
-function vis_containerSteadyWrite {
+function vis_containerSteadyWriteObsoleted {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
