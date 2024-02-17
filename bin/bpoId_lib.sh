@@ -221,7 +221,12 @@ _EOF_
         fi
     }
         
-    case ${inBxoId} in 
+    case ${inBxoId} in
+      "sysChar")
+          gotBxoId=$( vis_bpoIdFpsRead "sysChar" )
+          lpDo setOutBxoId "${gotBxoId}"
+          ;;
+
       "")
           EH_problem "bpoId=\"\" -- empty/blank -- invalid bpoId"
           lpReturn 101
@@ -251,10 +256,6 @@ _EOF_
           ;;    
       "palsByName")
           gotBxoId=$(vis_usgBpos_pals_byname_bpoId_fpRead)
-          lpDo setOutBxoId "${gotBxoId}"
-          ;;
-      "sysChar")
-          gotBxoId=$( vis_bpoIdFpsRead "sysChar" )
           lpDo setOutBxoId "${gotBxoId}"
           ;;
 

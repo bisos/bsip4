@@ -652,10 +652,10 @@ _EOF_
 
     #lpDo vis_containerSteadyRead    
 
-    local containerBase=$( vis_forThisSysFindContainerBase )
-    EH_assert [ ! -z "${containerBase}" ]
+    # local containerBase=$( vis_forThisSysFindContainerBase )
+    # EH_assert [ ! -z "${containerBase}" ]
 
-    vis_containerAssignRead "${containerBase}"
+    vis_containerAssignRead # "${containerBase}"
     EH_assert [ ! -z "${containerAssign_containerId}" ]
 
     local hostContainerId="${containerAssign_containerId}"
@@ -997,7 +997,7 @@ _OUTER_EOF_
         "bxDistro/ubuntu-20.04/mini")
         cat  << _OUTER_EOF_
       cat  << _EOF_
-######### PHASE 1: BISOS Provisioning -- baseBox=${containerBaseBox}
+######### PHASE 1: DEBIAN-11 BISOS Provisioning -- baseBox=${containerBaseBox}
 _EOF_
 
         sudo apt-get update
@@ -1007,7 +1007,23 @@ _EOF_
         /usr/local/bin/provisionBisos.sh -h -v -n showRun -i sysBasePlatform
 _OUTER_EOF_
             ;;
-        
+
+        "bxDistro/debian-12.4.0/desktop")
+        cat  << _OUTER_EOF_
+      cat  << _EOF_
+######### PHASE 1: DEBIAN-12 BISOS Provisioning -- baseBox=${containerBaseBox}
+_EOF_
+
+        sudo apt-get update
+        sudo apt-get -y  install pipx
+        id
+        echo \$HOME
+        pipx install bisos.provision
+        \$HOME/.local/bin/provisionBisos.sh -h -v -n showRun -i sysBasePlatform
+_OUTER_EOF_
+            ;;
+
+
         * )
             EH_problem "Unsupported containerBaseBox=${containerBaseBox}"
             ;;
@@ -1041,6 +1057,9 @@ _EOF_
             doNothing
             ;&   #fallthru
         "bxDistro/debian-11.0.0/desktop"|"bisos/debian-11.pre/bxcntnr")
+            doNothing
+            ;&   #fallthru
+        "bxDistro/debian-12.4.0/desktop")
             doNothing
             ;&   #fallthru
         "bxDistro/debian-10.8/desktop"|"bisos/debian-10.8/bxcntnr")

@@ -24,7 +24,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    echo "192.168.0.151"
+    echo "192.168.0.90"
 }
 
 function vis_registrarUserName {

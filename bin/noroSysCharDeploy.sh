@@ -158,12 +158,8 @@ _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  Examples      :: Examples [[elisp:(org-cycle)][| ]]
 _CommentEnd_
 
+
 function vis_examples {
-   G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
     typeset extraInfo="-h -v -n showRun"
     #typeset extraInfo=""
     typeset runInfo="-p ri=lsipusr:passive"
@@ -202,15 +198,16 @@ ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_fullUpdate #
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_intraToSudoersAddition # ManagerOnly -- intra user -- no bisos
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_aptSourcesPrep # ManagerOnly -- intra user -- no bisos
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_provisionBisos_sysBasePlatform # ManagerOnly -- intra user -- no bisos
-$( examplesSeperatorChapter "Site Setup (Registrar Not Here, in bisos-pip.siteRegistrar) -- bisosBasePlatform Actions" )
+$( examplesSeperatorChapter "Site Setup -- bisosBasePlatform Actions" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_fullUpdate # onManager
+
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_siteSetup # onManager or below onTarget
 ${G_myName} ${extraInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -p siteBxoId=${siteBxoId}" -i bisosBasePlatform_siteSetup # onTarget
-$( examplesSeperatorChapter "SysChar Setup (with sysCharBpo) -- siteBasePlatform Actions" )
+$( examplesSeperatorChapter "SysChar Setup -- siteBasePlatform Actions" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_fullUpdate  # onManager
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_sysBxoActivate  # onManager
 ${G_myName} ${extraInfo} -p bpoId="${bpoId}" -i siteBasePlatform_sysBxoActivate  # onTarget
-$( examplesSeperatorChapter "Specify ConveyInfo (to Guest) -- sysCharBasePlatform Actions" )
+$( examplesSeperatorChapter "Specify ConveyInfo -- sysCharBasePlatform Actions" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p bpoId="${effectiveContainerBxoId}" -p cfpSecurityMode=bisosDev -i conveyInfoStore
 ${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -p cfpPrivA=192.168.0.121 -i conveyInfoStore # For Generic Guests
 ${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -p cfpSecurityMode=bisosDev -i conveyInfoStore
@@ -237,7 +234,7 @@ ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i usgConvey_bisosDeve
 ${G_myName} ${extraInfo} -p bisosDevBxoId=prompt -i usgConvey_bisosDeveloper # onTarget
 $( examplesSeperatorChapter "Target Box Developmenet Preps -- On Target Box" )
 ssh -X bystar@${oneTargetName}    # Then run emacs
-bleeVisit /bisos/panels/development/bisos-dev/howToBecomeDeveloper/fullUsagePanel-en.org
+bleeVisit /bisos/panels/bisos-dev/howToBecomeDeveloper/fullUsagePanel-en.org
 $( examplesSeperatorChapter "siteBasePlatform New Box Assign -- On Manager Or On Target Box" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_newBoxAscertain
 ${G_myName} ${extraInfo} -i siteBasePlatform_newBoxAscertain
@@ -707,7 +704,7 @@ _EOF_
 }
 
 
-function vis_siteBasePlatform_newBoxAscertainObsolted {
+function vis_siteBasePlatform_newBoxAscertain {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Add thisBox to site info base.
@@ -739,40 +736,7 @@ _EOF_
 ####+END:
 }
 
-function vis_siteBasePlatform_newBoxAscertain {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** Add thisBox to site info base.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    function onTargetRun {
-        local boxNu=$( csInvSiteRegBox.cs -i thisBox_findNu 2> /dev/null )
-
-        if [ "${boxNu}" = "[]" ] ; then
-            ANT_raw "This box has NOT been registered -- Needs to be added"
-        else
-            ANT_raw "This box (${boxNu}) has already been registered -- addition skipped"
-        fi
-    }
-
-####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both"
-    if [ "${targetName}" == "onTargetRun" ] ; then
-        lpDo onTargetRun
-    elif [ -z "${targetName}" ] ; then
-        lpDo onTargetRun
-    else
-        local commandName=${FUNCNAME##vis_}
-        lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-             $(which ${G_myName}) ${G_commandPrefs} \
-             -p targetName=onTargetRun -i ${commandName}
-    fi
-####+END:
-}
-
-
-function vis_siteBasePlatform_newBoxAssignObsoleted {
+function vis_siteBasePlatform_newBoxAssign {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Add thisBox to site info base.
@@ -812,35 +776,6 @@ _EOF_
 }
 
 
-function vis_siteBasePlatform_newBoxAssign {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** Using csInvSiteRegBox.cs, we register as new box if needed.
-*** Can be invoked OnTarget or OnManager.
-*** When OnManager, the registration on target is reflected on manager with a boxesGitPull.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    function onTargetRun {
-        lpDo csInvSiteRegBox.cs  -i thisBox_assign
-    }
-
-####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both"
-    if [ "${targetName}" == "onTargetRun" ] ; then
-        lpDo onTargetRun
-    elif [ -z "${targetName}" ] ; then
-        lpDo onTargetRun
-    else
-        local commandName=${FUNCNAME##vis_}
-        lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-             $(which ${G_myName}) ${G_commandPrefs} \
-             -p targetName=onTargetRun -i ${commandName}
-    fi
-####+END:
-}
-
-
 function vis_siteBasePlatform_containerBoxAssignAndRepo {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -863,27 +798,6 @@ _EOF_
     fi
 }
 
-function vis_siteBasePlatform_containerBoxAssignAndRepoObsoleted {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** NOTYET
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    EH_assert [ ! -z "${model}" ]
-    EH_assert [ ! -z "${abode}" ]
-    EH_assert [ ! -z "${function}" ]
-
-    if [ -z "${targetName}" ] ; then
-        lpDo sysCharRealize.sh ${G_commandPrefs} \
-             -p model=${model} -p abode=${abode} -p function=${function} -i containerBoxAssignAndRepo
-    else
-        lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-             $(which sysCharRealize.sh) ${G_commandPrefs} \
-             -p model=${model} -p abode=${abode} -p function=${function} -i containerBoxAssignAndRepo
-    fi
-}
 
 function vis_siteBasePlatform_sysCharContainerBoxRealize {    
     G_funcEntry
@@ -905,50 +819,7 @@ _EOF_
     fi
 }
 
-function vis_siteBasePlatform_containerBoxRepoAscertain {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** Ascertain that containerAssignBase= and containerRepoBase= are in place.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    function onTargetRun {
-        local containerAssignBase=""
-        local containerRepoBase=""
-
-        # NOTYET, EndPoint is not being passed yet
-        containerAssignBase=$( csInvSiteRegContainer.cs --model="Host" --abode="Shield" --purpose="Server"  -i thisSys_findContainer 2> /dev/null )
-
-        if [ "${containerAssignBase}" = "[]" ] ; then
-            ANT_raw "This container has NOT been  -- Needs to be added"
-        else
-            ANT_raw "This container (${containerAssignBase}) has already been registered -- addition skipped"
-        fi
-
-        echo "containerAssignBase=${containerAssignBase}"
-
-        # containerRepoBase=$( siteContainerRepo.sh -i containerRepoBase "${containerAssignBase}" )
-        # EH_assert [ -d "${containerRepoBase}" ]
-
-        # echo "containerRepoBase=${containerRepoBase}"
-    }
-
-####+BEGIN: bx:bsip:bash/onTargetRun
-    if [ "${targetName}" == "onTargetRun" ] ; then
-        lpDo onTargetRun
-    elif [ -z "${targetName}" ] ; then
-        lpDo onTargetRun
-    else
-        local commandName=${FUNCNAME##vis_}
-        lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-             $(which ${G_myName}) ${G_commandPrefs} \
-             -p targetName=onTargetRun -i ${commandName}
-    fi
-####+END:
-}
-
-function vis_siteBasePlatform_containerBoxRepoAscertainObsoleted {
+function vis_siteBasePlatform_containerBoxRepoAscertain {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Ascertain that containerAssignBase= and containerRepoBase= are in place.

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IimBriefDescription="sysCharRealize replaces noroSysCharRealize. Gets rid of siteContainerRepo.sh. See Panel."
+IimBriefDescription="NOTYET: Short Description Of The Module"
 
 ORIGIN="
 * Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee
@@ -104,28 +104,33 @@ _CommentEnd_
 # PRE parameters
 
 typeset -t bpoId=""
+typeset -t containerAssignBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
 
 typeset -t model=""     # one of [HPV]
 typeset -t abode=""     # one of [MAPIS]
 typeset -t function=""  # one of [LASD]
 
+
 function G_postParamHook {
-    # bpoIdPrepValidate
+    bpoIdPrepValidate    
 
     if [ ! -z "${bpoId}" ] ; then
         bpoHome=$( FN_absolutePathGet ~${bpoId} )
     fi
     
-    # bisosCurrentsGet
+    bisosCurrentsGet
 }
+
 
 noArgsHook() {
   vis_examples
 }
 
+
 _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  Examples      :: Examples [[elisp:(org-cycle)][| ]]
 _CommentEnd_
+
 
 function vis_examples {
     typeset extraInfo="-h -v -n showRun"
@@ -134,27 +139,19 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
-    local bpoId=$( vis_bpoIdPrep "sysChar" )
+    local containerBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
+    local sysCharContainerBxoId=$( vis_sysCharContainerBxoIdName ${containerBase} )
+    local selectedSiteBxoId=$( w )
+    local containersBase=$( vis_containersBaseObtain )
+    
+    #oneBxoId="prs-bisos"
+    oneBxoId="${currentBxoId}"
+    #oneBxoId="pic_dnsServer"
+    #oneBxoId="${sysCharContainerBxoId}"        
+    oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )
 
-    local bpoHome="UNKNWON-sysChar-HOME"
-    local containerId=${UNKNWON-sysChar-CONTAINER}
-
-    if [ -z "${bpoId}" ] ; then
-        bpoId="UNKNWON-sysChar"
-    else
-        bpoHome=$( FN_absolutePathGet ~${bpoId} )
-        containerId=${bpoId##pmp_}
-    fi
-
-    oneBxoId="${bpoId}"
-
-    echo ${oneBxoId}
-
-    return
-
-    oneBxoRepoScope="full"
-
-    containersBase="/bisos/admin/sysChar/generics/"
+    oneBxoRepoScope="basePrep"
+    
 
     function repoBaseCreateAndPushExamples {
         EH_assert [[ $# -eq 2 ]]
@@ -169,18 +166,22 @@ _EOF_
     
     visLibExamplesOutput ${G_myName}
 
- cat  << _EOF_
+    cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
-$( examplesSeperatorChapter "Container Assignment  -- Registrar Facilities" )
-csInvSiteRegContainer.cs   # Prerequisite for sysCharRealize.sh
-containerRepoSelf.sh     # Prerequisite for sysCharRealize.sh
-csInvSiteRegContainer.cs --model="Host" --abode="Shield" --purpose="Server"  -i thisSys_findContainer
-sysCharGenericsRealize.sh  # Realizes Generic BPOs, needed in Genesis and for new releases
-$( examplesSeperatorChapter "SysChar Container Realization -- With Base and With Id" )
-${G_myName} ${extraInfo} -i sysCharContainerIdRealize ${oneBxoRepoScope} HSS-1006  # INTERNAL Interface
-${G_myName} ${extraInfo} -i sysCharContainerBaseRealize ${oneBxoRepoScope} ${containersBase}/Virt/Auto/Generic/deb12  # MAIN Interface For FPs
+$( examplesSeperatorChapter "Site Container Bases" )
+ls -l ~${sysCharContainerBxoId}    # This Container (Host)
+${G_myName} ${extraInfo} -i selectedSiteBxoId
+${selectedSiteBxoId}               # Selected Site bpoId
+${containersBase}                  # Selected Site Containers Base
+$( examplesSeperatorChapter "Container Assignment" )
+siteContainerAssign.sh   # Prerequisite for sysCharRealize.sh
+siteContainerRepo.sh     # Prerequisite for sysCharRealize.sh
+$( examplesSeperatorChapter "SysChar Container Realization" )
+${G_myName} ${extraInfo} -i sysCharContainerRealize ${oneBxoRepoScope} ${containerBase}
+${G_myName} ${extraInfo} -i sysCharContainerRealize ${oneBxoRepoScope} ${containersBase}/assign/Virt/Auto/Generic/deb10
+${G_myName} ${extraInfo} -i sysCharContainerRealize ${oneBxoRepoScope} ${containersBase}/assign/Virt/Shield/Server/1009
 $( examplesSeperatorChapter "Box -- Site Assign SysChar And Container Realization" )
-${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i thisSys_containerAssign  # Uses Remote Registrar
+${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerBoxAssignAndRepo  # Uses thisBoxFindId
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerVirtAssignAndRepo
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i sysCharContainerBoxRealize
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerAssignAndRepoAndSysCharRealize  # FULL ACTION -- PRIMARY COMMAND
@@ -190,6 +191,15 @@ ${G_myName} ${extraInfo} -p model=Virt -p abode=Shield -p function=Server -i con
 ${G_myName} ${extraInfo} -p model=Virt -p abode=Shield -p function=Server -i containerAssignAndRepoAndSysCharRealize  # FULL ACTION -- PRIMARY COMMAND
 ${G_myName} ${extraInfo} -p model=Virt -p abode=Internet -p function=Server -i containerAssignAndRepo
 ${G_myName} ${extraInfo} -p model=Virt -p abode=Internet -p function=Server -i containerAssignAndRepoAndSysCharRealize  # FULL ACTION -- PRIMARY COMMAND
+$( examplesSeperatorChapter "SysChar Container BxoIdName -- Info" )
+${G_myName} ${extraInfo} -i sysCharContainerBxoIdName ${containerBase}
+${G_myName} ${extraInfo} -i sysCharContainerBxoIdName ${containersBase}/assign/Virt/Auto/Generic/deb10
+$( examplesSeperatorChapter "Generic SysChar Container Realization" )
+siteContainerRepo.sh -i containersGenericsAssignList
+${G_myName} ${extraInfo} -i sysCharContainersGenericsRealize examples basePrep
+${G_myName} ${extraInfo} -i sysCharContainersGenericsRealize examples realize
+${G_myName} ${extraInfo} -i sysCharContainersGenericsRealize examples full
+${G_myName} ${extraInfo} -i sysCharContainersGenericsRealize doIt full # bxoRepoScope=basePrep|realize|full
 _EOF_
 
   cat  << _EOF_
@@ -197,12 +207,12 @@ $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
 $( examplesSeperatorChapter "Provisioning: Initial BxE Realize -- Full Actions" )
-${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i fullCreateAndPush # NOTYET, perhaps kindTypeRealizeRepoBases
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i fullCreateAndPush # NOTYET, perhaps kindTypeRealizeRepoBases 
 ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i kindTypeRealizeRepoBasesCreate
 ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i kindTypeRealizeRepoBasesPush
 ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i basesFullCreate
 $( examplesSeperatorChapter "Specific Initial Repo Realizition" )
-${G_myName} ${extraInfo} -i repoBasesList
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i repoBasesList
 $( repoBaseCreateAndPushExamples sysChar "sysChar Repo (System Character)" )
 $( repoBaseCreateAndPushExamples svcsSpec "svcsSpec Repo (Services Specifications)" )
 $( repoBaseCreateAndPushExamples deploymentRecords "Deployment Records Repo" )
@@ -214,8 +224,7 @@ ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i sysCharReport
 ${G_myName} ${extraInfo} -i containerBoxSysCharReport
 ${G_myName} ${extraInfo} -i sysCharNetInterfaceSet privA eth0   # NOTYET, placeholder
 _EOF_
-
- }
+}
 
 function vis_containerAssignAndRepoAndSysCharRealize {
    G_funcEntry
@@ -233,22 +242,18 @@ _EOF_
    
    case "${model}" in
        Host|host|HOST|Pure|pure|PURE)
+           lpDo vis_containerBoxAssignAndRepo
+           lpDo siteContainerAssign.sh -i forThisSysContainerAssignBasePush
            lpDo vis_sysCharContainerBoxRealize
-
-           # MB 20240216 below lines have not been tested
-
-           local containerNu=$( lpDo eval csInvSiteRegContainer.cs --model="${model}" --abode="${abode}" --purpose="${function}"  -i thisSys_findContainer \| pyLiteralToBash.cs -i stdinToBash  )
-           EH_assert [ ! -z "${containerNu}" ]
-           local containerId=$(vis_containerId ${containerNu})
-
-           local sysCharContainerBpoId="pmp_${containerId}"
-
-           # We do this so that bpoId=sysChar would work.
-           lpDo bpoIdManage.sh -h -v -n showRun -i bpoIdFpsWrite sysChar ${sysCharContainerBpoId}
-
            ;;
        Virt|virt|VIRT)
-
+           siteContainerAssignBase=$( vis_containerAssignBase )
+           EH_assert [ ! -z "${siteContainerAssignBase}" ]
+           
+           lpDo eval echo ${siteContainerAssignBase} \| bx-gitRepos -i addCommitPush all
+           
+           lpDo vis_containerVirtAssignAndRepo "${siteContainerAssignBase}"
+           
            lpDo vis_sysCharContainerVirtRealize "${siteContainerAssignBase}"
            ;;
        *)
@@ -260,7 +265,7 @@ _EOF_
 function vis_sysCharContainerBoxRealize {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
-** Assigns a site container to box (if needed), invokes sysCharContainerIdRealize full
+** Assigns a site container to box (if needed), invokes sysCharContainerRealize full
 _EOF_
                       }
    EH_assert [[ $# -eq 0 ]]
@@ -269,133 +274,170 @@ _EOF_
    EH_assert [ ! -z "${abode}" ]
    EH_assert [ ! -z "${function}" ]
    
-   local containerId=$( vis_thisSys_containerAssign )
-   EH_assert [ ! -z "${containerId}" ]
+   local containerAssignBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
+   EH_assert [ ! -z "${containerAssignBase}" ]
+   
+   local containerRepoBase=$( siteContainerRepo.sh -i containerRepoBase "${containerAssignBase}" )
+   EH_assert [ -d "${containerRepoBase}" ]
                               
-   lpDo vis_sysCharContainerIdRealize full ${containerId}
+   lpDo vis_sysCharContainerRealize full ${containerAssignBase}
 }       
+
 
 function vis_sysCharContainerVirtRealize {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
                       }
-   EH_assert [[ $# -eq 0 ]]
+   EH_assert [[ $# -eq 1 ]]
 
-   EH_assert [ ! -z "${model}" ]
-   EH_assert [ ! -z "${abode}" ]
-   EH_assert [ ! -z "${function}" ]
-
-   local containerId=$( vis_virt_containerAssign )
-   EH_assert [ ! -z "${containerId}" ]
-
-   lpDo vis_sysCharContainerIdRealize full ${containerId}
-
-
+   local siteContainerAssignBase=$1
+                              
+   lpDo vis_sysCharContainerRealize full ${siteContainerAssignBase}
 }       
 
-function vis_thisSys_containerAssign {
+
+function vis_containerBoxAssignAndRepo {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
-** Registrar Service invokes and obtains a containerId
 _EOF_
                       }
    EH_assert [[ $# -eq 0 ]]
 
-   EH_assert [ ! -z "${model}" ]
+   EH_assert [ ! -z "${model}" ]   
    EH_assert [ ! -z "${abode}" ]
    EH_assert [ ! -z "${function}" ]
 
-   local containerId=$( lpDo csInvSiteRegContainer.cs --model="${model}" --abode="${abode}" --purpose="${function}" -i thisSys_assignContainer )
+   local boxId=$( siteBoxAssign.sh -i thisBoxFindId )
 
-   echo ${containerId}
-}
-
-function vis_virt_containerAssign {
-   G_funcEntry
-   function describeF {  G_funcEntryShow; cat  << _EOF_
-** Registrar Service invokes and obtains a containerId
-_EOF_
-                      }
-   EH_assert [[ $# -eq 0 ]]
-
-   EH_assert [ ! -z "${model}" ]
-   EH_assert [ ! -z "${abode}" ]
-   EH_assert [ ! -z "${function}" ]
-
-   local containerId=$( lpDo csInvSiteRegContainer.cs --model="${model}" --abode="${abode}" --purpose="${function}" --boxNu=virt -i reg_container_add )
-
-   echo ${containerId}
-}
-
-function vis_sysCharContainerIdRealize {
-   G_funcEntry
-   function describeF {  G_funcEntryShow; cat  << _EOF_
-** \$1 is bpoRepoScope -- \$2 is containerId
-** containerId is expected to have been registered.
-_EOF_
-                      }
-   EH_assert [[ $# -eq 2 ]]
-
-   local bxoRealizationScope=$1
-   local containerId=$2
-
-   EH_assert bxoRealizationScopeIsValid "${bxoRealizationScope}"
-   EH_assert [ ! -z ${containerId} ]
-
-   # sysCharContainerBxoId is just a bpoId derived from containerId assignment. It may or may not exist
-   local sysCharContainerBpoId=$( vis_sysCharContainerBpoIdName "${containerId}" )
-   EH_assert [ ! -z "${sysCharContainerBpoId}" ]
-
-   if vis_bxoNameExists ${sysCharContainerBpoId} ; then
-       ANT_raw "bpoId=${sysCharContainerBpoId}  already realized -- provisioning skipped"
-       if vis_bxoAcctVerify "${sysCharContainerBpoId}" ; then
-           ANT_raw "And bpoId=${sysCharContainerBpoId} account exists, -- provisioning skipped"
-       else
-           ANT_raw "But bpoId=${sysCharContainerBpoId} account Does Not exists, -- provisioning skipped"
-       fi
-       ANT_raw "You Can run basesFullCreate and kindTypeRealizeRepoBases if needed"
-       return
+   if [ -z "${boxId}" ] ; then
+       EH_problem "Missing boxId -- Either not a box, or has not been assigned"
+       lpReturn 101
    fi
 
-   local selectedSiteBxoId=$( vis_selectedSiteBxoId )   # used as parent for provisioning of sysCharContainerBxoId
+   local containerAssignBase=$( siteContainerAssign.sh -i withBoxIdFindContainerBase "${boxId}" )
 
-   if vis_bxoAcctVerify "${sysCharContainerBpoId}" ; then
-       ANT_raw "bpoId=${sysCharContainerBpoId} account exists, already realized -- provisioning skipped"
-       ANT_raw "Not Running: bxmeProvision.sh -h -v -n showRun -p privacy="priv" -p kind="materialization" -p type="sysChar" -p parent="${selectedSiteBxoId}" -p name="${containerId}" -i startToPrivRealize ${bxoRealizationScope}"
-       ANT_raw "You Can run basesFullCreate and kindTypeRealizeRepoBases if needed"
-       return
+   if [ -z "${containerAssignBase}" ] ; then
+       lpDo siteContainerAssign.sh ${G_commandPrefs} -p model=${model} -p abode=${abode} -p function=${function} -i containerBoxAssign
    else
-       ANT_raw "${sysCharContainerBpoId} will be realized"
-       #lpDo bxmeProvision.sh -h -v -n showRun -p privacy="priv" -p kind="materialization" -p type="sysChar" -p parent="${selectedSiteBxoId}" -p name="${containerId}" -i startToPrivRealize
-       lpDo bxmeProvision.sh -h -v -n showRun -p privacy="priv" -p kind="materialization" -p type="sysChar" -p parent="${selectedSiteBxoId}" -p name="${containerId}" -i startToPrivRealize ${bxoRealizationScope}
+       ANT_raw "containerAssignBase=${containerAssignBase} has already been assigned -- skipped"
    fi
 
-   bpoId="${sysCharContainerBpoId}"
-   EH_assert vis_bxoAcctVerify "${bpoId}"
-   bpoHome=$( FN_absolutePathGet ~${bpoId} )
+   # same as siteContainerAssign.sh -i withBoxIdFindContainerBase "${boxId}"
+   containerAssignBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
+   EH_assert [ ! -z "${containerAssignBase}" ]
 
-   # Capture box and container.fps of registrar in sysChar
-   lpDo containerRepoSelf.sh -h -v -n showRun -i selfUpdateFull ${bpoId}
+   local containerRepoBase=$( siteContainerRepo.sh -i containerRepoBase "${containerAssignBase}" )
 
-   # vis_basesFullCreate needs to run before vis_kindTypeRealizeRepoBases
-   vis_basesFullCreate # Creates symlinks in ~bxo
+   if [ -d "${containerRepoBase}" ] ; then
+       ANT_raw "containerRepoBase=${containerRepoBase} already exists -- creation skipped"
+       #lpDo siteContainerRepo.sh -h -v -n showRun -i containerRepoUpdate basePrep ${containerAssignBase}
+   else
+       lpDo siteContainerRepo.sh -h -v -n showRun -i containerRepoUpdate full ${containerAssignBase}
+   fi
 
-   vis_kindTypeRealizeRepoBases ${bxoRealizationScope}
-}
+   EH_assert [ -d "${containerRepoBase}" ]
+}       
 
 
-function vis_sysCharContainerBaseRealize {
+function vis_containerAssignBase {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
-** \$1 is bxoRepoScope -- \$2 is path to siteContainerAssignBase
+** Returns site container assign base.
+*** something like:  /server/1001
+_EOF_
+                      }
+   EH_assert [[ $# -eq 0 ]]
+
+   EH_assert [ ! -z "${model}" ]   
+   EH_assert [ ! -z "${abode}" ]
+   EH_assert [ ! -z "${function}" ]
+
+   local containerNu=$( siteContainerAssign.sh -p model=${model} -p abode=${abode} -p function=${function} -i containerAssign )
+
+   EH_assert [ ! -z ${containerNu} ]
+
+   local modelAbodeFunctionBase=$( container_modelAbodeFunctionBase )
+   EH_assert [ -d "${modelAbodeFunctionBase}" ]
+
+   containerAssignBase=${modelAbodeFunctionBase}/${containerNu}
+   EH_assert [ ! -z "${containerAssignBase}" ]
+ 
+   echo "${containerAssignBase}"
+}       
+
+
+function vis_containerVirtAssignAndRepo {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+** Returns site container assign base.
+_EOF_
+                      }
+   EH_assert [[ $# -eq 1 ]]
+
+   EH_assert [ ! -z "${model}" ]   
+   EH_assert [ ! -z "${abode}" ]
+   EH_assert [ ! -z "${function}" ]
+
+   local siteContainerAssignBase=$1
+
+   local containerRepoBase=$( siteContainerRepo.sh -i containerRepoBase "${siteContainerAssignBase}" )
+
+   if [ -d "${containerRepoBase}" ] ; then
+       ANT_raw "containerRepoBase=${containerRepoBase} already exists -- creation skipped"
+       #lpDo siteContainerRepo.sh -h -v -n showRun -i containerRepoUpdate basePrep ${siteContainerAssignBase}
+   else
+       lpDo siteContainerRepo.sh -h -v -n showRun -i containerRepoUpdate full ${siteContainerAssignBase}
+   fi
+
+   EH_assert [ -d "${containerRepoBase}" ]
+}       
+
+
+
+
+function vis_sysCharContainersGenericsRealize {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+                      }
+   EH_assert [[ $# -eq 2 ]]
+   local examplesOrDoIt=$1
+   local bxoRealizationScope=$2   
+   EH_assert bxoRealizationScopeIsValid "${bxoRealizationScope}"
+
+   local genericBasesList=( $( vis_containersGenericsAssignList ) )
+
+   local extraInfo="-h -v -n showRun"
+   
+   for each in ${genericBasesList[@]} ;  do
+       if [ "${examplesOrDoIt}" == "examples" ] ; then
+           cat  << _EOF_
+${G_myName} ${extraInfo} -i sysCharContainerRealize ${bxoRealizationScope} ${each}
+_EOF_
+       elif [ "${examplesOrDoIt}" == "doIt" ] ; then
+           lpDo vis_sysCharContainerRealize ${bxoRealizationScope} ${each}
+       else
+           EH_problem "Bad Usage -- ${examplesOrDoIt}"
+       fi
+   done
+   
+   lpReturn
+}       
+
+
+function vis_sysCharContainerRealize {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+** \$1 is bxoRepoScope -- \$2 is path to siteContainerAssignBase   
 ** With $1=siteContainerAssignBase, realize the sysCharContainerBxoId.
-*** Typical usage is for when containerNu is pre-assigned. For example for generics (VAG-deb12_)
+*** Typical usage is on box \$2=siteContainerAssignBase is base 
+    of this system obtained from siteContainerAssign.sh -i forThisSysFindContainerBase
 _EOF_
                       }
    EH_assert [[ $# -eq 2 ]]
 
-   local bxoRealizationScope=$1
+   local bxoRealizationScope=$1   
    local containerAssignBase=$2
 
    EH_assert bxoRealizationScopeIsValid "${bxoRealizationScope}"
@@ -405,32 +447,26 @@ _EOF_
    local sysCharContainerBxoId=$( vis_sysCharContainerBxoIdName "${containerAssignBase}" )
    EH_assert [ ! -z "${sysCharContainerBxoId}" ]
 
-   local containerNu=$( fileParamManage.py -i fileParamRead  "${containerAssignBase}" containerNu )  # used as name for provisioning
-   EH_assert [ ! -z "${containerNu}" ]
+   local selectedSiteBxoId=$( vis_selectedSiteBxoId )   # used as parent for provisioning of sysCharContainerBxoId
+   local containerId=$( fileParamManage.py -i fileParamRead  "${containerAssignBase}" containerId )  # used as name for provisioning
 
-   # Perhaps containerNu == _next_ is useful for batch numbered  assignments
-
-   local model=$( fileParamManage.py -i fileParamRead  "${containerAssignBase}" "model" )
-   EH_assert [ ! -z "${model}" ]
-   local abode=$( fileParamManage.py -i fileParamRead  "${containerAssignBase}" "abode" )
-   EH_assert [ ! -z "${abode}" ]
-   local function=$( fileParamManage.py -i fileParamRead  "${containerAssignBase}" "function" )
-   EH_assert [ ! -z "${function}" ]
-
-   local containerId=$(  lpDo csInvSiteRegContainer.cs --model="${model}" --abode="${abode}" --purpose="${function}" --containerNu=${containerNu} --boxNu=virt -i reg_container_add )
-
-   local fps_containerId=$( fileParamManage.py -i fileParamRead  "${containerAssignBase}" containerId )  # used as name for provisioning
-   EH_assert [ ! -z "${fps_containerId}" ]
-
-   if [ "${containerId}" != "${fps_containerId}"  ] ; then
-       EH_problem "containerId: ${containerId} is not same as ${fps_containerId} -- ${fps_containerId} will be used"
-       containerId=${fps_containerId}
+   if vis_bxoAcctVerify "${sysCharContainerBxoId}" ; then
+       ANT_raw "${sysCharContainerBxoId} account exists, already realized -- provisioning skipped"
+   else
+       ANT_raw "${sysCharContainerBxoId} will be realized"       
+       #lpDo bxmeProvision.sh -h -v -n showRun -p privacy="priv" -p kind="materialization" -p type="sysChar" -p parent="${selectedSiteBxoId}" -p name="${containerId}" -i startToPrivRealize
+       lpDo bxmeProvision.sh -h -v -n showRun -p privacy="priv" -p kind="materialization" -p type="sysChar" -p parent="${selectedSiteBxoId}" -p name="${containerId}" -i startToPrivRealize ${bxoRealizationScope}
    fi
 
-   lpDo vis_sysCharContainerIdRealize "${bxoRealizationScope}" ${containerId}
+   bpoId="${sysCharContainerBxoId}"
+   EH_assert vis_bxoAcctVerify "${bpoId}"
+   bpoHome=$( FN_absolutePathGet ~${bpoId} )
+
+   # vis_basesFullCreate needs to run before vis_kindTypeRealizeRepoBases
+   vis_basesFullCreate # Creates symlinks in ~bxo   
+
+   vis_kindTypeRealizeRepoBases ${bxoRealizationScope}
 }
-
-
 
 function vis_repoBasesList {
     G_funcEntry
@@ -450,9 +486,9 @@ _EOF_
 }
 
 function vis_basesList {
-    # siteContainersRepo NOTYET, Needs to be redone as containerRepoSelf
     cat  << _EOF_
 var
+siteContainersRepo
 _EOF_
 }
 
@@ -460,7 +496,7 @@ _EOF_
 function vis_baseCreate_var {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-Create /bisos/var/bpoId/${bpoId} and symlink to it as ~bpoId/var.
+Create /bisos/var/bpoId/${bpoId} and symlink to it.
 _EOF_
                        }
     EH_assert [[ $# -eq 0 ]]
@@ -481,7 +517,8 @@ _EOF_
 }       
 
 
-function vis_baseCreate_siteContainersRepoNotNeeded {
+
+function vis_baseCreate_siteContainersRepo {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Symlink to site containers.
@@ -495,7 +532,6 @@ _EOF_
     local baseName=${FUNCNAME##vis_baseCreate_}
     local basePath="${bpoHome}/${baseName}"
 
-    # siteContainerRepo.sh -i containerRepoBasePrep basePrep Happens Here
     local siteContainersBase=$( siteContainerRepo.sh -i containersBaseObtain )
     local containersRepoPath="${siteContainersBase}/${bpoId##pmp_}"
     EH_assert [ -d "${containersRepoPath}" ]
@@ -503,7 +539,7 @@ _EOF_
     lpDo FN_fileSymlinkUpdate "${containersRepoPath}" "${basePath}"
 
     lpReturn
-}
+}       
 
 function vis_basesFullCreate {
     G_funcEntry

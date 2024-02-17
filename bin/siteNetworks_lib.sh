@@ -438,8 +438,12 @@ _EOF_
      
     # Generics one way, auto one way, assigned one way
 
-    local siteContainersRepo="${bpoHome}/siteContainersRepo"
-    local containerAssignBase="${siteContainersRepo}/assign"
+    # local siteContainersRepo="${bpoHome}/siteContainersRepo"
+    # local containerAssignBase="${siteContainersRepo}/assign"
+
+    local thisCntnrId=${bpoId##pmp_}
+    local siteContainersRepo="${bpoHome}/${thisCntnrId}"
+    local containerAssignBase="${siteContainersRepo}/self/container.fps"
 
     local model=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} model )
     local abode=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} abode )

@@ -388,9 +388,6 @@ _EOF_
     echo ${resultBxoId}
 }
 
-
-
-
 function vis_sysCharContainerBxoIdName {
    G_funcEntry
    function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -407,6 +404,24 @@ _EOF_
 
    echo pmp_${containerId}
 }
+
+
+function vis_sysCharContainerBpoIdName {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+** returns on stdout: bpoId of container corresponding to \$1 as a containerPath.
+*** Typical usage is \$1=container base of this system obtained from siteContainerAssign.sh -i forThisSysFindContainerBase
+*** The sysCharContainerBpoId is just a bpoId derived from containerId assignment. It may or may not exist
+*** The sysCharContainerBpoId may or may not have been realized or activated.
+_EOF_
+                      }
+   EH_assert [[ $# -eq 1 ]]
+   local containerId=$1
+   EH_assert [ ! -z "${containerId}" ]
+
+   echo pmp_${containerId}
+}
+
 
 function withContainerIdGetBxoId {
    G_funcEntry
@@ -531,7 +546,8 @@ _EOF_
                       }
    EH_assert [[ $# -eq 0 ]]
 
-   local containersBase=$( containersBaseObtain )
+   # local containersBase=$( containersBaseObtain )
+   local containersBase="/bisos/admin/sysChar/generics/"
 
    #find ${containersBase} -type d -print | egrep '/Generic/.*[^/]$'
    local genericBasesList=( $(find ${containersBase} -type d -print | egrep '/Generic/[a-z|0-9|_]*$') )

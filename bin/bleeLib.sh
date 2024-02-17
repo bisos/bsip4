@@ -280,6 +280,11 @@ _EOF_
     local emacsCmndLineEndPath=$(readlink -f ${emacsCmndLinePath})
     local emacsClientMatching=$(echo ${emacsCmndLineEndPath} | sed -e 's/emacs-\(..\).*/emacsclient-\1/')
 
+    if [ ! -e "${emacsClientMatching}" ] ; then
+        # On Deb 12, with sys emacs we get /usr/bin/emacsclient-gt, so we get rid of -gt
+         emacsClientMatching=$(echo ${emacsCmndLineEndPath} | sed -e 's/emacs-\(..\).*/emacsclient/')
+    fi
+
     echo ${emacsClientMatching}
 }
 

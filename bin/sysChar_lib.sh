@@ -153,8 +153,11 @@ _EOF_
         deb10)
             baseBoxDistro=debian-10.8
             ;;
-        deb11|default)
+        deb11)
             baseBoxDistro=debian-11.pre
+            ;;
+        deb12|default)
+            baseBoxDistro=debian-12.4.0
             ;;
         ub2004)
             baseBoxDistro=ubuntu-20.04
@@ -378,7 +381,7 @@ _EOF_
 }       
 
 
-function vis_sysCharReport {
+function vis_sysCharReportObsolete {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -400,6 +403,30 @@ _EOF_
     lpReturn
 }       
 
+function vis_sysCharReport {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+                       }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bpoId}" ]
+
+    local containerId=${bpoId##pmp_}
+
+    EH_assert  vis_userAcctExists "${bpoId}"
+
+    fileParamManage.py -i fileParamDictReadDeep ${bpoHome} | grep -v bxeTree | grep -v bxeDesc
+
+    lpDo fileParamManage.py -i fileParamDictReadDeep ${bpoHome}/${containerId}/self
+
+    lpDo fileParamManage.py -i fileParamDictReadDeep ${bpoHome}/${containerId}
+
+    lpDo fileParamManage.py -i fileParamDictReadDeep ${bpoHome}/${containerId}/steady/net/networks
+    lpDo fileParamManage.py -i fileParamDictReadDeep ${bpoHome}/${containerId}/steady/net/routes
+
+    lpReturn
+}
+
 
 function vis_containerAssignRead {
     G_funcEntry
@@ -418,8 +445,11 @@ _EOF_
 
         EH_assert vis_bxoAcctVerify "${bpoId}"
         bpoHome=$( FN_absolutePathGet ~${bpoId} )
-  
-        containerAssignBase=${bpoHome}/siteContainersRepo/assign
+
+        local containerId=${bpoId##pmp_}
+
+
+        containerAssignBase=${bpoHome}/${containerId}/self/container.fps
     elif [ $# -eq 1 ] ; then
         containerAssignBase=$1
     else
@@ -433,6 +463,41 @@ _EOF_
     containerAssign_function=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} function )
     containerAssign_model=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} model )         
 }
+
+
+function vis_containerAssignReadObsolete {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+bpoId is the sysChar. From which the link to assign is followed.
+When boxId is "virt", virtSpec.fps become effective.
+_EOF_
+                      }
+
+    EH_assert [[ $# -lt 2 ]]
+
+    local containerAssignBase=""
+
+    if [ $# -eq 0 ] ; then
+        EH_assert [ ! -z "${bpoId}" ]
+
+        EH_assert vis_bxoAcctVerify "${bpoId}"
+        bpoHome=$( FN_absolutePathGet ~${bpoId} )
+
+        containerAssignBase=${bpoHome}/siteContainersRepo/assign
+    elif [ $# -eq 1 ] ; then
+        containerAssignBase=$1
+    else
+        EH_oops ""
+        lpReturn
+    fi
+
+    containerAssign_containerId=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} containerId )
+    containerAssign_boxId=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} boxId )
+    containerAssign_abode=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} abode )
+    containerAssign_function=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} function )
+    containerAssign_model=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} model )
+}
+
 
 function vis_containerSteadyRead {
    G_funcEntry
@@ -694,8 +759,10 @@ _EOF_
     local repoName="sysChar"
     local repoBase="${bpoHome}/${repoName}"
 
-    local siteContainersRepo="${bpoHome}/siteContainersRepo"
-    local containerAssignBase="${siteContainersRepo}/assign"
+    local thisCntnrId=${bpoId##pmp_}
+
+    local siteContainersRepo="${bpoHome}/${thisCntnrId}"
+    local containerAssignBase="${siteContainersRepo}/self/container.fps"
 
     local model=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} model )
     local abode=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} abode )
@@ -773,10 +840,14 @@ _EOF_
     local repoName="sysChar"
     local repoBase="${bpoHome}/${repoName}"
 
-    local siteContainersRepo="${bpoHome}/siteContainersRepo"
-    local containerAssignBase="${siteContainersRepo}/assign"
+    # local siteContainersRepo="${bpoHome}/siteContainersRepo"
+    # local containerAssignBase="${siteContainersRepo}/assign"
 
-    local abode=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} abode )
+    local thisCntnrId=${bpoId##pmp_}
+    local siteContainersRepo="${bpoHome}/${thisCntnrId}"
+    local containerAssignBase="${siteContainersRepo}/self/container.fps"
+
+    local abode=$( lpDo fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} abode )
 
     lpDo vis_withAbodeGetApplicableNetsList "${abode}"
 }
@@ -803,6 +874,8 @@ _EOF_
     EH_assert vis_bxoAcctVerify "${thisBxoId}"
     bpoHome=$( FN_absolutePathGet ~${thisBxoId} )
 
+    local thisCntnrId=${bpoId##pmp_}
+
     local netName="$1"
     EH_assert [ ! -z "${netName}" ]
 
@@ -815,8 +888,8 @@ _EOF_
     local repoName="sysChar"
     local repoBase="${bpoHome}/${repoName}"
 
-    local siteContainersRepo="${bpoHome}/siteContainersRepo"
-    local containerAssignBase="${siteContainersRepo}/assign"
+    local siteContainersRepo="${bpoHome}/${thisCntnrId}/self"
+    local containerAssignBase="${siteContainersRepo}/container.fps"
 
     local model=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} model )
     local abode=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} abode )
@@ -891,13 +964,17 @@ _EOF_
     local repoName="sysChar"
     local repoBase="${bpoHome}/${repoName}"
 
-    local siteContainersRepo="${bpoHome}/siteContainersRepo"
-    local containerAssignBase="${siteContainersRepo}/assign"
+    # local siteContainersRepo="${bpoHome}/siteContainersRepo"
+    # local containerAssignBase="${siteContainersRepo}/assign"
 
-    local model=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} model )
-    local abode=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} abode )
-    local function=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} function )
-    local containerId=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} containerId )    
+    local thisCntnrId=${bpoId##pmp_}
+    local siteContainersRepo="${bpoHome}/${thisCntnrId}"
+    local containerAssignBase="${siteContainersRepo}/self/container.fps"
+
+    local model=$( lpDo fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} model )
+    local abode=$( lpDo fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} abode )
+    local function=$( lpDo fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} function )
+    local containerId=$( lpDo fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} containerId )
 
     local sysInfoFps=${repoBase}/sysInfo.fps
     lpDo FN_dirCreatePathIfNotThere ${sysInfoFps}
@@ -953,9 +1030,15 @@ _EOF_
 
     local repoName="sysChar"
     local repoBase="${bpoHome}/${repoName}"
-    local containerAssignBase="${siteContainersRepo}/assign"
+    # local containerAssignBase="${siteContainersRepo}/assign"
 
-    local model=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} model )
+    local thisCntnrId=${bpoId##pmp_}
+
+    local siteContainersRepo="${bpoHome}/${thisCntnrId}"
+    local containerAssignBase="${siteContainersRepo}/self/container.fps"
+
+
+    local model=$( lpDo fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} model )
 
     function procNetNameInterface {
         netName=$1
@@ -991,7 +1074,7 @@ _EOF_
     
     vis_cntnr_netName_interfacesConject |
         while read line ; do
-            procNetNameInterface ${line} # 2 Args
+            lpDo procNetNameInterface ${line} # 2 Args
         done
 }
 
@@ -1019,8 +1102,12 @@ _EOF_
     local repoName="sysChar"
     local repoBase="${bpoHome}/${repoName}"
 
-    local siteContainersRepo="${bpoHome}/siteContainersRepo"
-    local containerAssignBase="${siteContainersRepo}/assign"
+    # local siteContainersRepo="${bpoHome}/siteContainersRepo"
+    # local containerAssignBase="${siteContainersRepo}/assign"
+
+    local thisCntnrId=${bpoId##pmp_}
+    local siteContainersRepo="${bpoHome}/${thisCntnrId}"
+    local containerAssignBase="${siteContainersRepo}/self/container.fps"
 
     local model=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} model )
     local abode=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} abode )
@@ -1073,6 +1160,96 @@ _EOF_
     
     lpReturn
 }       
+
+
+function vis_withInitialGetModel {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+                      }
+   EH_assert [[ $# -eq 1 ]]
+   local modelInitial=$1
+   local result=""
+
+   case "${modelInitial}" in
+       "H")
+           result="Host"
+           ;;
+       "P")
+           result="Pure"
+           ;;
+       "V")
+           result="Virt"
+           ;;
+       *)
+           EH_problem "Bad Usage -- modelInitial=${modelInitial}"
+   esac
+   echo ${result}
+}
+
+function vis_withInitialGetAbode {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+                      }
+   EH_assert [[ $# -eq 1 ]]
+   local abodeInitial=$1
+   local result=""
+
+   case "${abodeInitial}" in
+       "A")
+           result="Auto"
+           ;;
+       "M")
+           result="Mobile"
+           ;;
+       "P")
+           result="Perim"
+           ;;
+       "S")
+           result="Shield"
+           ;;
+       "I")
+           result="Internet"
+           ;;
+       *)
+           EH_problem "Bad Usage -- abodeInitial=${abodeInitial}"
+   esac
+   echo ${result}
+}
+
+
+function vis_withInitialGetFunction {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+                      }
+   EH_assert [[ $# -eq 1 ]]
+   local functionInitial=$1
+   local result=""
+
+   case "${functionInitial}" in
+       "L")
+           result="LinuxU"
+           ;;
+       "A")
+           result="AndroidU"
+           ;;
+       "S")
+           result="Server"
+           ;;
+       "D")
+           result="Devel"
+           ;;
+       "G")
+           result="Generic"
+           ;;
+       *)
+           EH_problem "Bad Usage -- functionInitial=${functionInitial}"
+   esac
+   echo ${result}
+}
+
 
 
 _CommentBegin_
