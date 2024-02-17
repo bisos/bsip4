@@ -650,16 +650,16 @@ _EOF_
 
     EH_assert bpoIdPrep
 
-    #lpDo vis_containerSteadyRead    
+    #lpDo vis_containerSteadyRead
 
     # local containerBase=$( vis_forThisSysFindContainerBase )
     # EH_assert [ ! -z "${containerBase}" ]
 
-    vis_containerAssignRead # "${containerBase}"
+    lpDo vis_containerAssignRead # "${containerBase}"
     EH_assert [ ! -z "${containerAssign_containerId}" ]
 
     local hostContainerId="${containerAssign_containerId}"
-    
+
     lpDo vis_containerAssignRead
     EH_assert [ ! -z "${containerAssign_abode}" ]
 

@@ -148,10 +148,6 @@ function vis_examples {
 
     oneBxoId="${bpoId}"
 
-    echo ${oneBxoId}
-
-    return
-
     oneBxoRepoScope="full"
 
     containersBase="/bisos/admin/sysChar/generics/"
@@ -232,6 +228,7 @@ _EOF_
    local siteContainerRepoBase=""
    
    case "${model}" in
+
        Host|host|HOST|Pure|pure|PURE)
            lpDo vis_sysCharContainerBoxRealize
 

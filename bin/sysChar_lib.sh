@@ -446,10 +446,9 @@ _EOF_
         EH_assert vis_bxoAcctVerify "${bpoId}"
         bpoHome=$( FN_absolutePathGet ~${bpoId} )
 
-        local containerId=${bpoId##pmp_}
+        local thisContainerId=${bpoId##pmp_}
 
-
-        containerAssignBase=${bpoHome}/${containerId}/self/container.fps
+        containerAssignBase=${bpoHome}/${thisContainerId}/self/container.fps
     elif [ $# -eq 1 ] ; then
         containerAssignBase=$1
     else
@@ -874,7 +873,8 @@ _EOF_
     EH_assert vis_bxoAcctVerify "${thisBxoId}"
     bpoHome=$( FN_absolutePathGet ~${thisBxoId} )
 
-    local thisCntnrId=${bpoId##pmp_}
+    #local thisCntnrId=${bpoId##pmp_}
+    local thisCntnrId=${thisBxoId##pmp_}
 
     local netName="$1"
     EH_assert [ ! -z "${netName}" ]

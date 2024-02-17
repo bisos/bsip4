@@ -118,7 +118,7 @@ _EOF_
             applicableNetsList=("pubA" "pubB" "perimA")
             ;;
         *)
-            EH_problem "Bad Usage -- abodeInitial=${abodeInitial}"
+            EH_problem "Bad Usage -- abode=${abode}"
     esac
 
     local result=""
