@@ -61,9 +61,11 @@ function vis_examples {
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 ${G_myName} ${extraInfo} -i list
-${G_myName} ${extraInfo} -i diffs
-${G_myName} ${extraInfo} -i update
+${G_myName} ${extraInfo} -i diff_selfContainedAndStandAlone
+${G_myName} ${extraInfo} -i diff_standAloneAndSelfReliant
+${G_myName} ${extraInfo} -i diff_selfReliantAndBisosSeed
 _EOF_
+  # ${G_myName} ${extraInfo} -i update
 }
 
 noArgsHook() {
@@ -79,13 +81,16 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    ls ./unisosAccounts_lib.sh ./bisosGroupAccount_lib.sh ./platformBases_lib.sh
+    ls -l /bisos/git/bxRepos/bxGenesis/start/selfContainedIcm.bash
+    ls -l /bisos/git/bxRepos/bisos-pip/provision/py3/bin/seedIcmStandalone.bash
+    ls -l /bisos/git/bxRepos/bxGenesis/provisioners/bin/seedIcmSelfReliant.bash
+    ls -l /bisos/core/bsip/bin/seedActions.bash
 
     lpReturn
 }
 
 
-function vis_diffs {
+function vis_diff_selfContainedAndStandAlone {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 echo someParam and args 
@@ -93,14 +98,39 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    opDo diff /bisos/core/bsip/bin/unisosAccounts_lib.sh ./unisosAccounts_lib.sh
-
-    opDo diff /bisos/core/bsip/bin/bisosGroupAccount_lib.sh ./bisosGroupAccount_lib.sh
-
-    opDo diff /bisos/core/bsip/bin/platformBases_lib.sh  ./platformBases_lib.sh
+    lpDo diff /bisos/git/bxRepos/bxGenesis/start/selfContainedIcm.bash /bisos/git/bxRepos/bisos-pip/provision/py3/bin/seedIcmStandalone.bash
 
     lpReturn
 }
+
+
+function vis_diff_standAloneAndSelfReliant {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+echo someParam and args
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo diff /bisos/git/bxRepos/bisos-pip/provision/py3/bin/seedIcmStandalone.bash /bisos/git/bxRepos/bxGenesis/provisioners/bin/seedIcmSelfReliant.bash
+
+    lpReturn
+}
+
+
+function vis_diff_selfReliantAndBisosSeed {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+echo someParam and args
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo diff /bisos/git/bxRepos/bxGenesis/provisioners/bin/seedIcmSelfReliant.bash /bisos/core/bsip/bin/seedActions.bash
+
+    lpReturn
+}
+
 
 
 function vis_update {
@@ -111,23 +141,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    if cmp /bisos/core/bsip/bin/unisosAccounts_lib.sh ./unisosAccounts_lib.sh; then
-        ANT_raw "Same, update skipped -- /bisos/core/bsip/bin/unisosAccounts_lib.sh ./unisosAccounts_lib.sh"    
-    else
-        lpDo cp /bisos/core/bsip/bin/unisosAccounts_lib.sh ./unisosAccounts_lib.sh
-    fi
-
-    if cmp /bisos/core/bsip/bin/bisosGroupAccount_lib.sh ./bisosGroupAccount_lib.sh; then
-        ANT_raw "Same, update skipped -- /bisos/core/bsip/bin/bisosGroupAccount_lib.sh ./bisosGroupAccount_lib.sh"
-    else
-        lpDo cp /bisos/core/bsip/bin/bisosGroupAccount_lib.sh ./bisosGroupAccount_lib.sh        
-    fi
-
-    if cmp /bisos/core/bsip/bin/platformBases_lib.sh ./platformBases_lib.sh; then
-        ANT_raw "Same, update skipped -- /bisos/core/bsip/bin/platformBases_lib.sh ./platformBases_lib.sh"
-    else
-        lpDo cp /bisos/core/bsip/bin/platformBases_lib.sh ./platformBases_lib.sh        
-    fi
+    echo NOTYET
 
     lpReturn
 }
