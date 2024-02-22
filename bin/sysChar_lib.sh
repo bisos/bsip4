@@ -1250,6 +1250,21 @@ _EOF_
    echo ${result}
 }
 
+function vis_distro_provisionBisos_ascertain {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Applies identically to all distros.
+*** ManagerOnly -- intra user
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert [ ! -z "${targetName}" ]
+
+    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+         sudo ls -l /bisos/core/bsip
+
+}
 
 
 _CommentBegin_

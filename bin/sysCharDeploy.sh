@@ -195,18 +195,48 @@ $( examplesSeperatorChapter "Ssh Based Cusomizations -- Bx Based (not vagrant ba
 ${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i postCustomize  # on host - bx-ssh
 ${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i secureSeal     # on host - bx-ssh
 ${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i recordDeployment      # inside of parent bxo
-$( examplesSeperatorChapter "Full Update" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i fullUpdate
-$( examplesSeperatorChapter "Distro Actions -- On Manager -- Ssh In Target" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_fullUpdate # intra user
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_intraToSudoersAddition # ManagerOnly -- intra user -- no bisos
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_aptSourcesPrep # ManagerOnly -- intra user -- no bisos
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_provisionBisos_sysBasePlatform # ManagerOnly -- intra user -- no bisos
-$( examplesSeperatorChapter "Site Setup (Registrar Not Here, in bisos-pip.siteRegistrar) -- bisosBasePlatform Actions" )
+$( examplesSeperatorChapter "LAYER-1:: bisosRawDeploy.sh  -- Distro Actions -- On Manager -- Ssh Into Target" )
+bisosRawDeploy.sh
+bisosRawDeploy.sh ${extraInfo} -p targetName="${oneTargetName}" -i fullUpdate
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_provisionBisos_ascertain
+$( examplesSeperatorSection "L1:: Target Box Developmenet Preps -- On Target Box" )
+ssh -X bystar@${oneTargetName}    # Then run emacs
+bleeVisit /bisos/panels/development/bisos-dev/howToBecomeDeveloper/fullUsagePanel-en.org
+$( examplesSeperatorChapter "LAYER-2:: Sited-Container (Registrar Not Here, in bisos-pip.siteRegistrar) -- bisosBasePlatform Actions" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_fullUpdate # onManager
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_siteSetup # onManager or below onTarget
 ${G_myName} ${extraInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -p siteBxoId=${siteBxoId}" -i bisosBasePlatform_siteSetup # onTarget
-$( examplesSeperatorChapter "SysChar Setup (with sysCharBpo) -- siteBasePlatform Actions" )
+cntnrDevel.sh -h -v -n showRun -i bisosDevBxo_fullSetup  # activate bisosDevBxoId and actuate it
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i  sitedDevelContainer  # PRIMARY 
+$( examplesSeperatorChapter "LAYER-3:: Chared-Container -- (Realize or Activate) SysChar Setup (with sysCharBpo) -- siteBasePlatform Actions" )
+$( examplesSeperatorSection "L3:: siteBasePlatform New Box Assign -- On Manager Or On Target Box" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_newBoxAscertain
+${G_myName} ${extraInfo} -i siteBasePlatform_newBoxAscertain
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_newBoxAssign
+${G_myName} ${extraInfo} -i siteBasePlatform_newBoxAssign
+$( examplesSeperatorSection "L3:: siteBasePlatform New Container Assign -- On Manager Or On Target Box" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_containerBoxRepoAscertain
+${G_myName} ${extraInfo} -i siteBasePlatform_containerBoxRepoAscertain
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p model=Host -p abode=Shield -p function=Server -i siteBasePlatform_containerBoxAssignAndRepo
+${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i siteBasePlatform_containerBoxAssignAndRepo
+$( examplesSeperatorSection "L3:: SysBxo Realize -- Container Box Realize -- One Time Activity --  On Target Box" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_containerBoxRepoAscertain
+${G_myName} ${extraInfo} -i siteBasePlatform_containerBoxRepoAscertain
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_sysCharContainerBoxRealize
+${G_myName} ${extraInfo} -i siteBasePlatform_sysCharContainerBoxRealize
+$( examplesSeperatorChapter "siteBasePlatform Actions -- On Manager Or On Target Box" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_sysCharBoxIdentitySet # NOTYET, likely not necessary
+${G_myName} ${extraInfo} -i siteBasePlatform_sysCharBoxIdentitySet # NOTYET, likely not necessary
+$( examplesSeperatorChapter "L3:: Full New Box Actions -- On Manager And On Target Box" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i boxSiteBasePlatform  # OnManager
+${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i boxRealizeOrActivateOnTarget # OnTarget Only
+$( examplesSeperatorChapter "L3:: Full Existing Box Actions -- On Manager Or On Target Box" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i boxFullActivate # On Manager From Begining-To-End
+$( examplesSeperatorChapter "Full Existing Box Actions -- On Manager Or On Target Box" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i containerBoxBpoId
+${G_myName} ${extraInfo} -i containerBoxBpoId
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i containerBoxBpoPath
+${G_myName} ${extraInfo} -i containerBoxBpoPath
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_fullUpdate  # onManager
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_sysBxoActivate  # onManager
 ${G_myName} ${extraInfo} -p bpoId="${bpoId}" -i siteBasePlatform_sysBxoActivate  # onTarget
@@ -235,37 +265,6 @@ ${G_myName} ${extraInfo} -i sysCharedPlatform_containerBoxReport
 $( examplesSeperatorChapter "BISOS Development Preps -- bisosBasePlatform Actions" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i usgConvey_bisosDeveloper # onManager+onTarget
 ${G_myName} ${extraInfo} -p bisosDevBxoId=prompt -i usgConvey_bisosDeveloper # onTarget
-$( examplesSeperatorChapter "Target Box Developmenet Preps -- On Target Box" )
-ssh -X bystar@${oneTargetName}    # Then run emacs
-bleeVisit /bisos/panels/development/bisos-dev/howToBecomeDeveloper/fullUsagePanel-en.org
-$( examplesSeperatorChapter "siteBasePlatform New Box Assign -- On Manager Or On Target Box" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_newBoxAscertain
-${G_myName} ${extraInfo} -i siteBasePlatform_newBoxAscertain
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_newBoxAssign
-${G_myName} ${extraInfo} -i siteBasePlatform_newBoxAssign
-$( examplesSeperatorChapter "siteBasePlatform New Container Assign -- On Manager Or On Target Box" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_containerBoxRepoAscertain
-${G_myName} ${extraInfo} -i siteBasePlatform_containerBoxRepoAscertain
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p model=Host -p abode=Shield -p function=Server -i siteBasePlatform_containerBoxAssignAndRepo
-${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i siteBasePlatform_containerBoxAssignAndRepo
-$( examplesSeperatorChapter "SysBxo Realize -- Container Box Realize -- One Time Activity --  On Target Box" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_containerBoxRepoAscertain
-${G_myName} ${extraInfo} -i siteBasePlatform_containerBoxRepoAscertain
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_sysCharContainerBoxRealize
-${G_myName} ${extraInfo} -i siteBasePlatform_sysCharContainerBoxRealize
-$( examplesSeperatorChapter "siteBasePlatform Actions -- On Manager Or On Target Box" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_sysCharBoxIdentitySet # NOTYET, likely not necessary
-${G_myName} ${extraInfo} -i siteBasePlatform_sysCharBoxIdentitySet # NOTYET, likely not necessary
-$( examplesSeperatorChapter "Full New Box Actions -- On Manager And On Target Box" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i boxSiteBasePlatform  # OnManager
-${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i boxRealizeOrActivateOnTarget # OnTarget Only
-$( examplesSeperatorChapter "Full Existing Box Actions -- On Manager Or On Target Box" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i boxFullActivate # On Manager From Begining-To-End
-$( examplesSeperatorChapter "Full Existing Box Actions -- On Manager Or On Target Box" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i containerBoxBpoId
-${G_myName} ${extraInfo} -i containerBoxBpoId
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i containerBoxBpoPath
-${G_myName} ${extraInfo} -i containerBoxBpoPath
 _EOF_
 }
 
@@ -300,112 +299,9 @@ _EOF_
     EH_assert [ ! -z "${targetName}" ]
     EH_assert [ "${targetName}" != "localhost" ] # Must be invoked OnManger
 
-    lpDo vis_distro_intraToSudoersAddition
-    lpDo vis_distro_aptSourcesPrep
-    lpDo vis_distro_provisionBisos_sysBasePlatform
+    lpDo bisosRawDeploy.sh -p targetName="${targetName}" -i fullUpdate
 }
 
-
-function vis_distro_intraToSudoersAddition {    
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** Specific to debian. Allow for sudo-ing as intra.
-*** By policy, at distro installation, intra is used as acctName, acctNamePasswd and rootPasswd
-*** in the command below intra is used 4 times. acctName is used twice.
-*** ManagerOnly -- intra user -- no bisos
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    EH_assert [ ! -z "${targetName}" ]
-    
-    # redirection of stderr gets rid of the Password: prompt, which can throw emacs off
-    local intraLine=$( sshpass -p intra ${sshCmnd} intra@"${targetName}" "echo intra | su - root -c 'egrep ^intra /etc/sudoers'" 2> /dev/null )
-
-    if [ -z "${intraLine}" ] ; then
-        lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-             "echo intra | su - root -c 'echo intra ALL=\(ALL\) NOPASSWD: ALL >> /etc/sudoers'"
-    else
-        ANT_raw "intra is already in /etc/sudoers -- skipped"
-    fi
-}
-
-
-function vis_distro_aptSourcesPrep {    
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** Setup apt/sources.list for initial use. Different for debian and ubuntu
-*** In a debian box, the deb cdrom: line needs to be removed.
-*** ManagerOnly -- intra user -- no bisos
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    EH_assert [ ! -z "${targetName}" ]
-
-    local lsOrig=$( sshpass -p intra ${sshCmnd} intra@"${targetName}" sudo ls /etc/apt/sources.list.orig 2> /dev/null )
-
-    if [ -z "${lsOrig}" ] ; then
-        lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-             sudo cp -p /etc/apt/sources.list /etc/apt/sources.list.orig
-    else
-        ANT_raw "/etc/apt/sources.list.orig exists -- copying skipped"
-    fi
-
-    # In "''" "" is consumed by lpDo
-    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-         grep -v "'^deb cdrom:'" /etc/apt/sources.list \> /tmp/sources.list
-
-    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-         sudo mv /tmp/sources.list /etc/apt/sources.list
-
-    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-         sudo apt-get update
-}
-
-function vis_distro_provisionBisos_ascertain {    
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** Applies identically to all distros.
-*** ManagerOnly -- intra user
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-    
-    EH_assert [ ! -z "${targetName}" ]
-
-    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-         sudo ls -l /bisos/core/bsip
-
-}
-
-
-function vis_distro_provisionBisos_sysBasePlatform {    
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** Applies identically to all distros.
-*** ManagerOnly -- intra user -- no bisos
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-    
-    EH_assert [ ! -z "${targetName}" ]
-
-    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-         sudo apt-get update
-
-    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-         sudo apt-get -y upgrade
-
-    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-         sudo apt-get install -y python3-pip
-    
-    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-         sudo pip3 install --upgrade bisos.provision
-
-    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-         sudo provisionBisos.sh ${G_commandPrefs} -i sysBasePlatform
-}
 
 function vis_bisosBasePlatform_fullUpdate {    
     G_funcEntry
@@ -748,7 +644,7 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     function onTargetRun {
-        local boxNu=$( csInvSiteRegBox.cs -i thisBox_findNu 2> /dev/null )
+        local boxNu=$( svcInvSiteRegBox.cs -i thisBox_findNu 2> /dev/null )
 
         if [ "${boxNu}" = "[]" ] ; then
             ANT_raw "This box has NOT been registered -- Needs to be added"
@@ -815,7 +711,7 @@ _EOF_
 function vis_siteBasePlatform_newBoxAssign {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Using csInvSiteRegBox.cs, we register as new box if needed.
+** Using svcInvSiteRegBox.cs, we register as new box if needed.
 *** Can be invoked OnTarget or OnManager.
 *** When OnManager, the registration on target is reflected on manager with a boxesGitPull.
 _EOF_
@@ -823,7 +719,7 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     function onTargetRun {
-        lpDo csInvSiteRegBox.cs  -i thisBox_assign
+        lpDo svcInvSiteRegBox.cs  -i thisBox_assign
     }
 
 ####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both"
@@ -918,7 +814,7 @@ _EOF_
         local containerRepoBase=""
 
         # NOTYET, EndPoint is not being passed yet
-        containerAssignBase=$( csInvSiteRegContainer.cs --model="Host" --abode="Shield" --purpose="Server"  -i thisSys_findContainer 2> /dev/null )
+        containerAssignBase=$( svcInvSiteRegContainer.cs --model="Host" --abode="Shield" --purpose="Server"  -i thisSys_findContainer 2> /dev/null )
 
         if [ "${containerAssignBase}" = "[]" ] ; then
             ANT_raw "This container has NOT been  -- Needs to be added"

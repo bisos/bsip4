@@ -200,7 +200,7 @@ _EOF_
    case "${thisModel}" in
        Host|host|HOST|Pure|pure|PURE)
 
-           declare -A containerRegDict=$( csInvSiteRegContainer.cs -i thisBox_read | pyLiteralToBash.cs -i stdinToBash )
+           declare -A containerRegDict=$( svcInvSiteRegContainer.cs -i thisBox_read | pyLiteralToBash.cs -i stdinToBash )
 
            local uniqueBoxId=${containerRegDict['uniqueBoxId']}
            local boxId=${containerRegDict['boxId']}
@@ -251,7 +251,7 @@ _EOF_
    local containerId=${bpoId##pmp_}
    local repoBase="${bpoHome}/${containerId}"
 
-   declare -A containerRegDict=$( csInvSiteRegContainer.cs -i withContainerIdRead ${containerId} | pyLiteralToBash.cs -i stdinToBash )
+   declare -A containerRegDict=$( svcInvSiteRegContainer.cs -i withContainerIdRead ${containerId} | pyLiteralToBash.cs -i stdinToBash )
 
    EH_assert bxoRealizationScopeIsValid "${bxoRealizationScope}"
    EH_assert [ ! -z ${containerId} ]

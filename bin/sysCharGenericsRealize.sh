@@ -160,7 +160,7 @@ _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 bxoGitlab.py  -i acctList  | egrep "pmp_VAG|pmp_VSG"
 $( examplesSeperatorChapter "Container Assignment  -- Registrar Facilities" )
-csInvSiteRegContainer.cs   # Prerequisite for sysCharRealize.sh
+svcInvSiteRegContainer.cs   # Prerequisite for sysCharRealize.sh
 containerRepoSelf.sh     # Prerequisite for sysCharRealize.sh
 $( examplesSeperatorChapter "SysChar Container BxoIdName -- Info" )
 sysCharRealize.sh ${extraInfo} -i sysCharContainerBaseRealize full ${containersBase}/Virt/Auto/Generic/deb12

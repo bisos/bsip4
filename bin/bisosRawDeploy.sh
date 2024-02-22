@@ -157,6 +157,7 @@ ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_fullUpdate #
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_intraToSudoersAddition # ManagerOnly -- intra user -- no bisos
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_aptSourcesPrep # ManagerOnly -- intra user -- no bisos
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_provisionBisos_rawBisos # ManagerOnly -- intra user -- no bisos
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_provisionBisos_ascertain
 $( examplesSeperatorChapter "Distro Installation -- On Target" )
 See: https://github.com/bxGenesis/start
 _EOF_

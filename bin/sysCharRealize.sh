@@ -168,9 +168,9 @@ _EOF_
  cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Container Assignment  -- Registrar Facilities" )
-csInvSiteRegContainer.cs   # Prerequisite for sysCharRealize.sh
+svcInvSiteRegContainer.cs   # Prerequisite for sysCharRealize.sh
 containerRepoSelf.sh     # Prerequisite for sysCharRealize.sh
-csInvSiteRegContainer.cs --model="Host" --abode="Shield" --purpose="Server"  -i thisSys_findContainer
+svcInvSiteRegContainer.cs --model="Host" --abode="Shield" --purpose="Server"  -i thisSys_findContainer
 sysCharGenericsRealize.sh  # Realizes Generic BPOs, needed in Genesis and for new releases
 $( examplesSeperatorChapter "SysChar Container Realization -- With Base and With Id" )
 ${G_myName} ${extraInfo} -i sysCharContainerIdRealize ${oneBxoRepoScope} HSS-1006  # INTERNAL Interface
@@ -234,7 +234,7 @@ _EOF_
 
            # MB 20240216 below lines have not been tested
 
-           local containerNu=$( lpDo eval csInvSiteRegContainer.cs --model="${model}" --abode="${abode}" --purpose="${function}"  -i thisSys_findContainer \| pyLiteralToBash.cs -i stdinToBash  )
+           local containerNu=$( lpDo eval svcInvSiteRegContainer.cs --model="${model}" --abode="${abode}" --purpose="${function}"  -i thisSys_findContainer \| pyLiteralToBash.cs -i stdinToBash  )
            EH_assert [ ! -z "${containerNu}" ]
            local containerId=$(vis_containerId ${containerNu})
 
@@ -303,7 +303,7 @@ _EOF_
    EH_assert [ ! -z "${abode}" ]
    EH_assert [ ! -z "${function}" ]
 
-   local containerId=$( lpDo csInvSiteRegContainer.cs --model="${model}" --abode="${abode}" --purpose="${function}" -i thisSys_assignContainer )
+   local containerId=$( lpDo svcInvSiteRegContainer.cs --model="${model}" --abode="${abode}" --purpose="${function}" -i thisSys_assignContainer )
 
    echo ${containerId}
 }
@@ -320,7 +320,7 @@ _EOF_
    EH_assert [ ! -z "${abode}" ]
    EH_assert [ ! -z "${function}" ]
 
-   local containerId=$( lpDo csInvSiteRegContainer.cs --model="${model}" --abode="${abode}" --purpose="${function}" --boxNu=virt -i reg_container_add )
+   local containerId=$( lpDo svcInvSiteRegContainer.cs --model="${model}" --abode="${abode}" --purpose="${function}" --boxNu=virt -i reg_container_add )
 
    echo ${containerId}
 }
@@ -414,7 +414,7 @@ _EOF_
    local function=$( fileParamManage.py -i fileParamRead  "${containerAssignBase}" "function" )
    EH_assert [ ! -z "${function}" ]
 
-   local containerId=$(  lpDo csInvSiteRegContainer.cs --model="${model}" --abode="${abode}" --purpose="${function}" --containerNu=${containerNu} --boxNu=virt -i reg_container_add )
+   local containerId=$(  lpDo svcInvSiteRegContainer.cs --model="${model}" --abode="${abode}" --purpose="${function}" --containerNu=${containerNu} --boxNu=virt -i reg_container_add )
 
    local fps_containerId=$( fileParamManage.py -i fileParamRead  "${containerAssignBase}" containerId )  # used as name for provisioning
    EH_assert [ ! -z "${fps_containerId}" ]

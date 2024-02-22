@@ -155,6 +155,11 @@ $( examplesSeperatorChapter "Developer Git Credentials Activate" )
 ${G_myName} ${extraInfo} -i bisosDevBxo_fullSetup  # activate bisosDevBxoId and actuate it
 ${G_myName} ${extraInfo} -i bisosDevBxo_activate   # activate bisosDevBxoId
 ${G_myName} ${extraInfo} -i bisosDevBxo_actuate    # clone  auth based bxRepos with bisosDev credentials
+$( examplesSeperatorChapter "Python Dev Virt Env Setup" )
+bisosPyVenvSetup.sh -h -v -n showRun -i pyVenv_DevSetup # Create Virtual Environment and dev pipInstalls
+$( examplesSeperatorChapter "Temporary Work Around" )
+bpoActivate.sh -h -v -n showRun -p privacy="priv" -p bpoId="piu_mbFullUsage" -i bpoActivate
+usgBpos.sh -h -v -n showRun -i usgBpos_usageEnvs_fullUse_update piu_mbFullUsage # Main Entry -- Sets
 $( examplesSeperatorChapter "Developer Git Credentials Deactivate" )
 ${G_myName} ${extraInfo} -i bisosDevBxo_delete
 $( examplesSeperatorChapter "Mode Selection" )

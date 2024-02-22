@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Obsolted by csInvSiteRegBox.cs"
+echo "Obsolted by svcInvSiteRegBox.cs"
 exit 1
 
 IcmBriefDescription="NOTYET: Short Description Of The Module"
