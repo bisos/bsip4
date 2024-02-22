@@ -470,12 +470,14 @@ _EOF_
 
     # NOTYET, verify that acctName is valid (source needed lib)
 
-    lpDo ${opBinBase}/bisosPyVenvSetup.sh -h -v -n showRun -i venvPy3_pipInstalls
+    # Has already been done, will not repeat
+    #lpDo ${opBinBase}/bisosPyVenvSetup.sh -h -v -n showRun -i venvPy3_pipInstalls
 
     # sha1 obtained from a stable release -- git rev-parse HEAD
     inBaseDirDo /bisos/blee/extPkgs/emacs-application-framework git reset --hard 4ce9b1cab0f4894adcb1710917f96279cccd401b
 
-    lpDo sudo -u ${acctName} ${opBinBase}/bleeDoomsManage.sh -h -v -n showRun -p profile=blee2 -i reBuild
+    # NOTYET, for DEBIAN-12.  Should check version here.
+    lpDo sudo -u ${acctName} ${opBinBase}/bleeDoomsManage.sh -h -v -n showRun -p emacs=sys -p profile=blee3 -i reBuild
     # lpDo bleeDoomsManage.sh -h -v -n showRun -p profile=sysDoom -i reBuild
 
     lpDo vis_blee1InitSetup

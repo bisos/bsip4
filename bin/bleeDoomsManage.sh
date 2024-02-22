@@ -280,14 +280,14 @@ _EOF_
 
     lpDo vis_switchInitTo sansBlee
 
-    lpDo mkdir ${doomMainBase}
+    lpDo mkdir -p ${doomMainBase}
 
     lpDo cp -r ${doomFrameworkBase}/* ${doomMainBase}
 
     lpDo echo DOOMDIR=${DOOMDIR}
     lpDo echo EMACS=${EMACS}
 
-    lpDo ${doomMainBase}/bin/doom install
+    lpDo ${doomMainBase}/bin/doom --force install
 
     lpDo vis_switchInitTo withBlee
 
