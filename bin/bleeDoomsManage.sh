@@ -274,7 +274,6 @@ _EOF_
             case $profile in
                 blee2|blee3)
                     lpDo chmod ug+rw ${doomDirBase}/init.el
-                    # /bisos/blee/doom-blee-base/initSansBlee.el
                     lpDo cp ${doomDirBase}/initSansBlee.el ${doomDirBase}/init.el
                     lpDo chmod 444 ${doomDirBase}/init.el
                     ;;
@@ -287,10 +286,6 @@ _EOF_
             case $profile in
                 blee2|blee3)
                     lpDo chmod ug+rw ${doomDirBase}/init.el                 
-                    # /bisos/blee/doom-blee-base/initSansBlee.el
-                    # /bisos/blee/doom-blee-base/loadBlee.el
-                    # /bisos/blee/dooms/doom-base-blee3/blee-init.el
-                    # lpDo eval cat ${doomDirBase}/initSansBlee.el ${doomDirBase}/loadBlee.el \> ${doomDirBase}/init.el
                     lpDo eval cat ${doomDirBase}/initSansBlee.el ${doomDirBase}/blee-init.el \> ${doomDirBase}/init.el
                     lpDo chmod 444 ${doomDirBase}/init.el
                     ;;
