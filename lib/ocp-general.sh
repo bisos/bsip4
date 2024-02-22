@@ -724,7 +724,10 @@ function FN_dirSafeKeep {
       #TM_trace 7 "not found"
       dateTag=`date +%y%m%d%H%M%S`
     fi
-    mv $1 $1.${dateTag}
+    if [[ "${G_verbose}_" == "verbose_" ]] ; then
+        print -u2 "Running: mv $1 $1.${dateTag}"
+    fi
+    mv "$1" "$1.${dateTag}"
   else
      if [[ "${G_verbose}_" == "verbose_" ]] ; then
         print -u2 "$1: not a directory, $0 skipped"

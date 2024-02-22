@@ -209,6 +209,54 @@ _EOF_
     lpReturn
 }
 
+function vis_switchInitTo_ObsoletedDeb11 {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** This is temporary.
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    EH_assert profilePrep
+
+    local switchTo="$1"
+
+    case ${switchTo} in
+        sansBlee)
+            case $profile in
+                blee2|blee3)
+                    lpDo chmod ug+rw ${doomDirBase}/init.el
+                    # /bisos/blee/doom-blee-base/initSansBlee.el
+                    lpDo cp ${doomDirBase}/initSansBlee.el ${doomDirBase}/init.el
+                    lpDo chmod 444 ${doomDirBase}/init.el
+                    ;;
+                *)
+                    EH_problem "Unknown profile=${profile} -- sansBlee skipped"
+                    ;;
+            esac
+            ;;
+        withBlee)
+            case $profile in
+                blee2|blee3)
+                    lpDo chmod ug+rw ${doomDirBase}/init.el
+                    # /bisos/blee/doom-blee-base/initSansBlee.el
+                    # /bisos/blee/doom-blee-base/loadBlee.el
+                    # /bisos/blee/dooms/doom-base-blee3/blee-init.el
+                    # lpDo eval cat ${doomDirBase}/initSansBlee.el ${doomDirBase}/loadBlee.el \> ${doomDirBase}/init.el
+                    lpDo eval cat ${doomDirBase}/initSansBlee.el ${doomDirBase}/blee-init.el \> ${doomDirBase}/init.el
+                    lpDo chmod 444 ${doomDirBase}/init.el
+                    ;;
+                *)
+                    EH_problem "Unknown profile=${profile} -- withBlee skipped"
+                    ;;
+            esac
+            ;;
+        *)
+            EH_problem "Bad Input: switchTo=${switchTo}"
+            ;;
+    esac
+}
+
 function vis_switchInitTo {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
