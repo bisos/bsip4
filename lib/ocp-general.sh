@@ -685,7 +685,7 @@ function FN_fileSafeKeep {
     if test -f ${thisOne} -o -L ${thisOne} ;   then
       if [ "${dateTag}X" == "X" ] ; then 
         #TM_trace 7 "not found"
-        dateTag=`date +%y%m%d%H%M%S`
+        local dateTag=`date +%y%m%d%H%M%S`
       fi
       if [[ "${G_verbose}_" == "verbose_" ]] ; then
         print "$0: ${thisOne}.${dateTag}" 1>&2
@@ -703,7 +703,7 @@ function FN_fileSafeKeepCp {
     if test -f ${thisOne} -o -L ${thisOne} ;   then
       if [ "${dateTag}X" == "X" ] ; then 
         #TM_trace 7 "not found"
-        dateTag=`date +%y%m%d%H%M%S`
+        local dateTag=`date +%y%m%d%H%M%S`
       fi
       if [[ "${G_verbose}_" == "verbose_" ]] ; then
         print "$0: ${thisOne}.${dateTag}" 1>&2
@@ -722,7 +722,7 @@ function FN_dirSafeKeep {
   if test -d $1 ;   then
     if [ "${dateTag}X" == "X" ] ; then 
       #TM_trace 7 "not found"
-      dateTag=`date +%y%m%d%H%M%S`
+      local dateTag=`date +%y%m%d%H%M%S`
     fi
     if [[ "${G_verbose}_" == "verbose_" ]] ; then
         print -u2 "Running: mv $1 $1.${dateTag}"

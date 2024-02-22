@@ -457,7 +457,7 @@ function _opDo {
     typeset failedMsg
     local justDateTag=$( date +%Y%m%d%H%M%S%N )
     local justId=$(id -u -n)
-    dateTag="${justId} ${justDateTag}"
+    local dateTag="${justId} ${justDateTag}"
     case "${G_verbose}" in
         "verbose")
             if [ "${scriptName}" == "" ] ; then
