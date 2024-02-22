@@ -146,21 +146,21 @@ _EOF_
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
-bisosCurrentsManage.sh  ${extraInfo} -i setParam curTargetBox 192.168.0.45
+bisosCurrentsManage.sh  ${extraInfo} -i setParam curTargetBox 192.168.0.256  # input needed
 ${curTargetBox:-}
+$( examplesSeperatorChapter "Distro Installation -- On Target" )
+See: https://github.com/bxGenesis/start
 $( examplesSeperatorChapter "Un Do -- De BISOS-ify -- Re-Install" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i deBisosIfy
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i reInstall
-$( examplesSeperatorChapter "Full Update" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i fullUpdate  # PRIMARY Action (all of below)
 $( examplesSeperatorChapter "Distro Actions -- On Manager -- Ssh Into Target" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_fullUpdate # intra user
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_intraToSudoersAddition # ManagerOnly -- intra user -- no bisos
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_aptSourcesPrep # ManagerOnly -- intra user -- no bisos
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_provisionBisos_unsitedBisos # ManagerOnly -- intra user -- no bisos
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_provisionBisos_ascertain
-$( examplesSeperatorChapter "Distro Installation -- On Target" )
-See: https://github.com/bxGenesis/start
+$( examplesSeperatorChapter "Full Update" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i fullUpdate  # PRIMARY Action (all of above)
 _EOF_
 }
 
