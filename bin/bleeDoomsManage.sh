@@ -273,9 +273,7 @@ _EOF_
         sansBlee)
             case $profile in
                 blee2|blee3)
-                    lpDo chmod ug+rw ${doomDirBase}/init.el
-                    lpDo cp ${doomDirBase}/initSansBlee.el ${doomDirBase}/init.el
-                    lpDo chmod 444 ${doomDirBase}/init.el
+                    ANT_raw "OBSOLETED -- vis_switchInitTo no longer needed -- switchTo=${switchTo} profile=${profile}"
                     ;;
                 *)
                     EH_problem "Unknown profile=${profile} -- sansBlee skipped"
@@ -285,9 +283,7 @@ _EOF_
         withBlee)
             case $profile in
                 blee2|blee3)
-                    lpDo chmod ug+rw ${doomDirBase}/init.el                 
-                    lpDo eval cat ${doomDirBase}/initSansBlee.el ${doomDirBase}/blee-init.el \> ${doomDirBase}/init.el
-                    lpDo chmod 444 ${doomDirBase}/init.el
+                    ANT_raw "OBSOLETED -- vis_switchInitTo no longer needed -- switchTo=${switchTo} profile=${profile}"
                     ;;
                 *)
                     EH_problem "Unknown profile=${profile} -- withBlee skipped"
@@ -317,7 +313,7 @@ _EOF_
         lpReturn 1
     fi
 
-    export DOOMDIR="${doomDirBase}"
+    export DOOMDIR="${doomDirBase}/sansBlee"
     export YES=y
     export EMACS="${emacsExec}"
 
