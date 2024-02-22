@@ -76,6 +76,7 @@ _EOF_
     
 }
 
+# sysBasePlatform is same as unsitedBisos
 function vis_bsipProvision_sysBasePlatform {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -95,7 +96,8 @@ _EOF_
 
     lpDo vis_provisionPyVenvSetup
 
-    lpDo vis_provisionBasicBlee
+    # DeleteMe: Blee setup is done in sysBaseGeneralAugment
+    # lpDo vis_provisionBasicBlee
 
     lpDo vis_provisionVirtSysSetup
 

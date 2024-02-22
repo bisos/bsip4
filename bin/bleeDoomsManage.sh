@@ -106,7 +106,7 @@ $( examplesSeperatorChapter "Doom Main Deploy -- profile=blee3" )
 ${G_myName} ${extraInfo} -p emacs=28 -p profile=blee3 -i buildInstall
 ${G_myName} ${extraInfo} -p profile=blee3 -i doomSync
 ${G_myName} ${extraInfo} -p profile=blee3 -i unMain
-${G_myName} ${extraInfo} -p emacs=28 -p profile=blee3 -i reBuild
+${G_myName} ${extraInfo} -p emacs=sys -p profile=blee3 -i reBuild
 ${G_myName} ${extraInfo} -p profile=blee3 -i switchInitTo sansBlee
 ${G_myName} ${extraInfo} -p profile=blee3 -i switchInitTo withBlee
 ls -l /bisos/blee/doom-blee-base/init.el

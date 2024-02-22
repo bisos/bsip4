@@ -470,6 +470,8 @@ _EOF_
 
     # NOTYET, verify that acctName is valid (source needed lib)
 
+    lpDo pushd $HOME   # for inBaseDirDo protection
+
     # Has already been done, will not repeat
     #lpDo ${opBinBase}/bisosPyVenvSetup.sh -h -v -n showRun -i venvPy3_pipInstalls
 
@@ -485,6 +487,8 @@ _EOF_
     lpDo vis_chemacs2FullUpdate
 
     lpDo sudo -u ${acctName} ${opBinBase}/bueMailManage.sh -h -v -n showRun -i mhonarcBasePrep
+
+    lpDo popd
 }
 
 

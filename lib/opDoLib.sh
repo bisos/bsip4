@@ -448,14 +448,16 @@ function _opDo {
     fi
 
     if [ -z "${G_recordMode}" ] ; then
-        scriptFuncName="* ${bashSrc}::[${lineNumber}] -- ${origScriptName}${functionName}"      
+        scriptFuncName="* ${bashSrc}::[${lineNumber}] -- ${origScriptName} -- ${functionName}"
     else
         scriptFuncName="* [[file:${bashSrc}::${lineNumber}][${origScriptName}:${bashSrcSansDirs}:${functionName}]]"             
     fi
 
     typeset msg
     typeset failedMsg
-    dateTag=$( date +%Y%m%d%H%M%S%N )
+    local justDateTag=$( date +%Y%m%d%H%M%S%N )
+    local justId=$(id -u -n)
+    dateTag="${justId} ${justDateTag}"
     case "${G_verbose}" in
         "verbose")
             if [ "${scriptName}" == "" ] ; then

@@ -143,9 +143,10 @@ _EOF_
 
     lpDo ${bisosBinBase}/lcaPythonCommonBinsPrep.sh -v -n showRun -i fullUpdate
 
+    lpDo bisosCurrentsManage.sh -i setParam cur_bpoId_parent pis_defaultSite
+
     lpDo sudo -u bystar ${bisosBinBase}/blee -v -n showRun -p acctName=bystar -i provisionSetup
 
-    lpDo bisosCurrentsManage.sh -i setParam cur_bpoId_parent pis_defaultSite
 
     lpDo echo "Stuff from bisosUpdateInterim.sh comes here."
 }
