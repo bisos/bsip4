@@ -148,15 +148,16 @@ $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam curTargetBox 192.168.0.45
 ${curTargetBox:-}
-$( examplesSeperatorChapter "Un Do -- De BISOS-ify" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i deBisosIfy  # NOTYET, has not been implemented
+$( examplesSeperatorChapter "Un Do -- De BISOS-ify -- Re-Install" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i deBisosIfy
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i reInstall
 $( examplesSeperatorChapter "Full Update" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i fullUpdate  # PRIMARY Action (all of below)
 $( examplesSeperatorChapter "Distro Actions -- On Manager -- Ssh Into Target" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_fullUpdate # intra user
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_intraToSudoersAddition # ManagerOnly -- intra user -- no bisos
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_aptSourcesPrep # ManagerOnly -- intra user -- no bisos
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_provisionBisos_rawBisos # ManagerOnly -- intra user -- no bisos
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_provisionBisos_unsitedBisos # ManagerOnly -- intra user -- no bisos
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_provisionBisos_ascertain
 $( examplesSeperatorChapter "Distro Installation -- On Target" )
 See: https://github.com/bxGenesis/start
@@ -176,10 +177,6 @@ _EOF_
     EH_assert [ "${targetName}" != "localhost" ] # Must be invoked OnManger
 
     lpDo vis_distro_fullUpdate
-
-    # lpDo vis_bisosBasePlatform_fullUpdate
-
-    # Needs abode ... # lpDo vis_siteBasePlatform_fullUpdate
 }
 
 function vis_distro_fullUpdate {    
@@ -196,7 +193,7 @@ _EOF_
 
     lpDo vis_distro_intraToSudoersAddition
     lpDo vis_distro_aptSourcesPrep
-    lpDo vis_distro_provisionBisos_sysBasePlatform
+    lpDo vis_distro_provisionBisos_unsitedBisos
 }
 
 
@@ -274,7 +271,8 @@ _EOF_
 }
 
 
-function vis_distro_provisionBisos_rawBisos {    
+
+function vis_distro_provisionBisos_unsitedBisos {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Applies identically to all distros.
@@ -290,17 +288,88 @@ _EOF_
     lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
          sudo apt-get update
 
-    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-         sudo apt-get -y upgrade
+    #lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+    #    sudo apt-get -y upgrade
 
-    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-         sudo apt-get install -y python3-pip
-    
-    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-         sudo pip3 install --upgrade bisos.provision
 
-    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-         sudo provisionBisos.sh ${G_commandPrefs} -i sysBasePlatform
+    local debVer=$(lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" lsb_release -a | grep Release | cut -d : -f 2)
+    debVer=$(echo ${debVer})  # get rid of spaces
+
+    if [ "${debVer}" == "12" ] ; then
+
+        lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+            sudo apt-get install -y pipx
+
+        lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+            pipx install bisos.provision
+
+        lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+           \$HOME/.local/bin/provisionBisos.sh -h -v -n showRun -i sysBasePlatform
+
+    elif [ "${debVer}" == "11" ] ; then
+
+        lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+            sudo apt-get install -y python3-pip
+
+        lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+            sudo pip3 install --upgrade bisos.provision
+
+        lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+            /usr/local/bin/provisionBisos.sh ${G_commandPrefs} -i sysBasePlatform
+
+   else
+      EH_problem "Unsuported debVer=${debVer}"
+   fi
+}
+
+
+function vis_deBisosIfy {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** TODO Needs to become consistent with bxGenesis/start/raw-bisos.sh
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert [ ! -z "${targetName}" ]
+
+    local debVer=$(lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" lsb_release -a | grep Release | cut -d : -f 2)
+    debVer=$(echo ${debVer})  # get rid of spaces
+
+    if [ "${debVer}" == "12" ] ; then
+        lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+            \$HOME/.local/bin/provisionBisos.sh -h -v -n showRun -i deBisosIfy
+    elif [ "${debVer}" == "11" ] ; then
+        lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+            /usr/local/bin/provisionBisos.sh -h -v -n showRun -i deBisosIfy
+   else
+      EH_problem "Unsuported debVer=${debVer}"
+   fi
+}
+
+
+function vis_reInstall {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** TODO Needs to become consistent with bxGenesis/start/raw-bisos.sh
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert [ ! -z "${targetName}" ]
+
+    local debVer=$(lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" lsb_release -a | grep Release | cut -d : -f 2)
+    debVer=$(echo ${debVer})  # get rid of spaces
+
+    if [ "${debVer}" == "12" ] ; then
+        lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+            \$HOME/.local/bin/provisionBisos.sh -h -v -n showRun -i reInstall  sysBasePlatform
+    elif [ "${debVer}" == "11" ] ; then
+        lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+            /usr/local/bin/provisionBisos.sh -h -v -n showRun -i reInstall  sysBasePlatform
+    else
+      EH_problem "Unsuported debVer=${debVer}"
+   fi
 }
 
 
