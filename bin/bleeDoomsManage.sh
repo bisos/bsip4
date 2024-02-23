@@ -337,7 +337,8 @@ _EOF_
 
     # If this proved to be a fix, NOTYET, make bystar a param
     lpDo echo "Be Patient, this can take a Long Time -- Running: sudo -u bystar ${doomMainBase}/bin/doom --force install"
-    sudo -u bystar stdbuf -i0 -o0 -e0  ${doomMainBase}/bin/doom --force install  </dev/null
+    #sudo -u bystar stdbuf -i0 -o0 -e0  ${doomMainBase}/bin/doom --force install  </dev/null
+    lpDo eval stdbuf -i0 -o0 -e0  ${doomMainBase}/bin/doom --force install  \</dev/null
 
     lpDo vis_switchInitTo withBlee
 
