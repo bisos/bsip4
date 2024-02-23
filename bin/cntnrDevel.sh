@@ -223,6 +223,8 @@ _EOF_
     lpDo vis_bisosDevBxo_activate
 
     lpDo vis_bisosDevBxo_actuate
+
+    lpDo bisosPyVenvSetup.sh -h -v -n showRun -i pyVenv_DevSetup
 }
 
 function vis_bisosDevBxo_activate {    

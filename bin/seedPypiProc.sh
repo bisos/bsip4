@@ -449,6 +449,7 @@ _EOF_
     fi
     
     if [ "${installType}" == "edit" ]; then
+        opDo git pull
         opDo  pip install --no-cache-dir --editable .
         return
         
