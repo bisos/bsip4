@@ -449,7 +449,8 @@ _EOF_
     fi
     
     if [ "${installType}" == "edit" ]; then
-        opDo git pull
+        # MB 2024 -- git pull should not be done here
+        # opDo git pull
         opDo  pip install --no-cache-dir --editable .
         return
         
