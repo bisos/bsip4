@@ -330,7 +330,8 @@ _EOF_
     lpDo echo DOOMDIR=${DOOMDIR}
     lpDo echo EMACS=${EMACS}
 
-    lpDo ${doomMainBase}/bin/doom --force install
+    # If this proved to be a fix, NOTYET, make bystar a param
+    lpDo sudo -u bystar ${doomMainBase}/bin/doom --force install
 
     lpDo vis_switchInitTo withBlee
 
