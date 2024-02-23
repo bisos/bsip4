@@ -381,6 +381,49 @@ _EOF_
 }
 
 
+function vis_sitedDevelContainer {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Materializes DevBpo
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    function onManagerRun {
+        lpReturn
+    }
+
+    function onTargetRun {
+
+        lpDo cntnrDevel.sh ${G_commandPrefs} \
+             -i bisosDevBxo_fullSetup
+    }
+
+    if [ "${targetName}" != "onTargetRun" ] && [ ! -z "${targetName}" ] ; then
+        lpDo onManagerRun
+    fi
+
+    # EH_assert [ ! -z "${devBpoId}" ]
+
+    G_paramCmndOption=""
+
+####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" :cmndOption t
+    if [ "${targetName}" == "onTargetRun" ] ; then
+        lpDo onTargetRun
+    elif [ -z "${targetName}" ] ; then
+        lpDo onTargetRun
+    else
+        local commandName=${FUNCNAME##vis_}
+        lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+             $(which ${G_myName}) ${G_commandPrefs} \
+             -p targetName=onTargetRun ${G_paramCmndOption} -i ${commandName}
+    fi
+####+END:
+}
+
+
+
+
 function vis_siteBasePlatform_fullUpdate {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
