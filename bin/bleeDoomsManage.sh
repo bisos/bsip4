@@ -275,7 +275,7 @@ _EOF_
                 blee2|blee3)
                     ANT_raw "switchInitTo -- switchTo=${switchTo} profile=${profile}"
                     lpDo cp ${doomDirBase}/configSansBlee.el ${doomDirBase}/config.el
-                    lpDo chmod 444 ${doomDirBase}/config.el
+                    # lpDo chmod 444 ${doomDirBase}/config.el
                     ;;
                 *)
                     EH_problem "Unknown profile=${profile} -- sansBlee skipped"
@@ -287,7 +287,7 @@ _EOF_
                 blee2|blee3)
                     ANT_raw "switchInitTo -- switchTo=${switchTo} profile=${profile}"
                     lpDo cp ${doomDirBase}/configWithBlee.el ${doomDirBase}/config.el
-                    lpDo chmod 444 ${doomDirBase}/config.el
+                    # lpDo chmod 444 ${doomDirBase}/config.el
                     ;;
                 *)
                     EH_problem "Unknown profile=${profile} -- withBlee skipped"
