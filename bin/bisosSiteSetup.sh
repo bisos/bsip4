@@ -164,6 +164,10 @@ _EOF_
 
     local curDir=$( pwd )
 
+    lpDo sudo rm /tmp/intra-ICM.log
+    lpDo sudo rm /tmp/bisos-ICM.log
+    lpDo sudo rm /tmp/bystar-ICM.log
+
     lpDo vis_obtainTmpSite    # registrar, id, password are icm params
 
     if [ ! -d "${HOME}/tmp/tmp-site" ] ; then

@@ -195,9 +195,9 @@ $( examplesSeperatorChapter "Ssh Based Cusomizations -- Bx Based (not vagrant ba
 ${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i postCustomize  # on host - bx-ssh
 ${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i secureSeal     # on host - bx-ssh
 ${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i recordDeployment      # inside of parent bxo
-$( examplesSeperatorChapter "LAYER-1:: bisosRawDeploy.sh  -- Distro Actions -- On Manager -- Ssh Into Target" )
-bisosRawDeploy.sh
-bisosRawDeploy.sh ${extraInfo} -p targetName="${oneTargetName}" -i fullUpdate
+$( examplesSeperatorChapter "LAYER-1:: unsitedBisosDeploy.sh  -- Distro Actions -- On Manager -- Ssh Into Target" )
+unsitedBisosDeploy.sh
+unsitedBisosDeploy.sh ${extraInfo} -p targetName="${oneTargetName}" -i fullUpdate
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_provisionBisos_ascertain
 $( examplesSeperatorSection "L1:: Target Box Developmenet Preps -- On Target Box" )
 ssh -X bystar@${oneTargetName}    # Then run emacs
@@ -299,7 +299,7 @@ _EOF_
     EH_assert [ ! -z "${targetName}" ]
     EH_assert [ "${targetName}" != "localhost" ] # Must be invoked OnManger
 
-    lpDo bisosRawDeploy.sh -p targetName="${targetName}" -i fullUpdate
+    lpDo unsitedBisosDeploy.sh -p targetName="${targetName}" -i fullUpdate
 }
 
 
