@@ -155,7 +155,8 @@ $( examplesSeperatorChapter "Developer Git Credentials Activate" )
 ${G_myName} ${extraInfo} -i bisosDevBxo_fullSetup  # activate bisosDevBxoId and actuate it
 ${G_myName} ${extraInfo} -i bisosDevBxo_activate   # activate bisosDevBxoId
 ${G_myName} ${extraInfo} -i bisosDevBxo_actuate    # clone  auth based bxRepos with bisosDev credentials
-$( examplesSeperatorChapter "Python Dev Virt Env Setup" )
+$( examplesSeperatorChapter "Repeatable Actions And Updates" )
+bx-gitReposBases -v 20 --baseDir="/bisos/git/auth/bxRepos" --pbdName="bxReposRoot" --vcMode="auth" --gitLabel="mb1_github"  -i pbdUpdate all
 bisosPyVenvSetup.sh -h -v -n showRun -i pyVenv_DevSetup # Create Virtual Environment and dev pipInstalls
 $( examplesSeperatorChapter "Temporary Work Around" )
 bpoActivate.sh -h -v -n showRun -p privacy="priv" -p bpoId="piu_mbFullUsage" -i bpoActivate
