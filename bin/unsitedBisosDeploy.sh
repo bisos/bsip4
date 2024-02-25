@@ -146,40 +146,27 @@ _EOF_
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
-bisosCurrentsManage.sh  ${extraInfo} -i setParam curTargetBox 192.168.0.256  # input needed
+bisosCurrentsManage.sh  ${extraInfo} -i setParam curTargetBox 192.168.0.257  # input needed
 ${curTargetBox:-}
 $( examplesSeperatorChapter "Distro Installation -- On Target" )
 See: https://github.com/bxGenesis/start
 $( examplesSeperatorChapter "Un Do -- De BISOS-ify -- Re-Install" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i deBisosIfy
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i reInstall
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1_boxUUID  # Box's unique-id for use by Manager 
+$( examplesSeperatorChapter "Un Do -- De BISOS-ify -- Re-Install" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1_deBisosIfy
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1_reInstall
 $( examplesSeperatorChapter "Distro Actions -- On Manager -- Ssh Into Target" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_fullUpdate # intra user
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_intraToSudoersAddition # ManagerOnly -- intra user -- no bisos
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_aptSourcesPrep # ManagerOnly -- intra user -- no bisos
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_provisionBisos_unsitedBisos # ManagerOnly -- intra user -- no bisos
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_provisionBisos_ascertain
 $( examplesSeperatorChapter "Full Update" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i fullUpdate  # PRIMARY Action (all of above)
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1_fullUpdate  # PRIMARY Action (all of above distro_ actions)
 _EOF_
 }
 
 
-function vis_fullUpdate {    
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** Update Everything.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    EH_assert [ ! -z "${targetName}" ]
-    EH_assert [ "${targetName}" != "localhost" ] # Must be invoked OnManger
-
-    lpDo vis_distro_fullUpdate
-}
-
-function vis_distro_fullUpdate {    
+function vis_l1_fullUpdate {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Update distro, and bring it to bisosBasePlatform.
@@ -270,8 +257,6 @@ _EOF_
 
 }
 
-
-
 function vis_distro_provisionBisos_unsitedBisos {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -322,8 +307,7 @@ _EOF_
    fi
 }
 
-
-function vis_deBisosIfy {
+function vis_l1_deBisosIfy {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** TODO Needs to become consistent with bxGenesis/start/raw-bisos.sh
@@ -347,8 +331,7 @@ _EOF_
    fi
 }
 
-
-function vis_reInstall {
+function vis_l1_reInstall {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** TODO Needs to become consistent with bxGenesis/start/raw-bisos.sh
@@ -372,6 +355,19 @@ _EOF_
    fi
 }
 
+function vis_l1_boxUUID {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** TODO Needs to become consistent with bxGenesis/start/raw-bisos.sh
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert [ ! -z "${targetName}" ]
+
+    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+        "echo intra | su - root -c 'dmidecode -s system-uuid'"
+}
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*
