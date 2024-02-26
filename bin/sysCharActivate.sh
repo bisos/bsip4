@@ -165,6 +165,8 @@ bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VSG-deb11_  # 
 $( examplesSeperatorChapter "SysChar Containers Info" )
 ${G_myName} -i containerReposList  # listAvaiableSysChars
 ${G_myName} -i containerBposList  # grep -i pmp_ to bxoGitlab.py -i acctList
+$( examplesSeperatorChapter "SysChar Box Facilities" )
+${G_myName} ${extraInfo}  -i containerBoxBpoId
 $( examplesSeperatorChapter "SysChar Container Activate" )
 ${G_myName} ${extraInfo}  -i activate_virtGenerics  # pmp_VAG-deb11_ pmp_VSG-deb11_
 $( examplesSeperatorChapter "SysChar Container Activate" )
@@ -183,6 +185,41 @@ $( examplesSeperatorChapter "Overview Report And Summary" )
 ${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i sysCharContainerReport
 _EOF_
 }
+
+function vis_containerBoxBpoId {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** onTarget obtain the bpoId for the box, the bpoId account may or may not exist.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local containerCharNames=$( lpDo eval svcInvSiteRegContainer.cs  -i thisSys_locateBoxInAll 2\> /dev/null \| pyLiteralToBash.cs -i stdinToBash )
+
+    if [ -z "${containerCharNames}" ] ; then
+        ANT_raw "No containerCharName found for this box"
+        lpReturn
+    fi
+
+    eval declare -a listOfDicts="${containerCharNames}"
+    for each in "${listOfDicts[@]}" ; do
+        declare -A gotPyDict="${each}"
+
+        echo ${gotPyDict[@]} -- ${!gotPyDict[@]} --- ${gotPyDict['model']}
+
+        for each in "${!gotPyDict[@]}"; do
+            echo "$each - ${gotPyDict[$each]}"
+        done
+    done
+
+    # ANT_cooked "NOTYET -- ${containerCharNames}"
+
+    lpReturn
+
+    # local sysCharContainerBpoId=$( vis_sysCharContainerBxoIdName ${containerAssignBase} )
+    # echo ${sysCharContainerBpoId}
+}
+
 
 
 _CommentBegin_

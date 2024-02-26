@@ -223,6 +223,7 @@ $( examplesSeperatorSection "L3:: Full New Box Actions -- Realize on Target Box"
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i l3_charedContainerBoxRealize  # OnTarget Only
 ${G_myName} ${extraInfo} -p model=Pure -p abode=Shield -p function=Server -i l3_charedContainerBoxRealize  # OnTarget Only
 $( examplesSeperatorSection "L3:: Full Existing Box Actions -- On Manager Or On Target Box" )
+${G_myName} ${extraInfo} -i l3_charedContainerBoxRealize  # OnTarget Only
 ${G_myName} ${extraInfo} -p bxoId="pmp_VAG-deb11_" -i siteBasePlatform_sysBxoActivate
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i boxSiteBasePlatform  # OnManager
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i boxFullActivate # On Manager From Begining-To-End
@@ -859,7 +860,7 @@ _EOF_
             lpReturn
         fi
 
-        ANT_cooked "NOTYET"
+        ANT_cooked "NOTYET -- ${containerCharNames}"
 
         lpReturn
         
@@ -944,6 +945,28 @@ _EOF_
     fi
 }
 
+function vis_l3_charedContainerBoxActivate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+*** Can only be invoked OnTarget as relaization involves self Blee dblock features.
+*** For activation only, it can be invoked OnManager throuhg vis_boxActivateAtSiteBasePlatform
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    if [ -z "${targetName}" ] ; then
+        lpDo sysCharRealize.sh ${G_commandPrefs} \
+             -p model=${model} -p abode=${abode} -p function=${function} \
+             -i sysCharContainerBoxRealize
+    else
+        EH_problem "Bad Usage: sysCharRealize.sh can only be invoked on Target"
+        lpReturn
+        lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+             $(which sysCharRealize.sh) ${G_commandPrefs} \
+             -p model=${model} -p abode=${abode} -p function=${function} \
+             -i sysCharContainerBoxRealize
+    fi
+}
 
 function vis_containerBoxBpoPath {    
     G_funcEntry
