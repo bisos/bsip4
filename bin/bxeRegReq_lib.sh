@@ -843,7 +843,7 @@ _EOF_
     # So, we create a new file.
     # 
     
-    echo regReqFileName=${regReqFileNamePath} > ${regReqFileNamePath}
+    lpDo eval echo regReqFileName=${regReqFileNamePath} \> ${regReqFileNamePath}
 
     vis_regReqStdout 1>> ${regReqFileNamePath}
 

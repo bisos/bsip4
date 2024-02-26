@@ -202,8 +202,8 @@ $( examplesSeperatorSection "L1:: Access to Layer-1 -- On Target Box" )
 ssh -X bystar@${oneTargetName}    # Then run emacs
 bleeVisit /bisos/panels/development/bisos-dev/howToBecomeDeveloper/fullUsagePanel-en.org # NOTYET, bad path
 $( examplesSeperatorChapter "LAYER-2:: Sited-Container -- UnsitedBisos to SitedContainer" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2_sitedDevContainer  # onManager
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2_sitedContainer  # onManager
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2_sitedDevContainer  # onManager  -- PRIMARY (New BOX)
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2_sitedContainer  # onManager  -- PRIMARY (New BOX)
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_siteSetup # onManager or below onTarget
 ${G_myName} ${extraInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -p siteBxoId=${siteBxoId}" -i bisosBasePlatform_siteSetup # onTarget
 $( examplesSeperatorSection "L2:: BISOS Development Preps -- bisosBasePlatform Actions" )
@@ -217,24 +217,25 @@ ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l2_sitedContainer
 $( examplesSeperatorChapter "LAYER-3:: Chared-Container -- [Realize or Activate] SysChar Setup [with sysCharBpo] -- siteBasePlatform Actions" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_regBoxAscertain  # Has this box been registered
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_regContainerBoxAscertain  # Is a container registered for this box
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_newBoxAssign  "someBoxName"
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_newBoxAssign  "someBoxName"  # OnManager -- PRIMARY (New BOX)
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_cntnrThis_regBpoId
 $( examplesSeperatorSection "L3:: Full New Box Actions -- Realize on Target Box Only" )
-${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i l3_charedContainerBoxRealize  # OnTarget Only
-${G_myName} ${extraInfo} -p model=Pure -p abode=Shield -p function=Server -i l3_charedContainerBoxRealize  # OnTarget Only
+${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i l3_charedContainerBoxRealize  # OnTarget Only -- PRIMARY (New BOX)
+${G_myName} ${extraInfo} -p model=Pure -p abode=Shield -p function=Server -i l3_charedContainerBoxRealize  # OnTarget Only -- PRIMARY (New BOX)
 $( examplesSeperatorSection "L3:: Full Existing Box Actions -- Activate on Manager Or On Target Box" )
 ${G_myName} ${extraInfo} -i l3_cntnrThis_activate # On Target
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l3_cntnrThis_activate # On Manager
 ${G_myName} ${extraInfo} -p bxoId="pmp_VAG-deb11_" -i siteBasePlatform_sysBxoActivate
 $( examplesSeperatorChapter "LAYER-1 + Layer 2 + Layer 3:: Combined -- Full Existing Box Actions -- On Manager" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l3_charedCntnr_activate  # onManager
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l3_charedCntnr_realizeNOT  # onManager
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l3_charedContainer_activate  # onManager
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l3_charedContainer_realizeNOT  # onManager
 $( examplesSeperatorChapter "LAYER-4:: Materialized-Container " )
 sysCharMaterializeBox.sh
 sysCharMaterializeGuest.sh
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l4_materializedContainer  # on Manager
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l4_materializedContainer  # on Manager  -- PRIMARY (New BOX)
 $( examplesSeperatorChapter "LAYER-1 to Layer 4:: Combined -- Full Existing Box Actions -- on Manager" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l4_materializedContainer  # on Manager
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l4_materializedContainer  # on Manager  -- PRIMARY (Existing BOX)
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l4_materializedDevContainer  # on Manager  -- PRIMARY (Existing BOX)
 $( examplesSeperatorChapter "VIRTUALIZATION :: sysCharGuestMaterialize.sh Use of sysCharDeploy.sh" )
 $( examplesSeperatorSection "Used in Vagrantfile --- Phase 2.1, 2.2, 2.3" )
 ${G_myName} ${extraInfo} -p registrar="192.168.0.257" -p id="bystar" -p password="somePasswd" -p siteBxoId="pms_someSite" -i bisosBasePlatform_siteSetup

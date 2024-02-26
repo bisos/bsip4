@@ -75,6 +75,7 @@ _EOF_
 
     itemOrderedList=(
         "debconf_utils"     # needed for pre-seeding
+        "dbus_x11"     # needed by blee
         "postfixCustom"     # because various packages install postfix
         "ruby"              # needed by facter  
         "facter"
@@ -185,6 +186,17 @@ item_pandoc () { distFamilyGenerationHookRun binsPrep_pandoc; }
 binsPrep_pandoc_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "pandoc"; }
 
 ####+END:
+
+####+BEGIN: bx:dblock:lsip:binsprep:apt :module "dbus-x11"
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || Apt-Pkg       :: dbus-x11 [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+item_dbus_x11 () { distFamilyGenerationHookRun binsPrep_dbus_x11; }
+
+binsPrep_dbus_x11_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "dbus-x11"; }
+
+####+END:
+
 
 ####+BEGIN: bx:dblock:lsip:binsprep:apt :module "debconf-utils"
 _CommentBegin_

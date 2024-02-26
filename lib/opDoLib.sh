@@ -455,9 +455,10 @@ function _opDo {
 
     typeset msg
     typeset failedMsg
-    local justDateTag=$( date +%Y%m%d%H%M%S%N )
+    #local justDateTag=$( date +%Y%m%d%H%M%S%N )
+    local dateTag=$( date +%Y%m%d%H%M%S%N )    
     local justId=$(id -u -n)
-    local dateTag="${justId} ${justDateTag}"
+    local fullDateTag="${justId} ${dateTag}"
     case "${G_verbose}" in
         "verbose")
             if [ "${scriptName}" == "" ] ; then
@@ -465,11 +466,11 @@ function _opDo {
                    msg="${lineNumberTag}: $@"
                 else
                     #msg="* ${scriptName}${functionName} -- ${dateTag}\n${lineNumber}: $@"
-                    msg="${scriptFuncName} -- ${dateTag}\n${lineNumberTag}: $@"
+                    msg="${scriptFuncName} -- ${fullDateTag}\n${lineNumberTag}: $@"
                 fi 
             else
                 #msg="* ${scriptName}${functionName} -- ${dateTag}\n${lineNumber}: $@"
-                msg="${scriptFuncName} -- ${dateTag}\n${lineNumberTag}: $@"             
+                msg="${scriptFuncName} -- ${fullDateTag}\n${lineNumberTag}: $@"             
             fi
             failedMsg="FAILED: ${scriptName}${functionName}${lineNumber}: $@ [ErrCode]="
             ;;
