@@ -141,19 +141,21 @@ function vis_examples {
     bisosCurrentsGet
     oneBxoId="${currentBxoId}"
     
-    local selectedContainerBxoId=$( vis_selectedContainerBxoId 2> /dev/null )
+    # local selectedContainerBxoId=$( vis_selectedContainerBxoId 2> /dev/null )
 
-    if [ -z "${selectedContainerBxoId}" ] ; then
+    # if [ -z "${selectedContainerBxoId}" ] ; then
 
-        local containerAssignBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
-        EH_assert [ ! -z "${containerAssignBase}" ]
+    #     local containerAssignBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
+    #     EH_assert [ ! -z "${containerAssignBase}" ]
    
-        local sysCharContainerBxoId=$( vis_sysCharContainerBxoIdName ${containerAssignBase} )
+    #     local sysCharContainerBxoId=$( vis_sysCharContainerBxoIdName ${containerAssignBase} )
 
-        effectiveContainerBxoId="${sysCharContainerBxoId}"
-    else
-        effectiveContainerBxoId="${selectedContainerBxoId}"
-    fi
+    #     effectiveContainerBxoId="${sysCharContainerBxoId}"
+    # else
+    #     effectiveContainerBxoId="${selectedContainerBxoId}"
+    # fi
+
+    local effectiveContainerBxoId=${oneBxoId}
 
     visLibExamplesOutput ${G_myName} 
     cat  << _EOF_
@@ -166,7 +168,9 @@ $( examplesSeperatorChapter "SysChar Containers Info" )
 ${G_myName} -i containerReposList  # listAvaiableSysChars
 ${G_myName} -i containerBposList  # grep -i pmp_ to bxoGitlab.py -i acctList
 $( examplesSeperatorChapter "SysChar Box Facilities" )
-${G_myName} ${extraInfo}  -i containerBoxBpoId
+${G_myName} ${extraInfo}  -i thisSys_locateBoxInAll
+${G_myName} ${extraInfo}  -i cntnrThis_regBpoId
+${G_myName} ${extraInfo}  -i cntnrThis_activate
 $( examplesSeperatorChapter "SysChar Container Activate" )
 ${G_myName} ${extraInfo}  -i activate_virtGenerics  # pmp_VAG-deb11_ pmp_VSG-deb11_
 $( examplesSeperatorChapter "SysChar Container Activate" )
@@ -186,7 +190,7 @@ ${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i sysCharContain
 _EOF_
 }
 
-function vis_containerBoxBpoId {
+function vis_thisSys_locateBoxInAll {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** onTarget obtain the bpoId for the box, the bpoId account may or may not exist.
@@ -202,24 +206,58 @@ _EOF_
     fi
 
     eval declare -a listOfDicts="${containerCharNames}"
-    for each in "${listOfDicts[@]}" ; do
-        declare -A gotPyDict="${each}"
+    if [ "${#listOfDicts[@]}" == "0" ] ; then
+       echo "Empty List"
+    fi
+    for eachDictStr in "${listOfDicts[@]}" ; do
+        declare -A eachDict="${eachDictStr}"
 
-        echo ${gotPyDict[@]} -- ${!gotPyDict[@]} --- ${gotPyDict['model']}
+        echo ${eachDict[@]} -- ${!eachDict[@]} --- ${eachDict['model']}
 
-        for each in "${!gotPyDict[@]}"; do
-            echo "$each - ${gotPyDict[$each]}"
+        for eachKey in "${!eachDict[@]}"; do
+            echo "$eachKey - ${eachDict[$eachKey]}"
         done
     done
 
-    # ANT_cooked "NOTYET -- ${containerCharNames}"
-
     lpReturn
-
-    # local sysCharContainerBpoId=$( vis_sysCharContainerBxoIdName ${containerAssignBase} )
-    # echo ${sysCharContainerBpoId}
 }
 
+
+function vis_cntnrThis_regBpoId {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** onTarget obtain the bpoId for the box, the bpoId account may or may not exist, but must have been reg-ed and relaized
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local regBpoId=$( lpDo eval cntnrCharThis.cs -i cntnrThis_regBpoId 2\> /dev/null )
+
+    echo "${regBpoId}"
+    
+    lpReturn
+}
+
+function vis_cntnrThis_activate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Uses bpoChar
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    # NOTYET, Rename to:: cntnrCharThis.cs -i cntnrThis_regBpoId
+    local regBpoId=$( lpDo vis_cntnrThis_regBpoId )
+
+    if [ -z "${regBpoId}" ] ; then
+        ANT_cooked "Empty result from cntnrThis_regBpoId -- activation skipped"
+        lpReturn
+    fi
+
+    lpDo bpoManage.sh -h -v -n showRun -p privacy="priv" -p bpoId="${regBpoId}" -i fullConstruct
+    
+    lpReturn
+}
 
 
 _CommentBegin_

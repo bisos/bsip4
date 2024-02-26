@@ -215,25 +215,26 @@ $( examplesSeperatorChapter "Layer-1 + Layer 2:: Combined" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l2_sitedDevContainer # OnManager
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l2_sitedContainer  # OnManager
 $( examplesSeperatorChapter "LAYER-3:: Chared-Container -- [Realize or Activate] SysChar Setup [with sysCharBpo] -- siteBasePlatform Actions" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_regBoxAscertain  # Has this box been resgistered
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_regBoxAscertain  # Has this box been registered
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_regContainerBoxAscertain  # Is a container registered for this box
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_newBoxAssign  "someBoxName"
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_containerBoxBpoId
-$( examplesSeperatorSection "L3:: Full New Box Actions -- Realize on Target Box" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_cntnrThis_regBpoId
+$( examplesSeperatorSection "L3:: Full New Box Actions -- Realize on Target Box Only" )
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i l3_charedContainerBoxRealize  # OnTarget Only
 ${G_myName} ${extraInfo} -p model=Pure -p abode=Shield -p function=Server -i l3_charedContainerBoxRealize  # OnTarget Only
-$( examplesSeperatorSection "L3:: Full Existing Box Actions -- On Manager Or On Target Box" )
-${G_myName} ${extraInfo} -i l3_charedContainerBoxRealize  # OnTarget Only
+$( examplesSeperatorSection "L3:: Full Existing Box Actions -- Activate on Manager Or On Target Box" )
+${G_myName} ${extraInfo} -i l3_cntnrThis_activate # On Target
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l3_cntnrThis_activate # On Manager
 ${G_myName} ${extraInfo} -p bxoId="pmp_VAG-deb11_" -i siteBasePlatform_sysBxoActivate
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i boxSiteBasePlatform  # OnManager
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i boxFullActivate # On Manager From Begining-To-End
-$( examplesSeperatorChapter "LAYER-1 + Layer 2 + Layer 3:: Combined -- Full Existing Box Actions -- On Manager Or On Target Box" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_fullUpdate  # onManager
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_sysBxoActivate  # onManager
-${G_myName} ${extraInfo} -p bpoId="${bpoId}" -i siteBasePlatform_sysBxoActivate  # onTarget
+$( examplesSeperatorChapter "LAYER-1 + Layer 2 + Layer 3:: Combined -- Full Existing Box Actions -- On Manager" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l3_charedCntnr_activate  # onManager
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l3_charedCntnr_realizeNOT  # onManager
 $( examplesSeperatorChapter "LAYER-4:: Materialized-Container " )
 sysCharMaterializeBox.sh
 sysCharMaterializeGuest.sh
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l4_materializedContainer  # on Manager
+$( examplesSeperatorChapter "LAYER-1 to Layer 4:: Combined -- Full Existing Box Actions -- on Manager" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l4_materializedContainer  # on Manager
 $( examplesSeperatorChapter "VIRTUALIZATION :: sysCharGuestMaterialize.sh Use of sysCharDeploy.sh" )
 $( examplesSeperatorSection "Used in Vagrantfile --- Phase 2.1, 2.2, 2.3" )
 ${G_myName} ${extraInfo} -p registrar="192.168.0.257" -p id="bystar" -p password="somePasswd" -p siteBxoId="pms_someSite" -i bisosBasePlatform_siteSetup
@@ -844,7 +845,7 @@ _EOF_
 ####+END:
 }
 
-function vis_l2Plus_containerBoxBpoId {    
+function vis_l2Plus_cntnrThis_regBpoId {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** onTarget obtain the bpoId for the box, the bpoId account may or may not exist.
@@ -853,19 +854,9 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     function onTargetRun {
-        local containerCharNames=$( lpDo eval svcInvSiteRegContainer.cs  -i thisSys_locateBoxInAll 2\> /dev/null \| pyLiteralToBash.cs -i stdinToBash )
-
-        if [ -z "${containerCharNames}" ] ; then
-            ANT_raw "No containerCharName found for this box"
-            lpReturn
-        fi
-
-        ANT_cooked "NOTYET -- ${containerCharNames}"
-
+        local regBpoId=$( lpDo eval cntnrCharThis.cs -i cntnrThis_regBpoId 2\> /dev/null )
+        echo "${regBpoId}"
         lpReturn
-        
-        local sysCharContainerBpoId=$( vis_sysCharContainerBxoIdName ${containerAssignBase} )
-        echo ${sysCharContainerBpoId}
     }
 
 ####+BEGIN: bx:bsip:bash/onTargetRun 
@@ -881,7 +872,6 @@ _EOF_
     fi
 ####+END:
 }
-
 
 
 function vis_l2Plus_newBoxAssign {
