@@ -76,7 +76,7 @@ item_vagrantDebUpstream () {
   distFamilyGenerationHookRun binsPrep_vagrantDebUpstream
 }
 
-binsPrep_vagrantDebUpstream_DEFAULT_DEFAULT () {
+binsPrep_vagrantDebUpstream_OBSOLETED_DEFAULT_DEFAULT () {
     mmaThisPkgName="na"
     mmaPkgDebianName="${mmaThisPkgName}"
     mmaPkgDebianMethod="custom"  #  or "apt" no need for customInstallScript but with binsPrep_installPostHook
@@ -100,8 +100,20 @@ binsPrep_vagrantPlugins_DEFAULT_DEFAULT () {
     mmaPkgDebianMethod="custom"  #  or "apt" no need for customInstallScript but with binsPrep_installPostHook
 
     function customInstallScript {
-        lpDo sudo vagrant plugin install vagrant-libvirt
-        lpDo sudo vagrant plugin install vagrant-disksize
+
+        function installVagrantLibvirtPlugin {
+            # In Feb 2024 Taken from: https://vagrant-libvirt.github.io/vagrant-libvirt/installation.html
+            lpDo sudo apt-get -y purge vagrant-libvirt
+            lpDo sudo apt-mark hold vagrant-libvirt
+            lpDo sudo apt-get install -ylibvirt-daemon-system libvirt-dev ebtables libguestfs-tools
+            lpDo sudo apt-get install -y vagrant ruby-fog-libvirt
+            lpDo sudo apt-get -y install libvirt-dev  # importnat and not in the instructions MB-2024-2-29
+
+            lpDo vagrant plugin install vagrant-libvirt
+        }
+        lpDo installVagrantLibvirtPlugin
+        
+        lpDo vagrant plugin install vagrant-disksize
 
         lpDo vagrant plugin list
     }
@@ -125,7 +137,7 @@ _CommentEnd_
 
 vis_repositoryAdd () {
     opDo eval "curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -"
-    opDo sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+    opDo sudo apt-add-repository -y "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
     opDo sudo apt-get update
 }
 

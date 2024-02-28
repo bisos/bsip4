@@ -387,7 +387,7 @@ _EOF_
 
     # /bxo/r3/iso/aip_vagrantBaseBoxes/vagrants/packerBaseBoxes/debian/desktop/debian-12.4.0-amd64.pkr.hcl
     # /bisos/admin/vagrants/packerBaseBoxes/debian/desktop/debian-12.4.0-amd64.pkr.hcl
-    inBaseDirDo ${bisosPackerBoxesPath}/debian/desktop packer build -var "headless=true" debian-12.4.0-amd64.pkr.hcl
+    inBaseDirDo ${bisosPackerBoxesPath}/debian/desktop packer  build -var "headless=true" debian-12.4.0-amd64.pkr.hcl
 
     lpDo vagrant box add $(vis_bisosVarVagrantBuilds)/debian-12.4.0-desktop.libvirt.box --name "bxDistro/debian-12.4.0/desktop"
 

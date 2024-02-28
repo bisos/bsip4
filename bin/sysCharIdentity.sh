@@ -157,6 +157,7 @@ ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i recordDeployment      # insid
 $( examplesSeperatorChapter "FULL SYSTEM Identity LEVEL SETUPS" )
 $( examplesSeperatorSection "Update" )
 ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i identityUpdate
+${G_myName} ${extraInfo} -i opConfigUpdate
 $( examplesSeperatorChapter "General Identity Parameters" )
 ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i motdSet
 ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i motdSet
@@ -231,6 +232,18 @@ _EOF_
     lpDo vis_netEtcHosts    
 
     lpReturn 0
+}
+
+function vis_opConfigUpdate {    
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    # Make sure contents of opConfig.sh are in effect.
+    lpDo sudo rm /etc/osmtInfo
+    lpDo opConfig.sh
 }
 
 

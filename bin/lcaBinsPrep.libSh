@@ -343,7 +343,8 @@ function mmaCompAuto_update {
         opDo ${binsPrep_installPreHook}
       fi
 
-      opDoComplain sudo apt-get -y --force-yes install ${mmaPkgDebianName}
+      # opDoComplain sudo apt-get -y --force-yes install ${mmaPkgDebianName}
+      opDoComplain sudo apt-get -y install ${mmaPkgDebianName}      
 
       if [ "${binsPrep_installPostHook}_" != "_" ] ; then
         opDo ${binsPrep_installPostHook}
@@ -678,13 +679,15 @@ function mmaPkgDebian_obtain {
             fi  
 
 
-          opDoExit sudo apt-get -y --force-yes -d install ${thisOne}
+          # opDoExit sudo apt-get -y --force-yes -d install ${thisOne}
+          opDoExit sudo apt-get -y -d install ${thisOne}
       done
   elif  [ "${mmaPkgDebianMethod}_" == "custom_" ]  ; then
           doNothing
   else
       for thisOne in "$@" ; do
-          opDoExit sudo apt-get -y --force-yes -d install ${thisOne}
+          # opDoExit sudo apt-get -y --force-yes -d install ${thisOne}
+          opDoExit sudo apt-get -y -d install ${thisOne}          
       done
   fi
 }

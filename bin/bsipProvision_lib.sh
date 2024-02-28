@@ -86,6 +86,10 @@ _EOF_
 
     local bisosBinBase="$( bisosBinBaseGet )"
 
+    # Make sure contents of opConfig.sh are in effect.
+    lpDo sudo rm /etc/osmtInfo
+    lpDo opConfig.sh
+
     lpDo vis_provisionBisosAccts
     
     lpDo vis_provisionUsgAcctBases

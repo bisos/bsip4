@@ -230,9 +230,10 @@ $( examplesSeperatorChapter "LAYER-1 + Layer 2 + Layer 3:: Combined -- Full Exis
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l3_charedContainer_activate  # onManager
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l3_charedContainer_realizeNOT  # onManager
 $( examplesSeperatorChapter "LAYER-4:: Materialized-Container " )
-sysCharMaterializeBox.sh
+sysCharMaterializeBox.sh    # Under lying ICM for Layer 4 
 sysCharMaterializeGuest.sh
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l4_materializedContainer  # on Manager  -- PRIMARY (New BOX)
+${G_myName} ${extraInfo} -i l4_materializedContainer  # on Target  -- PRIMARY (New BOX)
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l4_materializedContainer  # on Manager
 $( examplesSeperatorChapter "LAYER-1 to Layer 4:: Combined -- Full Existing Box Actions -- on Manager" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l4_materializedContainer  # on Manager  -- PRIMARY (Existing BOX)
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l4_materializedDevContainer  # on Manager  -- PRIMARY (Existing BOX)
@@ -925,22 +926,21 @@ _EOF_
     if [ -z "${targetName}" ] ; then
         lpDo sysCharRealize.sh ${G_commandPrefs} \
              -p model=${model} -p abode=${abode} -p function=${function} \
-             -i sysCharContainerBoxRealize
+             -i containerAssignAndRepoAndSysCharRealize
     else
         EH_problem "Bad Usage: sysCharRealize.sh can only be invoked on Target"
         lpReturn
         lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
              $(which sysCharRealize.sh) ${G_commandPrefs} \
              -p model=${model} -p abode=${abode} -p function=${function} \
-             -i sysCharContainerBoxRealize
+             -i containerAssignAndRepoAndSysCharRealize
     fi
 }
 
 function vis_l3_charedContainerBoxActivate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-*** Can only be invoked OnTarget as relaization involves self Blee dblock features.
-*** For activation only, it can be invoked OnManager throuhg vis_boxActivateAtSiteBasePlatform
+*** 
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -958,6 +958,26 @@ _EOF_
              -i sysCharContainerBoxRealize
     fi
 }
+
+
+function vis_l4_materializedContainer {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+*** Wrapper for sysCharMaterializeBox.sh
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    if [ -z "${targetName}" ] ; then
+        lpDo sysCharMaterializeBox.sh ${G_commandPrefs} \
+             -i materializedContainerThis
+    else
+        lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+             $(which sysCharMaterializeBox.sh) ${G_commandPrefs} \
+             -i materializedContainerThis
+    fi
+}
+
 
 function vis_containerBoxBpoPath {    
     G_funcEntry

@@ -111,11 +111,11 @@ typeset -t bpoId=""
 # usg=""
 
 function G_postParamHook {
-    bpoIdPrepValidate    
+    #bpoIdPrepValidate    
 
-    if [ ! -z "${bpoId}" ] ; then
-        bpoHome=$( FN_absolutePathGet ~${bpoId} )
-    fi
+    # if [ ! -z "${bpoId}" ] ; then
+     #   bpoHome=$( FN_absolutePathGet ~${bpoId} )
+    # fi
     
     bisosCurrentsGet
 }
@@ -143,6 +143,8 @@ function vis_examples {
 
     oneTargetBox=${curTargetBox:-}
 
+    thisBpoId=$( vis_bpoIdPrep "sysChar" )
+
     local boxId=$( siteBoxAssign.sh -i thisBoxFindId )    
     
     visLibExamplesOutput ${G_myName} 
@@ -152,132 +154,71 @@ bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
 bisosCurrentsManage.sh  ${extraInfo} -i setParam curTargetBox 192.168.0.45  # Currently curTargetBox=${curTargetBox:-}
 bisosCurrentsManage.sh  ${extraInfo} -i setParam curTargetBox localhost  # Currently curTargetBox=${curTargetBox:-}
-$( examplesSeperatorChapter "New Box Realize -- On Manager And On Target Box" )
-# Install Distro With Intra Account And Priv Interface Access -- record ipAddr for curTargetBox
-sysCharDeploy.sh ${extraInfo} -p targetName="${oneTargetBox}" -i boxSiteBasePlatform  # OnManager
-ssh -X bystar@${oneTargetBox}    # Then run emacs, then realize as below
-sysCharDeploy.sh ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i boxRealizeOrActivateOnTarget # OnTarget Only
-sysCharDeploy.sh ${extraInfo} -p model=Pure -p abode=Shield -p function=Server -i boxRealizeOrActivateOnTarget # Eg Media Center
-sysCharDeploy.sh ${extraInfo} -p model=Host -p abode=Internet -p function=Server -i boxRealizeOrActivateOnTarget # OnTarget Only
-sysCharDeploy.sh ${extraInfo} -p model=Pure -p abode=Mobile -p function=LinuxU -i boxRealizeOrActivateOnTarget # Eg Debian on Android
-$( examplesSeperatorChapter "Full Existing Box Activation -- On Manager Or On Target Box" )
-# Install Distro With Intra Account And Priv Interface Access -- record ipAddr for curTargetBox
-sysCharDeploy.sh ${extraInfo} -p targetName="${oneTargetBox}" -i boxFullActivate # OnManager From Begining-To-End
-# Or In Steps boxFullActivate = boxSiteBasePlatform + boxActivateAtSiteBasePlatform
-sysCharDeploy.sh ${extraInfo} -p targetName="${oneTargetBox}" -i boxSiteBasePlatform  # OnManager
-sysCharDeploy.sh ${extraInfo} -p targetName="${oneTargetBox}" -i boxActivateAtSiteBasePlatform # OnManager
-sysCharDeploy.sh ${extraInfo} -i boxActivateAtSiteBasePlatform # OnTarget -- After site has been setup
-$( examplesSeperatorChapter "Full Box Un Assign -- OnManager/OnTarget -- For ReAssignment/ReRealize" )
-siteBoxAssign.sh -i thisBoxFindId
-siteContainerAssign.sh ${extraInfo} -i withBoxIdFindContainerBase "${boxId}"
-siteContainerAssign.sh ${extraInfo} -i containerBoxUnAssignAndPush "${boxId}"
-siteContainerAssign.sh ${extraInfo} -i containerBoxUnAssign "${boxId}"
-$( examplesSeperatorChapter "Target Box Information -- On Manager Or On Target Box" )
-sysCharDeploy.sh ${extraInfo} -p targetName="${oneTargetBox}" -i siteBasePlatform_newBoxAscertain
-sysCharDeploy.sh ${extraInfo} -i siteBasePlatform_newBoxAscertain
-sysCharDeploy.sh ${extraInfo} -p targetName="${oneTargetBox}" -i siteBasePlatform_containerBoxRepoAscertain
-sysCharDeploy.sh ${extraInfo} -i siteBasePlatform_containerBoxRepoAscertain
-sysCharDeploy.sh ${extraInfo} -p targetName="${oneTargetBox}" -i containerBoxBpoId
-sysCharDeploy.sh ${extraInfo} -i containerBoxBpoId
-sysCharDeploy.sh ${extraInfo} -p targetName="${oneTargetBox}" -i containerBoxBpoPath
-sysCharDeploy.sh ${extraInfo} -p targetName="${oneTargetBox}" -i sysCharedPlatform_containerBoxReport
-sysCharDeploy.sh ${extraInfo} -i sysCharedPlatform_containerBoxReport
-sysCharDeploy.sh ${extraInfo} -i containerBoxBpoPath
-$( examplesSeperatorChapter "Box Convey Parameters And BISOS Development Preps -- After sysChar Activation" )
-sysCharDeploy.sh ${extraInfo} -p targetName="${oneTargetBox}" -i usgConvey_bisosDeveloper # onManager+onTarget
-sysCharDeploy.sh ${extraInfo} -p bisosDevBxoId=prompt -i usgConvey_bisosDeveloper # onTarget
-# NOTYET, show selected usgConvey_bisosDeveloper
-sysCharDevel.sh ${extraInfo} -i bisosDevBxo_fullSetup  # activate, actuate, set mode
-$( examplesSeperatorChapter "Box Disk Preps" )
-sysDiskDrives.sh 
-$( sysCharDeploy.sh -i containerBoxBpoPath )/sys/bin/sysDiskDrives-niche.sh 
+$( examplesSeperatorChapter "Layer 4 -- Materialize This Box" )
+sysCharIdentity.sh ${extraInfo} -p bpoId="${thisBpoId}" -i identityUpdate
+${G_myName} -i materializedContainerThis
 $( examplesSeperatorChapter "Hosting Container Actions" )
 sysCharPreps.sh
 sysCharPreps.sh -h -v -n showRun -i fullUpdate
 $( examplesSeperatorChapter "Pure Container Actions" )
 $( examplesSeperatorChapter "Manual BISOS Installation (Site Niched Below)" )
-${G_myName} -i initialBisosBoxInstall
-${G_myName} -i chromeOsDebianBisosInstall
 _EOF_
   
      vis_examplesNicheRun site
 }
 
 
-function vis_containerSteadyWriteObsoleted {
-   G_funcEntry
-   function describeF {  G_funcEntryShow; cat  << _EOF_
+function vis_materializedContainerThis {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+*** Applies 
 _EOF_
-                      }
-   EH_assert [[ $# -eq 1 ]]
-   local containerSteadyBase="$1"
-   # typically something like: /bxo/r3/iso/pmc_siteName-containers/VAG-deb10_/steady/
+    }
+    local thisBpoId=$( vis_bpoIdPrep "sysChar" )
 
-   EH_assert [ -d "${containerSteadyBase}" ]
 
-   # blank or auto or static
-   if [ ! -z "${containerSteady_networkMode:-}" ] ; then
-       lpDo fileParamManage.py -v 20 -i fileParamWrite ${containerSteadyBase}/net networkMode.fp "${containerSteady_networkMode}"
-   fi
+    lpDo echo sysCharIdentity.sh -h -v -n showRun -p bpoId="${thisBpoId}" -i identityUpdate
+
+    containerId=${thisBpoId##pmp_}
+    # Need not be a RO, should use cntntCharName.cs withContainerIdGetDict
+    declare -A containerRegDict=$( svcInvSiteRegContainer.cs -i withContainerIdRead ${containerId} | pyLiteralToBash.cs -i stdinToBash )
+
+    local model=${containerRegDict['model']}
+    local abode=${containerRegDict['abode']}
+    local function=${containerRegDict['function']}
+    local containerNu=${containerRegDict['containerNu']}
    
-   if [ ! -z "${containerSteady_privA_addr:-}" ] ; then
-       lpDo fileParamManage.py -i fileParamWrite ${containerSteadyBase}/net/ipv4/privA.fps addr "${containerSteady_privA_addr}"
+    case "${model}" in
 
-       local netSiteFpsPath=$( vis_netSiteFpsPath privA )
-       lpDo FN_fileSymlinkUpdate "${netSiteFpsPath}"  ${containerSteadyBase}/net/ipv4/privA.fps/net.fps
+        Host)
+            # BinsPrep install kvm, libvirt and Vagrant and packer
+            lpDo fgcKvmHostingSw.sh -h -v -n showRun -i  fullUpdate
 
-       local routerSiteFpsPath=$( vis_routerSiteFpsPath privA pubA)
-       lpDo FN_fileSymlinkUpdate "${routerSiteFpsPath}"  ${containerSteadyBase}/net/ipv4/privA.fps/router-pubA.fps
-   fi
+            # Create Needed Accounts
+            lpDo fgcKvmHostingSvc.sh -h -v -n showRun -i fullUpdate
+
+            # User packer to create Fresh Debian Vagrant Base Boxes 
+            lpDo lcaVagrantBoxBuild.sh -h -v -n showRun -i bvdbb_deb12_desktopBuild
+
+            # Activate Generic CntnrChar BPOs for Debian 11 and 12 -- pmp_VAG-deb12_  pmp_VSG-deb12_
+            lpDo sysCharActivate.sh -h -v -n showRun  -i activate_virtGenerics                
+
+            ;;
+        
+        Pure)
+            echo pure
+            ;;
+
+        Virt|virt|VIRT)
+           lpDo echo virt
+           ;;
+        
+       *)
+           EH_problem "Bad Usage -- model=${model}"
+    esac
+
 }
 
-function vis_firstBisosBoxInstall {
-   G_funcEntry
-   function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-                      }
-   EH_assert [[ $# -eq 0 ]]
-
-   cat  << _EOF_
-** vis_distro_intraToSudoersAddition
-*** echo intra | su - root -c 'echo intra ALL=\(ALL\) NOPASSWD: ALL >> /etc/sudoers'
-** vis_distro_aptSourcesPrep
-*** sudo cp -p /etc/apt/sources.list /etc/apt/sources.list.orig
-*** grep -v "'^deb cdrom:'" /etc/apt/sources.list \> /tmp/sources.list
-*** sudo mv /tmp/sources.list /etc/apt/sources.list
-*** sudo apt-get update
-** vis_distro_provisionBisos_sysBasePlatform
-*** sudo apt-get update
-*** sudo apt-get -y upgrade
-*** sudo apt-get install -y python3-pip
-*** sudo pip3 install --upgrade bisos.provision
-*** sudo provisionBisos.sh -v -h -n showRun -i sysBasePlatform
-** Do The equivalent of vagrantfile -- Get TBD's from there
-*** sudo /bisos/core/bsip/bin/sysCharDeploy.sh -h -v -n showRun -p registrar="TBD" -p id="TBD" -p password="intra" -p siteBxoId="TBD" -i bisosBasePlatform_siteSetup
-*** sudo -u bystar /bisos/core/bsip/bin/sysCharDeploy.sh -h -v -n showRun -p bisosDevBxoId=TBD -i usgConvey_bisosDeveloper
-_EOF_
-}
-
-
-function vis_chromeOsDebianBisosInstall {
-   G_funcEntry
-   function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-                      }
-   EH_assert [[ $# -eq 0 ]]
-
-   cat  << _EOF_
-** vis_distro_provisionBisos_sysBasePlatform
-*** sudo apt-get update
-*** sudo apt-get -y upgrade
-*** sudo apt-get install -y python3-pip
-*** sudo pip3 install --upgrade bisos.provision
-*** sudo provisionBisos.sh -v -h -n showRun -i sysBasePlatform
-** Do The equivalent of vagrantfile -- Get TBD's from there
-*** sudo /bisos/core/bsip/bin/sysCharDeploy.sh -h -v -n showRun -p registrar="TBD" -p id="TBD" -p password="intra" -p siteBxoId="TBD" -i bisosBasePlatform_siteSetup
-*** sudo -u bystar /bisos/core/bsip/bin/sysCharDeploy.sh -h -v -n showRun -p bisosDevBxoId=TBD -i usgConvey_bisosDeveloper
-_EOF_
-}
 
 
 _CommentBegin_

@@ -236,7 +236,7 @@ _EOF_
                       }
    EH_assert [[ $# -eq 0 ]]
 
-   local containerReposList="pmp_VAG-deb11_ pmp_VSG-deb11_"
+   local containerReposList="pmp_VAG-deb11_ pmp_VSG-deb11_ pmp_VAG-deb12_ pmp_VSG-deb12_"
        
    for each in ${containerReposList} ; do
        bpoId="${each}"

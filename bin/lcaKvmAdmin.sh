@@ -67,6 +67,8 @@ _CommentEnd_
 # . ${opBinBase}/bisosGroupAccount_lib.sh
 . ${opBinBase}/bisosAccounts_lib.sh
 
+. ${opBinBase}/kvm_lib.sh
+
 # PRE parameters
 
 baseDir=""
@@ -95,8 +97,9 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Virtualization Management" )
 $( examplesSeperatorSection "Virtualization Support" )
-${G_myName} -v -n showRun -i virtSupportP
-dmesg | grep kvm   # Verify that virtualization has not been disabled in the bios
+${G_myName} -v -n showRun -i nuOfVirtCpus  # 0 means no cpus for virtualization
+${G_myName} -v -n showRun -i kvmRequirementsP  # cpu supports virt and user is in groups
+sudo dmesg | grep kvm   # Verify that virtualization has not been disabled in the bios
 kvm-ok
 $( examplesSeperatorSection "Gui Interface" )
 virt-manager

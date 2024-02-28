@@ -178,7 +178,7 @@ ${G_myName} ${extraInfo} -i sysCharContainerBaseRealize ${oneBxoRepoScope} ${con
 $( examplesSeperatorChapter "Box -- Site Assign SysChar And Container Realization" )
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i thisSys_containerAssign  # Uses Remote Registrar
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerVirtAssignAndRepo
-${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i sysCharContainerBoxRealize
+${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i sysCharContainerBoxRealize  # Does not bpoIdManage
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerAssignAndRepoAndSysCharRealize  # FULL ACTION -- PRIMARY COMMAND
 ${G_myName} ${extraInfo} -p model=Host -p abode=Internet -p function=Server -i containerAssignAndRepoAndSysCharRealize  # FULL ACTION -- PRIMARY COMMAND
 $( examplesSeperatorChapter "Virt -- Site Assign SysChar And Container Realization" )
@@ -230,6 +230,7 @@ _EOF_
    case "${model}" in
 
        Host|host|HOST|Pure|pure|PURE)
+           
            lpDo vis_sysCharContainerBoxRealize
 
            # MB 20240216 below lines have not been tested
@@ -344,6 +345,8 @@ _EOF_
    local sysCharContainerBpoId=$( vis_sysCharContainerBpoIdName "${containerId}" )
    EH_assert [ ! -z "${sysCharContainerBpoId}" ]
 
+   bpoId="${sysCharContainerBpoId}"
+     
    if vis_bxoNameExists ${sysCharContainerBpoId} ; then
        ANT_raw "bpoId=${sysCharContainerBpoId}  already realized -- provisioning skipped"
        if vis_bxoAcctVerify "${sysCharContainerBpoId}" ; then
@@ -351,8 +354,8 @@ _EOF_
        else
            ANT_raw "But bpoId=${sysCharContainerBpoId} account Does Not exists, -- provisioning skipped"
        fi
-       ANT_raw "You Can run basesFullCreate and kindTypeRealizeRepoBases if needed"
-       return
+       ANT_cooked "You Can run basesFullCreate and kindTypeRealizeRepoBases if needed"
+       # return
    fi
 
    local selectedSiteBxoId=$( vis_selectedSiteBxoId )   # used as parent for provisioning of sysCharContainerBxoId
@@ -361,14 +364,13 @@ _EOF_
        ANT_raw "bpoId=${sysCharContainerBpoId} account exists, already realized -- provisioning skipped"
        ANT_raw "Not Running: bxmeProvision.sh -h -v -n showRun -p privacy="priv" -p kind="materialization" -p type="sysChar" -p parent="${selectedSiteBxoId}" -p name="${containerId}" -i startToPrivRealize ${bxoRealizationScope}"
        ANT_raw "You Can run basesFullCreate and kindTypeRealizeRepoBases if needed"
-       return
+       # return
    else
        ANT_raw "${sysCharContainerBpoId} will be realized"
        #lpDo bxmeProvision.sh -h -v -n showRun -p privacy="priv" -p kind="materialization" -p type="sysChar" -p parent="${selectedSiteBxoId}" -p name="${containerId}" -i startToPrivRealize
        lpDo bxmeProvision.sh -h -v -n showRun -p privacy="priv" -p kind="materialization" -p type="sysChar" -p parent="${selectedSiteBxoId}" -p name="${containerId}" -i startToPrivRealize ${bxoRealizationScope}
    fi
 
-   bpoId="${sysCharContainerBpoId}"
    EH_assert vis_bxoAcctVerify "${bpoId}"
    bpoHome=$( FN_absolutePathGet ~${bpoId} )
 

@@ -37,6 +37,9 @@ fi
 ####+END:
 
 
+. ${opBinBase}/kvm_lib.sh
+
+
 _CommentBegin_
 ####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/libre/ByStar/InitialTemplates/software/plusOrg/dblock/inserts/topControls.org"
 *      ================
@@ -74,8 +77,10 @@ function pkgsList_DEFAULT_DEFAULT {
 _EOF_
     }
 
+    echo "HHH"
+    
     itemOrderedList=(
-        linux_kvm
+        # linux_kvm
         #qemu_system
         #qemu_kvm
         libvirt_bin
@@ -184,7 +189,7 @@ _EOF_
 
 
 distFamilyGenerationHookRun pkgsList
-
+# echo MMM ${itemOrderedList[@]}
 
 
 _CommentBegin_
@@ -195,9 +200,10 @@ _CommentEnd_
 function examplesHookPost {
   cat  << _EOF_
 ----- ADDITIONS -------
-dmesg | grep kvm   # Verify that virtualization has not been disabled in the bios
+sudo dmesg | grep kvm   # Verify that virtualization has not been disabled in the bios
 kvm-ok
 ${G_myName} -v -n showRun -i addKvmGroups
+${G_myName} -v -n showRun -i kvmRequirementsP
 ${G_myName} -v -n showRun -i fullUpdatePlus
 _EOF_
 }

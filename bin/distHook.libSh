@@ -45,7 +45,7 @@ distFamilyGenerationHookRun () {
   funcListResult=`ListFuncs | egrep "^${fullFuncName}\$" || true`
   #if [ "${funcListResult}X" != "X" ] ; then
   if [ "${funcListResult}X" == "${fullFuncName}X" ] ; then
-    ${fullFuncName}
+      ${fullFuncName}
     return $?
   fi
   
@@ -219,7 +219,7 @@ lsipAdopted_DEBIAN_11 () {
 lsipAdopted_DEBIAN_12 () {
    adoptedDistFamily="debian"
    adoptedDistGeneration="12"  # bookworm
-   adoptedDistRev="11.0"
+   adoptedDistRev="12.0"
    adoptedDistArchs=( "i386"  "sparc" )
    adoptedDistNextGen=""
 }
