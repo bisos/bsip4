@@ -112,7 +112,6 @@ vagrant plugin list --local
 vagrant plugin list 
 vagrant plugin update
 vagrant plugin install vagrant-libvirt
-vagrant plugin install vagrant-disksize
 $( examplesSeperatorSection "Vagrant Status And Information" )
 vagrant --version
 vagrant global-status

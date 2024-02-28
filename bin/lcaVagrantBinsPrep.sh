@@ -113,7 +113,7 @@ binsPrep_vagrantPlugins_DEFAULT_DEFAULT () {
         }
         lpDo installVagrantLibvirtPlugin
         
-        lpDo vagrant plugin install vagrant-disksize
+        # lpDo echo DEPRECATED -- vagrant plugin install vagrant-disksize
 
         lpDo vagrant plugin list
     }

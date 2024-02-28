@@ -156,7 +156,6 @@ _EOF_
         
         lpDo vagrant plugin list --local
         # Should produce something like
-        # vagrant-disksize (0.1.3, global)
         # vagrant-libvirt (0.0.45, system)
         
     else

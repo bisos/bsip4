@@ -74,6 +74,7 @@ _EOF_
     #  [[elisp:(lsip-local-run-command "apt-cache search something | egrep '^something'")][apt-cache search something | egrep '^something']]
 
     itemOrderedList=(
+        "emacs"     # needed for pre-seeding
         "debconf_utils"     # needed for pre-seeding
         "dbus_x11"     # needed by blee
         "postfixCustom"     # because various packages install postfix
@@ -82,6 +83,7 @@ _EOF_
         "build_essential"
         "dkms"
         "sshpass"
+        "tree"        
         # Network Client Tools
         "net_tools"
         # Perhaps not available on all revs, hence coming last
@@ -155,6 +157,27 @@ _EOF_
     
     lpReturn
 }
+
+####+BEGIN: bx:dblock:lsip:binsprep:apt :module "emacs"
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || Apt-Pkg       :: emacs [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+item_emacs () { distFamilyGenerationHookRun binsPrep_emacs; }
+
+binsPrep_emacs_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "emacs"; }
+
+####+END:
+
+####+BEGIN: bx:dblock:lsip:binsprep:apt :module "tree"
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || Apt-Pkg       :: tree [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+item_tree () { distFamilyGenerationHookRun binsPrep_tree; }
+
+binsPrep_tree_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "tree"; }
+
+####+END:
+
 
 ####+BEGIN: bx:dblock:lsip:binsprep:apt :module "gnupg"
 _CommentBegin_
