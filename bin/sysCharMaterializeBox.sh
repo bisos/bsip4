@@ -200,8 +200,7 @@ _EOF_
     lpDo sysCharIdentity.sh -h -v -n showRun -p bpoId="${thisBpoId}" -i identityUpdate
 
     containerId=${thisBpoId##pmp_}
-    # Need not be a RO, should use cntntCharName.cs withContainerIdGetDict
-    declare -A containerRegDict=$( svcInvSiteRegContainer.cs -i withContainerIdRead ${containerId} | pyLiteralToBash.cs -i stdinToBash )
+    declare -A containerRegDict=$( cntnrCharName.cs  -i withInitialsName_getDict ${containerId} | pyLiteralToBash.cs -i stdinToBash )
 
     local model=${containerRegDict['model']}
     local abode=${containerRegDict['abode']}
