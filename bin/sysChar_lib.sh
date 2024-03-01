@@ -790,7 +790,7 @@ _EOF_
             lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysInfoFps} distroType ${distroType}
             ;;
         Server)
-            distro="deb11"  # NOTYET get it from facter or from /etc/issue
+            distro="deb12"  # NOTYET get it from facter or from /etc/issue
             distroType="desktop"
             lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysInfoFps} distro ${distro}
             lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysInfoFps} distroType ${distroType}
