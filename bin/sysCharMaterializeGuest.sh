@@ -1184,7 +1184,8 @@ $( vis_vagStdout_netInterfaces )
     config.vm.provider :libvirt do |libvirt|
       libvirt.driver = "kvm"
       libvirt.default_prefix = 'bxo'  # Set a prefix for the machine different from dir name.
-
+      
+      libvirt.video_type = "vga"
       libvirt.memory = ${vmParamRam}
       libvirt.cpus = ${vmParamCpus}
 
