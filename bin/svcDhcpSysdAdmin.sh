@@ -128,6 +128,7 @@ _EOF_
     vis_examplesServerConfig  
   
     vis_examplesLogInfo
+    vis_examplesLogSysd
 
     cat  << _EOF_
 $( examplesSeperatorChapter "CLIENT VERIFICATIONS" )

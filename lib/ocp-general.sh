@@ -88,6 +88,7 @@ function opBasePathSet {
   export PATH="${PATH}:/bisos/core/dev/bin"
   export PATH="${PATH}:/bisos/asc/bin"
   export PATH="${PATH}:/bisos/asc/dns/bin"
+  export PATH="${PATH}:/bisos/asc/bedrock/bin"  
   export PATH="${PATH}:/bisos/asc/plone3/bin"
   export PATH="${PATH}:/bisos/asc/mail/bin"
   export PATH="${PATH}:/bisos/core/bsip/bin"
