@@ -112,9 +112,8 @@ typeset -t function=""  # one of [LASD]
 
 
 function G_postParamHook {
-    # bpoIdPrepValidate
-
     if [ ! -z "${bpoId}" ] ; then
+        bpoIdPrepValidate
         bpoHome=$( FN_absolutePathGet ~${bpoId} )
     fi
     

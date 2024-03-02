@@ -79,10 +79,10 @@ typeset -t usg=""
 typeset -t bxosBase=""
 
 function G_postParamHook {
-
-    bpoIdPrepValidate
-    
-    bpoHome=$( FN_absolutePathGet ~${bpoId} )
+    if [ ! -z  "${bpoId}" ] ; then
+        bpoIdPrepValidate
+        bpoHome=$( FN_absolutePathGet ~${bpoId} )
+    fi
 
     if [ -z "${usg}" ] ; then
         usg=$( id -u -n )

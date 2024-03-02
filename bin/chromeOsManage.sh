@@ -111,13 +111,6 @@ typeset -t correspondingBxo=""
 
 function G_postParamHook {
     lpReturn
-    bpoIdPrepValidate    
-
-    if [ ! -z "${bpoId}" ] ; then
-        bpoHome=$( FN_absolutePathGet ~${bpoId} )
-    fi
-    
-    bisosCurrentsGet
 }
 
 

@@ -131,9 +131,8 @@ sshCmnd="ssh -o StrictHostKeyChecking=no"
 
 
 function G_postParamHook {
-    bpoIdPrepValidate    
-
     if [ ! -z "${bpoId}" ] ; then
+        bpoIdPrepValidate
         bpoHome=$( FN_absolutePathGet ~${bpoId} )
     fi
     

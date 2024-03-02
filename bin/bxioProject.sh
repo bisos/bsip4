@@ -96,7 +96,7 @@ typeset -t bpoId=""
 # usg=""
 
 function G_postParamHook {
-    bpoIdPrepValidate    
+    if [ ! -z  "${bpoId}" ] ; then  bpoIdPrepValidate; fi;
 
     if [ ! -z "${bpoId}" ] ; then
         bpoHome=$( FN_absolutePathGet ~${bpoId} )
