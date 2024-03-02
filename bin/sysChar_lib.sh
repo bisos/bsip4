@@ -552,6 +552,28 @@ _EOF_
        local routerSiteFpsPath=$( vis_routerSiteFpsPath privA pubA)
        lpDo FN_fileSymlinkUpdate "${routerSiteFpsPath}"  ${containerSteadyBase}/net/ipv4/privA.fps/router-pubA.fps
    fi
+
+   if [ ! -z "${containerSteady_pubA_addr:-}" ] ; then
+       lpDo fileParamManage.py -i fileParamWrite ${containerSteadyBase}/net/ipv4/pubB.fps addr "${containerSteady_pubA_addr}"
+
+       local netSiteFpsPath=$( vis_netSiteFpsPath pubA )
+       lpDo FN_fileSymlinkUpdate "${netSiteFpsPath}"  ${containerSteadyBase}/net/ipv4/pubA.fps/net.fps
+
+       local routerSiteFpsPath=$( vis_routerSiteFpsPath privA pubA)
+       lpDo FN_fileSymlinkUpdate "${routerSiteFpsPath}"  ${containerSteadyBase}/net/ipv4/pubB.fps/router-pubA.fps
+   fi
+
+   if [ ! -z "${containerSteady_pubB_addr:-}" ] ; then
+       lpDo fileParamManage.py -i fileParamWrite ${containerSteadyBase}/net/ipv4/pubB.fps addr "${containerSteady_pubB_addr}"
+
+       local netSiteFpsPath=$( vis_netSiteFpsPath pubB )
+       lpDo FN_fileSymlinkUpdate "${netSiteFpsPath}"  ${containerSteadyBase}/net/ipv4/pubB.fps/net.fps
+
+       local routerSiteFpsPath=$( vis_routerSiteFpsPath privA pubB)
+       lpDo FN_fileSymlinkUpdate "${routerSiteFpsPath}"  ${containerSteadyBase}/net/ipv4/pubB.fps/router-pubB.fps
+   fi
+
+
 }
 
 
@@ -790,7 +812,7 @@ _EOF_
             lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysInfoFps} distroType ${distroType}
             ;;
         Server)
-            distro="deb11"  # NOTYET get it from facter or from /etc/issue
+            distro="deb12"  # NOTYET get it from facter or from /etc/issue
             distroType="desktop"
             lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysInfoFps} distro ${distro}
             lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysInfoFps} distroType ${distroType}

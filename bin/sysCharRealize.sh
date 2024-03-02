@@ -247,7 +247,7 @@ _EOF_
            ;;
        Virt|virt|VIRT)
 
-           lpDo vis_sysCharContainerVirtRealize "${siteContainerAssignBase}"
+           lpDo vis_sysCharContainerVirtRealize # ${siteContainerAssignBase}"
            ;;
        *)
            EH_problem "Bad Usage -- model=${model}"

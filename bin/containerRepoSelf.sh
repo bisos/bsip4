@@ -310,17 +310,35 @@ _EOF_
                Auto|Mobile)
                    containerSteady_networkMode="auto"
                    ;;
-               Shield|Internet|perim)
+               Shield)
+                   containerSteady_networkMode="static"
+                   case ${model} in
+                       Host|Pure)
+                           # Host or Pure = containerBox
+                           containerSteady_privA_addr=$( lpDo siteNetworks.sh -i assignBoxAddr privA ${boxNu} )
+                           ;;
+                       Virt)
+                           containerSteady_privA_addr=$( lpDo siteNetworks.sh -i assignVirtAddr privA ${containerNu} )
+                           ;;
+                       *)
+                           EH_problem "Bad Usage -- invalid model=${model}"
+                           ;;
+                   esac
+                   ;;
+               
+               Internet)
                    containerSteady_networkMode="static"
                    local applicableNets=$( lpDo vis_withAbodeGetApplicableNetsList "${abode}" )
                    for eachNetName in ${applicableNets} ; do
                        case ${model} in
                            Host|Pure)
                                # Host or Pure = containerBox
-                               containerSteady_privA_addr=$( lpDo siteNetworks.sh -i assignBoxAddr privA ${boxNu} )
+                               containerSteady_${eachNetName}_addr=$( lpDo siteNetworks.sh -i assignBoxAddr ${eachNetName} ${boxNu} )
+                               ANT_cooked "containerSteady_${eachNetName}_addr set to: ${containerSteady_${eachNetName}_addr}"
                                ;;
                            Virt)
-                               containerSteady_privA_addr=$( lpDo siteNetworks.sh -i assignVirtAddr privA ${containerNu} )
+                               eval "containerSteady_${eachNetName}_addr=$( lpDo siteNetworks.sh -i assignVirtAddr ${eachNetName} ${containerNu} )"
+                               # ANT_cooked "containerSteady_${eachNetName}_addr set to: ${containerSteady_${eachNetName}_addr}"
                                ;;
                            *)
                                EH_problem "Bad Usage -- invalid model=${model}"
@@ -328,6 +346,13 @@ _EOF_
                        esac
                    done
                    ;;
+
+               
+               perim)
+                   EH_problem "NOTYET"
+                   ;;
+
+
                *)
                    doNothing
                    ;;

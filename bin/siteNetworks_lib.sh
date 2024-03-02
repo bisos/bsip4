@@ -115,7 +115,9 @@ _EOF_
             applicableNetsList=("privA")
             ;;
         "Internet")
-            applicableNetsList=("pubA" "pubB" "perimA")
+            # applicableNetsList=("pubA" "pubB" "perimA")
+            # The order in this list determines eth1, in vagrant file
+            applicableNetsList=("privA" "pubB")
             ;;
         *)
             EH_problem "Bad Usage -- abode=${abode}"
