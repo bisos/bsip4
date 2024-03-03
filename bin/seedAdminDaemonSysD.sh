@@ -164,6 +164,16 @@ ${G_myName} ${extraInfo} -i logErrGrep                # ${daemonLogFile} ${daemo
 _EOF_
 }
 
+function vis_examplesLogSysd {
+ cat  << _EOF_
+$( examplesSeperatorSection "Systemd (journalctl) Log And Info Files" )
+${G_myName} ${extraInfo} -i sysdLog
+${G_myName} ${extraInfo} -i sysdLogThisBoot
+${G_myName} ${extraInfo} -i sysdLogStatus
+_EOF_
+}
+
+
 vis_help () {
   cat  << _EOF_
     Generic SysV Init Daemon Start/Stop/Restart.
@@ -177,6 +187,11 @@ _CommentEnd_
 
 
 function vis_daemonDisable {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
 
     EH_assert daemonPrep
 
@@ -190,6 +205,11 @@ function vis_daemonDisable {
 }
 
 function vis_daemonEnable {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
 
     EH_assert daemonPrep
 
@@ -544,6 +564,25 @@ function vis_logErrGrep {
           opDo grep -i ${daemonLogTag} ${daemonLogErrFile} 
       fi
   fi
+}
+
+
+function vis_sysdLog {
+  EH_assert daemonPrep
+
+  lpDo journalctl -u ${daemonName}.service
+}
+
+function vis_sysdLogThisBoot {
+  EH_assert daemonPrep
+
+  lpDo journalctl -u ${daemonName}.service -b
+}
+
+function vis_sysdLogStatus {
+  EH_assert daemonPrep
+
+  lpDo systemctl --no-pager -l status ${daemonName}
 }
 
 
