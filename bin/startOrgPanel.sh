@@ -264,7 +264,7 @@ _EOF_
                 ANT_raw "${baseDir}/${nodeBaseDirName}/${panelFileName} in place -- untouched"
             else
                 inBaseDirDo ${baseDir}/${nodeBaseDirName} touch ${panelFileName}
-                
+                ANT_raw "* About to bleeclient yas bx-org-mode-begin Blee Branch Panel in ${panelFileName}"
                 bleeclient -h -v -n showRun -i run -- --eval \
                            "(save-excursion (find-file \"${baseDir}/${nodeBaseDirName}/${panelFileName}\") (yas--expand-or-visit-from-menu 'bx-org-mode-begin \"Blee Branch Panel\") (save-buffer) (kill-buffer))"
             
