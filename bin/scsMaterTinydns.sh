@@ -142,12 +142,22 @@ bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${thisBpoId}"
 bisosCurrentsManage.sh  ${extraInfo} -i setParam curTargetBox 192.168.0.45  # Currently curTargetBox=${curTargetBox:-}
 bisosCurrentsManage.sh  ${extraInfo} -i setParam curTargetBox localhost  # Currently curTargetBox=${curTargetBox:-}
+_EOF_
+     vis_examplesMaterializeTinydns ${thisBpoId}
+     vis_examplesNicheRun site
+}
+
+
+function vis_examplesMaterializeTinydns {
+    EH_assert [[ $# -eq 1 ]]
+
+    local thisBpoId=$1
+    local extraInfo="-h -v -n showRun"
+ cat  << _EOF_
 $( examplesSeperatorChapter "Materialize A DNS Server Based on its SCS-Bpo" )
 ${G_myName}  ${extraInfo} -p bpoId="${thisBpoId}"  -i fullUpdate
-${G_myName}  ${extraInfo} -p bpoId="${thisBpoId}"  -i binsPrep
+${G_myName}  ${extraInfo}  -i binsPrep
 _EOF_
-  
-     vis_examplesNicheRun site
 }
 
 
@@ -166,7 +176,14 @@ _EOF_
     
     lpDo vis_binsPrep
 
-    ANT_raw " NOTYET "
+    local bpoHome=$( FN_absolutePathGet ~${bpoId} )
+
+    lpDo ${bpoHome}/sys/bin/svcTinydnsSysdAdmin-niche.sh -v -n showRun -i niche_serverConfigUpdate
+
+    lpDo svcTinydnsSysdAdmin.sh -h -v -n showRun -i daemonStatus
+
+    lpDo eval sudo netstat -lntup \| grep \':53 \'
+    
 }
 
 function vis_binsPrep {
@@ -178,7 +195,7 @@ _EOF_
     
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo fgcBedrockSw.sh -h -v -n showRun -i  fullUpdate
+    # lpDo fgcBedrockSw.sh -h -v -n showRun -i  fullUpdate
 
     lpDo fgcDnsSw.sh -h -v -n showRun -i  fullUpdate    
     

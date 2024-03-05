@@ -258,6 +258,12 @@ _EOF_
     print "#### At ${currentDir}: effectiveNodes=${effectiveNodes}  ####"
 
     for thisNode in ${effectiveNodes} ; do
+
+        if [ -L "${currentDir}/${thisNode}" ] ; then
+            print "#### Skipping Symoblic Link Node: ${currentDir}/${thisNode} ####"
+            continue
+        fi
+        
         #opDoComplain cd ${currentDir}/${thisNode} || continue
         cd ${currentDir}/${thisNode} || continue
         print "#### Recursing To Node: ${currentDir}/${thisNode} ####"
