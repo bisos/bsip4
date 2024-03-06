@@ -554,7 +554,7 @@ _EOF_
    fi
 
    if [ ! -z "${containerSteady_pubA_addr:-}" ] ; then
-       lpDo fileParamManage.py -i fileParamWrite ${containerSteadyBase}/net/ipv4/pubB.fps addr "${containerSteady_pubA_addr}"
+       lpDo fileParamManage.py -i fileParamWrite ${containerSteadyBase}/net/ipv4/pubA.fps addr "${containerSteady_pubA_addr}"
 
        local netSiteFpsPath=$( vis_netSiteFpsPath pubA )
        lpDo FN_fileSymlinkUpdate "${netSiteFpsPath}"  ${containerSteadyBase}/net/ipv4/pubA.fps/net.fps

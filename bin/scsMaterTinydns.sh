@@ -180,11 +180,14 @@ _EOF_
 
     lpDo ${bpoHome}/sys/bin/svcTinydnsSysdAdmin-niche.sh -v -n showRun -i niche_serverConfigUpdate
 
+    lpDo svcTinydnsSysdAdmin.sh -h -v -n showRun -i daemonEnable
+
+    lpDo svcTinydnsSysdAdmin.sh -h -v -n showRun -i daemonStart
+
     lpDo svcTinydnsSysdAdmin.sh -h -v -n showRun -i daemonStatus
 
     lpDo eval sudo netstat -lntup \| grep \':53 \'
-    
-}
+ }
 
 function vis_binsPrep {
     G_funcEntry

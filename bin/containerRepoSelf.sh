@@ -337,8 +337,10 @@ _EOF_
                                ANT_cooked "containerSteady_${eachNetName}_addr set to: ${containerSteady_${eachNetName}_addr}"
                                ;;
                            Virt)
-                               eval "containerSteady_${eachNetName}_addr=$( lpDo siteNetworks.sh -i assignVirtAddr ${eachNetName} ${containerNu} )"
-                               # ANT_cooked "containerSteady_${eachNetName}_addr set to: ${containerSteady_${eachNetName}_addr}"
+                               # Note Indirection ${! below
+                               local eachContainerSteadyNetName=$( echo "containerSteady_${eachNetName}_addr" )
+                               eval "${eachContainerSteadyNetName}=$( lpDo siteNetworks.sh -i assignVirtAddr ${eachNetName} ${containerNu} )"
+                               ANT_cooked "${eachContainerSteadyNetName}" set to: "${!eachContainerSteadyNetName}"
                                ;;
                            *)
                                EH_problem "Bad Usage -- invalid model=${model}"
