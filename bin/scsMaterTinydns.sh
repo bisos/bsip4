@@ -182,7 +182,7 @@ _EOF_
 
     lpDo svcTinydnsSysdAdmin.sh -h -v -n showRun -i daemonEnable
 
-    lpDo svcTinydnsSysdAdmin.sh -h -v -n showRun -i daemonStart
+    lpDo svcTinydnsSysdAdmin.sh -h -v -n showRun -i daemonRestart
 
     lpDo svcTinydnsSysdAdmin.sh -h -v -n showRun -i daemonStatus
 
