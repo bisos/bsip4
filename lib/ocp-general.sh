@@ -77,7 +77,19 @@ function thisFuncNameBashOrKsh {
 
 
 function opBasePathSet {
-  export PATH="."
+
+    function addEffectiveSitePerhaps {
+        # ~/bpos/sites/selected
+        local effSiteBinBase="$HOME/bpos/sites/selected/sys/bin"
+        if [ -d "${effSiteBinBase}" ] ; then
+            export PATH="${PATH}:${effSiteBinBase}"
+        fi
+    }
+    
+    export PATH="."
+
+    addEffectiveSitePerhaps
+  
   #export PATH="${PATH}:${HOME}/.local/bin"
   export PATH="${PATH}:/bisos/pipx/bin"
   export PATH="${PATH}:$HOME/.poetry/bin"
