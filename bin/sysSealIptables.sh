@@ -19,15 +19,15 @@ __author__="
 "
 
 
-####+BEGINNOT: bx:bsip:bash:seed-spec :types "seedActions.bash"
+####+BEGIN: bx:bsip:bash:seed-spec :types "seedActions.bash"
 SEED="
 *  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
 "
 FILE="
-*  /This File/ :: /bisos/bsip/bin/siteIptable.sh 
+*  /This File/ :: /bisos/git/auth/bxRepos/bisos/bsip4/bin/sysSealIptables.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
-    /opt/public/osmt/bin/seedActions.bash -l $0 "$@" 
+    /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
     exit $?
 fi
 ####+END:
@@ -138,7 +138,6 @@ _EOF_
     itemOrderedWhiteList=(
         "127.0.0.0/8"
         "192.168.0.0/24"
-        "198.62.92.0/24"
     )
 }
 
