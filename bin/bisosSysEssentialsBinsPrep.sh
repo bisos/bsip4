@@ -74,7 +74,8 @@ _EOF_
     #  [[elisp:(lsip-local-run-command "apt-cache search something | egrep '^something'")][apt-cache search something | egrep '^something']]
 
     itemOrderedList=(
-        "emacs"     # needed for pre-seeding
+        "iptables"     # needed for sealing
+        "emacs"     # needed for pre-seeding        
         "debconf_utils"     # needed for pre-seeding
         "dbus_x11"     # needed by blee
         "postfixCustom"     # because various packages install postfix
@@ -157,6 +158,17 @@ _EOF_
     
     lpReturn
 }
+
+####+BEGIN: bx:dblock:lsip:binsprep:apt :module "iptables"
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || Apt-Pkg       :: iptables [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+item_iptables () { distFamilyGenerationHookRun binsPrep_iptables; }
+
+binsPrep_iptables_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "iptables"; }
+
+####+END:
+
 
 ####+BEGIN: bx:dblock:lsip:binsprep:apt :module "emacs"
 _CommentBegin_
