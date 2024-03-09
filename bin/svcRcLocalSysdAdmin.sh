@@ -68,7 +68,7 @@ _CommentEnd_
 
 daemonName="rc-local"  # common name, used as a tag
 daemonsServiceName=(
-    "tinydns"
+    "rc-local"
     # "isc_dhcp_server6"
 )
 daemonControlScript="NA-controlScript"
@@ -132,8 +132,8 @@ $( examplesSeperatorChapter "Client Verification" )
 sudo lsof -i :53
 _EOF_
 
-    ANT_raw "NOTYET -- /bisos/git/auth/bxRepos/blee-binders/bisos-svcs/dns/tinydns-diag/_nodeBase_/fullUsagePanel-en.org"
-    ANT_raw "NOTYET -- /bisos/git/auth/bxRepos/blee-binders/connectivity/dnsResolution/_nodeBase_/fullUsagePanel-en.org"
+    ANT_raw "NOTYET -- /bisos/git/auth/bxRepos/blee-binders//_nodeBase_/fullUsagePanel-en.org"
+    ANT_raw "NOTYET -- /bisos/git/auth/bxRepos/blee-binders//_nodeBase_/fullUsagePanel-en.org"
     
     cat  << _EOF_
 $( examplesSeperatorChapter "Niche Pointer" )
@@ -151,7 +151,7 @@ noArgsHook() {
 function vis_examplesDefaultConfig {
  cat  << _EOF_
 $( examplesSeperatorSection "DEFAULT CONFIG FILES" )
-Not Applicable --- tinydns does not use /etc/default 
+Not Applicable --- rc-local does not use /etc/default 
 _EOF_
 }
 
