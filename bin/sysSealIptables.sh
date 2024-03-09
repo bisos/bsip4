@@ -114,11 +114,13 @@ sudo iptables -F  # Flush
 sudo iptables -L INPUT -v  # List with statistics
 $( examplesSeperatorChapter "Block Public And Delete White List From SysType" )
 ${G_myName} ${extraInfo} -i unsealSysTypeWithWhiteList vmHost
+${G_myName} ${extraInfo} -i unsealSysTypeWithWhiteList vmGuest
 ${G_myName} ${extraInfo} -i unsealSysTypeWithWhiteList mailonly
 ${G_myName} ${extraInfo} -i unsealSysTypeWithWhiteList webOnly
 ${G_myName} ${extraInfo} -i unsealSysTypeWithWhiteList webAndMail
 $( examplesSeperatorChapter "Block Public And Apply White List To SysType" )
 ${G_myName} ${extraInfo} -i sealSysTypeWithWhiteList vmHost
+${G_myName} ${extraInfo} -i sealSysTypeWithWhiteList vmGuest
 ${G_myName} ${extraInfo} -i sealSysTypeWithWhiteList mailonly
 ${G_myName} ${extraInfo} -i sealSysTypeWithWhiteList webOnly
 ${G_myName} ${extraInfo} -i sealSysTypeWithWhiteList webAndMail
@@ -234,6 +236,20 @@ _EOF_
         "tcpUdp_webPrivatePorts"
     )
 }
+
+function sysType_vmGuest {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+
+    tcpUdp_portsListSpec=( 
+        "tcpUdp_commonPrivatePorts"
+        "tcpUdp_mailPrivatePorts"
+        "tcpUdp_webPrivatePorts"
+    )
+}
+
 
 
 function sysType_mailOnly {
