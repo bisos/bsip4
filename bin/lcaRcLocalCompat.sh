@@ -18,16 +18,15 @@ __author__="
 * Authors: Mohsen BANAN, http://mohsen.banan.1.byname.net/contact
 "
 
-
-####+BEGINNOT: bx:bsip:bash:seed-spec :types "seedActions.bash"
+####+BEGIN: bx:bsip:bash:seed-spec :types "seedActions.bash"
 SEED="
 *  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
 "
 FILE="
-*  /This File/ :: /bisos/bsip/bin/siteIptable.sh 
+*  /This File/ :: /bisos/git/auth/bxRepos/bisos/bsip4/bin/lcaRcLocalCompat.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
-    /opt/public/osmt/bin/seedActions.bash -l $0 "$@" 
+    /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
     exit $?
 fi
 ####+END:
@@ -109,7 +108,7 @@ ls -l /etc/rc.local
 $( examplesSeperatorChapter "Raw iptable commands" )
 sudo systemctl status rc-local.service
 sudo systemctl enable rc-local.service
-udo systemctl cat rc-local.service  # need to reboot -- perhaps it is enabled after -i rcLocalUpdate
+sudo systemctl cat rc-local.service  # need to reboot -- perhaps it is enabled after -i rcLocalUpdate
 _EOF_
 }
 
