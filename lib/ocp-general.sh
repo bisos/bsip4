@@ -75,12 +75,18 @@ function thisFuncNameBashOrKsh {
     fi
 }
 
-
+#
+# NOTYET, There should be no HOME in here as it could be used from
+# scripts in systemd, etc.
+#
+# NOTYET, dela with :${HOME:-/}/.poetry/bin
+# 
 function opBasePathSet {
 
     function addEffectiveSitePerhaps {
         # ~/bpos/sites/selected
-        local effSiteBinBase="$HOME/bpos/sites/selected/sys/bin"
+        # local effSiteBinBase="$HOME/bpos/sites/selected/sys/bin"
+        local effSiteBinBase="/bisos/var/sites/selected/sys/bin"
         if [ -d "${effSiteBinBase}" ] ; then
             export PATH="${PATH}:${effSiteBinBase}"
         fi
@@ -92,7 +98,7 @@ function opBasePathSet {
   
   #export PATH="${PATH}:${HOME}/.local/bin"
   export PATH="${PATH}:/bisos/pipx/bin"
-  export PATH="${PATH}:$HOME/.poetry/bin"
+  export PATH="${PATH}:${HOME:-/}/.poetry/bin"
   export PATH="${PATH}:/bisos/venv/py3/dev-bisos3/bin"
   export PATH="${PATH}:/bisos/venv/py3/bisos3/bin"
   export PATH="${PATH}:/bisos/venv/py3/adopted/bin"
