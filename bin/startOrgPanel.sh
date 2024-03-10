@@ -65,7 +65,7 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
-# /opt/public/osmt/bin/lcnObjectTree.libSh
+# /bisos/core/bsip/bin/lcnObjectTree.libSh
 . ${opBinBase}/lcnObjectTree.libSh
 
 # PRE parameters
@@ -104,7 +104,8 @@ _EOF_
 $( examplesSeperatorChapter "Common File Tree Object Examples" )
 ${G_myName} ${extraInfo} -i ftoCommonExamples
 $( examplesSeperatorChapter "Start Blee Node Panel Base" )
-${G_myName} ${extraInfo} -i bleePanelBase node . 
+${G_myName} ${extraInfo} -i bleePanelBase node .      # obsolted by branch
+${G_myName} ${extraInfo} -i bleePanelBase branch .    # obsoltes node
 $( examplesSeperatorChapter "Start Blee Leaf" )
 ${G_myName} ${extraInfo} -i bleePanelBase leaf . 
 $( examplesSeperatorChapter "Start Blee AuxNode" )
@@ -140,7 +141,7 @@ _EOF_
     local treeItem=$( cat "${baseDir}/_tree_")
          
     case ${treeItem} in
-        "node")
+        "node"|"branch")
             if [ -d "${baseDir}/_nodeBase_" ] ; then
                 lpDo vis_bleePanelBase ${treeItem} ${baseDir}           
             else
@@ -226,7 +227,7 @@ _EOF_
             lpDo commonFeatures ${baseDir}
             ;;
 
-        "node")
+        "node"|"branch")
             inBaseDirDo ${baseDir} vis_startFtoUpdate node
             
             inBaseDirDo ${baseDir} vis_objectTypeOverwrite "blee.org.fto.node"
