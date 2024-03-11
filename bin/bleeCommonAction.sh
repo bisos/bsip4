@@ -151,7 +151,7 @@ _EOF_
     lpDo FN_fileSafeCopy ${fileName} ${fileName}.${dateTag}
     
     bleeclient -h -v -n showRun -i run -- --eval \
-               "(save-excursion (load-file \"${bleeCommonActionEl}\") (filterFilePanelCleanups \"${fileName}\"))"
+               "(save-window-excursion (load-file \"${bleeCommonActionEl}\") (filterFilePanelCleanups \"${fileName}\"))"
 
     lpReturn
 }
@@ -175,7 +175,7 @@ _EOF_
     lpDo FN_fileSafeCopy ${fileName} ${fileName}.${dateTag}
     
     bleeclient -h -v -n showRun -i run -- --eval \
-               "(save-excursion (load-file \"${bleeCommonActionEl}\") (latexNewlineFixFile \"${fileName}\"))"
+               "(save-window-excursion (load-file \"${bleeCommonActionEl}\") (latexNewlineFixFile \"${fileName}\"))"
 
     lpReturn
 }
@@ -197,8 +197,9 @@ _EOF_
         lpReturn 101
     fi
 
+    ANT_cooked "Running bleeclient"
     bleeclient -i run -- --eval \
-        "(save-excursion (load-file \"${bleeCommonActionEl}\") (chemacs-profiles-names-list \"${fileName}\"))"
+        "(save-window-excursion (load-file \"${bleeCommonActionEl}\") (chemacs-profiles-names-list \"${fileName}\"))"
 
     lpReturn
 }

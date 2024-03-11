@@ -411,6 +411,60 @@ _EOF_
 
 
 
+function doomProfilePrep {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+\${profile} name here need not match what is blee's .emacs-profile.el, but we use the same.
+But
+** Three variables are set:
+1) <<doomFrameworkBase>> /bisos/blee/dooms/doomemacs  --- is anon cloned from https://github.com/doomemacs/doomemacs
+2) <<doomDirBase>> /bisos/blee/dooms/doom-base-blee3  == Equivalent of .doom.d dir for packages and config
+3) <<doomRunBase>> /bisos/blee/emacsVers/28.1/doom-run-blee3  == Re-creatable by bleeDoomManage.sh
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    if [ -z "${profile}" ] ; then
+        lpReturn 1
+    fi
+    local emacsVer=$(vis_getEmacsVer ${emacs})
+
+    if [ -z "${emacsVer}" ] ; then
+        EH_problem "Bad emacsVer=${emacsVer}"
+        lpReturn 1
+    fi
+
+    #doomFrameworkBase=/bisos/blee/doom-emacs-framework
+    doomFrameworkBase="/bisos/blee/dooms/doomemacs"
+    case $profile in
+        doom-dist)
+            #doomRunBase="/bisos/blee/emacsVers/${emacsVer}/doom-main-emacs"
+            doomRunBase="/bisos/blee/emacsVers/${emacsVer}/doom-run-emacs"
+            # instead of doom-base-emacs it should have be called doom-base-dist
+            doomDirBase="/bisos/blee/dooms/doom-base-emacs"
+            ;;
+
+        doom-withoutBlee3)
+            doomRunBase="/bisos/blee/emacsVers/${emacsVer}/doom-run-withoutBlee3"
+            doomDirBase="/bisos/blee/dooms/doom-base-blee3/doom-base-withoutBlee3"
+            ;;
+
+        doom-blee3)
+            doomRunBase="/bisos/blee/emacsVers/${emacsVer}/doom-run-blee3"
+            doomDirBase="/bisos/blee/dooms/doom-base-blee3"
+            ;;
+
+        *)
+            EH_problem "Unknown profile=$profile"
+            lpReturn 1
+            ;;
+    esac
+
+    lpReturn
+}
+
+
+
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*
 _CommentEnd_
