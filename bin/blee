@@ -481,6 +481,8 @@ _EOF_
 
     # NOTYET, verify that acctName is valid (source needed lib)
 
+    lpDo sudo -u ${acctName} ${opBinBase}/lcaGetNerdFonts.sh -h -v -n showRun -i fullUpdate
+
     lpDo pushd $HOME   # for inBaseDirDo protection
 
     lpDo vis_blee1InitSetup
