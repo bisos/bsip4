@@ -1284,7 +1284,7 @@ _EOF_
     EH_assert [ ! -z "${targetName}" ]
 
     lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-         sudo ls -l /bisos/core/bsip
+         ls -l /bisos/core/bsip
 
 }
 

@@ -152,6 +152,7 @@ ${G_myName} ${extraInfo} -i fullUpdate
 ${G_myName} ${extraInfo} -i vagrantBaseBoxesBuild
 ${G_myName} ${extraInfo} -i siteContainersAssignGenerics
 $( examplesSeperatorChapter "Developer Git Credentials Activate" )
+sysCharDeploy.sh -h -v -n showRun -p bisosDevBxoId=piu_mbBisosDev -i usgConvey_bisosDeveloper
 ${G_myName} ${extraInfo} -i bisosDevBxo_fullSetup  # activate bisosDevBxoId and actuate it
 ${G_myName} ${extraInfo} -i bisosDevBxo_activate   # activate bisosDevBxoId
 ${G_myName} ${extraInfo} -i bisosDevBxo_actuate    # clone  auth based bxRepos with bisosDev credentials
