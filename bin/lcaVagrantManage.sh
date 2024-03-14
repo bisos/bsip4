@@ -167,6 +167,8 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
+    lpDo vagrant plugin install vagrant-libvirt
+
     lpDo vagrant plugin list
 
     lpDo vagrant box list

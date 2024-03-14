@@ -177,7 +177,7 @@ _EOF_
     }
     local thisBpoId=$( vis_bpoIdPrep "sysChar" )
 
-    bpoId= ${thisBpoId}
+    bpoId=${thisBpoId}
     lpDo vis_materializedContainer
 }
 
@@ -193,18 +193,16 @@ _EOF_
     
     local thisBpoId="${bpoId}"
 
-    lpDo echo "Under StepByStep Development"
-
-    lpReturn
-    
     lpDo sysCharIdentity.sh -h -v -n showRun -p bpoId="${thisBpoId}" -i identityUpdate
 
     containerId=${thisBpoId##pmp_}
-    declare -A containerRegDict=$( cntnrCharName.cs  -i withInitialsName_getDict ${containerId} | pyLiteralToBash.cs -i stdinToBash )
+    containerRegDictStr=$( lpDo eval cntnrCharName.cs  -i withInitialsName_getDict ${containerId} \| pyLiteralToBash.cs -i stdinToBash )
+    declare -A containerRegDict
+    lpDo eval containerRegDict=${containerRegDictStr}
 
     local model=${containerRegDict['model']}
     local abode=${containerRegDict['abode']}
-    local function=${containerRegDict['function']}
+    local function=${containerRegDict['purpose']}
     local containerNu=${containerRegDict['containerNu']}
    
     case "${model}" in
@@ -250,6 +248,9 @@ _EOF_
 
     # Activate Generic CntnrChar BPOs for Debian 11 and 12 -- pmp_VAG-deb12_  pmp_VSG-deb12_
     lpDo sysCharActivate.sh -h -v -n showRun  -i activate_virtGenerics                
+
+    ANT-cooked "This has happened before and should be un-needed: vagrant plugin install vagrant-libvirt"
+    lpDo lcaVagrantManage.sh -h -v -n showRun  -i fullUpdate
 
     # Create Generic VM Images
     lpDo sysCharMaterializeGuest.sh -h -v -n showRun -p bpoId="pmp_VAG-deb12_" -i vagrantFile_run

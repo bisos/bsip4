@@ -235,7 +235,11 @@ _EOF_
 
            # MB 20240216 below lines have not been tested
 
-           local containerNu=$( lpDo eval svcInvSiteRegContainer.cs --model="${model}" --abode="${abode}" --purpose="${function}"  -i thisSys_findContainer \| pyLiteralToBash.cs -i stdinToBash  )
+           # containerNusStr is something like "( 1009 )"
+           local containerNusStr=$( lpDo eval svcInvSiteRegContainer.cs --model="${model}" --abode="${abode}" --purpose="${function}"  -i thisSys_findContainer \| pyLiteralToBash.cs -i stdinToBash  )
+           local containerNus
+           lpDo eval containerNus=${containerNusStr}
+           local containerNu=${containerNus[0]}
            EH_assert [ ! -z "${containerNu}" ]
            local containerId=$(vis_containerId ${containerNu})
 

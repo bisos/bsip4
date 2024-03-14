@@ -215,7 +215,7 @@ ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l2_sitedContainer
 $( examplesSeperatorChapter "LAYER-3:: Chared-Container -- [Realize or Activate] SysChar Setup [with sysCharBpo] -- siteBasePlatform Actions" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_regBoxAscertain  # Has this box been registered
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_regContainerBoxAscertain  # Is a container registered for this box
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_newBoxAssign  "someBoxName"  # OnManager -- PRIMARY (New BOX)
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_boxNameUpdate  "Like-R710-2"  # OnManager -- PRIMARY (New BOX)
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_cntnrThis_regBpoId
 $( examplesSeperatorSection "L3:: Full New Box Actions -- Realize on Target Box Only" )
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i l3_charedContainerBoxRealize  # OnTarget Only -- PRIMARY (New BOX)
@@ -874,7 +874,7 @@ _EOF_
 }
 
 
-function vis_l2Plus_newBoxAssign {
+function vis_l2Plus_boxNameUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Using svcInvSiteRegBox.cs, we register as new box if needed.
@@ -884,18 +884,14 @@ _EOF_
     }
     EH_assert [[ $# -lt 2 ]]
 
-    local boxName=""
+    local boxName="UnNamed"
     
     if [ $# -eq 1 ] ; then
         boxName="$1"
     fi
 
-    echo "NOTYET,  thisBox_assign needs a name boxName=${boxName}"
-
-    lpReturn
-
     function onTargetRun {
-        lpDo svcInvSiteRegBox.cs  -i thisBox_assign
+        lpDo svcInvSiteRegBox.cs --boxName="${boxName}"  -i thisBox_update
     }
 
 ####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both"
