@@ -332,7 +332,8 @@ _EOF_
 
     lpDo bx-gitRepos -h -v -n showRun -i baseUpdateDotIgnore "${repoBase}"
 
-    lpDo startOrgPanel.sh -h -v -n showRun -i bleePanelBase node "${repoBase}"
+    # This is done in provisioning, don't want emacsclient
+    lpDo startOrgPanel.sh -h -v -n showRun -i bleePanelBaseNoDblock node "${repoBase}"
     
     lpReturn
 }       

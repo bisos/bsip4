@@ -170,8 +170,26 @@ _EOF_
     esac
 }
 
+function vis_bleePanelBaseNoDblock {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+                       }
+    doDblock="FALSE"
+    bleePanelBaseCommon $@
+}
+
 
 function vis_bleePanelBase {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+                       }
+    doDblock="TRUE"
+    bleePanelBaseCommon $@
+}
+
+function bleePanelBaseCommon {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -220,8 +238,10 @@ _EOF_
 
                 bleeclient -h -v -n showRun -i run -- --eval \
                 "(progn (find-file \"${baseDir}/${panelFileName}\") (yas--expand-or-visit-from-menu 'bx-org-mode-begin \"Blee Leaf Panel\") (save-buffer) (kill-buffer))"
-            
-                inBaseDirDo ${baseDir} bx-dblock -i dblockUpdateFiles ${panelFileName}
+
+                if [ "${doDblock}" == "TRUE" ] ; then
+                    inBaseDirDo ${baseDir} bx-dblock -i dblockUpdateFiles ${panelFileName}
+                fi
             fi
 
             lpDo commonFeatures ${baseDir}
@@ -268,8 +288,10 @@ _EOF_
                 ANT_raw "* About to bleeclient yas bx-org-mode-begin Blee Branch Panel in ${panelFileName}"
                 bleeclient -h -v -n showRun -i run -- --eval \
                            "(save-excursion (find-file \"${baseDir}/${nodeBaseDirName}/${panelFileName}\") (yas--expand-or-visit-from-menu 'bx-org-mode-begin \"Blee Branch Panel\") (save-buffer) (kill-buffer))"
-            
-                inBaseDirDo ${baseDir}/${nodeBaseDirName} bx-dblock -i dblockUpdateFiles ${panelFileName}
+
+                if [ "${doDblock}" == "TRUE" ] ; then
+                    inBaseDirDo ${baseDir}/${nodeBaseDirName} bx-dblock -i dblockUpdateFiles ${panelFileName}
+                fi
             fi
 
             lpDo commonFeatures ${baseDir}/${nodeBaseDirName}
