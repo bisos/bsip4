@@ -227,6 +227,10 @@ _EOF_
     lpDo vis_bisosDevBxo_actuate
 
     lpDo bisosPyVenvSetup.sh -h -v -n showRun -i pyVenv_DevSetup
+
+    lpDo bisosSiteSetup.sh  ${G_commandPrefs} \
+        -p registrar=192.168.0.90 -i siteRegistrarSelect
+
 }
 
 function vis_bisosDevBxo_activate {    
