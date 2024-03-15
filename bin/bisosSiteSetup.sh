@@ -124,6 +124,7 @@ ${G_myName} ${extraInfo} -p registrar=TBD -p id=TBD -p password=TBD -i obtainTmp
 $( examplesSeperatorChapter "Initial Known Hosts Setup" )
 ${G_myName} ${extraInfo} -i knownHostsAddSiteGitServer  # Runs after obtainTmpSite
 ${G_myName} ${extraInfo} -p id=bystar -i knownHostsAddSiteGitServer
+${G_myName} ${extraInfo} -p registrar=192.168.0.90 -i siteRegistrarSelect
 _EOF_
 }
 
@@ -206,6 +207,24 @@ _EOF_
 
     lpDo /bisos/var/sites/selected/sys/bin/siteBisosDefaults.sh ${extraInfo} -i initialize
 
+    lpDo vis_siteRegistrarSelect
+
+    lpReturn
+}
+
+
+function vis_siteRegistrarSelect {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Incomplete.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert [ ! -z "${registrar}" ]
+
+    typeset extraInfo="-h -v -n showRun"  #   ${G_commandOptions}
+
     # NOTYET, has not been tested
     #
     # lpDo svcInvSiteRegBox.cs --regBoxPerfAddrs="['192.168.0.90']"  -i invSiteRegBoxConf_set
@@ -219,10 +238,10 @@ _EOF_
 
 
 
-function vis_activate_siteBxoPlusAndSelect {    
+function vis_activate_siteBxoPlusAndSelect {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Create the specified bpoId 
+** Create the specified bpoId
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -235,13 +254,13 @@ _EOF_
 
     lpDo vis_activate_siteBxoPlus "${siteBxoId}"
 
-    # BISOS Selected Site 
+    # BISOS Selected Site
     lpDo siteManage.sh -h -v -n showRun -i siteBisosAdd ${siteBxoId}
     lpDo siteManage.sh -h -v -n showRun -i siteBisosSelect ${siteBxoId}
 
     # USG Selected Site
     lpDo siteManage.sh -h -v -n showRun -i siteUsgAdd ${siteBxoId}
-    lpDo siteManage.sh -h -v -n showRun -i siteUsgSelect ${siteBxoId}    
+    lpDo siteManage.sh -h -v -n showRun -i siteUsgSelect ${siteBxoId}
 }
 
 
