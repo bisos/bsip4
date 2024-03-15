@@ -164,9 +164,9 @@ _EOF_
 
     local curDir=$( pwd )
 
-    lpDo sudo rm /tmp/intra-ICM.log
-    lpDo sudo rm /tmp/bisos-ICM.log
-    lpDo sudo rm /tmp/bystar-ICM.log
+    [ -f /tmp/intra-ICM.log ] || lpDo sudo rm /tmp/intra-ICM.log
+    [ -f /tmp/bisos-ICM.log ] || lpDo sudo rm /tmp/bisos-ICM.log
+    [ -f /tmp/bystar-ICM.log ] || lpDo sudo rm /tmp/bystar-ICM.log
 
     lpDo vis_obtainTmpSite    # registrar, id, password are icm params
 
@@ -205,7 +205,15 @@ _EOF_
     lpDo /bisos/var/sites/selected/sys/bin/siteBisosGitServer.sh ${extraInfo} -i initialize
 
     lpDo /bisos/var/sites/selected/sys/bin/siteBisosDefaults.sh ${extraInfo} -i initialize
-    
+
+    # NOTYET, has not been tested
+    #
+    # lpDo svcInvSiteRegBox.cs --regBoxPerfAddrs="['192.168.0.90']"  -i invSiteRegBoxConf_set
+    lpDo svcInvSiteRegBox.cs --regBoxPerfAddrs="['${registrar}']"  -i invSiteRegBoxConf_set
+    lpDo svcInvSiteRegBox.cs --perfName="svcSiteRegistrars"  -i reg_sapCreateBox
+    lpDo svcInvSiteRegContainer.cs --regContainerPerfAddrs="['${registrar}']" -i invSiteRegContainerConf_set
+    lpDo svcInvSiteRegContainer.cs --perfName="svcSiteRegistrars"  -i reg_sapCreateContainer
+
     lpReturn
 }
 

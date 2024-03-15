@@ -212,6 +212,7 @@ cntnrDevel.sh -h -v -n showRun -i bisosDevBxo_fullSetup  # activate bisosDevBxoI
 $( examplesSeperatorChapter "Layer-1 + Layer 2:: Combined" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l2_sitedDevContainer # OnManager
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l2_sitedContainer  # OnManager
+sshpass -p intra ssh -X bystar@${oneTargetName} -f xterm -font 10x20
 $( examplesSeperatorChapter "LAYER-3:: Chared-Container -- [Realize or Activate] SysChar Setup [with sysCharBpo] -- siteBasePlatform Actions" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_regBoxAscertain  # Has this box been registered
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_regContainerBoxAscertain  # Is a container registered for this box
@@ -432,6 +433,8 @@ _EOF_
     lpDo vis_l2_sitedContainer
     
     lpDo vis_usgConvey_bisosDeveloper
+
+    lpDo vis_l2Plus_devContainer
 }
 
 function vis_l2_sitedContainer {    
@@ -445,12 +448,6 @@ _EOF_
 
     lpDo vis_bisosBasePlatform_siteSetup
 
-    # What is below should go in is_bisosBasePlatform_siteSetup and come from site
-    # 
-    lpDo svcInvSiteRegBox.cs --regBoxPerfAddrs="['192.168.0.90']"  -i invSiteRegBoxConf_set 
-    lpDo svcInvSiteRegBox.cs --perfName="svcSiteRegistrars"  -i reg_sapCreateBox
-    lpDo svcInvSiteRegContainer.cs --regContainerPerfAddrs="['192.168.0.90']"  -i invSiteRegContainerConf_set 
-    lpDo svcInvSiteRegContainer.cs --perfName="svcSiteRegistrars"  -i reg_sapCreateContainer
 }
 
 function vis_bisosBasePlatform_siteSetup {
