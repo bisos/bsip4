@@ -326,12 +326,7 @@ _EOF_
 
         cat ${each}.${eachDateTag} | \
             sed \
-            -e "s@b:mtdt:recipients|curSet@b:mtdt:recipients|select@g"\
-            -e "s@b:mtdt:mailings|curSet@b:mtdt:mailings|select@g"\
-            -e "s@b:mtdt:distr|applyRecipientsCurSetListToMailings@b:mtdt:distr|applyRecipientsSelectedListToMailings@g"\
-            -e "s@curSetForms@selectedForms@g"\
-            -e "s@b:mtdt:derive/withFileAndCurSet@b:mtdt:derive/withFileAndSelect@g"\
-            -e "s@CurRecipients@SelRecipients@g"\
+            -e "s@/libre/ByStar/InitialTemplates/software/plusOrg/dblock/inserts/topControls.org@/bisos/apps/defaults/software/plusOrg/dblock/inserts/topControls.org@g"\
             > ${each}
 
             # sed -e "s@unisos.marme@bisos.marmee@g" > ${each}
@@ -360,6 +355,66 @@ _EOF_
     lpDo processArgsAndStdin "$@"
 ####+END:
     
+    lpReturn
+}
+
+
+function vis_miscFixMtdt {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Function description.
+Design Pattern: processEach based on args or stdin.
+Examples:
+      ${G_myName} -i userAcctsReport bisos
+      echo bisos bystar | ${G_myName} -i userAcctsReport
+_EOF_
+    }
+    local thisFunc=${G_thisFunc}
+
+    function processEach {
+        EH_assert [[ $# -eq 1 ]]
+        local each="$1"
+        local eachDateTag="${dateTag}"
+
+        #echo "${thisFunc}" "${each}"
+        lpDo FN_fileSafeCopy "${each}" "${each}.${eachDateTag}"
+
+        cat ${each}.${eachDateTag} | \
+            sed \
+            -e "s@b:mtdt:recipients|curSet@b:mtdt:recipients|select@g"\
+            -e "s@b:mtdt:mailings|curSet@b:mtdt:mailings|select@g"\
+            -e "s@b:mtdt:distr|applyRecipientsCurSetListToMailings@b:mtdt:distr|applyRecipientsSelectedListToMailings@g"\
+            -e "s@curSetForms@selectedForms@g"\
+            -e "s@b:mtdt:derive/withFileAndCurSet@b:mtdt:derive/withFileAndSelect@g"\
+            -e "s@CurRecipients@SelRecipients@g"\
+            > ${each}
+
+            # sed -e "s@unisos.marme@bisos.marmee@g" > ${each}
+            #sed -e "s@bx:bsip:bash/processArgsAndStdin \$@bx:bsip:bash/processArgsAndStdin :noParams t@g" > ${each}
+
+        lpReturn 0
+    }
+
+####+BEGIN: bx:bsip:bash/processArgsAndStdin :noParams t
+     function processArgsAndStdin {
+        local effectiveArgs=( "$@" )
+        local stdinArgs=()
+        local each
+        if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
+            readarray stdinArgs < /dev/stdin
+            effectiveArgs=( "$@" "${stdinArgs[@]}" )
+        fi
+        if [ ${#effectiveArgs[@]} -eq 0 ] ; then
+            ANT_raw "No Args And Stdin Is Empty"
+            lpReturn
+        fi
+        for each in "${effectiveArgs[@]}"; do
+            lpDo processEach "${each%$'\n'}"
+        done
+    }
+    lpDo processArgsAndStdin "$@"
+####+END:
+
     lpReturn
 }
 

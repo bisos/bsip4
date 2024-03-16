@@ -6,9 +6,13 @@ ORIGIN="
 * Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee
 "
 
-####+BEGIN: bx:dblock:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
-typeset RcsId="$Id: findXargs,v 1.2 2019-04-27 04:19:06 lsipusr Exp $"
+####+BEGIN: bx:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
+### Args: :control "enabled|disabled|hide|release|fVar"  :vc "cvs|git|nil" :partof "bystar|nil" :copyleft "halaal+minimal|halaal+brief|nil"
+typeset RcsId="$Id: dblock-iim-bash.el,v 1.4 2017-02-08 06:42:32 lsipusr Exp $"
 # *CopyLeft*
+__copying__="
+* Libre-Halaal Software"
+#  This is part of ByStar Libre Services. http://www.by-star.net
 # Copyright (c) 2011 Neda Communications, Inc. -- http://www.neda.com
 # See PLPC-120001 for restrictions.
 # This is a Halaal Poly-Existential intended to remain perpetually Halaal.
@@ -24,7 +28,7 @@ SEED="
 *  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
 "
 FILE="
-*  /This File/ :: /bisos/bsip/bin/findXargs 
+*  /This File/ :: /bisos/core/bsip/bin/bxeRealize.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
     /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
@@ -34,9 +38,8 @@ fi
 
 _CommentBegin_
 ####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/bisos/apps/defaults/software/plusOrg/dblock/inserts/topControls.org"
-*      ================
 *  /Controls/ ::  [[elisp:(org-cycle)][| ]]  [[elisp:(show-all)][Show-All]]  [[elisp:(org-shifttab)][Overview]]  [[elisp:(progn (org-shifttab) (org-content))][Content]] | [[file:Panel.org][Panel]] | [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] | [[elisp:(bx:org:run-me)][Run]] | [[elisp:(bx:org:run-me-eml)][RunEml]] | [[elisp:(delete-other-windows)][(1)]] | [[elisp:(progn (save-buffer) (kill-buffer))][S&Q]]  [[elisp:(save-buffer)][Save]]  [[elisp:(kill-buffer)][Quit]] [[elisp:(org-cycle)][| ]]
-** /Version Control/ ::  [[elisp:(call-interactively (quote cvs-update))][cvs-update]]  [[elisp:(vc-update)][vc-update]] | [[elisp:(bx:org:agenda:this-file-otherWin)][Agenda-List]]  [[elisp:(bx:org:todo:this-file-otherWin)][ToDo-List]] 
+** /Version Control/ ::  [[elisp:(call-interactively (quote cvs-update))][cvs-update]]  [[elisp:(vc-update)][vc-update]] | [[elisp:(bx:org:agenda:this-file-otherWin)][Agenda-List]]  [[elisp:(bx:org:todo:this-file-otherWin)][ToDo-List]]
 ####+END:
 _CommentEnd_
 
@@ -48,7 +51,7 @@ _CommentEnd_
 
 function vis_moduleDescription {  cat  << _EOF_
 *  [[elisp:(org-cycle)][| ]]  Xrefs         :: *[Related/Xrefs:]*  <<Xref-Here->>  -- External Documents  [[elisp:(org-cycle)][| ]]
-**  [[elisp:(org-cycle)][| ]]  Panel        :: [[file:/libre/ByStar/InitialTemplates/activeDocs/bxServices/versionControl/fullUsagePanel-en.org::Xref-VersionControl][Panel Roadmap Documentation]] [[elisp:(org-cycle)][| ]]
+**  [[elisp:(org-cycle)][| ]]  Panel        :: [[file:/bisos/panels/bisos/core/bxeAndBxo/_nodeBase_/fullUsagePanel-en.org::Panel][Panel Roadmap Documentation]] [[elisp:(org-cycle)][| ]]
 *  [[elisp:(org-cycle)][| ]]  Info          :: *[Module Description:]* [[elisp:(org-cycle)][| ]]
 
 _EOF_
@@ -67,13 +70,59 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
+# ./platformBases_lib.sh
+. ${opBinBase}/platformBases_lib.sh
+
+. ${opBinBase}/bpo_lib.sh
+. ${opBinBase}/bpoId_lib.sh
+
+. ${opBinBase}/bxeDesc_lib.sh
+
+. ${opBinBase}/bystarHook.libSh
+
+. ${opBinBase}/bystarLib.sh
+
+. ${opBinBase}/lcnFileParams.libSh
+
+# . ${opBinBase}/bystarInfoBase.libSh
+
+. ${opBinBase}/unisosAccounts_lib.sh
+. ${opBinBase}/bisosGroupAccount_lib.sh
+. ${opBinBase}/bisosAccounts_lib.sh
+
+. ${opBinBase}/bxioCommon_lib.sh
+
+. ${opBinBase}/bisosCurrents_lib.sh
+
+. ${opBinBase}/site_lib.sh
+
+. ${opBinBase}/sysChar_lib.sh
+
+. ${opBinBase}/siteNetworks_lib.sh
+
+. ${opBinBase}/siteRegistrar_lib.sh
+
+. ${opBinBase}/niche_lib.sh
+
 
 # PRE parameters
 
-baseDir=""
+typeset -t bpoId=""
+# usg=""
 
 function G_postParamHook {
-     return 0
+    #bpoIdPrepValidate    
+
+    # if [ ! -z "${bpoId}" ] ; then
+     #   bpoHome=$( FN_absolutePathGet ~${bpoId} )
+    # fi
+    
+    bisosCurrentsGet
+}
+
+
+noArgsHook() {
+  vis_examples
 }
 
 
@@ -89,90 +138,44 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
+    oneBxoId="${currentBxoId}"
+    oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )
+
+    oneTargetBox=${curTargetBox:-}
+
+    thisBpoId=$( vis_bpoIdPrep "sysChar" )
+
+    local boxId=$( siteBoxAssign.sh -i thisBoxFindId )    
+    
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
-Terse Actions vis_hereFiles grep -i \$@
-$( examplesSeperatorChapter "find | xargs" )
-$( examplesSeperatorSection "At . (here)" )
-${G_myName} ${extraInfo} -i hereFiles grep -i 
-${G_myName} ${extraInfo} -i here ls -l
-$( examplesSeperatorSection "At Bisos Places" )
-${G_myName} ${extraInfo} -i homeOrg grep -i 
-${G_myName} ${extraInfo} -i bleePanels grep -i
-$( examplesSeperatorSection "Raw find Examples" )
-find -L . -type f -print | grep -v '\.git/' | grep -v '\.mypy' | grep -v __pycache__ | grep -i
-find -L . -type f -print | grep -v '\.git/' | grep -v '\.mypy' | grep -v __pycache__ | tr '\n' '\0' |  xargs -0 grep -i
-find -L . -type f -print0 | xargs -0 grep -i
+bisosCurrentsManage.sh
+bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
+$( examplesSeperatorChapter "Host Container -- General -- Summary" )
+${G_myName}  ${extraInfo} -p bpoId="${thisBpoId}"  -i summary
+${G_myName}  ${extraInfo} -p bpoId="sysChar"  -i summary
+$( examplesSeperatorChapter "Network" )
+${G_myName}  ${extraInfo} -p bpoId="${thisBpoId}" -i netIfs   # Used by Vagrant
+$( examplesSeperatorChapter "Pure Container Actions" )
 _EOF_
 }
 
-function noArgsHook {
-    if [ $# -eq 0 ] ; then
-        vis_examples
-    else
-        vis_hereFiles grep -i $@
-    fi
+
+function vis_summary {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+*** Applies 
+_EOF_
+    }
+    local thisBpoId=$( vis_bpoIdPrep "sysChar" )
+
+    bpoId=${thisBpoId}
+    bpoHome=$( FN_absolutePathGet ~${bpoId} )
+
+    lpDo vis_sysCharReport
+    # lpDo vis_materializedContainer
 }
-
-
-
-_CommentBegin_
-*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || IIF       ::  vis_bxReposStatus  [[elisp:(org-cycle)][| ]]
-_CommentEnd_
-
-
-
-function vis_here {
-   G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    #EH_assert [[ $# -eq 0 ]]
-
-    lpDo eval find -L .  -print0 \| xargs -0 $*
-    
-    lpReturn
-}       
-
-
-function vis_hereFiles {
-   G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    #EH_assert [[ $# -eq 0 ]]
-
-    lpDo eval find -L . -type f  -print0 \| grep -z -v mypy_cache \| grep -z -v __pycache__ \|  xargs -0 $*
-    
-    lpReturn
-}       
-
-function vis_homeOrg {
-   G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    #EH_assert [[ $# -eq 0 ]]
-
-    lpDo eval find -L ${HOME}/org -not -type d  -print0 \| xargs -0 $*
-    
-    lpReturn
-}       
-
-function vis_bleePanels {
-   G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    #EH_assert [[ $# -eq 0 ]]
-
-    lpDo eval find -L /libre/ByStar/InitialTemplates/activeDocs -not -type d -print0 \| xargs -0 $*
-    
-    lpReturn
-}       
-
-
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*
