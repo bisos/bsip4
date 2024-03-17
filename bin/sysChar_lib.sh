@@ -414,6 +414,7 @@ _EOF_
     local containerId=${bpoId##pmp_}
 
     EH_assert  vis_userAcctExists "${bpoId}"
+    local bpoHome=$( FN_absolutePathGet ~${bpoId} )
 
     fileParamManage.py -i fileParamDictReadDeep ${bpoHome} | grep -v bxeTree | grep -v bxeDesc
 
@@ -426,6 +427,32 @@ _EOF_
 
     lpReturn
 }
+
+function vis_sysCharReportShort {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+                       }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bpoId}" ]
+
+    local containerId=${bpoId##pmp_}
+
+    EH_assert  vis_userAcctExists "${bpoId}"
+    local bpoHome=$( FN_absolutePathGet ~${bpoId} )
+
+    local bisosSysChar=$( lpDo fileParamManage.py -i fileParamRead /bisos/var/bpoId sysChar.fp )
+
+    containerBoxBase=${bpoHome}/${containerId}/self/box.fps
+
+    local boxName=$( lpDo fileParamManage.py -i fileParamRead  ${containerBoxBase} boxId )
+    local boxNu=$( lpDo fileParamManage.py -i fileParamRead  ${containerBoxBase} boxNu )
+
+    ANT_raw "bisosSysChar=${bisosSysChar} boxName=${boxName} boxNu=${boxNu}"
+
+}
+
+
 
 
 function vis_containerAssignRead {

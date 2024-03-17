@@ -28,7 +28,7 @@ SEED="
 *  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
 "
 FILE="
-*  /This File/ :: /bisos/git/auth/bxRepos/bisos/bsip4/bin/sysCharManage.sh 
+*  /This File/ :: /bisos/core/bsip/bin/bxeRealize.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
     /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
@@ -95,52 +95,38 @@ _CommentEnd_
 . ${opBinBase}/bisosCurrents_lib.sh
 
 . ${opBinBase}/site_lib.sh
-. ${opBinBase}/siteNetworks_lib.sh
-. ${opBinBase}/l3_lib.sh
 
 . ${opBinBase}/sysChar_lib.sh
 
+. ${opBinBase}/siteNetworks_lib.sh
+
 . ${opBinBase}/siteRegistrar_lib.sh
 
-. ${opBinBase}/container_lib.sh
+. ${opBinBase}/niche_lib.sh
 
-. ${opBinBase}/usgBpos_lib.sh
 
 # PRE parameters
 
 typeset -t bpoId=""
-typeset -t privA=""
-typeset -t registrar=""
-typeset -t id=""
-typeset -t password=""
-typeset -t siteBxoId=""
-typeset -t bisosDevBxoId=""
-
-typeset -t model=""     # one of [HPV]
-typeset -t abode=""     # one of [MAPIS]
-typeset -t function=""  # one of [LASD]
-
-typeset -t cfpVmNameQualifier=""
-typeset -t cfpPrivA=""
-typeset -t cfpPubA=""
-typeset -t cfpSecurityMode=""
-
-typeset -t targetName=""
-
-sshCmnd="ssh -o StrictHostKeyChecking=no"
-
+# usg=""
 
 function G_postParamHook {
-    if [ ! -z "${bpoId}" ] ; then
-        bpoIdPrepValidate
-        bpoHome=$( FN_absolutePathGet ~${bpoId} )
-    fi
+    #bpoIdPrepValidate    
+
+    # if [ ! -z "${bpoId}" ] ; then
+     #   bpoHome=$( FN_absolutePathGet ~${bpoId} )
+    # fi
     
+    bisosCurrentsGet
 }
 
 
 noArgsHook() {
-  vis_examples
+    if [ "${G_myName}" == "this.sh" ] ; then
+        vis_this
+    else
+        vis_examples
+    fi
 }
 
 
@@ -156,6 +142,15 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
+    oneBxoId="${currentBxoId}"
+    oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )
+
+    oneTargetBox=${curTargetBox:-}
+
+    thisBpoId=$( vis_bpoIdPrep "sysChar" )
+
+    local boxId=$( siteBoxAssign.sh -i thisBoxFindId )
+
     bisosCurrentsGet
 
     local effectiveContainerBxoId="sysChar"
@@ -164,7 +159,7 @@ function vis_examples {
 
     local registrar=$( vis_registrarHostName )
     local id=$( vis_registrarUserName )
-    local password=$( vis_registrarUserPassword )        
+    local password=$( vis_registrarUserPassword )
 
     # local oneTargetName="192.168.0.52"
     local oneTargetName=${curTargetBox:-}
@@ -179,7 +174,7 @@ function vis_examples {
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
-bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${effectiveContainerBxoId}"
+bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
 ${currentBxoId:-}
 $( examplesSeperatorChapter "Ssh Based Cusomizations -- Bx Based (not vagrant based)" )
 ${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i postCustomize  # on host - bx-ssh
@@ -188,9 +183,10 @@ ${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i recordDeployme
 $( examplesSeperatorChapter "Full Update" )
 ${G_myName} ${extraInfo} -i fullUpdate
 $( examplesSeperatorChapter "Overview Report And Summary" )
-${G_myName} ${extraInfo} -p bpoId=sysChar -i bpoIdShow  # from  bpoIdManage.sh 
+${G_myName} ${extraInfo} -p bpoId=sysChar -i bpoIdShow  # from  bpoIdManage.sh
 ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i sysCharReport
 ${G_myName} ${extraInfo} -p bpoId=sysChar -i sysCharReport
+${G_myName} ${extraInfo} -i this
 ${G_myName} ${extraInfo} -i containerBoxSysCharReport
 $( examplesSeperatorChapter "Container Networks Info" )
 ${G_myName} -p bpoId=sysChar -i cntnr_netName_applicables
@@ -206,11 +202,58 @@ ${G_myName} ${extraInfo} -p bpoId=sysChar -i cntnr_netName_interfacesUpdateBased
 $( examplesSeperatorChapter "Container File Set/Update" )
 ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i sysCharWrite  # Initially invoked in sysCharRealize.sh
 ${G_myName} ${extraInfo} -p bpoId=sysChar -i sysCharWrite  # Initially invoked in sysCharRealize.sh
+
+$( examplesSeperatorChapter "All BPO Containers List" )
+bxoGitlab.py
+bxoGitlab.py -i acctList
+bxoGitlab.py -i acctList | grep pmp_H   # All Hosts
+bxoGitlab.py -i acctList | grep pmp_P   # All Hosts
+$( examplesSeperatorChapter "This Container" )
+sysCharManage.sh
+$( examplesSeperatorSection "This Container /bisos/var/bpoId/sysChar.fp/ (sysChar)  Info" )
+cat /bisos/var/bpoId/sysChar.fp/value
+fileParamManage.py -i fileParamRead /bisos/var/bpoId sysChar.fp
+$( examplesSeperatorSection "This Container Registrar Info" )
+svcInvSiteRegContainer.cs  -i thisSys_locateBoxInAll
+svcInvSiteRegBox.cs  -i thisBox_read
+$( examplesSeperatorSection "This Container Depository Info" )
+NOTYET, list -- bxoGitLab
+
+$( examplesSeperatorChapter "BPO Container  -- General -- Summary" )
+${G_myName}  ${extraInfo} -p bpoId="${thisBpoId}"  -i summary
+${G_myName}  ${extraInfo} -p bpoId="sysChar"  -i summary
+$( examplesSeperatorSection "Network" )
+${G_myName}  ${extraInfo} -p bpoId="${thisBpoId}" -i netIfs   # Used by Vagrant
+$( examplesSeperatorChapter "Pure Container Actions" )
 _EOF_
 }
 
+function vis_this {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    bpoId=$( vis_bpoIdPrep "sysChar" )
+    vis_sysCharReportShort
 
-function vis_fullUpdate {    
+}
+
+function vis_summary {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    local thisBpoId=$( vis_bpoIdPrep "sysChar" )
+
+    bpoId=${thisBpoId}
+    bpoHome=$( FN_absolutePathGet ~${bpoId} )
+
+    lpDo vis_sysCharReport
+    # lpDo vis_materializedContainer
+}
+
+
+function vis_fullUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Update Everything.
