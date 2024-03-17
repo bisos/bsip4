@@ -202,29 +202,22 @@ ${G_myName} ${extraInfo} -p bpoId=sysChar -i cntnr_netName_interfacesUpdateBased
 $( examplesSeperatorChapter "Container File Set/Update" )
 ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i sysCharWrite  # Initially invoked in sysCharRealize.sh
 ${G_myName} ${extraInfo} -p bpoId=sysChar -i sysCharWrite  # Initially invoked in sysCharRealize.sh
-
-$( examplesSeperatorChapter "All BPO Containers List" )
-bxoGitlab.py
-bxoGitlab.py -i acctList
-bxoGitlab.py -i acctList | grep pmp_H   # All Hosts
-bxoGitlab.py -i acctList | grep pmp_P   # All Hosts
-$( examplesSeperatorChapter "This Container" )
-sysCharManage.sh
 $( examplesSeperatorSection "This Container /bisos/var/bpoId/sysChar.fp/ (sysChar)  Info" )
 cat /bisos/var/bpoId/sysChar.fp/value
 fileParamManage.py -i fileParamRead /bisos/var/bpoId sysChar.fp
 $( examplesSeperatorSection "This Container Registrar Info" )
 svcInvSiteRegContainer.cs  -i thisSys_locateBoxInAll
 svcInvSiteRegBox.cs  -i thisBox_read
-$( examplesSeperatorSection "This Container Depository Info" )
-NOTYET, list -- bxoGitLab
-
-$( examplesSeperatorChapter "BPO Container  -- General -- Summary" )
-${G_myName}  ${extraInfo} -p bpoId="${thisBpoId}"  -i summary
-${G_myName}  ${extraInfo} -p bpoId="sysChar"  -i summary
-$( examplesSeperatorSection "Network" )
-${G_myName}  ${extraInfo} -p bpoId="${thisBpoId}" -i netIfs   # Used by Vagrant
+$( examplesSeperatorSection "This Container Accounts Info" )
+egrep 'pmp_H|pmp_P' /etc/passwd   # There should only be one -- Hosts and Pures accounts in this container
+egrep 'pmp_V' /etc/passwd   # Guest accounts in this container
+egrep 'pmp_V' /etc/passwd | egrep -v 'pmp_VAG-|pmp_VSG-'  # Non Generic Guest accounts in this container
 $( examplesSeperatorChapter "Pure Container Actions" )
+NOTYET
+$( examplesSeperatorChapter "Host Container Actions" )
+NOTYET, nu of guests
+$( examplesSeperatorChapter "Guest Container Actions" )
+NOTYET, nu of guests
 _EOF_
 }
 
