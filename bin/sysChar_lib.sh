@@ -449,7 +449,8 @@ _EOF_
     local boxNu=$( lpDo fileParamManage.py -i fileParamRead  ${containerBoxBase} boxNu )
 
     local mem=$( free -h | egrep '^Mem:' | tr -s " " | cut -d ' ' -f 2 )
-    local cpus=$( lcaKvmAdmin.sh -i nuOfVirtCpus )
+    local cpus=$(nproc --all )
+    # local cpus=$( lcaKvmAdmin.sh -i nuOfVirtCpus )
 
     ANT_raw "bisosSysChar=${bisosSysChar} boxName=${boxName} boxNu=${boxNu} cpus=${cpus} mem=${mem} deb=notyet usgBpo=notyet"
 
