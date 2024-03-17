@@ -168,6 +168,8 @@ function vis_examples {
     bpoId=sysChar
     local oneInterface=$( vis_cntnr_netName_applicables | head -1 )
 
+    local thisOut=$(vis_this)
+
     oneBxoId="${currentBxoId}"
     
     visLibExamplesOutput ${G_myName} 
@@ -203,8 +205,9 @@ $( examplesSeperatorChapter "Container File Set/Update" )
 ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i sysCharWrite  # Initially invoked in sysCharRealize.sh
 ${G_myName} ${extraInfo} -p bpoId=sysChar -i sysCharWrite  # Initially invoked in sysCharRealize.sh
 $( examplesSeperatorSection "This Container /bisos/var/bpoId/sysChar.fp/ (sysChar)  Info" )
-cat /bisos/var/bpoId/sysChar.fp/value
-fileParamManage.py -i fileParamRead /bisos/var/bpoId sysChar.fp
+cat /bisos/var/bpoId/sysChar.fp/value  # -> (cat /bisos/var/bpoId/sysChar.fp/value)
+fileParamManage.py -i fileParamRead /bisos/var/bpoId sysChar.fp  # -> $( fileParamManage.py -i fileParamRead /bisos/var/bpoId sysChar.fp )
+${G_myName} ${extraInfo} -i bpoIdPrep "sysChar" # vis_bpoIdPrep "sysChar" ->  $( vis_bpoIdPrep "sysChar" )
 $( examplesSeperatorSection "This Container Registrar Info" )
 svcInvSiteRegContainer.cs  -i thisSys_locateBoxInAll
 svcInvSiteRegBox.cs  -i thisBox_read
@@ -218,6 +221,8 @@ $( examplesSeperatorChapter "Host Container Actions" )
 NOTYET, nu of guests
 $( examplesSeperatorChapter "Guest Container Actions" )
 NOTYET, nu of guests
+$( examplesSeperatorChapter "Summary" )
+this.sh  # -> $( vis_this )
 _EOF_
 }
 
