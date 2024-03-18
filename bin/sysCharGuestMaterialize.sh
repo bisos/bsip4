@@ -825,7 +825,7 @@ _EOF_
     local password=$( vis_registrarUserPassword )
 
     local runInfo="-h -v -n showRun"
-    local binPath="/bisos/core/bsip/bin/sysCharDeploy.sh"
+    local binPath="/bisos/core/bsip/bin/sysCharBoxDeploy.sh"
 
     local bisosDevBxoId=$( usgBpos.sh -i usgBposUsageEnvs_bisosDevBxoId_read )
 

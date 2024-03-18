@@ -122,11 +122,7 @@ function G_postParamHook {
 
 
 noArgsHook() {
-    if [ "${G_myName}" == "this.sh" ] ; then
-        vis_this
-    else
-        vis_examples
-    fi
+  vis_examples
 }
 
 
@@ -149,95 +145,38 @@ function vis_examples {
 
     thisBpoId=$( vis_bpoIdPrep "sysChar" )
 
-    local boxId=$( siteBoxAssign.sh -i thisBoxFindId )
-
-    bisosCurrentsGet
-
-    local effectiveContainerBxoId="sysChar"
-
-    local siteBxoId=$( sysCharRealize.sh -i selectedSiteBxoId )
-
-    local registrar=$( vis_registrarHostName )
-    local id=$( vis_registrarUserName )
-    local password=$( vis_registrarUserPassword )
-
-    # local oneTargetName="192.168.0.52"
-    local oneTargetName=${curTargetBox:-}
-    # local oneTargetName="localhost"
-
-    bpoId=sysChar
-    local oneInterface=$( vis_cntnr_netName_applicables | head -1 )
-
-    local thisOut=$(vis_this)
-
-    oneBxoId="${currentBxoId}"
+    local boxId=$( siteBoxAssign.sh -i thisBoxFindId )    
     
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
-${currentBxoId:-}
-$( examplesSeperatorChapter "Ssh Based Cusomizations -- Bx Based (not vagrant based)" )
-${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i postCustomize  # on host - bx-ssh
-${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i secureSeal     # on host - bx-ssh
-${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i recordDeployment      # inside of parent bxo
-$( examplesSeperatorChapter "Full Update" )
-${G_myName} ${extraInfo} -i fullUpdate
-$( examplesSeperatorChapter "Overview Report And Summary" )
-${G_myName} ${extraInfo} -p bpoId=sysChar -i bpoIdShow  # from  bpoIdManage.sh
-${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i sysCharReport
-${G_myName} ${extraInfo} -p bpoId=sysChar -i sysCharReport
-${G_myName} ${extraInfo} -i this
-${G_myName} ${extraInfo} -i containerBoxSysCharReport
-$( examplesSeperatorChapter "Container Networks Info" )
-${G_myName} -p bpoId=sysChar -i cntnr_netName_applicables
-${G_myName} ${extraInfo} -p bpoId=sysChar -i cntnr_netName_interfaceObtain ${oneInterface}
-${G_myName} -p bpoId=sysChar -i cntnr_netName_applicables | xargs -n1 -- ${G_myName} -p bpoId=sysChar -i cntnr_netName_interfaceObtain
-$( examplesSeperatorChapter "Container Networks Set/Update" )
-${G_myName} -p bpoId=sysChar -i cntnr_netName_applicables
-${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i cntnr_netName_interfaceUpdate ${oneInterface} enSomeNu enabled
-${G_myName} ${extraInfo} -p bpoId=sysChar -i cntnr_netName_interfaceUpdate ${oneInterface} enSomeNu enabled
-${G_myName} -p bpoId="${oneBxoId}" -i cntnr_netName_interfacesConject
-${G_myName} -p bpoId=sysChar -i cntnr_netName_interfacesConject
-${G_myName} ${extraInfo} -p bpoId=sysChar -i cntnr_netName_interfacesUpdateBasedOnConjecture
-$( examplesSeperatorChapter "Container File Set/Update" )
-${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i sysCharWrite  # Initially invoked in sysCharRealize.sh
-${G_myName} ${extraInfo} -p bpoId=sysChar -i sysCharWrite  # Initially invoked in sysCharRealize.sh
-$( examplesSeperatorSection "This Container /bisos/var/bpoId/sysChar.fp/ (sysChar)  Info" )
-cat /bisos/var/bpoId/sysChar.fp/value  # -> (cat /bisos/var/bpoId/sysChar.fp/value)
-fileParamManage.py -i fileParamRead /bisos/var/bpoId sysChar.fp  # -> $( fileParamManage.py -i fileParamRead /bisos/var/bpoId sysChar.fp )
+$( examplesSeperatorChapter "All BPO Containers List" )
+bxoGitlab.py
+bxoGitlab.py -i acctList
+bxoGitlab.py -i acctList | grep pmp_H   # All Hosts
+bxoGitlab.py -i acctList | grep pmp_P   # All Hosts
+$( examplesSeperatorChapter "This Container" )
+cntnrThisManage.sh
+this.sh  # -> $( this.sh )
 ${G_myName} ${extraInfo} -i bpoIdPrep "sysChar" # vis_bpoIdPrep "sysChar" ->  $( vis_bpoIdPrep "sysChar" )
-$( examplesSeperatorSection "This Container Registrar Info" )
-svcInvSiteRegContainer.cs  -i thisSys_locateBoxInAll
-svcInvSiteRegBox.cs  -i thisBox_read
 $( examplesSeperatorSection "This Container Accounts Info" )
 egrep 'pmp_H|pmp_P' /etc/passwd   # There should only be one -- Hosts and Pures accounts in this container
-egrep 'pmp_V' /etc/passwd   # Guest accounts in this container
-egrep 'pmp_V' /etc/passwd | egrep -v 'pmp_VAG-|pmp_VSG-'  # Non Generic Guest accounts in this container
-$( examplesSeperatorChapter "Pure and Host Container Actions" )
-bpoCntnrBoxManage.sh
-$( examplesSeperatorChapter "This Container -- Manage BPO Container Guests" )
-virsh --connect qemu:///system list --all
-bpoCntnrGuestManage.sh
-$( examplesSeperatorChapter "Summary" )
-this.sh  # -> $( vis_this )
+$( examplesSeperatorChapter "BPO Container  -- General -- Summary" )
+${G_myName}  ${extraInfo} -p bpoId="${thisBpoId}"  -i summary
+${G_myName}  ${extraInfo} -p bpoId="sysChar"  -i summary
+$( examplesSeperatorSection "Network" )
+${G_myName}  ${extraInfo} -p bpoId="${thisBpoId}" -i netIfs   # Used by Vagrant
+$( examplesSeperatorChapter "Pure Container Actions" )
 _EOF_
 }
 
-function vis_this {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    bpoId=$( vis_bpoIdPrep "sysChar" )
-    vis_sysCharReportShort
-
-}
 
 function vis_summary {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+*** Applies 
 _EOF_
     }
     local thisBpoId=$( vis_bpoIdPrep "sysChar" )
@@ -248,19 +187,6 @@ _EOF_
     lpDo vis_sysCharReport
     # lpDo vis_materializedContainer
 }
-
-
-function vis_fullUpdate {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** Update Everything.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    # lpDo vis_distro_fullUpdate
-}
-
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*

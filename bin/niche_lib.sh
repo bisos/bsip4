@@ -114,7 +114,7 @@ _EOF_
         container)
             cat  << _EOF_
 $( examplesSeperatorChapter "Container Niche Examples" )
-$( sysCharDeploy.sh -i selectedContainerBxoPath )/sys/bin/$(G_myNicheNameGet)
+$( sysCharBoxDeploy.sh -i selectedContainerBxoPath )/sys/bin/$(G_myNicheNameGet)
 _EOF_
 
             nicheExamplesFile="$(dirname $(dirname ${G_myFullName}))/examples/$(G_myNicheNameGet)"
@@ -127,7 +127,7 @@ _EOF_
         site)
             cat  << _EOF_
 $( examplesSeperatorChapter "Selected Site Niche Examples" )
-$(sysCharDeploy.sh -i selectedSiteBxoPath)/sys/bin/$(G_myNicheNameGet)
+$(sysCharBoxDeploy.sh -i selectedSiteBxoPath)/sys/bin/$(G_myNicheNameGet)
 _EOF_
 
             nicheExamplesFile="$(dirname $(dirname ${G_myFullName}))/examples/$(G_myNicheNameGet)"

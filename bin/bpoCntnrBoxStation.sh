@@ -158,16 +158,13 @@ bxoGitlab.py -i acctList
 bxoGitlab.py -i acctList | grep pmp_H   # All Hosts
 bxoGitlab.py -i acctList | grep pmp_P   # All Hosts
 $( examplesSeperatorChapter "This Container" )
-sysCharManage.sh
-$( examplesSeperatorSection "This Container /bisos/var/bpoId/sysChar.fp/ (sysChar)  Info" )
-cat /bisos/var/bpoId/sysChar.fp/value
-fileParamManage.py -i fileParamRead /bisos/var/bpoId sysChar.fp
-$( examplesSeperatorSection "This Container Registrar Info" )
-svcInvSiteRegContainer.cs  -i thisSys_locateBoxInAll
-svcInvSiteRegBox.cs  -i thisBox_read
-$( examplesSeperatorSection "This Container Depository Info" )
-NOTYET, list -- bxoGitLab
-
+cntnrThisManage.sh
+this.sh  # -> $( this.sh )
+${G_myName} ${extraInfo} -i bpoIdPrep "sysChar" # vis_bpoIdPrep "sysChar" ->  $( vis_bpoIdPrep "sysChar" )
+$( examplesSeperatorSection "This Container Accounts Info" )
+egrep 'pmp_H|pmp_P' /etc/passwd   # There should only be one -- Hosts and Pures accounts in this container
+egrep 'pmp_V' /etc/passwd   # Guest accounts in this container
+egrep 'pmp_V' /etc/passwd | egrep -v 'pmp_VAG-|pmp_VSG-'  # Non Generic Guest accounts in this container
 $( examplesSeperatorChapter "BPO Container  -- General -- Summary" )
 ${G_myName}  ${extraInfo} -p bpoId="${thisBpoId}"  -i summary
 ${G_myName}  ${extraInfo} -p bpoId="sysChar"  -i summary

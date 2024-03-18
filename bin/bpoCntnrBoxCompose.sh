@@ -168,9 +168,9 @@ function vis_summary {
 *** Applies 
 _EOF_
     }
-    local thisBpoId=$( vis_bpoIdPrep "sysChar" )
+    # local thisBpoId=$( vis_bpoIdPrep "sysChar" )
 
-    bpoId=${thisBpoId}
+    # bpoId=${thisBpoId}
     bpoHome=$( FN_absolutePathGet ~${bpoId} )
 
     lpDo vis_sysCharReport

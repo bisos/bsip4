@@ -232,14 +232,14 @@ $( examplesSeperatorChapter "LAYER-4:: BPO Contaioner Composition" )
 bpoCntnrComposeBox.sh     # Under lying ICM for Layer 4
 bpoCntnrComposeGuest.sh
 $( examplesSeperatorChapter "LAYER-5:: Materialized-Container " )
-sysCharMaterializeBox.sh    # Under lying ICM for Layer
+sysCharBoxMaterialize.sh    # Under lying ICM for Layer
 sysCharMaterializeGuest.sh
 ${G_myName} ${extraInfo} -i l5_materializedContainer  # on Target  -- PRIMARY (New BOX)
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l5_materializedContainer  # on Manager
 $( examplesSeperatorChapter "LAYER-1 to Layer 5:: Combined -- Full Existing Box Actions -- on Manager" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l5_materializedContainer  # on Manager  -- PRIMARY (Existing BOX)
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l5_materializedDevContainer  # on Manager  -- PRIMARY (Existing BOX)
-$( examplesSeperatorChapter "VIRTUALIZATION :: sysCharGuestMaterialize.sh Use of sysCharDeploy.sh" )
+$( examplesSeperatorChapter "VIRTUALIZATION :: sysCharGuestMaterialize.sh Use of sysChaBoxrDeploy.sh" )
 $( examplesSeperatorSection "Used in Vagrantfile --- Phase 2.1, 2.2, 2.3" )
 ${G_myName} ${extraInfo} -p registrar="192.168.0.257" -p id="bystar" -p password="somePasswd" -p siteBxoId="pms_someSite" -i bisosBasePlatform_siteSetup
 ${G_myName} ${extraInfo} -p bisosDevBxoId=piu_mbBisosDev -i usgConvey_bisosDeveloper
@@ -848,17 +848,17 @@ _EOF_
 function vis_l5_materializedContainer {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-*** Wrapper for sysCharMaterializeBox.sh
+*** Wrapper for sysCharBoxMaterialize.sh
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
     if [ -z "${targetName}" ] ; then
-        lpDo sysCharMaterializeBox.sh ${G_commandPrefs} \
+        lpDo sysCharBoxMaterialize.sh ${G_commandPrefs} \
              -i materializedContainerThis
     else
         lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-             $(which sysCharMaterializeBox.sh) ${G_commandPrefs} \
+             $(which sysCharBoxMaterialize.sh) ${G_commandPrefs} \
              -i materializedContainerThis
     fi
 }
