@@ -923,14 +923,26 @@ _EOF_
 
     EH_assert [ ! -z "${bpoId}" ]
     EH_assert vis_bxoAcctVerify "${bpoId}"
-    
+
+    local bpoHome=$( FN_absolutePathGet ~${bpoId} )
+
+    local cntnrAssemblePath="${bpoHome}/sys/bin/cntnrAssemble.sh"
+
+    local runLine
+
+    if [ -x "${cntnrAssemblePath}" ] ; then
+        runLine="sudo -u bystar ${cntnrAssemblePath}"
+    else
+        runLine="echo Missing ${cntnrAssemblePath} -- Skipped"
+    fi
+
     function platformBinsRun {
     EH_assert [[ $# -eq 0 ]]
     cat  << _OUTER_EOF_
              cat   << _EOF_
 ######### PHASE 3: Run Pre and platformBinsRun and Post
 _EOF_
-        echo "NOTYET."
+        ${runLine}
 _OUTER_EOF_
     }
 
