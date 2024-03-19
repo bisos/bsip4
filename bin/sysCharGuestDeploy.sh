@@ -23,7 +23,7 @@ __author__="
 "
 
 
-####+BEGIN: bx:bsip:bash:seed-spec :types "seedActions.bash"
+####+BEGIN: bx:bsip:bash:seed-spec :types "seedActions.bash".
 SEED="
 *  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
 "
@@ -102,8 +102,6 @@ _CommentEnd_
 
 . ${opBinBase}/siteRegistrar_lib.sh
 
-. ${opBinBase}/niche_lib.sh
-
 
 # PRE parameters
 
@@ -111,22 +109,18 @@ typeset -t bpoId=""
 # usg=""
 
 function G_postParamHook {
-    #bpoIdPrepValidate    
 
-    # if [ ! -z "${bpoId}" ] ; then
-     #   bpoHome=$( FN_absolutePathGet ~${bpoId} )
-    # fi
+    if [ ! -z "${bpoId}" ] ; then
+        bpoIdPrepValidate
+        bpoHome=$( FN_absolutePathGet ~${bpoId} )
+    fi
     
     bisosCurrentsGet
 }
 
 
 noArgsHook() {
-    if [ "${G_myName}" == "this.sh" ] ; then
-        vis_this
-    else
-        vis_examples
-    fi
+  vis_examples
 }
 
 
@@ -136,20 +130,16 @@ _CommentEnd_
 
 
 function vis_examples {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
     typeset extraInfo="-h -v -n showRun"
     #typeset extraInfo=""
     typeset runInfo="-p ri=lsipusr:passive"
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
-
-    oneBxoId="${currentBxoId}"
-    oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )
-
-    oneTargetBox=${curTargetBox:-}
-
-    thisBpoId=$( vis_bpoIdPrep "sysChar" )
-
-    local boxId=$( siteBoxAssign.sh -i thisBoxFindId )
 
     bisosCurrentsGet
 
@@ -165,101 +155,69 @@ function vis_examples {
     local oneTargetName=${curTargetBox:-}
     # local oneTargetName="localhost"
 
-    bpoId=sysChar
-    local oneInterface=$( vis_cntnr_netName_applicables | head -1 )
+    # bisosCurrentsManage.sh -i setParam curTargetBox 192.168.0.257 &> /dev/null
 
-    local thisOut=$(vis_this)
-
-    oneBxoId="${currentBxoId}"
-    
-    visLibExamplesOutput ${G_myName} 
+    visLibExamplesOutput ${G_myName}
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
-bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
-${currentBxoId:-}
-$( examplesSeperatorChapter "Ssh Based Cusomizations -- Bx Based (not vagrant based)" )
-${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i postCustomize  # on host - bx-ssh
-${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i secureSeal     # on host - bx-ssh
-${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i recordDeployment      # inside of parent bxo
-$( examplesSeperatorChapter "Full Update" )
-${G_myName} ${extraInfo} -i fullUpdate
-$( examplesSeperatorChapter "Overview Report And Summary" )
-${G_myName} ${extraInfo} -p bpoId=sysChar -i bpoIdShow  # from  bpoIdManage.sh
-${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i sysCharReport
-${G_myName} ${extraInfo} -p bpoId=sysChar -i sysCharReport
-${G_myName} ${extraInfo} -i this
-${G_myName} ${extraInfo} -i containerBoxSysCharReport
-$( examplesSeperatorChapter "Container Networks Info" )
-${G_myName} -p bpoId=sysChar -i cntnr_netName_applicables
-${G_myName} ${extraInfo} -p bpoId=sysChar -i cntnr_netName_interfaceObtain ${oneInterface}
-${G_myName} -p bpoId=sysChar -i cntnr_netName_applicables | xargs -n1 -- ${G_myName} -p bpoId=sysChar -i cntnr_netName_interfaceObtain
-$( examplesSeperatorChapter "Container Networks Set/Update" )
-${G_myName} -p bpoId=sysChar -i cntnr_netName_applicables
-${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i cntnr_netName_interfaceUpdate ${oneInterface} enSomeNu enabled
-${G_myName} ${extraInfo} -p bpoId=sysChar -i cntnr_netName_interfaceUpdate ${oneInterface} enSomeNu enabled
-${G_myName} -p bpoId="${oneBxoId}" -i cntnr_netName_interfacesConject
-${G_myName} -p bpoId=sysChar -i cntnr_netName_interfacesConject
-${G_myName} ${extraInfo} -p bpoId=sysChar -i cntnr_netName_interfacesUpdateBasedOnConjecture
-$( examplesSeperatorChapter "Container File Set/Update" )
-${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i sysCharWrite  # Initially invoked in sysCharRealize.sh
-${G_myName} ${extraInfo} -p bpoId=sysChar -i sysCharWrite  # Initially invoked in sysCharRealize.sh
-$( examplesSeperatorSection "This Container /bisos/var/bpoId/sysChar.fp/ (sysChar)  Info" )
-cat /bisos/var/bpoId/sysChar.fp/value  # -> (cat /bisos/var/bpoId/sysChar.fp/value)
-fileParamManage.py -i fileParamRead /bisos/var/bpoId sysChar.fp  # -> $( fileParamManage.py -i fileParamRead /bisos/var/bpoId sysChar.fp )
-${G_myName} ${extraInfo} -i bpoIdPrep "sysChar" # vis_bpoIdPrep "sysChar" ->  $( vis_bpoIdPrep "sysChar" )
-$( examplesSeperatorSection "This Container Registrar Info" )
-svcInvSiteRegContainer.cs  -i thisSys_locateBoxInAll
-svcInvSiteRegBox.cs  -i thisBox_read
-$( examplesSeperatorSection "This Container Accounts Info" )
-egrep 'pmp_H|pmp_P' /etc/passwd   # There should only be one -- Hosts and Pures accounts in this container
-egrep 'pmp_V' /etc/passwd   # Guest accounts in this container
-egrep 'pmp_V' /etc/passwd | egrep -v 'pmp_VAG-|pmp_VSG-'  # Non Generic Guest accounts in this container
-$( examplesSeperatorChapter "Pure and Host Container Actions" )
-bpoCntnrBoxManage.sh
-$( examplesSeperatorChapter "This Container -- Manage BPO Container Guests" )
-virsh --connect qemu:///system list --all
-bpoCntnrGuestManage.sh
-$( examplesSeperatorChapter "Summary" )
-this.sh  # -> $( vis_this )
+bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${effectiveContainerBxoId}"
+${curTargetBox:-}
+$( examplesSeperatorChapter "LAYER-0:: Generic FreshDebian VM (vagrant up FreshDebian-Basebox)" )
+sysCharGuestMaterialize.sh -h -v -n showRun -p bpoId="pmp_deb12-freshVagBb" -i vagrantFile_run       # on host - ends with image
+NOTYET, point to buildBaseBox build and pmp_deb12 BPO
+$( examplesSeperatorChapter "LAYER-1:: Generic unsitedBisosDeploy.sh  -- (vagrant up UnsitedBisos-basebox)" )
+sysCharGuestMaterialize.sh -h -v -n showRun -p bpoId="pmp_deb12-unsitedBisosVagBb" -i vagrantFile_run       # on host - ends with image
+sysCharGuestMaterialize.sh -h -v -n showRun -p bpoId="pmp_deb12-unsitedBisosFab" -i vagrantFile_run       # Fabricate on host - ends with image
+NOTYET, point to buildBaseBox build and pmp_deb12 BPO
+$( examplesSeperatorChapter "LAYER-2:: Generic Sited-Container -- UnsitedBisos to SitedContainer" )
+sysCharGuestMaterialize.sh -h -v -n showRun -p bpoId="pmp_pmp_VAG-deb12_" -i vagrantFile_run       # on host - ends with image
+sysCharGuestMaterialize.sh -h -v -n showRun -p bpoId="pmp_pmp_VSG-deb12_" -i vagrantFile_run       # on host - ends with image
+sysCharGuestMaterialize.sh -h -v -n showRun -p bpoId="pmp_deb12-sitedBisosFabL0-VAG" -i vagrantFile_run       # Fabricate on host - ends with image
+sysCharGuestMaterialize.sh -h -v -n showRun -p bpoId="pmp_deb12-sitedBisosFabL1-VSG" -i vagrantFile_run       # Fabricate on host - ends with image
+NOTYET, dev vs stable
+NOTYET, start up VMs in addition to run vagrant
+sysCharGenericsRealize.sh
+$( examplesSeperatorChapter "LAYER-3:: Chared-Container -- [Reify: Realize or Activate] SysChar Setup [with sysCharBpo] -- siteBasePlatform Actions" )
+sysCharRealize.sh
+$( examplesSeperatorSection "L3:: Full New Guest Actions -- Realize " )
+sysCharRealize.sh -h -v -n showRun -p model=Virt -p abode=Shield -p function=Server -i containerAssignAndRepoAndSysCharRealize  # FULL ACTION -- PRIMARY COMMAND
+sysCharRealize.sh -h -v -n showRun -p model=Virt -p abode=Internet -p function=Server -i containerAssignAndRepoAndSysCharRealize  # FULL ACTION -- PRIMARY COMMAND
+$( examplesSeperatorSection "L3:: Full Existing Guest Actions -- Activate" )
+${G_myName} ${extraInfo} -p bxoId="pmp_VAG-deb11_" -i siteBasePlatform_sysBxoActivate
+$( examplesSeperatorChapter "LAYER-4:: BPO Contaioner Composition" )
+bpoCntnrComposeGuest.sh
+$( examplesSeperatorChapter "LAYER-5:: Materialized-Container " )
+sysCharGuestMaterialize.sh    # Under lying ICM for Layer
+sysCharGuestMaterialize.sh -h -v -n showRun -p bpoId="notyet" -i vagrantFile_run       # on host - ends with image
+$( examplesSeperatorChapter "LAYER-1 to Layer 5:: Combined -- Full Existing Box Actions -- on Manager" )
+${G_myName} ${extraInfo} -p bpoId="notyet" -i l1l5_materializedContainer  # on Manager  -- PRIMARY (Existing BOX)
+${G_myName} ${extraInfo} -p bpoId="notyet" -i l1l5_materializedDevContainer  # on Manager  -- PRIMARY (Existing BOX)
+$( examplesSeperatorChapter "LAYER-6:: Stationed-Guest-Container " )
+bpoCntnrGuestStation.sh
+bpoCntnrGuestStation.sh -h -v -n showRun -p bpoId="notyet" -i reStart
+$( examplesSeperatorChapter "LAYER-1 to Layer 6:: Combined -- Full Existing Box Actions -- on Manager" )
+${G_myName} ${extraInfo} -p bpoId="notyet" -i l1l6_stationedContainer
+${G_myName} ${extraInfo} -p bpoId="notyet" -i l1l6_stationedDevContainer
+$( examplesSeperatorChapter "Developer Activities" )
+${G_myName} ${extraInfo} -i devExamples
 _EOF_
 }
 
-function vis_this {
+
+function someExample {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-    }
-    bpoId=$( vis_bpoIdPrep "sysChar" )
-    vis_sysCharReportShort
-
-}
-
-function vis_summary {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    local thisBpoId=$( vis_bpoIdPrep "sysChar" )
-
-    bpoId=${thisBpoId}
-    bpoHome=$( FN_absolutePathGet ~${bpoId} )
-
-    lpDo vis_sysCharReport
-    # lpDo vis_materializedContainer
-}
-
-
-function vis_fullUpdate {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** Update Everything.
-_EOF_
-    }
+                       }
     EH_assert [[ $# -eq 0 ]]
 
-    # lpDo vis_distro_fullUpdate
+    if [ -d /tmp/netNameInfo ] ; then
+        lpDo rm -r /tmp/netNameInfo
+    fi
+    lpDo mkdir -p /tmp/netNameInfo
 }
+
 
 
 _CommentBegin_

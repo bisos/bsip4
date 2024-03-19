@@ -72,6 +72,12 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
+. ${opBinBase}/unisosAccounts_lib.sh
+. ${opBinBase}/bisosGroupAccount_lib.sh
+. ${opBinBase}/bisosAccounts_lib.sh
+
+. ${opBinBase}/bisosCurrents_lib.sh
+
 
 # PRE parameters
 
@@ -97,11 +103,20 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
-    typeset currentVmName="ub-1604-bx2-bxInstaller-"$( ${G_myName}  -i getCurNuForVmTemplate ub-1604-bx2-bxInstaller-)
+    bisosCurrentsGet
 
+    currentVmName=${currentVmName-unspecified}
+    
+    #typeset currentVmName="ub-1604-bx2-bxInstaller-"$( ${G_myName}  -i getCurNuForVmTemplate ub-1604-bx2-bxInstaller-)
+
+    vmHostUri="qemu+ssh://localhost/system"
+
+    
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
+bisosCurrentsManage.sh
+bisosCurrentsManage.sh  ${extraInfo} -i setParam currentVmName "bxoVSS-1001-7"
 $( examplesSeperatorChapter "GUI Interfaces" )
 virt-manager  # Gui Interface for managing VMs
 virt-viewer   # Connect to desktop of running VM with VNC
@@ -123,6 +138,8 @@ ${G_myName} ${extraInfo} -i exportVmTo virgin-ub-1604 /uniform/VMs/Public/bx/1/k
 $( examplesSeperatorSection "Import A VM Image" )
 ${G_myName} ${extraInfo} -i importVmFrom /uniform/VMs/Public/bx/1/kvm/ virgin-ub-1604 
 $( examplesSeperatorChapter "Virt-Install -- Create New VMs From Scratch" )
+# unabsorbed OSMT -- bxBootstrap.sh ${extraInfo} -i virtBuild next distro medium ubuntu 1604 bx2
+$( examplesSeperatorChapter "Virt-Install -- Create New VMs From Scratch" )
 bxBootstrap.sh ${extraInfo} -i virtBuild next distro medium ubuntu 1604 bx2
 bxBootstrap.sh ${extraInfo} -i virtBuild next distro medium debian 8 bx2
 bxBootstrap.sh ${extraInfo} -i virtBuild next bxInstaller small ubuntu 1604 bx2
@@ -140,6 +157,27 @@ ${G_myName} ${extraInfo} -i virtStartConnect ub-1604-bx2-bxInstaller-13
 ${G_myName} ${extraInfo} -i virtStartConnect ${currentVmName}
 $( examplesSeperatorChapter "Development And Experimentation" )
 ${G_myName} ${extraInfo} -i examplesPlus
+$( examplesSeperatorChapter "Auto Start A VM At Boot time" )
+virsh --connect ${vmHostUri} autostart ${currentVmName}   # enable auto start
+virsh --connect ${vmHostUri} autostart ${currentVmName} --disable  # disable auto start
+virsh --connect ${vmHostUri} dominfo ${currentVmName}
+ls -l /etc/libvirt/qemu/autostart
+virsh --connect ${vmHostUri} desc ${currentVmName} --current --title "TitleOfVm" --new-desc "Description of VM comes here"
+virsh --connect ${vmHostUri} desc ${currentVmName} --title
+sudo systemctl stop libvirt-guests   # stops VMs
+sudo systemctl restart libvirtd      # starts VMs agains
+sudo virsh net-autostart --network vagrant-libvirt
+sudo virsh net-start --network vagrant-libvirt
+sudo virsh net-autostart --network default
+sudo virsh net-start --network default
+sudo virsh net-list --all
+virsh --connect ${vmHostUri} start ${currentVmName}
+$( examplesSeperatorChapter "Development And Experimentation" )
+${G_myName} ${extraInfo} -i examplesPlus
+export VIRSH_DEFAULT_CONNECT_URI=qemu:///system
+echo \${VIRSH_DEFAULT_CONNECT_URI}
+unset VIRSH_DEFAULT_CONNECT_URI
+# NOTYET, Absorb from OSMT panel
 _EOF_
 }
 
@@ -394,9 +432,9 @@ _EOF_
     typeset vmHost=$1
     typeset vmName=$2    
 
-    opDo virsh --connect qemu+ssh://lsipusr@${vmHost}/system start ${vmName}
+    opDo virsh --connect qemu+ssh://bystar@${vmHost}/system start ${vmName}
     
-    opDo virt-viewer --connect qemu+ssh://lsipusr@${vmHost}/system  ${vmName} &
+    opDo virt-viewer --connect qemu+ssh://bystar@${vmHost}/system  ${vmName} &
     
     lpReturn
 }
@@ -466,7 +504,7 @@ _EOF_
     EH_assert [[ $# -gt 0 ]]
 
     for thisHost in $@; do    
-        opDo virsh --connect qemu+ssh://lsipusr@${thisHost}/system list --all --title
+        opDo virsh --connect qemu+ssh://bystar@${thisHost}/system list --all --title
     done
     lpReturn
 }

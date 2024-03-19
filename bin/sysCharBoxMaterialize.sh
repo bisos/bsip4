@@ -28,7 +28,7 @@ SEED="
 *  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
 "
 FILE="
-*  /This File/ :: /bisos/bsip/bin/sysCharGuestPreps.sh 
+*  /This File/ :: /bisos/core/bsip/bin/bxeRealize.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
     /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
@@ -98,7 +98,11 @@ _CommentEnd_
 
 . ${opBinBase}/sysChar_lib.sh
 
-. ${opBinBase}/usgBpos_lib.sh
+. ${opBinBase}/siteNetworks_lib.sh
+
+. ${opBinBase}/siteRegistrar_lib.sh
+
+. ${opBinBase}/niche_lib.sh
 
 
 # PRE parameters
@@ -107,10 +111,11 @@ typeset -t bpoId=""
 # usg=""
 
 function G_postParamHook {
-    if [ ! -z "${bpoId}" ] ; then
-        bpoIdPrepValidate
-        bpoHome=$( FN_absolutePathGet ~${bpoId} )
-    fi
+    #bpoIdPrepValidate    
+
+    # if [ ! -z "${bpoId}" ] ; then
+     #   bpoHome=$( FN_absolutePathGet ~${bpoId} )
+    # fi
     
     bisosCurrentsGet
 }
@@ -133,178 +138,158 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
-    #oneBxoId="prs-bisos"
     oneBxoId="${currentBxoId}"
-    #oneBxoId="pic_dnsServer"    
-    oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )    
+    oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )
+
+    oneTargetBox=${curTargetBox:-}
+
+    thisBpoId=$( vis_bpoIdPrep "sysChar" )
+
+    local boxId=$( siteBoxAssign.sh -i thisBoxFindId )    
     
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
-bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VAG-deb11_
-$( examplesSeperatorChapter "Identify or Locate bisosDevBxo" )
-usgBpos.sh
-usgBpos.sh -i usgBposUsageEnvs_bisosDevBxoId_read
-$( examplesSeperatorChapter "Specialized Actions" )
-${G_myName} ${extraInfo} -i fullUpdate
-${G_myName} ${extraInfo} -i vagrantBaseBoxesBuild
-${G_myName} ${extraInfo} -i siteContainersAssignGenerics
-$( examplesSeperatorChapter "Developer Git Credentials Activate" )
-sysCharBoxDeploy.sh -h -v -n showRun -p bisosDevBxoId=piu_mbBisosDev -i usgConvey_bisosDeveloper
-${G_myName} ${extraInfo} -i bisosDevBxo_fullSetup  # activate bisosDevBxoId and actuate it
-${G_myName} ${extraInfo} -i bisosDevBxo_activate   # activate bisosDevBxoId
-${G_myName} ${extraInfo} -i bisosDevBxo_actuate    # clone  auth based bxRepos with bisosDev credentials
-$( examplesSeperatorChapter "Repeatable Actions And Updates" )
-bx-gitReposBases -v 20 --baseDir="/bisos/git/auth/bxRepos" --pbdName="bxReposRoot" --vcMode="auth" --gitLabel="mb1_github"  -i pbdUpdate all
-bisosPyVenvSetup.sh -h -v -n showRun -i pyVenv_DevSetup # Create Virtual Environment and dev pipInstalls
-$( examplesSeperatorChapter "Temporary Work Around" )
-bpoActivate.sh -h -v -n showRun -p privacy="priv" -p bpoId="piu_mbFullUsage" -i bpoActivate
-usgBpos.sh -h -v -n showRun -i usgBpos_usageEnvs_fullUse_update piu_mbFullUsage # Main Entry -- Sets
-$( examplesSeperatorChapter "Developer Git Credentials Deactivate" )
-${G_myName} ${extraInfo} -i bisosDevBxo_delete
-$( examplesSeperatorChapter "Mode Selection" )
-sysCharBoxDeploy.sh -p bpoId="sysChar" -i conveyInfoShow
-${G_myName} ${extraInfo} -p bpoId="sysChar" -i sysCharConveyInfoWrite securityMode developer
-${G_myName} ${extraInfo} -p bpoId="sysChar" -i sysCharConveyInfoWrite securityMode stable
-${G_myName} ${extraInfo} -i securityMode developer
-${G_myName} ${extraInfo} -i securityMode stable
-${G_myName} ${extraInfo} -i securityMode sealed
+bisosCurrentsManage.sh  ${extraInfo} -i setParam curTargetBox 192.168.0.45  # Currently curTargetBox=${curTargetBox:-}
+bisosCurrentsManage.sh  ${extraInfo} -i setParam curTargetBox localhost  # Currently curTargetBox=${curTargetBox:-}
+$( examplesSeperatorChapter "Layer 4 -- Materialize This Box" )
+sysCharIdentity.sh ${extraInfo} -p bpoId="${thisBpoId}" -i identityUpdate
+${G_myName}  ${extraInfo} -p bpoId="${oneBxoId}"  -i materializedContainer
+${G_myName}  ${extraInfo} -i materializedContainerThis
+$( examplesSeperatorChapter "Hosting Container Actions" )
+sysCharPreps.sh
+sysCharPreps.sh -h -v -n showRun -i fullUpdate
+$( examplesSeperatorChapter "Pure Container Actions" )
+$( examplesSeperatorChapter "Manual BISOS Installation (Site Niched Below)" )
 _EOF_
-}
-
-function vis_fullUpdate {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    lpDo vis_vagrantBaseBoxesBuild
-
-    lpDo vis_siteContainersAssignGenerics
-    
-    lpReturn
-}       
-
-function vis_vagrantBaseBoxesBuild {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    lpDo echo run lcaVagrantBoxRun.sh
-    
-    lpReturn
-}       
-
-function vis_siteContainersAssignGenerics {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    lpDo siteContainerAssign.sh -h -v -n showRun -i assignGenerics doIt
-
-    lpDo siteContainerRepo.sh -h -v -n showRun -i containerRepoGenericsUpdate full    
-    
-    lpReturn
-}       
-
-function vis_bisosDevBxo_fullSetup {    
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** Activate the bisosDev usage env bpo. authClone using credentials of bisosDev.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    lpDo vis_bisosDevBxo_activate
-
-    lpDo vis_bisosDevBxo_actuate
-
-    lpDo bisosPyVenvSetup.sh -h -v -n showRun -i pyVenv_DevSetup
-
-    lpDo bisosSiteSetup.sh  ${G_commandPrefs} \
-        -p registrar=192.168.0.90 -i siteRegistrarSelect
-
-}
-
-function vis_bisosDevBxo_activate {    
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** Activate the bisosDev usage env bpo. authClone using credentials of bisosDev.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    local bisosDevBxoId=$( vis_usgBposUsageEnvs_bisosDevBxoId_read )
-    EH_assert [ ! -z "${bisosDevBxoId}" ]
-
-    # Activate bisosDev usage env bpo
-    lpDo bpoManage.sh ${G_commandPrefs} \
-         -p privacy=priv -p bpoId=${bisosDevBxoId} \
-         -i fullConstruct
-
-    local bisosDevBxoHome=$( FN_absolutePathGet ~${bisosDevBxoId} )
-    
-    # record the activated bpo as bisosDev
-    lpDo usgBpos.sh ${G_commandPrefs} \
-         -i usgBposUsageEnvs_bisosDev_update ${bisosDevBxoHome}
+  
+     vis_examplesNicheRun site
 }
 
 
-function vis_bisosDevBxo_actuate {    
+function vis_materializedContainerThis {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** actuate
+*** Applies 
 _EOF_
     }
-    EH_assert [[ $# -eq 0 ]]
+    local thisBpoId=$( vis_bpoIdPrep "sysChar" )
 
-    bisosDevBxoHome=$( vis_usgBposUsageEnvs_bisosDev_bxoPath )
-    EH_assert [ ! -z "${bisosDevBxoHome}" ]
-    
-    # Install bisosDev dev crentials in ~/.ssh and
-    # auth clone using bisosDev credentials
-    # switch to auth based bxRepos 
-    lpDo ${bisosDevBxoHome}/sys/bin/bpoSysSetup.sh ${G_commandPrefs} \
-         -i developerMode
+    bpoId=${thisBpoId}
+    lpDo vis_materializedContainer
 }
 
-
-function vis_securityMode {
+function vis_materializedContainer {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+*** Applies 
 _EOF_
     }
-    EH_assert [[ $# -eq 1 ]]
+    
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bpoId}" ]
+    
+    local thisBpoId="${bpoId}"
 
-    local secMode="$1"
+    lpDo sysCharIdentity.sh -h -v -n showRun -p bpoId="${thisBpoId}" -i identityUpdate
 
-    case ${secMode} in
-        developer)
-            lpDo bisosBaseDirs.sh ${G_commandPrefs} -i bxReposAuthSet
-            lpDo vis_sysCharConveyInfoWrite securityMode developer
+    containerId=${thisBpoId##pmp_}
+    containerRegDictStr=$( lpDo eval cntnrCharName.cs  -i withInitialsName_getDict ${containerId} \| pyLiteralToBash.cs -i stdinToBash )
+    declare -A containerRegDict
+    lpDo eval containerRegDict=${containerRegDictStr}
+
+    local model=${containerRegDict['model']}
+    local abode=${containerRegDict['abode']}
+    local function=${containerRegDict['purpose']}
+    local containerNu=${containerRegDict['containerNu']}
+   
+    case "${model}" in
+
+        Host)
+            lpDo vis_materializedHostContainer
             ;;
-        stable)
-            lpDo bisosBaseDirs.sh ${G_commandPrefs} -i bxReposAnonSet
-            lpDo vis_sysCharConveyInfoWrite securityMode stable    
-            ;;
-        sealed)
-            EH_problem "NOTYET"
-            ;;
-        *)
-            EH_problem "Bad Usage -- ${secMode}"
-            ;;
-    esac
         
-    lpReturn
+        Pure)
+           lpDo vis_materializedPureContainer
+            ;;
+
+        Virt|virt|VIRT)
+           lpDo vis_materializedVirtContainer
+           ;;
+        
+       *)
+           EH_problem "Bad Usage -- model=${model}"
+    esac
+
 }
 
+function vis_materializedHostContainer {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+*** Applies 
+_EOF_
+    }
+    
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bpoId}" ]
+    
+    local thisBpoId="${bpoId}"
+
+    # BinsPrep install kvm, libvirt and Vagrant and packer
+    lpDo fgcKvmHostingSw.sh -h -v -n showRun -i  fullUpdate
+
+    # Create Needed Accounts
+    lpDo fgcKvmHostingSvc.sh -h -v -n showRun -i fullUpdate
+
+    # User packer to create Fresh Debian Vagrant Base Boxes 
+    lpDo lcaVagrantBoxBuild.sh -h -v -n showRun -i bvdbb_deb12_desktopBuild
+
+    # Activate Generic CntnrChar BPOs for Debian 11 and 12 -- pmp_VAG-deb12_  pmp_VSG-deb12_
+    lpDo sysCharActivate.sh -h -v -n showRun  -i activate_virtGenerics                
+
+    ANT-cooked "This has happened before and should be un-needed: vagrant plugin install vagrant-libvirt"
+    lpDo lcaVagrantManage.sh -h -v -n showRun  -i fullUpdate
+
+    # Create Generic VM Images
+    lpDo sysCharGuestMaterialize.sh -h -v -n showRun -p bpoId="pmp_VAG-deb12_" -i vagrantFile_run
+    lpDo sysCharGuestMaterialize.sh -h -v -n showRun -p bpoId="pmp_VSG-deb12_" -i vagrantFile_run
+
+    # Run VM Images
+
+    # Run Niche of bpoId
+}
+
+function vis_materializedPureContainer {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+*** Applies 
+_EOF_
+    }
+    
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bpoId}" ]
+    
+    local thisBpoId="${bpoId}"
+
+    # Run Niche of bpoId
+}
+
+function vis_materializedVirtContainer {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+*** Applies 
+_EOF_
+    }
+    
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bpoId}" ]
+    
+    local thisBpoId="${bpoId}"
+
+    lpDo "Bad Usage: Run sysCharGuestMaterialize.sh instead"
+}
 
 
 _CommentBegin_
