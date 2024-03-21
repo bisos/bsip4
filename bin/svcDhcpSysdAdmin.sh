@@ -170,11 +170,11 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo lcaDhcpServerBinsPrep.sh -v -n showRun -i fullUpdate
+    # lpDo lcaDhcpServerBinsPrep.sh -v -n showRun -i fullUpdate
 
     lpDo vis_defaultConfigUpdate
 
-    lpDo vis_serverConfigUpdateserverConfigUpdate
+    lpDo vis_serverConfigUpdate
 
     lpDo vis_daemonRestart
 
