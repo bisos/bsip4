@@ -931,7 +931,7 @@ _EOF_
     local runLine
 
     if [ -x "${cntnrAssemblePath}" ] ; then
-        runLine="sudo -u bystar ${cntnrAssemblePath}"
+        runLine="sudo -u bystar ${cntnrAssemblePath} -h -v -n showRun -i fullUpdate"
     else
         runLine="echo Missing ${cntnrAssemblePath} -- Skipped"
     fi
