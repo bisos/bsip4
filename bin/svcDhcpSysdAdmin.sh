@@ -132,6 +132,8 @@ _EOF_
 
     cat  << _EOF_
 $( examplesSeperatorChapter "CLIENT VERIFICATIONS" )
+${G_myName} -e "defaultConfigUpdate+serverConfigUpdate+restart" -i provision
+$( examplesSeperatorChapter "CLIENT VERIFICATIONS" )
 ${G_myName} -e "WARNING: may CHANGE IP Addr" -i runFunc dhclient3 -d -w -n eth0
 sudo nmap --script broadcast-dhcp-discover
 ${G_myName} -i getPrivA_SNPA
@@ -159,6 +161,29 @@ _EOF_
 
     ip -4 route ls | grep default | grep -v 192.168.121 | grep -v 192.168.0.122 | grep -Po '(?<=dev )(\S+)'
 }
+
+
+function vis_provision       {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo lcaDhcpServerBinsPrep.sh -v -n showRun -i fullUpdate
+
+    lpDo vis_defaultConfigUpdate
+
+    lpDo vis_serverConfigUpdateserverConfigUpdate
+
+    lpDo vis_daemonRestart
+
+    lpDo vis_daemonStatus
+
+    lpReturn
+}
+
+
 
 
 _CommentBegin_
