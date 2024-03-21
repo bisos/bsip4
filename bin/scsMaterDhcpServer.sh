@@ -161,10 +161,12 @@ _EOF_
     local thisBpoId="${bpoId}"
 
     lpDo bpoActivate.sh -h -v -n showRun -p privacy="priv" -p bpoId="${bpoId}" -i bpoActivate
-    
+
     lpDo vis_binsPrep
 
-    ANT_raw " NOTYET "
+    local bpoHome=$( FN_absolutePathGet ~${bpoId} )
+
+    lpDo ${bpoHome}/sys/bin/svcDhcpSysdAdmin-niche.sh -h -v -n showRun -i provision
 }
 
 function vis_binsPrep {
