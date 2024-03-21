@@ -152,12 +152,20 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
+$( examplesSeperatorChapter "All BPO Containers List" )
+bxoGitlab.py
+bxoGitlab.py -i acctList
+bxoGitlab.py -i acctList | grep pmp_H   # All Hosts
+bxoGitlab.py -i acctList | grep pmp_P   # All Hosts
 $( examplesSeperatorChapter "Host Container -- General -- Summary" )
 ${G_myName}  ${extraInfo} -p bpoId="${thisBpoId}"  -i summary
 ${G_myName}  ${extraInfo} -p bpoId="sysChar"  -i summary
 $( examplesSeperatorChapter "Network" )
 ${G_myName}  ${extraInfo} -p bpoId="${thisBpoId}" -i netIfs   # Used by Vagrant
 $( examplesSeperatorChapter "Pure Container Actions" )
+$( examplesSeperatorChapter "This Container" )
+cntnrThisManage.sh
+this.sh  # -> $( this.sh )
 _EOF_
 }
 

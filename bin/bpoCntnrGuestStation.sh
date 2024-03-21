@@ -166,6 +166,16 @@ egrep 'pmp_V' /etc/passwd | egrep -v 'pmp_VAG-|pmp_VSG-'  # Non Generic Guest ac
 $( examplesSeperatorChapter "BPO Container Guests -- Stationing (VMs start, stop, auto-star, delete)" )
 lcaVirshManage.sh  #
 virsh --connect qemu:///system list --all
+virsh --connect qemu:///system stop VSS-1004-3
+virsh --connect qemu:///system start VSS-1004-3
+virsh --connect qemu:///system restart VSS-1004-3
+virsh --connect qemu:///system restart VSS-1004-3
+virsh --connect qemu+ssh://localhost/system autostart unspecified   # enable auto start
+virsh --connect qemu+ssh://localhost/system autostart unspecified --disable  # disable auto start
+virsh --connect qemu+ssh://localhost/system dominfo unspecified
+ls -l /etc/libvirt/qemu/autostart
+virsh --connect qemu+ssh://localhost/system desc unspecified --current --title "TitleOfVm" --new-desc "Description of VM comes here"
+virsh --connect qemu+ssh://localhost/system desc unspecified --title
 virsh domifaddr
 ${G_myName}  ${extraInfo} -p bpoId="${thisBpoId}" -i virshDominfo
 ${G_myName}  ${extraInfo} -p bpoId="${thisBpoId}" -i virshDomifaddr
