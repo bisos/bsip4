@@ -165,11 +165,12 @@ $( examplesSeperatorSection "BxO Construct Full Update -- All Of The Above" )
 ${G_myName} ${extraInfo} -p privacy="${priv}" -p bpoId="${oneBxoId}" -i fullConstruct $(vis_bxoConstructBaseDir_obtain priv)/${oneBxoId}/home # noAcct
 ${G_myName} ${extraInfo} -p privacy="${priv}" -p bpoId="${oneBxoId}" -i fullConstruct # Creats Acct & clones in ${oneBxoHome}
 $( examplesSeperatorChapter "Activate Selected Real Individual" )
-${G_myName} ${extraInfo} -p privacy="${priv}" -p bpoId="${oneRealIndivBxoId}" -i bpoActivate  # Real Individual
+${G_myName} ${extraInfo} -p privacy="${priv}" -p bpoId="${oneRealIndivBxoId}" -i bpoActivate  # Real Individual  =PRIMARY=
 usgBpos.sh ${extraInfo} -i usgBpos_real_indivBxoId_read
 usgBpos.sh ${extraInfo} -i usgBpos_real_indivBxoId_write "${oneRealIndivBxoId}"
 ${G_myName} ${extraInfo} -p privacy="${priv}" -i bpoActivate ${oneRealIndivBxoId} 
-echo ${oneRealIndivBxoId} | ${G_myName} ${extraInfo} -p privacy="${priv}" -i bpoActivate
+echo ${oneRealIndivBxoId} | ${G_myName} ${extraInfo} -p privacy="${priv}" -i bpoActivate   # =PRIMARY=
+bxoGitlab.py -v 20  -i acctList | egrep '[a-z][a-z][a-z]_' | ${G_myName} ${extraInfo} -p privacy="${priv}" -i bpoActivate
 ${G_myName} ${extraInfo} -p bpoId=${oneRealIndivBxoId} -i bxoTreeDescendantsList
 ${G_myName} ${extraInfo} -p bpoId=${oneRealIndivBxoId} -i bxoTreeDescendantsList | ${G_myName} ${extraInfo} -p privacy="${priv}" -i bpoActivate
 $( examplesSeperatorChapter "Overview Report And Summary" )
