@@ -452,7 +452,14 @@ _EOF_
     local cpus=$(nproc --all )
     # local cpus=$( lcaKvmAdmin.sh -i nuOfVirtCpus )
 
-    echo "bisosSysChar=${bisosSysChar} boxName=${boxName} boxNu=${boxNu} cpus=${cpus} mem=${mem} deb=notyet usgBpo=notyet"
+    local virtTech=$( sudo virt-what )
+    local hostForList=$( echo $( egrep 'pmp_V' /etc/passwd | egrep -v 'pmp_VAG-|pmp_VSG-' | cut -d ':' -f 1 ) | sed -e 's/ /,/g')
+
+    if [ "${virtTech}" == "kvm" ] ; then
+        echo "bisosSysChar=${bisosSysChar} boxName=${boxName} boxNu=${boxNu} cpus=${cpus} mem=${mem} deb=notyet usgBpo=notyet" hostedBy=
+    else
+        echo "bisosSysChar=${bisosSysChar} boxName=${boxName} boxNu=${boxNu} cpus=${cpus} mem=${mem} deb=notyet usgBpo=notyet hostFor=${hostForList}"
+    fi
 }
 
 

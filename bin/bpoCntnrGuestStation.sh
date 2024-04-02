@@ -165,7 +165,7 @@ egrep 'pmp_V' /etc/passwd   # Guest accounts in this container
 egrep 'pmp_V' /etc/passwd | egrep -v 'pmp_VAG-|pmp_VSG-'  # Non Generic Guest accounts in this container
 $( examplesSeperatorChapter "BPO Container Guests -- Stationing (VMs start, stop, auto-star, delete)" )
 lcaVirshManage.sh  #
-virsh --connect qemu:///system list --all
+virsh --connect qemu:///system list --all --title
 virsh --connect qemu:///system stop VSS-1004-3
 virsh --connect qemu:///system start VSS-1004-3
 virsh --connect qemu:///system restart VSS-1004-3
