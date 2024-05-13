@@ -87,7 +87,7 @@ $( examplesSeperatorSection "Create virtenvs and install packages" )
 ${G_myName} ${extraInfo} -i virtenvsPrep py3
 ${G_myName} ${extraInfo} -f -i virtenvsPrep py3  # force mode
 $( examplesSeperatorSection "BISOS Install packages" )
-${G_myName} ${extraInfo} -i venvPy3_pipInstalls
+${G_myName} ${extraInfo} -i venvPy3_pipInstalls   # Uses bisos.py3-all /bisos/git/bxRepos/bisos-pip/full/py3/setup.py
 $( examplesSeperatorSection "BISOS Uninstall packages" )
 ${G_myName} ${extraInfo} -i venvPy3_bisosUninstalls
 $( examplesSeperatorChapter "BISOS Upgrade Packages" )
