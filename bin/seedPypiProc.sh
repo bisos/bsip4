@@ -164,6 +164,9 @@ fileParamManage.py -i fileParamWritePath ../fptb/docTitle "Pkg's Human Oriented 
 fileParamManage.py -i fileParamWritePath ../fptb/docVersion "0.1"
 $( examplesSeperatorChapter "REAME.rst Creation" )
 pandoc --from=latex -s -t rst --toc README.tex -o README.rst
+pandoc --from=latex -s -t org --toc README.tex -o RESULT.org
+pandoc --from=org -s -t rst --toc RESULT.org -o RESULT.rst
+pandoc --from=org -s -t rst --toc README.org -o README.rst
 xelatex README.tex
 $( examplesSeperatorChapter "Requirements And Dependencies" )
 pipreqs --force .
@@ -171,6 +174,8 @@ johnnydep -v 0 $pypiPkgName
 pipdeptree -r -p $pypiPkgName # Needs a virtEnv
 pipdeptree -fl -p $pypiPkgName # Needs a virtEnv
 yolk -U $pypiPkgName # show if update available at PyPI
+${G_myName} ${extraInfo} -i filesList
+${G_myName} ${extraInfo} -i namespaceRequires
 _EOF_
 
 
@@ -748,6 +753,68 @@ _EOF_
     cat >> ${manifestFile} << _EOF_ 
 include lh-agpl3-LICENSE.txt
 _EOF_
+
+}
+
+function vis_filesList {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo pypiPkgInfoExtract
+
+    local scriptFiles=""
+    local moduleFiles=""
+
+    if [ -d "./bin" ] ; then
+        scriptFiles="$( ls ./bin/* )"
+    fi
+
+    local modulesBaseDir="./${pypiPkgNamespace}/${pypiPkgModule}"
+    if [ -d "${modulesBaseDir}" ] ; then
+        moduleFiles="$( ls ${modulesBaseDir}/*.py )"
+    else
+        EH_problem "Missing ${modulesBaseDir}"
+    fi
+
+
+    echo ${scriptFiles} ${moduleFiles}
+
+}
+
+
+function vis_namespaceRequires {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo pypiPkgInfoExtract
+
+    local filesList="$( vis_filesList )"
+    local tmpFile=$( FN_tempFile )
+    lpDo touch ${tmpFile}
+
+    function procEach {
+        local eachFile=$1
+        egrep 'from.*import.*$' ${eachFile} \
+            | grep ${pypiPkgNamespace} \
+            | cut -d ' ' -f 2 \
+            | egrep -v ${pypiPkgName} \
+            | egrep -v bisos.b.cs \
+            | egrep -v ${pypiPkgNamespace}'$' >> ${tmpFile}
+    }
+
+    for each in ${filesList} ; do
+        lpDo procEach ${each}
+    done
+
+    lpDo cat ${tmpFile} | sort | uniq | sed -e 's:\(^.*$\):\"\1\",:'
+
+    lpDo rm ${tmpFile}
 
 }
 

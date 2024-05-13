@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IimBriefDescription="Self Contained Internet Service. Realizes/Creates pmz_ BPOs"
+IimBriefDescription="NOTYET: Short Description Of The Module"
 
 ORIGIN="
 * Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee
@@ -28,7 +28,7 @@ SEED="
 *  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
 "
 FILE="
-*  /This File/ :: /bisos/bsip/bin/scsRealize.sh 
+*  /This File/ :: /bisos/core/bsip/bin/bxeRealize.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
     /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
@@ -70,6 +70,9 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
+# ./platformBases_lib.sh
+. ${opBinBase}/platformBases_lib.sh
+
 . ${opBinBase}/bpo_lib.sh
 . ${opBinBase}/bpoId_lib.sh
 
@@ -83,8 +86,6 @@ _CommentEnd_
 
 # . ${opBinBase}/bystarInfoBase.libSh
 
-. ${opBinBase}/platformBases_lib.sh
-
 . ${opBinBase}/unisosAccounts_lib.sh
 . ${opBinBase}/bisosGroupAccount_lib.sh
 . ${opBinBase}/bisosAccounts_lib.sh
@@ -95,27 +96,21 @@ _CommentEnd_
 
 . ${opBinBase}/site_lib.sh
 
-. ${opBinBase}/l3_lib.sh
 . ${opBinBase}/sysChar_lib.sh
 
 . ${opBinBase}/siteNetworks_lib.sh
 
-. ${opBinBase}/scsRealize_lib.sh
+. ${opBinBase}/siteRegistrar_lib.sh
+
+. ${opBinBase}/niche_lib.sh
+
 
 # PRE parameters
 
 typeset -t bpoId=""
-
-typeset -t correspondingBxo=""
-
+# usg=""
 
 function G_postParamHook {
-    if [ ! -z  "${bpoId}" ] ; then  bpoIdPrepValidate; fi;
-
-    if [ ! -z "${bpoId}" ] ; then
-        bpoHome=$( FN_absolutePathGet ~${bpoId} )
-    fi
-    
     bisosCurrentsGet
 }
 
@@ -137,68 +132,79 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
-    oneBxoId="${currentBxoId}"
+    # thisBpoId=$( vis_bpoIdPrep "sysChar" )
+    thisBpoId="pmz_dnsLiveStatic-bystar"
 
-    oneBxoRepoScope="basePrep"
-
-    function repoBaseCreateAndPushExamples {
-        EH_assert [[ $# -eq 2 ]]
-        local repoName=$1
-        local description=$2
-        cat  << _EOF_
-$( examplesSeperatorSubSection "${description}" )
-${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i scs_repoBaseCreate_${repoName}
-${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i bxoRealize_repoBasesPush ${repoName}
-_EOF_
-    }   
-
-    function nonRepoBaseCreateAndPushExamples {
-        EH_assert [[ $# -eq 2 ]]
-        local repoName=$1
-        local description=$2
-        cat  << _EOF_
-$( examplesSeperatorSubSection "${description}" )
-${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i scs_nonRepoBaseCreate_${repoName}
-_EOF_
-    }   
-
-    
-    visLibExamplesOutput ${G_myName}
-    
-    cat  << _EOF_
+    visLibExamplesOutput ${G_myName} 
+  cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
-bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
+bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${thisBpoId}"
+bisosCurrentsManage.sh  ${extraInfo} -i setParam curTargetBox 192.168.0.45  # Currently curTargetBox=${curTargetBox:-}
+bisosCurrentsManage.sh  ${extraInfo} -i setParam curTargetBox localhost  # Currently curTargetBox=${curTargetBox:-}
 _EOF_
-    
-    cat  << _EOF_
-$( examplesSeperatorTopLabel "${G_myName}" )
-$( examplesSeperatorChapter "Site Container Bases" )
-${G_myName} ${extraInfo} -i scs_basicBxoRealize geneweb-xx  # FULL ACTION -- PRIMARY COMMAND (pmz_geneweb-xx BPO )
-${G_myName} ${extraInfo} -i scs_basicBxoRealize dhcpStatic-xx  # FULL ACTION -- PRIMARY COMMAND (pmz_dhcpStatic-xx BPO )
-${G_myName} ${extraInfo} -i scs_basicBxoRealize dns-xx  # FULL ACTION -- PRIMARY COMMAND (pmz_dns-xx BPO )
-${G_myName} ${extraInfo} -i scs_fullBxoRealize
-_EOF_
-
-    cat  << _EOF_
-$( examplesSeperatorChapter "Specific Initial Repo Realizition" )
-$( examplesSeperatorSection "Repo Bases List And Create -- Realizition" )
-${G_myName} ${extraInfo} -i scs_repoBasesList
-${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i scs_repoBasesAllCreate
-${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i scs_repoBasesAllPush
-${G_myName} -i scs_repoBasesList | ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i bxoRealize_repoBasesCreate scs
-$( repoBaseCreateAndPushExamples panel "Panel Repo (Basic Panel)" )
-$( repoBaseCreateAndPushExamples BAGP "Repo" )
-$( repoBaseCreateAndPushExamples NSP "Repo" )
-$( repoBaseCreateAndPushExamples par_live "Repo" )
-$( examplesSeperatorSection "Non Repo Bases List And Create -- Realizition" )
-${G_myName} ${extraInfo} -i scs_nonRepoBasesList
-${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i scs_nonRepoBasesAllCreate
-${G_myName} -i scs_nonRepoBasesList | ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i bxoRealize_nonRepoBasesCreate scs
-$( nonRepoBaseCreateAndPushExamples var "Var BaseDir Link" )
-_EOF_
-
+     vis_examplesMaterializeTinydns ${thisBpoId}
+     vis_examplesNicheRun site
 }
+
+
+function vis_examplesMaterializeTinydns {
+    EH_assert [[ $# -eq 1 ]]
+
+    local thisBpoId=$1
+    local extraInfo="-h -v -n showRun"
+ cat  << _EOF_
+$( examplesSeperatorChapter "Materialize A DNS Server Based on its SCS-Bpo" )
+${G_myName}  ${extraInfo} -p bpoId="${thisBpoId}"  -i fullUpdate
+${G_myName}  ${extraInfo}  -i binsPrep
+_EOF_
+}
+
+
+function vis_fullUpdate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+*** Applies 
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bpoId}" ]
+    
+    local thisBpoId="${bpoId}"
+
+    lpDo bpoActivate.sh -h -v -n showRun -p privacy="priv" -p bpoId="${bpoId}" -i bpoActivate
+    
+    lpDo vis_binsPrep
+
+    local bpoHome=$( FN_absolutePathGet ~${bpoId} )
+
+    lpDo ${bpoHome}/sys/bin/svcTinydnsSysdAdmin-niche.sh -v -n showRun -i niche_serverConfigUpdate
+
+    lpDo svcTinydnsSysdAdmin.sh -h -v -n showRun -i daemonEnable
+
+    lpDo svcTinydnsSysdAdmin.sh -h -v -n showRun -i daemonRestart
+
+    lpDo svcTinydnsSysdAdmin.sh -h -v -n showRun -i daemonStatus
+
+    lpDo eval sudo netstat -lntup \| grep \':53 \'
+ }
+
+function vis_binsPrep {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+*** Applies 
+_EOF_
+    }
+    
+    EH_assert [[ $# -eq 0 ]]
+
+    # lpDo fgcBedrockSw.sh -h -v -n showRun -i  fullUpdate
+
+    lpDo fgcDnsSw.sh -h -v -n showRun -i  fullUpdate    
+    
+    lpReturn
+}
+
 
 
 _CommentBegin_
