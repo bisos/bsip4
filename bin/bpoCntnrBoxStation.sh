@@ -37,7 +37,7 @@ fi
 ####+END:
 
 _CommentBegin_
-####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/libre/ByStar/InitialTemplates/software/plusOrg/dblock/inserts/topControls.org"
+####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/bisos/apps/defaults/software/plusOrg/dblock/inserts/topControls.org"
 *  /Controls/ ::  [[elisp:(org-cycle)][| ]]  [[elisp:(show-all)][Show-All]]  [[elisp:(org-shifttab)][Overview]]  [[elisp:(progn (org-shifttab) (org-content))][Content]] | [[file:Panel.org][Panel]] | [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] | [[elisp:(bx:org:run-me)][Run]] | [[elisp:(bx:org:run-me-eml)][RunEml]] | [[elisp:(delete-other-windows)][(1)]] | [[elisp:(progn (save-buffer) (kill-buffer))][S&Q]]  [[elisp:(save-buffer)][Save]]  [[elisp:(kill-buffer)][Quit]] [[elisp:(org-cycle)][| ]]
 ** /Version Control/ ::  [[elisp:(call-interactively (quote cvs-update))][cvs-update]]  [[elisp:(vc-update)][vc-update]] | [[elisp:(bx:org:agenda:this-file-otherWin)][Agenda-List]]  [[elisp:(bx:org:todo:this-file-otherWin)][ToDo-List]]
 ####+END:
@@ -111,6 +111,12 @@ typeset -t bpoId=""
 # usg=""
 
 function G_postParamHook {
+    #bpoIdPrepValidate    
+
+    # if [ ! -z "${bpoId}" ] ; then
+     #   bpoHome=$( FN_absolutePathGet ~${bpoId} )
+    # fi
+    
     bisosCurrentsGet
 }
 
@@ -132,60 +138,57 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
-    # thisBpoId=$( vis_bpoIdPrep "sysChar" )
-    thisBpoId="pmz_dnsLiveStatic-bystar"
+    oneBxoId="${currentBxoId}"
+    oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )
 
+    oneTargetBox=${curTargetBox:-}
+
+    thisBpoId=$( vis_bpoIdPrep "sysChar" )
+
+    local boxId=$( siteBoxAssign.sh -i thisBoxFindId )    
+    
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
-bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${thisBpoId}"
-bisosCurrentsManage.sh  ${extraInfo} -i setParam curTargetBox 192.168.0.45  # Currently curTargetBox=${curTargetBox:-}
-bisosCurrentsManage.sh  ${extraInfo} -i setParam curTargetBox localhost  # Currently curTargetBox=${curTargetBox:-}
-$( examplesSeperatorChapter "Materialize A DNS Server Based on its SCS-Bpo" )
-${G_myName}  ${extraInfo} -p bpoId="${thisBpoId}"  -i fullUpdate
-${G_myName}  ${extraInfo} -p bpoId="${thisBpoId}"  -i binsPrep
+bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
+$( examplesSeperatorChapter "All BPO Containers List" )
+bxoGitlab.py
+bxoGitlab.py -i acctList
+bxoGitlab.py -i acctList | grep pmp_H   # All Hosts
+bxoGitlab.py -i acctList | grep pmp_P   # All Hosts
+$( examplesSeperatorChapter "This Container" )
+cntnrThisManage.sh
+this.sh  # -> $( this.sh )
+${G_myName} ${extraInfo} -i bpoIdPrep "sysChar" # vis_bpoIdPrep "sysChar" ->  $( vis_bpoIdPrep "sysChar" )
+$( examplesSeperatorSection "This Container Accounts Info" )
+egrep 'pmp_H|pmp_P' /etc/passwd   # There should only be one -- Hosts and Pures accounts in this container
+egrep 'pmp_V' /etc/passwd   # Guest accounts in this container
+egrep 'pmp_V' /etc/passwd | egrep -v 'pmp_VAG-|pmp_VSG-'  # Non Generic Guest accounts in this container
+$( examplesSeperatorChapter "BPO Container  -- General -- Summary" )
+${G_myName}  ${extraInfo} -p bpoId="${thisBpoId}"  -i summary
+${G_myName}  ${extraInfo} -p bpoId="sysChar"  -i summary
+$( examplesSeperatorSection "Network" )
+${G_myName}  ${extraInfo} -p bpoId="${thisBpoId}" -i netIfs   # Used by Vagrant
+$( examplesSeperatorChapter "Pure Container Actions" )
 _EOF_
-  
-     vis_examplesNicheRun site
 }
 
 
-function vis_fullUpdate {
+function vis_summary {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 *** Applies 
 _EOF_
     }
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bpoId}" ]
-    
-    local thisBpoId="${bpoId}"
+    local thisBpoId=$( vis_bpoIdPrep "sysChar" )
 
-    lpDo bpoActivate.sh -h -v -n showRun -p privacy="priv" -p bpoId="${bpoId}" -i bpoActivate
-    
-    lpDo vis_binsPrep
+    bpoId=${thisBpoId}
+    bpoHome=$( FN_absolutePathGet ~${bpoId} )
 
-    ANT_raw " NOTYET "
+    lpDo vis_sysCharReport
+    # lpDo vis_materializedContainer
 }
-
-function vis_binsPrep {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-*** Applies 
-_EOF_
-    }
-    
-    EH_assert [[ $# -eq 0 ]]
-
-    lpDo fgcBedrockSw.sh -h -v -n showRun -i  fullUpdate
-
-    lpDo fgcDnsSw.sh -h -v -n showRun -i  fullUpdate    
-    
-    lpReturn
-}
-
-
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*

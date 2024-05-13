@@ -33,7 +33,7 @@ fi
 ####+END:
 
 _CommentBegin_
-####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/libre/ByStar/InitialTemplates/software/plusOrg/dblock/inserts/topControls.org"
+####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/bisos/apps/defaults/software/plusOrg/dblock/inserts/topControls.org"
 *      ================
 *  /Controls/ ::  [[elisp:(org-cycle)][| ]]  [[elisp:(show-all)][Show-All]]  [[elisp:(org-shifttab)][Overview]]  [[elisp:(progn (org-shifttab) (org-content))][Content]] | [[file:Panel.org][Panel]] | [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] | [[elisp:(bx:org:run-me)][Run]] | [[elisp:(bx:org:run-me-eml)][RunEml]] | [[elisp:(delete-other-windows)][(1)]] | [[elisp:(progn (save-buffer) (kill-buffer))][S&Q]]  [[elisp:(save-buffer)][Save]]  [[elisp:(kill-buffer)][Quit]] [[elisp:(org-cycle)][| ]]
 ** /Version Control/ ::  [[elisp:(call-interactively (quote cvs-update))][cvs-update]]  [[elisp:(vc-update)][vc-update]] | [[elisp:(bx:org:agenda:this-file-otherWin)][Agenda-List]]  [[elisp:(bx:org:todo:this-file-otherWin)][ToDo-List]] 
@@ -132,6 +132,8 @@ _EOF_
 
     cat  << _EOF_
 $( examplesSeperatorChapter "CLIENT VERIFICATIONS" )
+${G_myName} -e "defaultConfigUpdate+serverConfigUpdate+restart" -i provision
+$( examplesSeperatorChapter "CLIENT VERIFICATIONS" )
 ${G_myName} -e "WARNING: may CHANGE IP Addr" -i runFunc dhclient3 -d -w -n eth0
 sudo nmap --script broadcast-dhcp-discover
 ${G_myName} -i getPrivA_SNPA
@@ -159,6 +161,29 @@ _EOF_
 
     ip -4 route ls | grep default | grep -v 192.168.121 | grep -v 192.168.0.122 | grep -Po '(?<=dev )(\S+)'
 }
+
+
+function vis_provision       {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    # lpDo lcaDhcpServerBinsPrep.sh -v -n showRun -i fullUpdate
+
+    lpDo vis_defaultConfigUpdate
+
+    lpDo vis_serverConfigUpdate
+
+    lpDo vis_daemonRestart
+
+    lpDo vis_daemonStatus
+
+    lpReturn
+}
+
+
 
 
 _CommentBegin_

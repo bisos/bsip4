@@ -19,21 +19,21 @@ __author__="
 "
 
 
-####+BEGINNOT: bx:bsip:bash:seed-spec :types "seedActions.bash"
+####+BEGIN: bx:bsip:bash:seed-spec :types "seedActions.bash"
 SEED="
 *  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
 "
 FILE="
-*  /This File/ :: /bisos/bsip/bin/siteIptable.sh 
+*  /This File/ :: /bisos/git/auth/bxRepos/bisos/bsip4/bin/sysSealIptables.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
-    /opt/public/osmt/bin/seedActions.bash -l $0 "$@" 
+    /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
     exit $?
 fi
 ####+END:
 
 _CommentBegin_
-####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/libre/ByStar/InitialTemplates/software/plusOrg/dblock/inserts/topControls.org"
+####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/bisos/apps/defaults/software/plusOrg/dblock/inserts/topControls.org"
 *      ================
 *  /Controls/ ::  [[elisp:(org-cycle)][| ]]  [[elisp:(show-all)][Show-All]]  [[elisp:(org-shifttab)][Overview]]  [[elisp:(progn (org-shifttab) (org-content))][Content]] | [[file:Panel.org][Panel]] | [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] | [[elisp:(bx:org:run-me)][Run]] | [[elisp:(bx:org:run-me-eml)][RunEml]] | [[elisp:(delete-other-windows)][(1)]] | [[elisp:(progn (save-buffer) (kill-buffer))][S&Q]]  [[elisp:(save-buffer)][Save]]  [[elisp:(kill-buffer)][Quit]] [[elisp:(org-cycle)][| ]]
 ** /Version Control/ ::  [[elisp:(call-interactively (quote cvs-update))][cvs-update]]  [[elisp:(vc-update)][vc-update]] | [[elisp:(bx:org:agenda:this-file-otherWin)][Agenda-List]]  [[elisp:(bx:org:todo:this-file-otherWin)][ToDo-List]] 
@@ -114,11 +114,13 @@ sudo iptables -F  # Flush
 sudo iptables -L INPUT -v  # List with statistics
 $( examplesSeperatorChapter "Block Public And Delete White List From SysType" )
 ${G_myName} ${extraInfo} -i unsealSysTypeWithWhiteList vmHost
+${G_myName} ${extraInfo} -i unsealSysTypeWithWhiteList vmGuest
 ${G_myName} ${extraInfo} -i unsealSysTypeWithWhiteList mailonly
 ${G_myName} ${extraInfo} -i unsealSysTypeWithWhiteList webOnly
 ${G_myName} ${extraInfo} -i unsealSysTypeWithWhiteList webAndMail
 $( examplesSeperatorChapter "Block Public And Apply White List To SysType" )
 ${G_myName} ${extraInfo} -i sealSysTypeWithWhiteList vmHost
+${G_myName} ${extraInfo} -i sealSysTypeWithWhiteList vmGuest
 ${G_myName} ${extraInfo} -i sealSysTypeWithWhiteList mailonly
 ${G_myName} ${extraInfo} -i sealSysTypeWithWhiteList webOnly
 ${G_myName} ${extraInfo} -i sealSysTypeWithWhiteList webAndMail
@@ -138,7 +140,6 @@ _EOF_
     itemOrderedWhiteList=(
         "127.0.0.0/8"
         "192.168.0.0/24"
-        "198.62.92.0/24"
     )
 }
 
@@ -235,6 +236,20 @@ _EOF_
         "tcpUdp_webPrivatePorts"
     )
 }
+
+function sysType_vmGuest {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+
+    tcpUdp_portsListSpec=( 
+        "tcpUdp_commonPrivatePorts"
+        "tcpUdp_mailPrivatePorts"
+        "tcpUdp_webPrivatePorts"
+    )
+}
+
 
 
 function sysType_mailOnly {

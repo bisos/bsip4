@@ -33,7 +33,7 @@ fi
 ####+END:
 
 _CommentBegin_
-####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/libre/ByStar/InitialTemplates/software/plusOrg/dblock/inserts/topControls.org"
+####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/bisos/apps/defaults/software/plusOrg/dblock/inserts/topControls.org"
 *      ================
 *  /Controls/:  [[elisp:(org-cycle)][Fold]]  [[elisp:(show-all)][Show-All]]  [[elisp:(org-shifttab)][Overview]]  [[elisp:(progn (org-shifttab) (org-content))][Content]] | [[elisp:(bx:org:run-me)][RunMe]] | [[elisp:(delete-other-windows)][(1)]]  | [[elisp:(progn (save-buffer) (kill-buffer))][S&Q]]  [[elisp:(save-buffer)][Save]]  [[elisp:(kill-buffer)][Quit]] 
 ** /Version Control/:  [[elisp:(call-interactively (quote cvs-update))][cvs-update]]  [[elisp:(vc-update)][vc-update]] | [[elisp:(bx:org:agenda:this-file-otherWin)][Agenda-List]]  [[elisp:(bx:org:todo:this-file-otherWin)][ToDo-List]] 
@@ -124,6 +124,7 @@ ${G_myName} ${extraInfo} -p registrar=TBD -p id=TBD -p password=TBD -i obtainTmp
 $( examplesSeperatorChapter "Initial Known Hosts Setup" )
 ${G_myName} ${extraInfo} -i knownHostsAddSiteGitServer  # Runs after obtainTmpSite
 ${G_myName} ${extraInfo} -p id=bystar -i knownHostsAddSiteGitServer
+${G_myName} ${extraInfo} -p registrar=192.168.0.90 -i siteRegistrarSelect
 _EOF_
 }
 
@@ -164,9 +165,9 @@ _EOF_
 
     local curDir=$( pwd )
 
-    lpDo sudo rm /tmp/intra-ICM.log
-    lpDo sudo rm /tmp/bisos-ICM.log
-    lpDo sudo rm /tmp/bystar-ICM.log
+    [ -f /tmp/intra-ICM.log ] || lpDo sudo rm /tmp/intra-ICM.log
+    [ -f /tmp/bisos-ICM.log ] || lpDo sudo rm /tmp/bisos-ICM.log
+    [ -f /tmp/bystar-ICM.log ] || lpDo sudo rm /tmp/bystar-ICM.log
 
     lpDo vis_obtainTmpSite    # registrar, id, password are icm params
 
@@ -205,16 +206,42 @@ _EOF_
     lpDo /bisos/var/sites/selected/sys/bin/siteBisosGitServer.sh ${extraInfo} -i initialize
 
     lpDo /bisos/var/sites/selected/sys/bin/siteBisosDefaults.sh ${extraInfo} -i initialize
-    
+
+    lpDo vis_siteRegistrarSelect
+
+    lpReturn
+}
+
+
+function vis_siteRegistrarSelect {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Incomplete.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert [ ! -z "${registrar}" ]
+
+    typeset extraInfo="-h -v -n showRun"  #   ${G_commandOptions}
+
+    # NOTYET, has not been tested
+    #
+    # lpDo svcInvSiteRegBox.cs --regBoxPerfAddrs="['192.168.0.90']"  -i invSiteRegBoxConf_set
+    lpDo svcInvSiteRegBox.cs --regBoxPerfAddrs="['${registrar}']"  -i invSiteRegBoxConf_set
+    lpDo svcInvSiteRegBox.cs --perfName="svcSiteRegistrars"  -i reg_sapCreateBox
+    lpDo svcInvSiteRegContainer.cs --regContainerPerfAddrs="['${registrar}']" -i invSiteRegContainerConf_set
+    lpDo svcInvSiteRegContainer.cs --perfName="svcSiteRegistrars"  -i reg_sapCreateContainer
+
     lpReturn
 }
 
 
 
-function vis_activate_siteBxoPlusAndSelect {    
+function vis_activate_siteBxoPlusAndSelect {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** Create the specified bpoId 
+** Create the specified bpoId
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -227,13 +254,13 @@ _EOF_
 
     lpDo vis_activate_siteBxoPlus "${siteBxoId}"
 
-    # BISOS Selected Site 
+    # BISOS Selected Site
     lpDo siteManage.sh -h -v -n showRun -i siteBisosAdd ${siteBxoId}
     lpDo siteManage.sh -h -v -n showRun -i siteBisosSelect ${siteBxoId}
 
     # USG Selected Site
     lpDo siteManage.sh -h -v -n showRun -i siteUsgAdd ${siteBxoId}
-    lpDo siteManage.sh -h -v -n showRun -i siteUsgSelect ${siteBxoId}    
+    lpDo siteManage.sh -h -v -n showRun -i siteUsgSelect ${siteBxoId}
 }
 
 

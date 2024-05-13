@@ -35,12 +35,12 @@ if [ "${loadFiles}" == "" ] ; then
 fi
 ####+END:
 
-####+BEGIN: bx:dblock:global:file-insert :surround "default" :file "/libre/ByStar/InitialTemplates/software/plusOrg/dblock/inserts/topControls.org"
+####+BEGIN: bx:dblock:global:file-insert :surround "default" :file "/bisos/apps/defaults/software/plusOrg/dblock/inserts/topControls.org"
 _CommentBegin_
-* /->/ ([[file:/libre/ByStar/InitialTemplates/software/plusOrg/dblock/inserts/topControls.org][dblock-inFile]]
+* /->/ ([[file:/bisos/apps/defaults/software/plusOrg/dblock/inserts/topControls.org][dblock-inFile]]
 *  /Controls/ ::  [[elisp:(org-cycle)][| ]]  [[elisp:(show-all)][Show-All]]  [[elisp:(org-shifttab)][Overview]]  [[elisp:(progn (org-shifttab) (org-content))][Content]] | [[file:Panel.org][Panel]] | [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] | [[elisp:(bx:org:run-me)][Run]] | [[elisp:(bx:org:run-me-eml)][RunEml]] | [[elisp:(delete-other-windows)][(1)]] | [[elisp:(progn (save-buffer) (kill-buffer))][S&Q]]  [[elisp:(save-buffer)][Save]]  [[elisp:(kill-buffer)][Quit]] [[elisp:(org-cycle)][| ]]
 ** /Version Control/ ::  [[elisp:(call-interactively (quote cvs-update))][cvs-update]]  [[elisp:(vc-update)][vc-update]] | [[elisp:(bx:org:agenda:this-file-otherWin)][Agenda-List]]  [[elisp:(bx:org:todo:this-file-otherWin)][ToDo-List]]
-* /<-/ [[file:/libre/ByStar/InitialTemplates/software/plusOrg/dblock/inserts/topControls.org][dblock-inFile]])
+* /<-/ [[file:/bisos/apps/defaults/software/plusOrg/dblock/inserts/topControls.org][dblock-inFile]])
 _CommentEnd_
 ####+END:
 

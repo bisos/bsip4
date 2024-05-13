@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IimBriefDescription="NOTYET: Short Description Of The Module"
+IimBriefDescription="Manage Multiple Dooms Configurations, Profiles and Setup"
 
 ORIGIN="
 * Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee
@@ -29,7 +29,7 @@ fi
 ####+END:
 
 _CommentBegin_
-####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/libre/ByStar/InitialTemplates/software/plusOrg/dblock/inserts/topControls.org"
+####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/bisos/apps/defaults/software/plusOrg/dblock/inserts/topControls.org"
 *  /Controls/ ::  [[elisp:(org-cycle)][| ]]  [[elisp:(show-all)][Show-All]]  [[elisp:(org-shifttab)][Overview]]  [[elisp:(progn (org-shifttab) (org-content))][Content]] | [[file:Panel.org][Panel]] | [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] | [[elisp:(bx:org:run-me)][Run]] | [[elisp:(bx:org:run-me-eml)][RunEml]] | [[elisp:(delete-other-windows)][(1)]] | [[elisp:(progn (save-buffer) (kill-buffer))][S&Q]]  [[elisp:(save-buffer)][Save]]  [[elisp:(kill-buffer)][Quit]] [[elisp:(org-cycle)][| ]]
 ** /Version Control/ ::  [[elisp:(call-interactively (quote cvs-update))][cvs-update]]  [[elisp:(vc-update)][vc-update]] | [[elisp:(bx:org:agenda:this-file-otherWin)][Agenda-List]]  [[elisp:(bx:org:todo:this-file-otherWin)][ToDo-List]]
 ####+END:
@@ -87,35 +87,48 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
+    profile=doom-blee3
+    EH_assert doomProfilePrep
+
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Blee Lib Examples " )
 ${G_myName} ${extraInfo} -i examples_bleeLib
 ${G_myName} ${extraInfo} -i getEmacsVer 0
-$( examplesSeperatorChapter "Doom Main Deploy -- profile=blee2" )
-${G_myName} ${extraInfo} -p profile=blee2 -i buildInstall
-${G_myName} ${extraInfo} -p profile=blee2 -i doomSync
-${G_myName} ${extraInfo} -p profile=blee2 -i unMain
-${G_myName} ${extraInfo} -p emacs=28 -p profile=blee2 -i reBuild
-${G_myName} ${extraInfo} -p profile=blee2 -i switchInitTo sansBlee
-${G_myName} ${extraInfo} -p profile=blee2 -i switchInitTo withBlee
+$( examplesSeperatorChapter "Doom Main Deploy -- profile=doom-dist emacs=sys" )
+${G_myName} ${extraInfo} -p emacs=sys -i reBuildAll   # NOTYET, has not been implemented yet
+${G_myName} ${extraInfo} -p emacs=29 -i reBuildAll    # NOTYET, has not been implemented yet
+$( examplesSeperatorChapter "Doom Main Deploy -- profile=doom-dist emacs=sys" )
+${G_myName} ${extraInfo} -p profile=doom-dist -i buildInstall
+${G_myName} ${extraInfo} -p profile=doom-dist -i doomSync
+${G_myName} ${extraInfo} -p profile=doom-dist -i deleteRunBase
+${G_myName} ${extraInfo} -p profile=doom-dist -i reBuild           #  deleteRunBase + buildInstall
+$( examplesSeperatorChapter "Doom Main Deploy -- profile=withoutBlee3doom-blee3 emacs=sys" )
+${G_myName} ${extraInfo} -p profile=doom-withoutBlee3 -i buildInstall
+${G_myName} ${extraInfo} -p profile=doom-withoutBlee3 -i doomSync
+${G_myName} ${extraInfo} -p profile=doom-withoutBlee3 -i deleteRunBase
+${G_myName} ${extraInfo} -p profile=doom-withoutBlee3 -i reBuild           #  deleteRunBase + buildInstall
+$( examplesSeperatorChapter "Switch Config From With to Sans -- profile=doom-blee3 emacs=sys" )
+${G_myName} ${extraInfo} -p profile=doom-blee3 -i switchInitTo sansBlee
+${G_myName} ${extraInfo} -p profile=doom-blee3 -i switchInitTo withBlee
 ls -l /bisos/blee/doom-blee-base/init.el
-emacs --debug-init --with-profile blee2 &
-$( examplesSeperatorChapter "Doom Main Deploy -- profile=blee3" )
-${G_myName} ${extraInfo} -p emacs=28 -p profile=blee3 -i buildInstall
-${G_myName} ${extraInfo} -p profile=blee3 -i doomSync
-${G_myName} ${extraInfo} -p profile=blee3 -i unMain
-${G_myName} ${extraInfo} -p emacs=sys -p profile=blee3 -i reBuild
-${G_myName} ${extraInfo} -p profile=blee3 -i switchInitTo sansBlee
-${G_myName} ${extraInfo} -p profile=blee3 -i switchInitTo withBlee
-ls -l /bisos/blee/doom-blee-base/init.el
-emacs --debug-init --with-profile blee3 &( examplesSeperatorChapter "Doom Main Deploy -- profile=sysDoom" )
-${G_myName} ${extraInfo} -p profile=sysDoom -i buildInstall
-${G_myName} ${extraInfo} -p profile=sysDoom -i doomSync
-${G_myName} ${extraInfo} -p profile=sysDoom -i unMain
-${G_myName} ${extraInfo} -p profile=sysDoom -i reBuild
-emacs --debug-init --with-profile doom &
+$( examplesSeperatorChapter "Doom Main Deploy -- profile=doom-blee3 emacs=sys" )
+${G_myName} ${extraInfo} -p profile=doom-blee3 -i buildInstall
+${G_myName} ${extraInfo} -p profile=doom-blee3 -i doomSync
+${G_myName} ${extraInfo} -p profile=doom-blee3 -i deleteRunBase
+${G_myName} ${extraInfo} -p profile=doom-blee3 -i reBuild           #  deleteRunBase + buildInstall
+ls -ld ${doomRunBase}     # Where straight packages are installed (based on ${doomDirBase})
+ls -ld ${doomDirBase}     # Where Doom  init.el, packages.el and config.el are
+emacs --debug-init --with-profile doom-blee3 &
+blee -i run doom-blee3
+$( examplesSeperatorChapter "Doom Main Deploy -- profile=doom-blee3 emacs=29" )
+${G_myName} ${extraInfo} -p emacs=29 -p profile=doom-blee3 -i buildInstall
+${G_myName} ${extraInfo} -p emacs=29 -p profile=doom-blee3 -i doomSync
+${G_myName} ${extraInfo} -p emacs=29 -p profile=doom-blee3 -i deleteRunBase
+${G_myName} ${extraInfo} -p emacs=29 -p profile=doom-blee3 -i reBuild           #  deleteRunBase + buildInstall
+$( examplesSeperatorChapter "Blee" )
+blee
 _EOF_
 }
 
@@ -133,55 +146,6 @@ _CommentEnd_
 
 
 
-function profilePrep {
-   G_funcEntry
-   function describeF {  G_funcEntryShow; cat  << _EOF_
-** Three variables are set:
-1) <<doomFrameworkBase>> /bisos/blee/dooms/doomemacs  --- is anon cloned from https://github.com/doomemacs/doomemacs
-2) <<doomDirBase>> /bisos/blee/dooms/doom-base-blee3  == Equivalent of .doom.d dir for packages and config
-3) <<doomMainBase>> /bisos/blee/emacsVers/28.1/doom-blee3  == Re-creatable by bleeDoomManage.sh 
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    if [ -z "${profile}" ] ; then
-        lpReturn 1
-    fi
-    local emacsVer=$(vis_getEmacsVer ${emacs})
-
-    if [ -z "${emacsVer}" ] ; then
-        EH_problem "Bad emacsVer=${emacsVer}"
-        lpReturn 1
-    fi
-
-    #doomFrameworkBase=/bisos/blee/doom-emacs-framework
-    doomFrameworkBase="/bisos/blee/dooms/doomemacs"
-    case $profile in
-        # NOTYET, no longer in real use. Should be obsoleted
-        blee2)
-            doomMainBase="/bisos/blee/emacsVers/${emacsVer}/doom-main-blee2"
-            doomDirBase="/bisos/blee/dooms/doom-base-blee2"
-            ;;
-        # NOTYET, TODO, add to this sansBlee3, for testing in parallel with blee3
-        blee3)
-            doomMainBase="/bisos/blee/emacsVers/${emacsVer}/doom-main-blee3"
-            doomDirBase="/bisos/blee/dooms/doom-base-blee3"
-            ;;
-        # NOTYET, TODO, Rename this to dist-doom, consistent with chemacs
-        sysDoom)
-            doomMainBase="/bisos/blee/emacsVers/${emacsVer}/doom-main-emacs"
-            doomDirBase="/bisos/blee/dooms/doom-base-emacs"
-            ;;
-        *)
-            EH_problem "Unknown profile=$profile"
-            lpReturn 1
-            ;;
-    esac
-
-    lpReturn
-}
-
-
 function vis_reBuild {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -189,72 +153,24 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo vis_unMain
+    lpDo vis_deleteRunBase
     lpDo vis_buildInstall
 
     lpReturn
 }
 
-function vis_unMain {
+function vis_deleteRunBase {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert profilePrep
+    EH_assert doomProfilePrep
 
-    lpDo rm -r -f ${doomMainBase}
+    lpDo rm -r -f ${doomRunBase}
 
     lpReturn
-}
-
-function vis_switchInitTo_ObsoletedDeb11 {
-   G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** This is temporary.
-_EOF_
-    }
-    EH_assert [[ $# -eq 1 ]]
-
-    EH_assert profilePrep
-
-    local switchTo="$1"
-
-    case ${switchTo} in
-        sansBlee)
-            case $profile in
-                blee2|blee3)
-                    lpDo chmod ug+rw ${doomDirBase}/init.el
-                    # /bisos/blee/doom-blee-base/initSansBlee.el
-                    lpDo cp ${doomDirBase}/initSansBlee.el ${doomDirBase}/init.el
-                    lpDo chmod 444 ${doomDirBase}/init.el
-                    ;;
-                *)
-                    EH_problem "Unknown profile=${profile} -- sansBlee skipped"
-                    ;;
-            esac
-            ;;
-        withBlee)
-            case $profile in
-                blee2|blee3)
-                    lpDo chmod ug+rw ${doomDirBase}/init.el
-                    # /bisos/blee/doom-blee-base/initSansBlee.el
-                    # /bisos/blee/doom-blee-base/loadBlee.el
-                    # /bisos/blee/dooms/doom-base-blee3/blee-init.el
-                    # lpDo eval cat ${doomDirBase}/initSansBlee.el ${doomDirBase}/loadBlee.el \> ${doomDirBase}/init.el
-                    lpDo eval cat ${doomDirBase}/initSansBlee.el ${doomDirBase}/blee-init.el \> ${doomDirBase}/init.el
-                    lpDo chmod 444 ${doomDirBase}/init.el
-                    ;;
-                *)
-                    EH_problem "Unknown profile=${profile} -- withBlee skipped"
-                    ;;
-            esac
-            ;;
-        *)
-            EH_problem "Bad Input: switchTo=${switchTo}"
-            ;;
-    esac
 }
 
 function vis_switchInitTo {
@@ -265,16 +181,17 @@ _EOF_
     }
     EH_assert [[ $# -eq 1 ]]
 
-    EH_assert profilePrep
+    EH_assert doomProfilePrep
 
     local switchTo="$1"
 
     case ${switchTo} in
         sansBlee)
             case $profile in
-                blee2|blee3)
+                doom-blee3)
                     ANT_raw "switchInitTo -- switchTo=${switchTo} profile=${profile}"
                     lpDo cp ${doomDirBase}/configSansBlee.el ${doomDirBase}/config.el
+                    lpDo ls -l  ${doomDirBase}/config.el
                     # lpDo chmod 444 ${doomDirBase}/config.el
                     ;;
                 *)
@@ -284,9 +201,11 @@ _EOF_
             ;;
         withBlee)
             case $profile in
-                blee2|blee3)
+                doom-blee3)
                     ANT_raw "switchInitTo -- switchTo=${switchTo} profile=${profile}"
+                    lpDo eval cat ${doomDirBase}/configSansBlee.el ${doomDirBase}/extras.el \>  ${doomDirBase}/configWithBlee.el
                     lpDo cp ${doomDirBase}/configWithBlee.el ${doomDirBase}/config.el
+                    lpDo ls -l  ${doomDirBase}/config.el
                     # lpDo chmod 444 ${doomDirBase}/config.el
                     ;;
                 *)
@@ -308,7 +227,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert profilePrep
+    EH_assert doomProfilePrep
 
     local emacsExec=$(vis_getEmacsExec ${emacs})
 
@@ -323,9 +242,9 @@ _EOF_
 
     lpDo vis_switchInitTo sansBlee
 
-    lpDo mkdir -p ${doomMainBase}
+    lpDo mkdir -p ${doomRunBase}
 
-    lpDo cp -r ${doomFrameworkBase}/* ${doomMainBase}
+    lpDo cp -r ${doomFrameworkBase}/* ${doomRunBase}
 
     lpDo echo DOOMDIR=${DOOMDIR}
     lpDo echo EMACS=${EMACS}
@@ -336,9 +255,9 @@ _EOF_
     inBaseDirDo /bisos/git/anon/ext/emacs/doomemacs git reset --hard 03d692f129633e3bf0bd100d91b3ebf3f77db6d1
 
     # If this proved to be a fix, NOTYET, make bystar a param
-    lpDo echo "Be Patient, this can take a Long Time -- Running: sudo -u bystar ${doomMainBase}/bin/doom --force install"
-    #sudo -u bystar stdbuf -i0 -o0 -e0  ${doomMainBase}/bin/doom --force install  </dev/null
-    lpDo eval stdbuf -i0 -o0 -e0  ${doomMainBase}/bin/doom --force install  \</dev/null
+    lpDo echo "Be Patient, this can take a Long Time -- Running: sudo -u bystar ${doomRunBase}/bin/doom --force install"
+    #sudo -u bystar stdbuf -i0 -o0 -e0  ${doomRunBase}/bin/doom --force install  </dev/null
+    lpDo eval stdbuf -i0 -o0 -e0  ${doomRunBase}/bin/doom --force install  \</dev/null
 
     lpDo vis_switchInitTo withBlee
 
@@ -352,7 +271,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert profilePrep
+    EH_assert doomProfilePrep
 
     local emacsExec=$(vis_getEmacsExec ${emacs})
 
@@ -366,7 +285,7 @@ _EOF_
 
     lpDo vis_switchInitTo sansBlee
 
-    lpDo ${doomMainBase}/bin/doom sync
+    lpDo ${doomRunBase}/bin/doom sync
 
     lpDo vis_switchInitTo withBlee
 

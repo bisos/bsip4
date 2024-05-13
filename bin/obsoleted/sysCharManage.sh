@@ -28,7 +28,7 @@ SEED="
 *  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
 "
 FILE="
-*  /This File/ :: /bisos/core/bsip/bin/bxeRealize.sh 
+*  /This File/ :: /bisos/git/auth/bxRepos/bisos/bsip4/bin/sysCharManage.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
     /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
@@ -37,7 +37,7 @@ fi
 ####+END:
 
 _CommentBegin_
-####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/libre/ByStar/InitialTemplates/software/plusOrg/dblock/inserts/topControls.org"
+####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/bisos/apps/defaults/software/plusOrg/dblock/inserts/topControls.org"
 *  /Controls/ ::  [[elisp:(org-cycle)][| ]]  [[elisp:(show-all)][Show-All]]  [[elisp:(org-shifttab)][Overview]]  [[elisp:(progn (org-shifttab) (org-content))][Content]] | [[file:Panel.org][Panel]] | [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] | [[elisp:(bx:org:run-me)][Run]] | [[elisp:(bx:org:run-me-eml)][RunEml]] | [[elisp:(delete-other-windows)][(1)]] | [[elisp:(progn (save-buffer) (kill-buffer))][S&Q]]  [[elisp:(save-buffer)][Save]]  [[elisp:(kill-buffer)][Quit]] [[elisp:(org-cycle)][| ]]
 ** /Version Control/ ::  [[elisp:(call-interactively (quote cvs-update))][cvs-update]]  [[elisp:(vc-update)][vc-update]] | [[elisp:(bx:org:agenda:this-file-otherWin)][Agenda-List]]  [[elisp:(bx:org:todo:this-file-otherWin)][ToDo-List]]
 ####+END:
@@ -95,29 +95,47 @@ _CommentEnd_
 . ${opBinBase}/bisosCurrents_lib.sh
 
 . ${opBinBase}/site_lib.sh
+. ${opBinBase}/siteNetworks_lib.sh
+. ${opBinBase}/l3_lib.sh
 
 . ${opBinBase}/sysChar_lib.sh
 
-. ${opBinBase}/siteNetworks_lib.sh
-
 . ${opBinBase}/siteRegistrar_lib.sh
 
-. ${opBinBase}/niche_lib.sh
+. ${opBinBase}/container_lib.sh
 
+. ${opBinBase}/usgBpos_lib.sh
 
 # PRE parameters
 
 typeset -t bpoId=""
-# usg=""
+typeset -t privA=""
+typeset -t registrar=""
+typeset -t id=""
+typeset -t password=""
+typeset -t siteBxoId=""
+typeset -t bisosDevBxoId=""
+
+typeset -t model=""     # one of [HPV]
+typeset -t abode=""     # one of [MAPIS]
+typeset -t function=""  # one of [LASD]
+
+typeset -t cfpVmNameQualifier=""
+typeset -t cfpPrivA=""
+typeset -t cfpPubA=""
+typeset -t cfpSecurityMode=""
+
+typeset -t targetName=""
+
+sshCmnd="ssh -o StrictHostKeyChecking=no"
+
 
 function G_postParamHook {
-    #bpoIdPrepValidate    
-
-    # if [ ! -z "${bpoId}" ] ; then
-     #   bpoHome=$( FN_absolutePathGet ~${bpoId} )
-    # fi
+    if [ ! -z "${bpoId}" ] ; then
+        bpoIdPrepValidate
+        bpoHome=$( FN_absolutePathGet ~${bpoId} )
+    fi
     
-    bisosCurrentsGet
 }
 
 
@@ -138,156 +156,69 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
+    bisosCurrentsGet
+
+    local effectiveContainerBxoId="sysChar"
+
+    local siteBxoId=$( sysCharRealize.sh -i selectedSiteBxoId )
+
+    local registrar=$( vis_registrarHostName )
+    local id=$( vis_registrarUserName )
+    local password=$( vis_registrarUserPassword )        
+
+    # local oneTargetName="192.168.0.52"
+    local oneTargetName=${curTargetBox:-}
+    # local oneTargetName="localhost"
+
+    bpoId=sysChar
+    local oneInterface=$( vis_cntnr_netName_applicables | head -1 )
+
     oneBxoId="${currentBxoId}"
-    oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )
-
-    oneTargetBox=${curTargetBox:-}
-
-    thisBpoId=$( vis_bpoIdPrep "sysChar" )
-
-    local boxId=$( siteBoxAssign.sh -i thisBoxFindId )    
     
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
-bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
-bisosCurrentsManage.sh  ${extraInfo} -i setParam curTargetBox 192.168.0.45  # Currently curTargetBox=${curTargetBox:-}
-bisosCurrentsManage.sh  ${extraInfo} -i setParam curTargetBox localhost  # Currently curTargetBox=${curTargetBox:-}
-$( examplesSeperatorChapter "Layer 4 -- Materialize This Box" )
-sysCharIdentity.sh ${extraInfo} -p bpoId="${thisBpoId}" -i identityUpdate
-${G_myName}  ${extraInfo} -p bpoId="${oneBxoId}"  -i materializedContainer
-${G_myName}  ${extraInfo} -i materializedContainerThis
-$( examplesSeperatorChapter "Hosting Container Actions" )
-sysCharPreps.sh
-sysCharPreps.sh -h -v -n showRun -i fullUpdate
-$( examplesSeperatorChapter "Pure Container Actions" )
-$( examplesSeperatorChapter "Manual BISOS Installation (Site Niched Below)" )
+bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${effectiveContainerBxoId}"
+${currentBxoId:-}
+$( examplesSeperatorChapter "Ssh Based Cusomizations -- Bx Based (not vagrant based)" )
+${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i postCustomize  # on host - bx-ssh
+${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i secureSeal     # on host - bx-ssh
+${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i recordDeployment      # inside of parent bxo
+$( examplesSeperatorChapter "Full Update" )
+${G_myName} ${extraInfo} -i fullUpdate
+$( examplesSeperatorChapter "Overview Report And Summary" )
+${G_myName} ${extraInfo} -p bpoId=sysChar -i bpoIdShow  # from  bpoIdManage.sh 
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i sysCharReport
+${G_myName} ${extraInfo} -p bpoId=sysChar -i sysCharReport
+${G_myName} ${extraInfo} -i containerBoxSysCharReport
+$( examplesSeperatorChapter "Container Networks Info" )
+${G_myName} -p bpoId=sysChar -i cntnr_netName_applicables
+${G_myName} ${extraInfo} -p bpoId=sysChar -i cntnr_netName_interfaceObtain ${oneInterface}
+${G_myName} -p bpoId=sysChar -i cntnr_netName_applicables | xargs -n1 -- ${G_myName} -p bpoId=sysChar -i cntnr_netName_interfaceObtain
+$( examplesSeperatorChapter "Container Networks Set/Update" )
+${G_myName} -p bpoId=sysChar -i cntnr_netName_applicables
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i cntnr_netName_interfaceUpdate ${oneInterface} enSomeNu enabled
+${G_myName} ${extraInfo} -p bpoId=sysChar -i cntnr_netName_interfaceUpdate ${oneInterface} enSomeNu enabled
+${G_myName} -p bpoId="${oneBxoId}" -i cntnr_netName_interfacesConject
+${G_myName} -p bpoId=sysChar -i cntnr_netName_interfacesConject
+${G_myName} ${extraInfo} -p bpoId=sysChar -i cntnr_netName_interfacesUpdateBasedOnConjecture
+$( examplesSeperatorChapter "Container File Set/Update" )
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i sysCharWrite  # Initially invoked in sysCharRealize.sh
+${G_myName} ${extraInfo} -p bpoId=sysChar -i sysCharWrite  # Initially invoked in sysCharRealize.sh
 _EOF_
-  
-     vis_examplesNicheRun site
 }
 
 
-function vis_materializedContainerThis {
+function vis_fullUpdate {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-*** Applies 
+** Update Everything.
 _EOF_
     }
-    local thisBpoId=$( vis_bpoIdPrep "sysChar" )
-
-    bpoId= ${thisBpoId}
-    lpDo vis_materializedContainer
-}
-
-function vis_materializedContainer {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-*** Applies 
-_EOF_
-    }
-    
     EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bpoId}" ]
-    
-    local thisBpoId="${bpoId}"
 
-    lpDo echo "Under StepByStep Development"
-
-    lpReturn
-    
-    lpDo sysCharIdentity.sh -h -v -n showRun -p bpoId="${thisBpoId}" -i identityUpdate
-
-    containerId=${thisBpoId##pmp_}
-    declare -A containerRegDict=$( cntnrCharName.cs  -i withInitialsName_getDict ${containerId} | pyLiteralToBash.cs -i stdinToBash )
-
-    local model=${containerRegDict['model']}
-    local abode=${containerRegDict['abode']}
-    local function=${containerRegDict['function']}
-    local containerNu=${containerRegDict['containerNu']}
-   
-    case "${model}" in
-
-        Host)
-            lpDo vis_materializedHostContainer
-            ;;
-        
-        Pure)
-           lpDo vis_materializedPureContainer
-            ;;
-
-        Virt|virt|VIRT)
-           lpDo vis_materializedVirtContainer
-           ;;
-        
-       *)
-           EH_problem "Bad Usage -- model=${model}"
-    esac
-
-}
-
-function vis_materializedHostContainer {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-*** Applies 
-_EOF_
-    }
-    
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bpoId}" ]
-    
-    local thisBpoId="${bpoId}"
-
-    # BinsPrep install kvm, libvirt and Vagrant and packer
-    lpDo fgcKvmHostingSw.sh -h -v -n showRun -i  fullUpdate
-
-    # Create Needed Accounts
-    lpDo fgcKvmHostingSvc.sh -h -v -n showRun -i fullUpdate
-
-    # User packer to create Fresh Debian Vagrant Base Boxes 
-    lpDo lcaVagrantBoxBuild.sh -h -v -n showRun -i bvdbb_deb12_desktopBuild
-
-    # Activate Generic CntnrChar BPOs for Debian 11 and 12 -- pmp_VAG-deb12_  pmp_VSG-deb12_
-    lpDo sysCharActivate.sh -h -v -n showRun  -i activate_virtGenerics                
-
-    # Create Generic VM Images
-    lpDo sysCharMaterializeGuest.sh -h -v -n showRun -p bpoId="pmp_VAG-deb12_" -i vagrantFile_run
-    lpDo sysCharMaterializeGuest.sh -h -v -n showRun -p bpoId="pmp_VSG-deb12_" -i vagrantFile_run            
-
-    # Run VM Images
-
-    # Run Niche of bpoId
-}
-
-function vis_materializedPureContainer {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-*** Applies 
-_EOF_
-    }
-    
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bpoId}" ]
-    
-    local thisBpoId="${bpoId}"
-
-    # Run Niche of bpoId
-}
-
-function vis_materializedVirtContainer {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-*** Applies 
-_EOF_
-    }
-    
-    EH_assert [[ $# -eq 0 ]]
-    EH_assert [ ! -z "${bpoId}" ]
-    
-    local thisBpoId="${bpoId}"
-
-    lpDo "Bad Usage: Run sysCharMaterializeGuest.sh instead"
+    # lpDo vis_distro_fullUpdate
 }
 
 

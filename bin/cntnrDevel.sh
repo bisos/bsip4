@@ -37,7 +37,7 @@ fi
 ####+END:
 
 _CommentBegin_
-####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/libre/ByStar/InitialTemplates/software/plusOrg/dblock/inserts/topControls.org"
+####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/bisos/apps/defaults/software/plusOrg/dblock/inserts/topControls.org"
 *  /Controls/ ::  [[elisp:(org-cycle)][| ]]  [[elisp:(show-all)][Show-All]]  [[elisp:(org-shifttab)][Overview]]  [[elisp:(progn (org-shifttab) (org-content))][Content]] | [[file:Panel.org][Panel]] | [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] | [[elisp:(bx:org:run-me)][Run]] | [[elisp:(bx:org:run-me-eml)][RunEml]] | [[elisp:(delete-other-windows)][(1)]] | [[elisp:(progn (save-buffer) (kill-buffer))][S&Q]]  [[elisp:(save-buffer)][Save]]  [[elisp:(kill-buffer)][Quit]] [[elisp:(org-cycle)][| ]]
 ** /Version Control/ ::  [[elisp:(call-interactively (quote cvs-update))][cvs-update]]  [[elisp:(vc-update)][vc-update]] | [[elisp:(bx:org:agenda:this-file-otherWin)][Agenda-List]]  [[elisp:(bx:org:todo:this-file-otherWin)][ToDo-List]]
 ####+END:
@@ -152,6 +152,7 @@ ${G_myName} ${extraInfo} -i fullUpdate
 ${G_myName} ${extraInfo} -i vagrantBaseBoxesBuild
 ${G_myName} ${extraInfo} -i siteContainersAssignGenerics
 $( examplesSeperatorChapter "Developer Git Credentials Activate" )
+sysCharBoxDeploy.sh -h -v -n showRun -p bisosDevBxoId=piu_mbBisosDev -i usgConvey_bisosDeveloper
 ${G_myName} ${extraInfo} -i bisosDevBxo_fullSetup  # activate bisosDevBxoId and actuate it
 ${G_myName} ${extraInfo} -i bisosDevBxo_activate   # activate bisosDevBxoId
 ${G_myName} ${extraInfo} -i bisosDevBxo_actuate    # clone  auth based bxRepos with bisosDev credentials
@@ -164,7 +165,7 @@ usgBpos.sh -h -v -n showRun -i usgBpos_usageEnvs_fullUse_update piu_mbFullUsage 
 $( examplesSeperatorChapter "Developer Git Credentials Deactivate" )
 ${G_myName} ${extraInfo} -i bisosDevBxo_delete
 $( examplesSeperatorChapter "Mode Selection" )
-sysCharDeploy.sh -p bpoId="sysChar" -i conveyInfoShow
+sysCharBoxDeploy.sh -p bpoId="sysChar" -i conveyInfoShow
 ${G_myName} ${extraInfo} -p bpoId="sysChar" -i sysCharConveyInfoWrite securityMode developer
 ${G_myName} ${extraInfo} -p bpoId="sysChar" -i sysCharConveyInfoWrite securityMode stable
 ${G_myName} ${extraInfo} -i securityMode developer
@@ -226,6 +227,10 @@ _EOF_
     lpDo vis_bisosDevBxo_actuate
 
     lpDo bisosPyVenvSetup.sh -h -v -n showRun -i pyVenv_DevSetup
+
+    lpDo bisosSiteSetup.sh  ${G_commandPrefs} \
+        -p registrar=192.168.0.90 -i siteRegistrarSelect
+
 }
 
 function vis_bisosDevBxo_activate {    

@@ -37,7 +37,7 @@ fi
 ####+END:
 
 _CommentBegin_
-####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/libre/ByStar/InitialTemplates/software/plusOrg/dblock/inserts/topControls.org"
+####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/bisos/apps/defaults/software/plusOrg/dblock/inserts/topControls.org"
 *  /Controls/ ::  [[elisp:(org-cycle)][| ]]  [[elisp:(show-all)][Show-All]]  [[elisp:(org-shifttab)][Overview]]  [[elisp:(progn (org-shifttab) (org-content))][Content]] | [[file:Panel.org][Panel]] | [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] | [[elisp:(bx:org:run-me)][Run]] | [[elisp:(bx:org:run-me-eml)][RunEml]] | [[elisp:(delete-other-windows)][(1)]] | [[elisp:(progn (save-buffer) (kill-buffer))][S&Q]]  [[elisp:(save-buffer)][Save]]  [[elisp:(kill-buffer)][Quit]] [[elisp:(org-cycle)][| ]]
 ** /Version Control/ ::  [[elisp:(call-interactively (quote cvs-update))][cvs-update]]  [[elisp:(vc-update)][vc-update]] | [[elisp:(bx:org:agenda:this-file-otherWin)][Agenda-List]]  [[elisp:(bx:org:todo:this-file-otherWin)][ToDo-List]]
 ####+END:
@@ -825,7 +825,7 @@ _EOF_
     local password=$( vis_registrarUserPassword )
 
     local runInfo="-h -v -n showRun"
-    local binPath="/bisos/core/bsip/bin/sysCharDeploy.sh"
+    local binPath="/bisos/core/bsip/bin/sysCharBoxDeploy.sh"
 
     local bisosDevBxoId=$( usgBpos.sh -i usgBposUsageEnvs_bisosDevBxoId_read )
 
@@ -923,14 +923,26 @@ _EOF_
 
     EH_assert [ ! -z "${bpoId}" ]
     EH_assert vis_bxoAcctVerify "${bpoId}"
-    
+
+    local bpoHome=$( FN_absolutePathGet ~${bpoId} )
+
+    local cntnrAssemblePath="${bpoHome}/sys/bin/cntnrAssemble.sh"
+
+    local runLine
+
+    if [ -x "${cntnrAssemblePath}" ] ; then
+        runLine="sudo -u bystar ${cntnrAssemblePath} -h -v -n showRun -i fullUpdate"
+    else
+        runLine="echo Missing ${cntnrAssemblePath} -- Skipped"
+    fi
+
     function platformBinsRun {
     EH_assert [[ $# -eq 0 ]]
     cat  << _OUTER_EOF_
              cat   << _EOF_
 ######### PHASE 3: Run Pre and platformBinsRun and Post
 _EOF_
-        echo "NOTYET."
+        ${runLine}
 _OUTER_EOF_
     }
 

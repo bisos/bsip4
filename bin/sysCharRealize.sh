@@ -37,7 +37,7 @@ fi
 ####+END:
 
 _CommentBegin_
-####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/libre/ByStar/InitialTemplates/software/plusOrg/dblock/inserts/topControls.org"
+####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/bisos/apps/defaults/software/plusOrg/dblock/inserts/topControls.org"
 *  /Controls/ ::  [[elisp:(org-cycle)][| ]]  [[elisp:(show-all)][Show-All]]  [[elisp:(org-shifttab)][Overview]]  [[elisp:(progn (org-shifttab) (org-content))][Content]] | [[file:Panel.org][Panel]] | [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] | [[elisp:(bx:org:run-me)][Run]] | [[elisp:(bx:org:run-me-eml)][RunEml]] | [[elisp:(delete-other-windows)][(1)]] | [[elisp:(progn (save-buffer) (kill-buffer))][S&Q]]  [[elisp:(save-buffer)][Save]]  [[elisp:(kill-buffer)][Quit]] [[elisp:(org-cycle)][| ]]
 ** /Version Control/ ::  [[elisp:(call-interactively (quote cvs-update))][cvs-update]]  [[elisp:(vc-update)][vc-update]] | [[elisp:(bx:org:agenda:this-file-otherWin)][Agenda-List]]  [[elisp:(bx:org:todo:this-file-otherWin)][ToDo-List]]
 ####+END:
@@ -235,7 +235,11 @@ _EOF_
 
            # MB 20240216 below lines have not been tested
 
-           local containerNu=$( lpDo eval svcInvSiteRegContainer.cs --model="${model}" --abode="${abode}" --purpose="${function}"  -i thisSys_findContainer \| pyLiteralToBash.cs -i stdinToBash  )
+           # containerNusStr is something like "( 1009 )"
+           local containerNusStr=$( lpDo eval svcInvSiteRegContainer.cs --model="${model}" --abode="${abode}" --purpose="${function}"  -i thisSys_findContainer \| pyLiteralToBash.cs -i stdinToBash  )
+           local containerNus
+           lpDo eval containerNus=${containerNusStr}
+           local containerNu=${containerNus[0]}
            EH_assert [ ! -z "${containerNu}" ]
            local containerId=$(vis_containerId ${containerNu})
 

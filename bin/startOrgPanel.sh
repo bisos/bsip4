@@ -33,7 +33,7 @@ fi
 ####+END:
 
 _CommentBegin_
-####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/libre/ByStar/InitialTemplates/software/plusOrg/dblock/inserts/topControls.org"
+####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/bisos/apps/defaults/software/plusOrg/dblock/inserts/topControls.org"
 *      ================
 *  /Controls/ ::  [[elisp:(org-cycle)][| ]]  [[elisp:(show-all)][Show-All]]  [[elisp:(org-shifttab)][Overview]]  [[elisp:(progn (org-shifttab) (org-content))][Content]] | [[file:Panel.org][Panel]] | [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] | [[elisp:(bx:org:run-me)][Run]] | [[elisp:(bx:org:run-me-eml)][RunEml]] | [[elisp:(delete-other-windows)][(1)]] | [[elisp:(progn (save-buffer) (kill-buffer))][S&Q]]  [[elisp:(save-buffer)][Save]]  [[elisp:(kill-buffer)][Quit]] [[elisp:(org-cycle)][| ]]
 ** /Version Control/ ::  [[elisp:(call-interactively (quote cvs-update))][cvs-update]]  [[elisp:(vc-update)][vc-update]] | [[elisp:(bx:org:agenda:this-file-otherWin)][Agenda-List]]  [[elisp:(bx:org:todo:this-file-otherWin)][ToDo-List]] 
@@ -65,7 +65,7 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
-# /opt/public/osmt/bin/lcnObjectTree.libSh
+# /bisos/core/bsip/bin/lcnObjectTree.libSh
 . ${opBinBase}/lcnObjectTree.libSh
 
 # PRE parameters
@@ -104,7 +104,8 @@ _EOF_
 $( examplesSeperatorChapter "Common File Tree Object Examples" )
 ${G_myName} ${extraInfo} -i ftoCommonExamples
 $( examplesSeperatorChapter "Start Blee Node Panel Base" )
-${G_myName} ${extraInfo} -i bleePanelBase node . 
+${G_myName} ${extraInfo} -i bleePanelBase node .      # obsolted by branch
+${G_myName} ${extraInfo} -i bleePanelBase branch .    # obsoltes node
 $( examplesSeperatorChapter "Start Blee Leaf" )
 ${G_myName} ${extraInfo} -i bleePanelBase leaf . 
 $( examplesSeperatorChapter "Start Blee AuxNode" )
@@ -140,7 +141,7 @@ _EOF_
     local treeItem=$( cat "${baseDir}/_tree_")
          
     case ${treeItem} in
-        "node")
+        "node"|"branch")
             if [ -d "${baseDir}/_nodeBase_" ] ; then
                 lpDo vis_bleePanelBase ${treeItem} ${baseDir}           
             else
@@ -169,8 +170,26 @@ _EOF_
     esac
 }
 
+function vis_bleePanelBaseNoDblock {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+                       }
+    doDblock="FALSE"
+    bleePanelBaseCommon $@
+}
+
 
 function vis_bleePanelBase {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+                       }
+    doDblock="TRUE"
+    bleePanelBaseCommon $@
+}
+
+function bleePanelBaseCommon {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -219,14 +238,16 @@ _EOF_
 
                 bleeclient -h -v -n showRun -i run -- --eval \
                 "(progn (find-file \"${baseDir}/${panelFileName}\") (yas--expand-or-visit-from-menu 'bx-org-mode-begin \"Blee Leaf Panel\") (save-buffer) (kill-buffer))"
-            
-                inBaseDirDo ${baseDir} bx-dblock -i dblockUpdateFiles ${panelFileName}
+
+                if [ "${doDblock}" == "TRUE" ] ; then
+                    inBaseDirDo ${baseDir} bx-dblock -i dblockUpdateFiles ${panelFileName}
+                fi
             fi
 
             lpDo commonFeatures ${baseDir}
             ;;
 
-        "node")
+        "node"|"branch")
             inBaseDirDo ${baseDir} vis_startFtoUpdate node
             
             inBaseDirDo ${baseDir} vis_objectTypeOverwrite "blee.org.fto.node"
@@ -267,8 +288,10 @@ _EOF_
                 ANT_raw "* About to bleeclient yas bx-org-mode-begin Blee Branch Panel in ${panelFileName}"
                 bleeclient -h -v -n showRun -i run -- --eval \
                            "(save-excursion (find-file \"${baseDir}/${nodeBaseDirName}/${panelFileName}\") (yas--expand-or-visit-from-menu 'bx-org-mode-begin \"Blee Branch Panel\") (save-buffer) (kill-buffer))"
-            
-                inBaseDirDo ${baseDir}/${nodeBaseDirName} bx-dblock -i dblockUpdateFiles ${panelFileName}
+
+                if [ "${doDblock}" == "TRUE" ] ; then
+                    inBaseDirDo ${baseDir}/${nodeBaseDirName} bx-dblock -i dblockUpdateFiles ${panelFileName}
+                fi
             fi
 
             lpDo commonFeatures ${baseDir}/${nodeBaseDirName}

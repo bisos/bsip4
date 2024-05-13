@@ -10,7 +10,7 @@ fi
 
 
 _CommentBegin_
-####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/libre/ByStar/InitialTemplates/software/plusOrg/dblock/inserts/topControls.org"
+####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/bisos/apps/defaults/software/plusOrg/dblock/inserts/topControls.org"
 *  /Controls/ ::  [[elisp:(org-cycle)][| ]]  [[elisp:(show-all)][Show-All]]  [[elisp:(org-shifttab)][Overview]]  [[elisp:(progn (org-shifttab) (org-content))][Content]] | [[file:Panel.org][Panel]] | [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] | [[elisp:(bx:org:run-me)][Run]] | [[elisp:(bx:org:run-me-eml)][RunEml]] | [[elisp:(delete-other-windows)][(1)]] | [[elisp:(progn (save-buffer) (kill-buffer))][S&Q]]  [[elisp:(save-buffer)][Save]]  [[elisp:(kill-buffer)][Quit]] [[elisp:(org-cycle)][| ]]
 ** /Version Control/ ::  [[elisp:(call-interactively (quote cvs-update))][cvs-update]]  [[elisp:(vc-update)][vc-update]] | [[elisp:(bx:org:agenda:this-file-otherWin)][Agenda-List]]  [[elisp:(bx:org:todo:this-file-otherWin)][ToDo-List]]
 ####+END:
@@ -414,6 +414,7 @@ _EOF_
     local containerId=${bpoId##pmp_}
 
     EH_assert  vis_userAcctExists "${bpoId}"
+    local bpoHome=$( FN_absolutePathGet ~${bpoId} )
 
     fileParamManage.py -i fileParamDictReadDeep ${bpoHome} | grep -v bxeTree | grep -v bxeDesc
 
@@ -425,6 +426,40 @@ _EOF_
     lpDo fileParamManage.py -i fileParamDictReadDeep ${bpoHome}/${containerId}/steady/net/routes
 
     lpReturn
+}
+
+function vis_sysCharReportShort {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+                       }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert [ ! -z "${bpoId}" ]
+
+    local containerId=${bpoId##pmp_}
+
+    EH_assert  vis_userAcctExists "${bpoId}"
+    local bpoHome=$( FN_absolutePathGet ~${bpoId} )
+
+    local bisosSysChar=$( lpDo fileParamManage.py -i fileParamRead /bisos/var/bpoId sysChar.fp )
+
+    containerBoxBase=${bpoHome}/${containerId}/self/box.fps
+
+    local boxName=$( lpDo fileParamManage.py -i fileParamRead  ${containerBoxBase} boxId )
+    local boxNu=$( lpDo fileParamManage.py -i fileParamRead  ${containerBoxBase} boxNu )
+
+    local mem=$( free -h | egrep '^Mem:' | tr -s " " | cut -d ' ' -f 2 )
+    local cpus=$(nproc --all )
+    # local cpus=$( lcaKvmAdmin.sh -i nuOfVirtCpus )
+
+    local virtTech=$( sudo virt-what )
+    local hostForList=$( echo $( egrep 'pmp_V' /etc/passwd | egrep -v 'pmp_VAG-|pmp_VSG-' | cut -d ':' -f 1 ) | sed -e 's/ /,/g')
+
+    if [ "${virtTech}" == "kvm" ] ; then
+        echo "bisosSysChar=${bisosSysChar} boxName=${boxName} boxNu=${boxNu} cpus=${cpus} mem=${mem} deb=notyet usgBpo=notyet" hostedBy=
+    else
+        echo "bisosSysChar=${bisosSysChar} boxName=${boxName} boxNu=${boxNu} cpus=${cpus} mem=${mem} deb=notyet usgBpo=notyet hostFor=${hostForList}"
+    fi
 }
 
 
@@ -554,7 +589,7 @@ _EOF_
    fi
 
    if [ ! -z "${containerSteady_pubA_addr:-}" ] ; then
-       lpDo fileParamManage.py -i fileParamWrite ${containerSteadyBase}/net/ipv4/pubB.fps addr "${containerSteady_pubA_addr}"
+       lpDo fileParamManage.py -i fileParamWrite ${containerSteadyBase}/net/ipv4/pubA.fps addr "${containerSteady_pubA_addr}"
 
        local netSiteFpsPath=$( vis_netSiteFpsPath pubA )
        lpDo FN_fileSymlinkUpdate "${netSiteFpsPath}"  ${containerSteadyBase}/net/ipv4/pubA.fps/net.fps
@@ -1284,7 +1319,7 @@ _EOF_
     EH_assert [ ! -z "${targetName}" ]
 
     lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-         sudo ls -l /bisos/core/bsip
+         ls -l /bisos/core/bsip
 
 }
 

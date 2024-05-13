@@ -36,7 +36,7 @@ fi
 
 
 _CommentBegin_
-####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/libre/ByStar/InitialTemplates/software/plusOrg/dblock/inserts/topControls.org"
+####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/bisos/apps/defaults/software/plusOrg/dblock/inserts/topControls.org"
 *  /Controls/ ::  [[elisp:(org-cycle)][| ]]  [[elisp:(show-all)][Show-All]]  [[elisp:(org-shifttab)][Overview]]  [[elisp:(progn (org-shifttab) (org-content))][Content]] | [[file:Panel.org][Panel]] | [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] | [[elisp:(bx:org:run-me)][Run]] | [[elisp:(bx:org:run-me-eml)][RunEml]] | [[elisp:(delete-other-windows)][(1)]] | [[elisp:(progn (save-buffer) (kill-buffer))][S&Q]]  [[elisp:(save-buffer)][Save]]  [[elisp:(kill-buffer)][Quit]] [[elisp:(org-cycle)][| ]]
 ** /Version Control/ ::  [[elisp:(call-interactively (quote cvs-update))][cvs-update]]  [[elisp:(vc-update)][vc-update]] | [[elisp:(bx:org:agenda:this-file-otherWin)][Agenda-List]]  [[elisp:(bx:org:todo:this-file-otherWin)][ToDo-List]]
 ####+END:
@@ -76,8 +76,6 @@ _CommentEnd_
 baseDir=""
 acctName=""
 emacs="0"
-backupP="t"  ## blank is false
-bleeName="blee3"
 
 function G_postParamHook {
      return 0
@@ -121,10 +119,6 @@ ${G_myName} ${extraInfo} -i run doom
 ${G_myName} ${extraInfo} -p emacs=0 -i run blee2
 ${G_myName} ${extraInfo} -p emacs=28 -i run blee2
 ${G_myName} ${extraInfo} -i run blee2
-$( examplesSeperatorChapter "Pure Blee DeStraight --- Delete All elcs and cloned repos" )
-${G_myName} ${extraInfo} -p emacs=0 -i deStraight blee2
-${G_myName} ${extraInfo} -p emacs=28.1 -i deStraight blee2
-${G_myName} ${extraInfo} -p emacs=28.1 -i deStraight blee3
 $( examplesSeperatorChapter "Blee Provisioing Setup" )
 ${G_myName} ${extraInfo} -i blee1InitSetup
 ${G_myName} ${extraInfo} -p acctName=bystar -i provisionSetup # runs prepUpdateInit
@@ -162,25 +156,19 @@ _EOF_
     #opDoExit  FN_dirCreatePathIfNotThere ${dirsPart}
 
     if [[ "${G_forceMode}" == "force" ]] ; then
-        if [ -n "${backupP}" ] ; then
-            FN_fileSafeKeep ${updateFileName}
-        fi
+        FN_fileSafeKeep ${updateFileName}
         ${updateStdoutFunc} > ${updateFileName} # 2> /dev/null
     else
         if [ -f ${updateFileName} ] ; then
             ANT_raw "File: ${updateFileName} exists -- no action taken"
         else
-            if [ -n "${backupP}" ] ; then
-                FN_fileSafeKeep ${updateFileName}
-            fi
+            FN_fileSafeKeep ${updateFileName}
             ${updateStdoutFunc} > ${updateFileName} # 2> /dev/null
         fi
     fi
 
     # opDoComplain chmod ugo+x ${updateFileName}
-    if [ -n "${backupP}" ] ; then
-        opDoComplain ls -l ${updateFileName}
-    fi
+    opDoComplain ls -l ${updateFileName}
 }
 
 function vis_verifyFileWithStdoutFunc {
@@ -220,12 +208,12 @@ function vis_emacsProfilesStdout {
 (
  ("default" . ((user-emacs-directory . "/bisos/blee/blee-1-init")))       ;; Same as blee1
  ("blee1" . ((user-emacs-directory . "/bisos/blee/blee-1-init")))         ;; Not based on doom
- ("doom" . ((user-emacs-directory . "/bisos/blee/${emacsVer}f/doom-main-emacs") ;; Minimal doom for comparison
+ ("doom" . ((user-emacs-directory . "/bisos/blee/${emacsVer}f/doom-emacs-main") ;; Minimal doom for comparison
            (env . (("DOOMDIR" . "/bisos/blee/doom-base")))))
- ("blee2" . ((user-emacs-directory . "/bisos/blee/${emacsVer}f/doom-main-blee2")    ;; blee2 on top of doom
+ ("blee2" . ((user-emacs-directory . "/bisos/blee/${emacsVer}f/doom-blee-main")    ;; blee2 on top of doom
            (env . (("DOOMDIR" . "/bisos/blee/doom-blee-base")))))
  ("blee3" . ((user-emacs-directory . "/bisos/blee/env3/boot")))         ;; Not based on doom
- ("doomblee3" . ((user-emacs-directory . "/bisos/blee/${emacsVer}f/doom-main-blee3")    ;; blee2 on top of doom
+ ("doomblee3" . ((user-emacs-directory . "/bisos/blee/${emacsVer}f/doom-blee-main")    ;; blee2 on top of doom
            (env . (("DOOMDIR" . "/bisos/blee/doom-blee-base")))))
  )
 
@@ -368,53 +356,13 @@ _EOF_
     fi
 
     G_forceMode="force"
-    backupP=""
     lpDo vis_emacsProfilesUpdate
 
     for each in $@ ; do
         # echo $PATH
-        lpDo ${emacsExec} --with-profile ${each} --debug-init  &
+        lpDo ${emacsExec} --with-profile ${each} &
     done
 }
-
-
-function vis_deStraight {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** Move base of blee-straight out of the way. As if we are starting with a virgin blee.
-_EOF_
-    }
-    if [ $# -eq 0  ] ; then
-        ANT_raw "Usage: No arguments were specified."
-        lpDo describeF
-    fi
-
-    local emacsVer=${emacs}
-    if [ -z "${emacsVer}" ] ; then
-        EH_problem "Bad emacsVer=${emacsVer}"
-        lpReturn 1
-    fi
-
-    local emacsVerBaseDir="/bisos/blee/emacsVers/${emacsVer}"
-
-    if [ ! -d "${emacsVerBaseDir}" ] ; then
-        EH_problem "Missing ${emacsVerBaseDir}"
-        lpReturn 101
-    fi
-
-    local bleeBaseDir=""
-
-    for each in $@ ; do
-        bleeBaseDir="${emacsVerBaseDir}/${each}"
-        if [ ! -d "${bleeBaseDir}" ] ; then
-            EH_problem "Missing ${bleeBaseDir} --- skipped"
-            continue
-        fi
-        # NOTYET, if not force mode get user's confirmation
-        lpDo /bin/rm -r -f "${bleeBaseDir}"
-    done
-}
-
 
 
 function vis_blee1InitSetup {

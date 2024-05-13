@@ -37,7 +37,7 @@ fi
 ####+END:
 
 _CommentBegin_
-####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/libre/ByStar/InitialTemplates/software/plusOrg/dblock/inserts/topControls.org"
+####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/bisos/apps/defaults/software/plusOrg/dblock/inserts/topControls.org"
 *  /Controls/ ::  [[elisp:(org-cycle)][| ]]  [[elisp:(show-all)][Show-All]]  [[elisp:(org-shifttab)][Overview]]  [[elisp:(progn (org-shifttab) (org-content))][Content]] | [[file:Panel.org][Panel]] | [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] | [[elisp:(bx:org:run-me)][Run]] | [[elisp:(bx:org:run-me-eml)][RunEml]] | [[elisp:(delete-other-windows)][(1)]] | [[elisp:(progn (save-buffer) (kill-buffer))][S&Q]]  [[elisp:(save-buffer)][Save]]  [[elisp:(kill-buffer)][Quit]] [[elisp:(org-cycle)][| ]]
 ** /Version Control/ ::  [[elisp:(call-interactively (quote cvs-update))][cvs-update]]  [[elisp:(vc-update)][vc-update]] | [[elisp:(bx:org:agenda:this-file-otherWin)][Agenda-List]]  [[elisp:(bx:org:todo:this-file-otherWin)][ToDo-List]]
 ####+END:
@@ -212,10 +212,11 @@ cntnrDevel.sh -h -v -n showRun -i bisosDevBxo_fullSetup  # activate bisosDevBxoI
 $( examplesSeperatorChapter "Layer-1 + Layer 2:: Combined" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l2_sitedDevContainer # OnManager
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l2_sitedContainer  # OnManager
-$( examplesSeperatorChapter "LAYER-3:: Chared-Container -- [Realize or Activate] SysChar Setup [with sysCharBpo] -- siteBasePlatform Actions" )
+sshpass -p intra ssh -X bystar@${oneTargetName} -f xterm -font 10x20
+$( examplesSeperatorChapter "LAYER-3:: Chared-Container -- [Reify: Realize or Activate] SysChar Setup [with sysCharBpo] -- siteBasePlatform Actions" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_regBoxAscertain  # Has this box been registered
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_regContainerBoxAscertain  # Is a container registered for this box
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_newBoxAssign  "someBoxName"  # OnManager -- PRIMARY (New BOX)
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_boxNameUpdate  "Like-R710-2"  # OnManager -- PRIMARY (New BOX)
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_cntnrThis_regBpoId
 $( examplesSeperatorSection "L3:: Full New Box Actions -- Realize on Target Box Only" )
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i l3_charedContainerBoxRealize  # OnTarget Only -- PRIMARY (New BOX)
@@ -227,15 +228,18 @@ ${G_myName} ${extraInfo} -p bxoId="pmp_VAG-deb11_" -i siteBasePlatform_sysBxoAct
 $( examplesSeperatorChapter "LAYER-1 + Layer 2 + Layer 3:: Combined -- Full Existing Box Actions -- On Manager" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l3_charedContainer_activate  # onManager
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l3_charedContainer_realizeNOT  # onManager
-$( examplesSeperatorChapter "LAYER-4:: Materialized-Container " )
-sysCharMaterializeBox.sh    # Under lying ICM for Layer 4 
+$( examplesSeperatorChapter "LAYER-4:: BPO Contaioner Composition" )
+bpoCntnrComposeBox.sh     # Under lying ICM for Layer 4
+bpoCntnrComposeGuest.sh
+$( examplesSeperatorChapter "LAYER-5:: Materialized-Container " )
+sysCharBoxMaterialize.sh    # Under lying ICM for Layer
 sysCharMaterializeGuest.sh
-${G_myName} ${extraInfo} -i l4_materializedContainer  # on Target  -- PRIMARY (New BOX)
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l4_materializedContainer  # on Manager
-$( examplesSeperatorChapter "LAYER-1 to Layer 4:: Combined -- Full Existing Box Actions -- on Manager" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l4_materializedContainer  # on Manager  -- PRIMARY (Existing BOX)
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l4_materializedDevContainer  # on Manager  -- PRIMARY (Existing BOX)
-$( examplesSeperatorChapter "VIRTUALIZATION :: sysCharGuestMaterialize.sh Use of sysCharDeploy.sh" )
+${G_myName} ${extraInfo} -i l5_materializedContainer  # on Target  -- PRIMARY (New BOX)
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l5_materializedContainer  # on Manager
+$( examplesSeperatorChapter "LAYER-1 to Layer 5:: Combined -- Full Existing Box Actions -- on Manager" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l5_materializedContainer  # on Manager  -- PRIMARY (Existing BOX)
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l5_materializedDevContainer  # on Manager  -- PRIMARY (Existing BOX)
+$( examplesSeperatorChapter "VIRTUALIZATION :: sysCharGuestMaterialize.sh Use of sysChaBoxrDeploy.sh" )
 $( examplesSeperatorSection "Used in Vagrantfile --- Phase 2.1, 2.2, 2.3" )
 ${G_myName} ${extraInfo} -p registrar="192.168.0.257" -p id="bystar" -p password="somePasswd" -p siteBxoId="pms_someSite" -i bisosBasePlatform_siteSetup
 ${G_myName} ${extraInfo} -p bisosDevBxoId=piu_mbBisosDev -i usgConvey_bisosDeveloper
@@ -265,115 +269,6 @@ $( examplesSeperatorChapter "sysCharedPlatform Report -- Ssh In Other -- Dev Exa
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i sysCharedPlatform_containerBoxReport
 ${G_myName} ${extraInfo} -i sysCharedPlatform_containerBoxReport
 ${G_myName} ${extraInfo} -i devExamples
-_EOF_
-}
-
-
-function vis_devExamples {
-   G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-    typeset extraInfo="-h -v -n showRun"
-    #typeset extraInfo=""
-    typeset runInfo="-p ri=lsipusr:passive"
-
-    typeset examplesInfo="${extraInfo} ${runInfo}"
-
-    bisosCurrentsGet
-
-    local effectiveContainerBxoId="sysChar"
-
-    local siteBxoId=$( sysCharRealize.sh -i selectedSiteBxoId )
-
-    local registrar=$( vis_registrarHostName )
-    local id=$( vis_registrarUserName )
-    local password=$( vis_registrarUserPassword )        
-
-    # local oneTargetName="192.168.0.52"
-    local oneTargetName=${curTargetBox:-}
-    # local oneTargetName="localhost"
-    
-    visLibExamplesOutput ${G_myName} 
-  cat  << _EOF_
-$( examplesSeperatorTopLabel "${G_myName}" )
-bisosCurrentsManage.sh
-bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${effectiveContainerBxoId}"
-bisosCurrentsManage.sh  ${extraInfo} -i setParam curTargetBox 192.168.0.45
-${curTargetBox:-}
-$( examplesSeperatorChapter "Ssh Based Cusomizations -- Bx Based (not vagrant based)" )
-${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i postCustomize  # on host - bx-ssh
-${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i secureSeal     # on host - bx-ssh
-${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i recordDeployment      # inside of parent bxo
-$( examplesSeperatorChapter "LAYER-1:: unsitedBisosDeploy.sh  -- Distro Actions -- On Manager -- Ssh Into Target" )
-unsitedBisosDeploy.sh
-unsitedBisosDeploy.sh ${extraInfo} -p targetName="${oneTargetName}" -i fullUpdate
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_provisionBisos_ascertain
-$( examplesSeperatorSection "L1:: Target Box Developmenet Preps -- On Target Box" )
-ssh -X bystar@${oneTargetName}    # Then run emacs
-bleeVisit /bisos/panels/development/bisos-dev/howToBecomeDeveloper/fullUsagePanel-en.org
-$( examplesSeperatorChapter "LAYER-2:: Sited-Container (Registrar Not Here, in bisos-pip.siteRegistrar) -- bisosBasePlatform Actions" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_fullUpdate # onManager
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_siteSetup # onManager or below onTarget
-${G_myName} ${extraInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -p siteBxoId=${siteBxoId}" -i bisosBasePlatform_siteSetup # onTarget
-cntnrDevel.sh -h -v -n showRun -i bisosDevBxo_fullSetup  # activate bisosDevBxoId and actuate it
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i  sitedDevelContainer  # PRIMARY 
-$( examplesSeperatorChapter "LAYER-3:: Chared-Container -- (Realize or Activate) SysChar Setup (with sysCharBpo) -- siteBasePlatform Actions" )
-$( examplesSeperatorSection "L3:: siteBasePlatform New Box Assign -- On Manager Or On Target Box" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_newBoxAscertain
-${G_myName} ${extraInfo} -i siteBasePlatform_newBoxAscertain
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_newBoxAssign
-${G_myName} ${extraInfo} -i siteBasePlatform_newBoxAssign
-$( examplesSeperatorSection "L3:: siteBasePlatform New Container Assign -- On Manager Or On Target Box" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_containerBoxRepoAscertain
-${G_myName} ${extraInfo} -i siteBasePlatform_containerBoxRepoAscertain
-$( examplesSeperatorSection "L3:: SysBxo Realize -- Container Box Realize -- One Time Activity --  On Target Box" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_containerBoxRepoAscertain
-${G_myName} ${extraInfo} -i siteBasePlatform_containerBoxRepoAscertain
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_sysCharContainerBoxRealize
-${G_myName} ${extraInfo} -i siteBasePlatform_sysCharContainerBoxRealize
-$( examplesSeperatorChapter "siteBasePlatform Actions -- On Manager Or On Target Box" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_sysCharBoxIdentitySet # NOTYET, likely not necessary
-${G_myName} ${extraInfo} -i siteBasePlatform_sysCharBoxIdentitySet # NOTYET, likely not necessary
-$( examplesSeperatorChapter "L3:: Full New Box Actions -- On Manager And On Target Box" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i boxSiteBasePlatform  # OnManager
-${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i boxRealizeOrActivateOnTarget # OnTarget Only
-$( examplesSeperatorChapter "L3:: Full Existing Box Actions -- On Manager Or On Target Box" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i boxFullActivate # On Manager From Begining-To-End
-$( examplesSeperatorChapter "Full Existing Box Actions -- On Manager Or On Target Box" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i containerBoxBpoId
-${G_myName} ${extraInfo} -i containerBoxBpoId
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i containerBoxBpoPath
-${G_myName} ${extraInfo} -i containerBoxBpoPath
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_fullUpdate  # onManager
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_sysBxoActivate  # onManager
-${G_myName} ${extraInfo} -p bpoId="${bpoId}" -i siteBasePlatform_sysBxoActivate  # onTarget
-$( examplesSeperatorChapter "Specify ConveyInfo (to Guest) -- sysCharBasePlatform Actions" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p bpoId="${effectiveContainerBxoId}" -p cfpSecurityMode=bisosDev -i conveyInfoStore
-${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -p cfpPrivA=192.168.0.121 -i conveyInfoStore # For Generic Guests
-${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -p cfpSecurityMode=bisosDev -i conveyInfoStore
-${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -p cfpNetIf=eth2 -i conveyNetInfoStore pubA
-${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -p cfpHostNetIf=eno1 -i conveyNetInfoStore pubA
-${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i conveyInfoShow
-$( examplesSeperatorChapter "Deploy With Convey Info -- FULL SYSTEM Deployment" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p bpoId="${effectiveContainerBxoId}" -i deployWithSysCharConveyInfo # onManager
-${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i deployWithSysCharConveyInfo # onTarget
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p bpoId="${effectiveContainerBxoId}" -i deploySysChar_sysBin_setup # NOTYET, placeHolder
-${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i deploySysChar_sysBin_setup  # NOTYET, placeHolder
-$( examplesSeperatorChapter "sysCharedPlatform Service Actions" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i sysCharedPlatform_fullUpdate
-${G_myName} ${extraInfo} -i sysCharedPlatform_fullUpdate
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i sysCharedPlatform_actuateServices
-${G_myName} ${extraInfo} -i sysCharedPlatform_actuateServices
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i sysCharedPlatform_sealActuatedServices
-${G_myName} ${extraInfo} -i sysCharedPlatform_sealActuatedServices
-$( examplesSeperatorChapter "sysCharedPlatform Report -- Ssh In Other" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i sysCharedPlatform_containerBoxReport
-${G_myName} ${extraInfo} -i sysCharedPlatform_containerBoxReport
-$( examplesSeperatorChapter "BISOS Development Preps -- bisosBasePlatform Actions" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i usgConvey_bisosDeveloper # onManager+onTarget
-${G_myName} ${extraInfo} -p bisosDevBxoId=prompt -i usgConvey_bisosDeveloper # onTarget
 _EOF_
 }
 
@@ -432,6 +327,8 @@ _EOF_
     lpDo vis_l2_sitedContainer
     
     lpDo vis_usgConvey_bisosDeveloper
+
+    lpDo vis_l2Plus_devContainer
 }
 
 function vis_l2_sitedContainer {    
@@ -445,12 +342,6 @@ _EOF_
 
     lpDo vis_bisosBasePlatform_siteSetup
 
-    # What is below should go in is_bisosBasePlatform_siteSetup and come from site
-    # 
-    lpDo svcInvSiteRegBox.cs --regBoxPerfAddrs="['192.168.0.90']"  -i invSiteRegBoxConf_set 
-    lpDo svcInvSiteRegBox.cs --perfName="svcSiteRegistrars"  -i reg_sapCreateBox
-    lpDo svcInvSiteRegContainer.cs --regContainerPerfAddrs="['192.168.0.90']"  -i invSiteRegContainerConf_set 
-    lpDo svcInvSiteRegContainer.cs --perfName="svcSiteRegistrars"  -i reg_sapCreateContainer
 }
 
 function vis_bisosBasePlatform_siteSetup {
@@ -874,7 +765,7 @@ _EOF_
 }
 
 
-function vis_l2Plus_newBoxAssign {
+function vis_l2Plus_boxNameUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Using svcInvSiteRegBox.cs, we register as new box if needed.
@@ -884,18 +775,14 @@ _EOF_
     }
     EH_assert [[ $# -lt 2 ]]
 
-    local boxName=""
+    local boxName="UnNamed"
     
     if [ $# -eq 1 ] ; then
         boxName="$1"
     fi
 
-    echo "NOTYET,  thisBox_assign needs a name boxName=${boxName}"
-
-    lpReturn
-
     function onTargetRun {
-        lpDo svcInvSiteRegBox.cs  -i thisBox_assign
+        lpDo svcInvSiteRegBox.cs --boxName="${boxName}"  -i thisBox_update
     }
 
 ####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both"
@@ -958,20 +845,20 @@ _EOF_
 }
 
 
-function vis_l4_materializedContainer {
+function vis_l5_materializedContainer {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-*** Wrapper for sysCharMaterializeBox.sh
+*** Wrapper for sysCharBoxMaterialize.sh
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
     if [ -z "${targetName}" ] ; then
-        lpDo sysCharMaterializeBox.sh ${G_commandPrefs} \
+        lpDo sysCharBoxMaterialize.sh ${G_commandPrefs} \
              -i materializedContainerThis
     else
         lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
-             $(which sysCharMaterializeBox.sh) ${G_commandPrefs} \
+             $(which sysCharBoxMaterialize.sh) ${G_commandPrefs} \
              -i materializedContainerThis
     fi
 }
@@ -1480,6 +1367,117 @@ _EOF_
     fi
 ####+END:
 }
+
+
+
+function vis_devExamples {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    typeset extraInfo="-h -v -n showRun"
+    #typeset extraInfo=""
+    typeset runInfo="-p ri=lsipusr:passive"
+
+    typeset examplesInfo="${extraInfo} ${runInfo}"
+
+    bisosCurrentsGet
+
+    local effectiveContainerBxoId="sysChar"
+
+    local siteBxoId=$( sysCharRealize.sh -i selectedSiteBxoId )
+
+    local registrar=$( vis_registrarHostName )
+    local id=$( vis_registrarUserName )
+    local password=$( vis_registrarUserPassword )
+
+    # local oneTargetName="192.168.0.52"
+    local oneTargetName=${curTargetBox:-}
+    # local oneTargetName="localhost"
+
+    visLibExamplesOutput ${G_myName}
+  cat  << _EOF_
+$( examplesSeperatorTopLabel "${G_myName}" )
+bisosCurrentsManage.sh
+bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${effectiveContainerBxoId}"
+bisosCurrentsManage.sh  ${extraInfo} -i setParam curTargetBox 192.168.0.45
+${curTargetBox:-}
+$( examplesSeperatorChapter "Ssh Based Cusomizations -- Bx Based (not vagrant based)" )
+${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i postCustomize  # on host - bx-ssh
+${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i secureSeal     # on host - bx-ssh
+${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i recordDeployment      # inside of parent bxo
+$( examplesSeperatorChapter "LAYER-1:: unsitedBisosDeploy.sh  -- Distro Actions -- On Manager -- Ssh Into Target" )
+unsitedBisosDeploy.sh
+unsitedBisosDeploy.sh ${extraInfo} -p targetName="${oneTargetName}" -i fullUpdate
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_provisionBisos_ascertain
+$( examplesSeperatorSection "L1:: Target Box Developmenet Preps -- On Target Box" )
+ssh -X bystar@${oneTargetName}    # Then run emacs
+bleeVisit /bisos/panels/development/bisos-dev/howToBecomeDeveloper/fullUsagePanel-en.org
+$( examplesSeperatorChapter "LAYER-2:: Sited-Container (Registrar Not Here, in bisos-pip.siteRegistrar) -- bisosBasePlatform Actions" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_fullUpdate # onManager
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_siteSetup # onManager or below onTarget
+${G_myName} ${extraInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -p siteBxoId=${siteBxoId}" -i bisosBasePlatform_siteSetup # onTarget
+cntnrDevel.sh -h -v -n showRun -i bisosDevBxo_fullSetup  # activate bisosDevBxoId and actuate it
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i  sitedDevelContainer  # PRIMARY
+$( examplesSeperatorChapter "LAYER-3:: Chared-Container -- (Realize or Activate) SysChar Setup (with sysCharBpo) -- siteBasePlatform Actions" )
+$( examplesSeperatorSection "L3:: siteBasePlatform New Box Assign -- On Manager Or On Target Box" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_newBoxAscertain
+${G_myName} ${extraInfo} -i siteBasePlatform_newBoxAscertain
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_newBoxAssign
+${G_myName} ${extraInfo} -i siteBasePlatform_newBoxAssign
+$( examplesSeperatorSection "L3:: siteBasePlatform New Container Assign -- On Manager Or On Target Box" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_containerBoxRepoAscertain
+${G_myName} ${extraInfo} -i siteBasePlatform_containerBoxRepoAscertain
+$( examplesSeperatorSection "L3:: SysBxo Realize -- Container Box Realize -- One Time Activity --  On Target Box" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_containerBoxRepoAscertain
+${G_myName} ${extraInfo} -i siteBasePlatform_containerBoxRepoAscertain
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_sysCharContainerBoxRealize
+${G_myName} ${extraInfo} -i siteBasePlatform_sysCharContainerBoxRealize
+$( examplesSeperatorChapter "siteBasePlatform Actions -- On Manager Or On Target Box" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_sysCharBoxIdentitySet # NOTYET, likely not necessary
+${G_myName} ${extraInfo} -i siteBasePlatform_sysCharBoxIdentitySet # NOTYET, likely not necessary
+$( examplesSeperatorChapter "L3:: Full New Box Actions -- On Manager And On Target Box" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i boxSiteBasePlatform  # OnManager
+${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i boxRealizeOrActivateOnTarget # OnTarget Only
+$( examplesSeperatorChapter "L3:: Full Existing Box Actions -- On Manager Or On Target Box" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i boxFullActivate # On Manager From Begining-To-End
+$( examplesSeperatorChapter "Full Existing Box Actions -- On Manager Or On Target Box" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i containerBoxBpoId
+${G_myName} ${extraInfo} -i containerBoxBpoId
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i containerBoxBpoPath
+${G_myName} ${extraInfo} -i containerBoxBpoPath
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_fullUpdate  # onManager
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i siteBasePlatform_sysBxoActivate  # onManager
+${G_myName} ${extraInfo} -p bpoId="${bpoId}" -i siteBasePlatform_sysBxoActivate  # onTarget
+$( examplesSeperatorChapter "Specify ConveyInfo (to Guest) -- sysCharBasePlatform Actions" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p bpoId="${effectiveContainerBxoId}" -p cfpSecurityMode=bisosDev -i conveyInfoStore
+${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -p cfpPrivA=192.168.0.121 -i conveyInfoStore # For Generic Guests
+${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -p cfpSecurityMode=bisosDev -i conveyInfoStore
+${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -p cfpNetIf=eth2 -i conveyNetInfoStore pubA
+${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -p cfpHostNetIf=eno1 -i conveyNetInfoStore pubA
+${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i conveyInfoShow
+$( examplesSeperatorChapter "Deploy With Convey Info -- FULL SYSTEM Deployment" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p bpoId="${effectiveContainerBxoId}" -i deployWithSysCharConveyInfo # onManager
+${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i deployWithSysCharConveyInfo # onTarget
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p bpoId="${effectiveContainerBxoId}" -i deploySysChar_sysBin_setup # NOTYET, placeHolder
+${G_myName} ${extraInfo} -p bpoId="${effectiveContainerBxoId}" -i deploySysChar_sysBin_setup  # NOTYET, placeHolder
+$( examplesSeperatorChapter "sysCharedPlatform Service Actions" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i sysCharedPlatform_fullUpdate
+${G_myName} ${extraInfo} -i sysCharedPlatform_fullUpdate
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i sysCharedPlatform_actuateServices
+${G_myName} ${extraInfo} -i sysCharedPlatform_actuateServices
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i sysCharedPlatform_sealActuatedServices
+${G_myName} ${extraInfo} -i sysCharedPlatform_sealActuatedServices
+$( examplesSeperatorChapter "sysCharedPlatform Report -- Ssh In Other" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i sysCharedPlatform_containerBoxReport
+${G_myName} ${extraInfo} -i sysCharedPlatform_containerBoxReport
+$( examplesSeperatorChapter "BISOS Development Preps -- bisosBasePlatform Actions" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i usgConvey_bisosDeveloper # onManager+onTarget
+${G_myName} ${extraInfo} -p bisosDevBxoId=prompt -i usgConvey_bisosDeveloper # onTarget
+_EOF_
+}
+
 
 
 

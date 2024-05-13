@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-
-IcmBriefDescription="NOTYET: Short Description Of The Module"
+IcmBriefDescription="Blee: ByStar/BISOS  Libe-Halaal Emacs Environment"
 
 ORIGIN="
 * Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee
@@ -29,14 +28,8 @@ if [ "${loadFiles}" == "" ] ; then
 fi
 ####+END:
 
-# set -u            # unset vars are an error
-# #set -e            # exit if pipeline fails  
-# set -o pipefail   # return is that of rightmost
-# IFS=$'\n\t'      #
-
-
 _CommentBegin_
-####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/libre/ByStar/InitialTemplates/software/plusOrg/dblock/inserts/topControls.org"
+####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/bisos/apps/defaults/software/plusOrg/dblock/inserts/topControls.org"
 *  /Controls/ ::  [[elisp:(org-cycle)][| ]]  [[elisp:(show-all)][Show-All]]  [[elisp:(org-shifttab)][Overview]]  [[elisp:(progn (org-shifttab) (org-content))][Content]] | [[file:Panel.org][Panel]] | [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] | [[elisp:(bx:org:run-me)][Run]] | [[elisp:(bx:org:run-me-eml)][RunEml]] | [[elisp:(delete-other-windows)][(1)]] | [[elisp:(progn (save-buffer) (kill-buffer))][S&Q]]  [[elisp:(save-buffer)][Save]]  [[elisp:(kill-buffer)][Quit]] [[elisp:(org-cycle)][| ]]
 ** /Version Control/ ::  [[elisp:(call-interactively (quote cvs-update))][cvs-update]]  [[elisp:(vc-update)][vc-update]] | [[elisp:(bx:org:agenda:this-file-otherWin)][Agenda-List]]  [[elisp:(bx:org:todo:this-file-otherWin)][ToDo-List]]
 ####+END:
@@ -100,7 +93,7 @@ function vis_examples {
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "chemacs2 ~/.emacs-profiles.el" )
-${G_myName} ${extraInfo} -i emacsProfilesStdout
+${G_myName} ${extraInfo} -i emacsProfilesStdout   # emacs=sys
 ${G_myName} ${extraInfo} -p emacs=29 -i emacsProfilesStdout
 ${G_myName} ${extraInfo} -i emacsProfilesUpdate
 ${G_myName} ${extraInfo} -p emacs=29 -i emacsProfilesUpdate
@@ -113,23 +106,25 @@ $( examplesSeperatorChapter "chemacs2 Setup" )
 ${G_myName} ${extraInfo} -i chemacs2FullUpdate # dotEmacsDeactivate+dotEmacsDirForChemacs2+emacsProfilesUpdate
 ${G_myName} ${extraInfo} -i dotEmacsDeactivate
 ${G_myName} ${extraInfo} -i dotEmacsDirForChemacs2
-$( examplesSeperatorChapter "Emacs Profiles List/Run" )
-${G_myName} ${extraInfo} -i chemacs2ProfilesNamesList
+$( examplesSeperatorChapter "Emacs Profiles List/Info" )
+${G_myName} ${extraInfo} -i chemacs2ProfilesNamesList  # runs emacs with  ~/.emacs-profiles.el
 ${G_myName} ${extraInfo} -i chemacs2ProfilesNamesCache # $(vis_chemacs2ProfilesNamesCache)
-${G_myName} ${extraInfo} -i run blee1
-${G_myName} ${extraInfo} -i run doom
-${G_myName} ${extraInfo} -i getEmacsVer 0
-${G_myName} ${extraInfo} -i getEmacsVer 28
-${G_myName} ${extraInfo} -p emacs=0 -i run blee2
-${G_myName} ${extraInfo} -p emacs=28 -i run blee2
-${G_myName} ${extraInfo} -i run blee2
-${G_myName} ${extraInfo} -p emacs=sys -i run blee3
-${G_myName} ${extraInfo} -i run blee3
-${G_myName} ${extraInfo} -p emacs=28 -i run doom-blee3
+${G_myName} ${extraInfo} -i getEmacsVer sys
+${G_myName} ${extraInfo} -i getEmacsVer 29
+$( examplesSeperatorChapter "Emacs Profiles  Sys Emacs Run" )
+${G_myName} ${extraInfo} -i run blee1  # No Doom, rolling native emacs pkgs --  Uses blee/28f
+${G_myName} ${extraInfo} -i run doom-dist
+${G_myName} ${extraInfo} -i run doom-withoutBlee3
+${G_myName} ${extraInfo} -i run doom-blee3
+${G_myName} ${extraInfo} -i run blee3  # (pureBlee) independent of doom but pinned as doom
+$( examplesSeperatorChapter "Emacs Profiles Emacs 29 Run" )
+${G_myName} ${extraInfo} -p emacs=29 -i run blee1  # No Doom, rolling native emacs pkgs --  Uses blee/28f
+${G_myName} ${extraInfo} -p emacs=29 -i run doom-dist
+${G_myName} ${extraInfo} -p emacs=29 -i run doom-withoutBlee3
+${G_myName} ${extraInfo} -p emacs=29 -i run doom-blee3
+${G_myName} ${extraInfo} -p emacs=29 -i run blee3  # (pureBlee) independent of doom but pinned as doom
 $( examplesSeperatorChapter "Pure Blee DeStraight --- Delete All elcs and cloned repos" )
-${G_myName} ${extraInfo} -p emacs=0 -i deStraight blee2
-${G_myName} ${extraInfo} -p emacs=28.1 -i deStraight blee2
-${G_myName} ${extraInfo} -p emacs=28.1 -i deStraight blee3
+${G_myName} ${extraInfo} -p emacs=sys -i deStraight blee3
 $( examplesSeperatorChapter "Blee Provisioing Setup" )
 ${G_myName} ${extraInfo} -i blee1InitSetup
 ${G_myName} ${extraInfo} -p acctName=bystar -i provisionSetup # runs prepUpdateInit
@@ -139,7 +134,9 @@ diff ~/.emacs.d/init.el /bisos/blee/env/init/dotEmacs_dInit
 $( examplesSeperatorChapter "Development And Libraries And History" )
 $( vis_examples_bleeLibLine )
 ${G_myName} ${extraInfo} -p acctName=bystar -i provisionSetup
-bleeDoomsManage.sh ${extraInfo} -p profile=blee2 -i reBuild    # doomReBuildBlee2
+$( examplesSeperatorChapter "Doom and Doom-Blee" )
+bleeDoomsManage.sh
+bleeDoomsManage.sh ${extraInfo} -p profile=doom-blee3 -i reBuild    # doomReBuildBlee
 _EOF_
 }
 
@@ -224,22 +221,34 @@ function vis_emacsProfilesStdout {
 ;;; Machine Generated By ${G_myFullName}::${G_thisFunc} on $( DATE_nowTag )
 ;;;
 (
- ("default" . ((user-emacs-directory . "/bisos/blee/blee-1-init")))       ;; Same as blee1
+_EOF_
+
+   profile="doom-blee3"
+   doomProfilePrep
+   cat  << _EOF_
+ ("default" . ((user-emacs-directory . "${doomRunBase}")    ;; blee3 doom without blee3
+           (env . (("DOOMDIR" . "${doomDirBase}")))))
+_EOF_
+
+ cat  << _EOF_
  ("blee1" . ((user-emacs-directory . "/bisos/blee/blee-1-init")))         ;; Not based on doom
- ("doom" . ((user-emacs-directory . "/bisos/blee/${emacsVer}/doom-main-emacs") ;; Minimal doom for comparison
-           (env . (("DOOMDIR" . "/bisos/blee/doom-base")))))
- ("blee2Old" . ((user-emacs-directory . "/bisos/blee/28f/doom-main-blee2")    ;; blee2 on top of doom
-           (env . (("DOOMDIR" . "/bisos/blee/doom-blee-base")))))
- ("doom-blee2" . ((user-emacs-directory . "/bisos/blee/emacsVers/${emacsVer}/doom-main-blee2")    ;; blee2 on top of doom
-           (env . (("DOOMDIR" . "/bisos/blee/emacsVers/${emacsVer}/doom-main-blee2")))))
  ("blee3" . ((user-emacs-directory . "/bisos/blee/env3/boot")))         ;; Not based on doom
- ("doom-blee3" . ((user-emacs-directory . "/bisos/blee/emacsVers/${emacsVer}/doom-main-blee3")    ;; blee3 on top of doom
-           (env . (("DOOMDIR" . "/bisos/blee/dooms/doom-base-blee3")))))
+_EOF_
+
+    local doomProfiles="doom-dist doom-withoutBlee3  doom-blee3"
+    for eachDoomProfile in ${doomProfiles} ; do
+        profile="${eachDoomProfile}"
+        doomProfilePrep
+        cat  << _EOF_
+ ("${eachDoomProfile}" . ((user-emacs-directory . "${doomRunBase}")    ;; blee3 doom without blee3
+           (env . (("DOOMDIR" . "${doomDirBase}")))))
+_EOF_
+    done
+
+    cat  << _EOF_
  )
 
 _EOF_
-
-##  ("doomDist" . ((user-emacs-directory . "~/doom-emacs")))                 ;; In homeDir using ~/.doom.d
 
 }
 
@@ -316,10 +325,10 @@ _EOF_
 chemacsProfilesNamesCache=(
 default
 blee1
-doom
-blee2
 blee3
-doomblee3
+doom-dist
+doom-withoutBlee3
+doom-blee3
 )
 
 ####+END:
@@ -358,14 +367,16 @@ _EOF_
 function vis_run {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** run ICM expects one or more chemacs2 profile names.
+** run expects one or more chemacs2 profile names.
 Valid profile names are:
 $(vis_chemacs2ProfilesNamesCache)
 _EOF_
     }
     if [ $# -eq 0  ] ; then
-        ANT_raw "Usage: No arguments were specified."
-        lpDo describeF
+        # ANT_raw "Usage: No arguments were specified."
+        # lpDo describeF
+        set -- "doom-blee3"
+        ANT_raw "\$1 set to $1 -- executing vis_run $1"
     fi
 
     local emacsExec=$(vis_getEmacsExec ${emacs})
@@ -382,7 +393,7 @@ _EOF_
     for each in $@ ; do
         # echo $PATH
         #lpDo ${emacsExec} --with-profile ${each} --debug-init  &
-	lpDo ${emacsExec} --with-profile ${each} &	
+	    lpDo ${emacsExec} --with-profile ${each} &
     done
 }
 
@@ -470,6 +481,8 @@ _EOF_
 
     # NOTYET, verify that acctName is valid (source needed lib)
 
+    lpDo sudo -u ${acctName} ${opBinBase}/lcaGetNerdFonts.sh -h -v -n showRun -i fullUpdate
+
     lpDo pushd $HOME   # for inBaseDirDo protection
 
     lpDo vis_blee1InitSetup
@@ -483,9 +496,8 @@ _EOF_
     inBaseDirDo /bisos/blee/extPkgs/emacs-application-framework git reset --hard 4ce9b1cab0f4894adcb1710917f96279cccd401b
 
     # NOTYET, for DEBIAN-12. for emacs=sys  Should check version here. ./bleeDoomsManage.sh
-    lpDo sudo -u ${acctName} ${opBinBase}/bleeDoomsManage.sh -h -v -n showRun -p emacs=sys -p profile=blee3 -i reBuild
+    lpDo sudo -u ${acctName} ${opBinBase}/bleeDoomsManage.sh -h -v -n showRun -p emacs=sys -p profile=doom-blee3 -i reBuild
     # lpDo bleeDoomsManage.sh -h -v -n showRun -p profile=sysDoom -i reBuild
-
 
     lpDo sudo -u ${acctName} ${opBinBase}/bueMailManage.sh -h -v -n showRun -i mhonarcBasePrep
 

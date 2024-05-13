@@ -297,9 +297,12 @@ _EOF_
         #
         
         #opDo ${ftpProcFile} -v -n showRun -i pkgedPanelPreps
-        
-        opDo bx-dblock -i dblockUpdateFiles ${ftpProcFile}
-        opDo chmod 775 ${ftpProcFile}
+
+        if [ "${doDblock:-TRUE}" == "TRUE" ] ; then
+            opDo bx-dblock -i dblockUpdateFiles ${ftpProcFile}
+            opDo chmod 775 ${ftpProcFile}
+        fi
+
     fi
 
     if [ -f ${mainPanelFile} ] ; then
@@ -319,8 +322,11 @@ _EOF_
                 EH_problem ""
                 ;;              
         esac
-        opDo bx-dblock -i dblockUpdateFiles ${mainPanelFile}
-        opDo chmod 664 ${mainPanelFile}
+        if [ "${doDblock:-TRUE}" == "TRUE" ] ; then
+            opDo bx-dblock -i dblockUpdateFiles ${mainPanelFile}
+            opDo chmod 664 ${mainPanelFile}
+        fi
+
     fi
 
     if [ -f ${commonObjectTypeFileName} ] ; then
@@ -1177,8 +1183,11 @@ _EOF_
     local underFilesList=$(find . -type f -print | egrep "/${underFilesName}"'$')
 
     for each in ${underFilesList} ; do
-        opDo cp ${updateToFile} ${each} 
-        opDo bx-dblock -i dblockUpdateFile ${each}
+        opDo cp ${updateToFile} ${each}
+        if [ "${doDblock:-TRUE}" == "TRUE" ] ; then
+            opDo bx-dblock -i dblockUpdateFile ${each}
+        fi
+
     done
 
     lpReturn
