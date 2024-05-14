@@ -174,6 +174,8 @@ johnnydep -v 0 $pypiPkgName
 pipdeptree -r -p $pypiPkgName # Needs a virtEnv
 pipdeptree -fl -p $pypiPkgName # Needs a virtEnv
 yolk -U $pypiPkgName # show if update available at PyPI
+${G_myName} ${extraInfo} -i nextVersion 0.01
+${G_myName} ${extraInfo} -i scriptFiles
 ${G_myName} ${extraInfo} -i filesList
 ${G_myName} ${extraInfo} -i namespaceRequires
 _EOF_
@@ -647,7 +649,9 @@ _EOF_
     opDo vis_distClean
     
     opDo vis_licenseLhAgpl3
-    opDo pandoc --from=latex -s -t rst --toc README.tex -o README.rst
+    if [ -f ./README.tex ] ; then
+        opDo pandoc --from=latex -s -t rst --toc README.tex -o README.rst
+    fi
 
     opDo ./setup.py sdist
 }
@@ -729,7 +733,6 @@ _EOF_
     else
         EH_problem "Missing pipPkgFile=${pipPkgFile}"
     fi  
-
 }
 
 
@@ -756,6 +759,42 @@ _EOF_
 
 }
 
+
+function vis_nextVersion {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+    local increment="$1"
+
+    lpDo pypiPkgInfoExtract
+
+    lpDo  pyPkgTools.cs  -i pypiLatestVersionPlus ${pypiPkgName} ${increment}
+}
+
+
+function vis_scriptFiles {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo pypiPkgInfoExtract
+
+    local scriptFiles=""
+
+    if [ -d "./bin" ] ; then
+        scriptFiles="$( ls ./bin/* )"
+    fi
+
+    for each in ${scriptFiles} ; do
+        echo "'$each',"
+    done
+}
+
+
 function vis_filesList {
     G_funcEntry
     function describeF {  cat  << _EOF_
@@ -779,9 +818,7 @@ _EOF_
         EH_problem "Missing ${modulesBaseDir}"
     fi
 
-
     echo ${scriptFiles} ${moduleFiles}
-
 }
 
 
@@ -795,6 +832,26 @@ _EOF_
     lpDo pypiPkgInfoExtract
 
     local filesList="$( vis_filesList )"
+
+    local tmpBleeFile=$( FN_tempFile )
+    lpDo touch ${tmpBleeFile}
+
+    function procEachBlee {
+        local eachFile=$1
+        egrep 'from.*import.*$' ${eachFile} \
+            | grep blee \
+            | cut -d ' ' -f 2  >> ${tmpBleeFile}
+    }
+
+    for each in ${filesList} ; do
+        lpDo procEachBlee ${each}
+    done
+    if [ ! -z  "${tmpBleeFile}" ] ; then
+        echo "\"blee\","
+    fi
+    lpDo cat ${tmpBleeFile} | sort | uniq | sed -e 's:\(^.*$\):\"\1\",:'
+    lpDo rm ${tmpBleeFile}
+
     local tmpFile=$( FN_tempFile )
     lpDo touch ${tmpFile}
 
@@ -811,11 +868,12 @@ _EOF_
     for each in ${filesList} ; do
         lpDo procEach ${each}
     done
+    if [ ! -z  "${tmpBleeFile}" ] ; then
+        echo "\"${pypiPkgNamespace}\","
+    fi
 
     lpDo cat ${tmpFile} | sort | uniq | sed -e 's:\(^.*$\):\"\1\",:'
-
     lpDo rm ${tmpFile}
-
 }
 
 
