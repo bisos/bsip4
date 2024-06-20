@@ -162,22 +162,30 @@ $( examplesSeperatorChapter "File Parameters Tree Base (fptb)" )
 fileParamManage.py -v 30  -i fileParamDictReadDeep ../fptb
 fileParamManage.py -i fileParamWritePath ../fptb/docTitle "Pkg's Human Oriented Name"
 fileParamManage.py -i fileParamWritePath ../fptb/docVersion "0.1"
-$( examplesSeperatorChapter "REAME.rst Creation" )
+$( examplesSeperatorChapter "REAME.rst Creation --- Mostly Obsoleted" )
 pandoc --from=latex -s -t rst --toc README.tex -o README.rst
 pandoc --from=latex -s -t org --toc README.tex -o RESULT.org
 pandoc --from=org -s -t rst --toc RESULT.org -o RESULT.rst
 pandoc --from=org -s -t rst --toc README.org -o README.rst
 xelatex README.tex
-$( examplesSeperatorChapter "Requirements And Dependencies" )
+$( examplesSeperatorChapter "pip and setup.py Dependencies" )
 pipreqs --force .
 johnnydep -v 0 $pypiPkgName
 pipdeptree -r -p $pypiPkgName # Needs a virtEnv
 pipdeptree -fl -p $pypiPkgName # Needs a virtEnv
 yolk -U $pypiPkgName # show if update available at PyPI
-${G_myName} ${extraInfo} -i nextVersion 0.01
-${G_myName} ${extraInfo} -i scriptFiles
+pyPkgTools.cs
+${G_myName} ${extraInfo} -i nextVersion 0.01    # setup.py dblock
+${G_myName} ${extraInfo} -i scriptFiles         # setup.py dblock
 ${G_myName} ${extraInfo} -i filesList
-${G_myName} ${extraInfo} -i namespaceRequires
+${G_myName} ${extraInfo} -i namespaceRequires   # setup.py dblock
+$( examplesSeperatorChapter "pipx and Requirements And Dependencies" )
+pipx install --force ${pypiPkgName}
+pipx upgrade ${pypiPkgName}
+pipx uninstall ${pypiPkgName}
+pipx runpip ${pypiPkgName} list --outdated
+pipx runpip ${pypiPkgName} freeze > ./requirements.txt ; ls -l ./requirements.txt # Update
+pipx runpip ${pypiPkgName} show ${pypiPkgName}
 _EOF_
 
 
@@ -242,6 +250,10 @@ _EOF_
 
     pypiPkgName=$(./setup.py --name)
 
+    # echo ZZ${pypiPkgName}XX
+    if [ -z "${pypiPkgName}" ] ; then
+        pypiPkgName="missing.pkg"
+    fi
     IFS=. command eval 'components=(${pypiPkgName##*-})'
 
     pypiPkgModule=${components[-1]}
@@ -872,7 +884,9 @@ _EOF_
         echo "\"${pypiPkgNamespace}\","
     fi
 
-    lpDo cat ${tmpFile} | sort | uniq | sed -e 's:\(^.*$\):\"\1\",:'
+    # First get rid of blank lines, also insert quotes around file names.
+    #
+    lpDo cat ${tmpFile} | grep -v '^[[:space:]]*$' | sort | uniq | sed -e 's:\(^.*$\):\"\1\",:'
     lpDo rm ${tmpFile}
 }
 

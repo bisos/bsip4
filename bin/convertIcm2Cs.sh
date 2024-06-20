@@ -97,7 +97,7 @@ find /bisos/git/auth/bxRepos -type f -print | egrep '/ftoProc\.sh\.2020[0-9]+$' 
 $( examplesSeperatorSection "Current Dir And Below" )
 find . -type f -print | egrep '/ftoProc\.sh$' | wc
 find . -type f -print | egrep '/ftoProc\.sh$' | ${G_myName} -i report
-find . -type f -print | grep -v ${G_myName} | ${G_myName} ${extraInfo} -i miscFix
+find . -type f -print | grep -v '/\.git' | grep -v ${G_myName} | ${G_myName} ${extraInfo} -i miscFix
 find . -type f -print | grep -v ${G_myName} | ${G_myName} ${extraInfo} -i libreByStar
 echo /bisos/panels/bisos-dev/_nodeBase_/fullUsagePanel-en.org | ${G_myName} ${extraInfo} -i miscFix
 find /bisos/panels/ -type f -print | xargs grep -l /bisos/panels/bisos/ | ${G_myName} ${extraInfo} -i miscFix
@@ -381,13 +381,18 @@ _EOF_
 
         cat ${each}.${eachDateTag} | \
             sed \
-            -e "s@b:mtdt:recipients|curSet@b:mtdt:recipients|select@g"\
-            -e "s@b:mtdt:mailings|curSet@b:mtdt:mailings|select@g"\
-            -e "s@b:mtdt:distr|applyRecipientsCurSetListToMailings@b:mtdt:distr|applyRecipientsSelectedListToMailings@g"\
-            -e "s@curSetForms@selectedForms@g"\
-            -e "s@b:mtdt:derive/withFileAndCurSet@b:mtdt:derive/withFileAndSelect@g"\
-            -e "s@CurRecipients@SelRecipients@g"\
+            -e "s@b:mtdt:compose:fashion@b:mtdt:compose:framework@g"\
             > ${each}
+
+            # sed \
+            # -e "s@b:mtdt:recipients|curSet@b:mtdt:recipients|select@g"\
+            # -e "s@b:mtdt:mailings|curSet@b:mtdt:mailings|select@g"\
+            # -e "s@b:mtdt:distr|applyRecipientsCurSetListToMailings@b:mtdt:distr|applyRecipientsSelectedListToMailings@g"\
+            # -e "s@curSetForms@selectedForms@g"\
+            # -e "s@b:mtdt:derive/withFileAndCurSet@b:mtdt:derive/withFileAndSelect@g"\
+            # -e "s@CurRecipients@SelRecipients@g"\
+            # > ${each}
+
 
             # sed -e "s@unisos.marme@bisos.marmee@g" > ${each}
             #sed -e "s@bx:bsip:bash/processArgsAndStdin \$@bx:bsip:bash/processArgsAndStdin :noParams t@g" > ${each}
