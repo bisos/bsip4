@@ -147,6 +147,7 @@ echo ${oneRepoBaseDir}  | ${G_myName} ${extraInfo} -i cloneWhenMissing
 ${G_myName} -i cachedLs | ${G_myName} -i cloneWhenMissing
 echo ${oneRepoBaseDir}  | ${G_myName} ${extraInfo} -i gitRemPullAndCloneWhenMissing
 ${G_myName} -i cachedLs | ${G_myName} -i gitRemPullAndCloneWhenMissing
+${G_myName}  -p vcMode=anon -i cachedLs | ${G_myName} -i gitRemPullAndCloneWhenMissing
 $( examplesSeperatorSection "Add, Commit and Push" )
 echo ${oneRepoBaseDir}  | ${G_myName} ${extraInfo} -i addCommitPush modifieds 
 echo  ${oneRepoBaseDir} | ${G_myName} ${extraInfo} -i addCommitPush all
