@@ -205,9 +205,9 @@ ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2_sitedContainer  
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_siteSetup # onManager or below onTarget
 ${G_myName} ${extraInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -p siteBxoId=${siteBxoId}" -i bisosBasePlatform_siteSetup # onTarget
 $( examplesSeperatorSection "L2:: BISOS Development Preps -- bisosBasePlatform Actions" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_devContainer # onManager+onTarget
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i usgConvey_bisosDeveloper # onManager+onTarget
-${G_myName} ${extraInfo} -p bisosDevBxoId=prompt -i usgConvey_bisosDeveloper # onTarget
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_devContainer # onManager+onTarget UsedBy: l2_sitedDevContainer
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i usgConvey_bisosDeveloper # onManager+onTarget UsedBy: l2_sitedDevContainer
+${G_myName} ${extraInfo} -p bisosDevBxoId=prompt -i usgConvey_bisosDeveloper # onTarget UsedBy: l2_sitedDevContainer
 cntnrDevel.sh -h -v -n showRun -i bisosDevBxo_fullSetup  # activate bisosDevBxoId and Materialize it
 $( examplesSeperatorChapter "Layer-1 + Layer 2:: Combined" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l2_sitedDevContainer # OnManager

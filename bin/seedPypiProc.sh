@@ -531,6 +531,26 @@ _EOF_
     inBaseDirDo ${pypiPkgNamespace} FN_fileRmIfThere -v *.pyc    
     inBaseDirDo ${pypiPkgNamespace} FN_fileRmIfThere -v *~
 
+    local pycacheDirs=$(find . -type d -print | egrep '/__pycache__$')
+
+    if [ ! -z "${pycacheDirs}" ] ; then
+        lpDo /bin/rm -r ${pycacheDirs}
+    else
+        ANT_raw "No __pycache__ dirs under here -- Skipping removal"
+    fi
+
+    # function rm_pycache {
+    #     local here=$(pwd)
+    #     if [ -d ./__pycache__ ] ; then
+    #         opDo rm -r ./__pycache__
+    #     else
+    #         ANT_raw "No ./__pycache__ in ${here} -- Skipping removal"
+    #     fi
+    # }
+
+    # inBaseDirDo $(vis_pkgModuleBase) rm_pycache
+    # inBaseDirDo ${pypiPkgNamespace} rm_pycache
+
     opDo FN_fileRmIfThere -v README.aux README.out README.log
 
     opDo FN_fileRmIfThere ./auto/*
