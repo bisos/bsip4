@@ -173,7 +173,7 @@ ${G_myName} ${extraInfo} -i usgBpos_pals_bydomain_update ${oneAaipBydomain} # Ma
 ${G_myName} ${extraInfo} -i usgBpos_pals_bydomain_bxoPath # Main Entry -- Gets
 ${G_myName} ${extraInfo} -i usgBpos_pals_bydomain_bpoId
 $( examplesSeperatorSection "LCNT Bases BPOs -- LCNT (Libre-Halaal Content)  BPO" )
-${G_myName} ${extraInfo} -i usgBpos_lcntBases_update pip_credsSpecify # Main Entry -- Sets 
+${G_myName} ${extraInfo} -i usgBpos_lcntBases_update pip_lcntBases  # Main Entry -- Sets
 ${G_myName} ${extraInfo} -i usgBpos_lcntBases_bxoPath # Main Entry -- Gets
 ${G_myName} ${extraInfo} -i usgBpos_lcntBases_bpoId
 $( examplesSeperatorSection "Site Configs BPOs -- Site Confihurations BPO" )

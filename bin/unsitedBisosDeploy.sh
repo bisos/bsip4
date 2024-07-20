@@ -151,7 +151,8 @@ ${curTargetBox:-}
 $( examplesSeperatorChapter "Distro Installation -- On Target" )
 See: https://github.com/bxGenesis/start
 $( examplesSeperatorChapter "Un Do -- De BISOS-ify -- Re-Install" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1_boxUUID  # Box's unique-id for use by Manager 
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1_boxUUID  # Box's unique-id for use by Manager
+sysCharBoxDeploy.sh ${extraInfo} -p targetName="${oneTargetName}" -i l1_boxUUIDToBoxNu
 $( examplesSeperatorChapter "Un Do -- De BISOS-ify -- Re-Install" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1_deBisosIfy
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1_reInstall

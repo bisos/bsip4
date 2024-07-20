@@ -195,7 +195,9 @@ $( examplesSeperatorChapter "LAYER-1:: unsitedBisosDeploy.sh  -- Distro Actions 
 unsitedBisosDeploy.sh
 unsitedBisosDeploy.sh ${extraInfo} -p targetName="${oneTargetName}" -i l1_fullUpdate
 unsitedBisosDeploy.sh ${extraInfo} -p targetName="${oneTargetName}" -i l1_boxUUID  # Box's unique-id
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1_boxUUIDToBoxNu
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_provisionBisos_ascertain # Has it been provisioned?
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1_unsitedBisos #  -- PRIMARY (uses unsitedBisosDeploy.sh -i l1_fullUpdate)
 $( examplesSeperatorSection "L1:: Access to Layer-1 -- On Target Box" )
 ssh -X bystar@${oneTargetName}    # Then run emacs
 bleeVisit /bisos/panels/development/bisos-dev/howToBecomeDeveloper/fullUsagePanel-en.org # NOTYET, bad path
@@ -270,6 +272,23 @@ ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i sysCharedPlatform_c
 ${G_myName} ${extraInfo} -i sysCharedPlatform_containerBoxReport
 ${G_myName} ${extraInfo} -i devExamples
 _EOF_
+}
+
+
+function vis_l1_boxUUIDToBoxNu {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** TODO Needs to become consistent with bxGenesis/start/raw-bisos.sh
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert [ ! -z "${targetName}" ]
+
+    local boxUUID=$(unsitedBisosDeploy.sh -h -v -n showRun -p targetName="${targetName}" -i l1_boxUUID)
+    # echo "ZZ K-${boxUUID}"
+
+    lpDo svcInvSiteRegBox.cs  -i reg_box_find uniqueBoxId ${boxUUID}
 }
 
 
