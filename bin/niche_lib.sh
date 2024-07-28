@@ -109,9 +109,32 @@ _EOF_
     local nicheScope="$1"
 
     local nicheExamplesFile=""
-    
+    local nicheNamePath=$( bpoIdManage.sh -p bpoId="sysChar" -i bpoIdPath )/sys/bin/$(G_myNicheNameGet)
+
     case ${nicheScope} in
         container)
+            cat  << _EOF_
+$( examplesSeperatorChapter "Container Niche Examples" )
+_EOF_
+            if [ -e "${nicheNamePath}" ] ; then
+                cat  << _EOF_
+${nicheNamePath}
+_EOF_
+            else
+                    cat  << _EOF_
+Missing: ${nicheNamePath}
+_EOF_
+            fi
+
+            nicheExamplesFile="$(dirname $(dirname ${G_myFullName}))/examples/$(G_myNicheNameGet)"
+            if [ -e "${nicheExamplesFile}" ] ; then
+                cat  << _EOF_
+${nicheExamplesFile}
+_EOF_
+            fi
+            ;;
+
+        selected)
             cat  << _EOF_
 $( examplesSeperatorChapter "Container Niche Examples" )
 $( sysCharBoxDeploy.sh -i selectedContainerBxoPath )/sys/bin/$(G_myNicheNameGet)
@@ -124,6 +147,7 @@ ${nicheExamplesFile}
 _EOF_
             fi
             ;;
+
         site)
             cat  << _EOF_
 $( examplesSeperatorChapter "Selected Site Niche Examples" )
@@ -169,6 +193,64 @@ _EOF_
     esac
     
     
+}
+
+
+function vis_nichePathOrMyName {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local nicheScope="$1"
+
+    local nicheExamplesFile=""
+    local nicheNamePath=$( bpoIdManage.sh -p bpoId="sysChar" -i bpoIdPath )/sys/bin/$(G_myNicheNameGet)
+
+    case ${nicheScope} in
+        container)
+            if [ -e "${nicheNamePath}" ] ; then
+                cat  << _EOF_
+${nicheNamePath}
+_EOF_
+            else
+                    cat  << _EOF_
+${G_myName}
+_EOF_
+            fi
+            ;;
+
+        selected)
+            cat  << _EOF_
+NOTYET
+_EOF_
+            ;;
+
+        site)
+            cat  << _EOF_
+NOTYET
+_EOF_
+            ;;
+
+        controller)
+            cat  << _EOF_
+NOTYET
+_EOF_
+            ;;
+
+        usageEnvs)
+            cat  << _EOF_
+NOTYET
+_EOF_
+            ;;
+
+        *)
+            EH_problem "Unimplemented yet -- nicheScope=${nicheScope}"
+            ;;
+    esac
+
+
 }
 
 

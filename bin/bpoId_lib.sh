@@ -169,7 +169,20 @@ _EOF_
 }       
 
 
-function vis_bpoIdShow {    
+function vis_bpoIdPath {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Update Everything.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert bpoIdPrep
+
+    lpDo echo ${bpoHome}
+}
+
+function vis_bpoIdShow {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Update Everything.
@@ -180,8 +193,9 @@ _EOF_
     EH_assert bpoIdPrep
 
     lpDo echo ${bpoId}
-    lpDo echo ${bpoHome}    
+    lpDo echo ${bpoHome}
 }
+
 
 function vis_bpoIdPrep {
     bpoIdPrep $@

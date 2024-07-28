@@ -158,6 +158,7 @@ $( examplesSeperatorChapter "Layer 4 -- Materialize This Box" )
 sysCharIdentity.sh ${extraInfo} -p bpoId="${thisBpoId}" -i identityUpdate
 ${G_myName}  ${extraInfo} -p bpoId="${oneBxoId}"  -i materializedContainer
 ${G_myName}  ${extraInfo} -i materializedContainerThis
+${G_myName}  ${extraInfo} -i materializedCommonContainer  # ~bpoId/sys/bin/cntnrAssemble.sh
 $( examplesSeperatorChapter "Hosting Container Actions" )
 sysCharPreps.sh
 sysCharPreps.sh -h -v -n showRun -i fullUpdate
@@ -275,6 +276,26 @@ _EOF_
 
     # Run Niche of bpoId
 }
+
+function vis_materializedCommonContainer {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+*** Applies
+_EOF_
+    }
+
+    EH_assert [[ $# -eq 0 ]]
+
+    if [ -z "${bpoId}" ] ; then
+        bpoId=$( vis_bpoIdPrep "sysChar" )
+    fi
+
+    local cntnrAssemble_runLine=$( vis_cntnrAssemble_runLine )
+
+    # Run Niche of bpoId
+    lpDo ${cntnrAssemble_runLine}
+}
+
 
 function vis_materializedVirtContainer {
     G_funcEntry

@@ -915,7 +915,7 @@ _OUTER_EOF_
 function vis_vagStdout_platformBinsRun {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** 
+** NOTYET, should use vis_cntnrAssemble_runLine
 *** NOTYET, pre and post hooks
 _EOF_
                        }
