@@ -142,8 +142,28 @@ function vis_examples {
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 ${G_myName} ${extraInfo} -i userConfigReset
+${G_myName} ${extraInfo} -i loadModuleCombineSink
 _EOF_
 }
+
+function vis_loadModuleCombineSink {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local greped=$(pactl list modules | grep module-combine-sink)
+
+    if [ -z "${greped}" ] ; then
+        lpDo pactl load-module module-combine-sink
+    else
+        lpDo echo "Already Loaded: ${greped}"
+    fi
+
+    lpReturn
+}       
 
 function vis_userConfigReset {
     G_funcEntry
@@ -170,7 +190,8 @@ _EOF_
     lpDo pulseaudio -k
 
     lpReturn
-}       
+}
+
 
 
 _CommentBegin_
