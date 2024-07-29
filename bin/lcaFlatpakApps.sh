@@ -70,39 +70,6 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
-# ./platformBases_lib.sh
-. ${opBinBase}/platformBases_lib.sh
-
-. ${opBinBase}/bpo_lib.sh
-. ${opBinBase}/bpoId_lib.sh
-
-. ${opBinBase}/bxeDesc_lib.sh
-
-. ${opBinBase}/bystarHook.libSh
-
-. ${opBinBase}/bystarLib.sh
-
-. ${opBinBase}/lcnFileParams.libSh
-
-# . ${opBinBase}/bystarInfoBase.libSh
-
-. ${opBinBase}/unisosAccounts_lib.sh
-. ${opBinBase}/bisosGroupAccount_lib.sh
-. ${opBinBase}/bisosAccounts_lib.sh
-
-. ${opBinBase}/bxioCommon_lib.sh
-
-. ${opBinBase}/bisosCurrents_lib.sh
-
-. ${opBinBase}/site_lib.sh
-
-. ${opBinBase}/sysChar_lib.sh
-
-. ${opBinBase}/siteNetworks_lib.sh
-
-. ${opBinBase}/siteRegistrar_lib.sh
-
-. ${opBinBase}/niche_lib.sh
 
 
 # PRE parameters
@@ -117,7 +84,8 @@ function G_postParamHook {
      #   bpoHome=$( FN_absolutePathGet ~${bpoId} )
     # fi
     
-    bisosCurrentsGet
+    # bisosCurrentsGet
+    doNothing
 }
 
 
@@ -146,6 +114,9 @@ flatpak run io.github.dyegoaurelio.simple-wireplumber-gui
 $( examplesSeperatorChapter "Helvum -- A Graphical patchbay for PipeWire" )
 sudo flatpak install flathub org.pipewire.Helvum
 flatpak run org.pipewire.Helvum
+$( examplesSeperatorChapter "Easy Effects is an advanced audio manipulation tool" )
+sudo Easy Effects is an advanced audio manipulation tool
+flatpak run com.github.wwmm.easyeffects
 _EOF_
   
      # vis_examplesNicheRun site
