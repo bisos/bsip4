@@ -124,6 +124,7 @@ ${G_myName} ${extraInfo} -i licenseLhAgpl3
 ./setup.py develop
 ./setup.py sdist
 ${G_myName} ${extraInfo} -i fullPrep
+${G_myName} ${extraInfo} -p repo=main -i fullPrepUploadRePrep  # After upload recreates the egg with installed version
 ${G_myName} ${extraInfo} -p repo=main -i fullPrepUpload
 ${G_myName} ${extraInfo} -p repo=test -i fullPrepUpload
 $( examplesSeperatorChapter "Registering and publishing the package" )
@@ -174,8 +175,12 @@ johnnydep -v 0 $pypiPkgName
 pipdeptree -r -p $pypiPkgName # Needs a virtEnv
 pipdeptree -fl -p $pypiPkgName # Needs a virtEnv
 yolk -U $pypiPkgName # show if update available at PyPI
+$( examplesSeperatorChapter "Pkg Versions (Installed vs setup.py vs PyPi)" )
 pyPkgTools.cs
+${G_myName} -i versions 0.01       # shows all version info
 ${G_myName} ${extraInfo} -i nextVersion 0.01    # setup.py dblock
+${G_myName} ${extraInfo} -i installedVersion    # setup.py dblock
+setup.py --version  # read from ./setup.py
 ${G_myName} ${extraInfo} -i scriptFiles         # setup.py dblock
 ${G_myName} ${extraInfo} -i filesList
 ${G_myName} ${extraInfo} -i namespaceRequires   # setup.py dblock
@@ -514,6 +519,7 @@ _EOF_
     # Module's autodoc
     pkgModuleAutodoc="$( vis_pkgModuleBase )/autodoc"
 
+    # NOTYET, should not use star. Should uses package name.
     if [ -d ./*.egg-info ] ; then
         opDo rm -r ./*.egg-info
     else
@@ -685,8 +691,28 @@ _EOF_
         opDo pandoc --from=latex -s -t rst --toc README.tex -o README.rst
     fi
 
+    if [ -f ./README.org ] ; then
+        lpDo echo "Converting README.org to README.rst with pandoc"
+        cat README.org   | egrep -v  '^Panel Controls:' | egrep -v '^Links:' | pandoc --from=org -s -t rst --toc -o README.rst
+    fi
+
     opDo ./setup.py sdist
 }
+
+function vis_fullPrepUploadRePrep {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    opDo icmPreps
+
+    lpDo vis_fullPrepUpload
+
+    opDo vis_fullPrep # recreates the egg with installed version
+
+ }
 
 
 function vis_fullPrepUpload {
@@ -709,9 +735,13 @@ _EOF_
         return
     fi
 
+    lpDo touch "./pypiUploadVer"
+
     opDo vis_fullPrep
 
     opDo vis_twineUpload
+
+    lpDo rm "./pypiUploadVer"
 
     opDo echo ${pypiUrl}
 }
@@ -777,7 +807,7 @@ _EOF_
 
     manifestFile="./MANIFEST.in"
 
-    opDo cp /libre/ByStar/InitialTemplates/license/lh-agpl3/lh-agpl3-LICENSE.txt  ./lh-agpl3-LICENSE.txt
+    opDo echo NOTYET Fix cp /libre/ByStar/InitialTemplates/license/lh-agpl3/lh-agpl3-LICENSE.txt  ./lh-agpl3-LICENSE.txt
 
     FN_lineIsInFile "^include lh-agpl3-LICENSE.txt" ${manifestFile} ; thisRetVal=$?
     if [[ ${thisRetVal} -eq 0 ]] ; then
@@ -789,6 +819,20 @@ _EOF_
 include lh-agpl3-LICENSE.txt
 _EOF_
 
+}
+
+function vis_versions {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local nextVersion=$(vis_nextVersion $1)
+    local installedVersion=$(vis_installedVersion)
+    local setupVersion=$(setup.py --version)
+
+    lpDo echo "Installed=${installedVersion} -- setup.py=${setupVersion} -- PyPi+$1=${nextVersion}"
 }
 
 
@@ -804,6 +848,20 @@ _EOF_
 
     lpDo  pyPkgTools.cs  -i pypiLatestVersionPlus ${pypiPkgName} ${increment}
 }
+
+
+function vis_installedVersion {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    local installedVer=$( pip show $(setup.py --name)  | egrep '^Version:' | cut -d ":" -f 2 )
+
+    echo ${installedVer}
+}
+
+
 
 
 function vis_scriptFiles {
