@@ -147,7 +147,8 @@ function do_compUpdate {
   subjectValidatePrepare
   binsPrepPkgInfoPre
   continueAfterThis
-  opDo mmaCompAuto_update
+  # opDo mmaCompAuto_update
+  mmaCompAuto_update
 }
 
 function do_compDelete {

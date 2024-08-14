@@ -170,8 +170,9 @@ sysCharActivate.sh -h -v -n showRun -p bpoId="${oneBxoId}" -i activate_sysContai
 $( examplesSeperatorChapter "Specialized Actions" )
 ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vagrantBaseBoxFromSysChar   # which vagrantBaseBox will be used
 ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vagrantBase_last     # on host - Show Vagrant Directory
-${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vagrantFile_run       # on host - ends with image
-${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -p phases="P0 P1" -i vagrantFile_run   # on host - ends with image - Equivalent of UnSited BISOS
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vagrantFile_run       # Ends with image -- SITED BISOS
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -p phases="P0 P1" -i vagrantFile_run   # Ends with image - Equivalent of UnSited BISOS
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -p phases="P0" -i vagrantFile_run   # Ends with image - Equivalent of Raw-DEBIAN
 $( examplesSeperatorChapter "Vagrantfile Stdout and Creation " )
 ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vagrantFile_bottomPart
 ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vagrantFile_stdout    # on host
@@ -193,7 +194,7 @@ ${G_myName} -p phases="P0 P1" -i vagrantPhasesGet
 _EOF_
 }
 
-vagrantPhasesList=( "P0" "P1" "P2" "P3" "P4" )
+vagrantPhasesList=( "P0" "P1" "P2" "P3" )
 
 typeset -t phases=""
 
@@ -1059,6 +1060,18 @@ _OUTER_EOF_
 ######### PHASE 1: DEBIAN-12 BISOS Provisioning -- baseBox=${containerBaseBox}
 _EOF_
 
+        wget  https://raw.githubusercontent.com/bxGenesis/start/main/raw-bisos.sh
+        chmod 775 ./raw-bisos.sh
+        ./raw-bisos.sh -v -n showRun -i installUnsitedBisos
+_OUTER_EOF_
+            ;;
+
+        "OLDbxDistro/debian-12.4.0/desktop")
+        cat  << _OUTER_EOF_
+      cat  << _EOF_
+######### PHASE 1: DEBIAN-12 BISOS Provisioning -- baseBox=${containerBaseBox}
+_EOF_
+
         sudo apt-get update
         sudo apt-get -y  install pipx
         id
@@ -1067,7 +1080,6 @@ _EOF_
         \$HOME/.local/bin/provisionBisos.sh -h -v -n showRun -i sysBasePlatform
 _OUTER_EOF_
             ;;
-
 
         * )
             EH_problem "Unsupported containerBaseBox=${containerBaseBox}"
@@ -1157,6 +1169,31 @@ _OUTER_EOF_
     lpReturn
 }
 
+function thisPlatformName {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+                       }
+    EH_assert [[ $# -eq 2 ]]
+    local containerId="$1"
+    local vmNameQualifier="$2"
+    local phaseName="BlankPhase"
+
+    lpDo vis_vagrantPhasesSet
+
+    if IS_inList "P3" "${vagrantPhasesList[@]}" ; then
+        phaseName="P3"
+    elif IS_inList "P1" "${vagrantPhasesList[@]}" ; then
+        phaseName="P1"
+    elif IS_inList "P0" "${vagrantPhasesList[@]}" ; then
+        phaseName="P0"
+    else
+        phaseName="MissingPhase"
+        EH_problem "Missing Phase: ${vagrantPhasesList[@]}"
+    fi
+
+    echo "${containerId}-${phaseName}-${vmNameQualifier}"
+}
 
 function vis_vagrantFile_stdout {
     G_funcEntry
@@ -1199,7 +1236,7 @@ _EOF_
 
     local containerBaseBox=$( vis_vagrantBaseBoxFromSysChar )
 
-    local containerName="${containerAssign_containerId}-${vmNameQualifier}"
+    local containerName=$(thisPlatformName "${containerAssign_containerId}" "${vmNameQualifier}")
     # local hostname=$( echo ${containerName} | sed -e 's:_:-:g' )
     local hostname=$( echo ${containerName} | sed -e 's:_::g' )
 

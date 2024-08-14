@@ -657,7 +657,8 @@ function mmaPkgDebian_obtain {
   # $1 ... pkgName (eg daemontools)
 
   EH_assert [[ $# -gt 0 ]]
-  opDoRet opLinuxOnly || return $?
+  #opDoRet opLinuxOnly || return $?
+  opLinuxOnly || return $?
 
   typeset thisOne=""
 
