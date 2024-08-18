@@ -178,7 +178,12 @@ _EOF_
     }
     local thisBpoId=$( vis_bpoIdPrep "sysChar" )
 
+    if [ -z "${thisBpoId}" ] ; then
+        thisBpoId=$( lpDo sysCharBoxDeploy.sh -h -v -n showRun -i l2Plus_cntnrThis_regBpoId )
+    fi
+
     bpoId=${thisBpoId}
+    lpDo echo bpoId=$bpoId
     lpDo vis_materializedContainer
 }
 
