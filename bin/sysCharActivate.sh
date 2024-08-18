@@ -230,7 +230,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    local regBpoId=$( lpDo eval cntnrCharThis.cs -i cntnrThis_regBpoId 2\> /dev/null )
+    local regBpoId=$( lpDo eval "cntnrCharThis.cs -i cntnrThis_regBpoId 2\> /dev/null" )
 
     echo "${regBpoId}"
     

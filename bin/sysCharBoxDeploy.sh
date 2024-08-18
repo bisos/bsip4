@@ -133,11 +133,13 @@ typeset -t cfpNetAddr=""
 typeset -t cfpPrivA=""
 typeset -t cfpPubA=""
 
-
 typeset -t targetName=""
 
-sshCmnd="ssh -o StrictHostKeyChecking=no"
+typeset -t debInstAcct="intra"
+typeset -t debInstAcctPasswd="intra"
+typeset -t debInstRootPasswd="intra"
 
+sshCmnd="ssh -o StrictHostKeyChecking=no"
 
 function G_postParamHook {
     if [ ! -z "${bpoId}" ] ; then
@@ -146,11 +148,9 @@ function G_postParamHook {
     fi
 }
 
-
 noArgsHook() {
   vis_examples
 }
-
 
 _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  Examples      :: Examples [[elisp:(org-cycle)][| ]]
@@ -193,6 +193,7 @@ bisosCurrentsManage.sh  ${extraInfo} -i setParam curTargetBox 192.168.0.257
 ${curTargetBox:-}
 $( examplesSeperatorChapter "LAYER-1:: unsitedBisosDeploy.sh  -- Distro Actions -- On Manager -- Ssh Into Target" )
 unsitedBisosDeploy.sh
+unsitedBisosDeploy.sh -h -v -n showRun -p targetName="${oneTargetName}" -p debInstAcct="intra" -p debInstAcctPasswd="intra" -p debInstRootPasswd=intra -i l1_raw_bisos   # PRIMARY Action (all of above distro_ actions)
 unsitedBisosDeploy.sh ${extraInfo} -p targetName="${oneTargetName}" -i l1_fullUpdate
 unsitedBisosDeploy.sh ${extraInfo} -p targetName="${oneTargetName}" -i l1_boxUUID  # Box's unique-id
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1_boxUUIDToBoxNu
@@ -274,7 +275,6 @@ ${G_myName} ${extraInfo} -i devExamples
 _EOF_
 }
 
-
 function vis_l1_boxUUIDToBoxNu {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -297,14 +297,27 @@ function vis_l1_unsitedBisos {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Update distro, and bring it to bisosBasePlatform.
 *** TargetOnly -- intra user -- no bisos
+*** One of two models. unsitedModel and rawBisosModel Defaults to rawBisosModel
 _EOF_
     }
-    EH_assert [[ $# -eq 0 ]]
+    EH_assert [[ $# -lt 2 ]]
 
     EH_assert [ ! -z "${targetName}" ]
     EH_assert [ "${targetName}" != "localhost" ] # Must be invoked OnManger
 
-    lpDo unsitedBisosDeploy.sh -p targetName="${targetName}" -i l1_fullUpdate
+    local model="rawBisosModel"
+    if [ $# -eq 1 ] ; then
+        model="$1"
+    fi
+
+    if [ "${model}" == "rawBisosModel" ] ; then
+        lpDo unsitedBisosDeploy.sh -p targetName="${targetName}" -p debInstAcct="${debInstAcct}" -p debInstAcctPasswd="${debInstAcctPasswd}" -p debInstRootPasswd=${debInstRootPasswd} -i l1_raw_bisos
+    elif [ "${model}" == "unsitedModel" ] ; then
+        lpDo unsitedBisosDeploy.sh -p targetName="${targetName}" -i l1_fullUpdate
+    else
+        EH_problem "Unknown Model -- model=${model}"
+    fi
+
 }
 
 function vis_l1l2_sitedDevContainer {    
@@ -362,6 +375,37 @@ _EOF_
     lpDo vis_bisosBasePlatform_siteSetup
 
 }
+
+function vis_l3_cntnrThis_activate  {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Run sysCharActivate.sh -i cntnrThis_activate
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    function onManagerRun {
+        lpDo sysCharActivate.sh -v -n showRun -i cntnrThis_activate
+    }
+
+    function onTargetRun {
+        lpDo sysCharActivate.sh -v -n showRun -i cntnrThis_activate
+    }
+
+####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" :cmndOption t
+    if [ "${targetName}" == "onTargetRun" ] ; then
+        lpDo onTargetRun
+    elif [ -z "${targetName}" ] ; then
+        lpDo onTargetRun
+    else
+        local commandName=${FUNCNAME##vis_}
+        lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+             $(which ${G_myName}) ${G_commandPrefs} \
+             -p targetName=onTargetRun ${G_paramCmndOption} -i ${commandName}
+    fi
+####+END:
+}
+
 
 function vis_bisosBasePlatform_siteSetup {
     G_funcEntry

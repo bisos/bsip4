@@ -53,7 +53,8 @@ function vis_moduleDescription {  cat  << _EOF_
 *  [[elisp:(org-cycle)][| ]]  Xrefs         :: *[Related/Xrefs:]*  <<Xref-Here->>  -- External Documents  [[elisp:(org-cycle)][| ]]
 **  [[elisp:(org-cycle)][| ]]  Panel        :: [[file:/bisos/panels/bisos/core/bxeAndBxo/_nodeBase_/fullUsagePanel-en.org::Panel][Panel Roadmap Documentation]] [[elisp:(org-cycle)][| ]]
 *  [[elisp:(org-cycle)][| ]]  Info          :: *[Module Description:]* [[elisp:(org-cycle)][| ]]
-The equivalent of this script as a Standalone-ICM script is at: https://github.com/bxGenesis/start
+The equivalent of this script as a Standalone-ICM script is at: https://github.com/bxGenesis/start/raw-bisos.sh
+This script needs to be re-done to use the terminology of debInstAcct and debInstRootPasswd and debInstAcctPasswd
 _EOF_
 }
 
@@ -108,6 +109,10 @@ _CommentEnd_
 
 
 typeset -t targetName=""
+typeset -t debInstAcct="intra"
+typeset -t debInstAcctPasswd="intra"
+typeset -t debInstRootPasswd="intra"
+
 
 sshCmnd="ssh -o StrictHostKeyChecking=no"
 
@@ -163,7 +168,39 @@ ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_provisionBis
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_provisionBisos_ascertain
 $( examplesSeperatorChapter "Full Update" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1_fullUpdate  # PRIMARY Action (all of above distro_ actions)
+$( examplesSeperatorChapter "Raw-BISOS -- bxGeneis/start repo" )
+https://github.com/bxGenesis/start
++ /bisos/git/bxRepos/bxGenesis/start
++ /bisos/git/bxRepos/bxGenesis/provisioners
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p debInstAcct="intra" -p debInstAcctPasswd="intra" -p debInstRootPasswd=intra -i l1_raw_bisos   # PRIMARY Action (all of above distro_ actions)
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p debInstAcct="vagrant" -p debInstAcctPasswd="vagrant" -p debInstRootPasswd="" -i l1_raw_bisos   # PRIMARY Action (all of above distro_ actions)
 _EOF_
+}
+
+
+function vis_l1_raw_bisos {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Use and run on target with https://raw.githubusercontent.com/bxGenesis/start/main/raw-bisos.sh
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert [ ! -z "${targetName}" ]
+
+    local passwdParam=""
+
+    lpDo sshpass -p ${debInstAcctPasswd} ${sshCmnd} ${debInstAcct}@"${targetName}" \
+        wget  https://raw.githubusercontent.com/bxGenesis/start/main/raw-bisos.sh
+
+    lpDo sshpass -p ${debInstAcctPasswd} ${sshCmnd} ${debInstAcct}@"${targetName}" \
+        chmod 775 ./raw-bisos.sh
+
+    if [ ! -z "${debInstRootPasswd}" ] ; then
+        passwdParam="-p debInstRootPasswd=${debInstRootPasswd}"
+    fi
+    lpDo sshpass -p ${debInstAcctPasswd} ${sshCmnd} ${debInstAcct}@"${targetName}" \
+        ./raw-bisos.sh -v -n showRun ${passwdParam} -i installUnsitedBisos
 }
 
 

@@ -170,9 +170,9 @@ sysCharActivate.sh -h -v -n showRun -p bpoId="${oneBxoId}" -i activate_sysContai
 $( examplesSeperatorChapter "Specialized Actions" )
 ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vagrantBaseBoxFromSysChar   # which vagrantBaseBox will be used
 ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vagrantBase_last     # on host - Show Vagrant Directory
-${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vagrantFile_run       # Ends with image -- SITED BISOS
-${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -p phases="P0 P1" -i vagrantFile_run   # Ends with image - Equivalent of UnSited BISOS
-${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -p phases="P0" -i vagrantFile_run   # Ends with image - Equivalent of Raw-DEBIAN
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vagrantFile_run       # Generates image for SITED BISOS
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -p phases="P0 P1" -i vagrantFile_run   # Generates image for UnSited BISOS
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -p phases="P0" -i vagrantFile_run      # Generates image for Raw-DEBIAN
 $( examplesSeperatorChapter "Vagrantfile Stdout and Creation " )
 ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vagrantFile_bottomPart
 ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vagrantFile_stdout    # on host
@@ -188,11 +188,20 @@ ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i recordDeployment      # insid
 $( examplesSeperatorChapter "Generic Container Materialization" )
 ${G_myName} -i containerGenericMaterialize examples
 ${G_myName} ${extraInfo} -i containerGenericMaterialize doIt
-$( examplesSeperatorChapter "Phases Specification" )
-${G_myName} -i vagrantPhasesGet
-${G_myName} -p phases="P0 P1" -i vagrantPhasesGet
+$( examplesSeperatorChapter "Guest / VM / Vagrant -- Management And Deletion" )
+vagrant global-status  # List Vagrant Directories, Names and IDs, runningh status is inacurate
+virsh --connect qemu:///system list --all --title  # List running and shut off VMs
+bpoCntnrGuestStation.sh  # Manage VMs with their Guest BPOs
+lcaVirshManage.sh   # Low level virsh Management
+echo vagrant destroy id  # Name does not work. Id is obtained from vagrant global-status
 _EOF_
 }
+
+# $( examplesSeperatorChapter "Phases Specification" )
+# ${G_myName} -i vagrantPhasesGet
+# ${G_myName} -p phases="P0 P1" -i vagrantPhasesGet
+
+
 
 vagrantPhasesList=( "P0" "P1" "P2" "P3" )
 
