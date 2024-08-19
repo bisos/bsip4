@@ -234,6 +234,7 @@ ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l3_charedContaine
 $( examplesSeperatorChapter "LAYER-4:: BPO Contaioner Composition" )
 bpoCntnrComposeBox.sh     # Under lying ICM for Layer 4
 bpoCntnrComposeGuest.sh
+containerRepoSelf.sh -h -v -n showRun -i selfUpdateFull "thisSysBpoId"  # selfUpdateBoxFPs -- Modernize this existing cntnrBpo
 $( examplesSeperatorChapter "LAYER-5:: Materialized-Container " )
 sysCharBoxMaterialize.sh    # Under lying ICM for Layer
 sysCharMaterializeGuest.sh

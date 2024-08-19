@@ -284,19 +284,23 @@ _EOF_
         ANT_raw "pyproject.toml -- is in place, updating skipped"
     fi
 
+    # /bisos/apps/defaults/begin/templates/purposed/pyModule/org/README.org
+    if [ ! -f "README.org" ] ; then
+        lpDo cp "${templatesBase}/org/README.org" README.org
+    else
+        ANT_raw "README.org -- is in place, updating skipped"
+    fi
+
+    #
+    # Order is important. setup.py should come last.
+    #
+
     # /bisos/apps/defaults/begin/templates/purposed/pyModule/python/setup.py
     if [ ! -f "setup.py" ] ; then
         lpDo cp "${templatesBase}/python/setup.py" setup.py
         lpDo bx-dblock -i dblockUpdateFiles setup.py
     else
         ANT_raw "setup.py -- is in place, updating skipped"
-    fi
-
-    # /bisos/apps/defaults/begin/templates/purposed/pyModule/org/README.org
-    if [ ! -f "README.org" ] ; then
-        lpDo cp "${templatesBase}/org/README.org" README.org
-    else
-        ANT_raw "README.org -- is in place, updating skipped"
     fi
 
     lpReturn
@@ -1012,7 +1016,7 @@ function vis_installedVersion {
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
-    #local installedVer=$( pip show $(setup.py --name)  | egrep '^Version:' | cut -d ":" -f 2 )
+    ###  local installedVer=$( pip show $(setup.py --name)  | egrep '^Version:' | cut -d ":" -f 2 )
     local installedVer=$( vis_curDevVer )
 
     echo ${installedVer}
