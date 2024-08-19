@@ -181,6 +181,7 @@ ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i con
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i sysCharContainerBoxRealize  # Does not bpoIdManage
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i containerAssignAndRepoAndSysCharRealize  # FULL ACTION -- PRIMARY COMMAND
 ${G_myName} ${extraInfo} -p model=Host -p abode=Internet -p function=Server -i containerAssignAndRepoAndSysCharRealize  # FULL ACTION -- PRIMARY COMMAND
+${G_myName} ${extraInfo} -p model=Pure -p abode=Mobile -p function=LinuxU -i containerAssignAndRepoAndSysCharRealize  # FULL ACTION -- PRIMARY COMMAND
 $( examplesSeperatorChapter "Virt -- Site Assign SysChar And Container Realization" )
 ${G_myName} ${extraInfo} -p model=Virt -p abode=Shield -p function=Server -i containerAssignAndRepo
 ${G_myName} ${extraInfo} -p model=Virt -p abode=Shield -p function=Server -i containerAssignAndRepoAndSysCharRealize  # FULL ACTION -- PRIMARY COMMAND

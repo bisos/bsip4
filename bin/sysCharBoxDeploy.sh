@@ -216,15 +216,19 @@ $( examplesSeperatorChapter "Layer-1 + Layer 2:: Combined" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l2_sitedDevContainer # OnManager
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l2_sitedContainer  # OnManager
 sshpass -p intra ssh -X bystar@${oneTargetName} -f xterm -font 10x20
-$( examplesSeperatorChapter "LAYER-3:: Chared-Container -- [Reify: Realize or Activate] SysChar Setup [with sysCharBpo] -- siteBasePlatform Actions" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_regBoxAscertain  # Has this box been registered
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_regContainerBoxAscertain  # Is a container registered for this box
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_boxNameUpdate  "Like-R710-2"  # OnManager -- PRIMARY (New BOX)
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_cntnrThis_regBpoId
-$( examplesSeperatorSection "L3:: Full New Box Actions -- Realize on Target Box Only" )
+$( examplesSeperatorChapter "LAYER-2 Plus:: Registrar Box and Container Info" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_regBoxAscertain  # Has this box been registered?
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_regContainerBoxAscertain  # Is a container registered for this box?
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_boxNameUpdate  "Like-R710-2"  # OnManager -- PRIMARY (New and Existing BOX)
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_cntnrThis_regBpoId  # Find the registered bpoId of this container
+$( examplesSeperatorSection "L3:: ContainerBpo Creation and Registration - Full New Box Actions -- Realize on Target Box Only" )
+svcInvSiteRegBox.cs  -i thisBox_assign           # Assign a number to this box, if needed -- PRIMARY (New BOX)
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_boxNameUpdate  "Like-R710-2"  # OnManager -- PRIMARY (New and Existing BOX)
+sysCharRealize.sh 
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i l3_charedContainerBoxRealize  # OnTarget Only -- PRIMARY (New BOX)
 ${G_myName} ${extraInfo} -p model=Pure -p abode=Shield -p function=Server -i l3_charedContainerBoxRealize  # OnTarget Only -- PRIMARY (New BOX)
-$( examplesSeperatorSection "L3:: Full Existing Box Actions -- Activate on Manager Or On Target Box" )
+${G_myName} ${extraInfo} -p model=Pure -p abode=Mobile -p function=LinuxU -i l3_charedContainerBoxRealize  # OnTarget Only -- PRIMARY (New BOX)
+$( examplesSeperatorSection "L3:: Full Existing Box Actions -- [Reify: Realize or Activate] SysChar Setup [with sysCharBpo] -- siteBasePlatform Actions" )
 ${G_myName} ${extraInfo} -i l3_cntnrThis_activate # On Target
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l3_cntnrThis_activate # On Manager
 ${G_myName} ${extraInfo} -p bxoId="pmp_VAG-deb11_" -i siteBasePlatform_sysBxoActivate
@@ -436,13 +440,17 @@ _EOF_
         # NOTYET, perhaps this should be done even sooner
         lpDo bisosCurrentsManage.sh ${G_commandPrefs} -i currentsFileCreate
         
-        lpDo bisosSiteSetup.sh ${G_commandPrefs} \
-             -p registrar="${registrar}" -p id="${id}" -p password="${password}" \
-             -i fullUpdate
+        # lpDo bisosSiteSetup.sh ${G_commandPrefs} \
+        #      -p bpoId="${siteBxoId}" \
+        #      -i activate_siteBxoPlusAndSelect
 
+        #  activate_siteBxoPlusAndSelect is now done in fullUpdate
         lpDo bisosSiteSetup.sh ${G_commandPrefs} \
-             -p bpoId="${siteBxoId}" \
-             -i activate_siteBxoPlusAndSelect 
+            -p bpoId="${siteBxoId}" \
+            -p registrar="${registrar}" -p id="${id}" -p password="${password}" \
+            -i fullUpdate
+
+
     }
 
     if [ "${targetName}" != "onTargetRun" ] && [ ! -z "${targetName}" ] ; then
