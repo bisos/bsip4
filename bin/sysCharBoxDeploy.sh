@@ -135,9 +135,32 @@ typeset -t cfpPubA=""
 
 typeset -t targetName=""
 
-typeset -t debInstAcct="intra"
-typeset -t debInstAcctPasswd="intra"
-typeset -t debInstRootPasswd="intra"
+typeset -t debInstAcct=""         # See debInstDefaults
+typeset -t debInstAcctPasswd=""   # See debInstDefaults
+typeset -t debInstRootPasswd=""   # See debInstDefaults
+
+function debInstDefaults {
+    if [ -z "${debInstAcct}" ] ; then
+        debInstAcct="intra"
+    fi
+    if [ "${debInstAcct}" == "intra" ] ; then
+        if [ -z "${debInstAcctPasswd}" ] ; then
+            debInstAcctPasswd="intra"
+        fi
+        if [ -z "${debInstRootPasswd}" ] ; then
+            debInstRootPasswd="intra"
+        fi
+    elif [ "${debInstAcct}" == "vagrant" ] ; then
+        if [ -z "${debInstAcctPasswd}" ] ; then
+            debInstAcctPasswd="vagrant"
+        fi
+        if [ -z "${debInstRootPasswd}" ] ; then
+            debInstRootPasswd="NA"
+        fi
+    else
+        doNothing
+    fi
+}
 
 sshCmnd="ssh -o StrictHostKeyChecking=no"
 
@@ -146,6 +169,7 @@ function G_postParamHook {
         bpoIdPrepValidate
         bpoHome=$( FN_absolutePathGet ~${bpoId} )
     fi
+    debInstDefaults
 }
 
 noArgsHook() {
@@ -193,7 +217,8 @@ bisosCurrentsManage.sh  ${extraInfo} -i setParam curTargetBox 192.168.0.257
 ${curTargetBox:-}
 $( examplesSeperatorChapter "LAYER-1:: unsitedBisosDeploy.sh  -- Distro Actions -- On Manager -- Ssh Into Target" )
 unsitedBisosDeploy.sh
-unsitedBisosDeploy.sh -h -v -n showRun -p targetName="${oneTargetName}" -p debInstAcct="intra" -p debInstAcctPasswd="intra" -p debInstRootPasswd=intra -i l1_raw_bisos   # PRIMARY Action (all of above distro_ actions)
+unsitedBisosDeploy.sh -h -v -n showRun -p targetName="${oneTargetName}" -p debInstAcct="intra" -p debInstAcctPasswd="${debInstAcctPasswd}" -p debInstRootPasswd="${debInstRootPasswd}" -i l1_raw_bisos   # PRIMARY Action
+unsitedBisosDeploy.sh -h -v -n showRun -p targetName="${oneTargetName}" -p debInstAcct="vagrant" -i l1_raw_bisos   # PRIMARY Action
 unsitedBisosDeploy.sh ${extraInfo} -p targetName="${oneTargetName}" -i l1_fullUpdate
 unsitedBisosDeploy.sh ${extraInfo} -p targetName="${oneTargetName}" -i l1_boxUUID  # Box's unique-id
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1_boxUUIDToBoxNu
@@ -205,7 +230,8 @@ bleeVisit /bisos/panels/development/bisos-dev/howToBecomeDeveloper/fullUsagePane
 $( examplesSeperatorChapter "LAYER-2:: Sited-Container -- UnsitedBisos to SitedContainer" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2_sitedDevContainer  # onManager  -- PRIMARY (New BOX)
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2_sitedContainer  # onManager  -- PRIMARY (New BOX)
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_siteSetup # onManager or below onTarget
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2_sitedContainer  # onManager  -- PRIMARY (New BOX)
+ ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_siteSetup # onManager or below onTarget
 ${G_myName} ${extraInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -p siteBxoId=${siteBxoId}" -i bisosBasePlatform_siteSetup # onTarget
 $( examplesSeperatorSection "L2:: BISOS Development Preps -- bisosBasePlatform Actions" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_devContainer # onManager+onTarget UsedBy: l2_sitedDevContainer
@@ -215,6 +241,7 @@ cntnrDevel.sh -h -v -n showRun -i bisosDevBxo_fullSetup  # activate bisosDevBxoI
 $( examplesSeperatorChapter "Layer-1 + Layer 2:: Combined" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l2_sitedDevContainer # OnManager
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l2_sitedContainer  # OnManager
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p debInstAcct="vagrant" -i l1l2_sitedContainer  # OnManager
 sshpass -p intra ssh -X bystar@${oneTargetName} -f xterm -font 10x20
 $( examplesSeperatorChapter "LAYER-2 Plus:: Registrar Box and Container Info" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_regBoxAscertain  # Has this box been registered?

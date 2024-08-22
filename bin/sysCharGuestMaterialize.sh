@@ -171,8 +171,8 @@ $( examplesSeperatorChapter "Specialized Actions" )
 ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vagrantBaseBoxFromSysChar   # which vagrantBaseBox will be used
 ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vagrantBase_last     # on host - Show Vagrant Directory
 ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vagrantFile_run       # Generates image for SITED BISOS
-${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -p phases="P0 P1" -i vagrantFile_run   # Generates image for UnSited BISOS
-${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -p phases="P0" -i vagrantFile_run      # Generates image for Raw-DEBIAN
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -p phases="P0 P1" -i vagrantFile_run   # Generates image for Raw-BISOS (UnSited-BISOS)
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -p phases="P0" -i vagrantFile_run      # Generates image for Fresh-DEBIAN
 $( examplesSeperatorChapter "Vagrantfile Stdout and Creation " )
 ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vagrantFile_bottomPart
 ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vagrantFile_stdout    # on host

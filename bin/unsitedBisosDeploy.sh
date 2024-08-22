@@ -109,15 +109,39 @@ _CommentEnd_
 
 
 typeset -t targetName=""
-typeset -t debInstAcct="intra"
-typeset -t debInstAcctPasswd="intra"
-typeset -t debInstRootPasswd="intra"
 
+typeset -t debInstAcct=""         # See debInstDefaults
+typeset -t debInstAcctPasswd=""   # See debInstDefaults
+typeset -t debInstRootPasswd=""   # See debInstDefaults
+
+function debInstDefaults {
+    if [ -z "${debInstAcct}" ] ; then
+        debInstAcct="intra"
+    fi
+    if [ "${debInstAcct}" == "intra" ] ; then
+        if [ -z "${debInstAcctPasswd}" ] ; then
+            debInstAcctPasswd="intra"
+        fi
+        if [ -z "${debInstRootPasswd}" ] ; then
+            debInstRootPasswd="intra"
+        fi
+    elif [ "${debInstAcct}" == "vagrant" ] ; then
+        if [ -z "${debInstAcctPasswd}" ] ; then
+            debInstAcctPasswd="vagrant"
+        fi
+        if [ -z "${debInstRootPasswd}" ] ; then
+            debInstRootPasswd="NA"
+        fi
+    else
+        doNothing
+    fi
+}
 
 sshCmnd="ssh -o StrictHostKeyChecking=no"
 
 
 function G_postParamHook {
+    debInstDefaults
     lpReturn
 }
 
@@ -172,8 +196,9 @@ $( examplesSeperatorChapter "Raw-BISOS -- bxGeneis/start repo" )
 https://github.com/bxGenesis/start
 + /bisos/git/bxRepos/bxGenesis/start
 + /bisos/git/bxRepos/bxGenesis/provisioners
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p debInstAcct="intra" -p debInstAcctPasswd="intra" -p debInstRootPasswd=intra -i l1_raw_bisos   # PRIMARY Action (all of above distro_ actions)
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p debInstAcct="vagrant" -p debInstAcctPasswd="vagrant" -p debInstRootPasswd="" -i l1_raw_bisos   # PRIMARY Action (all of above distro_ actions)
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p debInstAcct="intra" -p debInstAcctPasswd="${debInstAcctPasswd}" -p debInstRootPasswd="${debInstRootPasswd}" -i l1_raw_bisos   # PRIMARY Action (all of above distro_ actions)
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p debInstAcct="intra" -i l1_raw_bisos     # PRIMARY Action (all of above distro_ actions)
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p debInstAcct="vagrant" -i l1_raw_bisos   # PRIMARY Action (all of above distro_ actions)
 _EOF_
 }
 
