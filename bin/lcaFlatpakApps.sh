@@ -108,6 +108,8 @@ function vis_examples {
 
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
+$( examplesSeperatorSection "Full Actions" )
+${G_myName} ${extraInfo} -i fullUpdate
 $( examplesSeperatorChapter "simple-wireplumber-gui -- GUI App for editing inputs and outputs" )
 sudo flatpak install flathub io.github.dyegoaurelio.simple-wireplumber-gui
 flatpak run io.github.dyegoaurelio.simple-wireplumber-gui
@@ -122,6 +124,17 @@ _EOF_
      # vis_examplesNicheRun site
 }
 
+function vis_fullUpdate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo sudo flatpak install flathub io.github.dyegoaurelio.simple-wireplumber-gui
+    lpDo sudo sudo flatpak install flathub org.pipewire.Helvum
+}
 
 
 _CommentBegin_
