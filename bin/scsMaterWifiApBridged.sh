@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IimBriefDescription="Configure a Bridged Wireless Access Point."
+IimBriefDescription="Self-Contained Service Materialization -- Configure a Bridged Wireless Access Point."
 
 ORIGIN="
 * Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee
