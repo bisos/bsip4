@@ -133,7 +133,7 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     lpDo sudo flatpak install flathub io.github.dyegoaurelio.simple-wireplumber-gui
-    lpDo sudo sudo flatpak install flathub org.pipewire.Helvum
+    lpDo sudo flatpak install flathub org.pipewire.Helvum
 }
 
 
