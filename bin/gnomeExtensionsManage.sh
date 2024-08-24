@@ -93,9 +93,29 @@ function vis_examples {
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
-$( examplesSeperatorChapter "Installation Profile" )
 $( examplesSeperatorSection "Full Actions" )
 ${G_myName} ${extraInfo} -i fullUpdate
+$( examplesSeperatorSection "Gnome Extensions Useful Commands" )
+gnome-shell --version
+ls -ldt /usr/share/gnome-shell/extensions/*  # equivalent of gnome-extensions list
+gsettings get org.gnome.shell.enabled-extensions
+echo gsettings get org.gnome.shell.enabled-extensions "$(gsettings get org.gnome.shell.enabled-extensions)"
+gsettings list-schemas
+gnome-extensions list # PROBLEM:  Failed to connect to GNOME Shell
+gnome-extensions enable  dash-to-panel # PROBLEM
+gnome-extensions enable  gsconnect  # PROBLEM
+$( examplesSeperatorSection "Gnome Dash Launcher Useful Commands" )
+gsettings get org.gnome.shell favorite-apps
+dconf read /org/gnome/shell/favorite-apps
+echo dconf write /org/gnome/shell/favorite-apps
+$( examplesSeperatorSection "Python Gnome API" )
+https://unix.stackexchange.com/questions/313338/gnome3-how-do-i-remove-favorites-from-dash-via-terminal
+$( examplesSeperatorSection "Useful GUI Apps And Tips" )
+gnome-tweaks
+gnome-shell-extension-prefs # PROBLEM
+gnome-extensions-app  # Fails from Command line. But works when pinned
+dconf-editor
+echo Hint: the number of workspaces is changed in Settings-Multitasking.
 _EOF_
 }
 

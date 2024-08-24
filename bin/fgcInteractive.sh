@@ -66,10 +66,7 @@ _CommentEnd_
 
 
 itemsOrderedList=(
-    gnomeExtensionsBinsPrep.sh
-    lcaKodiBinsPrep.sh
-    lcaFlatpakBinsPrep.sh
-    # lcaFlatpakApps.sh # For now moved to fgcInteractive
+    lcaFlatpakApps.sh
 )
 
 
