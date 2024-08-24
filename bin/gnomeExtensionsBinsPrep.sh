@@ -76,7 +76,7 @@ _EOF_
 
     itemOrderedList=( 
         "gnome_shell_extension_manager"
-        "gnome_shell_extension_perfs"
+        "gnome_shell_extension_prefs"
         "gnome_shell_extension_dash_to_panel"
         "gnome_shell_extension_gsconnect"
         "gnome_shell_extension_gsconnect_browsers"
@@ -119,13 +119,13 @@ binsPrep_gnome_shell_extension_manager_DEFAULT_DEFAULT () { binsPrepAptPkgNameSe
 
 ####+END:
 
-####+BEGIN: bx:dblock:lsip:binsprep:apt :module "gnome-shell-extension-perfs"
+####+BEGIN: bx:dblock:lsip:binsprep:apt :module "gnome-shell-extension-prefs"
 _CommentBegin_
-*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || Apt-Pkg       :: gnome-shell-extension-perfs [[elisp:(org-cycle)][| ]]
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || Apt-Pkg       :: gnome-shell-extension-prefs [[elisp:(org-cycle)][| ]]
 _CommentEnd_
-item_gnome_shell_extension_perfs () { distFamilyGenerationHookRun binsPrep_gnome_shell_extension_perfs; }
+item_gnome_shell_extension_prefs () { distFamilyGenerationHookRun binsPrep_gnome_shell_extension_prefs; }
 
-binsPrep_gnome_shell_extension_perfs_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "gnome-shell-extension-perfs"; }
+binsPrep_gnome_shell_extension_prefs_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "gnome-shell-extension-prefs"; }
 
 ####+END:
 
