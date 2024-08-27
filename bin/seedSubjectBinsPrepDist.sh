@@ -146,7 +146,7 @@ function do_compUpdate {
   binsPrepItemClear
   subjectValidatePrepare
   binsPrepPkgInfoPre
-  continueAfterThis
+  # continueAfterThis
   # opDo mmaCompAuto_update
   mmaCompAuto_update
 }
@@ -196,7 +196,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    local extraInfo="-v -n showRun"
+    local extraInfo="${G_verboseCmndOption} ${G_runModeCmndOption}"
 
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn 1; fi;
     typeset allOrderedSubjects=$( vis_orderedList )

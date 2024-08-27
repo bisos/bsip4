@@ -681,7 +681,10 @@ function mmaPkgDebian_obtain {
 
 
           # opDoExit sudo apt-get -y --force-yes -d install ${thisOne}
+          local savedRunMode="${G_runMode}"
+          G_runMode="showRun"
           opDoExit sudo apt-get -y -d install ${thisOne}
+          G_runMode="${savedRunMode}"
       done
   elif  [ "${mmaPkgDebianMethod}_" == "custom_" ]  ; then
           doNothing

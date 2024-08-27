@@ -177,6 +177,7 @@ _EOF_
         lpReturn 1
     else
         opDo "${bisosProg}" -h -v -n showRun -i sysPreps
+        # opDo "${bisosProg}" -h -v -n showRun -i fullUpdate
         opDo "${bisosProg}" -h -v -n showRun -i fullUpdate
     fi
     
@@ -199,7 +200,8 @@ _EOF_
         EH_problem "Missing ${bisosProg}"
         lpReturn 1
     else        
-        opDo "${bisosProg}" -h -v -n showRun -i fullUpdate
+        #opDo "${bisosProg}" -h -v -n showRun -i fullUpdate
+        opDo "${bisosProg}" -i fullUpdate
     fi
     
     lpReturn

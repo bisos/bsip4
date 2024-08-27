@@ -92,6 +92,9 @@ _EOF_
         "nmap"
         "pandoc"
         "gnupg"   # Keywords: GPG PGP
+        "libcairo2_dev"           # Needed for bisos.gnome
+        "libxt_dev"               # Needed for bisos.gnome
+        "libgirepository1.0_dev"  # Needed for bisos.gnom
     )
 
     itemOptionalOrderedList=()
@@ -158,6 +161,36 @@ _EOF_
     
     lpReturn
 }
+
+####+BEGIN: bx:dblock:lsip:binsprep:apt :module "libcairo2-dev"
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || Apt-Pkg       :: libcairo2-dev [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+item_libcairo2_dev () { distFamilyGenerationHookRun binsPrep_libcairo2_dev; }
+
+binsPrep_libcairo2_dev_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "libcairo2-dev"; }
+
+####+END:
+
+####+BEGIN: bx:dblock:lsip:binsprep:apt :module "libxt-dev"
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || Apt-Pkg       :: libxt-dev [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+item_libxt_dev () { distFamilyGenerationHookRun binsPrep_libxt_dev; }
+
+binsPrep_libxt_dev_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "libxt-dev"; }
+
+####+END:
+
+####+BEGIN: bx:dblock:lsip:binsprep:apt :module "libgirepository1.0-dev"
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || Apt-Pkg       :: libgirepository1.0-dev [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+item_libgirepository1.0_dev () { distFamilyGenerationHookRun binsPrep_libgirepository1.0_dev; }
+
+binsPrep_libgirepository1.0_dev_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "libgirepository1.0-dev"; }
+
+####+END:
 
 ####+BEGIN: bx:dblock:lsip:binsprep:apt :module "iptables"
 _CommentBegin_

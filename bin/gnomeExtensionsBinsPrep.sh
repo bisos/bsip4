@@ -80,6 +80,7 @@ _EOF_
         "gnome_shell_extension_dash_to_panel"
         "gnome_shell_extension_gsconnect"
         "gnome_shell_extension_gsconnect_browsers"
+        "python_gi_dev"
         "gnome_tweaks"
     )
 
@@ -158,6 +159,17 @@ item_gnome_shell_extension_gsconnect_browsers () { distFamilyGenerationHookRun b
 binsPrep_gnome_shell_extension_gsconnect_browsers_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "gnome-shell-extension-gsconnect-browsers"; }
 
 ####+END:
+
+####+BEGIN: bx:dblock:lsip:binsprep:apt :module "python-gi-dev"
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || Apt-Pkg       :: python-gi-dev [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+item_python_gi_dev () { distFamilyGenerationHookRun binsPrep_python_gi_dev; }
+
+binsPrep_python_gi_dev_DEFAULT_DEFAULT () { binsPrepAptPkgNameSet "python-gi-dev"; }
+
+####+END:
+
 
 ####+BEGIN: bx:dblock:lsip:binsprep:apt :module "gnome-tweaks"
 _CommentBegin_
