@@ -136,8 +136,41 @@ noArgsHook() {
 }
 
 
-
 function desktopAppFileUpdate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+if updateFileName starts with /usr/local process it as root. Otherwise the current user.
+_EOF_
+    }
+    EH_assert [[ $# -eq 2 ]]
+
+    updateFileName=$1
+    updateStdoutFunc=$2
+
+    if [[ $updateFileName == /usr/local/* ]] ; then
+      lpDo desktopAppFileUpdateRoot ${updateFileName} ${updateStdoutFunc}
+    else
+      lpDo desktopAppFileUpdateUser ${updateFileName} ${updateStdoutFunc}
+    fi
+}
+
+function desktopAppFileUpdateRoot {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 2 ]]
+
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
+
+    lpDo desktopAppFileUpdateUser $@
+}
+
+function desktopAppFileUpdateUser {
+  G_funcEntry
+  function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+                     }
   EH_assert [[ $# -eq 2 ]]
 
   updateFileName=$1
@@ -161,7 +194,6 @@ function desktopAppFileUpdate {
   # opDoComplain chmod ugo+x ${updateFileName}
   opDoComplain ls -l ${updateFileName}
 }
-
 
 function vis_xdgBleeOrgProtocolStdout {
   cat  << _EOF_
@@ -234,11 +266,15 @@ _EOF_
 }
 
 
-function vis_xdgBleeSysAppFile {
+function vis_xdgBleeSysAppFileUser {
   local updateFileName=$( echo ~/.local/share/applications/blee3-doom-sys.desktop )
   echo ${updateFileName}
 }
 
+function vis_xdgBleeSysAppFile {
+  local updateFileName=$( echo /usr/local/share/applications/blee3-doom-sys.desktop )
+  echo ${updateFileName}
+}
 
 function vis_xdgBleeSysAppUpdate {
 
@@ -260,12 +296,10 @@ MimeType=x-scheme-handler/mailto
 _EOF_
 }
 
-
 function vis_xdgBlee30AppFile {
   local updateFileName=$( echo ~/.local/share/applications/blee-sys.desktop )
   echo ${updateFileName}
 }
-
 
 function vis_xdgBlee30AppUpdate {
 
@@ -274,8 +308,6 @@ function vis_xdgBlee30AppUpdate {
 
   lpDo desktopAppFileUpdate ${updateFileName} ${updateStdoutFunc}
 }
-
-
 
 
 _CommentBegin_
