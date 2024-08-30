@@ -109,7 +109,7 @@ _EOF_
 
     lpDo ${bisosBinBase}/bsipProvision.sh -h -v -n showRun -i sysBaseGeneralAugment
 
-    lpDo Id
+    lpDo id
 
     lpDo ${bisosBinBase}/bsipProvision.sh -h -v -n showRun -i provisionGnomeDesktop
     
@@ -338,7 +338,8 @@ _EOF_
 
     lpDo sudo -u bisos env PIPX_HOME=/bisos/pipx PIPX_BIN_DIR=/bisos/pipx/bin /bisos/venv/py3/bisos3/bin/pipx install bisos.gnome
 
-    opDo sudo -u bystar /bisos/pipx/bin/gnomeBisos.cs -i gnomeCustomizeForBCBs commonCaps
-
+    lpDo sudo -u bystar /bisos/pipx/bin/gnomeBisos.cs  --cls="gnomeBisosAutostart"  -i configFileUpdate
+    lpDo sudo -u bystar /bisos/pipx/bin/gnomeBisos.cs  --cls="gnomeBisosAutostart"  -i configFilePath
+    
     lpReturn
 }
