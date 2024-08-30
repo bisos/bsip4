@@ -338,6 +338,7 @@ _EOF_
 
     lpDo sudo -u bisos env PIPX_HOME=/bisos/pipx PIPX_BIN_DIR=/bisos/pipx/bin /bisos/venv/py3/bisos3/bin/pipx install bisos.gnome
 
+    lpDo sudo -u bystar /bisos/pipx/bin/gnomeBisos.cs -i gnomeAutostartPrep
     lpDo sudo -u bystar /bisos/pipx/bin/gnomeBisos.cs  --cls="gnomeBisosAutostart"  -i configFileUpdate
     lpDo sudo -u bystar /bisos/pipx/bin/gnomeBisos.cs  --cls="gnomeBisosAutostart"  -i configFilePath
     
