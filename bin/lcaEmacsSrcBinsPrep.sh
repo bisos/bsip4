@@ -257,8 +257,25 @@ _EOF_
    
     opDo emacsVerCanonicalized    
 
+    function srcPkgSpecPrep_emacs30_git {
+        srcPkgName="emacs-30"
+
+        srcBuildScript=""
+        srcBuildScriptTmpDir=/tmp/"${srcPkgName}"
+
+        srcObtainBaseDir="/bisos/var/srcPkgs/${srcPkgName}"
+        # -- depth 1 of git clone, copies only the latest revision
+        #obtainCmndLine="git clone --depth 1 git://git.sv.gnu.org/emacs.git"
+        #obtainCmndLine="obtainOrUpdateSrc_emacs29"
+        #
+        obtainCmndLine="git clone --depth 1 -b ${srcPkgName} git://git.sv.gnu.org/emacs.git"
+        prepCmndLine="echo Git cloned"
+
+        srcBuildBaseDir="/bisos/var/srcPkgs/${srcPkgName}/emacs"
+    }
+    
     function srcPkgSpecPrep_emacs29_git {
-        srcPkgName="emacs-29"
+        srcPkgName="emacs-29.4"
        
         srcBuildScript=""
         srcBuildScriptTmpDir=/tmp/"${srcPkgName}"
@@ -268,7 +285,7 @@ _EOF_
         #obtainCmndLine="git clone --depth 1 git://git.sv.gnu.org/emacs.git"
         #obtainCmndLine="obtainOrUpdateSrc_emacs29"
         #
-        obtainCmndLine="git clone -b ${srcPkgName} git://git.sv.gnu.org/emacs.git"
+        obtainCmndLine="git clone --depth 1 -b ${srcPkgName} git://git.sv.gnu.org/emacs.git"
         prepCmndLine="echo Git cloned"
 
         srcBuildBaseDir="/bisos/var/srcPkgs/${srcPkgName}/emacs"        
@@ -1146,6 +1163,7 @@ _EOF_
 }
 
 
+function vis_srcBuild_emacs30 { opDo vis_srcBuild_default; }
 function vis_srcBuild_emacs29 { opDo vis_srcBuild_default; }
 function vis_srcBuild_emacs28 { opDo vis_srcBuild_default; }
 function vis_srcBuild_emacs27 { opDo vis_srcBuild_default; }
