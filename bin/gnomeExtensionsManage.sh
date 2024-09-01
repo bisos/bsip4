@@ -1,21 +1,13 @@
 #!/bin/bash
 
-IimBriefDescription="NOTYET: Short Description Of The Module"
+IcmBriefDescription="NOTYET: Short Description Of The Module"
 
 ORIGIN="
 * Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee
 "
 
 ####+BEGIN: bx:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
-### Args: :control "enabled|disabled|hide|release|fVar"  :vc "cvs|git|nil" :partof "bystar|nil" :copyleft "halaal+minimal|halaal+brief|nil"
-typeset RcsId="$Id: dblock-iim-bash.el,v 1.4 2017-02-08 06:42:32 lsipusr Exp $"
-# *CopyLeft*
-__copying__="
-* Libre-Halaal Software"
-#  This is part of ByStar Libre Services. http://www.by-star.net
-# Copyright (c) 2011 Neda Communications, Inc. -- http://www.neda.com
-# See PLPC-120001 for restrictions.
-# This is a Halaal Poly-Existential intended to remain perpetually Halaal.
+
 ####+END:
 
 __author__="
@@ -25,13 +17,13 @@ __author__="
 
 ####+BEGIN: bx:bsip:bash:seed-spec :types "seedActions.bash"
 SEED="
-*  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
+*  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] |
 "
 FILE="
-*  /This File/ :: /bisos/bsip/bin/sysCharGuestPreps.sh 
+*  /This File/ :: /bisos/core/bsip/bin/gnomeExtensionsManage.sh
 "
 if [ "${loadFiles}" == "" ] ; then
-    /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
+    /bisos/core/bsip/bin/seedActions.bash -l $0 "$@"
     exit $?
 fi
 ####+END:
@@ -51,7 +43,7 @@ _CommentEnd_
 
 function vis_moduleDescription {  cat  << _EOF_
 *  [[elisp:(org-cycle)][| ]]  Xrefs         :: *[Related/Xrefs:]*  <<Xref-Here->>  -- External Documents  [[elisp:(org-cycle)][| ]]
-**  [[elisp:(org-cycle)][| ]]  Panel        :: [[file:/bisos/panels/bisos/core/bxeAndBxo/_nodeBase_/fullUsagePanel-en.org::Panel][Panel Roadmap Documentation]] [[elisp:(org-cycle)][| ]]
+**  [[elisp:(org-cycle)][| ]]  Panel        :: [[file:/libre/ByStar/InitialTemplates/activeDocs/bxServices/versionControl/fullUsagePanel-en.org::Xref-VersionControl][Panel Roadmap Documentation]] [[elisp:(org-cycle)][| ]]
 *  [[elisp:(org-cycle)][| ]]  Info          :: *[Module Description:]* [[elisp:(org-cycle)][| ]]
 
 _EOF_
@@ -70,54 +62,17 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
-# ./platformBases_lib.sh
-. ${opBinBase}/platformBases_lib.sh
+. ${opBinBase}/distHook.libSh
 
-. ${opBinBase}/bpo_lib.sh
-. ${opBinBase}/bpoId_lib.sh
-
-. ${opBinBase}/bxeDesc_lib.sh
-
-. ${opBinBase}/bystarHook.libSh
-
-. ${opBinBase}/bystarLib.sh
-
-. ${opBinBase}/lcnFileParams.libSh
-
-# . ${opBinBase}/bystarInfoBase.libSh
-
-. ${opBinBase}/unisosAccounts_lib.sh
-. ${opBinBase}/bisosGroupAccount_lib.sh
+# . ${opBinBase}/bisosGroupAccount_lib.sh
 . ${opBinBase}/bisosAccounts_lib.sh
-
-. ${opBinBase}/bxioCommon_lib.sh
-
-. ${opBinBase}/bisosCurrents_lib.sh
-
-. ${opBinBase}/site_lib.sh
-
-. ${opBinBase}/sysChar_lib.sh
-
-. ${opBinBase}/usgBpos_lib.sh
-
 
 # PRE parameters
 
-typeset -t bpoId=""
-# usg=""
+baseDir=""
 
 function G_postParamHook {
-    if [ ! -z "${bpoId}" ] ; then
-        bpoIdPrepValidate
-        bpoHome=$( FN_absolutePathGet ~${bpoId} )
-    fi
-    
-    bisosCurrentsGet
-}
-
-
-noArgsHook() {
-  vis_examples
+     return 0
 }
 
 
@@ -131,67 +86,79 @@ function vis_examples {
     #typeset extraInfo=""
     typeset runInfo="-p ri=lsipusr:passive"
 
+    local curUser=$( id -u -n )
+
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
-    #oneBxoId="prs-bisos"
-    oneBxoId="${currentBxoId}"
-    #oneBxoId="pic_dnsServer"    
-    oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )    
-    
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
-${G_myName} ${extraInfo} -i userConfigReset
-${G_myName} ${extraInfo} -i loadModuleCombineSink
+$( examplesSeperatorSection "Full Actions" )
+${G_myName} ${extraInfo} -i fullUpdate
+$( examplesSeperatorSection "Gnome Extensions Useful Commands" )
+gnome-shell --version
+ls -ldt /usr/share/gnome-shell/extensions/*  # equivalent of gnome-extensions list
+gsettings get org.gnome.shell.enabled-extensions
+echo gsettings get org.gnome.shell.enabled-extensions "$(gsettings get org.gnome.shell.enabled-extensions)"
+gsettings list-schemas
+gnome-extensions list # PROBLEM:  Failed to connect to GNOME Shell
+gnome-extensions enable  dash-to-panel # PROBLEM
+gnome-extensions enable  gsconnect  # PROBLEM
+$( examplesSeperatorSection "Gnome Dash Launcher Useful Commands" )
+gsettings get org.gnome.shell favorite-apps
+dconf read /org/gnome/shell/favorite-apps
+echo dconf write /org/gnome/shell/favorite-apps
+$( examplesSeperatorSection "Python Gnome API" )
+https://unix.stackexchange.com/questions/313338/gnome3-how-do-i-remove-favorites-from-dash-via-terminal
+$( examplesSeperatorSection "Useful GUI Apps And Tips" )
+gnome-tweaks
+gnome-shell-extension-prefs # PROBLEM
+gnome-extensions-app  # Fails from Command line. But works when pinned
+dconf-editor
+echo Hint: the number of workspaces is changed in Settings-Multitasking.
 _EOF_
 }
 
-function vis_loadModuleCombineSink {
+# ${G_myName} -v -n showRun -i x64P
+
+noArgsHook() {
+  vis_examples
+}
+
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  IIFs          :: Interactively Invokable Functions (IIF)s |  [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+
+
+
+function vis_fullUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+To be run after BinsPrep.sh. 
+
+https://github.com/home-sweet-gnome/dash-to-panel/wiki/Enable-and-Customize#customize-it
+Then configure it with gnome-tweaks.
+
+--------------------------
+Gnome Blee Panel
+-------------------------
+Multiple Monitors   --- Using Gnome-tweaks
+Gnome-tweaks -> Workspaces
+Gnome-tweaks -> Workspaces -> Dynamic Workspaces
+Gnome-tweaks -> Workspaces -> Workspaces span displays
+Gnome-tweaks -> Workspaces -> Workspaces span displays
+-------------------------
+Background --- Grey
+
 
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    local greped=$(pactl list modules | grep module-combine-sink)
+    lpDo ls ~/.local/share/gnome-shell/extensions
+    lpDo gnome-extensions enable  dash-to-dock@micxgx.gmail.com
 
-    if [ -z "${greped}" ] ; then
-        lpDo pactl load-module module-combine-sink
-    else
-        lpDo echo "Already Loaded: ${greped}"
-    fi
-
-    lpReturn
-}       
-
-function vis_userConfigReset {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-# From: https://forums.linuxmint.com/viewtopic.php?t=344639
-# url https://gitlab.freedesktop.org/pulseaudio/pulseaudio/raw/master/src/utils/pa-info?inline=false | bash | nc termbin.com 9999
-#
-# The first thing you should always try when working audio stops performing
-# properly is to delete the files in /home/YourUserName/.config/pulse then run
-# pulseaudio -k in the terminal to restart the sound daemon.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    homeConfigPulseBase="${HOME}/.config/pulse"
-
-    if [ ! -d "${homeConfigPulseBase}" ] ; then
-        EH_problem "Missing ${homeConfigPulseBase} -- further processing abandoned."
-        lpReturn 101
-    fi
-
-    lpDo mv ${homeConfigPulseBase} /tmp/pulse-$(DATE_nowTag)
-
-    lpDo pulseaudio -k
-
-    lpReturn
 }
-
 
 
 _CommentBegin_

@@ -47,7 +47,7 @@ function vis_moduleDescription {  cat  << _EOF_
 *  [[elisp:(org-cycle)][| ]]  Xrefs         :: *[Related/Xrefs:]*  <<Xref-Here->>  -- External Documents  [[elisp:(org-cycle)][| ]]
 **  [[elisp:(org-cycle)][| ]]  Panel        :: [[file:/libre/ByStar/InitialTemplates/activeDocs/bxServices/versionControl/fullUsagePanel-en.org::Xref-VersionControl][Panel Roadmap Documentation]] [[elisp:(org-cycle)][| ]]
 *  [[elisp:(org-cycle)][| ]]  Info          :: *[Module Description:]* [[elisp:(org-cycle)][| ]]
-
+** https://wiki.archlinux.org/title/Desktop_entries
 _EOF_
 }
 
@@ -91,6 +91,18 @@ function vis_examples {
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
+$( examplesSeperatorChapter "Blee Run Sys" )
+${G_myName} ${extraInfo} -i xdgBleeSysAppStdout
+${G_myName} ${extraInfo} -i xdgBleeSysAppUpdate
+${G_myName} ${extraInfo} -f -i xdgBleeSysAppUpdate
+ls -l $( vis_xdgBleeSysAppFile  )
+gtk-launch $(basename $( vis_xdgBleeSysAppFile  ))
+$( examplesSeperatorChapter "Blee Run 30" )
+${G_myName} ${extraInfo} -i xdgBlee30AppStdout
+${G_myName} ${extraInfo} -i xdgBlee30AppUpdate
+${G_myName} ${extraInfo} -f -i xdgBlee30AppUpdate
+ls -l $( vis_xdgBlee30AppFile  )
+gtk-launch $(basename $( vis_xdgBleeSysAppFile  ))
 $( examplesSeperatorChapter "bleeclient Org-Protocol Install" )
 ${G_myName} ${extraInfo} -i xdgBleeOrgProtocolStdout
 ${G_myName} ${extraInfo} -i xdgBleeOrgProtocolUpdate
@@ -109,9 +121,13 @@ xdg-mime default blee-mailto.desktop x-scheme-handler/mailto
 $( examplesSeperatorChapter "bleeclient mailto Run" )
 xdg-email "mailto:emacs@mohsen.1.banan.byname.net"
 xdg-email "mailto:emacs@mohsen.1.banan.byname.net"
-$( examplesSeperatorChapter "DEBUGGING" )
+$( examplesSeperatorChapter "Tools and DEBUGGING" )
 export XDG_UTILS_DEBUG_LEVEL=9
 xdg-mime query default 'x-scheme-handler/mailto'
+desktop-file-validate your-desktop-file
+desktop-file-install --dir=$HOME/.local/share/applications ~/app.desktop
+update-desktop-database ~/.local/share/applications
+echo $XDG_DATA_DIRS/icons  # Where Icons Go
 _EOF_
 }
 
@@ -120,8 +136,41 @@ noArgsHook() {
 }
 
 
+function desktopAppFileUpdate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+if updateFileName starts with /usr/local process it as root. Otherwise the current user.
+_EOF_
+    }
+    EH_assert [[ $# -eq 2 ]]
 
-function mimeAppFileUpdate {
+    updateFileName=$1
+    updateStdoutFunc=$2
+
+    if [[ $updateFileName == /usr/local/* ]] ; then
+      lpDo desktopAppFileUpdateRoot ${updateFileName} ${updateStdoutFunc}
+    else
+      lpDo desktopAppFileUpdateUser ${updateFileName} ${updateStdoutFunc}
+    fi
+}
+
+function desktopAppFileUpdateRoot {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 2 ]]
+
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
+
+    lpDo desktopAppFileUpdateUser $@
+}
+
+function desktopAppFileUpdateUser {
+  G_funcEntry
+  function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+                     }
   EH_assert [[ $# -eq 2 ]]
 
   updateFileName=$1
@@ -146,7 +195,6 @@ function mimeAppFileUpdate {
   opDoComplain ls -l ${updateFileName}
 }
 
-
 function vis_xdgBleeOrgProtocolStdout {
   cat  << _EOF_
 [Desktop Entry]
@@ -168,7 +216,7 @@ function vis_xdgBleeOrgProtocolUpdate {
   local updateFileName=$( vis_xdgBleeOrgProtocolFile  )
   local updateStdoutFunc=vis_xdgBleeOrgProtocolStdout
 
-  lpDo mimeAppFileUpdate ${updateFileName} ${updateStdoutFunc}
+  lpDo desktopAppFileUpdate ${updateFileName} ${updateStdoutFunc}
 }
 
 
@@ -201,7 +249,64 @@ function vis_xdgBleeMailtoUpdate {
   local updateFileName=$( vis_xdgBleeMailtoFile )
   local updateStdoutFunc=vis_xdgBleeMailtoStdout
 
-  lpDo mimeAppFileUpdate ${updateFileName} ${updateStdoutFunc}
+  lpDo desktopAppFileUpdate ${updateFileName} ${updateStdoutFunc}
+}
+
+
+function vis_xdgBleeSysAppStdout {
+  cat  << _EOF_
+[Desktop Entry]
+Name=Doom-Blee3-Sys
+Comment=Blee3 With Emacs-sys and Doom
+Exec=/bisos/core/bsip/bin/blee -h -v -n showRun -i run doom-blee3
+Icon=/bisos/blee/env3/images/bxLogo.jpg
+Type=Application
+Terminal=false
+_EOF_
+}
+
+
+function vis_xdgBleeSysAppFileUser {
+  local updateFileName=$( echo ~/.local/share/applications/blee3-doom-sys.desktop )
+  echo ${updateFileName}
+}
+
+function vis_xdgBleeSysAppFile {
+  local updateFileName=$( echo /usr/local/share/applications/blee3-doom-sys.desktop )
+  echo ${updateFileName}
+}
+
+function vis_xdgBleeSysAppUpdate {
+
+  local updateFileName=$( vis_xdgBleeSysAppFile )
+  local updateStdoutFunc=vis_xdgBleeSysAppStdout
+
+  lpDo desktopAppFileUpdate ${updateFileName} ${updateStdoutFunc}
+}
+
+function vis_xdgBlee30AppStdout {
+  cat  << _EOF_
+[Desktop Entry]
+Name=Mailto
+Exec=bleeclient -i defaultRun -- -c --eval "(xdp:email|act-on-url  \"%u\")"
+Icon=emacs-icon
+Type=Application
+Terminal=false
+MimeType=x-scheme-handler/mailto
+_EOF_
+}
+
+function vis_xdgBlee30AppFile {
+  local updateFileName=$( echo ~/.local/share/applications/blee-sys.desktop )
+  echo ${updateFileName}
+}
+
+function vis_xdgBlee30AppUpdate {
+
+  local updateFileName=$( vis_xdgBleeMailtoFile )
+  local updateStdoutFunc=vis_xdgBleeMailtoStdout
+
+  lpDo desktopAppFileUpdate ${updateFileName} ${updateStdoutFunc}
 }
 
 

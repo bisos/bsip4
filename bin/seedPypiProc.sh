@@ -87,7 +87,6 @@ installDestBase="/bisos/venv/py3/dev-bisos3/lib/python3.9/site-packages"
 
 # {{{ Examples
 
-
 function vis_examples {
 
   #typeset extraInfo=""
@@ -111,24 +110,29 @@ function vis_examples {
 EXAMPLES:
 ${visLibExamples}
 $( examplesSeperatorChapter "Package Information" )
-${G_myName} ${extraInfo} -i pkgModuleBase
-${G_myName} ${extraInfo} -i pypiPkgInfoShow
+${G_myName} -i curDevVer         # lowest version number in the ./dist directory
+${G_myName} -i pypiPkgInfoShow   # Show setup.py and ./dist and ./egg info
+${G_myName} ${extraInfo} -i packagingTemplatesUpdate # Create/Renew templates for setup.py README.org
 $( examplesSeperatorChapter "Pip Local Direct Actions" )
-pip show ${pypiPkgName}
-pip show --verbose ${pypiPkgName}
+pip show ${pypiPkgName}            # this local pkg ver=${pypiPkgVersion}
+pip show --verbose ${pypiPkgName}  # this local pkg ver=${pypiPkgVersion}
 pip uninstall ${pypiPkgName}
-pip download ${pypiPkgName}      # Brings ove rthe pkg but does not install
-pip list -o --format columns     # Lists pkgs that are intersection of local and pypi
+pip download ${pypiPkgName}        # Brings over the pkg but does not install
+pip list -o --format columns       # Lists pkgs that are intersection of local and pypi
 $( examplesSeperatorChapter "Building The Package" )
+bx-dblock -i dblockUpdateFiles setup.py
+touch ./pypiUploadVer ; bx-dblock -i dblockUpdateFiles setup.py ; rm  ./pypiUploadVer
 ${G_myName} ${extraInfo} -i licenseLhAgpl3
-./setup.py develop
-./setup.py sdist
-${G_myName} ${extraInfo} -i fullPrep
-${G_myName} ${extraInfo} -p repo=main -i fullPrepUpload
-${G_myName} ${extraInfo} -p repo=test -i fullPrepUpload
+./setup.py develop   # Obsoleted
+./setup.py sdist     # Obsoleted
+${G_myName} ${extraInfo} -i fullPrepBuild curDev  # uses cur pkg rev
+${G_myName} ${extraInfo} -i fullPrepBuild nextPypi # increments pypi latest pkg rev
+${G_myName} ${extraInfo} -p repo=main -i fullPrepBuildUploadRePrep  # After upload recreates the dist with installed version
+${G_myName} ${extraInfo} -p repo=main -i fullPrepBuildUpload
+${G_myName} ${extraInfo} -p repo=test -i fullPrepBuildUpload
 $( examplesSeperatorChapter "Registering and publishing the package" )
-https://pypi.python.org/pypi  https://testpypi.python.org/pypi 
-twine upload --repository-url https://test.pypi.org/legacy/ ./dist/unisos.ucf-0.8.tar.gz 
+https://pypi.python.org/pypi  https://testpypi.python.org/pypi
+twine upload --repository-url https://test.pypi.org/legacy/ ./dist/unisos.ucf-0.8.tar.gz
 ${G_myName} ${extraInfo} -p repo=main -i twineUpload
 ${G_myName} ${extraInfo} -p repo=test -i twineUpload
 ls -ld /de/bx/nne/dev-py/pypi/pkgs/fptb/pypiProfile/default
@@ -153,6 +157,52 @@ ${G_myName} ${extraInfo} -i pkgLocalUsageMode rel  # remove symlink
 ${G_myName} ${extraInfo} -i pkgLocalUsageMode dev  # create symlink
 $( examplesSeperatorChapter "Cleaning" )
 ${G_myName} ${extraInfo} -i distClean
+$( examplesSeperatorChapter "Pkg Versions (Installed vs setup.py vs PyPi)" )
+pyPkgTools.cs
+echo https://pypi.org/project/${pypiPkgName}  # Usually updates before pip database
+${G_myName} -i versions 0.01       # shows all version info
+${G_myName} ${extraInfo} -i nextVersion 0.01    # setup.py dblock
+${G_myName} ${extraInfo} -i installedVersion    # setup.py dblock
+setup.py --version  # read from ./setup.py
+${G_myName} ${extraInfo} -i scriptFiles         # setup.py dblock
+${G_myName} ${extraInfo} -i filesList
+${G_myName} ${extraInfo} -i namespaceRequires   # setup.py dblock
+$( examplesSeperatorChapter "pipx and Requirements And Dependencies" )
+pipx install --force ${pypiPkgName}
+pipx upgrade ${pypiPkgName}
+pipx uninstall ${pypiPkgName}
+pipx runpip ${pypiPkgName} list --outdated
+pipx runpip ${pypiPkgName} freeze > ./requirements.txt ; ls -l ./requirements.txt # Update
+pipx runpip ${pypiPkgName} show ${pypiPkgName}
+$( examplesSeperatorChapter "Development Examples" )
+${G_myName} ${extraInfo} -i vis_devExamples
+_EOF_
+
+}
+
+
+function vis_devExamples {
+
+  #typeset extraInfo=""
+  typeset extraInfo="-v -n showRun"
+
+  # sitePagesList=`echo ${sitePages}`
+
+      icmPreps
+    local pipPkgFile="./dist/${pypiPkgName}-${pypiPkgVersion}.tar.gz"
+
+    local devPy3Bisos3="/bisos/venv/py3/dev-bisos3"
+    #local relPy3Bisos3="/bystar/dist/venv/py2-bisos-3"
+    local relPy3Bisos3="/bisos/venv/py3/bisos3"
+
+    opDo icmPreps
+
+    pypiPkgInfoExtract
+
+  typeset visLibExamples=`visLibExamplesOutput ${G_myName} ${extraInfo}`
+ cat  << _EOF_
+EXAMPLES:
+${visLibExamples}
 $( examplesSeperatorChapter "Python Sphinx Documentation" )
 ${G_myName} ${extraInfo} -i sphinxDocUpdate
 ${G_myName} ${extraInfo} -f -i sphinxDocUpdate   # Force Recreation
@@ -174,20 +224,7 @@ johnnydep -v 0 $pypiPkgName
 pipdeptree -r -p $pypiPkgName # Needs a virtEnv
 pipdeptree -fl -p $pypiPkgName # Needs a virtEnv
 yolk -U $pypiPkgName # show if update available at PyPI
-pyPkgTools.cs
-${G_myName} ${extraInfo} -i nextVersion 0.01    # setup.py dblock
-${G_myName} ${extraInfo} -i scriptFiles         # setup.py dblock
-${G_myName} ${extraInfo} -i filesList
-${G_myName} ${extraInfo} -i namespaceRequires   # setup.py dblock
-$( examplesSeperatorChapter "pipx and Requirements And Dependencies" )
-pipx install --force ${pypiPkgName}
-pipx upgrade ${pypiPkgName}
-pipx uninstall ${pypiPkgName}
-pipx runpip ${pypiPkgName} list --outdated
-pipx runpip ${pypiPkgName} freeze > ./requirements.txt ; ls -l ./requirements.txt # Update
-pipx runpip ${pypiPkgName} show ${pypiPkgName}
 _EOF_
-
 
 hookRun "examplesHookPost"
 }
@@ -213,6 +250,62 @@ _EOF_
     fptb_docVersion=$(fileParamManage.py -i fileParamReadPath ../fptb/docVersion)
     fptb_docTitle=$(fileParamManage.py -i fileParamReadPath ../fptb/docTitle)    
 }
+
+
+function vis_packagingTemplatesUpdate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local templatesBase="/bisos/apps/defaults/begin/templates/purposed/pyModule"
+
+    ANT_raw "pyModule Template Base: ${templatesBase}"
+
+    # /bisos/apps/defaults/begin/templates/purposed/pyModule/bash/pypiProc.sh
+    if [ ! -f "pypiProc.sh" ] ; then
+        lpDo cp "${templatesBase}/build/pypiProc.sh" pypiProc.sh
+    else
+        ANT_raw "pypiProc.sh -- is in place, updating skipped"
+    fi
+
+    # /bisos/apps/defaults/begin/templates/purposed/pyModule/build/MANIFEST.in
+    if [ ! -f "MANIFEST.in" ] ; then
+        lpDo cp "${templatesBase}/build/MANIFEST.in" MANIFEST.in
+    else
+        ANT_raw "MANIFEST.in -- is in place, updating skipped"
+    fi
+
+    # /bisos/apps/defaults/begin/templates/purposed/pyModule/build/pyproject.toml
+    if [ ! -f "pyproject.toml" ] ; then
+        lpDo cp "${templatesBase}/build/pyproject.toml" pyproject.toml
+    else
+        ANT_raw "pyproject.toml -- is in place, updating skipped"
+    fi
+
+    # /bisos/apps/defaults/begin/templates/purposed/pyModule/org/README.org
+    if [ ! -f "README.org" ] ; then
+        lpDo cp "${templatesBase}/org/README.org" README.org
+    else
+        ANT_raw "README.org -- is in place, updating skipped"
+    fi
+
+    #
+    # Order is important. setup.py should come last.
+    #
+
+    # /bisos/apps/defaults/begin/templates/purposed/pyModule/python/setup.py
+    if [ ! -f "setup.py" ] ; then
+        lpDo cp "${templatesBase}/python/setup.py" setup.py
+        lpDo bx-dblock -i dblockUpdateFiles setup.py
+    else
+        ANT_raw "setup.py -- is in place, updating skipped"
+    fi
+
+    lpReturn
+}
+
 
 
 _CommentBegin_
@@ -254,7 +347,8 @@ _EOF_
     if [ -z "${pypiPkgName}" ] ; then
         pypiPkgName="missing.pkg"
     fi
-    IFS=. command eval 'components=(${pypiPkgName##*-})'
+    # IFS=. command eval 'components=(${pypiPkgName##*-})'
+    IFS=. command eval 'components=(${pypiPkgName##*=})'
 
     pypiPkgModule=${components[-1]}
     
@@ -290,6 +384,7 @@ _EOF_
     lpReturn
 }
 
+
 _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || IIF       ::  vis_pypiPkgInfoShow    [[elisp:(org-cycle)][| ]]
 _CommentEnd_
@@ -305,6 +400,18 @@ _EOF_
 
     echo pypiPkgBaseMode=${pypiPkgBaseMode} -- pypiPkgName=${pypiPkgName} -- pypiPkgModule=${pypiPkgModule} -- pypiPkgNamespace=${pypiPkgNamespace} -- pypiPkgVersion=${pypiPkgVersion}
     echo pkgModuleBase=$(vis_pkgModuleBase)
+
+    if [ -d "./${pypiPkgName}.egg-info" ] ; then
+        lpDo egrep '^Version' ./${pypiPkgName}.egg-info/PKG-INFO
+    else
+        ANT_raw "Missing ./${pypiPkgName}.egg-info"
+    fi
+
+    if [ -d "./dist" ] ; then
+        lpDo ls ./dist/*
+    else
+        ANT_raw "Missing ./dist"
+    fi
 
     lpReturn
 }
@@ -514,6 +621,7 @@ _EOF_
     # Module's autodoc
     pkgModuleAutodoc="$( vis_pkgModuleBase )/autodoc"
 
+    # NOTYET, should not use star. Should uses package name.
     if [ -d ./*.egg-info ] ; then
         opDo rm -r ./*.egg-info
     else
@@ -668,8 +776,67 @@ _EOF_
     fi
 }
 
+function vis_distBuild {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+** Running setup.py is being obsoleted. Will use python build
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
 
-function vis_fullPrep {
+    lpDo ./setup.py sdist
+}
+
+function vis_fullPrepBuild {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local buildType="$1"
+
+    case $buildType in
+        "curDev"|"nextPypi")
+            doNothing
+            ;;
+        *)
+            EH_problem "Unexpected buildType=${buildType} -- Should be curDev or nextPypi"
+            lpReturn 1
+            ;;
+    esac
+
+    opDo icmPreps
+
+    opDo vis_licenseLhAgpl3
+    if [ -f ./README.tex ] ; then
+        opDo pandoc --from=latex -s -t rst --toc README.tex -o README.rst
+    fi
+
+    if [ -f ./README.org ] ; then
+        lpDo echo "Converting README.org to README.rst with pandoc"
+        cat README.org   | egrep -v  '^Panel Controls:' | egrep -v '^Links:' | pandoc --from=org -s -t rst --toc -o README.rst
+    fi
+
+    if [ "${buildType}"  == "nextPypi" ] ; then
+        lpDo touch "./pypiUploadVer"
+        lpDo bx-dblock -i dblockUpdateFiles ./setup.py
+        # lpDo vis_distClean
+        lpDo vis_distBuild
+        lpDo rm "./pypiUploadVer"
+   elif [ "${buildType}"  == "curDev" ] ; then
+        lpDo bx-dblock -i dblockUpdateFiles ./setup.py
+        # lpDo vis_distClean
+        lpDo vis_distBuild
+    else
+        EH_problem "Unexpected buildType=${buildType} -- Should be curDev or nextPypi"
+        lpReturn 1
+    fi
+}
+
+
+
+function vis_fullPrep%% {
     G_funcEntry
     function describeF {  cat  << _EOF_
 _EOF_
@@ -685,11 +852,31 @@ _EOF_
         opDo pandoc --from=latex -s -t rst --toc README.tex -o README.rst
     fi
 
+    if [ -f ./README.org ] ; then
+        lpDo echo "Converting README.org to README.rst with pandoc"
+        cat README.org   | egrep -v  '^Panel Controls:' | egrep -v '^Links:' | pandoc --from=org -s -t rst --toc -o README.rst
+    fi
+
     opDo ./setup.py sdist
 }
 
+function vis_fullPrepBuildUploadRePrep {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
 
-function vis_fullPrepUpload {
+    opDo icmPreps
+
+    lpDo vis_fullPrepBuildUpload
+
+    opDo vis_fullPrepBuild curDev  # recreates the dist with installed version
+
+ }
+
+
+function vis_fullPrepBuildUpload {
     G_funcEntry
     function describeF {  cat  << _EOF_
 _EOF_
@@ -709,7 +896,7 @@ _EOF_
         return
     fi
 
-    opDo vis_fullPrep
+    opDo vis_fullPrepBuild nextPypi
 
     opDo vis_twineUpload
 
@@ -724,7 +911,9 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
+    lpDo touch "./pypiUploadVer"   # NB:  IMPORTANT
     opDo icmPreps
+    lpDo rm "./pypiUploadVer"
 
     local repoStr="--repository-url https://upload.pypi.org/legacy/"
     #local userName=$(fileParamManage.py  -i fileParamReadPath /de/bx/nne/dev-py/pypi/pkgs/fptb/pypiProfile/default/userName)
@@ -777,7 +966,7 @@ _EOF_
 
     manifestFile="./MANIFEST.in"
 
-    opDo cp /libre/ByStar/InitialTemplates/license/lh-agpl3/lh-agpl3-LICENSE.txt  ./lh-agpl3-LICENSE.txt
+    opDo echo NOTYET Fix cp /libre/ByStar/InitialTemplates/license/lh-agpl3/lh-agpl3-LICENSE.txt  ./lh-agpl3-LICENSE.txt
 
     FN_lineIsInFile "^include lh-agpl3-LICENSE.txt" ${manifestFile} ; thisRetVal=$?
     if [[ ${thisRetVal} -eq 0 ]] ; then
@@ -789,6 +978,22 @@ _EOF_
 include lh-agpl3-LICENSE.txt
 _EOF_
 
+}
+
+function vis_versions {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+   opDo icmPreps
+
+    local nextVersion=$(vis_nextVersion $1)
+    local installedVersion=$(vis_installedVersion)
+    local setupVersion=$(setup.py --version)
+
+    lpDo echo "Installed=${installedVersion} -- setup.py=${setupVersion} -- PyPi+$1=${nextVersion}" -- https://pypi.org/project/${pypiPkgName}
 }
 
 
@@ -805,6 +1010,31 @@ _EOF_
     lpDo  pyPkgTools.cs  -i pypiLatestVersionPlus ${pypiPkgName} ${increment}
 }
 
+function vis_installedVersion {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    ###  local installedVer=$( pip show $(setup.py --name)  | egrep '^Version:' | cut -d ":" -f 2 )
+    local installedVer=$( vis_curDevVer )
+
+    echo ${installedVer}
+}
+
+function vis_curDevVer {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    lpDo pypiPkgInfoExtract
+    # -v natural sort of (version) numbers within text.
+    local curDevVer=$(ls -v ./dist/* | head -1 | sed -e s:.tar.gz:: -e s:./dist/${pypiPkgName}-::)
+
+    echo ${curDevVer}
+}
+
 
 function vis_scriptFiles {
     G_funcEntry
@@ -813,7 +1043,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo pypiPkgInfoExtract
+    # lpDo pypiPkgInfoExtract
 
     local scriptFiles=""
 

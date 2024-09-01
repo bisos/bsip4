@@ -207,6 +207,9 @@ _EOF_
 
     lpDo /bisos/var/sites/selected/sys/bin/siteBisosDefaults.sh ${extraInfo} -i initialize
 
+    lpDo vis_activate_siteBxoPlusAndSelect
+
+    # This should happen after vis_activate_siteBxoPlusAndSelect
     lpDo vis_siteRegistrarSelect
 
     lpReturn
@@ -261,6 +264,7 @@ _EOF_
     # USG Selected Site
     lpDo siteManage.sh -h -v -n showRun -i siteUsgAdd ${siteBxoId}
     lpDo siteManage.sh -h -v -n showRun -i siteUsgSelect ${siteBxoId}
+
 }
 
 

@@ -158,7 +158,7 @@ _EOF_
 
    local curUsgBposBase=$( vis_curUsgBposBase )   
 
-   EH_assert [ -e ${curUsgBposBase}/usageEnvs/bisosDev ]
+   # EH_assert [ -e ${curUsgBposBase}/usageEnvs/bisosDev ]
    
    echo ${curUsgBposBase}/usageEnvs/bisosDev
 }

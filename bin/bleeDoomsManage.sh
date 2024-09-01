@@ -114,6 +114,7 @@ ${G_myName} ${extraInfo} -p profile=doom-blee3 -i switchInitTo sansBlee
 ${G_myName} ${extraInfo} -p profile=doom-blee3 -i switchInitTo withBlee
 ls -l /bisos/blee/doom-blee-base/init.el
 $( examplesSeperatorChapter "Doom Main Deploy -- profile=doom-blee3 emacs=sys" )
+pushd  /bisos/git/anon/ext/emacs/doomemacs ; git pull ; popd
 ${G_myName} ${extraInfo} -p profile=doom-blee3 -i buildInstall
 ${G_myName} ${extraInfo} -p profile=doom-blee3 -i doomSync
 ${G_myName} ${extraInfo} -p profile=doom-blee3 -i deleteRunBase

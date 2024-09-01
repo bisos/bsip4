@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IimBriefDescription="NOTYET: Short Description Of The Module"
+IimBriefDescription="Self-Contained Service Materialization -- Configure a Bridged Wireless Access Point."
 
 ORIGIN="
 * Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee
@@ -28,7 +28,7 @@ SEED="
 *  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
 "
 FILE="
-*  /This File/ :: /bisos/bsip/bin/sysCharGuestPreps.sh 
+*  /This File/ :: /bisos/core/bsip/bin/bxeRealize.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
     /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
@@ -51,9 +51,9 @@ _CommentEnd_
 
 function vis_moduleDescription {  cat  << _EOF_
 *  [[elisp:(org-cycle)][| ]]  Xrefs         :: *[Related/Xrefs:]*  <<Xref-Here->>  -- External Documents  [[elisp:(org-cycle)][| ]]
-**  [[elisp:(org-cycle)][| ]]  Panel        :: [[file:/bisos/panels/bisos/core/bxeAndBxo/_nodeBase_/fullUsagePanel-en.org::Panel][Panel Roadmap Documentation]] [[elisp:(org-cycle)][| ]]
+**  [[elisp:(org-cycle)][| ]]  Panel        :: [[file:/bisos/panels/bisos-core/bootstrap/Generic-Guests/_nodeBase_/fullUsagePanel-en.org::Panel][Panel Roadmap Documentation]] [[elisp:(org-cycle)][| ]]
 *  [[elisp:(org-cycle)][| ]]  Info          :: *[Module Description:]* [[elisp:(org-cycle)][| ]]
-
+* See Panel for description and documentation.
 _EOF_
 }
 
@@ -70,49 +70,34 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
-# ./platformBases_lib.sh
-. ${opBinBase}/platformBases_lib.sh
-
-. ${opBinBase}/bpo_lib.sh
-. ${opBinBase}/bpoId_lib.sh
-
-. ${opBinBase}/bxeDesc_lib.sh
-
-. ${opBinBase}/bystarHook.libSh
-
-. ${opBinBase}/bystarLib.sh
-
-. ${opBinBase}/lcnFileParams.libSh
-
-# . ${opBinBase}/bystarInfoBase.libSh
-
-. ${opBinBase}/unisosAccounts_lib.sh
-. ${opBinBase}/bisosGroupAccount_lib.sh
-. ${opBinBase}/bisosAccounts_lib.sh
-
-. ${opBinBase}/bxioCommon_lib.sh
-
 . ${opBinBase}/bisosCurrents_lib.sh
 
 . ${opBinBase}/site_lib.sh
 
+. ${opBinBase}/l3_lib.sh
 . ${opBinBase}/sysChar_lib.sh
 
-. ${opBinBase}/usgBpos_lib.sh
+. ${opBinBase}/siteNetworks_lib.sh
 
 
 # PRE parameters
 
 typeset -t bpoId=""
-# usg=""
+# typeset -t containerAssignBase=$( siteContainerAssign.sh -i forThisSysFindContainerBase )
+
+typeset -t model=""     # one of [HPV]
+typeset -t abode=""     # one of [MAPIS]
+typeset -t function=""  # one of [LASD]
+
 
 function G_postParamHook {
+    return
     if [ ! -z "${bpoId}" ] ; then
         bpoIdPrepValidate
         bpoHome=$( FN_absolutePathGet ~${bpoId} )
     fi
     
-    bisosCurrentsGet
+    # bisosCurrentsGet
 }
 
 
@@ -133,65 +118,99 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
-    #oneBxoId="prs-bisos"
-    oneBxoId="${currentBxoId}"
-    #oneBxoId="pic_dnsServer"    
-    oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )    
-    
-    visLibExamplesOutput ${G_myName} 
-  cat  << _EOF_
+    visLibExamplesOutput ${G_myName}
+
+ cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
-${G_myName} ${extraInfo} -i userConfigReset
-${G_myName} ${extraInfo} -i loadModuleCombineSink
+$( examplesSeperatorChapter "NEW Wifi Access Point Creation" )
+${G_myName} ${extraInfo} -i wifiApFullUpdate lePasswd
+${G_myName} ${extraInfo} -i wifiApBridgeCreate lePasswd
+${G_myName} ${extraInfo} -i wifiApAndBridgeStatus
 _EOF_
 }
 
-function vis_loadModuleCombineSink {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-
+function vis_wifiApFullUpdate {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
+                      }
+   EH_assert [[ $# -eq 1 ]]
+   local lePassword=$1
 
-    local greped=$(pactl list modules | grep module-combine-sink)
+   lpDo vis_wifiApBridgeCreate ${lePassword}
 
-    if [ -z "${greped}" ] ; then
-        lpDo pactl load-module module-combine-sink
-    else
-        lpDo echo "Already Loaded: ${greped}"
-    fi
+   lpDo vis_wifiApAndBridgeStatus
 
-    lpReturn
-}       
-
-function vis_userConfigReset {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-# From: https://forums.linuxmint.com/viewtopic.php?t=344639
-# url https://gitlab.freedesktop.org/pulseaudio/pulseaudio/raw/master/src/utils/pa-info?inline=false | bash | nc termbin.com 9999
-#
-# The first thing you should always try when working audio stops performing
-# properly is to delete the files in /home/YourUserName/.config/pulse then run
-# pulseaudio -k in the terminal to restart the sound daemon.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    homeConfigPulseBase="${HOME}/.config/pulse"
-
-    if [ ! -d "${homeConfigPulseBase}" ] ; then
-        EH_problem "Missing ${homeConfigPulseBase} -- further processing abandoned."
-        lpReturn 101
-    fi
-
-    lpDo mv ${homeConfigPulseBase} /tmp/pulse-$(DATE_nowTag)
-
-    lpDo pulseaudio -k
-
-    lpReturn
+   lpReturn
 }
 
+
+function vis_wifiApBridgeCreate {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+** NOTYET, parametrize everything.
+** NOTYET, Introduce ApNu (Access Point Number) based on which you assign diff channels
+** NOTYET, Assign Channel Numbers.
+_EOF_
+                      }
+   EH_assert [[ $# -eq 1 ]]
+   local lePassword=$1
+
+   # Cleanup previous configurations -- delete WifiBridge0 br0-wired  br0-wifi
+   lpDo sudo nmcli connection delete WifiBridge0
+
+   lpDo sudo nmcli connection down br0-wired
+   lpDo sudo nmcli connection delete br0-wired
+
+   lpDo sudo nmcli connection down br0-wifi
+   lpDo sudo nmcli connection delete br0-wifi
+
+   # Create WifiBridge0
+   lpDo sudo nmcli connection add con-name WifiBridge0 ifname br0 type bridge ipv4.method auto ipv6.method disabled connection.autoconnect yes stp no
+
+   # Add br0-wired as slave to WifiBridge0 on wired interface
+   lpDo sudo nmcli connection add con-name br0-wired ifname enp3s0f1 type bridge-slave master WifiBridge0 connection.autoconnect yes
+
+   # Add br0-wifi as slave to WifiBridge0
+   lpDo sudo nmcli connection add con-name br0-wifi ifname wlx00c0cab044d5 type wifi slave-type bridge master WifiBridge0 connection.autoconnect yes wifi.ssid lws-1000010
+
+   # Configure br0-wifi
+   lpDo sudo nmcli connection modify br0-wifi 802-11-wireless.mode ap 802-11-wireless.band bg
+   # lpDo sudo nmcli connection modify br0-wifi wifi.band a wifi.channel 153
+   lpDo sudo nmcli connection modify br0-wifi wifi-sec.key-mgmt wpa-psk
+   lpDo sudo nmcli connection modify br0-wifi wifi-sec.psk "${lePassword}"
+
+   # Bring Up All the Connections
+   lpDo sudo nmcli connection up br0-wired
+   lpDo sudo nmcli connection up br0-wifi
+   lpDo sudo nmcli connection up WifiBridge0
+
+   lpReturn
+}
+
+function vis_wifiApAndBridgeStatus {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+                      }
+   EH_assert [[ $# -eq 0 ]]
+
+   lpDo nmcli device
+
+   lpDo nmcli device wifi list
+
+   lpDo eval iw list \| grep AP
+
+   lpDo nmcli connection
+
+   lpDo ip link show master br0
+
+   lpDo bridge link show
+
+   lpDo ip a
+
+   lpReturn
+}
 
 
 _CommentBegin_

@@ -4,6 +4,11 @@ sudo apt-get install gettext
 make
 make install
 gnome-extensions-app
+
+ls ~/.local/share/gnome-shell/extensions
+gnome-extensions enable  dash-to-dock@micxgx.gmail.com
+
+
 --------------------------
 sudo apt install gnome-shell-extension-dash-to-panel
 https://github.com/home-sweet-gnome/dash-to-panel/wiki/Enable-and-Customize#customize-it

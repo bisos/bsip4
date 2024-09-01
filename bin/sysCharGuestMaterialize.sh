@@ -152,7 +152,8 @@ function vis_examples {
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
     #oneBxoId="prs-bisos"
-    oneBxoId="${currentBxoId}"
+    #oneBxoId="${currentBxoId}"
+    oneBxoId="pmp_VAG-deb12_"
     #oneBxoId="pic_dnsServer"    
     oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )    
     
@@ -161,18 +162,21 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
-bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VAG-deb11_  # Generic, Auto, Dhcp,  
-bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VSG-deb11_  # Generic, Shielded, StaticIP
+bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VAG-deb12_  # Generic, Auto, Dhcp,
+bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VSG-deb12_  # Generic, Shielded, StaticIP
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VSS-1009    # Specific, Shielded, StaticIP
 $( examplesSeperatorChapter "Activate Subject sysContainerBxo" )
 sysCharActivate.sh -h -v -n showRun -p bpoId="${oneBxoId}" -i activate_sysContainerBxo
 $( examplesSeperatorChapter "Specialized Actions" )
 ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vagrantBaseBoxFromSysChar   # which vagrantBaseBox will be used
-${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vagrantBase_last     # on host
-${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vagrantFile_run       # on host - ends with image
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vagrantBase_last     # on host - Show Vagrant Directory
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vagrantFile_run       # Generates image for SITED BISOS
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -p phases="P0 P1" -i vagrantFile_run   # Generates image for Raw-BISOS (UnSited-BISOS)
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -p phases="P0" -i vagrantFile_run      # Generates image for Fresh-DEBIAN
 $( examplesSeperatorChapter "Vagrantfile Stdout and Creation " )
 ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vagrantFile_bottomPart
 ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vagrantFile_stdout    # on host
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -p phases="P0 P1" -i vagrantFile_stdout    # on host - Equivalent of UnSited BISOS
 ${G_myName} -p bpoId="${oneBxoId}" -i vagrantFile_stdout    # on host
 $( examplesSeperatorChapter "Post Vagrant Virsh Activities" )
 ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vmCustomize           # using virsh sets up guest ip addrs
@@ -184,9 +188,48 @@ ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i recordDeployment      # insid
 $( examplesSeperatorChapter "Generic Container Materialization" )
 ${G_myName} -i containerGenericMaterialize examples
 ${G_myName} ${extraInfo} -i containerGenericMaterialize doIt
+$( examplesSeperatorChapter "Guest / VM / Vagrant -- Management And Deletion" )
+vagrant global-status  # List Vagrant Directories, Names and IDs, runningh status is inacurate
+virsh --connect qemu:///system list --all --title  # List running and shut off VMs
+bpoCntnrGuestStation.sh  # Manage VMs with their Guest BPOs
+lcaVirshManage.sh   # Low level virsh Management
+echo vagrant destroy id  # Name does not work. Id is obtained from vagrant global-status
 _EOF_
 }
 
+# $( examplesSeperatorChapter "Phases Specification" )
+# ${G_myName} -i vagrantPhasesGet
+# ${G_myName} -p phases="P0 P1" -i vagrantPhasesGet
+
+
+
+vagrantPhasesList=( "P0" "P1" "P2" "P3" )
+
+typeset -t phases=""
+
+function vis_vagrantPhasesSet {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+
+                         }
+   if [ ! -z "${phases}" ] ; then
+       vagrantPhasesList=( ${phases} )
+   fi
+}
+
+function vis_vagrantPhasesGet {
+   G_funcEntry
+   function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+
+                         }
+   lpDo  vis_vagrantPhasesSet
+   for each in  ${vagrantPhasesList[@]} ; do
+       echo -n "${each} "
+   done
+   echo
+}
 
 function netNameInfoInit {
     G_funcEntry
@@ -915,7 +958,7 @@ _OUTER_EOF_
 function vis_vagStdout_platformBinsRun {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-** 
+** NOTYET, should use vis_cntnrAssemble_runLine
 *** NOTYET, pre and post hooks
 _EOF_
                        }
@@ -1026,6 +1069,18 @@ _OUTER_EOF_
 ######### PHASE 1: DEBIAN-12 BISOS Provisioning -- baseBox=${containerBaseBox}
 _EOF_
 
+        wget  https://raw.githubusercontent.com/bxGenesis/start/main/raw-bisos.sh
+        chmod 775 ./raw-bisos.sh
+        ./raw-bisos.sh -v -n showRun -i installUnsitedBisos
+_OUTER_EOF_
+            ;;
+
+        "OLDbxDistro/debian-12.4.0/desktop")
+        cat  << _OUTER_EOF_
+      cat  << _EOF_
+######### PHASE 1: DEBIAN-12 BISOS Provisioning -- baseBox=${containerBaseBox}
+_EOF_
+
         sudo apt-get update
         sudo apt-get -y  install pipx
         id
@@ -1034,7 +1089,6 @@ _EOF_
         \$HOME/.local/bin/provisionBisos.sh -h -v -n showRun -i sysBasePlatform
 _OUTER_EOF_
             ;;
-
 
         * )
             EH_problem "Unsupported containerBaseBox=${containerBaseBox}"
@@ -1124,6 +1178,31 @@ _OUTER_EOF_
     lpReturn
 }
 
+function thisPlatformName {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+                       }
+    EH_assert [[ $# -eq 2 ]]
+    local containerId="$1"
+    local vmNameQualifier="$2"
+    local phaseName="BlankPhase"
+
+    lpDo vis_vagrantPhasesSet
+
+    if IS_inList "P3" "${vagrantPhasesList[@]}" ; then
+        phaseName="P3"
+    elif IS_inList "P1" "${vagrantPhasesList[@]}" ; then
+        phaseName="P1"
+    elif IS_inList "P0" "${vagrantPhasesList[@]}" ; then
+        phaseName="P0"
+    else
+        phaseName="MissingPhase"
+        EH_problem "Missing Phase: ${vagrantPhasesList[@]}"
+    fi
+
+    echo "${containerId}-${phaseName}-${vmNameQualifier}"
+}
 
 function vis_vagrantFile_stdout {
     G_funcEntry
@@ -1166,7 +1245,7 @@ _EOF_
 
     local containerBaseBox=$( vis_vagrantBaseBoxFromSysChar )
 
-    local containerName="${containerAssign_containerId}-${vmNameQualifier}"
+    local containerName=$(thisPlatformName "${containerAssign_containerId}" "${vmNameQualifier}")
     # local hostname=$( echo ${containerName} | sed -e 's:_:-:g' )
     local hostname=$( echo ${containerName} | sed -e 's:_::g' )
 
@@ -1213,7 +1292,7 @@ _EOF_
 }
 
 
-function vis_vagrantFile_bottomPart {
+function vis_vagrantFile_bottomPart%%AllPhases {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Output a vagrantfile using the sysChar BxO.
@@ -1255,6 +1334,87 @@ $(vis_vagStdout_bisosSetIdAndDeploy "${vmNameQualifier}")
 
 $(vis_vagStdout_platformBinsRun)
 
+      cat  << _EOF_
+ ######### PHASE 4: Cleanup and Shutdown  -- Running As Root
+_EOF_
+
+      shutdown now
+      exit 0
+
+_EOF_MainRootShell_
+  end
+end
+
+_OUTER_EOF_
+    }
+
+    ${shellProvisioning}
+}
+
+
+function vis_vagrantFile_bottomPart {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Output a vagrantfile using the sysChar BxO.
+*** \$1 (callable) [Optional] would produce bottom part instead of default.
+_EOF_
+                       }
+    local thisFunc=${G_thisFunc}
+    EH_assert [[ $# -lt 3 ]]
+    EH_assert [[ $# -gt 0 ]]
+    EH_assert [ ! -z "${bpoId}" ]
+
+    EH_assert  vis_bxoAcctVerify "${bpoId}"
+
+    lpDo vis_vagrantPhasesSet
+
+    local vmNameQualifier="$1"
+    shift
+
+    local shellProvisioning=""
+
+    if [ $# -eq 0 ] ; then
+        shellProvisioning=baseContainer
+    else
+        shellProvisioning=$1
+    fi
+
+    function baseContainer {
+        cat  << _OUTER_EOF_
+
+    ## SHELL PROVISIONING
+    guest.vm.provision "shell", inline: <<-_EOF_MainRootShell_
+       set -x
+_OUTER_EOF_
+
+
+        vis_vagStdout_netInterfacesDown
+
+        if IS_inList "P0" "${vagrantPhasesList[@]}" ; then
+            lpDo vis_vagStdout_serverToDesktop
+        else
+            lpDo echo "##### P0 Skipped"
+        fi
+
+        if IS_inList "P1" "${vagrantPhasesList[@]}" ; then
+            lpDo vis_vagStdout_bisosProvision
+        else
+            lpDo echo "##### P1 Skipped"
+        fi
+
+        if IS_inList "P2" "${vagrantPhasesList[@]}" ; then
+            lpDo vis_vagStdout_bisosSetIdAndDeploy "${vmNameQualifier}"
+        else
+            lpDo echo "##### P2 Skipped"
+        fi
+
+        if IS_inList "P3" "${vagrantPhasesList[@]}" ; then
+            lpDo vis_vagStdout_platformBinsRun
+        else
+            lpDo echo "##### P3 Skipped"
+        fi
+
+        cat  << _OUTER_EOF_
       cat  << _EOF_
  ######### PHASE 4: Cleanup and Shutdown  -- Running As Root
 _EOF_

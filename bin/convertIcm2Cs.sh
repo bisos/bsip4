@@ -326,7 +326,8 @@ _EOF_
 
         cat ${each}.${eachDateTag} | \
             sed \
-            -e "s@/libre/ByStar/InitialTemplates/software/plusOrg/dblock/inserts/topControls.org@/bisos/apps/defaults/software/plusOrg/dblock/inserts/topControls.org@g"\
+            -e "s@activeDocs/common/buePanels@begin/bleePanel@g"\
+            -e "s@Description:@contributor:@g"\
             > ${each}
 
             # sed -e "s@unisos.marme@bisos.marmee@g" > ${each}

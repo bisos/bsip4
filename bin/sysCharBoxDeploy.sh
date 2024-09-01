@@ -133,24 +133,48 @@ typeset -t cfpNetAddr=""
 typeset -t cfpPrivA=""
 typeset -t cfpPubA=""
 
-
 typeset -t targetName=""
 
-sshCmnd="ssh -o StrictHostKeyChecking=no"
+typeset -t debInstAcct=""         # See debInstDefaults
+typeset -t debInstAcctPasswd=""   # See debInstDefaults
+typeset -t debInstRootPasswd=""   # See debInstDefaults
 
+function debInstDefaults {
+    if [ -z "${debInstAcct}" ] ; then
+        debInstAcct="intra"
+    fi
+    if [ "${debInstAcct}" == "intra" ] ; then
+        if [ -z "${debInstAcctPasswd}" ] ; then
+            debInstAcctPasswd="intra"
+        fi
+        if [ -z "${debInstRootPasswd}" ] ; then
+            debInstRootPasswd="intra"
+        fi
+    elif [ "${debInstAcct}" == "vagrant" ] ; then
+        if [ -z "${debInstAcctPasswd}" ] ; then
+            debInstAcctPasswd="vagrant"
+        fi
+        if [ -z "${debInstRootPasswd}" ] ; then
+            debInstRootPasswd="NA"
+        fi
+    else
+        doNothing
+    fi
+}
+
+sshCmnd="ssh -o StrictHostKeyChecking=no"
 
 function G_postParamHook {
     if [ ! -z "${bpoId}" ] ; then
         bpoIdPrepValidate
         bpoHome=$( FN_absolutePathGet ~${bpoId} )
     fi
+    debInstDefaults
 }
-
 
 noArgsHook() {
   vis_examples
 }
-
 
 _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  Examples      :: Examples [[elisp:(org-cycle)][| ]]
@@ -193,16 +217,21 @@ bisosCurrentsManage.sh  ${extraInfo} -i setParam curTargetBox 192.168.0.257
 ${curTargetBox:-}
 $( examplesSeperatorChapter "LAYER-1:: unsitedBisosDeploy.sh  -- Distro Actions -- On Manager -- Ssh Into Target" )
 unsitedBisosDeploy.sh
+unsitedBisosDeploy.sh -h -v -n showRun -p targetName="${oneTargetName}" -p debInstAcct="intra" -p debInstAcctPasswd="${debInstAcctPasswd}" -p debInstRootPasswd="${debInstRootPasswd}" -i l1_raw_bisos   # PRIMARY Action
+unsitedBisosDeploy.sh -h -v -n showRun -p targetName="${oneTargetName}" -p debInstAcct="vagrant" -i l1_raw_bisos   # PRIMARY Action
 unsitedBisosDeploy.sh ${extraInfo} -p targetName="${oneTargetName}" -i l1_fullUpdate
 unsitedBisosDeploy.sh ${extraInfo} -p targetName="${oneTargetName}" -i l1_boxUUID  # Box's unique-id
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1_boxUUIDToBoxNu
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i distro_provisionBisos_ascertain # Has it been provisioned?
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1_unsitedBisos #  -- PRIMARY (uses unsitedBisosDeploy.sh -i l1_fullUpdate)
 $( examplesSeperatorSection "L1:: Access to Layer-1 -- On Target Box" )
 ssh -X bystar@${oneTargetName}    # Then run emacs
 bleeVisit /bisos/panels/development/bisos-dev/howToBecomeDeveloper/fullUsagePanel-en.org # NOTYET, bad path
 $( examplesSeperatorChapter "LAYER-2:: Sited-Container -- UnsitedBisos to SitedContainer" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2_sitedDevContainer  # onManager  -- PRIMARY (New BOX)
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2_sitedContainer  # onManager  -- PRIMARY (New BOX)
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_siteSetup # onManager or below onTarget
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2_sitedContainer  # onManager  -- PRIMARY (New BOX)
+ ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_siteSetup # onManager or below onTarget
 ${G_myName} ${extraInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -p siteBxoId=${siteBxoId}" -i bisosBasePlatform_siteSetup # onTarget
 $( examplesSeperatorSection "L2:: BISOS Development Preps -- bisosBasePlatform Actions" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_devContainer # onManager+onTarget UsedBy: l2_sitedDevContainer
@@ -212,16 +241,21 @@ cntnrDevel.sh -h -v -n showRun -i bisosDevBxo_fullSetup  # activate bisosDevBxoI
 $( examplesSeperatorChapter "Layer-1 + Layer 2:: Combined" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l2_sitedDevContainer # OnManager
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l2_sitedContainer  # OnManager
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -p debInstAcct="vagrant" -i l1l2_sitedContainer  # OnManager
 sshpass -p intra ssh -X bystar@${oneTargetName} -f xterm -font 10x20
-$( examplesSeperatorChapter "LAYER-3:: Chared-Container -- [Reify: Realize or Activate] SysChar Setup [with sysCharBpo] -- siteBasePlatform Actions" )
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_regBoxAscertain  # Has this box been registered
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_regContainerBoxAscertain  # Is a container registered for this box
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_boxNameUpdate  "Like-R710-2"  # OnManager -- PRIMARY (New BOX)
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_cntnrThis_regBpoId
-$( examplesSeperatorSection "L3:: Full New Box Actions -- Realize on Target Box Only" )
+$( examplesSeperatorChapter "LAYER-2 Plus:: Registrar Box and Container Info" )
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_regBoxAscertain  # Has this box been registered?
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_regContainerBoxAscertain  # Is a container registered for this box?
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_boxNameUpdate  "Like-R710-2"  # OnManager -- PRIMARY (New and Existing BOX)
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_cntnrThis_regBpoId  # Find the registered bpoId of this container
+$( examplesSeperatorSection "L3:: ContainerBpo Creation and Registration - Full New Box Actions -- Realize on Target Box Only" )
+svcInvSiteRegBox.cs  -i thisBox_assign           # Assign a number to this box, if needed -- PRIMARY (New BOX)
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_boxNameUpdate  "Like-R710-2"  # OnManager -- PRIMARY (New and Existing BOX)
+sysCharRealize.sh 
 ${G_myName} ${extraInfo} -p model=Host -p abode=Shield -p function=Server -i l3_charedContainerBoxRealize  # OnTarget Only -- PRIMARY (New BOX)
 ${G_myName} ${extraInfo} -p model=Pure -p abode=Shield -p function=Server -i l3_charedContainerBoxRealize  # OnTarget Only -- PRIMARY (New BOX)
-$( examplesSeperatorSection "L3:: Full Existing Box Actions -- Activate on Manager Or On Target Box" )
+${G_myName} ${extraInfo} -p model=Pure -p abode=Mobile -p function=LinuxU -i l3_charedContainerBoxRealize  # OnTarget Only -- PRIMARY (New BOX)
+$( examplesSeperatorSection "L3:: Full Existing Box Actions -- [Reify: Realize or Activate] SysChar Setup [with sysCharBpo] -- siteBasePlatform Actions" )
 ${G_myName} ${extraInfo} -i l3_cntnrThis_activate # On Target
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l3_cntnrThis_activate # On Manager
 ${G_myName} ${extraInfo} -p bxoId="pmp_VAG-deb11_" -i siteBasePlatform_sysBxoActivate
@@ -231,6 +265,7 @@ ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l3_charedContaine
 $( examplesSeperatorChapter "LAYER-4:: BPO Contaioner Composition" )
 bpoCntnrComposeBox.sh     # Under lying ICM for Layer 4
 bpoCntnrComposeGuest.sh
+containerRepoSelf.sh -h -v -n showRun -i selfUpdateFull "thisSysBpoId"  # selfUpdateBoxFPs -- Modernize this existing cntnrBpo
 $( examplesSeperatorChapter "LAYER-5:: Materialized-Container " )
 sysCharBoxMaterialize.sh    # Under lying ICM for Layer
 sysCharMaterializeGuest.sh
@@ -272,20 +307,49 @@ ${G_myName} ${extraInfo} -i devExamples
 _EOF_
 }
 
+function vis_l1_boxUUIDToBoxNu {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** TODO Needs to become consistent with bxGenesis/start/raw-bisos.sh
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert [ ! -z "${targetName}" ]
+
+    local boxUUID=$(unsitedBisosDeploy.sh -h -v -n showRun -p targetName="${targetName}" -i l1_boxUUID)
+    # echo "ZZ K-${boxUUID}"
+
+    lpDo svcInvSiteRegBox.cs  -i reg_box_find uniqueBoxId ${boxUUID}
+}
+
 
 function vis_l1_unsitedBisos {    
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 ** Update distro, and bring it to bisosBasePlatform.
 *** TargetOnly -- intra user -- no bisos
+*** One of two models. unsitedModel and rawBisosModel Defaults to rawBisosModel
 _EOF_
     }
-    EH_assert [[ $# -eq 0 ]]
+    EH_assert [[ $# -lt 2 ]]
 
     EH_assert [ ! -z "${targetName}" ]
     EH_assert [ "${targetName}" != "localhost" ] # Must be invoked OnManger
 
-    lpDo unsitedBisosDeploy.sh -p targetName="${targetName}" -i l1_fullUpdate
+    local model="rawBisosModel"
+    if [ $# -eq 1 ] ; then
+        model="$1"
+    fi
+
+    if [ "${model}" == "rawBisosModel" ] ; then
+        lpDo unsitedBisosDeploy.sh -p targetName="${targetName}" -p debInstAcct="${debInstAcct}" -p debInstAcctPasswd="${debInstAcctPasswd}" -p debInstRootPasswd=${debInstRootPasswd} -i l1_raw_bisos
+    elif [ "${model}" == "unsitedModel" ] ; then
+        lpDo unsitedBisosDeploy.sh -p targetName="${targetName}" -i l1_fullUpdate
+    else
+        EH_problem "Unknown Model -- model=${model}"
+    fi
+
 }
 
 function vis_l1l2_sitedDevContainer {    
@@ -344,6 +408,37 @@ _EOF_
 
 }
 
+function vis_l3_cntnrThis_activate  {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Run sysCharActivate.sh -i cntnrThis_activate
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    function onManagerRun {
+        lpDo sysCharActivate.sh -v -n showRun -i cntnrThis_activate
+    }
+
+    function onTargetRun {
+        lpDo sysCharActivate.sh -v -n showRun -i cntnrThis_activate
+    }
+
+####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" :cmndOption t
+    if [ "${targetName}" == "onTargetRun" ] ; then
+        lpDo onTargetRun
+    elif [ -z "${targetName}" ] ; then
+        lpDo onTargetRun
+    else
+        local commandName=${FUNCNAME##vis_}
+        lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+             $(which ${G_myName}) ${G_commandPrefs} \
+             -p targetName=onTargetRun ${G_paramCmndOption} -i ${commandName}
+    fi
+####+END:
+}
+
+
 function vis_bisosBasePlatform_siteSetup {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -372,13 +467,17 @@ _EOF_
         # NOTYET, perhaps this should be done even sooner
         lpDo bisosCurrentsManage.sh ${G_commandPrefs} -i currentsFileCreate
         
-        lpDo bisosSiteSetup.sh ${G_commandPrefs} \
-             -p registrar="${registrar}" -p id="${id}" -p password="${password}" \
-             -i fullUpdate
+        # lpDo bisosSiteSetup.sh ${G_commandPrefs} \
+        #      -p bpoId="${siteBxoId}" \
+        #      -i activate_siteBxoPlusAndSelect
 
+        #  activate_siteBxoPlusAndSelect is now done in fullUpdate
         lpDo bisosSiteSetup.sh ${G_commandPrefs} \
-             -p bpoId="${siteBxoId}" \
-             -i activate_siteBxoPlusAndSelect 
+            -p bpoId="${siteBxoId}" \
+            -p registrar="${registrar}" -p id="${id}" -p password="${password}" \
+            -i fullUpdate
+
+
     }
 
     if [ "${targetName}" != "onTargetRun" ] && [ ! -z "${targetName}" ] ; then

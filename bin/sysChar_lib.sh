@@ -1323,6 +1323,33 @@ _EOF_
 
 }
 
+function vis_cntnrAssemble_runLine {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+                       }
+    EH_assert [[ $# -eq 0 ]]
+
+    EH_assert [ ! -z "${bpoId}" ]
+    EH_assert vis_bxoAcctVerify "${bpoId}"
+
+    local bpoHome=$( FN_absolutePathGet ~${bpoId} )
+
+    local cntnrAssemblePath="${bpoHome}/sys/bin/cntnrAssemble.sh"
+
+    local runLine
+
+    if [ -x "${cntnrAssemblePath}" ] ; then
+        runLine="sudo -u bystar ${cntnrAssemblePath} -h -v -n showRun -i fullUpdate"
+    else
+        runLine="echo Missing ${cntnrAssemblePath} -- Skipped"
+    fi
+
+    echo ${runLine}
+
+    lpReturn
+}
+
 
 _CommentBegin_
 *  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *End Of Editable Text*

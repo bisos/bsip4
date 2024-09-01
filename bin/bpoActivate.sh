@@ -170,7 +170,7 @@ usgBpos.sh ${extraInfo} -i usgBpos_real_indivBxoId_read
 usgBpos.sh ${extraInfo} -i usgBpos_real_indivBxoId_write "${oneRealIndivBxoId}"
 ${G_myName} ${extraInfo} -p privacy="${priv}" -i bpoActivate ${oneRealIndivBxoId} 
 echo ${oneRealIndivBxoId} | ${G_myName} ${extraInfo} -p privacy="${priv}" -i bpoActivate   # =PRIMARY=
-bxoGitlab.py -v 20  -i acctList | egrep '[a-z][a-z][a-z]_' | ${G_myName} ${extraInfo} -p privacy="${priv}" -i bpoActivate
+bxoGitlab.py -v 20  -i acctList | egrep '[a-z][a-z][a-z]_' | ${G_myName} ${extraInfo} -p privacy="${priv}" -i bpoActivate  # Activate ALL BPOs in Gitlab
 ${G_myName} ${extraInfo} -p bpoId=${oneRealIndivBxoId} -i bxoTreeDescendantsList
 ${G_myName} ${extraInfo} -p bpoId=${oneRealIndivBxoId} -i bxoTreeDescendantsList | ${G_myName} ${extraInfo} -p privacy="${priv}" -i bpoActivate
 $( examplesSeperatorChapter "Overview Report And Summary" )

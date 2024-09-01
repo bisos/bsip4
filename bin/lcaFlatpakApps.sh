@@ -28,7 +28,7 @@ SEED="
 *  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
 "
 FILE="
-*  /This File/ :: /bisos/bsip/bin/sysCharGuestPreps.sh 
+*  /This File/ :: /bisos/core/bsip/bin/bxeRealize.sh 
 "
 if [ "${loadFiles}" == "" ] ; then
     /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
@@ -70,35 +70,6 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
-# ./platformBases_lib.sh
-. ${opBinBase}/platformBases_lib.sh
-
-. ${opBinBase}/bpo_lib.sh
-. ${opBinBase}/bpoId_lib.sh
-
-. ${opBinBase}/bxeDesc_lib.sh
-
-. ${opBinBase}/bystarHook.libSh
-
-. ${opBinBase}/bystarLib.sh
-
-. ${opBinBase}/lcnFileParams.libSh
-
-# . ${opBinBase}/bystarInfoBase.libSh
-
-. ${opBinBase}/unisosAccounts_lib.sh
-. ${opBinBase}/bisosGroupAccount_lib.sh
-. ${opBinBase}/bisosAccounts_lib.sh
-
-. ${opBinBase}/bxioCommon_lib.sh
-
-. ${opBinBase}/bisosCurrents_lib.sh
-
-. ${opBinBase}/site_lib.sh
-
-. ${opBinBase}/sysChar_lib.sh
-
-. ${opBinBase}/usgBpos_lib.sh
 
 
 # PRE parameters
@@ -107,12 +78,14 @@ typeset -t bpoId=""
 # usg=""
 
 function G_postParamHook {
-    if [ ! -z "${bpoId}" ] ; then
-        bpoIdPrepValidate
-        bpoHome=$( FN_absolutePathGet ~${bpoId} )
-    fi
+    #bpoIdPrepValidate    
+
+    # if [ ! -z "${bpoId}" ] ; then
+     #   bpoHome=$( FN_absolutePathGet ~${bpoId} )
+    # fi
     
-    bisosCurrentsGet
+    # bisosCurrentsGet
+    doNothing
 }
 
 
@@ -133,20 +106,25 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
-    #oneBxoId="prs-bisos"
-    oneBxoId="${currentBxoId}"
-    #oneBxoId="pic_dnsServer"    
-    oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )    
-    
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
-$( examplesSeperatorTopLabel "${G_myName}" )
-${G_myName} ${extraInfo} -i userConfigReset
-${G_myName} ${extraInfo} -i loadModuleCombineSink
+$( examplesSeperatorSection "Full Actions" )
+${G_myName} ${extraInfo} -i fullUpdate
+$( examplesSeperatorChapter "simple-wireplumber-gui -- GUI App for editing inputs and outputs" )
+sudo flatpak install flathub io.github.dyegoaurelio.simple-wireplumber-gui
+flatpak run io.github.dyegoaurelio.simple-wireplumber-gui
+$( examplesSeperatorChapter "Helvum -- A Graphical patchbay for PipeWire" )
+sudo flatpak install flathub org.pipewire.Helvum
+flatpak run org.pipewire.Helvum
+$( examplesSeperatorChapter "Easy Effects is an advanced audio manipulation tool" )
+sudo Easy Effects is an advanced audio manipulation tool
+flatpak run com.github.wwmm.easyeffects
 _EOF_
+  
+     # vis_examplesNicheRun site
 }
 
-function vis_loadModuleCombineSink {
+function vis_fullUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 
@@ -154,44 +132,9 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    local greped=$(pactl list modules | grep module-combine-sink)
-
-    if [ -z "${greped}" ] ; then
-        lpDo pactl load-module module-combine-sink
-    else
-        lpDo echo "Already Loaded: ${greped}"
-    fi
-
-    lpReturn
-}       
-
-function vis_userConfigReset {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-# From: https://forums.linuxmint.com/viewtopic.php?t=344639
-# url https://gitlab.freedesktop.org/pulseaudio/pulseaudio/raw/master/src/utils/pa-info?inline=false | bash | nc termbin.com 9999
-#
-# The first thing you should always try when working audio stops performing
-# properly is to delete the files in /home/YourUserName/.config/pulse then run
-# pulseaudio -k in the terminal to restart the sound daemon.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    homeConfigPulseBase="${HOME}/.config/pulse"
-
-    if [ ! -d "${homeConfigPulseBase}" ] ; then
-        EH_problem "Missing ${homeConfigPulseBase} -- further processing abandoned."
-        lpReturn 101
-    fi
-
-    lpDo mv ${homeConfigPulseBase} /tmp/pulse-$(DATE_nowTag)
-
-    lpDo pulseaudio -k
-
-    lpReturn
+    lpDo sudo flatpak install flathub io.github.dyegoaurelio.simple-wireplumber-gui
+    lpDo sudo flatpak install flathub org.pipewire.Helvum
 }
-
 
 
 _CommentBegin_

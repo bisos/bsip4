@@ -57,6 +57,8 @@ ${G_myName} ${extraInfo} -i provisionPyVenvSetup
 ${G_myName} ${extraInfo} -i provisionBasicBlee
 ${G_myName} ${extraInfo} -i provisionVirtSysSetup
 ${G_myName} ${extraInfo} -i provisionEmacsFromSrc
+$( examplesSeperatorSection "Gnome Desktop Customizations" )
+${G_myName} ${extraInfo} -i provisionGnomeDesktop
 _EOF_
 
     vis_fromBsipProvisionExamplesList
@@ -106,6 +108,10 @@ _EOF_
     lpDo vis_provisionVirtSysSetup
 
     lpDo ${bisosBinBase}/bsipProvision.sh -h -v -n showRun -i sysBaseGeneralAugment
+
+    lpDo id
+
+    lpDo ${bisosBinBase}/bsipProvision.sh -h -v -n showRun -i provisionGnomeDesktop
     
     lpDo echo skipping vis_provisionEmacsFromSrc
 
@@ -177,6 +183,7 @@ _EOF_
         lpReturn 1
     else
         opDo "${bisosProg}" -h -v -n showRun -i sysPreps
+        # opDo "${bisosProg}" -h -v -n showRun -i fullUpdate
         opDo "${bisosProg}" -h -v -n showRun -i fullUpdate
     fi
     
@@ -199,7 +206,8 @@ _EOF_
         EH_problem "Missing ${bisosProg}"
         lpReturn 1
     else        
-        opDo "${bisosProg}" -h -v -n showRun -i fullUpdate
+        #opDo "${bisosProg}" -h -v -n showRun -i fullUpdate
+        opDo "${bisosProg}" -i fullUpdate
     fi
     
     lpReturn
@@ -312,3 +320,27 @@ _EOF_
     lpReturn
 }
 
+function vis_provisionGnomeDesktop {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local bisosBinBase="$( bisosBinBaseGet )"
+
+    lpDo id
+
+    lpDo sudo  mkdir -p /usr/local/share/applications
+    lpDo ${bisosBinBase}/blee-xdg.sh -h -v -n showRun -f -i xdgBleeSysAppUpdate
+
+    lpDo sudo -u bisos ${bisosBinBase}/gnomeExtensionsBinsPrep.sh -i fullUpdate
+
+    lpDo sudo -u bisos env PIPX_HOME=/bisos/pipx PIPX_BIN_DIR=/bisos/pipx/bin /bisos/venv/py3/bisos3/bin/pipx install bisos.gnome
+
+    lpDo sudo -u bystar /bisos/pipx/bin/gnomeBisos.cs -i gnomeAutostartPrep
+    lpDo sudo -u bystar /bisos/pipx/bin/gnomeBisos.cs  --cls="gnomeBisosAutostart"  -i configFileUpdate
+    lpDo sudo -u bystar /bisos/pipx/bin/gnomeBisos.cs  --cls="gnomeBisosAutostart"  -i configFilePath
+    
+    lpReturn
+}
