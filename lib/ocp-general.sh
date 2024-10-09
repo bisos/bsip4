@@ -115,6 +115,7 @@ function opBasePathSet {
   export PATH="${PATH}:/bisos/core/mail/bin"
   export PATH="${PATH}:/bisos/pals/bin"
   export PATH="${PATH}:/usr/local/bin:/usr/local/sbin"
+  export PATH="${PATH}:/var/qmail/bin"
   export PATH="${PATH}:/usr/5bin:/usr/ccs/bin:/usr/sbin:/bin:/sbin:/usr/bin"
 }
 

@@ -104,8 +104,12 @@ ${G_myName} -i moduleDescription
 node -v
 npm -v
 sudo npm install -g --save --prefix=/usr/local reveal.js-plugins
+sudo npm install --save reveal.js-menu
+sudo ln -s /usr/local/lib/node_modules/reveal.js-plugins/node_modules/reveal.js-menu /usr/local/lib/node_modules/reveal.js-plugins/menu
 _EOF_
 }
+
+
 
 
 ####+BEGIN: bx:dblock:lsip:binsprep:apt :module "npm"

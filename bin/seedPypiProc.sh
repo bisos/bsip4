@@ -113,6 +113,7 @@ $( examplesSeperatorChapter "Package Information" )
 ${G_myName} -i curDevVer         # lowest version number in the ./dist directory
 ${G_myName} -i pypiPkgInfoShow   # Show setup.py and ./dist and ./egg info
 ${G_myName} ${extraInfo} -i packagingTemplatesUpdate # Create/Renew templates for setup.py README.org
+${G_myName} ${extraInfo} -i panelsUpdate # Modernize ./panels
 $( examplesSeperatorChapter "Pip Local Direct Actions" )
 pip show ${pypiPkgName}            # this local pkg ver=${pypiPkgVersion}
 pip show --verbose ${pypiPkgName}  # this local pkg ver=${pypiPkgVersion}
@@ -132,11 +133,9 @@ ${G_myName} ${extraInfo} -p repo=main -i fullPrepBuildUpload
 ${G_myName} ${extraInfo} -p repo=test -i fullPrepBuildUpload
 $( examplesSeperatorChapter "Registering and publishing the package" )
 https://pypi.python.org/pypi  https://testpypi.python.org/pypi
-twine upload --repository-url https://test.pypi.org/legacy/ ./dist/unisos.ucf-0.8.tar.gz
+twine upload --repository-url https://test.pypi.org/legacy/ ./dist/bisos.pkgName-0.8.tar.gz
 ${G_myName} ${extraInfo} -p repo=main -i twineUpload
 ${G_myName} ${extraInfo} -p repo=test -i twineUpload
-ls -ld /de/bx/nne/dev-py/pypi/pkgs/fptb/pypiProfile/default
-python setup.py --long-description | rst2html.py > output.html
 $( examplesSeperatorChapter "Un Installation" )
 ${G_myName} ${extraInfo} -i pkgUnInstall ${relPy3Bisos3}
 ${G_myName} ${extraInfo} -i pkgUnInstall ${devPy3Bisos3}
@@ -144,14 +143,9 @@ ${G_myName} ${extraInfo} -i pkgUnInstall sys
 $( examplesSeperatorChapter "Installation" )
 ${G_myName} ${extraInfo} -i pkgInstall local ${relPy3Bisos3}   # pip install  ${pipPkgFile}
 ${G_myName} ${extraInfo} -i pkgInstall edit ${devPy3Bisos3}  # pip install --editable $(pwd)
-${G_myName} ${extraInfo} -i pkgInstall local /bisos/tmp/venv/py3-tmp  # pip install --editable $(pwd)
-${G_myName} ${extraInfo} -i pkgInstall edit /bisos/tmp/venv/py3-tmp
 ${G_myName} ${extraInfo} -i pkgInstall edit sys  # pip install --editable $(pwd)
 ${G_myName} ${extraInfo} -i pkgInstall pypi ${relPy3Bisos3}  # pip install ${pypiPkgName}
-pip install --no-cache-dir --install-option="--install-scripts=/bystar/bin" --install-option="--install-data=/bystar/data" ${pipPkgFile}
-pip install --no-cache-dir --index-url https://test.pypi.org/simple/ ${pypiPkgName}
 pip install --no-cache-dir --editable ${pypiPkgName}
-pip install --no-cache-dir --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple ${pypiPkgName}
 ${G_myName} ${extraInfo} -i pkgLocalUsageMode      # show current symlink
 ${G_myName} ${extraInfo} -i pkgLocalUsageMode rel  # remove symlink
 ${G_myName} ${extraInfo} -i pkgLocalUsageMode dev  # create symlink
@@ -203,6 +197,20 @@ function vis_devExamples {
  cat  << _EOF_
 EXAMPLES:
 ${visLibExamples}
+$( examplesSeperatorChapter "Installation" )
+${G_myName} ${extraInfo} -i pkgInstall local ${relPy3Bisos3}   # pip install  ${pipPkgFile}
+${G_myName} ${extraInfo} -i pkgInstall edit ${devPy3Bisos3}  # pip install --editable $(pwd)
+${G_myName} ${extraInfo} -i pkgInstall local /bisos/tmp/venv/py3-tmp  # pip install --editable $(pwd)
+${G_myName} ${extraInfo} -i pkgInstall edit /bisos/tmp/venv/py3-tmp
+${G_myName} ${extraInfo} -i pkgInstall edit sys  # pip install --editable $(pwd)
+${G_myName} ${extraInfo} -i pkgInstall pypi ${relPy3Bisos3}  # pip install ${pypiPkgName}
+pip install --no-cache-dir --install-option="--install-scripts=/bystar/bin" --install-option="--install-data=/bystar/data" ${pipPkgFile}
+pip install --no-cache-dir --index-url https://test.pypi.org/simple/ ${pypiPkgName}
+pip install --no-cache-dir --editable ${pypiPkgName}
+pip install --no-cache-dir --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple ${pypiPkgName}
+${G_myName} ${extraInfo} -i pkgLocalUsageMode      # show current symlink
+${G_myName} ${extraInfo} -i pkgLocalUsageMode rel  # remove symlink
+${G_myName} ${extraInfo} -i pkgLocalUsageMode dev  # create symlink
 $( examplesSeperatorChapter "Python Sphinx Documentation" )
 ${G_myName} ${extraInfo} -i sphinxDocUpdate
 ${G_myName} ${extraInfo} -f -i sphinxDocUpdate   # Force Recreation
@@ -302,6 +310,34 @@ _EOF_
     else
         ANT_raw "setup.py -- is in place, updating skipped"
     fi
+
+    lpReturn
+}
+
+
+function vis_panelsUpdate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    pypiPkgInfoExtract
+
+    if [ -d "./panels/${pypiPkgName}" ] ; then
+        ANT_raw "./panels/${pypiPkgName} alread in place. Update skipped."
+        lpReturn
+    fi
+
+    lpDo mkdir ./panels/${pypiPkgName}
+    if [ -d ./panels/_nodeBase_ ] ; then
+        lpDo mv ./panels/bleePanelProc.sh  ./panels/ftoProc.sh  ./panels/_nodeBase_  ./panels/_objectType_ ./panels/_tree_ ./panels/_treeProc_ ./panels/${pypiPkgName}
+    fi
+
+    lpDo mkdir ./panels/${pypiPkgName}/README
+    inBaseDirDo ./panels/${pypiPkgName}/README startOrgPanel.sh -h -v -n showRun -i bleePanelBase leaf .
+    lpDo rm ./panels/${pypiPkgName}/README/fullUsagePanel-en.org
+    lpDo ln -s $(pwd)/README.org ./panels/${pypiPkgName}/README/fullUsagePanel-en.org
 
     lpReturn
 }
@@ -577,7 +613,17 @@ _EOF_
     if [ "${installType}" == "edit" ]; then
         # MB 2024 -- git pull should not be done here
         # opDo git pull
+        if [ -f  "./pyproject.toml" ] ; then
+            lpDo mv ./pyproject.toml ./TMP-pyproject.toml
+        fi
         opDo  pip install --no-cache-dir --editable .
+        if [ -f  "./pyproject.toml" ] ; then
+            EH_problem "Un-expected ./pyproject.toml"
+        else
+            if [ -f  "./TMP-pyproject.toml" ] ; then
+                lpDo mv ./TMP-pyproject.toml ./pyproject.toml
+            fi
+        fi
         return
         
     elif [ "${installType}" == "local" ]; then
