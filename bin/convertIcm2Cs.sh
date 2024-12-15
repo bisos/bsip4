@@ -326,8 +326,7 @@ _EOF_
 
         cat ${each}.${eachDateTag} | \
             sed \
-            -e "s@activeDocs/common/buePanels@begin/bleePanel@g"\
-            -e "s@Description:@contributor:@g"\
+            -e "s@msgOrg@orgMsg@g"\
             > ${each}
 
             # sed -e "s@unisos.marme@bisos.marmee@g" > ${each}

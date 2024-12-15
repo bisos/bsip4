@@ -280,7 +280,8 @@ ${G_myName} ${extraInfo} -i namesOutputToFilesWithAndResult tag1 vis_examplesAnd
 --------- 2023 Revisions -----------
 ${G_myName} ${extraInfo} -i fileVarsUpdate
 ${G_myName} ${extraInfo} -i resultNamesAsAddrRecipsAndSelect
-${G_myName} ${extraInfo} -i mtdtSelectRecips $(ls *-recips.el | head -1)
+${G_myName} ${extraInfo} -i mtdtSelectRecips $(ls -t *-recips.el | head -1)
+${G_myName} ${extraInfo} -i mtdtSelectRecips selected-recips.el
 ${G_myName} ${extraInfo} -i mtdtSelectMailing
 _EOF_
 }
