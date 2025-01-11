@@ -374,7 +374,7 @@ _EOF_
         lpReturn
     fi
 
-    lpDo mkdir ./panels/${pypiPkgName}
+    lpDo mkdir -p ./panels/${pypiPkgName}
     if [ -d ./panels/_nodeBase_ ] ; then
         lpDo mv ./panels/bleePanelProc.sh  ./panels/ftoProc.sh  ./panels/_nodeBase_  ./panels/_objectType_ ./panels/_tree_ ./panels/_treeProc_ ./panels/${pypiPkgName}
     fi
@@ -382,7 +382,7 @@ _EOF_
     lpDo mkdir ./panels/${pypiPkgName}/README
     inBaseDirDo ./panels/${pypiPkgName}/README startOrgPanel.sh -h -v -n showRun -i bleePanelBase leaf .
     lpDo rm ./panels/${pypiPkgName}/README/fullUsagePanel-en.org
-    lpDo ln -s ../README.org ./panels/${pypiPkgName}/README/fullUsagePanel-en.org
+    lpDo ln -s ../../../../README.org ./panels/${pypiPkgName}/README/fullUsagePanel-en.org
 
     lpReturn
 }
