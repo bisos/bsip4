@@ -297,7 +297,7 @@ _EOF_
 
     local artifactsBaseDir=$(vis_artifactsBaseDir)
 
-    ANT_raw "pyModule Artifacts / Template Base Dir: ${artifactsBaseDir}"
+    ANT_raw "=== pyModule Artifacts / Template Base Dir: ${artifactsBaseDir}"
 
     function updateAsNeeded {
         EH_assert [[ $# -eq 2 ]]
@@ -311,7 +311,7 @@ _EOF_
             if  cmp -s  "${templateFile}" "${artifact}" ; then
                 ANT_raw "${artifact} -- is current, no update needed"
             else
-                ANT_raw "force=${G_forceMode} -- ${artifact} is NOT Current"
+                # ANT_raw "force=${G_forceMode} -- ${artifact} is NOT Current"
                 if [ "${G_forceMode}" == "force" ] ; then
                     FN_fileSafeCopy ${artifact} ${artifact}.$(DATE_getTag)
                     lpDo cp "${templateFile} ${artifact}"
@@ -329,13 +329,42 @@ _EOF_
 
         if [ ! -f "${artifact}" ] ; then
             ANT_raw "Missing ${artifact} -- cp ${templateFile} ${artifact}"
-            lpDo cp "${templateFile}" ${artifact}
+            lpDo cp "${templateFile}" "${artifact}"
         else
             ANT_raw "${artifact} -- can not be reasonably machined compared. Consider diffing"
-            lpDo echo diff  ${artifact} "${templateFile}"
+            lpDo echo diff  "${templateFile}"  "${artifact}"
         fi
     }
 
+    function decommission {
+        EH_assert [[ $# -eq 1 ]]
+        local artifact="$1"
+
+        if [ -f "${artifact}" ] ; then
+            ANT_raw "${artifact} Noticed -- No Longer Needed -- Decomissioned"
+            lpDo mv ${artifact} ${artifact}.$(DATE_getTag)
+        else
+            ANT_raw "${artifact} Not There -- Good, No action is needed."
+        fi
+    }
+
+    function perhapsSwapReadmeOrg {
+        EH_assert [[ $# -eq 0 ]]
+
+        if [ -L "../README.org" ] && [ -f "./README.org" ] ; then
+            ANT_raw "./README.org is a file and ../README.org is symlink. Will Swap."
+            lpDo rm ../README.org
+            lpDo mv ./README.org ../README.org
+        elif [ -f "./README.org" ] && [ -f "../README.org" ] ; then
+            ANT_raw "./README.org exists file and ../README.org exists. Will obsolete ./README.org."
+            lpDo mv  ./README.org  ./README.org.$(DATE_getTag)
+        elif [ -f "./README.org" ] && [ ! -f "../README.org" ] ; then
+            ANT_raw "./README.org exists file and ../README.org is missing . Will Swap."
+            lpDo mv  ./README.org  ../README.org
+        else
+            ANT_raw "No ./README.org deduced, No action needed."
+        fi
+    }
 
     lpDo updateAsNeeded "pypiProc.sh" "${artifactsBaseDir}/bash/pypiProc.sh"
 
@@ -350,8 +379,12 @@ _EOF_
     # /bisos/apps/defaults/begin/templates/purposed/pyModule/git/_gitattributes
     lpDo updateAsNeeded "../.gitattributes" "${artifactsBaseDir}/git/_gitattributes"
 
+    lpDo decommission ./MANIFEST.in
+
     # /bisos/apps/defaults/begin/templates/purposed/pyModule/python/setup.py
     lpDo initializeOnly "setup.py" "${artifactsBaseDir}/python/setup.py"
+
+    lpDo perhapsSwapReadmeOrg
 
     # /bisos/apps/defaults/begin/templates/purposed/pyModule/org/README.org
     lpDo initializeOnly ../"README.org" "${artifactsBaseDir}/org/README.org"
