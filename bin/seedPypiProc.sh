@@ -105,16 +105,14 @@ function vis_examples {
  cat  << _EOF_
 EXAMPLES:
 ${visLibExamples}
-$( examplesSeperatorChapter "Package Information" )
-${G_myName} -i pypiPkgInfoShow   # Show setup.py and ./dist and ./egg info
-${G_myName} -i pipPkgFilePath
-$( examplesSeperatorChapter "Package Common Artifacts" )
+$( examplesSeperatorChapter "Package Common Artifacts -- For Initiation and Modernization" )
 ${G_myName} -i artifactsBaseDir
 ${G_myName} -i artifactsList
 ${G_myName} -i artifactsUpdate  # Create/Renew templates for setup.py README.org
 ${G_myName} ${extraInfo} -f -i artifactsUpdate # Modernize -- Overwrite existing files
 ${G_myName} ${extraInfo} -i artifactsPanelsUpdate # Modernize ./panels
-$( examplesSeperatorChapter "Pip Local Direct Actions" )
+$( examplesSeperatorChapter "Package Information and Pip Local Direct Actions" )
+${G_myName} -i pypiPkgInfoShow   # Show setup.py and ./dist and ./egg info
 pip show ${pypiPkgName}            # this local pkg ver=${pypiPkgVersion}
 pip show --verbose ${pypiPkgName}  # this local pkg ver=${pypiPkgVersion}
 pip uninstall ${pypiPkgName}
@@ -141,17 +139,16 @@ ${G_myName} ${extraInfo} -i pkgInstall local ${relPy3Bisos3}   # pip install  ${
 ${G_myName} ${extraInfo} -i pkgInstall edit ${devPy3Bisos3}  # pip install --editable $(pwd)
 ${G_myName} ${extraInfo} -i pkgInstall pypi ${relPy3Bisos3}  # pip install ${pypiPkgName}
 pip install --no-cache-dir --editable ${pypiPkgName}
-$( examplesSeperatorChapter "Un Installation" )
+$( examplesSeperatorChapter "Un-Installation and Re-Installation" )
 ${G_myName} ${extraInfo} -i pkgUnInstall ${relPy3Bisos3}
 ${G_myName} ${extraInfo} -i pkgUnInstall ${devPy3Bisos3}
-${G_myName} ${extraInfo} -i pkgUnInstall sys
+${G_myName} ${extraInfo} -i pkgReInstall local ${relPy3Bisos3}
+${G_myName} ${extraInfo} -i pkgReInstall edit ${devPy3Bisos3}
 $( examplesSeperatorChapter "Cleaning" )
 ${G_myName} ${extraInfo} -i distClean
 $( examplesSeperatorChapter "Pkg Versions at PyPi" )
 pyPkgTools.cs  -i pypiLatestVersion ${pypiPkgName}           # PyPi Ver Latest  -- pip index versions ${pypiPkgName}
-pyPkgTools.cs  -i pypiLatestVersionPlus ${pypiPkgName} 0.01  # pypiLatestVersion + 0.01
-${G_myName} ${extraInfo} -i pypiVerLatest                    # Same as: pyPkgTools.cs  -i pypiLatestVersion ${pypiPkgName}
-${G_myName} ${extraInfo} -i pypiVerNext 0.01                 # Same as: pyPkgTools.cs  -i pypiLatestVersionPlus ${pypiPkgName} 0.01
+pyPkgTools.cs  -i pypiLatestVersionPlus ${pypiPkgName} 0.01  # Same as: -i pypiLatestVersion + 0.01
 $( examplesSeperatorChapter "Pkg Versions at System" )
 ${G_myName} ${extraInfo} -i versReport                       # Report all PyPi and System Versions
 ${G_myName} ${extraInfo} -i sysVerInstalled                  # pip show ${pypiPkgName} | grep Version
@@ -290,7 +287,7 @@ _EOF_
 function vis_artifactsUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-NOTYET. This is out dated needs to be modernized.
+Used for both initiation and modernization.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -306,7 +303,7 @@ _EOF_
 
         if [ ! -f "${artifact}" ] ; then
             ANT_raw "Missing ${artifact} -- cp ${templateFile} ${artifact}"
-            lpDo cp "${templateFile}" ${artifact}
+            lpDo cp ${templateFile} ${artifact}
         else
             if  cmp -s  "${templateFile}" "${artifact}" ; then
                 ANT_raw "${artifact} -- is current, no update needed"
@@ -314,7 +311,7 @@ _EOF_
                 # ANT_raw "force=${G_forceMode} -- ${artifact} is NOT Current"
                 if [ "${G_forceMode}" == "force" ] ; then
                     FN_fileSafeCopy ${artifact} ${artifact}.$(DATE_getTag)
-                    lpDo cp "${templateFile} ${artifact}"
+                    lpDo cp ${templateFile} ${artifact}
                 else
                     ANT_raw "${artifact} -- not current but updating skipped -- Perhaps use -f"
                 fi
@@ -403,9 +400,19 @@ _EOF_
     pypiPkgInfoExtract
 
     if [ -d "./panels/${pypiPkgName}" ] ; then
-        ANT_raw "./panels/${pypiPkgName} alread in place. Update skipped."
+        ANT_raw "./panels/${pypiPkgName} alread in place. Just perhaps updating the README"
+
+        if [ ! -e ./panels/${pypiPkgName}/README/fullUsagePanel-en.org ] ; then
+            ANT_raw "Updating ./panels/${pypiPkgName}/README/fullUsagePanel-en.org"
+            lpDo rm ./panels/${pypiPkgName}/README/fullUsagePanel-en.org
+            lpDo ln -s ../../../../README.org ./panels/${pypiPkgName}/README/fullUsagePanel-en.org
+        else
+            ANT_raw "In place. No action required for ./panels/${pypiPkgName}/README/fullUsagePanel-en.org"
+        fi
         lpReturn
     fi
+
+    # When does not ./panels/${pypiPkgName}
 
     lpDo mkdir -p ./panels/${pypiPkgName}
     if [ -d ./panels/_nodeBase_ ] ; then
@@ -527,6 +534,9 @@ _EOF_
         ANT_raw "Missing ./dist"
     fi
 
+    ANT_raw "pipPkgFilePath:"
+    lpDo vis_pipPkgFilePath
+
     lpReturn
 }
 
@@ -645,7 +655,6 @@ _EOF_
 
     opDo pypiPkgInfoExtract
 
-      
     local activeFile=$(withVenvBaseGetActiveFile ${venvBase})
 
     if [ ! -z ${activeFile} ] ; then
@@ -656,6 +665,38 @@ _EOF_
         
     lpReturn
 }
+
+
+function vis_pkgReInstall {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 2 ]]
+
+    local installType="$1"
+    local venvBase="$2"
+
+
+    local venvBase="$1"
+
+    opDo pypiPkgInfoExtract
+
+    local activeFile=$(withVenvBaseGetActiveFile ${venvBase})
+
+    if [ ! -z ${activeFile} ] ; then
+        opDo sourceVenvActiveFile ${activeFile}
+    fi
+
+    opDo pip uninstall -y --no-cache-dir "${pypiPkgName}"
+
+    lpDo vis_fullPrepBuild forSys
+
+    lpDo vis_pkgInstall ${installType} ${venvBase}
+
+    lpReturn
+}
+
 
 
 _CommentBegin_
@@ -1364,6 +1405,7 @@ _EOF_
             | cut -d ' ' -f 2 \
             | egrep -v ${pypiPkgName} \
             | egrep -v bisos.b.cs \
+            | egrep -v from \
             | egrep -v ${pypiPkgNamespace}'$' >> ${tmpFile}
     }
 
