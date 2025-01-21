@@ -493,7 +493,9 @@ _EOF_
     #lpDo ${opBinBase}/bisosPyVenvSetup.sh -h -v -n showRun -i venvPy3_pipInstalls
 
     # sha1 obtained from a stable release -- git rev-parse HEAD
-    inBaseDirDo /bisos/blee/extPkgs/emacs-application-framework git reset --hard 4ce9b1cab0f4894adcb1710917f96279cccd401b
+    # inBaseDirDo /bisos/blee/extPkgs/emacs-application-framework git reset --hard 4ce9b1cab0f4894adcb1710917f96279cccd401b
+    # Testing with latest instead
+    echo NOTYET 20250120 inBaseDirDo /bisos/blee/extPkgs/emacs-application-framework git reset --hard 4ce9b1cab0f4894adcb1710917f96279cccd401b
 
     # NOTYET, for DEBIAN-12. for emacs=sys  Should check version here. ./bleeDoomsManage.sh
     lpDo sudo -u ${acctName} ${opBinBase}/bleeDoomsManage.sh -h -v -n showRun -p emacs=sys -p profile=doom-blee3 -i reBuild
