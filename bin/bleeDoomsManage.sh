@@ -262,6 +262,10 @@ _EOF_
 
     lpDo vis_switchInitTo withBlee
 
+    # NOTYET
+    echo "NOTYET, BAD and UGLY"
+    lpDo cp /bisos/blee/env3/doom/doom-straight.el /bisos/blee/emacsVers/28.2/doom-run-blee3/lisp/doom-straight.el
+
     lpReturn
 }
 
