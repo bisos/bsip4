@@ -253,9 +253,7 @@ _EOF_
     # /bisos/git/anon/ext/emacs/doomemacs /bisos/blee/dooms/doomemacs  --- is anon cloned from https://github.com/doomemacs/doomemacs
     # ln -s /bisos/git/anon/ext/emacs/doomemacs /bisos/blee/dooms/doomemacs
     # sha1 obtained on Fri Dec 8 12:13:10 2023 from a stable release -- git rev-parse HEAD
-
-    # MB 2025 Jan 20  NOTYET  -- Testing With Latest
-    # inBaseDirDo /bisos/git/anon/ext/emacs/doomemacs git reset --hard 03d692f129633e3bf0bd100d91b3ebf3f77db6d1
+    inBaseDirDo /bisos/git/anon/ext/emacs/doomemacs git reset --hard 03d692f129633e3bf0bd100d91b3ebf3f77db6d1
 
     # If this proved to be a fix, NOTYET, make bystar a param
     lpDo echo "Be Patient, this can take a Long Time -- Running: sudo -u bystar ${doomRunBase}/bin/doom --force install"
