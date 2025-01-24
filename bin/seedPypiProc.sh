@@ -95,7 +95,7 @@ function vis_examples {
   # sitePagesList=`echo ${sitePages}`
 
       pypiPkgInfoExtract
-    local pipPkgFile="./dist/${pypiPkgName/./_}-${pypiPkgVersion}.tar.gz"
+    local pipPkgFile=$(vis_pipPkgFilePath)
 
     local devPy3Bisos3="/bisos/venv/py3/dev-bisos3"
     #local relPy3Bisos3="/bystar/dist/venv/py2-bisos-3"
@@ -109,8 +109,8 @@ $( examplesSeperatorChapter "Package Common Artifacts -- For Initiation and Mode
 ${G_myName} -i artifactsBaseDir
 ${G_myName} -i artifactsList
 ${G_myName} -i artifactsUpdate  # Create/Renew templates for setup.py README.org
-${G_myName} ${extraInfo} -f -i artifactsUpdate # Modernize -- Overwrite existing files
-${G_myName} ${extraInfo} -i artifactsPanelsUpdate # Modernize ./panels
+${G_myName} -f -i artifactsUpdate # Modernize -- Overwrite existing files
+${G_myName} -i artifactsPanelsUpdate # Modernize ./panels
 $( examplesSeperatorChapter "Package Information and Pip Local Direct Actions" )
 ${G_myName} -i pypiPkgInfoShow   # Show setup.py and ./dist and ./egg info
 pip show ${pypiPkgName}            # this local pkg ver=${pypiPkgVersion}
@@ -131,7 +131,7 @@ https://pypi.python.org/pypi  https://testpypi.python.org/pypi
 ${G_myName} ${extraInfo} -p repo=main -i twineUpload  # twine upload --repository-url https://test.pypi.org/legacy/ ./dist/bisos.pkgName-ver.tar.gz
 ${G_myName} ${extraInfo} -p repo=test -i twineUpload
 ${G_myName} ${extraInfo} -i twineCheck sdist # whl
-${G_myName} ${extraInfo} -p repo=main -i fullPrepBuildUploadRePrep  # After upload recreates the dist with installed version
+${G_myName} ${extraInfo} -p repo=main -i fullPrepBuildUploadRePrep  # PRIMARY - After upload recreates the dist with installed version
 ${G_myName} ${extraInfo} -p repo=main -i fullPrepBuildUpload  # sets pypiVer (increments pypi)
 ${G_myName} ${extraInfo} -p repo=test -i fullPrepBuildUpload
 $( examplesSeperatorChapter "Installation" )
@@ -143,7 +143,7 @@ $( examplesSeperatorChapter "Un-Installation and Re-Installation" )
 ${G_myName} ${extraInfo} -i pkgUnInstall ${relPy3Bisos3}
 ${G_myName} ${extraInfo} -i pkgUnInstall ${devPy3Bisos3}
 ${G_myName} ${extraInfo} -i pkgReInstall local ${relPy3Bisos3}
-${G_myName} ${extraInfo} -i pkgReInstall edit ${devPy3Bisos3}
+${G_myName} ${extraInfo} -i pkgReInstall edit ${devPy3Bisos3}   # PRIMARY, unInstall+fullPrepBuild forSys+Install
 $( examplesSeperatorChapter "Cleaning" )
 ${G_myName} ${extraInfo} -i distClean
 $( examplesSeperatorChapter "Pkg Versions at PyPi" )
@@ -177,7 +177,6 @@ _EOF_
 
 }
 
-
 function vis_devExamples {
 
   #typeset extraInfo=""
@@ -186,7 +185,8 @@ function vis_devExamples {
   # sitePagesList=`echo ${sitePages}`
 
       pypiPkgInfoExtract
-    local pipPkgFile="./dist/${pypiPkgName/./_}-${pypiPkgVersion}.tar.gz"
+
+    local pipPkgFile=$(vis_pipPkgFilePath)
 
     local devPy3Bisos3="/bisos/venv/py3/dev-bisos3"
     #local relPy3Bisos3="/bystar/dist/venv/py2-bisos-3"
@@ -253,7 +253,8 @@ _EOF_
 
     pypiPkgInfoExtract
 
-    local pipPkgFile="./dist/${pypiPkgName/./_}-${pypiPkgVersion}.tar.gz"
+    local lc_pypiPkgName="${pypiPkgName,,}"
+    local pipPkgFile="./dist/${lc_pypiPkgName/./_}-${pypiPkgVersion}.tar.gz"
     echo ${pipPkgFile}
 }
 
@@ -717,7 +718,7 @@ _EOF_
 
     # opDo sudo chgrp employee /usr/local/lib/python2.7/dist-packages
     
-    local pipPkgFile="./dist/${pypiPkgName}-${pypiPkgVersion}.tar.gz"
+    local pipPkgFile=$(vis_pipPkgFilePath)
       
     local activeFile=$(withVenvBaseGetActiveFile ${venvBase})
 
@@ -1088,7 +1089,7 @@ _EOF_
 
     local credentials="--username ${userName} --password ${userPasswd}"
 
-    local sdistPkgFile="./dist/${pypiPkgName/./_}-${pypiPkgVersion}.tar.gz"
+    local sdistPkgFile=$(vis_pipPkgFilePath)
 
     if [ ! -f "${sdistPkgFile}" ] ; then
         EH_problem "Missing sdistPkgFile=${sdistPkgFile}"
@@ -1308,7 +1309,8 @@ _EOF_
         
     lpDo pypiPkgInfoExtract
 
-    local curDistVer=$(ls -v ./dist/*.tar.gz | head -1 | sed -e s:.tar.gz:: -e s:./dist/${pypiPkgName}-::)
+    # pypiPkgName,, Makes it all lower case
+    local curDistVer=$(ls -v ./dist/*.tar.gz | head -1 | sed -e s:.tar.gz:: -e s:./dist/${pypiPkgName,,}-::)
 
     echo ${curDistVer}
 }
@@ -1392,7 +1394,7 @@ _EOF_
     if [ ! -z  "${tmpBleeFile}" ] ; then
         echo "\"blee\","
     fi
-    lpDo cat ${tmpBleeFile} | sort | uniq | sed -e 's:\(^.*$\):\"\1\",:'
+    lpDo cat ${tmpBleeFile} | egrep -v from | sort | uniq | sed -e 's:\(^.*$\):\"\1\",:'
     lpDo rm ${tmpBleeFile}
 
     local tmpFile=$( FN_tempFile )
