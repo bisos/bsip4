@@ -534,11 +534,11 @@ _EOF_
 
     lpDo vagrant up
 
-    local vmName=$( vis_vagrantFile_vmName ${thisDir}/Vagrantfile )
+    local vmName=$( vis_vagrantFile_vmName ${dirsPart}/${thisDir}/Vagrantfile )
     local dateTag=$( date +%Y%m%d%H%M%S )
 
     lpDo echo "Add a Title here: -- (Prompts for Password)"
-    lpDo echo --  virsh --connect qemu+ssh://localhost/system desc ${vmName} --current --title "${vmName} - Imaged at ${dateTag} - " --new-desc "Description of VM comes here"
+    lpDo echo virsh --connect qemu+ssh://localhost/system desc ${vmName} --current --title "${vmName} - Imaged at ${dateTag} - " --new-desc "Description of VM comes here"
 
     lpReturn
 }
@@ -1024,7 +1024,7 @@ _EOF_
     if [ -x "${cntnrAssemblePath}" ] ; then
         runLine="sudo -u bystar ${cntnrAssemblePath} -h -v -n showRun -i fullUpdate # Is being obsoleted by capMaterializationDispatch.cs"
     else
-        runLine="echo -- Missing ${cntnrAssemblePath} -- Skipped -- Is being obsoleted by capMaterializationDispatch.cs"
+        runLine="echo Missing ${cntnrAssemblePath} -- Skipped -- Is being obsoleted by capMaterializationDispatch.cs"
     fi
 
     function platformBinsRun {
@@ -1035,7 +1035,7 @@ _EOF_
 _EOF_
         ${runLine}
 
-        /bisos/venv/py3/bisos3/bin/capMaterializationDispatch.cs -i fullCapSpecAndMatDispatch
+        sudo -u bystar /bisos/venv/py3/bisos3/bin/capMaterializationDispatch.cs -i fullCapSpecAndMatDispatch
 _OUTER_EOF_
     }
 
