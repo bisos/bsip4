@@ -1340,9 +1340,9 @@ _EOF_
     local runLine
 
     if [ -x "${cntnrAssemblePath}" ] ; then
-        runLine="sudo -u bystar ${cntnrAssemblePath} -h -v -n showRun -i fullUpdate"
+        runLine="sudo -u bystar ${cntnrAssemblePath} -h -v -n showRun -i fullUpdate  # Is being obsoleted by capMaterializationDispatch.cs"
     else
-        runLine="echo Missing ${cntnrAssemblePath} -- Skipped"
+        runLine="echo Missing ${cntnrAssemblePath} -- Skipped -- Is being obsoleted by capMaterializationDispatch.cs"
     fi
 
     echo ${runLine}

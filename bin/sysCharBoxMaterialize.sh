@@ -299,6 +299,8 @@ _EOF_
 
     # Run Niche of bpoId
     lpDo ${cntnrAssemble_runLine}
+
+    lpDo /bisos/venv/py3/bisos3/bin/capMaterializationDispatch.cs -i fullCapSpecAndMatDispatch
 }
 
 

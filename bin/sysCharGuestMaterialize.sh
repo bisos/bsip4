@@ -167,10 +167,13 @@ bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VSG-deb12_  # 
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VSS-1009    # Specific, Shielded, StaticIP
 $( examplesSeperatorChapter "Activate Subject sysContainerBxo" )
 sysCharActivate.sh -h -v -n showRun -p bpoId="${oneBxoId}" -i activate_sysContainerBxo
+$( examplesSeperatorChapter "VM File -- VM Name" )
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vagrantBase_last     # on host - Show Vagrant Directory
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vagrantFile_last
+${G_myName} -i vagrantFile_vmName  $( ${G_myName} -p bpoId="${oneBxoId}" -i vagrantFile_last )
 $( examplesSeperatorChapter "Specialized Actions" )
 ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vagrantBaseBoxFromSysChar   # which vagrantBaseBox will be used
-${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vagrantBase_last     # on host - Show Vagrant Directory
-${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vagrantFile_run       # Generates image for SITED BISOS
+${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -i vagrantFile_run       # PRIMARY Generates image for SITED BISOS
 ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -p phases="P0 P1" -i vagrantFile_run   # Generates image for Raw-BISOS (UnSited-BISOS)
 ${G_myName} ${extraInfo} -p bpoId="${oneBxoId}" -p phases="P0" -i vagrantFile_run      # Generates image for Fresh-DEBIAN
 $( examplesSeperatorChapter "Vagrantfile Stdout and Creation " )
@@ -377,6 +380,45 @@ _EOF_
     lpReturn
 }       
 
+function vis_vagrantFile_vmName {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+    
+    local vagrantFile="$1"
+
+    local vmNameLine=$( grep config.vm.define ${vagrantFile} )
+    local vmName=$( echo ${vmNameLine} | cut -d ' ' -f 2 | xargs echo )
+
+    echo ${vmName}
+
+    lpReturn
+}
+
+
+function vis_vagrantFile_last {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -lt 2 ]]
+    EH_assert [ ! -z "${bpoId}" ]
+
+    local lastBase=$(vis_vagrantBase_last)
+    local lastFile="${lastBase}/Vagrantfile"
+
+    if [ ! -e "${lastFile}" ] ; then
+        EH_problem "Missing ${lastFile}"
+        lpReturn
+    fi
+    echo ${lastFile}
+
+    lpReturn
+}
+
+
 
 function vis_vagrantBase_last {
     G_funcEntry
@@ -491,6 +533,12 @@ _EOF_
     lpDo pwd
 
     lpDo vagrant up
+
+    local vmName=$( vis_vagrantFile_vmName ${thisDir}/Vagrantfile )
+    local dateTag=$( date +%Y%m%d%H%M%S )
+
+    lpDo echo "Add a Title here: -- (Prompts for Password)"
+    lpDo echo --  virsh --connect qemu+ssh://localhost/system desc ${vmName} --current --title "${vmName} - Imaged at ${dateTag} - " --new-desc "Description of VM comes here"
 
     lpReturn
 }
@@ -974,9 +1022,9 @@ _EOF_
     local runLine
 
     if [ -x "${cntnrAssemblePath}" ] ; then
-        runLine="sudo -u bystar ${cntnrAssemblePath} -h -v -n showRun -i fullUpdate"
+        runLine="sudo -u bystar ${cntnrAssemblePath} -h -v -n showRun -i fullUpdate # Is being obsoleted by capMaterializationDispatch.cs"
     else
-        runLine="echo Missing ${cntnrAssemblePath} -- Skipped"
+        runLine="echo -- Missing ${cntnrAssemblePath} -- Skipped -- Is being obsoleted by capMaterializationDispatch.cs"
     fi
 
     function platformBinsRun {
@@ -986,6 +1034,8 @@ _EOF_
 ######### PHASE 3: Run Pre and platformBinsRun and Post
 _EOF_
         ${runLine}
+
+        /bisos/venv/py3/bisos3/bin/capMaterializationDispatch.cs -i fullCapSpecAndMatDispatch
 _OUTER_EOF_
     }
 

@@ -137,8 +137,8 @@ ${G_myName} ${extraInfo} -p repo=test -i fullPrepBuildUpload
 $( examplesSeperatorChapter "Installation" )
 ${G_myName} ${extraInfo} -i pkgInstall local ${relPy3Bisos3}   # pip install  ${pipPkgFile}
 ${G_myName} ${extraInfo} -i pkgInstall edit ${devPy3Bisos3}  # pip install --editable $(pwd)
-${G_myName} ${extraInfo} -i pkgInstall pypi ${relPy3Bisos3}  # pip install ${pypiPkgName}
-pip install --no-cache-dir --editable ${pypiPkgName}
+/bisos/venv/py3/bisos3/bin/pip install --no-cache-dir --upgrade ${pypiPkgName} # pip install from PYPI 
+pip install --no-cache-dir --editable ${pypiPkgName}  # --use-pep517
 $( examplesSeperatorChapter "Un-Installation and Re-Installation" )
 ${G_myName} ${extraInfo} -i pkgUnInstall ${relPy3Bisos3}
 ${G_myName} ${extraInfo} -i pkgUnInstall ${devPy3Bisos3}
@@ -254,6 +254,7 @@ _EOF_
     pypiPkgInfoExtract
 
     local lc_pypiPkgName="${pypiPkgName,,}"
+    lc_pypiPkgName=${lc_pypiPkgName/-/_}
     local pipPkgFile="./dist/${lc_pypiPkgName/./_}-${pypiPkgVersion}.tar.gz"
     echo ${pipPkgFile}
 }
@@ -313,6 +314,7 @@ _EOF_
                 if [ "${G_forceMode}" == "force" ] ; then
                     FN_fileSafeCopy ${artifact} ${artifact}.$(DATE_getTag)
                     lpDo cp ${templateFile} ${artifact}
+                    ANT_raw "${artifact} -- Updated with ${templateFile}"
                 else
                     ANT_raw "${artifact} -- not current but updating skipped -- Perhaps use -f"
                 fi
@@ -689,9 +691,9 @@ _EOF_
         opDo sourceVenvActiveFile ${activeFile}
     fi
 
-    opDo pip uninstall -y --no-cache-dir "${pypiPkgName}"
-
     lpDo vis_fullPrepBuild forSys
+
+    opDo pip uninstall -y --no-cache-dir "${pypiPkgName}"
 
     lpDo vis_pkgInstall ${installType} ${venvBase}
 
@@ -727,6 +729,12 @@ _EOF_
     else
         ANT_raw "No activeFile -- Will apply to system"
     fi
+
+    #
+    # The moving away of ./pyproject.toml is done to prevent
+    # --- pip install --no-cache-dir --editable . ---
+    # from creating the modern way of doing editable modules (with find etc)
+    #
     
     if [ "${installType}" == "edit" ]; then
         # MB 2024 -- git pull should not be done here
@@ -734,7 +742,9 @@ _EOF_
         if [ -f  "./pyproject.toml" ] ; then
             lpDo mv ./pyproject.toml ./TMP-pyproject.toml
         fi
-        opDo  pip install --no-cache-dir --editable .
+        
+        opDo  pip install --no-cache-dir --editable .  #  --config-settings editable_mode=compat
+        
         if [ -f  "./pyproject.toml" ] ; then
             EH_problem "Un-expected ./pyproject.toml"
         else
@@ -948,11 +958,13 @@ _EOF_
 
     if [ "${buildType}"  == "forPypi" ] ; then
         lpDo touch "./pypiUploadVer"
+        lpDo bx-dblock -i dblockUpdateFiles ./pyproject.toml       
         lpDo bx-dblock -i dblockUpdateFiles ./setup.py
         # lpDo vis_distClean
         lpDo vis_distBuild
         lpDo rm "./pypiUploadVer"
    elif [ "${buildType}"  == "forSys" ] ; then
+        lpDo bx-dblock -i dblockUpdateFiles ./pyproject.toml               
         lpDo bx-dblock -i dblockUpdateFiles ./setup.py
         # lpDo vis_distClean
         lpDo vis_distBuild
@@ -1026,20 +1038,22 @@ _EOF_
     local sdistPkgFile="./dist/${pypiPkgName/./_}-${pypiPkgVersion}.tar.gz"
     local whlPkgFile="./dist/${pypiPkgName}-${pypiPkgVersion}-py3-none-any.whl"
 
-    if [ ! -f "${sdistPkgFile}" ] ; then
-        EH_problem "Missing sdistPkgFile=${sdistPkgFile}"
-        lpReturn 101
-    fi
-
-    if [ ! -f "${whlPkgFile}" ] ; then
-        EH_problem "Missing  whlPkgFile=${whlPkgFile}"
-        lpReturn 101
-    fi
 
     for each in ${targets} ; do
         if [ "${each}" == "sdist" ] ; then
+
+            if [ ! -f "${sdistPkgFile}" ] ; then
+                EH_problem "Missing sdistPkgFile=${sdistPkgFile}"
+                lpReturn 101
+            fi
+
             lpDo twine check ${sdistPkgFile}
         elif [ "${each}" == "whl" ] ; then
+            if [ ! -f "${whlPkgFile}" ] ; then
+                EH_problem "Missing  whlPkgFile=${whlPkgFile}"
+                lpReturn 101
+            fi
+
             lpDo twine check ${whlPkgFile}
         else
             EH_problem "Bad Usage target=${each}"
@@ -1309,8 +1323,12 @@ _EOF_
         
     lpDo pypiPkgInfoExtract
 
+    local lc_pypiPkgName="${pypiPkgName,,}"
+    # local lc_pypiPkgName="${pypiPkgName}"    
+    lc_pypiPkgName=${lc_pypiPkgName/-/_}
+
     # pypiPkgName,, Makes it all lower case
-    local curDistVer=$(ls -v ./dist/*.tar.gz | head -1 | sed -e s:.tar.gz:: -e s:./dist/${pypiPkgName,,}-::)
+    local curDistVer=$(ls -v ./dist/*.tar.gz | head -1 | sed -e s:.tar.gz:: -e s:./dist/${lc_pypiPkgName}-::)
 
     echo ${curDistVer}
 }
@@ -1394,7 +1412,7 @@ _EOF_
     if [ ! -z  "${tmpBleeFile}" ] ; then
         echo "\"blee\","
     fi
-    lpDo cat ${tmpBleeFile} | egrep -v from | sort | uniq | sed -e 's:\(^.*$\):\"\1\",:'
+    lpDo cat ${tmpBleeFile} | egrep -v from | egrep -v missing | sort | uniq | sed -e 's:\(^.*$\):\"\1\",:'
     lpDo rm ${tmpBleeFile}
 
     local tmpFile=$( FN_tempFile )
@@ -1408,6 +1426,7 @@ _EOF_
             | egrep -v ${pypiPkgName} \
             | egrep -v bisos.b.cs \
             | egrep -v from \
+            | egrep -v missing \
             | egrep -v ${pypiPkgNamespace}'$' >> ${tmpFile}
     }
 
