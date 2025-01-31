@@ -988,6 +988,8 @@ _EOF_
 
     opDo vis_fullPrepBuild forSys  # recreates the dist with installed version
 
+    lpDo /bisos/venv/py3/bisos3/bin/pip install --no-cache-dir --upgrade "${pypiPkgName}"
+
  }
 
 

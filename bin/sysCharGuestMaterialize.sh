@@ -392,7 +392,10 @@ _EOF_
     local vmNameLine=$( grep config.vm.define ${vagrantFile} )
     local vmName=$( echo ${vmNameLine} | cut -d ' ' -f 2 | xargs echo )
 
-    echo ${vmName}
+    local vmPrefixLine=$( grep default_prefix ${vagrantFile} )
+    local vmPrefix=$( echo ${vmPrefixLine} | cut -d ' ' -f 3 | xargs echo )
+
+    echo ${vmPrefix}${vmName}
 
     lpReturn
 }
@@ -537,8 +540,8 @@ _EOF_
     local vmName=$( vis_vagrantFile_vmName ${dirsPart}/${thisDir}/Vagrantfile )
     local dateTag=$( date +%Y%m%d%H%M%S )
 
-    lpDo echo "Add a Title here: -- (Prompts for Password)"
-    lpDo echo virsh --connect qemu+ssh://localhost/system desc ${vmName} --current --title "${vmName} - Imaged at ${dateTag} - " --new-desc "Description of VM comes here"
+    #lpDo echo "Add a Title here: -- (Prompts for Password)"
+    lpDo virsh --connect qemu:///system desc ${vmName} --current --title "${vmName} - Imaged at ${dateTag} - " --new-desc "Description of VM comes here"
 
     lpReturn
 }
@@ -1035,7 +1038,8 @@ _EOF_
 _EOF_
         ${runLine}
 
-        sudo -u bystar /bisos/venv/py3/bisos3/bin/capMaterializationDispatch.cs -i fullCapSpecAndMatDispatch
+        # We don't use sudo -i or -E because the bisos account does not have a shell
+        sudo -u bystar bash -c 'PATH=$PATH:/bisos/venv/py3/bisos3/bin capMaterializationDispatch.cs -i fullCapSpecAndMatDispatch'
 _OUTER_EOF_
     }
 

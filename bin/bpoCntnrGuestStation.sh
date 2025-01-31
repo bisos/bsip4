@@ -138,12 +138,18 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
-    oneBxoId="${currentBxoId}"
-    oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )
+    # oneBxoId="${currentBxoId}"
+    local oneBpoId="pmp_VAG-deb12_"
+    local oneBxoHome=$( FN_absolutePathGet ~${oneBpoId} )
 
-    oneTargetBox=${curTargetBox:-}
+    bpoId=${oneBpoId}
 
-    thisBpoId=$( vis_bpoIdPrep "sysChar" )
+    local vagrantLastVmName=$( vis_vagrantLastVmName )
+
+
+    local oneTargetBox=${curTargetBox:-}
+
+    local thisBpoId=$( vis_bpoIdPrep "sysChar" )
 
     local boxId=$( siteBoxAssign.sh -i thisBoxFindId )    
     
@@ -151,7 +157,7 @@ function vis_examples {
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
-bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
+bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBpoId}"
 $( examplesSeperatorChapter "All BPO Containers List" )
 bxoGitlab.py
 bxoGitlab.py -i acctList
@@ -163,27 +169,62 @@ ${G_myName} ${extraInfo} -i bpoIdPrep "sysChar" # vis_bpoIdPrep "sysChar" ->  $(
 $( examplesSeperatorSection "This Container Accounts Info" )
 egrep 'pmp_V' /etc/passwd   # Guest accounts in this container
 egrep 'pmp_V' /etc/passwd | egrep -v 'pmp_VAG-|pmp_VSG-'  # Non Generic Guest accounts in this container
+${G_myName}  -p bpoId="${oneBpoId}" -i vagrantLastVmName
 $( examplesSeperatorChapter "BPO Container Guests -- Stationing (VMs start, stop, auto-star, delete)" )
 lcaVirshManage.sh  #
 virsh --connect qemu:///system list --all --title
-virsh --connect qemu:///system stop VSS-1004-3
-virsh --connect qemu:///system start VSS-1004-3
-virsh --connect qemu:///system restart VSS-1004-3
-virsh --connect qemu:///system restart VSS-1004-3
-virsh --connect qemu+ssh://localhost/system autostart unspecified   # enable auto start
-virsh --connect qemu+ssh://localhost/system autostart unspecified --disable  # disable auto start
-virsh --connect qemu+ssh://localhost/system dominfo unspecified
+virsh --connect qemu:///system stop ${vagrantLastVmName}
+virsh --connect qemu:///system start ${vagrantLastVmName}
+virsh --connect qemu:///system restart ${vagrantLastVmName}
+virsh --connect qemu:///system restart ${vagrantLastVmName}
+virsh --connect qemu://localhost/system autostart ${vagrantLastVmName}   # enable auto start
+virsh --connect qemu://localhost/system autostart ${vagrantLastVmName} --disable  # disable auto start
+virsh --connect qemu://localhost/system dominfo ${vagrantLastVmName}
 ls -l /etc/libvirt/qemu/autostart
-virsh --connect qemu+ssh://localhost/system desc unspecified --current --title "TitleOfVm" --new-desc "Description of VM comes here"
-virsh --connect qemu+ssh://localhost/system desc unspecified --title
+virsh --connect qemu+ssh://localhost/system desc ${vagrantLastVmName} --current --title "TitleOfVm" --new-desc "Description of VM comes here"
+virsh --connect qemu://localhost/system desc ${vagrantLastVmName} --title
 virsh domifaddr
-${G_myName}  ${extraInfo} -p bpoId="${thisBpoId}" -i virshDominfo
-${G_myName}  ${extraInfo} -p bpoId="${thisBpoId}" -i virshDomifaddr
+${G_myName}  ${extraInfo} -p bpoId="${oneBpoId}" -i virshDominfo
+${G_myName}  ${extraInfo} -p bpoId="${oneBpoId}" -i virshDomifaddr
+${G_myName}  ${extraInfo} -p bpoId="${oneBpoId}" -i virshStart
+${G_myName}  ${extraInfo} -p bpoId="${oneBpoId}" -i virshStop
+${G_myName}  ${extraInfo} -p bpoId="${oneBpoId}" -i validateFacter
 $( examplesSeperatorSection "Network" )
-${G_myName}  ${extraInfo} -p bpoId="${thisBpoId}" -i netIfs   # Used by Vagrant
+${G_myName}  ${extraInfo} -p bpoId="${oneBpoId}" -i netIfs   # Used by Vagrant
 $( examplesSeperatorChapter "Pure Container Actions" )
 _EOF_
 }
+
+function vis_vagrantLastVmName {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+                       }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert bpoIdPrep
+
+    local lastVagrantFile=$( sysCharGuestMaterialize.sh -p bpoId="$bpoId" -i vagrantFile_last )
+    local vmName=$( sysCharGuestMaterialize.sh -i vagrantFile_vmName ${lastVagrantFile} )
+
+    echo ${vmName}
+}
+
+
+function vis_ipAddrOfBpoVm {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+                       }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert bpoIdPrep
+
+    local addrLine=$( vis_virshDomifaddr |  grep ipv4 )
+
+    local ipAddr=$( echo ${addrLine} |  cut -d ' ' -f 4 | cut -d '/' -f 1 |  xargs echo )
+
+    echo ${ipAddr}
+}
+
 
 
 function vis_virshDominfo {
@@ -194,7 +235,7 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
     EH_assert bpoIdPrep
 
-    lpDo virsh --connect qemu:///system dominfo bxoVIS-1006-2
+    lpDo virsh --connect qemu:///system dominfo $(vis_vagrantLastVmName)
 }
 
 function vis_virshDomifaddr {
@@ -205,8 +246,49 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
     EH_assert bpoIdPrep
 
-    lpDo virsh --connect qemu:///system domifaddr bxoVIS-1006-2
+    lpDo virsh --connect qemu:///system domifaddr  $(vis_vagrantLastVmName)
 }
+
+function vis_virshStart {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+                       }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert bpoIdPrep
+
+    lpDo virsh --connect qemu:///system start   $(vis_vagrantLastVmName)
+}
+
+function vis_virshStop {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+                       }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert bpoIdPrep
+
+    lpDo virsh --connect qemu:///system stop   $(vis_vagrantLastVmName)
+}
+
+function vis_validateFacter {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+                       }
+    EH_assert [[ $# -eq 0 ]]
+    EH_assert bpoIdPrep
+
+    lpDo vis_virshStart
+
+    local ipAddrOfBpoVm=$(vis_ipAddrOfBpoVm)
+
+    lpDo roInv-facter.cs --svcName="svcFacter" --perfName="${ipAddrOfBpoVm}" --rosmu="roInv-facter.cs" --perfIpAddr="${ipAddrOfBpoVm}"  -i inv_sapCreate
+
+    lpDo roInv-facter.cs --perfName="${ipAddrOfBpoVm}"  -i factName networking
+}
+
+
 
 
 _CommentBegin_
