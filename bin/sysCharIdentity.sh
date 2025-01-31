@@ -222,10 +222,6 @@ _EOF_
     
     ANT_raw "About To identityUpdate"
 
-    lpDo platformBasesUpdate.cs --bpoId="${bpoId}"  -i platformBase update
-
-    lpDo platformBasesUpdate.cs --bpoId="${bpoId}"  -i siteBase update
-
 
     # ---- IDENTITY
     opDoComplain vis_motdSet
