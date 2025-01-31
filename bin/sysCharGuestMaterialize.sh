@@ -543,6 +543,9 @@ _EOF_
     #lpDo echo "Add a Title here: -- (Prompts for Password)"
     lpDo virsh --connect qemu:///system desc ${vmName} --current --title "${vmName} - Imaged at ${dateTag} - " --new-desc "Description of VM comes here"
 
+    lpDo echo To validate the materialiazation, run:
+    lpDo echo bpoCntnrGuestStation.sh  -h -v -n showRun -p bpoId="${bpoId}" -i validateFacter
+
     lpReturn
 }
 
@@ -1039,7 +1042,8 @@ _EOF_
         ${runLine}
 
         # We don't use sudo -i or -E because the bisos account does not have a shell
-        sudo -u bystar bash -c 'PATH=$PATH:/bisos/venv/py3/bisos3/bin capMaterializationDispatch.cs -i fullCapSpecAndMatDispatch'
+        # sudo -u bystar bash -c 'PATH=$PATH:/bisos/venv/py3/bisos3/bin capMaterializationDispatch.cs -i fullCapSpecAndMatDispatch'
+        sudo -u bisos bash -c 'PATH=$PATH:/bisos/venv/py3/bisos3/bin capMaterializationDispatch.cs -i fullCapSpecAndMatDispatch'
 _OUTER_EOF_
     }
 

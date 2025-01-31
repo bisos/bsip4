@@ -218,7 +218,7 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
     EH_assert bpoIdPrep
 
-    local addrLine=$( vis_virshDomifaddr |  grep ipv4 )
+    local addrLine=$( vis_virshDomifaddr | tail -2 | head -1 | grep 192.168.121 )
 
     local ipAddr=$( echo ${addrLine} |  cut -d ' ' -f 4 | cut -d '/' -f 1 |  xargs echo )
 
@@ -280,6 +280,8 @@ _EOF_
     EH_assert bpoIdPrep
 
     lpDo vis_virshStart
+
+    lpDo sleep 25
 
     local ipAddrOfBpoVm=$(vis_ipAddrOfBpoVm)
 

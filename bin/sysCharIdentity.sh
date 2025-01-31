@@ -229,7 +229,11 @@ _EOF_
     #NETWORK
     opDoComplain vis_netL3InterfacesUpdate
     # opDoComplain vis_netEtcHosts  # produces vis_netEtcHosts [ErrCode]= 25, Why, NOTYET
-    lpDo vis_netEtcHosts    
+    lpDo vis_netEtcHosts
+
+    lpDo platformBasesUpdate.cs --bpoId="${bpoId}"  -i platformBase update
+
+    lpDo platformBasesUpdate.cs --bpoId="${bpoId}"  -i siteBase update
 
     lpReturn 0
 }
