@@ -220,7 +220,12 @@ _EOF_
 
     EH_assert bpoIdPrep
     
-    ANT_raw "About To identityUpdate"    
+    ANT_raw "About To identityUpdate"
+
+    lpDo platformBasesUpdate.cs --bpoId="${bpoId}"  -i platformBase update
+
+    lpDo platformBasesUpdate.cs --bpoId="${bpoId}"  -i siteBase update
+
 
     # ---- IDENTITY
     opDoComplain vis_motdSet
@@ -231,9 +236,6 @@ _EOF_
     # opDoComplain vis_netEtcHosts  # produces vis_netEtcHosts [ErrCode]= 25, Why, NOTYET
     lpDo vis_netEtcHosts
 
-    lpDo platformBasesUpdate.cs --bpoId="${bpoId}"  -i platformBase update
-
-    lpDo platformBasesUpdate.cs --bpoId="${bpoId}"  -i siteBase update
 
     lpReturn 0
 }
