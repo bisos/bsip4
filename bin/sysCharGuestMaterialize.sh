@@ -1006,8 +1006,9 @@ _OUTER_EOF_
 _EOF_
 
         # These should be merged with sysCharBoxDeploy.sh -- They simply setup /bisos/platform and /bisos/site
-        sudo -u bisos bash -c 'PATH=$PATH:/bisos/venv/py3/bisos3/bin platformBasesUpdate.cs --bpoId=${bpoId}  -i platformBase update'
-        sudo -u bisos bash -c 'PATH=$PATH:/bisos/venv/py3/bisos3/bin platformBasesUpdate.cs --bpoId=${bpoId}  -i siteBase update'
+        # PATH is expanded in the context of that generates this segemnt -- not at run time.
+        sudo -u bisos bash -c 'PATH=$PATH platformBasesUpdate.cs --bpoId=${bpoId}  -i platformBase update'
+        # sudo -u bisos bash -c 'PATH=$PATH:/bisos/venv/py3/bisos3/bin platformBasesUpdate.cs --bpoId=${bpoId}  -i siteBase update'
 
         sudo -u bystar ${binPath} ${runInfo} -p bpoId="${bpoId}" -i deployWithSysCharConveyInfo
 _OUTER_EOF_
@@ -1051,7 +1052,7 @@ _EOF_
 
         # We don't use sudo -i or -E because the bisos account does not have a shell
         # sudo -u bystar bash -c 'PATH=$PATH:/bisos/venv/py3/bisos3/bin capMaterializationDispatch.cs -i fullCapSpecAndMatDispatch'
-        sudo -u bisos bash -c 'PATH=$PATH:/bisos/venv/py3/bisos3/bin capMaterializationDispatch.cs -i fullCapSpecAndMatDispatch'
+        sudo -u bisos bash -c 'PATH=$PATH capMaterializationDispatch.cs -i fullCapSpecAndMatDispatch'
 _OUTER_EOF_
     }
 
