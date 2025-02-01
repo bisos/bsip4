@@ -186,6 +186,7 @@ virsh --connect qemu://localhost/system desc ${vagrantLastVmName} --title
 virsh domifaddr
 ${G_myName}  ${extraInfo} -p bpoId="${oneBpoId}" -i virshDominfo
 ${G_myName}  ${extraInfo} -p bpoId="${oneBpoId}" -i virshDomifaddr
+${G_myName}  ${extraInfo} -p bpoId="${oneBpoId}" -i ipAddrOfBpoVm
 ${G_myName}  ${extraInfo} -p bpoId="${oneBpoId}" -i virshStart
 ${G_myName}  ${extraInfo} -p bpoId="${oneBpoId}" -i virshStop
 ${G_myName}  ${extraInfo} -p bpoId="${oneBpoId}" -i validateFacter

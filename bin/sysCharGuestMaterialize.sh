@@ -936,7 +936,13 @@ _EOF_
         cat   << _EOF_
 ######### PHASE 2.1: BISOS Site Setup And SysChar Container Activate And Identity Set -- With IpAddrs settings
 _EOF_
+        # prs_bisos is scped from ${registrar}. If that fails, we should exit all together.
         sudo -u bystar ${binPath} ${runInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -p siteBxoId="${siteBxoId}" -i bisosBasePlatform_siteSetup
+
+        # These should be merged with ${binPath} -- They simply setup /bisos/platform and /bisos/site
+        sudo -u bisos bash -c 'PATH=$PATH:/bisos/venv/py3/bisos3/bin platformBasesUpdate.cs --bpoId=${bpoId}  -i platformBase update'
+        sudo -u bisos bash -c 'PATH=$PATH:/bisos/venv/py3/bisos3/bin platformBasesUpdate.cs --bpoId=${bpoId}  -i siteBase update'
+
         sudo -u bystar ${binPath} ${runInfo} -p bisosDevBxoId=${bisosDevBxoId} -i usgConvey_bisosDeveloper
         sudo -u bystar ${binPath} ${runInfo} -p bpoId="${bpoId}" -i siteBasePlatform_sysBxoActivate
         sudo -u bystar ${binPath} ${runInfo} -p bpoId="${bpoId}" -p cfpVmNameQualifier=\"${vmNameQualifier}\" -i conveyInfoStore
@@ -1003,9 +1009,6 @@ _OUTER_EOF_
 _EOF_
 
         sudo -u bystar ${binPath} ${runInfo} -p bpoId="${bpoId}" -i deployWithSysCharConveyInfo
-
-        sudo -u bisos bash -c 'PATH=$PATH:/bisos/venv/py3/bisos3/bin platformBasesUpdate.cs --bpoId=${bpoId}  -i platformBase update'
-        sudo -u bisos bash -c 'PATH=$PATH:/bisos/venv/py3/bisos3/bin platformBasesUpdate.cs --bpoId=${bpoId}  -i siteBase update'
 _OUTER_EOF_
     
 
@@ -1480,6 +1483,9 @@ _OUTER_EOF_
       cat  << _EOF_
  ######### PHASE 4: Cleanup and Shutdown  -- Running As Root
 _EOF_
+
+      tail -20 /etc/passwd
+      ls -ld /bisos/platform /bisos/site
 
       shutdown now
       exit 0
