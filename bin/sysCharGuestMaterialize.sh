@@ -1002,9 +1002,10 @@ _OUTER_EOF_
 ######### PHASE 2.3: Deploy The SysChar Based On Abobe Provided ConveyInfo
 _EOF_
 
+        sudo -u bystar ${binPath} ${runInfo} -p bpoId="${bpoId}" -i deployWithSysCharConveyInfo
+
         sudo -u bisos bash -c 'PATH=$PATH:/bisos/venv/py3/bisos3/bin platformBasesUpdate.cs --bpoId=${bpoId}  -i platformBase update'
         sudo -u bisos bash -c 'PATH=$PATH:/bisos/venv/py3/bisos3/bin platformBasesUpdate.cs --bpoId=${bpoId}  -i siteBase update'
-        sudo -u bystar ${binPath} ${runInfo} -p bpoId="${bpoId}" -i deployWithSysCharConveyInfo
 _OUTER_EOF_
     
 
