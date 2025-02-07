@@ -428,6 +428,16 @@ vis_py3Bisos3PipInstalls () {
     print
 }
 
+vis_py3Bisos3DevPipInstalls () {
+    ANT_raw "Here we process py3Bisos3PipInstalls one by one."
+    local each
+    for each in ${itemPy3Bisos3PipOrderedList[@]} ; do
+        lpDo sudo -u bisos /bisos/core/bsip/bin/bisosPyVenvSetup.sh -h -v -n showRun -f -i venvDo py3/dev reInstall "${each}"
+    done
+    print
+}
+
+
 
 item_py3Bisos3PipInstalls () {
   distFamilyGenerationHookRun binsPrep_py3Bisos3PipInstalls
@@ -442,6 +452,21 @@ binsPrep_py3Bisos3PipInstalls_DEFAULT_DEFAULT () {
         opDo vis_py3Bisos3PipInstalls
     }
 }
+
+item_py3Bisos3DevPipInstalls () {
+  distFamilyGenerationHookRun binsPrep_py3Bisos3DevPipInstalls
+}
+
+binsPrep_py3Bisos3DevPipInstalls_DEFAULT_DEFAULT () {
+    mmaThisPkgName="py3Bisos3DevPipInstalls"
+    mmaPkgDebianName="${mmaThisPkgName}"
+    mmaPkgDebianMethod="custom"  #  or "apt" no need for customInstallScript but with binsPrep_installPostHook
+
+    function customInstallScript {
+        opDo vis_py3Bisos3DevPipInstalls
+    }
+}
+
 
 _CommentBegin_
 *      ======[[elisp:(org-cycle)][Fold]]====== Apt-Pkg: pipx installs

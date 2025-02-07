@@ -175,6 +175,8 @@ _EOF_
 
     lpDo vis_virtenvsPrep py3/dev
 
+    lpDo lcaPythonCommonBinsPrep.sh -v -n showRun -s py3Bisos3DevPipInstalls  -a fullUpdate
+
     lpDo vis_venvPy3Dev_pipInstalls
 
     lpReturn
@@ -225,7 +227,11 @@ _EOF_
             lpDo venvCmnd python3 venv/py3/bisos3 $@
             ;;
         py3/dev)
-            lpDo venvCmnd python3 venv/py3/dev-bisos3 $@
+            if [ -d "/bisos/venv/py3/dev-bisos3" ] ; then
+                lpDo venvCmnd python3 venv/py3/dev-bisos3 $@
+            else
+                ANT_RAW "Missing /bisos/venv/py3/dev-bisos3 -- Installation Skipped"
+            fi
             ;;
         *)
             EH_problem "UnKnown virtenvLabel=${virtenvLabel}"
