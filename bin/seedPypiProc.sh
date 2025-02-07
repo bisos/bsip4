@@ -691,9 +691,10 @@ _EOF_
         opDo sourceVenvActiveFile ${activeFile}
     fi
 
-    lpDo vis_fullPrepBuild forSys
-
+    # Order is important, uninstall first. PrepBuild considers the installed version for version
     opDo pip uninstall -y --no-cache-dir "${pypiPkgName}"
+
+    lpDo vis_fullPrepBuild forSys
 
     lpDo vis_pkgInstall ${installType} ${venvBase}
 
@@ -736,7 +737,7 @@ _EOF_
     # from creating the modern way of doing editable modules (with find etc)
     #
     
-    if [ "${installType}" == "edit" ]; then
+    if [ "${installType}" == "oldEdit" ]; then
         # MB 2024 -- git pull should not be done here
         # opDo git pull
         if [ -f  "./pyproject.toml" ] ; then
@@ -753,7 +754,12 @@ _EOF_
             fi
         fi
         return
-        
+
+    elif [ "${installType}" == "edit" ]; then
+        lpDo pip install --no-cache-dir -e . --no-build-isolation
+        return
+
+
     elif [ "${installType}" == "local" ]; then
         if [ -f "${pipPkgFile}" ] ; then
             opDo pip install --no-cache-dir "${pipPkgFile}"
