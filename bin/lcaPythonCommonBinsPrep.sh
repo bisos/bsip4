@@ -84,6 +84,14 @@ _EOF_
         "unisos.gcipher"       #
         "yolk3k"               # Did not work with pipx
         # "twine"                #
+        "pykeepass-cache"
+        "python-gnupg"
+        "libvirt-python"
+        "google-api-python-client"
+        "google-auth-oauthlib"
+        "pygit2"
+        "graphviz"
+        "python-magic"
     )
 
     itemPipxOrderedList=(
@@ -102,6 +110,7 @@ _EOF_
         "flake8"      # Used in python mode
         "pyflakes"
         "pep8"
+        "bisos.pycs"
     )
 }
 
