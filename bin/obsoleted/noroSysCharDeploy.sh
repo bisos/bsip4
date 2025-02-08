@@ -1200,27 +1200,27 @@ _EOF_
         lpDo FN_dirCreatePathIfNotThere ${sysCharConveyInfoBase}
 
         if [ ! -z "${cfpVmNameQualifier}" ] ; then
-            lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} vmNameQualifier "${cfpVmNameQualifier}"
+            lpDo fileParamManage.cs -v 30 -i fileParamWrite ${sysCharConveyInfoBase} vmNameQualifier "${cfpVmNameQualifier}"
         fi
         if [ ! -z "${cfpHostCntnr}" ] ; then
-            lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} hostCntnr "${cfpHostCntnr}"
+            lpDo fileParamManage.cs -v 30 -i fileParamWrite ${sysCharConveyInfoBase} hostCntnr "${cfpHostCntnr}"
         fi
         if [ ! -z "${cfpSecurityMode}" ] ; then
             lpDo sysCharConveyInfoWrite securityMode "${cfpSecurityMode}"
         fi
 
         if [ ! -z "${cfpPrivA}" ] ; then
-            lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} ipAddr_privA "${cfpPrivA}"
+            lpDo fileParamManage.cs -v 30 -i fileParamWrite ${sysCharConveyInfoBase} ipAddr_privA "${cfpPrivA}"
         fi
         if [ ! -z "${cfpPubA}" ] ; then
-            lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} ipAddr_pubA "${cfpPubA}"
+            lpDo fileParamManage.cs -v 30 -i fileParamWrite ${sysCharConveyInfoBase} ipAddr_pubA "${cfpPubA}"
         fi
         
         # if [ ! -z "${cfpPrivGit}" ] ; then
-        #     lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} privGit "${privGit}"
+        #     lpDo fileParamManage.cs -v 30 -i fileParamWrite ${sysCharConveyInfoBase} privGit "${privGit}"
         # fi
         # if [ ! -z "${cfpPubGit}" ] ; then
-        #     lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} pubGit "${pubGit}"
+        #     lpDo fileParamManage.cs -v 30 -i fileParamWrite ${sysCharConveyInfoBase} pubGit "${pubGit}"
         # fi
     }
 
@@ -1270,16 +1270,16 @@ _EOF_
         lpDo FN_dirCreatePathIfNotThere ${sysCharConveyNetInfoBase}
 
         if [ ! -z "${cfpNetIf}" ] ; then
-            lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyNetInfoBase} ${netName} "${cfpNetIf}"
+            lpDo fileParamManage.cs -v 30 -i fileParamWrite ${sysCharConveyNetInfoBase} ${netName} "${cfpNetIf}"
         fi
         if [ ! -z "${cfpNetIfControl}" ] ; then
-            lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyNetInfoBase} ${netName}-control "${cfpNetIfControl}"
+            lpDo fileParamManage.cs -v 30 -i fileParamWrite ${sysCharConveyNetInfoBase} ${netName}-control "${cfpNetIfControl}"
         fi
         if [ ! -z "${cfpHostNetIf}" ] ; then
-            lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyNetInfoBase} ${netName}-host "${cfpHostNetIf}"
+            lpDo fileParamManage.cs -v 30 -i fileParamWrite ${sysCharConveyNetInfoBase} ${netName}-host "${cfpHostNetIf}"
         fi
         if [ ! -z "${cfpNetAddr}" ] ; then
-            lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyNetInfoBase} ${netName}-ipv4Addr "${cfpNetAddr}"
+            lpDo fileParamManage.cs -v 30 -i fileParamWrite ${sysCharConveyNetInfoBase} ${netName}-ipv4Addr "${cfpNetAddr}"
         fi
     }
 
@@ -1322,7 +1322,7 @@ _EOF_
 
         local sysCharConveyInfoBase="${bpoHome}/var/sysCharConveyInfo"
 
-        lpDo  fileParamManage.py -i fileParamDictReadDeep ${sysCharConveyInfoBase}
+        lpDo  fileParamManage.cs -i fileParamDictReadDeep ${sysCharConveyInfoBase}
     }
 
     if [ "${targetName}" != "onTargetRun" ] && [ ! -z "${targetName}" ] ; then lpDo onManagerRun; fi

@@ -396,9 +396,9 @@ _EOF_
     function doThis {
         lpDo mkdir ${bpoHome}/bxeTree
         if [ "${node}" == "leaf" ] ; then
-            lpDo fileParamManage.py -i fileParamWrite ${bpoHome}/bxeTree node leaf
+            lpDo fileParamManage.cs -i fileParamWrite ${bpoHome}/bxeTree node leaf
         elif [ "${node}" == "branch" ] ; then
-            lpDo fileParamManage.py -i fileParamWrite ${bpoHome}/bxeTree node branch
+            lpDo fileParamManage.cs -i fileParamWrite ${bpoHome}/bxeTree node branch
             lpDo mkdir ${bpoHome}/bxeTree/regReq
             lpDo mkdir ${bpoHome}/bxeTree/bxeDesc
         else

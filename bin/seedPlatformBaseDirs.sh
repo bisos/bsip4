@@ -979,12 +979,12 @@ _EOF_
             typeset gitUser=$1
             typeset gitPasswd=""
             if [ "${gitUser}" == "uaso" ] ; then
-                gitUser=$( fileParamManage.py -i fileParamReadPath ~/gitAuth/${gitServer}/userName )
+                gitUser=$( fileParamManage.cs -i fileParamReadPath ~/gitAuth/${gitServer}/userName )
                 if [ -z "${gitUser}" ] ; then
                     EH_problem ""
                     lpReturn
                 fi
-                gitPasswd=$( fileParamManage.py -i fileParamReadPath ~/gitAuth/${gitServer}/userPasswd )
+                gitPasswd=$( fileParamManage.cs -i fileParamReadPath ~/gitAuth/${gitServer}/userPasswd )
             else
                 gitPasswd=$2
             fi

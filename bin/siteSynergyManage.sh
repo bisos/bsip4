@@ -676,7 +676,7 @@ _EOF_
     local synergyServerBase=$(lpDo vis_bxCntnr_synergy_featureBase)
     EH_assert [ -d "${synergyServerBase}" ]
 
-    local screensTopologyFile=$(lpDo fileParamManage.py -v 30 -i fileParamRead  "${synergyServerBase}/screensTopology" siteDefault )
+    local screensTopologyFile=$(lpDo fileParamManage.cs -v 30 -i fileParamRead  "${synergyServerBase}/screensTopology" siteDefault )
     EH_assert [ -e "${screensTopologyFile}" ]
 
     echo "${screensTopologyFile}"
@@ -696,7 +696,7 @@ _EOF_
     local synergyClientBase=$(lpDo vis_bxCntnr_synergy_featureBase)
     EH_assert [ -d "${synergyClientBase}" ]
 
-    local screenName=$(lpDo fileParamManage.py -v 30 -i fileParamRead  "${synergyClientBase}" screenName )
+    local screenName=$(lpDo fileParamManage.cs -v 30 -i fileParamRead  "${synergyClientBase}" screenName )
 
     echo "${screenName}"
 
@@ -735,7 +735,7 @@ _EOF_
     EH_assert [ -d "${synergyClientServersBase}" ]
     
     if [ -d "${synergyClientServersBase}/availableServers" ] ; then
-        local availableServers=$(lpDo fileParamManage.py -v 30 -i fileParamRead  "${synergyClientServersBase}" availableServers)
+        local availableServers=$(lpDo fileParamManage.cs -v 30 -i fileParamRead  "${synergyClientServersBase}" availableServers)
         EH_assert [ -n "${availableServers}" ]
         lpDo vis_listBposAtBaseSansAvailable "${availableServers}"
     fi
@@ -756,7 +756,7 @@ _EOF_
 
     local siteSynergyServersBase=$(lpDo vis_siteSynergyServersBase)
 
-    local siteIpAddr=$(lpDo fileParamManage.py -v 30 -i fileParamRead  "${siteSynergyServersBase}/available/${bpoId}/ipv4" wifi )
+    local siteIpAddr=$(lpDo fileParamManage.cs -v 30 -i fileParamRead  "${siteSynergyServersBase}/available/${bpoId}/ipv4" wifi )
 
     EH_assert [ -n "${siteIpAddr}" ]
 

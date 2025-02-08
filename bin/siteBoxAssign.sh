@@ -167,7 +167,7 @@ _EOF_
     local ppBoxesBxoId=""
 
     if [ -d "${selectedPpBoxesPath}" ] ; then
-        ppBoxesBxoId=$( fileParamManage.py -i fileParamReadPath ${selectedPpBoxesPath} )
+        ppBoxesBxoId=$( fileParamManage.cs -i fileParamReadPath ${selectedPpBoxesPath} )
         if [ -z "${ppBoxesBxoId}" ] ; then
             EH_problem "Missing ppBoxesBxoId"
             lpReturn 101
@@ -208,10 +208,10 @@ _EOF_
    EH_assert [ -d "${boxNuBase}" ]
 
    local my_uniqueBoxId=$(vis_thisBoxUUID)
-   local stored_uniqueBoxId=$( fileParamManage.py -i fileParamRead  ${boxNuBase} uniqueBoxId )
+   local stored_uniqueBoxId=$( fileParamManage.cs -i fileParamRead  ${boxNuBase} uniqueBoxId )
 
    if [ -z "${stored_uniqueBoxId}" ] ; then
-       lpDo fileParamManage.py -i fileParamWrite ${boxNuBase} uniqueBoxId "${my_uniqueBoxId}"
+       lpDo fileParamManage.cs -i fileParamWrite ${boxNuBase} uniqueBoxId "${my_uniqueBoxId}"
    else
        if [ "${my_uniqueBoxId}" != "${stored_uniqueBoxId}" ] ; then
            EH_problem "Expected ${my_uniqueBoxId} -- got ${stored_uniqueBoxId}"
@@ -219,10 +219,10 @@ _EOF_
        fi
    fi
 
-   local stored_boxNu=$( fileParamManage.py -i fileParamRead  ${boxNuBase} boxNu )
+   local stored_boxNu=$( fileParamManage.cs -i fileParamRead  ${boxNuBase} boxNu )
 
    if [ -z "${stored_boxNu}" ] ; then
-       lpDo fileParamManage.py -i fileParamWrite ${boxNuBase} boxNu "${boxNu}"
+       lpDo fileParamManage.cs -i fileParamWrite ${boxNuBase} boxNu "${boxNu}"
    else
        if [ "${boxNu}" != "${stored_boxNu}" ] ; then
            EH_problem "Expected ${boxNu} -- got ${stored_boxNu}"
@@ -231,10 +231,10 @@ _EOF_
    fi
 
    local my_boxId="box${boxNu}"
-   local stored_boxId=$( fileParamManage.py -i fileParamRead  ${boxNuBase} boxId )
+   local stored_boxId=$( fileParamManage.cs -i fileParamRead  ${boxNuBase} boxId )
 
    if [ -z "${stored_boxId}" ] ; then
-       lpDo fileParamManage.py -i fileParamWrite ${boxNuBase} boxId "${my_boxId}"
+       lpDo fileParamManage.cs -i fileParamWrite ${boxNuBase} boxId "${my_boxId}"
    else
        if [ "${my_boxId}" != "${stored_boxId}" ] ; then
            EH_problem "Expected ${my_boxId} -- got ${stored_boxId}"
@@ -291,7 +291,7 @@ _EOF_
 
    for eachBoxNuBase in ${boxNuBaseDirs} ; do   
 
-       stored_uniqueBoxId=$( fileParamManage.py -i fileParamRead ${eachBoxNuBase} uniqueBoxId )
+       stored_uniqueBoxId=$( fileParamManage.cs -i fileParamRead ${eachBoxNuBase} uniqueBoxId )
 
        if [ -z "${stored_uniqueBoxId}" ] ; then
            EH_problem "Missing uniqueBoxId in ${eachBoxNuBase}"

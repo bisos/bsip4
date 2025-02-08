@@ -110,7 +110,7 @@ _EOF_
 
     lpDo mkdir -p ${curUsgBposBase}/usageEnvs
     
-    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/usageEnvs bisosDevel.bpoFp ${bpoIdValue}
+    lpDo fileParamManage.cs -i fileParamWrite ${curUsgBposBase}/usageEnvs bisosDevel.bpoFp ${bpoIdValue}
 }
 
 
@@ -124,7 +124,7 @@ _EOF_
 
     local curUsgBposBase=$( vis_curUsgBposBase )
     
-    local resultBxoId=$( fileParamManage.py -i fileParamRead  ${curUsgBposBase}/usageEnvs bisosDevel.bpoFp )
+    local resultBxoId=$( fileParamManage.cs -i fileParamRead  ${curUsgBposBase}/usageEnvs bisosDevel.bpoFp )
     EH_assert [ ! -z "${resultBxoId}" ]
 
     echo ${resultBxoId}
@@ -190,7 +190,7 @@ _EOF_
 
     local curUsgBposBase=$( vis_curUsgBposBase )
     lpDo mkdir -p ${curUsgBposBase}/real
-    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/real realIndiv.bpoFp ${bpoIdValue}
+    lpDo fileParamManage.cs -i fileParamWrite ${curUsgBposBase}/real realIndiv.bpoFp ${bpoIdValue}
 }
 
 
@@ -204,7 +204,7 @@ _EOF_
 
     local curUsgBposBase=$( vis_curUsgBposBase )
     
-    local resultBxoId=$( fileParamManage.py -i fileParamRead  ${curUsgBposBase}/real realIndiv.bpoFp )
+    local resultBxoId=$( fileParamManage.cs -i fileParamRead  ${curUsgBposBase}/real realIndiv.bpoFp )
     EH_assert [ ! -z "${resultBxoId}" ]
 
     echo ${resultBxoId}
@@ -269,7 +269,7 @@ _EOF_
 
     local curUsgBposBase=$( vis_curUsgBposBase )
     lpDo mkdir -p ${curUsgBposBase}/usageEnvs
-    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/usageEnvs fullUse.bpoFp ${bpoIdValue}
+    lpDo fileParamManage.cs -i fileParamWrite ${curUsgBposBase}/usageEnvs fullUse.bpoFp ${bpoIdValue}
 }
 
 
@@ -283,7 +283,7 @@ _EOF_
 
     local curUsgBposBase=$( vis_curUsgBposBase )
     
-    local resultBxoId=$( fileParamManage.py -i fileParamRead  ${curUsgBposBase}/usageEnvs fullUse.bpoFp )
+    local resultBxoId=$( fileParamManage.cs -i fileParamRead  ${curUsgBposBase}/usageEnvs fullUse.bpoFp )
     EH_assert [ ! -z "${resultBxoId}" ]
 
     echo ${resultBxoId}
@@ -353,7 +353,7 @@ _EOF_
 
     local curUsgBposBase=$( vis_curUsgBposBase )
     lpDo mkdir -p ${curUsgBposBase}/pals
-    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/pals byname.bpoFp ${bpoIdValue}
+    lpDo fileParamManage.cs -i fileParamWrite ${curUsgBposBase}/pals byname.bpoFp ${bpoIdValue}
 }
 
 
@@ -367,7 +367,7 @@ _EOF_
 
     local curUsgBposBase=$( vis_curUsgBposBase )
     
-    local resultBxoId=$( fileParamManage.py -i fileParamRead  ${curUsgBposBase}/pals byname.bpoFp )
+    local resultBxoId=$( fileParamManage.cs -i fileParamRead  ${curUsgBposBase}/pals byname.bpoFp )
     EH_assert [ ! -z "${resultBxoId}" ]
 
     echo ${resultBxoId}
@@ -433,7 +433,7 @@ _EOF_
 
     local curUsgBposBase=$( vis_curUsgBposBase )
     lpDo mkdir -p ${curUsgBposBase}/pals
-    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/pals bydomain.bpoFp ${bpoIdValue}
+    lpDo fileParamManage.cs -i fileParamWrite ${curUsgBposBase}/pals bydomain.bpoFp ${bpoIdValue}
 }
 
 
@@ -447,7 +447,7 @@ _EOF_
 
     local curUsgBposBase=$( vis_curUsgBposBase )
 
-    local resultBxoId=$( fileParamManage.py -i fileParamRead  ${curUsgBposBase}/pals bydomain.bpoFp )
+    local resultBxoId=$( fileParamManage.cs -i fileParamRead  ${curUsgBposBase}/pals bydomain.bpoFp )
     EH_assert [ ! -z "${resultBxoId}" ]
 
     echo ${resultBxoId}
@@ -512,7 +512,7 @@ _EOF_
 
     local curUsgBposBase=$( vis_curUsgBposBase )
     lpDo mkdir -p ${curUsgBposBase}/controller
-    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/controller controller.bpoFp ${bpoIdValue}
+    lpDo fileParamManage.cs -i fileParamWrite ${curUsgBposBase}/controller controller.bpoFp ${bpoIdValue}
 }
 
 function vis_usgBpos_controller_bpoId_fpRead {
@@ -525,7 +525,7 @@ _EOF_
 
     local curUsgBposBase=$( vis_curUsgBposBase )
     
-    local resultBxoId=$( fileParamManage.py -i fileParamRead  ${curUsgBposBase}/controller controller.bpoFp )
+    local resultBxoId=$( fileParamManage.cs -i fileParamRead  ${curUsgBposBase}/controller controller.bpoFp )
     EH_assert [ ! -z "${resultBxoId}" ]
 
     echo ${resultBxoId}
@@ -590,7 +590,7 @@ _EOF_
 
     local curUsgBposBase=$( vis_curUsgBposBase )
     lpDo mkdir -p ${curUsgBposBase}/credentials
-    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/credentials credentials.bpoFp ${bpoIdValue}
+    lpDo fileParamManage.cs -i fileParamWrite ${curUsgBposBase}/credentials credentials.bpoFp ${bpoIdValue}
 }
 
 function vis_usgBpos_credentials_bpoId_fpRead {
@@ -603,7 +603,7 @@ _EOF_
 
     local curUsgBposBase=$( vis_curUsgBposBase )
     
-    local resultBxoId=$( fileParamManage.py -i fileParamRead  ${curUsgBposBase}/credentials credentials.bpoFp )
+    local resultBxoId=$( fileParamManage.cs -i fileParamRead  ${curUsgBposBase}/credentials credentials.bpoFp )
     EH_assert [ ! -z "${resultBxoId}" ]
 
     echo ${resultBxoId}
@@ -668,7 +668,7 @@ _EOF_
 
     local curUsgBposBase=$( vis_curUsgBposBase )
     lpDo mkdir -p ${curUsgBposBase}/lcntBases
-    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/lcntBases lcntBases.bpoFp ${bpoIdValue}
+    lpDo fileParamManage.cs -i fileParamWrite ${curUsgBposBase}/lcntBases lcntBases.bpoFp ${bpoIdValue}
 }
 
 function vis_usgBpos_lcntBases_bpoId_fpRead {
@@ -681,7 +681,7 @@ _EOF_
 
     local curUsgBposBase=$( vis_curUsgBposBase )
     
-    local resultBxoId=$( fileParamManage.py -i fileParamRead  ${curUsgBposBase}/lcntBases lcntBases.bpoFp )
+    local resultBxoId=$( fileParamManage.cs -i fileParamRead  ${curUsgBposBase}/lcntBases lcntBases.bpoFp )
     EH_assert [ ! -z "${resultBxoId}" ]
 
     echo ${resultBxoId}
@@ -755,7 +755,7 @@ _EOF_
 
     local curUsgBposBase=$( vis_curUsgBposBase )
     lpDo mkdir -p ${curUsgBposBase}/sites
-    lpDo fileParamManage.py -i fileParamWrite ${curUsgBposBase}/sites siteConfigs.bpoFp ${bpoIdValue}
+    lpDo fileParamManage.cs -i fileParamWrite ${curUsgBposBase}/sites siteConfigs.bpoFp ${bpoIdValue}
 }
 
 function vis_usgBpos_siteConfigs_bpoId_fpRead {
@@ -768,7 +768,7 @@ _EOF_
 
     local curUsgBposBase=$( vis_curUsgBposBase )
     
-    local resultBxoId=$( fileParamManage.py -i fileParamRead  ${curUsgBposBase}/sites siteConfigs.bpoFp )
+    local resultBxoId=$( fileParamManage.cs -i fileParamRead  ${curUsgBposBase}/sites siteConfigs.bpoFp )
     EH_assert [ ! -z "${resultBxoId}" ]
 
     echo ${resultBxoId}

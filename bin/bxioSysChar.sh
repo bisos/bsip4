@@ -255,7 +255,7 @@ Pointer to bpoId as a filePointer
 _EOF_
 
     lpDo FN_dirCreatePathIfNotThere ${repoBase}/bxoRef.fps
-    lpDo fileParamManage.py -i fileParamWrite ${repoBase}/bxoRef.fps bpoId UnSpecified
+    lpDo fileParamManage.cs -i fileParamWrite ${repoBase}/bxoRef.fps bpoId UnSpecified
 
     lpDo bx-gitRepos -h -v -n showRun -i baseUpdateDotIgnore "${repoBase}"
 
@@ -284,10 +284,10 @@ System Specification -- virtualization, resources, etc.
 _EOF_
 
     lpDo FN_dirCreatePathIfNotThere ${repoBase}/virtualization.fps
-    lpDo fileParamManage.py -i fileParamWrite ${repoBase}/virtualization.fps virtType default
+    lpDo fileParamManage.cs -i fileParamWrite ${repoBase}/virtualization.fps virtType default
 
     lpDo FN_dirCreatePathIfNotThere ${repoBase}/vmSpec.fps
-    lpDo fileParamManage.py -i fileParamWrite ${repoBase}/vmSpec.fps baseBox medium
+    lpDo fileParamManage.cs -i fileParamWrite ${repoBase}/vmSpec.fps baseBox medium
 
     lpDo bx-gitRepos -h -v -n showRun -i baseUpdateDotIgnore "${repoBase}"
 
@@ -316,7 +316,7 @@ includes a list of BxSO's which provide the expected services
 _EOF_
 
     lpDo FN_dirCreatePathIfNotThere ${repoBase}/fps
-    lpDo fileParamManage.py -i fileParamWrite ${repoBase}/fps bpoId UnSpecified
+    lpDo fileParamManage.cs -i fileParamWrite ${repoBase}/fps bpoId UnSpecified
 
     lpDo bx-gitRepos -h -v -n showRun -i baseUpdateDotIgnore "${repoBase}"
 

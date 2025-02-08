@@ -479,7 +479,7 @@ _EOF_
     
     opDo virsh dumpxml ${vmName} > ${destBasePath}/${vmNameExp}.xml
     
-    #opDo fileParamManage.py -i fileParamWrite ${destBasePath} vmName "${vmName}"
+    #opDo fileParamManage.cs -i fileParamWrite ${destBasePath} vmName "${vmName}"
 
     if LIST_isIn ${vmNameExp} "${vmDefinedNames}" ; then
         #opDo virsh destroy ${vmNameExp}
@@ -595,7 +595,7 @@ _EOF_
 
     opDo virsh define ${sourceBasePath}/${vmNameExp}.xml
     
-    #opDo fileParamManage.py -i fileParamWrite ${destBasePath} vmName "${vmName}"
+    #opDo fileParamManage.cs -i fileParamWrite ${destBasePath} vmName "${vmName}"
 
     vmDefinedNames=$( virsh --connect qemu:///system list --all --name )    
 

@@ -133,9 +133,9 @@ _EOF_
         lpDo mkdir -p "${gitServerInfoBase}"
     fi
     
-    lpDo fileParamManage.py -i fileParamWrite "${gitServerInfoBase}" gitServerName "${gitServerName}"
-    lpDo fileParamManage.py -i fileParamWrite "${gitServerInfoBase}" gitServerUrl "${gitServerUrl}"
-    lpDo fileParamManage.py -i fileParamWrite "${gitServerInfoBase}" gitServerPrivToken "${gitServerPrivToken}"    
+    lpDo fileParamManage.cs -i fileParamWrite "${gitServerInfoBase}" gitServerName "${gitServerName}"
+    lpDo fileParamManage.cs -i fileParamWrite "${gitServerInfoBase}" gitServerUrl "${gitServerUrl}"
+    lpDo fileParamManage.cs -i fileParamWrite "${gitServerInfoBase}" gitServerPrivToken "${gitServerPrivToken}"    
 
     lpReturn
 }
@@ -154,7 +154,7 @@ _EOF_
         lpReturn 101
     fi
 
-    lpDo fileParamManage.py -i fileParamDictRead "${gitServerInfoBase}"
+    lpDo fileParamManage.cs -i fileParamDictRead "${gitServerInfoBase}"
 
     lpReturn
 }

@@ -30,7 +30,7 @@ _EOF_
     local networksBxoId=""
 
     if [ -d "${selectedNetworksPath}" ] ; then
-        networksBxoId=$( fileParamManage.py -i fileParamReadPath ${selectedNetworksPath} )
+        networksBxoId=$( fileParamManage.cs -i fileParamReadPath ${selectedNetworksPath} )
         if [ -z "${networksBxoId}" ] ; then
             EH_problem "Missing networksBxoId"
             lpReturn 101
@@ -181,7 +181,7 @@ _EOF_
    # local netBase=${networksBase}/netDefinitions.fv/${netName}
    local netBase=${networksBase}/${netName}/net.fps  
 
-   local netAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} netAddr )
+   local netAddr=$( fileParamManage.cs -v 30 -i fileParamRead  ${netBase} netAddr )
 
    echo ${netAddr}
 }
@@ -202,7 +202,7 @@ _EOF_
 
    local netBase=${networksBase}/${netName}/net.fps  
 
-   local netmask=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} netmask )
+   local netmask=$( fileParamManage.cs -v 30 -i fileParamRead  ${netBase} netmask )
 
    echo ${netmask}
 }
@@ -221,7 +221,7 @@ _EOF_
 
    local netBase=${networksBase}/${netName}/net.fps  
 
-   local routerDefault=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} routerDefault )
+   local routerDefault=$( fileParamManage.cs -v 30 -i fileParamRead  ${netBase} routerDefault )
    # EH_assert [ -d "${netBase}/${routerDefault}" ]
    
    echo ${routerDefault}
@@ -291,7 +291,7 @@ _EOF_
     EH_assert vis_bxoAcctVerify "${containerBxoId}"
 
     containerBxoIdHome=$( FN_absolutePathGet ~${containerBxoId} )
-    local ipAddr_privA=$( fileParamManage.py -v 30 -i fileParamRead  ${containerBxoIdHome}/var/sysCharConveyInfo ipAddr_privA )
+    local ipAddr_privA=$( fileParamManage.cs -v 30 -i fileParamRead  ${containerBxoIdHome}/var/sysCharConveyInfo ipAddr_privA )
 
     echo ${ipAddr_privA}
 }
@@ -317,8 +317,8 @@ _EOF_
     local netBase=${networksBase}/${netName}/addrs/${addrType}
     EH_assert [ -d "${netBase}" ]
 
-    local minAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} minAddr.fp )
-    local maxAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} maxAddr.fp )
+    local minAddr=$( fileParamManage.cs -v 30 -i fileParamRead  ${netBase} minAddr.fp )
+    local maxAddr=$( fileParamManage.cs -v 30 -i fileParamRead  ${netBase} maxAddr.fp )
 
     local assignedBase="${netBase}/assigned"
 
@@ -370,8 +370,8 @@ _EOF_
     local netBase=${networksBase}/${netName}/addrs/${addrType}
     EH_assert [ -d "${netBase}" ]
 
-    local minAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} minAddr.fp )
-    local maxAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} maxAddr.fp )
+    local minAddr=$( fileParamManage.cs -v 30 -i fileParamRead  ${netBase} minAddr.fp )
+    local maxAddr=$( fileParamManage.cs -v 30 -i fileParamRead  ${netBase} maxAddr.fp )
 
     local netAddrPrefix=$( vis_forNetName_getNetAddrPrefix "${netName}" )
 
@@ -405,8 +405,8 @@ _EOF_
     local netBase=${networksBase}/${netName}/addrs/${addrType}
     EH_assert [ -d "${netBase}" ]
 
-    local minAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} minAddr.fp )
-    local maxAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} maxAddr.fp )
+    local minAddr=$( fileParamManage.cs -v 30 -i fileParamRead  ${netBase} minAddr.fp )
+    local maxAddr=$( fileParamManage.cs -v 30 -i fileParamRead  ${netBase} maxAddr.fp )
 
     local netAddrPrefix=$( vis_forNetName_getNetAddrPrefix "${netName}" )
     
@@ -447,10 +447,10 @@ _EOF_
     local siteContainersRepo="${bpoHome}/${thisCntnrId}"
     local containerAssignBase="${siteContainersRepo}/self/container.fps"
 
-    local model=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} model )
-    local abode=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} abode )
-    local function=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} function )
-    local containerId=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} containerId )    
+    local model=$( fileParamManage.cs -v 30 -i fileParamRead  ${containerAssignBase} model )
+    local abode=$( fileParamManage.cs -v 30 -i fileParamRead  ${containerAssignBase} abode )
+    local function=$( fileParamManage.cs -v 30 -i fileParamRead  ${containerAssignBase} function )
+    local containerId=$( fileParamManage.cs -v 30 -i fileParamRead  ${containerAssignBase} containerId )    
 
     local sysCharBase=${bpoHome}/sysChar
     local repoName="sysChar"
@@ -471,7 +471,7 @@ _EOF_
     
     case ${function} in
         Generic)
-            result=$(lpDo fileParamManage.py -i fileParamRead ${sysCharConveyInfoBase}/netIfs ${netName}-ipv4Addr)
+            result=$(lpDo fileParamManage.cs -i fileParamRead ${sysCharConveyInfoBase}/netIfs ${netName}-ipv4Addr)
             EH_assert [ ! -z "${result}" ]
             lpDo echo ${result}
             lpReturn 
@@ -486,12 +486,12 @@ _EOF_
 
     case ${model} in
         Virt)
-            local containerNu=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} containerNu )
+            local containerNu=$( fileParamManage.cs -v 30 -i fileParamRead  ${containerAssignBase} containerNu )
             result=$(vis_getVirtAddr ${netName} "${containerNu}")
             ;;
         Host|Pure)
             # /bxo/r3/iso/pmp_HIS-1001/siteContainersRepo/assign/boxId/
-            local boxId=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} boxId )
+            local boxId=$( fileParamManage.cs -v 30 -i fileParamRead  ${containerAssignBase} boxId )
             local boxNu=$( echo "${boxId}" | sed -e 's:box::' )
             result=$(vis_getBoxAddr ${netName} ${boxNu})
             ;;
@@ -523,8 +523,8 @@ _EOF_
     local netBase=${networksBase}/${netName}/addrs/${addrType}
     EH_assert [ -d "${netBase}" ]
 
-    local minAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} minAddr.fp )
-    local maxAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} maxAddr.fp )
+    local minAddr=$( fileParamManage.cs -v 30 -i fileParamRead  ${netBase} minAddr.fp )
+    local maxAddr=$( fileParamManage.cs -v 30 -i fileParamRead  ${netBase} maxAddr.fp )
 
     local netAddrPrefix=$( vis_forNetName_getNetAddrPrefix "${netName}" )
     
@@ -557,8 +557,8 @@ _EOF_
     local netBase=${networksBase}/${netName}/addrs/${addrType}
     EH_assert [ -d "${netBase}" ]
 
-    local minAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} minAddr.fp )
-    local maxAddr=$( fileParamManage.py -v 30 -i fileParamRead  ${netBase} maxAddr.fp )
+    local minAddr=$( fileParamManage.cs -v 30 -i fileParamRead  ${netBase} minAddr.fp )
+    local maxAddr=$( fileParamManage.cs -v 30 -i fileParamRead  ${netBase} maxAddr.fp )
 
     local netAddrPrefix=$( vis_forNetName_getNetAddrPrefix "${netName}" )
 

@@ -49,7 +49,7 @@ _EOF_
     typeset parName=$2
     typeset parValue=$3
 
-    opDo fileParamManage.py -i fileParamWrite "${parRoot}" "${parName}" "${parValue}"
+    opDo fileParamManage.cs -i fileParamWrite "${parRoot}" "${parName}" "${parValue}"
    
     lpReturn
 }
@@ -127,7 +127,7 @@ _EOF_
     typeset parNameFullPath=$1
     typeset parValue=$2
 
-    opDo fileParamManage.py -i fileParamWrite "${parNameFullPath}" "${parValue}"
+    opDo fileParamManage.cs -i fileParamWrite "${parNameFullPath}" "${parValue}"
     
     lpReturn
 }
@@ -143,7 +143,7 @@ _EOF_
     typeset parRoot=$1
     typeset parName=$2
 
-    opDo fileParamManage.py  -i fileParamRead "${parRoot}" "${parName}"
+    opDo fileParamManage.cs  -i fileParamRead "${parRoot}" "${parName}"
    
     lpReturn
 }
@@ -157,7 +157,7 @@ _EOF_
 
     typeset parNameFullPath=$1
 
-    opDo fileParamManage.py  -i fileParamReadPath -- "${parNameFullPath}"
+    opDo fileParamManage.cs  -i fileParamReadPath -- "${parNameFullPath}"
    
     lpReturn
 }

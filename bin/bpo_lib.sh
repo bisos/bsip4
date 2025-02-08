@@ -100,8 +100,8 @@ _EOF_
 
     local bxeDescBase="${bpoHome}/rbxe/bxeDesc"
     
-    local bxeKind=$( fileParamManage.py  -i fileParamRead  ${bxeDescBase} bxeKind )    
-    local bxeType=$( fileParamManage.py  -i fileParamRead  ${bxeDescBase} bxeType )
+    local bxeKind=$( fileParamManage.cs  -i fileParamRead  ${bxeDescBase} bxeKind )    
+    local bxeType=$( fileParamManage.cs  -i fileParamRead  ${bxeDescBase} bxeType )
 
     local bxeTypeWord=${bxeType^}
 

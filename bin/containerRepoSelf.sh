@@ -146,7 +146,7 @@ _EOF_
 
    local containerAssignBase=$1
 
-   local containerId=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} containerId )
+   local containerId=$( fileParamManage.cs -i fileParamRead  ${containerAssignBase} containerId )
    EH_assert [ ! -z ${containerId} ]
 
    lpDo vis_containerRepoNamedClone "${containerId}"
@@ -206,15 +206,15 @@ _EOF_
            local boxId=${containerRegDict['boxId']}
            local boxNu=${containerRegDict['boxNu']}
 
-           lpDo fileParamManage.py -i fileParamWrite ${boxFpsBase} uniqueBoxId ${uniqueBoxId}
-           lpDo fileParamManage.py -i fileParamWrite ${boxFpsBase} boxId ${boxId}
-           lpDo fileParamManage.py -i fileParamWrite ${boxFpsBase} boxNu ${boxNu}
+           lpDo fileParamManage.cs -i fileParamWrite ${boxFpsBase} uniqueBoxId ${uniqueBoxId}
+           lpDo fileParamManage.cs -i fileParamWrite ${boxFpsBase} boxId ${boxId}
+           lpDo fileParamManage.cs -i fileParamWrite ${boxFpsBase} boxNu ${boxNu}
 
            ;;
        Virt|virt|VIRT)
-           lpDo fileParamManage.py -i fileParamWrite ${boxFpsBase} uniqueBoxId "virt"
-           lpDo fileParamManage.py -i fileParamWrite ${boxFpsBase} boxId "virt"
-           lpDo fileParamManage.py -i fileParamWrite ${boxFpsBase} boxNu "virt"
+           lpDo fileParamManage.cs -i fileParamWrite ${boxFpsBase} uniqueBoxId "virt"
+           lpDo fileParamManage.cs -i fileParamWrite ${boxFpsBase} boxId "virt"
+           lpDo fileParamManage.cs -i fileParamWrite ${boxFpsBase} boxNu "virt"
 
            ;;
        *)
@@ -259,7 +259,7 @@ _EOF_
    local containerRegDictId=${containerRegDict['containerId']}
    EH_assert [ ${containerRegDictId} == ${containerId} ]
 
-   #local containerId=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} containerId )
+   #local containerId=$( fileParamManage.cs -i fileParamRead  ${containerAssignBase} containerId )
    local containerNu=${containerRegDict['containerNu']}
 
    local model=${containerRegDict['model']}
@@ -273,12 +273,12 @@ _EOF_
 
       lpDo mkdir -p ${containerFpsBase}
 
-      lpDo fileParamManage.py -i fileParamWrite ${containerFpsBase} containerId ${containerId}
-      lpDo fileParamManage.py -i fileParamWrite ${containerFpsBase} boxId ${boxNu}
-      lpDo fileParamManage.py -i fileParamWrite ${containerFpsBase} containerNu ${containerNu}
-      lpDo fileParamManage.py -i fileParamWrite ${containerFpsBase} model ${model}
-      lpDo fileParamManage.py -i fileParamWrite ${containerFpsBase} abode ${abode}
-      lpDo fileParamManage.py -i fileParamWrite ${containerFpsBase} function ${function}
+      lpDo fileParamManage.cs -i fileParamWrite ${containerFpsBase} containerId ${containerId}
+      lpDo fileParamManage.cs -i fileParamWrite ${containerFpsBase} boxId ${boxNu}
+      lpDo fileParamManage.cs -i fileParamWrite ${containerFpsBase} containerNu ${containerNu}
+      lpDo fileParamManage.cs -i fileParamWrite ${containerFpsBase} model ${model}
+      lpDo fileParamManage.cs -i fileParamWrite ${containerFpsBase} abode ${abode}
+      lpDo fileParamManage.cs -i fileParamWrite ${containerFpsBase} function ${function}
    }
    selfUpdateContainerFPs
 

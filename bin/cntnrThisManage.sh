@@ -176,7 +176,7 @@ ${G_myName} ${extraInfo} -p bpoId=sysChar -i cntnr_netName_interfacesUpdateBased
 $( examplesSeperatorSection "This Container /bisos/var/bpoId/sysChar.fp/ (sysChar)  Info" )
 ${G_myName} ${extraInfo} -p bpoId="${thisBpoId}" -i sysCharWrite  # Initially invoked in sysCharRealize.sh
 cat /bisos/var/bpoId/sysChar.fp/value  # -> (cat /bisos/var/bpoId/sysChar.fp/value)
-fileParamManage.py -i fileParamRead /bisos/var/bpoId sysChar.fp  # -> $( fileParamManage.py -i fileParamRead /bisos/var/bpoId sysChar.fp )
+fileParamManage.cs -i fileParamRead /bisos/var/bpoId sysChar.fp  # -> $( fileParamManage.cs -i fileParamRead /bisos/var/bpoId sysChar.fp )
 ${G_myName} ${extraInfo} -i bpoIdPrep "sysChar" # vis_bpoIdPrep "sysChar" ->  $( vis_bpoIdPrep "sysChar" )
 $( examplesSeperatorSection "This Container Registrar Info" )
 svcInvSiteRegContainer.cs

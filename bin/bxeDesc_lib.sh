@@ -42,9 +42,9 @@ _EOF_
     local bxeTreeDir=""
 
     if [ -z "${parentBxoId}" ] ; then
-        local cp_bxePrivacy=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxePrivacy )
-        local cp_bxeKind=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxeKind )    
-        local cp_bxeType=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxeType )
+        local cp_bxePrivacy=$( fileParamManage.cs  -i fileParamRead  ${bxeDesc} bxePrivacy )
+        local cp_bxeKind=$( fileParamManage.cs  -i fileParamRead  ${bxeDesc} bxeKind )    
+        local cp_bxeType=$( fileParamManage.cs  -i fileParamRead  ${bxeDesc} bxeType )
 
         echo "$(vis_bxeDescBase_obtain)/${cp_bxePrivacy}/${cp_bxeKind}/${cp_bxeType}"
     else
@@ -280,7 +280,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 1 ]]
     local bxeDesc="$1"
-    local parentBxoId=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} parentBxoId )
+    local parentBxoId=$( fileParamManage.cs  -i fileParamRead  ${bxeDesc} parentBxoId )
 
     echo ${parentBxoId}
 }
@@ -294,9 +294,9 @@ _EOF_
     EH_assert [[ $# -eq 1 ]]
     local bxeDesc="$1"
     
-    #local cp_bxePrivacy=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxePrivacy )
-    local cp_bxePrefix=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxePrefix )    
-    local cp_rdn=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} rdn )        
+    #local cp_bxePrivacy=$( fileParamManage.cs  -i fileParamRead  ${bxeDesc} bxePrivacy )
+    local cp_bxePrefix=$( fileParamManage.cs  -i fileParamRead  ${bxeDesc} bxePrefix )    
+    local cp_rdn=$( fileParamManage.cs  -i fileParamRead  ${bxeDesc} rdn )        
 
     #local bxeLocalName="$(vis_privacyTag_obtain ${cp_bxePrivacy})${cp_bxePrefix}_${cp_rdn}"
     local bxeLocalName="${cp_bxePrefix}_${cp_rdn}"
@@ -339,6 +339,6 @@ function vis_bxeDescInfo {
 
     #ANT_raw "Running: lcnFileParamsAdmin.sh  -p fileParamsBaseDir=${bxeDesc} -i fileParamsShow"
     # opDo lcnFileParamsAdmin.sh  -p fileParamsBaseDir=${bxeDesc} -i fileParamsShow 2> /dev/null
-    lpDo fileParamManage.py  -i fileParamDictReadDeep  "${bxeDesc}"
+    lpDo fileParamManage.cs  -i fileParamDictReadDeep  "${bxeDesc}"
 }
 

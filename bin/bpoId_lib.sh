@@ -50,7 +50,7 @@ _EOF_
                        }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo fileParamManage.py -i fileParamDictReadDeep $(vis_bpoIdFpsBase)
+    lpDo fileParamManage.cs -i fileParamDictReadDeep $(vis_bpoIdFpsBase)
     
     lpReturn
 }       
@@ -65,7 +65,7 @@ _EOF_
     local canonName="$1"
     local bpoId="$2"
 
-    lpDo fileParamManage.py -v 20 -i fileParamWrite $(vis_bpoIdFpsBase) "${canonName}.fp" "${bpoId}"
+    lpDo fileParamManage.cs -v 20 -i fileParamWrite $(vis_bpoIdFpsBase) "${canonName}.fp" "${bpoId}"
     
     lpReturn
 }       
@@ -79,7 +79,7 @@ _EOF_
 
     local canonName="$1"
 
-    lpDo fileParamManage.py -i fileParamRead $(vis_bpoIdFpsBase) "${canonName}.fp"
+    lpDo fileParamManage.cs -i fileParamRead $(vis_bpoIdFpsBase) "${canonName}.fp"
     
     lpReturn
 }       
@@ -107,7 +107,7 @@ _EOF_
 
     local canonName="sysChar"
     
-    local bpoId=$( lpDo fileParamManage.py -i fileParamRead $(vis_bpoIdFpsBase) "${canonName}.fp" )
+    local bpoId=$( lpDo fileParamManage.cs -i fileParamRead $(vis_bpoIdFpsBase) "${canonName}.fp" )
 
     if [ ! -z "${bpoId}" ] ; then
         if [[ "${G_forceMode}" == "force" ]] ; then
@@ -135,7 +135,7 @@ _EOF_
         effectiveContainerBxoId="${selectedContainerBxoId}"
     fi
 
-    lpDo fileParamManage.py -v 20 -i fileParamWrite $(vis_bpoIdFpsBase) "${canonName}.fp" "${effectiveContainerBxoId}"
+    lpDo fileParamManage.cs -v 20 -i fileParamWrite $(vis_bpoIdFpsBase) "${canonName}.fp" "${effectiveContainerBxoId}"
     
     lpReturn
 }       
@@ -150,7 +150,7 @@ _EOF_
 
     local canonName="site"
     
-    local bpoId=$( lpDo fileParamManage.py -i fileParamRead $(vis_bpoIdFpsBase) "${canonName}.fp" )
+    local bpoId=$( lpDo fileParamManage.cs -i fileParamRead $(vis_bpoIdFpsBase) "${canonName}.fp" )
 
     if [ ! -z "${bpoId}" ] ; then
         if [[ "${G_forceMode}" == "force" ]] ; then
@@ -163,7 +163,7 @@ _EOF_
 
     local determinedBxoId=$( sysCharRealize.sh -i selectedSiteBxoId )
     
-    lpDo fileParamManage.py -v 20 -i fileParamWrite $(vis_bpoIdFpsBase) "${canonName}.fp" "${determinedBxoId}"
+    lpDo fileParamManage.cs -v 20 -i fileParamWrite $(vis_bpoIdFpsBase) "${canonName}.fp" "${determinedBxoId}"
     
     lpReturn
 }       

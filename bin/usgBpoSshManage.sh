@@ -96,7 +96,7 @@ function G_postParamHook {
     
     local siteGitServerInfoBaseDir=$( bisosSiteGitServer.sh -i gitServerInfoBaseDir )
     
-    site_gitServerName=$( fileParamManage.py -i fileParamRead ${siteGitServerInfoBaseDir} gitServerName )
+    site_gitServerName=$( fileParamManage.cs -i fileParamRead ${siteGitServerInfoBaseDir} gitServerName )
     
 }
 
@@ -469,10 +469,10 @@ _EOF_
     opDo FN_dirCreatePathIfNotThere ${gitLabelPath}
     EH_retOnFail
 
-    lpDo fileParamManage.py  -i fileParamWrite  ${gitLabelPath} userName "${gitUserName}"
+    lpDo fileParamManage.cs  -i fileParamWrite  ${gitLabelPath} userName "${gitUserName}"
     EH_retOnFail
 
-    lpDo fileParamManage.py  -i fileParamWrite  ${gitLabelPath} userEmail "${gitUserEmail}"
+    lpDo fileParamManage.cs  -i fileParamWrite  ${gitLabelPath} userEmail "${gitUserEmail}"
     EH_retOnFail
 
     lpDo vis_usgAcct_gitConfigUpdate "${usg}" \""${gitUserName}"\" "${gitUserEmail}"
@@ -500,7 +500,7 @@ _EOF_
     local eachParam
 
     for eachParam in $@ ; do
-        lpDo fileParamManage.py  -i fileParamRead ${gitLabelPath} ${eachParam}
+        lpDo fileParamManage.cs  -i fileParamRead ${gitLabelPath} ${eachParam}
     done
 
     lpReturn

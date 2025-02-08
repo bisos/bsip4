@@ -257,7 +257,7 @@ _EOF_
     local key=$1
     local value=$2
 
-    lpDo fileParamManage.py -v 30 -i fileParamWrite /tmp/netNameInfo "${key}" "${value}"
+    lpDo fileParamManage.cs -v 30 -i fileParamWrite /tmp/netNameInfo "${key}" "${value}"
 }
 
 function netNameInfoRead {
@@ -269,7 +269,7 @@ _EOF_
     EH_assert [[ $# -eq 1 ]]
     local key=$1
 
-    lpDo fileParamManage.py -v 30 -i fileParamRead /tmp/netNameInfo "${key}"
+    lpDo fileParamManage.cs -v 30 -i fileParamRead /tmp/netNameInfo "${key}"
 }
 
 
@@ -913,9 +913,9 @@ _EOF_
 
     local siteGitServerInfoBaseDir=$( bisosSiteGitServer.sh -i gitServerInfoBaseDir )
 
-    local site_gitServerName=$( fileParamManage.py -i fileParamRead ${siteGitServerInfoBaseDir} gitServerName )
-    local site_gitServerUrl=$( fileParamManage.py -i fileParamRead ${siteGitServerInfoBaseDir} gitServerUrl )
-    local site_gitServerPrivToken=$( fileParamManage.py -i fileParamRead ${siteGitServerInfoBaseDir} gitServerPrivToken )
+    local site_gitServerName=$( fileParamManage.cs -i fileParamRead ${siteGitServerInfoBaseDir} gitServerName )
+    local site_gitServerUrl=$( fileParamManage.cs -i fileParamRead ${siteGitServerInfoBaseDir} gitServerUrl )
+    local site_gitServerPrivToken=$( fileParamManage.cs -i fileParamRead ${siteGitServerInfoBaseDir} gitServerPrivToken )
 
     local registrar=$( vis_registrarHostName )
     local id=$( vis_registrarUserName )
@@ -1302,7 +1302,7 @@ _EOF_
 
     local dateTag=$( date +%Y%m%d%H%M%S )
 
-    #local containerBxoRef=$( fileParamManage.py -v 30 -i fileParamRead  ${bpoHome}/containerBxO/bxoRef.fps bpoId )
+    #local containerBxoRef=$( fileParamManage.cs -v 30 -i fileParamRead  ${bpoHome}/containerBxO/bxoRef.fps bpoId )
 
     local sizing=$sysChar_virtSpec_sizing
 

@@ -155,7 +155,7 @@ _EOF_
 
    local containerAssignBase=$1
 
-   local containerId=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} containerId )
+   local containerId=$( fileParamManage.cs -i fileParamRead  ${containerAssignBase} containerId )
    EH_assert [ ! -z ${containerId} ]
 
    lpDo vis_containerRepoNamedClone "${containerId}"
@@ -261,8 +261,8 @@ _EOF_
 
    local containersBase=$( containersBaseObtain )
    
-   local containerId=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} containerId )
-   local containerNu=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} containerNu )
+   local containerId=$( fileParamManage.cs -i fileParamRead  ${containerAssignBase} containerId )
+   local containerNu=$( fileParamManage.cs -i fileParamRead  ${containerAssignBase} containerNu )
 
    local repoBase="${containersBase}/${containerId}"
 
@@ -273,9 +273,9 @@ _EOF_
    
    lpDo FN_fileSymlinkUpdate ${containerAssignBase} ${repoBase}/assign
 
-   local model=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} model )            
-   local abode=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} abode )
-   local function=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} function )
+   local model=$( fileParamManage.cs -i fileParamRead  ${containerAssignBase} model )            
+   local abode=$( fileParamManage.cs -i fileParamRead  ${containerAssignBase} abode )
+   local function=$( fileParamManage.cs -i fileParamRead  ${containerAssignBase} function )
 
    local containerSteadyBase=${repoBase}/steady
    lpDo mkdir -p ${containerSteadyBase}
@@ -361,7 +361,7 @@ _EOF_
    local containerAssignBase=$1
 
    local containersBase=$( containersBaseObtain )
-   local containerId=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} containerId )
+   local containerId=$( fileParamManage.cs -i fileParamRead  ${containerAssignBase} containerId )
 
    local repoBasePath="${containersBase}/${containerId}"
 
@@ -407,16 +407,16 @@ _EOF_
 
    local containersBase=$( containersBaseObtain )
    
-   local containerId=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} containerId )
+   local containerId=$( fileParamManage.cs -i fileParamRead  ${containerAssignBase} containerId )
 
    local repoBase="${containersBase}/${containerId}"
 
    opDoRet mkdir -p ${repoBase}
    lpDo FN_fileSymlinkUpdate ${containerAssignBase} ${repoBase}/assign
 
-   local abode=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} abode )
-   local function=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} function )
-   local model=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} model )         
+   local abode=$( fileParamManage.cs -i fileParamRead  ${containerAssignBase} abode )
+   local function=$( fileParamManage.cs -i fileParamRead  ${containerAssignBase} function )
+   local model=$( fileParamManage.cs -i fileParamRead  ${containerAssignBase} model )         
 
    local platformInfoBase=${repoBase}/platformInfo.fps
    lpDo mkdir -p ${platformInfoBase}
@@ -429,8 +429,8 @@ _EOF_
 
    case ${function} in
        Server)
-           lpDo fileParamManage.py -i fileParamWrite ${platformInfoBase} vmGuestLeastSize "medium"
-           lpDo fileParamManage.py -i fileParamWrite ${platformInfoBase} networkMode "fixed"       
+           lpDo fileParamManage.cs -i fileParamWrite ${platformInfoBase} vmGuestLeastSize "medium"
+           lpDo fileParamManage.cs -i fileParamWrite ${platformInfoBase} networkMode "fixed"       
            ;;
 
        *)
@@ -442,9 +442,9 @@ _EOF_
    lpDo mkdir -p ${netAttachmentsBase}/if1/ipv4
    lpDo mkdir -p ${netAttachmentsBase}/if1/ipv4/ipAddrs
    lpDo mkdir -p ${netAttachmentsBase}/if1/ipv4/ipAddrs/addr1.fps
-   lpDo fileParamManage.py -i fileParamWrite ${netAttachmentsBase}/if1/ipv4/ipAddrs/addr1.fps addr "192.168.0.151"
-   lpDo fileParamManage.py -i fileParamWrite ${netAttachmentsBase}/if1/ipv4/ipAddrs/addr1.fps gateway "192.168.0.220"
-   lpDo fileParamManage.py -i fileParamWrite ${netAttachmentsBase}/if1/ipv4/ipAddrs/addr1.fps netmask "24"
+   lpDo fileParamManage.cs -i fileParamWrite ${netAttachmentsBase}/if1/ipv4/ipAddrs/addr1.fps addr "192.168.0.151"
+   lpDo fileParamManage.cs -i fileParamWrite ${netAttachmentsBase}/if1/ipv4/ipAddrs/addr1.fps gateway "192.168.0.220"
+   lpDo fileParamManage.cs -i fileParamWrite ${netAttachmentsBase}/if1/ipv4/ipAddrs/addr1.fps netmask "24"
     
    lpDo mkdir -p ${netAttachmentsBase}/if1/resolvers
    lpDo mkdir -p ${netAttachmentsBase}/if1/resolvers/auto.fps

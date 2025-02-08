@@ -191,7 +191,7 @@ _EOF_
             EH_problem "Missing bxeDescDir=${bxeDescDir}"
             lpReturn 101
         fi
-        lpDo fileParamManage.py  -i fileParamRead  ${bxeDescDir} bxeOid
+        lpDo fileParamManage.cs  -i fileParamRead  ${bxeDescDir} bxeOid
     fi
 }
     
@@ -269,21 +269,21 @@ bxeDescParamInitSpecificCommon () {
     # COMMON PARAMETERS
     #
 
-    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} bxeROid "${nextNu}"
-    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} bxeOid "$( bxeOidGet ${nextNu} )"
+    lpDo fileParamManage.cs  -i fileParamWrite  ${thisPath} bxeROid "${nextNu}"
+    lpDo fileParamManage.cs  -i fileParamWrite  ${thisPath} bxeOid "$( bxeOidGet ${nextNu} )"
 
-    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} bxePrivacy  "${bc_privacy}"
-    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} bxeKind  "${bc_kind}"    
-    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} bxeType  "${bc_type}"
-    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} bxePrefix  "${bxePrefix}"
+    lpDo fileParamManage.cs  -i fileParamWrite  ${thisPath} bxePrivacy  "${bc_privacy}"
+    lpDo fileParamManage.cs  -i fileParamWrite  ${thisPath} bxeKind  "${bc_kind}"    
+    lpDo fileParamManage.cs  -i fileParamWrite  ${thisPath} bxeType  "${bc_type}"
+    lpDo fileParamManage.cs  -i fileParamWrite  ${thisPath} bxePrefix  "${bxePrefix}"
 
-    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} parentBxoId  "${bc_parentBxoId}"
+    lpDo fileParamManage.cs  -i fileParamWrite  ${thisPath} parentBxoId  "${bc_parentBxoId}"
     
-    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} RegReqOriginationMethod  "${bc_originationMethod}"    
-    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} requestingSysId "${opRunHostName}"
-    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} AdminContactEmail "${bc_email}"
+    lpDo fileParamManage.cs  -i fileParamWrite  ${thisPath} RegReqOriginationMethod  "${bc_originationMethod}"    
+    lpDo fileParamManage.cs  -i fileParamWrite  ${thisPath} requestingSysId "${opRunHostName}"
+    lpDo fileParamManage.cs  -i fileParamWrite  ${thisPath} AdminContactEmail "${bc_email}"
 
-    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} regReqFileName "${regReqFileName}"
+    lpDo fileParamManage.cs  -i fileParamWrite  ${thisPath} regReqFileName "${regReqFileName}"
 }
 
 function bxeOidGet {
@@ -317,8 +317,8 @@ bxeDescParamInitSpecific_real_individual () {
     # SERVICE SPECIFIC PARAMETERS
     #
 
-    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} firstName "${bc_firstName}"
-    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} lastName "${bc_lastName}"    
+    lpDo fileParamManage.cs  -i fileParamWrite  ${thisPath} firstName "${bc_firstName}"
+    lpDo fileParamManage.cs  -i fileParamWrite  ${thisPath} lastName "${bc_lastName}"    
 
     if (( selectorNu == 1 )) ; then
         rdnSelectorTag=""
@@ -326,7 +326,7 @@ bxeDescParamInitSpecific_real_individual () {
         rdnSelectorTag="_${selectorNu}"
     fi
 
-    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} rdn "${bc_firstName}_${bc_lastName}${rdnSelectorTag}"
+    lpDo fileParamManage.cs  -i fileParamWrite  ${thisPath} rdn "${bc_firstName}_${bc_lastName}${rdnSelectorTag}"
 }
 
 bxeDescParamInitSpecific_real_system () {
@@ -342,7 +342,7 @@ bxeDescParamInitSpecific_real_system () {
     # SERVICE SPECIFIC PARAMETERS
     #
 
-    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} sysName "${bc_sysName}"
+    lpDo fileParamManage.cs  -i fileParamWrite  ${thisPath} sysName "${bc_sysName}"
 
     if (( selectorNu == 1 )) ; then
         rdnSelectorTag=""
@@ -350,7 +350,7 @@ bxeDescParamInitSpecific_real_system () {
         rdnSelectorTag="_${selectorNu}"
     fi
 
-    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} rdn "${bc_sysName}${rdnSelectorTag}"
+    lpDo fileParamManage.cs  -i fileParamWrite  ${thisPath} rdn "${bc_sysName}${rdnSelectorTag}"
 }
 
 bxeDescParamInitSpecific_real_corp () {
@@ -366,7 +366,7 @@ bxeDescParamInitSpecific_real_corp () {
     # SERVICE SPECIFIC PARAMETERS
     #
 
-    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} sysName "${bc_corpName}"
+    lpDo fileParamManage.cs  -i fileParamWrite  ${thisPath} sysName "${bc_corpName}"
 
     if (( selectorNu == 1 )) ; then
         rdnSelectorTag=""
@@ -374,7 +374,7 @@ bxeDescParamInitSpecific_real_corp () {
         rdnSelectorTag="_${selectorNu}"
     fi
 
-    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} rdn "${bc_corpName}${rdnSelectorTag}"
+    lpDo fileParamManage.cs  -i fileParamWrite  ${thisPath} rdn "${bc_corpName}${rdnSelectorTag}"
 }
 
 
@@ -392,7 +392,7 @@ bxeDescParamInitSpecific_DEFAULT_DEFAULT () {
     # SERVICE SPECIFIC PARAMETERS
     #
 
-    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} name "${bc_name}"
+    lpDo fileParamManage.cs  -i fileParamWrite  ${thisPath} name "${bc_name}"
 
     if (( selectorNu == 1 )) ; then
         rdnSelectorTag=""
@@ -400,7 +400,7 @@ bxeDescParamInitSpecific_DEFAULT_DEFAULT () {
         rdnSelectorTag="_${selectorNu}"
     fi
 
-    lpDo fileParamManage.py  -i fileParamWrite  ${thisPath} rdn "${bc_name}${rdnSelectorTag}"
+    lpDo fileParamManage.cs  -i fileParamWrite  ${thisPath} rdn "${bc_name}${rdnSelectorTag}"
 }
 
 bxeDescParamInitSpecific () {
@@ -416,7 +416,7 @@ bxeDescCheckDuplicateSpecificCommon () {
     local thisDir=${1}
     local thisPath="$(pwd)/${thisDir}"    
 
-    local cp_regReqFileName=$( fileParamManage.py  -i fileParamRead  ${thisPath} regReqFileName )
+    local cp_regReqFileName=$( fileParamManage.cs  -i fileParamRead  ${thisPath} regReqFileName )
     
     thisregReqFileName=$( FN_absolutePathGet ${cp_regReqFileName} )
     if [ "${thisregReqFileName}" == "${regReqFile}" ] ; then
@@ -436,8 +436,8 @@ bxeDescCheckDuplicateSpecific_real_individual () {
     bxeDescCheckDuplicateSpecificCommon ${1}
     retVal=$?
 
-    local cp_firstName=$( fileParamManage.py  -i fileParamRead  ${thisPath} firstName )
-    local cp_lastName=$( fileParamManage.py  -i fileParamRead  ${thisPath} lastName )
+    local cp_firstName=$( fileParamManage.cs  -i fileParamRead  ${thisPath} firstName )
+    local cp_lastName=$( fileParamManage.cs  -i fileParamRead  ${thisPath} lastName )
     
     if [ "${bc_firstName}" == "${cp_firstName}" ] && [ "${bc_lastName}" == "${cp_lastName}" ] ; then
         ANT_cooked "$1: DUPLICATE, ${selectorNu}"
@@ -457,7 +457,7 @@ bxeDescCheckDuplicateSpecific_real_system () {
     bxeDescCheckDuplicateSpecificCommon ${1}
     retVal=$?
 
-    local cp_sysName=$( fileParamManage.py  -i fileParamRead  ${thisPath} sysName )    
+    local cp_sysName=$( fileParamManage.cs  -i fileParamRead  ${thisPath} sysName )    
     
     if [ "${bc_sysName}" == "${cp_sysName}" ] ; then
         ANT_cooked "$1: DUPLICATE, ${selectorNu}"
@@ -477,7 +477,7 @@ bxeDescCheckDuplicateSpecific_real_corp () {
     bxeDescCheckDuplicateSpecificCommon ${1}
     retVal=$?
 
-    local cp_corpName=$( fileParamManage.py  -i fileParamRead  ${thisPath} corpName )    
+    local cp_corpName=$( fileParamManage.cs  -i fileParamRead  ${thisPath} corpName )    
     
     if [ "${bc_corpName}" == "${cp_corpName}" ] ; then
         ANT_cooked "$1: DUPLICATE, ${selectorNu}"
@@ -497,7 +497,7 @@ bxeDescCheckDuplicateSpecific_DEFAULT_DEFAULT () {
     bxeDescCheckDuplicateSpecificCommon ${1}
     retVal=$?
 
-    local cp_name=$( fileParamManage.py  -i fileParamRead  ${thisPath} name )    
+    local cp_name=$( fileParamManage.cs  -i fileParamRead  ${thisPath} name )    
     
     if [ "${bc_name}" == "${cp_name}" ] ; then
         ANT_cooked "$1: DUPLICATE, ${selectorNu}"

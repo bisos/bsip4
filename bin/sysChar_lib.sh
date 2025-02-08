@@ -238,7 +238,7 @@ _EOF_
    local found=""
 
    for eachBoxIdFp in ${boxIdFps} ; do   
-       stored_boxId=$( fileParamManage.py -i fileParamReadPath ${eachBoxIdFp} )
+       stored_boxId=$( fileParamManage.cs -i fileParamReadPath ${eachBoxIdFp} )
 
        if [ -z "${stored_boxId}" ] ; then
            EH_problem "Missing boxId in ${eachBoxIdFp} -- continuing"
@@ -284,7 +284,7 @@ _EOF_
    local found=""
 
    for eachBoxIdFp in ${boxIdFps} ; do   
-       stored_boxId=$( fileParamManage.py -i fileParamReadPath ${eachBoxIdFp} )
+       stored_boxId=$( fileParamManage.cs -i fileParamReadPath ${eachBoxIdFp} )
 
        if [ -z "${stored_boxId}" ] ; then
            EH_problem "Missing boxId in ${eachBoxIdFp} -- continuing"
@@ -391,14 +391,14 @@ _EOF_
 
     EH_assert  vis_userAcctExists "${bpoId}"
 
-    fileParamManage.py -i fileParamDictReadDeep ${bpoHome} | grep -v bxeTree | grep -v bxeDesc
+    fileParamManage.cs -i fileParamDictReadDeep ${bpoHome} | grep -v bxeTree | grep -v bxeDesc
     
-    lpDo fileParamManage.py -i fileParamDictReadDeep ${bpoHome}/siteContainersRepo/assign
+    lpDo fileParamManage.cs -i fileParamDictReadDeep ${bpoHome}/siteContainersRepo/assign
 
-    lpDo fileParamManage.py -i fileParamDictReadDeep ${bpoHome}/siteContainersRepo
+    lpDo fileParamManage.cs -i fileParamDictReadDeep ${bpoHome}/siteContainersRepo
 
-    lpDo fileParamManage.py -i fileParamDictReadDeep ${bpoHome}/siteContainersRepo/steady/net/networks
-    lpDo fileParamManage.py -i fileParamDictReadDeep ${bpoHome}/siteContainersRepo/steady/net/routes        
+    lpDo fileParamManage.cs -i fileParamDictReadDeep ${bpoHome}/siteContainersRepo/steady/net/networks
+    lpDo fileParamManage.cs -i fileParamDictReadDeep ${bpoHome}/siteContainersRepo/steady/net/routes        
     
     lpReturn
 }       
@@ -416,14 +416,14 @@ _EOF_
     EH_assert  vis_userAcctExists "${bpoId}"
     local bpoHome=$( FN_absolutePathGet ~${bpoId} )
 
-    fileParamManage.py -i fileParamDictReadDeep ${bpoHome} | grep -v bxeTree | grep -v bxeDesc
+    fileParamManage.cs -i fileParamDictReadDeep ${bpoHome} | grep -v bxeTree | grep -v bxeDesc
 
-    lpDo fileParamManage.py -i fileParamDictReadDeep ${bpoHome}/${containerId}/self
+    lpDo fileParamManage.cs -i fileParamDictReadDeep ${bpoHome}/${containerId}/self
 
-    lpDo fileParamManage.py -i fileParamDictReadDeep ${bpoHome}/${containerId}
+    lpDo fileParamManage.cs -i fileParamDictReadDeep ${bpoHome}/${containerId}
 
-    lpDo fileParamManage.py -i fileParamDictReadDeep ${bpoHome}/${containerId}/steady/net/networks
-    lpDo fileParamManage.py -i fileParamDictReadDeep ${bpoHome}/${containerId}/steady/net/routes
+    lpDo fileParamManage.cs -i fileParamDictReadDeep ${bpoHome}/${containerId}/steady/net/networks
+    lpDo fileParamManage.cs -i fileParamDictReadDeep ${bpoHome}/${containerId}/steady/net/routes
 
     lpReturn
 }
@@ -441,12 +441,12 @@ _EOF_
     EH_assert  vis_userAcctExists "${bpoId}"
     local bpoHome=$( FN_absolutePathGet ~${bpoId} )
 
-    local bisosSysChar=$( lpDo fileParamManage.py -i fileParamRead /bisos/var/bpoId sysChar.fp )
+    local bisosSysChar=$( lpDo fileParamManage.cs -i fileParamRead /bisos/var/bpoId sysChar.fp )
 
     containerBoxBase=${bpoHome}/${containerId}/self/box.fps
 
-    local boxName=$( lpDo fileParamManage.py -i fileParamRead  ${containerBoxBase} boxId )
-    local boxNu=$( lpDo fileParamManage.py -i fileParamRead  ${containerBoxBase} boxNu )
+    local boxName=$( lpDo fileParamManage.cs -i fileParamRead  ${containerBoxBase} boxId )
+    local boxNu=$( lpDo fileParamManage.cs -i fileParamRead  ${containerBoxBase} boxNu )
 
     local mem=$( free -h | egrep '^Mem:' | tr -s " " | cut -d ' ' -f 2 )
     local cpus=$(nproc --all )
@@ -491,11 +491,11 @@ _EOF_
         lpReturn
     fi
   
-    containerAssign_containerId=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} containerId )
-    containerAssign_boxId=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} boxId )   
-    containerAssign_abode=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} abode )
-    containerAssign_function=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} function )
-    containerAssign_model=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} model )         
+    containerAssign_containerId=$( fileParamManage.cs -v 30 -i fileParamRead  ${containerAssignBase} containerId )
+    containerAssign_boxId=$( fileParamManage.cs -i fileParamRead  ${containerAssignBase} boxId )   
+    containerAssign_abode=$( fileParamManage.cs -i fileParamRead  ${containerAssignBase} abode )
+    containerAssign_function=$( fileParamManage.cs -i fileParamRead  ${containerAssignBase} function )
+    containerAssign_model=$( fileParamManage.cs -i fileParamRead  ${containerAssignBase} model )         
 }
 
 
@@ -525,11 +525,11 @@ _EOF_
         lpReturn
     fi
 
-    containerAssign_containerId=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} containerId )
-    containerAssign_boxId=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} boxId )
-    containerAssign_abode=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} abode )
-    containerAssign_function=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} function )
-    containerAssign_model=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} model )
+    containerAssign_containerId=$( fileParamManage.cs -v 30 -i fileParamRead  ${containerAssignBase} containerId )
+    containerAssign_boxId=$( fileParamManage.cs -i fileParamRead  ${containerAssignBase} boxId )
+    containerAssign_abode=$( fileParamManage.cs -i fileParamRead  ${containerAssignBase} abode )
+    containerAssign_function=$( fileParamManage.cs -i fileParamRead  ${containerAssignBase} function )
+    containerAssign_model=$( fileParamManage.cs -i fileParamRead  ${containerAssignBase} model )
 }
 
 
@@ -548,18 +548,18 @@ _EOF_
   
    local containerSteadyBase=${bpoHome}/siteContainersRepo/steady
 
-   containerSteady_networkMode=$( fileParamManage.py -i fileParamRead  ${containerSteadyBase}/net networkMode.fp )
+   containerSteady_networkMode=$( fileParamManage.cs -i fileParamRead  ${containerSteadyBase}/net networkMode.fp )
 
-   containerSteady_privA_addr=$( fileParamManage.py -i fileParamRead  ${containerSteadyBase}/net/ipv4/privA.fps addr )
+   containerSteady_privA_addr=$( fileParamManage.cs -i fileParamRead  ${containerSteadyBase}/net/ipv4/privA.fps addr )
 
    
-   containerSteady_privA_gateway=$( fileParamManage.py -i fileParamRead  ${containerSteadyBase}/net/ipv4/privA.fps/net.fps routerDefault )
+   containerSteady_privA_gateway=$( fileParamManage.cs -i fileParamRead  ${containerSteadyBase}/net/ipv4/privA.fps/net.fps routerDefault )
 
-   containerSteady_privA_netmask=$( fileParamManage.py -i fileParamRead  ${containerSteadyBase}/net/ipv4/privA.fps/net.fps netmask )   
+   containerSteady_privA_netmask=$( fileParamManage.cs -i fileParamRead  ${containerSteadyBase}/net/ipv4/privA.fps/net.fps netmask )   
 
-   containerSteady_privA_pubA_router=$( fileParamManage.py -i fileParamRead  ${containerSteadyBase}/net/ipv4/privA.fps/router-pubA.fps router )   
-   containerSteady_privA_pubA_upCommand=$( fileParamManage.py -i fileParamRead  ${containerSteadyBase}/net/ipv4/privA.fps/router-pubA.fps upCommand )
-   containerSteady_privA_pubA_downCommand=$( fileParamManage.py -i fileParamRead  ${containerSteadyBase}/net/ipv4/privA.fps/router-pubA.fps downCommand )   
+   containerSteady_privA_pubA_router=$( fileParamManage.cs -i fileParamRead  ${containerSteadyBase}/net/ipv4/privA.fps/router-pubA.fps router )   
+   containerSteady_privA_pubA_upCommand=$( fileParamManage.cs -i fileParamRead  ${containerSteadyBase}/net/ipv4/privA.fps/router-pubA.fps upCommand )
+   containerSteady_privA_pubA_downCommand=$( fileParamManage.cs -i fileParamRead  ${containerSteadyBase}/net/ipv4/privA.fps/router-pubA.fps downCommand )   
 }
 
 function vis_containerSteadyWrite {
@@ -575,11 +575,11 @@ _EOF_
 
    # blank or auto or static
    if [ ! -z "${containerSteady_networkMode:-}" ] ; then
-       lpDo fileParamManage.py -v 20 -i fileParamWrite ${containerSteadyBase}/net networkMode.fp "${containerSteady_networkMode}"
+       lpDo fileParamManage.cs -v 20 -i fileParamWrite ${containerSteadyBase}/net networkMode.fp "${containerSteady_networkMode}"
    fi
    
    if [ ! -z "${containerSteady_privA_addr:-}" ] ; then
-       lpDo fileParamManage.py -i fileParamWrite ${containerSteadyBase}/net/ipv4/privA.fps addr "${containerSteady_privA_addr}"
+       lpDo fileParamManage.cs -i fileParamWrite ${containerSteadyBase}/net/ipv4/privA.fps addr "${containerSteady_privA_addr}"
 
        local netSiteFpsPath=$( vis_netSiteFpsPath privA )
        lpDo FN_fileSymlinkUpdate "${netSiteFpsPath}"  ${containerSteadyBase}/net/ipv4/privA.fps/net.fps
@@ -589,7 +589,7 @@ _EOF_
    fi
 
    if [ ! -z "${containerSteady_pubA_addr:-}" ] ; then
-       lpDo fileParamManage.py -i fileParamWrite ${containerSteadyBase}/net/ipv4/pubA.fps addr "${containerSteady_pubA_addr}"
+       lpDo fileParamManage.cs -i fileParamWrite ${containerSteadyBase}/net/ipv4/pubA.fps addr "${containerSteady_pubA_addr}"
 
        local netSiteFpsPath=$( vis_netSiteFpsPath pubA )
        lpDo FN_fileSymlinkUpdate "${netSiteFpsPath}"  ${containerSteadyBase}/net/ipv4/pubA.fps/net.fps
@@ -599,7 +599,7 @@ _EOF_
    fi
 
    if [ ! -z "${containerSteady_pubB_addr:-}" ] ; then
-       lpDo fileParamManage.py -i fileParamWrite ${containerSteadyBase}/net/ipv4/pubB.fps addr "${containerSteady_pubB_addr}"
+       lpDo fileParamManage.cs -i fileParamWrite ${containerSteadyBase}/net/ipv4/pubB.fps addr "${containerSteady_pubB_addr}"
 
        local netSiteFpsPath=$( vis_netSiteFpsPath pubB )
        lpDo FN_fileSymlinkUpdate "${netSiteFpsPath}"  ${containerSteadyBase}/net/ipv4/pubB.fps/net.fps
@@ -649,7 +649,7 @@ _EOF_
     fi
 
     if [ -d "${containerSpecFps}" ] ; then
-        sysChar_netIfs_privA=$( fileParamManage.py -i fileParamRead ${containerSpecFps}/netIfs privA )
+        sysChar_netIfs_privA=$( fileParamManage.cs -i fileParamRead ${containerSpecFps}/netIfs privA )
     fi
 
     if [ -z "${sysChar_netIfs_privA}" ] ; then
@@ -692,7 +692,7 @@ _EOF_
 
     case ${paramName} in
         securityMode|vmNameQualifier)
-            lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysCharConveyInfoBase} "${paramName}" "${paramValue}"
+            lpDo fileParamManage.cs -v 30 -i fileParamWrite ${sysCharConveyInfoBase} "${paramName}" "${paramValue}"
             ;;
         *)
             EH_problem "Bad Usage -- ${paramName}"
@@ -725,13 +725,13 @@ _EOF_
     local sysCharConveyInfoBase="${bpoHome}/var/sysCharConveyInfo"
     
     if [ -d "${sysCharConveyInfoBase}" ] ; then
-        sysChar_conveyInfo_vmNameQualifier=$( fileParamManage.py -i fileParamRead  ${sysCharConveyInfoBase} vmNameQualifier )
-        sysChar_conveyInfo_hostCntnr=$( fileParamManage.py -i fileParamRead  ${sysCharConveyInfoBase} hostCntnr )       
-        sysChar_conveyInfo_ipAddr_privA=$( fileParamManage.py -i fileParamRead  ${sysCharConveyInfoBase} ipAddr_privA )
-        sysChar_conveyInfo_ipAddr_pubA=$( fileParamManage.py -i fileParamRead  ${sysCharConveyInfoBase} ipAddr_pubA )
-        sysChar_conveyInfo_privGitMode=$( fileParamManage.py -i fileParamRead  ${sysCharConveyInfoBase} privGit )
-        sysChar_conveyInfo_pubGitMode=$( fileParamManage.py -i fileParamRead  ${sysCharConveyInfoBase} pubGitMode )
-        sysChar_conveyInfo_securityMode=$( fileParamManage.py -i fileParamRead  ${sysCharConveyInfoBase} securityMode )
+        sysChar_conveyInfo_vmNameQualifier=$( fileParamManage.cs -i fileParamRead  ${sysCharConveyInfoBase} vmNameQualifier )
+        sysChar_conveyInfo_hostCntnr=$( fileParamManage.cs -i fileParamRead  ${sysCharConveyInfoBase} hostCntnr )       
+        sysChar_conveyInfo_ipAddr_privA=$( fileParamManage.cs -i fileParamRead  ${sysCharConveyInfoBase} ipAddr_privA )
+        sysChar_conveyInfo_ipAddr_pubA=$( fileParamManage.cs -i fileParamRead  ${sysCharConveyInfoBase} ipAddr_pubA )
+        sysChar_conveyInfo_privGitMode=$( fileParamManage.cs -i fileParamRead  ${sysCharConveyInfoBase} privGit )
+        sysChar_conveyInfo_pubGitMode=$( fileParamManage.cs -i fileParamRead  ${sysCharConveyInfoBase} pubGitMode )
+        sysChar_conveyInfo_securityMode=$( fileParamManage.cs -i fileParamRead  ${sysCharConveyInfoBase} securityMode )
     else
         sysChar_conveyInfo_vmNameQualifier=""
         sysChar_conveyInfo_hostCntnr="" 
@@ -774,14 +774,14 @@ _EOF_
     local virtSpecFps=${repoBase}/virtSpec.fps
     local containerSpecFps=${repoBase}/containerSpec.fps    
 
-    sysChar_sysInfo_distro=$( fileParamManage.py -v 30 -i fileParamRead ${sysInfoFps} distro )
-    sysChar_sysInfo_distroType=$( fileParamManage.py -v 30 -i fileParamRead ${sysInfoFps} distroType )      
+    sysChar_sysInfo_distro=$( fileParamManage.cs -v 30 -i fileParamRead ${sysInfoFps} distro )
+    sysChar_sysInfo_distroType=$( fileParamManage.cs -v 30 -i fileParamRead ${sysInfoFps} distroType )      
 
     if [ -d "${virtSpecFps}" ] ; then
-        sysChar_virtSpec_vagBaseBoxType=$( fileParamManage.py -i fileParamRead ${virtSpecFps} vagBaseBoxType )
-        sysChar_virtSpec_virtType=$( fileParamManage.py -i fileParamRead ${virtSpecFps} virtType )
-        sysChar_virtSpec_sizing=$( fileParamManage.py -i fileParamRead ${virtSpecFps} sizing )
-        sysChar_virtSpec_vagBaseBox=$( fileParamManage.py -i fileParamRead ${virtSpecFps} vagBaseBox )    
+        sysChar_virtSpec_vagBaseBoxType=$( fileParamManage.cs -i fileParamRead ${virtSpecFps} vagBaseBoxType )
+        sysChar_virtSpec_virtType=$( fileParamManage.cs -i fileParamRead ${virtSpecFps} virtType )
+        sysChar_virtSpec_sizing=$( fileParamManage.cs -i fileParamRead ${virtSpecFps} sizing )
+        sysChar_virtSpec_vagBaseBox=$( fileParamManage.cs -i fileParamRead ${virtSpecFps} vagBaseBox )    
     else
         sysChar_virtSpec_vagBaseBoxType=""
         sysChar_virtSpec_virtType=""
@@ -792,7 +792,7 @@ _EOF_
     
 
     if [ -d "${containerSpecFps}" ] ; then
-        sysChar_containerSpec_netIfs_privA=$( fileParamManage.py -i fileParamRead ${containerSpecFps}/netIfs privA )
+        sysChar_containerSpec_netIfs_privA=$( fileParamManage.cs -i fileParamRead ${containerSpecFps}/netIfs privA )
     else
         sysChar_containerSpec_netIfs_privA=""
     fi
@@ -820,10 +820,10 @@ _EOF_
     local siteContainersRepo="${bpoHome}/${thisCntnrId}"
     local containerAssignBase="${siteContainersRepo}/self/container.fps"
 
-    local model=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} model )
-    local abode=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} abode )
-    local function=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} function )
-    local containerId=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} containerId )    
+    local model=$( fileParamManage.cs -v 30 -i fileParamRead  ${containerAssignBase} model )
+    local abode=$( fileParamManage.cs -v 30 -i fileParamRead  ${containerAssignBase} abode )
+    local function=$( fileParamManage.cs -v 30 -i fileParamRead  ${containerAssignBase} function )
+    local containerId=$( fileParamManage.cs -v 30 -i fileParamRead  ${containerAssignBase} containerId )    
 
     local sysInfoFps=${repoBase}/sysInfo.fps
     lpDo FN_dirCreatePathIfNotThere ${sysInfoFps}
@@ -843,14 +843,14 @@ _EOF_
         Generic)
             distro=$( fromGenericContainerIdGetDistro ${containerId} )
             distroType="desktop"
-            lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysInfoFps} distro ${distro}
-            lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysInfoFps} distroType ${distroType}
+            lpDo fileParamManage.cs -v 30 -i fileParamWrite ${sysInfoFps} distro ${distro}
+            lpDo fileParamManage.cs -v 30 -i fileParamWrite ${sysInfoFps} distroType ${distroType}
             ;;
         Server)
             distro="deb12"  # NOTYET get it from facter or from /etc/issue
             distroType="desktop"
-            lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysInfoFps} distro ${distro}
-            lpDo fileParamManage.py -v 30 -i fileParamWrite ${sysInfoFps} distroType ${distroType}
+            lpDo fileParamManage.cs -v 30 -i fileParamWrite ${sysInfoFps} distro ${distro}
+            lpDo fileParamManage.cs -v 30 -i fileParamWrite ${sysInfoFps} distroType ${distroType}
             ;;
         *)
             EH_problem "Unimplemented yet -- ${function}"
@@ -860,19 +860,19 @@ _EOF_
     case ${model} in
         Virt)
             vagBaseBoxType=$( withFunctionAndContainerIdGetVagBoxType ${function} ${containerId} )
-            lpDo fileParamManage.py -v 30 -i fileParamWrite ${virtSpecFps} vagBaseBoxType ${vagBaseBoxType}
-            lpDo fileParamManage.py -v 30 -i fileParamWrite ${virtSpecFps} virtType default
-            lpDo fileParamManage.py -v 30 -i fileParamWrite ${virtSpecFps} sizing medium
+            lpDo fileParamManage.cs -v 30 -i fileParamWrite ${virtSpecFps} vagBaseBoxType ${vagBaseBoxType}
+            lpDo fileParamManage.cs -v 30 -i fileParamWrite ${virtSpecFps} virtType default
+            lpDo fileParamManage.cs -v 30 -i fileParamWrite ${virtSpecFps} sizing medium
             #vagBaseBox=$( withDistroGetVagBaseBox ${distro} ${distroType} ${vagBaseBoxType} )
             vagBaseBox=$( withDistroGetVagBaseBox ${function} ${distro} ${distroType} ${containerId} )      
-            lpDo fileParamManage.py -v 30 -i fileParamWrite ${virtSpecFps} vagBaseBox ${vagBaseBox}
+            lpDo fileParamManage.cs -v 30 -i fileParamWrite ${virtSpecFps} vagBaseBox ${vagBaseBox}
 
             ANT_raw "For model=${model} Network InterfaceName was communicated at VM creation"
             ANT_raw "Through conjecture, we label them as any enabled"      
             lpDo vis_cntnr_netName_interfacesUpdateBasedOnConjecture
             ;;
         Host|Pure)
-            lpDo fileParamManage.py -v 30 -i fileParamWrite ${virtSpecFps} virtType none
+            lpDo fileParamManage.cs -v 30 -i fileParamWrite ${virtSpecFps} virtType none
 
             lpDo vis_cntnr_netName_interfacesUpdateBasedOnConjecture
             ;;
@@ -903,7 +903,7 @@ _EOF_
     local siteContainersRepo="${bpoHome}/${thisCntnrId}"
     local containerAssignBase="${siteContainersRepo}/self/container.fps"
 
-    local abode=$( lpDo fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} abode )
+    local abode=$( lpDo fileParamManage.cs -v 30 -i fileParamRead  ${containerAssignBase} abode )
 
     lpDo vis_withAbodeGetApplicableNetsList "${abode}"
 }
@@ -948,10 +948,10 @@ _EOF_
     local siteContainersRepo="${bpoHome}/${thisCntnrId}/self"
     local containerAssignBase="${siteContainersRepo}/container.fps"
 
-    local model=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} model )
-    local abode=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} abode )
-    local function=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} function )
-    local containerId=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} containerId )    
+    local model=$( fileParamManage.cs -v 30 -i fileParamRead  ${containerAssignBase} model )
+    local abode=$( fileParamManage.cs -v 30 -i fileParamRead  ${containerAssignBase} abode )
+    local function=$( fileParamManage.cs -v 30 -i fileParamRead  ${containerAssignBase} function )
+    local containerId=$( fileParamManage.cs -v 30 -i fileParamRead  ${containerAssignBase} containerId )    
 
     # local sysInfoFps=${repoBase}/sysInfo.fps
     # EH_assert [ -d ${sysInfoFps} ]
@@ -970,14 +970,14 @@ _EOF_
             # Result is something like eth0  and is obtained from
             # sysCharBxoHome/var
 
-            interfaceOfNet=$( fileParamManage.py -v 30 -i fileParamRead ${bpoHome}/var/sysCharConveyInfo/netIfs "${netName}" )
-            interfaceOfNetControl=$( fileParamManage.py -v 30 -i fileParamRead ${bpoHome}/var/sysCharConveyInfo/netIfs "${netName}-control" )               
+            interfaceOfNet=$( fileParamManage.cs -v 30 -i fileParamRead ${bpoHome}/var/sysCharConveyInfo/netIfs "${netName}" )
+            interfaceOfNetControl=$( fileParamManage.cs -v 30 -i fileParamRead ${bpoHome}/var/sysCharConveyInfo/netIfs "${netName}-control" )               
             ;;
         Host|Pure)
             # Result is something like en0 and is obtained from
             # sysCharBxoHome/sysChar/containerSpec.fps/netIfs
-            interfaceOfNet=$( fileParamManage.py -v 30 -i fileParamRead ${containerSpecFps_netIfs} "${netName}" )
-            interfaceOfNetControl=$( fileParamManage.py -v 30 -i fileParamRead ${containerSpecFps_netIfs} "${netName}-control" )                    
+            interfaceOfNet=$( fileParamManage.cs -v 30 -i fileParamRead ${containerSpecFps_netIfs} "${netName}" )
+            interfaceOfNetControl=$( fileParamManage.cs -v 30 -i fileParamRead ${containerSpecFps_netIfs} "${netName}-control" )                    
             ;;
         *)
             EH_problem "Bad Usage model=${model}"
@@ -1028,10 +1028,10 @@ _EOF_
     local siteContainersRepo="${bpoHome}/${thisCntnrId}"
     local containerAssignBase="${siteContainersRepo}/self/container.fps"
 
-    local model=$( lpDo fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} model )
-    local abode=$( lpDo fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} abode )
-    local function=$( lpDo fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} function )
-    local containerId=$( lpDo fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} containerId )
+    local model=$( lpDo fileParamManage.cs -v 30 -i fileParamRead  ${containerAssignBase} model )
+    local abode=$( lpDo fileParamManage.cs -v 30 -i fileParamRead  ${containerAssignBase} abode )
+    local function=$( lpDo fileParamManage.cs -v 30 -i fileParamRead  ${containerAssignBase} function )
+    local containerId=$( lpDo fileParamManage.cs -v 30 -i fileParamRead  ${containerAssignBase} containerId )
 
     local sysInfoFps=${repoBase}/sysInfo.fps
     lpDo FN_dirCreatePathIfNotThere ${sysInfoFps}
@@ -1047,20 +1047,20 @@ _EOF_
             # Result is something like eth0  and is obtained from
             # sysCharBxoHome/var
 
-            lpDo fileParamManage.py -v 30 -i fileParamWrite ${bpoHome}/var/sysCharConveyInfo/netIfs "${netName}" "${interfaceOfNet}"
-            lpDo fileParamManage.py -v 30 -i fileParamWrite ${bpoHome}/var/sysCharConveyInfo/netIfs "${netName}-control" "${interfaceOfNetControl}"         
+            lpDo fileParamManage.cs -v 30 -i fileParamWrite ${bpoHome}/var/sysCharConveyInfo/netIfs "${netName}" "${interfaceOfNet}"
+            lpDo fileParamManage.cs -v 30 -i fileParamWrite ${bpoHome}/var/sysCharConveyInfo/netIfs "${netName}-control" "${interfaceOfNetControl}"         
             ;;
         Host|Pure)
             # Result is something like en0 and is obtained from
             # sysCharBxoHome/sysChar/containerSpec.fps/netIfs
-            lpDo fileParamManage.py -v 30 -i fileParamWrite ${containerSpecFps_netIfs} "${netName}" "${interfaceOfNet}"
-            lpDo fileParamManage.py -v 30 -i fileParamWrite ${containerSpecFps_netIfs} "${netName}-control" "${interfaceOfNetControl}"      
+            lpDo fileParamManage.cs -v 30 -i fileParamWrite ${containerSpecFps_netIfs} "${netName}" "${interfaceOfNet}"
+            lpDo fileParamManage.cs -v 30 -i fileParamWrite ${containerSpecFps_netIfs} "${netName}-control" "${interfaceOfNetControl}"      
             # case ${netName} in
             #   pubA|pubB)
-            #       lpDo fileParamManage.py -v 30 -i fileParamWrite ${containerSpecFps_netIfs} "${netName}-control" "disabled"
+            #       lpDo fileParamManage.cs -v 30 -i fileParamWrite ${containerSpecFps_netIfs} "${netName}-control" "disabled"
             #       ;;
             #   *)
-            #       lpDo fileParamManage.py -v 30 -i fileParamWrite ${containerSpecFps_netIfs} "${netName}-control" "enabled"
+            #       lpDo fileParamManage.cs -v 30 -i fileParamWrite ${containerSpecFps_netIfs} "${netName}-control" "enabled"
             #       ;;
             # esac
             ;;
@@ -1095,7 +1095,7 @@ _EOF_
     local containerAssignBase="${siteContainersRepo}/self/container.fps"
 
 
-    local model=$( lpDo fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} model )
+    local model=$( lpDo fileParamManage.cs -v 30 -i fileParamRead  ${containerAssignBase} model )
 
     function procNetNameInterface {
         netName=$1
@@ -1166,10 +1166,10 @@ _EOF_
     local siteContainersRepo="${bpoHome}/${thisCntnrId}"
     local containerAssignBase="${siteContainersRepo}/self/container.fps"
 
-    local model=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} model )
-    local abode=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} abode )
-    local function=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} function )
-    local containerId=$( fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} containerId )    
+    local model=$( fileParamManage.cs -v 30 -i fileParamRead  ${containerAssignBase} model )
+    local abode=$( fileParamManage.cs -v 30 -i fileParamRead  ${containerAssignBase} abode )
+    local function=$( fileParamManage.cs -v 30 -i fileParamRead  ${containerAssignBase} function )
+    local containerId=$( fileParamManage.cs -v 30 -i fileParamRead  ${containerAssignBase} containerId )    
 
     local sysInfoFps=${repoBase}/sysInfo.fps
     lpDo FN_dirCreatePathIfNotThere ${sysInfoFps}

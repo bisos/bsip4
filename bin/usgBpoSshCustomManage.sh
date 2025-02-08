@@ -257,10 +257,10 @@ _EOF_
     opDo FN_dirCreatePathIfNotThere ${sshConfLabelPath}
     EH_retOnFail
 
-    lpDo fileParamManage.py  -i fileParamWrite  ${sshConfLabelPath} userName "${gitUserName}"
+    lpDo fileParamManage.cs  -i fileParamWrite  ${sshConfLabelPath} userName "${gitUserName}"
     EH_retOnFail
 
-    lpDo fileParamManage.py  -i fileParamWrite  ${sshConfLabelPath} userEmail "${gitUserEmail}"
+    lpDo fileParamManage.cs  -i fileParamWrite  ${sshConfLabelPath} userEmail "${gitUserEmail}"
     EH_retOnFail
 
     lpDo vis_usgAcct_gitConfigUpdate "${usg}" \""${gitUserName}"\" "${gitUserEmail}"
@@ -288,7 +288,7 @@ _EOF_
     local eachParam
 
     for eachParam in $@ ; do
-        lpDo fileParamManage.py  -i fileParamRead ${sshConfLabelPath} ${eachParam}
+        lpDo fileParamManage.cs  -i fileParamRead ${sshConfLabelPath} ${eachParam}
     done
 
     lpReturn

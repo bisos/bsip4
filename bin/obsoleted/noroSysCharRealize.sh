@@ -448,7 +448,7 @@ _EOF_
    EH_assert [ ! -z "${sysCharContainerBxoId}" ]
 
    local selectedSiteBxoId=$( vis_selectedSiteBxoId )   # used as parent for provisioning of sysCharContainerBxoId
-   local containerId=$( fileParamManage.py -i fileParamRead  "${containerAssignBase}" containerId )  # used as name for provisioning
+   local containerId=$( fileParamManage.cs -i fileParamRead  "${containerAssignBase}" containerId )  # used as name for provisioning
 
    if vis_bxoAcctVerify "${sysCharContainerBxoId}" ; then
        ANT_raw "${sysCharContainerBxoId} account exists, already realized -- provisioning skipped"
@@ -606,7 +606,7 @@ includes a list of BxSO's which provide the expected services
 _EOF_
 
     lpDo FN_dirCreatePathIfNotThere ${repoBase}/fps
-    lpDo fileParamManage.py -i fileParamWrite ${repoBase}/fps bpoId UnSpecified
+    lpDo fileParamManage.cs -i fileParamWrite ${repoBase}/fps bpoId UnSpecified
 
     lpDo bx-gitRepos -h -v -n showRun -i baseUpdateDotIgnore "${repoBase}"
 

@@ -560,9 +560,9 @@ _EOF_
        lpReturn
    fi
 
-   privA_pubA_router=$( fileParamManage.py -i fileParamRead  ${privA_pubA_routerFpsBase} router )
-   privA_pubA_upCommand=$( fileParamManage.py -i fileParamRead  ${privA_pubA_routerFpsBase} upCommand )   
-   privA_pubA_downCommand=$( fileParamManage.py -i fileParamRead  ${privA_pubA_routerFpsBase} downCommand )   
+   privA_pubA_router=$( fileParamManage.cs -i fileParamRead  ${privA_pubA_routerFpsBase} router )
+   privA_pubA_upCommand=$( fileParamManage.cs -i fileParamRead  ${privA_pubA_routerFpsBase} upCommand )   
+   privA_pubA_downCommand=$( fileParamManage.cs -i fileParamRead  ${privA_pubA_routerFpsBase} downCommand )   
     
    cat  << _EOF_
       ${privA_pubA_upCommand}
@@ -616,9 +616,9 @@ _EOF_
         lpReturn
     fi
 
-    perimA_pubA_router=$( fileParamManage.py -i fileParamRead  ${perimA_pubA_routerFpsBase} router )
-    perimA_pubA_upCommand=$( fileParamManage.py -i fileParamRead  ${perimA_pubA_routerFpsBase} upCommand )   
-    perimA_pubA_downCommand=$( fileParamManage.py -i fileParamRead  ${perimA_pubA_routerFpsBase} downCommand )   
+    perimA_pubA_router=$( fileParamManage.cs -i fileParamRead  ${perimA_pubA_routerFpsBase} router )
+    perimA_pubA_upCommand=$( fileParamManage.cs -i fileParamRead  ${perimA_pubA_routerFpsBase} upCommand )   
+    perimA_pubA_downCommand=$( fileParamManage.cs -i fileParamRead  ${perimA_pubA_routerFpsBase} downCommand )   
     
     cat  << _EOF_
       ${perimA_pubA_upCommand}
@@ -672,9 +672,9 @@ _EOF_
         lpReturn
     fi
 
-    pubA_perimA_router=$( fileParamManage.py -i fileParamRead  ${pubA_perimA_routerFpsBase} router )
-    pubA_perimA_upCommand=$( fileParamManage.py -i fileParamRead  ${pubA_perimA_routerFpsBase} upCommand )   
-    pubA_perimA_downCommand=$( fileParamManage.py -i fileParamRead  ${pubA_perimA_routerFpsBase} downCommand )   
+    pubA_perimA_router=$( fileParamManage.cs -i fileParamRead  ${pubA_perimA_routerFpsBase} router )
+    pubA_perimA_upCommand=$( fileParamManage.cs -i fileParamRead  ${pubA_perimA_routerFpsBase} upCommand )   
+    pubA_perimA_downCommand=$( fileParamManage.cs -i fileParamRead  ${pubA_perimA_routerFpsBase} downCommand )   
     
     cat  << _EOF_
       ${pubA_perimA_upCommand}
@@ -729,9 +729,9 @@ _EOF_
         lpReturn
     fi
 
-    pubB_perimA_router=$( fileParamManage.py -i fileParamRead  ${pubB_perimA_routerFpsBase} router )
-    pubB_perimA_upCommand=$( fileParamManage.py -i fileParamRead  ${pubB_perimA_routerFpsBase} upCommand )   
-    pubB_perimA_downCommand=$( fileParamManage.py -i fileParamRead  ${pubB_perimA_routerFpsBase} downCommand )   
+    pubB_perimA_router=$( fileParamManage.cs -i fileParamRead  ${pubB_perimA_routerFpsBase} router )
+    pubB_perimA_upCommand=$( fileParamManage.cs -i fileParamRead  ${pubB_perimA_routerFpsBase} upCommand )   
+    pubB_perimA_downCommand=$( fileParamManage.cs -i fileParamRead  ${pubB_perimA_routerFpsBase} downCommand )   
     
     cat  << _EOF_
       ${pubB_perimA_upCommand}
@@ -813,7 +813,7 @@ _EOF_
     local siteContainersRepo="${bpoHome}/${thisCntnrId}"
     local containerAssignBase="${siteContainersRepo}/self/container.fps"
 
-    local abode=$( lpDo fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} abode )
+    local abode=$( lpDo fileParamManage.cs -v 30 -i fileParamRead  ${containerAssignBase} abode )
 
     lpDo vis_loopback_update
 
@@ -852,7 +852,7 @@ _EOF_
     local siteContainersRepo="${bpoHome}/${thisCntnrId}"
     local containerAssignBase="${siteContainersRepo}/self/container.fps"
 
-    local abode=$( lpDo fileParamManage.py -v 30 -i fileParamRead  ${containerAssignBase} abode )
+    local abode=$( lpDo fileParamManage.cs -v 30 -i fileParamRead  ${containerAssignBase} abode )
 
     lpDo vis_loopback_stdout
 

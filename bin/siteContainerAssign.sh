@@ -569,7 +569,7 @@ _EOF_
    local dateTag=$( DATE_nowTag )
    lpDo cp -p ${containerBoxIdFpPath}/value ${containerBoxIdFpPath}/value.${dateTag}
 
-   lpDo fileParamManage.py -i fileParamWrite "${containerBasePath}" boxId "unassigned"
+   lpDo fileParamManage.cs -i fileParamWrite "${containerBasePath}" boxId "unassigned"
 }
 
 function vis_containerBoxUnAssignAndPush {
@@ -641,7 +641,7 @@ _EOF_
 
    local containerBase=$( vis_assignedContainerBase "${containerGenericTag}" )
 
-   lpDo fileParamManage.py -i fileParamRead  ${containerBase} containerId
+   lpDo fileParamManage.cs -i fileParamRead  ${containerBase} containerId
 
    lpReturn
 }       
@@ -690,7 +690,7 @@ _EOF_
 
    local containerBase=$( vis_assignedContainerBase "${containerNu}" )
 
-   lpDo  fileParamManage.py -i fileParamRead  ${containerBase} containerId
+   lpDo  fileParamManage.cs -i fileParamRead  ${containerBase} containerId
 
    lpReturn
 }       
@@ -731,7 +731,7 @@ _EOF_
 
    local containerBase=$( vis_assignedContainerBase "${containerNu}" )
 
-   #lpDo  fileParamManage.py -i fileParamRead  ${containerBase} containerId
+   #lpDo  fileParamManage.cs -i fileParamRead  ${containerBase} containerId
 
    echo "${containerNu}"
 
@@ -798,7 +798,7 @@ _EOF_
    local found=""
 
    for eachBoxIdFp in ${boxIdFps} ; do   
-       stored_boxId=$( fileParamManage.py -i fileParamReadPath ${eachBoxIdFp} )
+       stored_boxId=$( fileParamManage.cs -i fileParamReadPath ${eachBoxIdFp} )
 
        if [ -z "${stored_boxId}" ] ; then
            EH_problem "Missing boxId in ${eachBoxIdFp} -- continuing"
@@ -855,13 +855,13 @@ _EOF_
    EH_assert [ -d "${containerBase}" ]
 
    if [ "${model}" == "Virt" ] ; then
-       lpDo fileParamManage.py -i fileParamWrite ${containerBase} boxId "virt"
+       lpDo fileParamManage.cs -i fileParamWrite ${containerBase} boxId "virt"
    else
        local boxId=$( siteBoxAssign.sh -i thisBoxFindId )
-       local stored_boxId=$( fileParamManage.py -i fileParamRead  ${containerBase} boxId )
+       local stored_boxId=$( fileParamManage.cs -i fileParamRead  ${containerBase} boxId )
 
        if [ -z "${stored_boxId}" ] ; then
-           lpDo fileParamManage.py -i fileParamWrite ${containerBase} boxId "${boxId}"
+           lpDo fileParamManage.cs -i fileParamWrite ${containerBase} boxId "${boxId}"
        else
            if [ "${boxId}" != "${stored_boxId}" ] ; then
                EH_problem "Expected ${boxId} -- got ${stored_boxId}"
@@ -871,35 +871,35 @@ _EOF_
    fi
 
    local containerId=$( vis_containerId ${containerNu} )
-   local stored_containerId=$( fileParamManage.py -i fileParamRead  ${containerBase} containerId )
+   local stored_containerId=$( fileParamManage.cs -i fileParamRead  ${containerBase} containerId )
 
    if [ -z "${stored_containerId}" ] ; then
-       lpDo fileParamManage.py -i fileParamWrite ${containerBase} containerId "${containerId}"
+       lpDo fileParamManage.cs -i fileParamWrite ${containerBase} containerId "${containerId}"
    else
        if [ "${containerId}" != "${stored_containerId}" ] ; then
            EH_problem "Expected ${containerId} -- got ${stored_containerId} -- Updating it."
-           lpDo fileParamManage.py -i fileParamWrite ${containerBase} containerId "${containerId}"
+           lpDo fileParamManage.cs -i fileParamWrite ${containerBase} containerId "${containerId}"
        else
            ANT_cooked "containerId=${containerId} -- No action taken"
        fi
    fi
 
-   local stored_containerNu=$( fileParamManage.py -i fileParamRead  ${containerBase} containerNu )
+   local stored_containerNu=$( fileParamManage.cs -i fileParamRead  ${containerBase} containerNu )
 
    if [ -z "${stored_containerNu}" ] ; then
-       lpDo fileParamManage.py -i fileParamWrite ${containerBase} containerNu "${containerNu}"
+       lpDo fileParamManage.cs -i fileParamWrite ${containerBase} containerNu "${containerNu}"
    else
        if [ "${containerNu}" != "${stored_containerNu}" ] ; then
            EH_problem "Expected ${containerNu} -- got ${stored_containerNu} -- Updating it."
-           lpDo fileParamManage.py -i fileParamWrite ${containerBase} containerNu "${containerNu}"
+           lpDo fileParamManage.cs -i fileParamWrite ${containerBase} containerNu "${containerNu}"
        else
            ANT_cooked "containerNu=${containerNu} -- No action taken"
        fi
    fi
    
-   lpDo fileParamManage.py -i fileParamWrite ${containerBase} model "${model}"
-   lpDo fileParamManage.py -i fileParamWrite ${containerBase} abode "${abode}"
-   lpDo fileParamManage.py -i fileParamWrite ${containerBase} function "${function}"         
+   lpDo fileParamManage.cs -i fileParamWrite ${containerBase} model "${model}"
+   lpDo fileParamManage.cs -i fileParamWrite ${containerBase} abode "${abode}"
+   lpDo fileParamManage.cs -i fileParamWrite ${containerBase} function "${function}"         
 
    lpReturn
 }       
@@ -941,8 +941,8 @@ _EOF_
    EH_assert [[ $# -eq 1 ]]
    local containerBase="$1"
 
-   local stored_boxId=$( fileParamManage.py -i fileParamRead  ${containerBase} boxId )
-   local stored_containerId=$( fileParamManage.py -i fileParamRead  ${containerBase} containerId )
+   local stored_boxId=$( fileParamManage.cs -i fileParamRead  ${containerBase} boxId )
+   local stored_containerId=$( fileParamManage.cs -i fileParamRead  ${containerBase} containerId )
 
    ANT_raw "boxId=${stored_boxId}"
    ANT_raw "containerId=${stored_containerId}"

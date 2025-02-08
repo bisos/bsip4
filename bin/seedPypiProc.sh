@@ -217,9 +217,9 @@ ${G_myName} ${extraInfo} -f -i sphinxDocUpdate   # Force Recreation
 ${G_myName} ${extraInfo} -i sphinxDocPublish
 ${G_myName} ${extraInfo} -i sphinxDocClean
 $( examplesSeperatorChapter "File Parameters Tree Base (fptb)" )
-fileParamManage.py -v 30  -i fileParamDictReadDeep ../fptb
-fileParamManage.py -i fileParamWritePath ../fptb/docTitle "Pkg's Human Oriented Name"
-fileParamManage.py -i fileParamWritePath ../fptb/docVersion "0.1"
+fileParamManage.cs -v 30  -i fileParamDictReadDeep ../fptb
+fileParamManage.cs -i fileParamWritePath ../fptb/docTitle "Pkg's Human Oriented Name"
+fileParamManage.cs -i fileParamWritePath ../fptb/docVersion "0.1"
 $( examplesSeperatorChapter "REAME.rst Creation --- Mostly Obsoleted" )
 pandoc --from=latex -s -t rst --toc README.tex -o README.rst
 pandoc --from=latex -s -t org --toc README.tex -o RESULT.org
@@ -1082,27 +1082,27 @@ _EOF_
     lpDo rm "./pypiUploadVer"
 
     local repoStr="--repository-url https://upload.pypi.org/legacy/"
-    #local userName=$(fileParamManage.py  -i fileParamReadPath /de/bx/nne/dev-py/pypi/pkgs/fptb/pypiProfile/default/userName)
-    #local userPasswd=$(fileParamManage.py  -i fileParamReadPath /de/bx/nne/dev-py/pypi/pkgs/fptb/pypiProfile/default/userPasswd)
+    #local userName=$(fileParamManage.cs  -i fileParamReadPath /de/bx/nne/dev-py/pypi/pkgs/fptb/pypiProfile/default/userName)
+    #local userPasswd=$(fileParamManage.cs  -i fileParamReadPath /de/bx/nne/dev-py/pypi/pkgs/fptb/pypiProfile/default/userPasswd)
 
     local credentialsBxoPath=$(lpDo vis_usgBpos_credentials_bxoPath)
 
     EH_assert [ -n "${credentialsBxoPath}" ]
     
-    #local userName=$(fileParamManage.py  -i fileParamReadPath ${credentialsBxoPath}/pypi/profiles/default/userName)
+    #local userName=$(fileParamManage.cs  -i fileParamReadPath ${credentialsBxoPath}/pypi/profiles/default/userName)
     local userName="__token__"
     EH_assert [ -n "${userName}" ]
-    #local userPasswd=$(fileParamManage.py  -i fileParamReadPath ${credentialsBxoPath}/pypi/profiles/default/userPasswd)
-    local userPasswd=$(fileParamManage.py  -i fileParamReadPath ${credentialsBxoPath}/pypi/profiles/default/userToken)
+    #local userPasswd=$(fileParamManage.cs  -i fileParamReadPath ${credentialsBxoPath}/pypi/profiles/default/userPasswd)
+    local userPasswd=$(fileParamManage.cs  -i fileParamReadPath ${credentialsBxoPath}/pypi/profiles/default/userToken)
     EH_assert [ -n "${userPasswd}" ]
     
     if [ "${repo}" == "main" ] ; then
         repoStr=${repoStr}
     elif [ "${repo}" == "test" ] ; then
         repoStr="--repository-url https://test.pypi.org/legacy/"
-        userName=$(fileParamManage.py  -i fileParamReadPath ${credentialsBxoPath}/pypi/profiles/testDefault/userName)
+        userName=$(fileParamManage.cs  -i fileParamReadPath ${credentialsBxoPath}/pypi/profiles/testDefault/userName)
         EH_assert [ -n "${userName}" ]
-        userPasswd=$(fileParamManage.py  -i fileParamReadPath ${credentialsBxoPath}/pypi/profiles/testDefault/userPasswd)
+        userPasswd=$(fileParamManage.cs  -i fileParamReadPath ${credentialsBxoPath}/pypi/profiles/testDefault/userPasswd)
         EH_assert [ -n "${userPasswd}" ]
     else
         EH_oops "Bad repo"

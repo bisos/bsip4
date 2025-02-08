@@ -409,21 +409,21 @@ _EOF_
    local sysCharContainerBxoId=$( vis_sysCharContainerBxoIdName "${containerAssignBase}" )
    EH_assert [ ! -z "${sysCharContainerBxoId}" ]
 
-   local containerNu=$( fileParamManage.py -i fileParamRead  "${containerAssignBase}" containerNu )  # used as name for provisioning
+   local containerNu=$( fileParamManage.cs -i fileParamRead  "${containerAssignBase}" containerNu )  # used as name for provisioning
    EH_assert [ ! -z "${containerNu}" ]
 
    # Perhaps containerNu == _next_ is useful for batch numbered  assignments
 
-   local model=$( fileParamManage.py -i fileParamRead  "${containerAssignBase}" "model" )
+   local model=$( fileParamManage.cs -i fileParamRead  "${containerAssignBase}" "model" )
    EH_assert [ ! -z "${model}" ]
-   local abode=$( fileParamManage.py -i fileParamRead  "${containerAssignBase}" "abode" )
+   local abode=$( fileParamManage.cs -i fileParamRead  "${containerAssignBase}" "abode" )
    EH_assert [ ! -z "${abode}" ]
-   local function=$( fileParamManage.py -i fileParamRead  "${containerAssignBase}" "function" )
+   local function=$( fileParamManage.cs -i fileParamRead  "${containerAssignBase}" "function" )
    EH_assert [ ! -z "${function}" ]
 
    local containerId=$(  lpDo svcInvSiteRegContainer.cs --model="${model}" --abode="${abode}" --purpose="${function}" --containerNu=${containerNu} --boxNu=virt -i reg_container_add )
 
-   local fps_containerId=$( fileParamManage.py -i fileParamRead  "${containerAssignBase}" containerId )  # used as name for provisioning
+   local fps_containerId=$( fileParamManage.cs -i fileParamRead  "${containerAssignBase}" containerId )  # used as name for provisioning
    EH_assert [ ! -z "${fps_containerId}" ]
 
    if [ "${containerId}" != "${fps_containerId}"  ] ; then
@@ -574,7 +574,7 @@ includes a list of BxSO's which provide the expected services
 _EOF_
 
     lpDo FN_dirCreatePathIfNotThere ${repoBase}/fps
-    lpDo fileParamManage.py -i fileParamWrite ${repoBase}/fps bpoId UnSpecified
+    lpDo fileParamManage.cs -i fileParamWrite ${repoBase}/fps bpoId UnSpecified
 
     lpDo bx-gitRepos -h -v -n showRun -i baseUpdateDotIgnore "${repoBase}"
 

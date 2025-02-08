@@ -256,16 +256,16 @@ _EOF_
     lpDo mkdir -p ${platformInfoBase}
 
     # One of: BxCO-VmHost, BxCO-Guest, BxCO-PureSys
-    lpDo fileParamManage.py -i fileParamWrite ${platformInfoBase} containerType "BXCO-Guest"
+    lpDo fileParamManage.cs -i fileParamWrite ${platformInfoBase} containerType "BXCO-Guest"
     
-    lpDo fileParamManage.py -i fileParamWrite ${platformInfoBase} boxPath "~pip_clusterNedaBoxes/boxes/1001"
-    lpDo fileParamManage.py -i fileParamWrite ${platformInfoBase} vmGuestLeastSize "medium"
+    lpDo fileParamManage.cs -i fileParamWrite ${platformInfoBase} boxPath "~pip_clusterNedaBoxes/boxes/1001"
+    lpDo fileParamManage.cs -i fileParamWrite ${platformInfoBase} vmGuestLeastSize "medium"
 
     # Internet Exposure, one of: Exposed, Perimeter, Private
-    lpDo fileParamManage.py -i fileParamWrite ${platformInfoBase} internetExposure "private"    
+    lpDo fileParamManage.cs -i fileParamWrite ${platformInfoBase} internetExposure "private"    
 
     # Network Mode, one of: Fixed, Anchored, Auto
-    lpDo fileParamManage.py -i fileParamWrite ${platformInfoBase} networkMode "fixed"
+    lpDo fileParamManage.cs -i fileParamWrite ${platformInfoBase} networkMode "fixed"
 
     local netAttachmentsBase=${repoBase}/netAttachments.fps
     lpDo mkdir -p ${netAttachmentsBase}
@@ -275,9 +275,9 @@ _EOF_
     lpDo mkdir -p ${netAttachmentsBase}/if1/ipv4
     lpDo mkdir -p ${netAttachmentsBase}/if1/ipv4/ipAddrs
     lpDo mkdir -p ${netAttachmentsBase}/if1/ipv4/ipAddrs/addr1.fps
-    lpDo fileParamManage.py -i fileParamWrite ${netAttachmentsBase}/if1/ipv4/ipAddrs/addr1.fps addr "192.168.0.151"
-    lpDo fileParamManage.py -i fileParamWrite ${netAttachmentsBase}/if1/ipv4/ipAddrs/addr1.fps gateway "192.168.0.220"
-    lpDo fileParamManage.py -i fileParamWrite ${netAttachmentsBase}/if1/ipv4/ipAddrs/addr1.fps netmask "24"
+    lpDo fileParamManage.cs -i fileParamWrite ${netAttachmentsBase}/if1/ipv4/ipAddrs/addr1.fps addr "192.168.0.151"
+    lpDo fileParamManage.cs -i fileParamWrite ${netAttachmentsBase}/if1/ipv4/ipAddrs/addr1.fps gateway "192.168.0.220"
+    lpDo fileParamManage.cs -i fileParamWrite ${netAttachmentsBase}/if1/ipv4/ipAddrs/addr1.fps netmask "24"
     
     lpDo mkdir -p ${netAttachmentsBase}/if1/resolvers
     lpDo mkdir -p ${netAttachmentsBase}/if1/resolvers/auto.fps
@@ -289,7 +289,7 @@ _EOF_
 
     local identityBase=${repoBase}/identity.fps
     lpDo mkdir -p ${identityBase}
-    lpDo fileParamManage.py -i fileParamWrite ${identityBase} name "bisp-9001"
+    lpDo fileParamManage.cs -i fileParamWrite ${identityBase} name "bisp-9001"
     
     lpDo bx-gitRepos -h -v -n showRun -i baseUpdateDotIgnore "${repoBase}"
 

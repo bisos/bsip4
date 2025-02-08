@@ -109,7 +109,7 @@ function G_postParamHook {
 
     local siteGitServerInfoBaseDir=$( bisosSiteGitServer.sh -i gitServerInfoBaseDir )
     
-    site_gitServerName=$( fileParamManage.py -i fileParamRead ${siteGitServerInfoBaseDir} gitServerName )
+    site_gitServerName=$( fileParamManage.cs -i fileParamRead ${siteGitServerInfoBaseDir} gitServerName )
     
     bisosCurrentsGet
 
@@ -239,8 +239,8 @@ _EOF_
 
             lpDo vis_rbxeSetup        # bxoBxeDescCopy + bxoCredentialsUpdate + bxoGitServerDescUpdate
 
-            # local cp_bxePrefix=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxePrefix )
-            # local cp_rdn=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} rdn )
+            # local cp_bxePrefix=$( fileParamManage.cs  -i fileParamRead  ${bxeDesc} bxePrefix )
+            # local cp_rdn=$( fileParamManage.cs  -i fileParamRead  ${bxeDesc} rdn )
             # bpoId="${cp_bxePrefix}-${cp_rdn}"
             ;;
         realize)
@@ -283,7 +283,7 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
     EH_assert [[ ! -z "${bxeDesc}" ]]    
 
-    local cp_bxeOid=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxeOid )    
+    local cp_bxeOid=$( fileParamManage.cs  -i fileParamRead  ${bxeDesc} bxeOid )    
 
     local bxeLocalName="$(vis_bpoIdFromBxeDesc ${bxeDesc})"
 
@@ -293,8 +293,8 @@ _EOF_
     # NOTYET, if kind==info and type=usg, use usgAcctManage.sh instead of bpoAcctManage.sh
     #
 
-    local bxeKind=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxeKind )    
-    local bxeType=$( fileParamManage.py  -i fileParamRead  ${bxeDesc} bxeType )
+    local bxeKind=$( fileParamManage.cs  -i fileParamRead  ${bxeDesc} bxeKind )    
+    local bxeType=$( fileParamManage.cs  -i fileParamRead  ${bxeDesc} bxeType )
 
     if [ "${bxeKind}" == "info" ] && [ "${bxeType}" == "usgAcct" ] ; then
         EH_problem "NOTYET, usgAcct realization has not been implemented yet."
@@ -427,7 +427,7 @@ _EOF_
     EH_assert [[ ! -z "${bpoId}" ]]    
 
     lpDo mkdir -p ${bpoHome}/rbxe/gitServerInfo
-    lpDo fileParamManage.py -i fileParamWrite ${bpoHome}/rbxe/gitServerInfo gitServer ${site_gitServerName}
+    lpDo fileParamManage.cs -i fileParamWrite ${bpoHome}/rbxe/gitServerInfo gitServer ${site_gitServerName}
     
     lpReturn
 }

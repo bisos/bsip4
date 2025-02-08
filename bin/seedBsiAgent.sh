@@ -106,20 +106,20 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
-    typeset srFqdn=$( fileParamManage.py -i fileParamReadPath ./srInfo/srFqdn )
+    typeset srFqdn=$( fileParamManage.cs -i fileParamReadPath ./srInfo/srFqdn )
     typeset srBaseDir=$( pwd )
     typeset isoId=$( ${G_myName} ${extraInfo} -i bisoIdGetThere $( pwd ) )
     typeset sr=$( ${G_myName} ${extraInfo} -i bisoSrGetThere $( pwd ) )
-    typeset svcCapability=$( fileParamManage.py -i fileParamReadPath ./srInfo/svcCapability )
+    typeset svcCapability=$( fileParamManage.cs -i fileParamReadPath ./srInfo/svcCapability )
 
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Service Realization Agent" )
 $( examplesSeperatorSection "Get SR Info" )
-fileParamManage.py -i fileParamWritePath ./srInfo/svcCapability bsrGenewebManage.sh
-fileParamManage.py -i fileParamWritePath ./srInfo/srFqdn genealogy.bymemory.net
-fileParamManage.py -i fileParamWritePath ./srInfo/srDomName genealogy
+fileParamManage.cs -i fileParamWritePath ./srInfo/svcCapability bsrGenewebManage.sh
+fileParamManage.cs -i fileParamWritePath ./srInfo/srFqdn genealogy.bymemory.net
+fileParamManage.cs -i fileParamWritePath ./srInfo/srDomName genealogy
 ${G_myName} ${extraInfo} -i svcCapability
 ${G_myName} ${extraInfo} -i srFqdnGet
 ${G_myName} ${extraInfo} -i srDomName
@@ -179,7 +179,7 @@ function vis_startObjectGenExamples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
-    typeset srFqdn=$( fileParamManage.py -i fileParamReadPath ./srInfo/srFqdn )
+    typeset srFqdn=$( fileParamManage.cs -i fileParamReadPath ./srInfo/srFqdn )
     typeset srBaseDir=$( pwd )
     typeset isoId="ea-59075"   # Should Be Auto Gened
     typeset sr="NOTYET, This dir - base"
@@ -232,7 +232,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo fileParamManage.py -i fileParamReadPath ./srInfo/svcCapabilityAgent
+    lpDo fileParamManage.cs -i fileParamReadPath ./srInfo/svcCapabilityAgent
     EH_retOnFail
 
     lpReturn
@@ -245,7 +245,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo fileParamManage.py -i fileParamReadPath ./srInfo/svcCapabilityFlavor
+    lpDo fileParamManage.cs -i fileParamReadPath ./srInfo/svcCapabilityFlavor
     EH_retOnFail
 
     lpReturn
@@ -259,7 +259,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo fileParamManage.py -i fileParamReadPath ./srInfo/svcCapabilityName
+    lpDo fileParamManage.cs -i fileParamReadPath ./srInfo/svcCapabilityName
     EH_retOnFail
 
     lpReturn
@@ -273,7 +273,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo fileParamManage.py -i fileParamReadPath ./srInfo/svcName
+    lpDo fileParamManage.cs -i fileParamReadPath ./srInfo/svcName
     EH_retOnFail
 
     lpReturn
@@ -292,7 +292,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo fileParamManage.py -i fileParamReadPath ./srInfo/srDomName
+    lpDo fileParamManage.cs -i fileParamReadPath ./srInfo/srDomName
     EH_retOnFail
 
     lpReturn
@@ -306,7 +306,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo fileParamManage.py -i fileParamReadPath ./srInfo/srFqdn
+    lpDo fileParamManage.cs -i fileParamReadPath ./srInfo/srFqdn
     EH_retOnFail
 
     lpReturn

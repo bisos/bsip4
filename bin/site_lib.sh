@@ -261,7 +261,7 @@ _EOF_
     EH_assert vis_bxoAcctVerify "${siteBxoId}"
     siteBxoHome=$( FN_absolutePathGet ~${siteBxoId} )
 
-    lpDo fileParamManage.py -i fileParamRead  ${siteBxoHome}/siteBpos/boxes.bpoFp bpoId ${bpoIdValue}
+    lpDo fileParamManage.cs -i fileParamRead  ${siteBxoHome}/siteBpos/boxes.bpoFp bpoId ${bpoIdValue}
 }
 
 
@@ -278,7 +278,7 @@ _EOF_
     EH_assert vis_bxoAcctVerify "${siteBxoId}"
     siteBxoHome=$( FN_absolutePathGet ~${siteBxoId} )
 
-    lpDo fileParamManage.py -i fileParamWrite  ${siteBxoHome}/siteBpos/containers.bpoFp bpoId ${bpoIdValue}
+    lpDo fileParamManage.cs -i fileParamWrite  ${siteBxoHome}/siteBpos/containers.bpoFp bpoId ${bpoIdValue}
 }
 
 function vis_withSiteBxoId_write_networksBxoId {
@@ -294,7 +294,7 @@ _EOF_
     EH_assert vis_bxoAcctVerify "${siteBxoId}"
     siteBxoHome=$( FN_absolutePathGet ~${siteBxoId} )
 
-    lpDo fileParamManage.py -i fileParamWrite  ${siteBxoHome}/siteBpos networks.bpoFp ${bpoIdValue}
+    lpDo fileParamManage.cs -i fileParamWrite  ${siteBxoHome}/siteBpos networks.bpoFp ${bpoIdValue}
 }
 
 function vis_withSiteBxoId_write_domainsBxoId {
@@ -310,7 +310,7 @@ _EOF_
     EH_assert vis_bxoAcctVerify "${siteBxoId}"
     siteBxoHome=$( FN_absolutePathGet ~${siteBxoId} )
 
-    lpDo fileParamManage.py -i fileParamWrite ${siteBxoHome}/siteBpos domains.bpoFp ${bpoIdValue}
+    lpDo fileParamManage.cs -i fileParamWrite ${siteBxoHome}/siteBpos domains.bpoFp ${bpoIdValue}
 }
 
 
@@ -326,7 +326,7 @@ _EOF_
     EH_assert vis_bxoAcctVerify "${siteBxoId}"
     siteBxoHome=$( FN_absolutePathGet ~${siteBxoId} )
 
-    local boxesBxoId=$( fileParamManage.py -i fileParamRead  ${siteBxoHome}/siteBpos/boxes.bpoFp bpoId )
+    local boxesBxoId=$( fileParamManage.cs -i fileParamRead  ${siteBxoHome}/siteBpos/boxes.bpoFp bpoId )
     EH_assert [ ! -z "${boxesBxoId}" ]
 
     echo ${boxesBxoId}
@@ -345,7 +345,7 @@ _EOF_
     EH_assert vis_bxoAcctVerify "${siteBxoId}"
     siteBxoHome=$( FN_absolutePathGet ~${siteBxoId} )
 
-    local containersBxoId=$( fileParamManage.py -i fileParamRead  ${siteBxoHome}/siteBpos/containers.bpoFp bpoId )
+    local containersBxoId=$( fileParamManage.cs -i fileParamRead  ${siteBxoHome}/siteBpos/containers.bpoFp bpoId )
     EH_assert [ ! -z "${containersBxoId}" ]
 
     echo ${containersBxoId}
@@ -364,7 +364,7 @@ _EOF_
     EH_assert vis_bxoAcctVerify "${siteBxoId}"
     siteBxoHome=$( FN_absolutePathGet ~${siteBxoId} )
 
-    local networkBxoId=$( fileParamManage.py -i fileParamRead  ${siteBxoHome}/siteBpos networks.bpoFp )
+    local networkBxoId=$( fileParamManage.cs -i fileParamRead  ${siteBxoHome}/siteBpos networks.bpoFp )
     EH_assert [ ! -z "${networkBxoId}" ]
 
     echo ${networkBxoId}
@@ -382,7 +382,7 @@ _EOF_
     EH_assert vis_bxoAcctVerify "${siteBxoId}"
     siteBxoHome=$( FN_absolutePathGet ~${siteBxoId} )
 
-    local resultBxoId=$( fileParamManage.py -i fileParamRead  ${siteBxoHome}/siteBpos domains.bpoFp )
+    local resultBxoId=$( fileParamManage.cs -i fileParamRead  ${siteBxoHome}/siteBpos domains.bpoFp )
     # EH_assert [ ! -z "${resultBxoId}" ] # NOTYET, domains are not used yet. [2021-08-07 Sat 11:16]
 
     echo ${resultBxoId}
@@ -399,7 +399,7 @@ _EOF_
                       }
    EH_assert [[ $# -eq 1 ]]
    local containerAssignBase=$1
-   local containerId=$( fileParamManage.py -i fileParamRead  ${containerAssignBase} containerId )
+   local containerId=$( fileParamManage.cs -i fileParamRead  ${containerAssignBase} containerId )
    EH_assert [ ! -z "${containerId}" ]
 
    echo pmp_${containerId}
@@ -454,7 +454,7 @@ _EOF_
     local containersBxoId=""
 
     if [ -d "${selectedContainersPath}" ] ; then
-        containersBxoId=$( fileParamManage.py -i fileParamReadPath ${selectedContainersPath} )
+        containersBxoId=$( fileParamManage.cs -i fileParamReadPath ${selectedContainersPath} )
         if [ -z "${containersBxoId}" ] ; then
             EH_problem "Missing containersBxoId"
             lpReturn 101
@@ -497,7 +497,7 @@ _EOF_
     local containersBxoId=""
 
     if [ -d "${selectedContainersPath}" ] ; then
-        containersBxoId=$( fileParamManage.py -i fileParamReadPath ${selectedContainersPath} )
+        containersBxoId=$( fileParamManage.cs -i fileParamReadPath ${selectedContainersPath} )
         if [ -z "${containersBxoId}" ] ; then
             EH_problem "Missing containersBxoId"
             lpReturn 101

@@ -325,9 +325,9 @@ _EOF_
     fi
     local siteGitServerInfoBaseDir=$( bisosSiteGitServer.sh -i gitServerInfoBaseDir )
 
-    echo NOTYET fileParamManage.py -i fileParamRead ${siteGitServerInfoBaseDir} gitServerName
+    echo NOTYET fileParamManage.cs -i fileParamRead ${siteGitServerInfoBaseDir} gitServerName
     
-    local site_gitServerName=$( fileParamManage.py -i fileParamRead ${siteGitServerInfoBaseDir} gitServerName )
+    local site_gitServerName=$( fileParamManage.cs -i fileParamRead ${siteGitServerInfoBaseDir} gitServerName )
     EH_assert [ ! -z "${site_gitServerName}" ]
 
     lpDo lcaSshAdmin.sh ${G_commandOptions} -i knownHostsAddSystem "${id}" "${site_gitServerName}"
