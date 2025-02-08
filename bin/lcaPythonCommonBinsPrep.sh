@@ -86,13 +86,14 @@ _EOF_
         # "twine"                #
         "pykeepass-cache"
         "python-gnupg"
-        "libvirt-python"
         "google-api-python-client"
         "google-auth-oauthlib"
         "pygit2"
         "graphviz"
         "python-magic"
     )
+
+# "libvirt-python" only applies to hosts not guests -- should be bundeled with lcaKvmBinsPrep.sh because of libvirt-bin
 
     itemPipxOrderedList=(
         "twine"       # for pypi uploading
