@@ -548,6 +548,11 @@ _EOF_
   
    local containerSteadyBase=${bpoHome}/siteContainersRepo/steady
 
+   if [ ! -d "${containerSteadyBase}" ] ; then
+       EH_problem "Missing ${containerSteadyBase} -- Processing Skipped"
+       return
+   fi
+
    containerSteady_networkMode=$( fileParamManage.cs -i fileParamRead  ${containerSteadyBase}/net networkMode.fp )
 
    containerSteady_privA_addr=$( fileParamManage.cs -i fileParamRead  ${containerSteadyBase}/net/ipv4/privA.fps addr )
