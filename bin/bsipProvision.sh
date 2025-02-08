@@ -137,7 +137,8 @@ _EOF_
 
     local bisosBinBase="$( bisosBinBaseGet )"
 
-    lpDo ${bisosBinBase}/bisosPyVenvSetup.sh -h -v -n showRun -i venvPy3_pipInstalls
+    # had already been venvPy3_pipInstalls
+    # lpDo ${bisosBinBase}/bisosPyVenvSetup.sh -h -v -n showRun -i venvPy3_pipInstalls
 
     lpDo ${bisosBinBase}/lcaJsBinsPrep.sh -v -n showRun -i fullUpdate
 
