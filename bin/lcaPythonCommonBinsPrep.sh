@@ -81,7 +81,7 @@ _EOF_
 
     itemPy3Bisos3PipOrderedList=(
         "pipx"
-        "unisos.gcipher"       #
+        "bisos.gcipher"       #
         "yolk3k"               # Did not work with pipx
         # "twine"                #
         "pykeepass-cache"
@@ -91,6 +91,9 @@ _EOF_
         "pygit2"
         "graphviz"
         "python-magic"
+        "cryptography"
+        "keyring"
+        "build"
     )
 
 # "libvirt-python" only applies to hosts not guests -- should be bundeled with lcaKvmBinsPrep.sh because of libvirt-bin

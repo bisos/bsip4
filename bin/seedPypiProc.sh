@@ -427,6 +427,10 @@ _EOF_
     lpDo rm ./panels/${pypiPkgName}/README/fullUsagePanel-en.org
     lpDo ln -s ../../../../README.org ./panels/${pypiPkgName}/README/fullUsagePanel-en.org
 
+    if [ ! -d ./panels/${pypiPkgName}/_nodeBase_ ] ; then
+        inBaseDirDo ./panels/${pypiPkgName} startOrgPanel.sh -h -v -n showRun -i bleePanelBase branch .
+    fi
+
     lpReturn
 }
 
