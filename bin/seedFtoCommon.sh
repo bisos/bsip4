@@ -18,6 +18,7 @@ __author__="
 * Authors: Mohsen BANAN, http://mohsen.banan.1.byname.net/contact
 "
 
+seedExamplesType="DEFAULT"
 
 ####+BEGIN: bx:bsip:bash:seed-spec :types "seedActions.bash"
 SEED="
@@ -135,7 +136,15 @@ function vis_examples {
 
     visLibExamplesOutput ${G_myName}
 
-    vis_ftoCommonExamples    
+    vis_ftoCommonExamples
+
+    if [ "${seedExamplesType}" == "pypi" ] ; then
+        pypiFtpWalks
+    elif [ "${seedExamplesType}" == "DEFAULT" ] ; then
+        :
+    else
+        EH_problem "Unknown seedExamplesType=${seedExamplesType}"
+    fi
 
     hookRun "examplesHookPost"
 }
@@ -1195,24 +1204,53 @@ _EOF_
 
 
 
-_CommentBegin_
-*  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  /Full Actions/
-_CommentEnd_
+function vis_updateUnderFilesTo {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 2 ]]
+
+    local updateToFile="$1"
+    local underFilesName="$2"
+
+    if [ ! -f "${updateToFile}" ] ; then
+	EH_problem "Bad Usage Missing ${updateToFile}"
+	lpReturn
+    fi
+
+    local underFilesList=$(find . -type f -print | egrep "/${underFilesName}"'$')
+
+    for each in ${underFilesList} ; do
+	opDo cp ${updateToFile} ${each}
+	opDo bx-dblock -i dblockUpdateFile ${each}
+    done
+
+    lpReturn
+}
 
 
-_CommentBegin_
-*  [[elisp:(org-cycle)][| ]]  IIFs          :: fullUpdate, fullClean [[elisp:(org-cycle)][| ]]
-_CommentEnd_
 
+function pypiFtpWalks {
+    local pypiProcStartTemplate="/bisos/apps/defaults/software/starts/pypiProc.sh"
+    local ftoProcNodeStartTemplate="/bisos/apps/defaults/update/fto/start/commonProc/anyFtoItem/ftoProcNode.sh"
 
-_CommentBegin_
-*  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *Common/Generic Facilities -- Library Candidates*
-_CommentEnd_
+    cat  << _EOF_
+$( examplesSeperatorChapter "ftpWalks: Uninstall" )
+ftoProc.sh -v -n showRun -i ftoWalkRunCmnd pypiProc.sh -i pkgUnInstall /bisos/venv/py3/dev-bisos3
+$( examplesSeperatorChapter "PyPi AuxNode ftpWalks" )
+ftoProc.sh -v -n showRun -i treeRecurse runFunc pypiProc.sh -i distClean
+ftoProc.sh -v -n showRun -i ftoWalkRunCmnd pypiProc.sh -i distClean
+ftoProc.sh -v -n showRun -i ftoWalkRunCmnd pypiProc.sh -v -n showRun -i pkgReInstall edit /bisos/venv/py3/dev-bisos3
+ftoProc.sh -v -n showRun -i ftoWalkRunCmnd csPlayer.sh -i clean ftoProc.sh pypiProc.sh
+ftoProc.sh -v -n showRun -i ftoWalkRunCmnd csPlayer.sh -i pkgedPrep ftoProc.sh pypiProc.sh
+$( examplesSeperatorChapter "Under Files Update" )
+ftoProc.sh -v -n showRun -i updateUnderFilesTo  ${ftoProcNodeStartTemplate} ftoProc.sh
+ftoProc.sh -v -n showRun -i updateUnderFilesTo  ${pypiProcStartTemplate} pypiProc.sh
+_EOF_
+ return
+}
 
-
-_CommentBegin_
-*  [[elisp:(beginning-of-buffer)][Top]] ################ [[elisp:(delete-other-windows)][(1)]]  *Unused Facilities -- Temporary Junk Yard*
-_CommentEnd_
 
 
 

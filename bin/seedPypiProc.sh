@@ -124,7 +124,7 @@ touch ./pypiUploadVer ; bx-dblock -i dblockUpdateFiles setup.py ; rm  ./pypiUplo
 ./setup.py --name --version
 ${G_myName} ${extraInfo} -i distBuild    # Just run python3 -m build
 ${G_myName} ${extraInfo} -i fullPrep  # Update ./_description and ./README.rst based on ../README.org
-${G_myName} ${extraInfo} -i fullPrepBuild forSys  # sets sysVer -- uses cur pkg rev
+${G_myName} ${extraInfo} -i fullPrepBuild forLocal  # sets localVer -- uses cur pkg rev
 ${G_myName} ${extraInfo} -i fullPrepBuild forPypi # sets pypiVer (increments pypi)
 $( examplesSeperatorChapter "Registering and publishing the package" )
 https://pypi.python.org/pypi  https://testpypi.python.org/pypi
@@ -143,7 +143,7 @@ $( examplesSeperatorChapter "Un-Installation and Re-Installation" )
 ${G_myName} ${extraInfo} -i pkgUnInstall ${relPy3Bisos3}
 ${G_myName} ${extraInfo} -i pkgUnInstall ${devPy3Bisos3}
 ${G_myName} ${extraInfo} -i pkgReInstall local ${relPy3Bisos3}
-${G_myName} ${extraInfo} -i pkgReInstall edit ${devPy3Bisos3}   # PRIMARY, unInstall+fullPrepBuild forSys+Install
+${G_myName} ${extraInfo} -i pkgReInstall edit ${devPy3Bisos3}   # PRIMARY, unInstall+fullPrepBuild forLocal+Install
 $( examplesSeperatorChapter "Cleaning" )
 ${G_myName} ${extraInfo} -i distClean
 $( examplesSeperatorChapter "Pkg Versions at PyPi" )
@@ -151,15 +151,15 @@ pyPkgTools.cs  -i pypiLatestVersion ${pypiPkgName}           # PyPi Ver Latest  
 pyPkgTools.cs  -i pypiLatestVersionPlus ${pypiPkgName} 0.01  # Same as: -i pypiLatestVersion + 0.01
 $( examplesSeperatorChapter "Pkg Versions at System" )
 ${G_myName} ${extraInfo} -i versReport                       # Report all PyPi and System Versions
-${G_myName} ${extraInfo} -i sysVerInstalled                  # pip show ${pypiPkgName} | grep Version
-${G_myName} ${extraInfo} -i sysVerAtDist                     # ls -v ./dist/* | head -1 --  natural sort of (ver) numbers
-${G_myName} ${extraInfo} -i sysVerAtSetup                    # setup.py --version -- Reads from  ./setup.py
-${G_myName} ${extraInfo} -i sysVerIsNew                      # Is this a brand new package
+${G_myName} ${extraInfo} -i localVerInstalled                  # pip show ${pypiPkgName} | grep Version
+${G_myName} ${extraInfo} -i localVerAtDist                     # ls -v ./dist/* | head -1 --  natural sort of (ver) numbers
+${G_myName} ${extraInfo} -i localVerAtSetup                    # setup.py --version -- Reads from  ./setup.py
+${G_myName} ${extraInfo} -i localVerIsNew                      # Is this a brand new package
 $( examplesSeperatorChapter "Setup.py  Dblock Support" )
-${G_myName} ${extraInfo} -i verForSetup  # PRIMARY -- sysVerInstalled but if ./pypiUploadVer exists pypiLatestVersionPlus
+${G_myName} ${extraInfo} -i verForSetup  # PRIMARY -- localVerInstalled but if ./pypiUploadVer exists pypiLatestVersionPlus
 touch ./pypiUploadVer ; ${G_myName} ${extraInfo} -i verForSetup; rm  ./pypiUploadVer  # pypiLatestVersionPlus
 ${G_myName} ${extraInfo} -i verForSetup forPypi # -i pypiVerNext
-${G_myName} ${extraInfo} -i verForSetup forSys  # -i sysVerInstalled
+${G_myName} ${extraInfo} -i verForSetup forLocal  # -i localVerInstalled
 ${G_myName} ${extraInfo} -i scriptFiles         # produces list of script files -- used in setup.py dblock
 ${G_myName} ${extraInfo} -i filesList           # produces list of script files and .py files
 ${G_myName} ${extraInfo} -i namespaceRequires   # produces list of imported bisos modules -- used in setup.py dblock
@@ -202,7 +202,7 @@ ${G_myName} ${extraInfo} -i pkgInstall local ${relPy3Bisos3}   # pip install  ${
 ${G_myName} ${extraInfo} -i pkgInstall edit ${devPy3Bisos3}  # pip install --editable $(pwd)
 ${G_myName} ${extraInfo} -i pkgInstall local /bisos/tmp/venv/py3-tmp  # pip install --editable $(pwd)
 ${G_myName} ${extraInfo} -i pkgInstall edit /bisos/tmp/venv/py3-tmp
-${G_myName} ${extraInfo} -i pkgInstall edit sys  # pip install --editable $(pwd)
+${G_myName} ${extraInfo} -i pkgInstall edit local  # pip install --editable $(pwd)
 ${G_myName} ${extraInfo} -i pkgInstall pypi ${relPy3Bisos3}  # pip install ${pypiPkgName}
 pip install --no-cache-dir --install-option="--install-scripts=/bystar/bin" --install-option="--install-data=/bystar/data" ${pipPkgFile}
 pip install --no-cache-dir --index-url https://test.pypi.org/simple/ ${pypiPkgName}
@@ -628,7 +628,7 @@ _EOF_
 
 function withVenvBaseGetActiveFile {
     local venvBase=$1
-    if [ "${venvBase}" == "sys" ] ; then
+    if [ "${venvBase}" == "local" ] ; then
         echo ""
         return 0
     fi
@@ -698,7 +698,7 @@ _EOF_
     # Order is important, uninstall first. PrepBuild considers the installed version for version
     opDo pip uninstall -y --no-cache-dir "${pypiPkgName}"
 
-    lpDo vis_fullPrepBuild forSys
+    lpDo vis_fullPrepBuild forLocal
 
     lpDo vis_pkgInstall ${installType} ${venvBase}
 
@@ -945,7 +945,7 @@ _EOF_
 function vis_fullPrepBuild {
     G_funcEntry
     function describeF {  cat  << _EOF_
-Run  vis_fullPrep and then build arg1=forSys or  arg1=forPypi.
+Run  vis_fullPrep and then build arg1=forLocal or  arg1=forPypi.
 _EOF_
     }
     EH_assert [[ $# -eq 1 ]]
@@ -953,11 +953,11 @@ _EOF_
     local buildType="$1"
 
     case $buildType in
-        "forSys"|"forPypi")
+        "forLocal"|"forPypi")
             doNothing
             ;;
         *)
-            EH_problem "Unexpected buildType=${buildType} -- Should be forSys or forPypi"
+            EH_problem "Unexpected buildType=${buildType} -- Should be forLocal or forPypi"
             lpReturn 1
             ;;
     esac
@@ -973,13 +973,13 @@ _EOF_
         # lpDo vis_distClean
         lpDo vis_distBuild
         lpDo rm "./pypiUploadVer"
-   elif [ "${buildType}"  == "forSys" ] ; then
+   elif [ "${buildType}"  == "forLocal" ] ; then
         lpDo bx-dblock -i dblockUpdateFiles ./pyproject.toml               
         lpDo bx-dblock -i dblockUpdateFiles ./setup.py
         # lpDo vis_distClean
         lpDo vis_distBuild
     else
-        EH_problem "Unexpected buildType=${buildType} -- Should be forSys or forPypi"
+        EH_problem "Unexpected buildType=${buildType} -- Should be forLocal or forPypi"
         lpReturn 1
     fi
 }
@@ -996,7 +996,7 @@ _EOF_
 
     lpDo vis_fullPrepBuildUpload
 
-    opDo vis_fullPrepBuild forSys  # recreates the dist with installed version
+    opDo vis_fullPrepBuild forLocal  # recreates the dist with installed version
 
     lpDo /bisos/venv/py3/bisos3/bin/pip install --no-cache-dir --upgrade "${pypiPkgName}"
 
@@ -1144,9 +1144,9 @@ function vis_verForSetup {
     G_funcEntry
     function describeF {  cat  << _EOF_
 The version number to be used in setup.py. Used in dblock.
-With arg1=forSys -- In order try: vis_sysVerAtDist vis_sysVerInstalled vis_pypiVerLatest or 0.1
+With arg1=forLocal -- In order try: vis_localVerAtDist vis_localVerInstalled vis_pypiVerLatest or 0.1
 With arg1=forPypi -- In order try: (vis_pypiVerNext 0.01) or 0.1
-With no args: in presence of ./pypiUploadVer, same as arg1=forPypi otherwise same as arg1=forSys
+With no args: in presence of ./pypiUploadVer, same as arg1=forPypi otherwise same as arg1=forLocal
 _EOF_
     }
     EH_assert [[ $# -lt 2 ]]
@@ -1161,17 +1161,17 @@ _EOF_
         lpReturn
     }
 
-    function forSys {
+    function forLocal {
 
-        local sysVerAtDist=$(vis_sysVerAtDist)
-        if [ ! -z "${sysVerAtDist}" ] ; then
-            echo "${sysVerAtDist}"
+        local localVerAtDist=$(vis_localVerAtDist)
+        if [ ! -z "${localVerAtDist}" ] ; then
+            echo "${localVerAtDist}"
             lpReturn
         fi
 
-        local sysVerInstalled=$(vis_sysVerInstalled 2> /dev/null)
-        if [ ! -z "${sysVerInstalled}" ] ; then
-            echo "${sysVerInstalled}"
+        local localVerInstalled=$(vis_localVerInstalled 2> /dev/null)
+        if [ ! -z "${localVerInstalled}" ] ; then
+            echo "${localVerInstalled}"
             lpReturn
         fi
 
@@ -1192,8 +1192,8 @@ _EOF_
 
         if [ "${action}" == "forPypi" ] ; then
             lpDo forPypi
-        elif [ "${action}" == "forSys" ] ; then
-            lpDo forSys
+        elif [ "${action}" == "forLocal" ] ; then
+            lpDo forLocal
         else
             EH_problem "Bad Usage action=${action}"
             lpReturn
@@ -1202,7 +1202,7 @@ _EOF_
         if [ -f  ./pypiUploadVer ] ; then
             lpDo forPypi
         else
-            lpDo forSys
+            lpDo forLocal
         fi
     fi
 }
@@ -1222,16 +1222,16 @@ _EOF_
     local pypiVerLatest=$(vis_pypiVerLatest)
     local pypiVerNext=$(vis_pypiVerNext 0.01)
 
-    local sysVerInstalled=$(vis_sysVerInstalled 2> /dev/null)
-    local sysVerAtDist=$(vis_sysVerAtDist)
-    local sysVerAtSetup=$(vis_sysVerAtSetup)
-    local sysVerIsNew=$(vis_sysVerIsNew)
+    local localVerInstalled=$(vis_localVerInstalled 2> /dev/null)
+    local localVerAtDist=$(vis_localVerAtDist)
+    local localVerAtSetup=$(vis_localVerAtSetup)
+    local localVerIsNew=$(vis_localVerIsNew)
 
-    lpDo echo "${pypiPkgName}: pypiVerLatest=${pypiVerLatest} ; pypiVerNext=${pypiVerNext} ; sysVerInstalled=${sysVerInstalled} ; sysVerAtDist=${sysVerAtDist} ; sysVerAtSetup=${sysVerAtSetup} ; sysVerIsNew=${sysVerIsNew}"
+    lpDo echo "${pypiPkgName}: pypiVerLatest=${pypiVerLatest} ; pypiVerNext=${pypiVerNext} ; localVerInstalled=${localVerInstalled} ; localVerAtDist=${localVerAtDist} ; localVerAtSetup=${localVerAtSetup} ; localVerIsNew=${localVerIsNew}"
 }
 
 
-function vis_sysVerIsNew {
+function vis_localVerIsNew {
     G_funcEntry
     function describeF {  cat  << _EOF_
 We consider a package as New if there is no trace of it on the system and no trace of it on PyPi.
@@ -1241,14 +1241,14 @@ _EOF_
 
     opDo pypiPkgInfoExtract
 
-    local sysVerInstalled=$(vis_sysVerInstalled 2> /dev/null)
-    if [ ! -z "${sysVerInstalled}" ] ; then
+    local localVerInstalled=$(vis_localVerInstalled 2> /dev/null)
+    if [ ! -z "${localVerInstalled}" ] ; then
         echo "False"
         lpReturn
     fi
 
-    local sysVerAtDist=$(vis_sysVerAtDist)
-    if [ ! -z "${sysVerAtDist}" ] ; then
+    local localVerAtDist=$(vis_localVerAtDist)
+    if [ ! -z "${localVerAtDist}" ] ; then
         echo "False"
         lpReturn
     fi
@@ -1292,7 +1292,7 @@ _EOF_
 }
 
 
-function vis_sysVerInstalled {
+function vis_localVerInstalled {
     G_funcEntry
     function describeF {  cat  << _EOF_
 Version number reported by pip.
@@ -1305,7 +1305,7 @@ _EOF_
     echo ${installedVer}
 }
 
-function vis_sysVerAtSetup {
+function vis_localVerAtSetup {
     G_funcEntry
     function describeF {  cat  << _EOF_
 The version number inside of setup.py file.
@@ -1318,7 +1318,7 @@ _EOF_
     echo ${ver}
 }
 
-function vis_sysVerAtDist {
+function vis_localVerAtDist {
     G_funcEntry
     function describeF {  cat  << _EOF_
 Lowest version number in ./dist/*.tar.gz --- During edit/development versions are kept stable.
@@ -1408,24 +1408,24 @@ _EOF_
 
     local filesList="$( vis_filesList )"
 
-    local tmpBleeFile=$( FN_tempFile )
-    lpDo touch ${tmpBleeFile}
+    # local tmpBleeFile=$( FN_tempFile )
+    # lpDo touch ${tmpBleeFile}
 
-    function procEachBlee {
-        local eachFile=$1
-        egrep 'from.*import.*$' ${eachFile} \
-            | grep blee \
-            | cut -d ' ' -f 2  >> ${tmpBleeFile}
-    }
+    # function procEachBlee {
+    #     local eachFile=$1
+    #     egrep 'from.*import.*$' ${eachFile} \
+    #         | grep blee \
+    #         | cut -d ' ' -f 2  >> ${tmpBleeFile}
+    # }
 
-    for each in ${filesList} ; do
-        lpDo procEachBlee ${each}
-    done
-    if [ ! -z  "${tmpBleeFile}" ] ; then
-        echo "\"blee\","
-    fi
-    lpDo cat ${tmpBleeFile} | egrep -v from | egrep -v missing | sort | uniq | sed -e 's:\(^.*$\):\"\1\",:'
-    lpDo rm ${tmpBleeFile}
+    # for each in ${filesList} ; do
+    #     lpDo procEachBlee ${each}
+    # done
+    # if [ ! -z  "${tmpBleeFile}" ] ; then
+    #     echo "\"blee\","
+    # fi
+    # lpDo cat ${tmpBleeFile} | egrep -v from | egrep -v missing | sort | uniq | sed -e 's:\(^.*$\):\"\1\",:'
+    # lpDo rm ${tmpBleeFile}
 
     local tmpFile=$( FN_tempFile )
     lpDo touch ${tmpFile}
@@ -1445,9 +1445,12 @@ _EOF_
     for each in ${filesList} ; do
         lpDo procEach ${each}
     done
-    if [ ! -z  "${tmpBleeFile}" ] ; then
-        echo "\"${pypiPkgNamespace}\","
-    fi
+    
+    # if [ ! -z  "${tmpBleeFile}" ] ; then
+    #     echo "\"${pypiPkgNamespace}\","
+    # fi
+
+    echo "\"${pypiPkgNamespace}\","
 
     # First get rid of blank lines, also insert quotes around file names.
     #

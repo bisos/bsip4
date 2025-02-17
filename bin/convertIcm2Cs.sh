@@ -104,6 +104,17 @@ find /bisos/panels/ -type f -print | xargs grep -l /bisos/panels/bisos/ | ${G_my
 find . -type f -print | egrep '/ftoProc\.sh$' | ${G_myName} ${extraInfo} -i commonAspects
 find . -type f -print | egrep '/ftoProc\.sh$' | bx-dblock -i dblockUpdateFiles
 find . -type f -print | egrep '/ftoProc\.sh\.2020[0-9]+$' | wc
+$( examplesSeperatorSection "blee.csPlayer -- blee.icmPlayer" )
+find /bisos/git/bxRepos/bisos-pip -type f -print | grep -v egg-info | grep -v setup.py | grep -v __pycache__ | grep -v obsoleted | xargs egrep -l blee.csPlayer | ${G_myName} ${extraInfo} -i fixBleeCsPlayer
+find /bisos/git/bxRepos/bisos-pip -type f -print | grep -v egg-info | grep -v setup.py | grep -v __pycache__ | grep -v obsoleted | xargs egrep -l blee.icmPlayer | ${G_myName} ${extraInfo} -i fixBleeCsPlayer
+echo /bisos/git/bxRepos/bisos-pip/crypt/py3/bin/bx-gpg.cs | ${G_myName} ${extraInfo} -i fixBleeCsPlayer
+find /bisos/git/bxRepos/bisos-pip -type f -print | grep -v egg-info | grep -v setup.py | grep -v __pycache__ | grep -v obsoleted | xargs egrep -l blee.csPlayer | wc
+find /bisos/git/bxRepos/bisos-pip -type f -print | grep -v egg-info | grep -v setup.py | grep -v __pycache__ | grep -v obsoleted | xargs egrep -l blee.icmPlayer | wc
+$( examplesSeperatorSection "from unisos import" )
+find /bisos/git/bxRepos/bisos-pip -type f -print | grep -v egg-info | grep -v setup.py | grep -v __pycache__ | grep -v obsoleted | xargs egrep -l 'from.*unisos.*import' | ${G_myName} ${extraInfo} -i  commonAspects
+echo /bisos/git/bxRepos/bisos-pip/crypt/py3/bin/bx-gpg.cs | ${G_myName} ${extraInfo} -i commonAspects
+find /bisos/git/bxRepos/bisos-pip/gcipher/py3/bisos/gcipher -type f -print | xargs egrep -l 'from.*unisos.*import' | ${G_myName} ${extraInfo} -i  commonAspects
+find /bisos/git/bxRepos/bisos-pip -type f -print | grep -v egg-info | grep -v setup.py | grep -v __pycache__ | grep -v obsoleted | xargs egrep -l 'from.*unisos.*import' | wc
 $( examplesSeperatorSection "Current Dir" )
 ${G_myName} ${extraInfo} -i commonAspects *
 find . -type f -print | grep -v ${G_myName} | ${G_myName} ${extraInfo} -i commonAspects
@@ -275,6 +286,8 @@ _EOF_
             -e "s@icm.subjectToTracking(fnLoc=True, fnEntry=True, fnExit=True)@@g"\
             -e "s@(G.icmMyName()@(cs.G.icmMyName()@g"\
             -e "s@ G.icmMyFullName@ cs.G.icmMyFullName@g"\
+            -e "s@examples_icmBasic@examples_csBasic@g"\
+            -e "s@from bisos.icm import fp@from bisos.b import fp@g"\
             > ${each}
         
         lpReturn 0
@@ -422,6 +435,61 @@ _EOF_
 
     lpReturn
 }
+
+
+function vis_fixBleeCsPlayer {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Function description.
+Design Pattern: processEach based on args or stdin.
+Examples:
+      ${G_myName} -i userAcctsReport bisos
+      echo bisos bystar | ${G_myName} -i userAcctsReport
+_EOF_
+    }
+    local thisFunc=${G_thisFunc}
+
+    function processEach {
+        EH_assert [[ $# -eq 1 ]]
+        local each="$1"
+        local eachDateTag="${dateTag}"
+
+        #echo "${thisFunc}" "${each}"
+        lpDo FN_fileSafeCopy "${each}" "${each}.${eachDateTag}"
+
+        cat ${each}.${eachDateTag} | \
+            sed \
+            -e "s@blee.icmPlayer@bisos.csPlayer@g"\
+            -e "s@blee.csPlayer@bisos.csPlayer@g"\
+            -e "s@bleep.examples_icmBasic@bleep.examples_csBasic@g"\
+            > ${each}
+
+        lpReturn 0
+    }
+
+####+BEGIN: bx:bsip:bash/processArgsAndStdin :noParams t
+     function processArgsAndStdin {
+        local effectiveArgs=( "$@" )
+        local stdinArgs=()
+        local each
+        if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
+            readarray stdinArgs < /dev/stdin
+            effectiveArgs=( "$@" "${stdinArgs[@]}" )
+        fi
+        if [ ${#effectiveArgs[@]} -eq 0 ] ; then
+            ANT_raw "No Args And Stdin Is Empty"
+            lpReturn
+        fi
+        for each in "${effectiveArgs[@]}"; do
+            lpDo processEach "${each%$'\n'}"
+        done
+    }
+    lpDo processArgsAndStdin "$@"
+####+END:
+
+    lpReturn
+}
+
 
 
 _CommentBegin_
