@@ -465,7 +465,7 @@ _EOF_
     lpDo echo ${VIRTUAL_ENV}
 
     # inBaseDirDo /bisos/git/bxRepos ftoProc-pip.sh -i ftoWalkRunCmnd pypiProc.sh -i pkgInstall edit ${pdb_venv_py3Bisos3Dev}
-    inBaseDirDo /bisos/git/bxRepos ftoProc.sh -i ftoWalkRunCmnd pypiProc.sh -i pkgInstall edit ${pdb_venv_py3Bisos3Dev}
+    inBaseDirDo /bisos/git/bxRepos/bisos-pip ftoProc.sh -i ftoWalkRunCmnd pypiProc.sh -i pkgInstall edit ${pdb_venv_py3Bisos3Dev}
 
     lpDo pip3 list 
     
