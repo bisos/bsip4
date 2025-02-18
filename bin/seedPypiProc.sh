@@ -1433,6 +1433,7 @@ _EOF_
     function procEach {
         local eachFile=$1
         egrep 'from.*import.*$' ${eachFile} \
+            | egrep -v '^#' \
             | grep ${pypiPkgNamespace} \
             | cut -d ' ' -f 2 \
             | egrep -v ${pypiPkgName} \
