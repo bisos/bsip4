@@ -180,6 +180,8 @@ _EOF_
     
     lpDo FN_fileSymlinkUpdate ${HOME}/tmp/tmp-site /bisos/var/sites/selected
 
+    lpDo FN_fileSymlinkUpdate /bisos/var/sites/selected  /bisos/site
+
     lpDo vis_knownHostsAddSiteGitServer  # Needs to happen before any git clones and after var/sites/selected
     
     inBaseDirDo /bisos/var/sites/selected/sys/bin siteBisosSetup.sh -h -v -n showRun -i fullUpdate
