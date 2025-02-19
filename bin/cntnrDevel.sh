@@ -171,7 +171,7 @@ ${G_myName} ${extraInfo} -p bpoId="sysChar" -i sysCharConveyInfoWrite securityMo
 ${G_myName} ${extraInfo} -i securityMode developer
 ${G_myName} ${extraInfo} -i securityMode stable
 ${G_myName} ${extraInfo} -i securityMode sealed
-$( examplesSeperatorChapter "List of Effective Branches To Traverse" )
+$( examplesSeperatorChapter "Update github.com keys in known_hosts" )
 ${G_myName} -i githubSshKnownHostsUpdate known_hosts
 ${G_myName} -i githubSshKnownHostsStdout
 _EOF_
@@ -278,7 +278,6 @@ _EOF_
 
     lpDo vis_bisosDevBxo_actuate
 
-    lpDo vis_githubSshKnownHostsUpdate
 
     lpDo bisosPyVenvSetup.sh -h -v -n showRun -i pyVenv_DevSetup
 
@@ -321,7 +320,7 @@ _EOF_
 
     bisosDevBxoHome=$( vis_usgBposUsageEnvs_bisosDev_bxoPath )
     EH_assert [ ! -z "${bisosDevBxoHome}" ]
-    
+
     # Install bisosDev dev crentials in ~/.ssh and
     # auth clone using bisosDev credentials
     # switch to auth based bxRepos 

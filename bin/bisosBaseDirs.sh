@@ -132,14 +132,62 @@ $( ls -l $( ${G_myName} ${extraInfo} -i bxReposCurShow ) )
 ${G_myName} ${extraInfo} -i bxReposAuthSet
 ${G_myName} ${extraInfo} -i bxReposAnonSet
 $( examplesSeperatorChapter "Initial Setup" )
-ssh-keygen -F github.com || ssh-keyscan github.com >> ~/.ssh/known_hosts
+ssh-keygen -F github.com || ssh-keyscan github.com >> ~/.ssh/known_hosts  # See vis_githubSshKnownHostsUpdate
 ${G_myName} ${extraInfo} -i detectNewlyAddedRepos
+$( examplesSeperatorChapter "Update github.com keys in known_hosts" )
+${G_myName} -i githubSshKnownHostsUpdate known_hosts
+${G_myName} -i githubSshKnownHostsStdout
 _EOF_
 }
 
 noArgsHook() {
   vis_examples_general "general"
 }
+
+
+function vis_githubSshKnownHostsUpdate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local result=$(vis_githubSshKnownHostsStdout)
+
+    if [ -z "${result}" ] ; then
+         EH_problem "ALERT! Man In The Middle detected."
+    else
+        ssh-keygen -F github.com ||  echo "${result}" >> ${HOME}/.ssh/known_hosts
+    fi
+}
+
+function vis_githubSshKnownHostsStdout {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local  tmpFileKeyscan=$( FN_tempFile )
+    local  tmpFileApi=$( FN_tempFile )
+    local  retVal=0
+
+    ssh-keyscan  github.com  2> /dev/null  | sort > ${tmpFileKeyscan}
+    curl --silent https://api.github.com/meta  | jq --raw-output '"github.com "+.ssh_keys[]' | sort > ${tmpFileApi}
+
+    if cmp ${tmpFileKeyscan} ${tmpFileApi} ; then
+        cat ${tmpFileApi}
+        retVal=0
+    else
+        EH_problem "ALERT! Man In The Middle detected."
+        retVal=1
+    fi
+
+    # ls -l ${tmpFileKeyscan} ${tmpFileApi}
+    lpDo rm ${tmpFileKeyscan} ${tmpFileApi}
+    lpReturn ${retVal}
+}
+
 
 
 function vis_detectNewlyAddedRepos {
@@ -207,8 +255,12 @@ _EOF_
     local bxGitReposBase=""         
     
     if [ "${vcMode}" == "auth" ] ; then
+
+        lpDo vis_githubSshKnownHostsUpdate known_hosts
+
         bxGitReposBase="${bxp_rootDir_bisos}/git/auth"
-        ${G_myFullName} -h -v -n showRun -p vcMode=${vcMode} -i bxGitReposBasesReClone "${bxGitReposBase}"      
+        ${G_myFullName} -h -v -n showRun -p vcMode=${vcMode} -i bxGitReposBasesReClone "${bxGitReposBase}"
+
     elif [ "${vcMode}" == "anon" ] ; then
         bxGitReposBase="${bxp_rootDir_bisos}/git/anon"
         lpDo sudo --set-home --user=${currentUser} ${G_myFullName} -h -v -n showRun -p vcMode=${vcMode} -i bxGitReposBasesReClone "${bxGitReposBase}"   
