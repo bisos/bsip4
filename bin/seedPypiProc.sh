@@ -762,6 +762,7 @@ _EOF_
 
     elif [ "${installType}" == "edit" ]; then
         lpDo pip install --no-cache-dir -e . --no-build-isolation
+        lpDo vis_devBinSymlinks
         return
 
 
