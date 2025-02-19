@@ -171,9 +171,6 @@ ${G_myName} ${extraInfo} -p bpoId="sysChar" -i sysCharConveyInfoWrite securityMo
 ${G_myName} ${extraInfo} -i securityMode developer
 ${G_myName} ${extraInfo} -i securityMode stable
 ${G_myName} ${extraInfo} -i securityMode sealed
-$( examplesSeperatorChapter "Update github.com keys in known_hosts" )
-${G_myName} -i githubSshKnownHostsUpdate known_hosts
-${G_myName} -i githubSshKnownHostsStdout
 _EOF_
 }
 
@@ -191,53 +188,6 @@ _EOF_
 
     lpReturn
 }
-
-function vis_githubSshKnownHostsUpdate {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 1 ]]
-
-    local result=$(vis_githubSshKnownHostsStdout)
-    
-    if [ -z "${result}" ] ; then
-         EH_problem "ALERT! Man In The Middle detected."
-    else
-        lpDo ssh-keygen -R github.com
-        echo "${result}" >> ${HOME}/.ssh/known_hosts
-    fi
-}
-
-function vis_githubSshKnownHostsStdout {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-curl --silent https://api.github.com/meta  | jq --raw-output '"github.com "+.ssh_keys[]' | sort
-ssh-keyscan  github.com  2> /dev/null  | sort
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    local  tmpFileKeyscan=$( FN_tempFile )
-    local  tmpFileApi=$( FN_tempFile )
-    local  retVal=0
-
-    ssh-keyscan  github.com  2> /dev/null  | sort > ${tmpFileKeyscan}
-    curl --silent https://api.github.com/meta  | jq --raw-output '"github.com "+.ssh_keys[]' | sort > ${tmpFileApi}
-
-    if cmp ${tmpFileKeyscan} ${tmpFileApi} ; then
-        cat ${tmpFileApi}
-        retVal=0
-    else
-        EH_problem "ALERT! Man In The Middle detected."
-        retVal=1
-    fi
-
-    # ls -l ${tmpFileKeyscan} ${tmpFileApi}
-    lpDo rm ${tmpFileKeyscan} ${tmpFileApi}
-    lpReturn ${retVal}
-}
-
 
 
 function vis_vagrantBaseBoxesBuild {
