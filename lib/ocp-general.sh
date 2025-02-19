@@ -99,6 +99,7 @@ function opBasePathSet {
   #export PATH="${PATH}:${HOME}/.local/bin"
   export PATH="${PATH}:/bisos/pipx/bin"
   export PATH="${PATH}:${HOME:-/}/.poetry/bin"
+  export PATH="${PATH}:/bisos/venv/py3/devbin"
   export PATH="${PATH}:/bisos/venv/py3/dev-bisos3/bin"
   export PATH="${PATH}:/bisos/venv/py3/bisos3/bin"
   export PATH="${PATH}:/bisos/venv/py3/adopted/bin"

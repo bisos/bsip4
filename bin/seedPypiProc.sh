@@ -144,6 +144,7 @@ ${G_myName} ${extraInfo} -i pkgUnInstall ${relPy3Bisos3}
 ${G_myName} ${extraInfo} -i pkgUnInstall ${devPy3Bisos3}
 ${G_myName} ${extraInfo} -i pkgReInstall local ${relPy3Bisos3}
 ${G_myName} ${extraInfo} -i pkgReInstall edit ${devPy3Bisos3}   # PRIMARY, unInstall+fullPrepBuild forLocal+Install
+${G_myName} ${extraInfo} -i devBinSymLinks
 $( examplesSeperatorChapter "Cleaning" )
 ${G_myName} ${extraInfo} -i distClean
 $( examplesSeperatorChapter "Pkg Versions at PyPi" )
@@ -1364,6 +1365,36 @@ _EOF_
 
     for each in ${scriptFiles} ; do
         echo "'$each',"
+    done
+}
+
+
+function vis_devBinSymlinks {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+produces list of script files -- used in setup.py dblock
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    # lpDo pypiPkgInfoExtract
+
+    local scriptFiles=""
+    local here=$( FN_absolutePathGet $(pwd))
+    local devbinBase="/bisos/venv/py3/devbin"
+    local eachFile=""
+
+    if [ ! -d "${devbinBase}" ] ; then
+        mkdir -p ${devbinBase}
+    fi
+
+    if [ -d "./bin" ] ; then
+        scriptFiles="$( ls bin/* )"
+    fi
+
+    for each in ${scriptFiles} ; do
+        eachFile=$( FN_nonDirsPart "${each}" )
+        lpDo FN_fileSymlinkUpdate   "${here}/${each}" ${devbinBase}/${eachFile}
     done
 }
 
