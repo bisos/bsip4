@@ -1365,7 +1365,13 @@ _EOF_
     fi
 
     for each in ${scriptFiles} ; do
-        echo "'$each',"
+        if [ "${each}" == "bin/__pycache__:" ] ; then
+            :
+        elif  [[ "${each}" == *"pyc" ]] ; then
+            :
+        else
+            echo "'$each',"
+        fi
     done
 }
 
