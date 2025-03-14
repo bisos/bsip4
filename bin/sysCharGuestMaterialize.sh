@@ -936,7 +936,7 @@ _EOF_
         cat   << _EOF_
 ######### PHASE 2.1: BISOS Site Setup And SysChar Container Activate And Identity Set -- With IpAddrs settings
 _EOF_
-        # prs_bisos is scp-ed from ${registrar}. If that fails, we should exit all together.
+        # prs_bisos is scp-ed from ${platfSiteBootstrap}. If that fails, we should exit all together.
         # sudo -u bystar ${binPath} ${runInfo} -p platfSiteBootstrap="${platfSiteBootstrap}" -p id="${id}" -p password="${password}" -p siteBxoId="${siteBxoId}" -i bisosBasePlatform_siteSetup
         sudo -u bystar ${binPath} ${runInfo} -p platfSiteBootstrap="${platfSiteBootstrap}" -p id="${id}" -p password="${password}" -i bisosBasePlatform_siteSetup
 

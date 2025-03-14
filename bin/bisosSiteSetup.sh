@@ -230,25 +230,46 @@ _EOF_
 function vis_siteRegistrarSelect {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-Incomplete.
+
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    EH_assert [ ! -z "${registrar}" ]
+    # EH_assert [ ! -z "${registrar}" ]
 
     typeset extraInfo="-h -v -n showRun"  #   ${G_commandOptions}
 
     # NOTYET, has not been tested
     #
     # lpDo svcInvSiteRegBox.cs --regBoxPerfAddrs="['192.168.0.90']"  -i invSiteRegBoxConf_set
-    lpDo svcInvSiteRegBox.cs --regBoxPerfAddrs="['${registrar}']"  -i invSiteRegBoxConf_set
+    # lpDo svcInvSiteRegBox.cs --regBoxPerfAddrs="['${registrar}']"  -i invSiteRegBoxConf_set
+    #
+    # lpDo svcInvSiteRegBox.cs --perfName="svcSiteRegistrars"  -i reg_sapCreateBox
+
+    # lpDo svcInvSiteRegContainer.cs --regContainerPerfAddrs="['${registrar}']" -i invSiteRegContainerConf_set
+    #
+    # lpDo svcInvSiteRegContainer.cs --perfName="svcSiteRegistrars"  -i reg_sapCreateContainer
+    #
+    lpDo vis_siteRegistrarSapsCreate
+
+    lpReturn
+}
+
+function vis_siteRegistrarSapsCreate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Assuminng that /bisos/site/registrars have been configured, Create SAPs for invoker.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
     lpDo svcInvSiteRegBox.cs --perfName="svcSiteRegistrars"  -i reg_sapCreateBox
-    lpDo svcInvSiteRegContainer.cs --regContainerPerfAddrs="['${registrar}']" -i invSiteRegContainerConf_set
+
     lpDo svcInvSiteRegContainer.cs --perfName="svcSiteRegistrars"  -i reg_sapCreateContainer
 
     lpReturn
 }
+
 
 
 
