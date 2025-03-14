@@ -147,10 +147,6 @@ _EOF_
 
     local siteBxoId=$( sysCharRealize.sh -i selectedSiteBxoId )
 
-    local registrar=$( vis_registrarHostName )
-    local id=$( vis_registrarUserName )
-    local password=$( vis_registrarUserPassword )
-
     # local oneTargetName="192.168.0.52"
     local oneTargetName=${curTargetBox:-}
     # local oneTargetName="localhost"

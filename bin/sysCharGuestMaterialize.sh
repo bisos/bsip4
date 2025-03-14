@@ -917,15 +917,15 @@ _EOF_
     local site_gitServerUrl=$( fileParamManage.cs -i fileParamRead ${siteGitServerInfoBaseDir} gitServerUrl )
     local site_gitServerPrivToken=$( fileParamManage.cs -i fileParamRead ${siteGitServerInfoBaseDir} gitServerPrivToken )
 
-    local registrar=$( vis_registrarHostName )
-    local id=$( vis_registrarUserName )
-    local password=$( vis_registrarUserPassword )
+    local platfSiteBootstrap=$( platfSiteBootstrap-fps.cs  -i parGet nameOrIpAddr )
+    local id=$( platfSiteBootstrap-fps.cs  -i parGet acct )
+    # local password=$( vis_registrarUserPassword )
+    local password=$( platfSiteBootstrap-fps.cs  -i parGet passwd )
 
     local runInfo="-h -v -n showRun"
     local binPath="/bisos/core/bsip/bin/sysCharBoxDeploy.sh"
 
     local bisosDevBxoId=$( usgBpos.sh -i usgBposUsageEnvs_bisosDevBxoId_read )
-
 
     #
     # No longer needed:: /bisos/core/bsip/bin/bisosSiteGitServer.sh -h -v -n showRun -p gitServerName=${site_gitServerName} -p gitServerUrl=${site_gitServerUrl} -p gitServerPrivToken=${site_gitServerPrivToken} -i gitServerInfoSet
@@ -936,9 +936,9 @@ _EOF_
         cat   << _EOF_
 ######### PHASE 2.1: BISOS Site Setup And SysChar Container Activate And Identity Set -- With IpAddrs settings
 _EOF_
-        # prs_bisos is scped from ${registrar}. If that fails, we should exit all together.
-        sudo -u bystar ${binPath} ${runInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -p siteBxoId="${siteBxoId}" -i bisosBasePlatform_siteSetup
-
+        # prs_bisos is scp-ed from ${registrar}. If that fails, we should exit all together.
+        # sudo -u bystar ${binPath} ${runInfo} -p platfSiteBootstrap="${platfSiteBootstrap}" -p id="${id}" -p password="${password}" -p siteBxoId="${siteBxoId}" -i bisosBasePlatform_siteSetup
+        sudo -u bystar ${binPath} ${runInfo} -p platfSiteBootstrap="${platfSiteBootstrap}" -p id="${id}" -p password="${password}" -i bisosBasePlatform_siteSetup
 
         sudo -u bystar ${binPath} ${runInfo} -p bisosDevBxoId=${bisosDevBxoId} -i usgConvey_bisosDeveloper
         sudo -u bystar ${binPath} ${runInfo} -p bpoId="${bpoId}" -i siteBasePlatform_sysBxoActivate

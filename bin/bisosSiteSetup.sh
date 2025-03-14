@@ -83,6 +83,7 @@ _CommentEnd_
 
 
 # PRE parameters
+typeset -t platfSiteBootstrap=""
 typeset -t registrar=""
 typeset -t id=""
 typeset -t password=""
@@ -106,23 +107,28 @@ function vis_examples {
 
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
-    local siteBxoId=$( sysCharRealize.sh -i selectedSiteBxoId )    
+    local siteBxoId=$( sysCharRealize.sh -i selectedSiteBxoId )
+
+    # local platfSiteBootstrap=$( platfSiteBootstrap-fps.cs  -i parGet nameOrIpAddr )
+    local platfSiteBootstrap="127.0.0.1"
+    local id=$( platfSiteBootstrap-fps.cs  -i parGet acct )
+    local password=$( platfSiteBootstrap-fps.cs  -i parGet passwd )
 
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "FULL Site Deployment" )
-${G_myName} ${extraInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -i fullUpdate  # currents + siteFullUpdate
+${G_myName} ${extraInfo} -p platfSiteBootstrap="${platfSiteBootstrap}" -p id="${id}" -p password="${password}" -i fullUpdate  # currents + siteFullUpdate
 ${G_myName} ${extraInfo} -i fullUpdate   # currents + siteFullUpdate
 ${G_myName} ${extraInfo} -p bpoId="${siteBxoId}" -i activate_siteBxoPlusAndSelect 
 $( examplesSeperatorChapter "Full Operations" )
 ${G_myName} ${extraInfo} -i siteFullUpdate
-${G_myName} ${extraInfo} -p registrar=TBD -p id=TBD -p password=TBD -i siteFullUpdate
+${G_myName} ${extraInfo} -p platfSiteBootstrap="${platfSiteBootstrap}" -p id="${id}" -p password="${password}" -i siteFullUpdate
 $( examplesSeperatorChapter "Temporary Site" )
-${G_myName} ${extraInfo} -i obtainTmpSite
-${G_myName} ${extraInfo} -p registrar=TBD -p id=TBD -p password=TBD -i obtainTmpSite
+${G_myName} ${extraInfo} -i obtainPlatfSiteBootstrap
+${G_myName} ${extraInfo} -p platfSiteBootstrap="${platfSiteBootstrap}" -p id="${id}" -p password="${password}" -i obtainPlatfSiteBootstrap
 $( examplesSeperatorChapter "Initial Known Hosts Setup" )
-${G_myName} ${extraInfo} -i knownHostsAddSiteGitServer  # Runs after obtainTmpSite
+${G_myName} ${extraInfo} -i knownHostsAddSiteGitServer  # Runs after obtainPlatfSiteBootstrap
 ${G_myName} ${extraInfo} -p id=bystar -i knownHostsAddSiteGitServer
 ${G_myName} ${extraInfo} -p registrar=192.168.0.90 -i siteRegistrarSelect
 _EOF_
@@ -150,13 +156,13 @@ _EOF_
 function vis_siteFullUpdate {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-First ${HOME}/tmp/tmp-site/bin is obtained.
+First ${HOME}/tmp/platfSiteBootstrap/bin is obtained.
 /bisos/var/sites/selected/bin/siteBisosSetup.sh -i fullUpdate sets up a gitServer
 With that gitServer, we then
 - activate "bisos" Real-System BxO
 - activate "defaultSite" BxO
 We then symlink ~pis_defaultSite to /bisos/var/sites/selected
-And git rid of ${HOME}/tmp/tmp-site
+And git rid of ${HOME}/tmp/platfSiteBootstrap
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -169,16 +175,16 @@ _EOF_
     [ -f /tmp/bisos-ICM.log ] || lpDo sudo rm /tmp/bisos-ICM.log
     [ -f /tmp/bystar-ICM.log ] || lpDo sudo rm /tmp/bystar-ICM.log
 
-    lpDo vis_obtainTmpSite    # registrar, id, password are icm params
+    lpDo vis_obtainPlatfSiteBootstrap    # registrar, id, password are icm params
 
-    if [ ! -d "${HOME}/tmp/tmp-site" ] ; then
-        EH_problem "Missing ${HOME}/tmp/tmp-site"
+    if [ ! -d "${HOME}/tmp/platfSiteBootstrap" ] ; then
+        EH_problem "Missing ${HOME}/tmp/platfSiteBootstrap"
         lpReturn 101
     fi
     
     lpDo FN_dirCreatePathIfNotThere /bisos/var/sites
     
-    lpDo FN_fileSymlinkUpdate ${HOME}/tmp/tmp-site /bisos/var/sites/selected
+    lpDo FN_fileSymlinkUpdate ${HOME}/tmp/platfSiteBootstrap /bisos/var/sites/selected
 
     lpDo FN_fileSymlinkUpdate /bisos/var/sites/selected  /bisos/site
 
@@ -203,11 +209,14 @@ _EOF_
 
     lpDo cd ${curDir}
     
-    # lpDo rm -r -f ${HOME}/tmp/tmp-site
+    # lpDo rm -r -f ${HOME}/tmp/platfSiteBootstrap
 
     lpDo /bisos/var/sites/selected/sys/bin/siteBisosGitServer.sh ${extraInfo} -i initialize
 
     lpDo /bisos/var/sites/selected/sys/bin/siteBisosDefaults.sh ${extraInfo} -i initialize
+
+    # NOTYET, Shortcut 2025-03-13
+    bpoId=pis_superSiteNeda
 
     lpDo vis_activate_siteBxoPlusAndSelect
 
@@ -271,21 +280,25 @@ _EOF_
 
 
 
-function vis_obtainTmpSite {
+function vis_obtainPlatfSiteBootstrap {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    if [ -z "${registrar}" ] ; then
-        registrar=$( siteRegistrarInfo.sh -i registrarHostName )
+    if [ -z "${platfSiteBootstrap}" ] ; then
+        platfSiteBootstrap=$( platfSiteBootstrap-fps.cs  -i parGet nameOrIpAddr )
     fi
     if [ -z "${id}" ] ; then
-        id=$( siteRegistrarInfo.sh -i registrarUserName )
+        id=$( platfSiteBootstrap-fps.cs  -i parGet acct )
     fi
     if [ -z "${password}" ] ; then
-        password=$( siteRegistrarInfo.sh -i registrarUserPassword )
+        password=$( platfSiteBootstrap-fps.cs  -i parGet passwd )
+    fi
+
+    if [ "${password}" == "default" ] ; then
+       password="intra"
     fi
 
     local passwdFile="/tmp/bisosPasswdFile"
@@ -299,15 +312,15 @@ _EOF_
     
     lpDo FN_dirCreatePathIfNotThere ${HOME}/tmp
 
-    if [ -d "${HOME}/tmp/tmp-site" ] ; then
-        EH_problem "${HOME}/tmp/tmp-site already exists"
+    if [ -d "${HOME}/tmp/platfSiteBootstrap" ] ; then
+        EH_problem "${HOME}/tmp/platfSiteBootstrap already exists"
         lpReturn 101
     fi
 
     #local siteBootstrapDir="/bxo/r3/iso/pis_defaultSite/bootstrap"  # OBSOLETED
     local siteBootstrapDir="/bxo/r3/iso/pis_defaultSite"
     
-    lpDo sshpass -f "${passwdFile}" scp -o StrictHostKeyChecking=no -r ${id}@${registrar}:${siteBootstrapDir} ${HOME}/tmp/tmp-site
+    lpDo sshpass -f "${passwdFile}" scp -o StrictHostKeyChecking=no -r ${id}@${platfSiteBootstrap}:${siteBootstrapDir} ${HOME}/tmp/platfSiteBootstrap
 
     lpDo rm "${passwdFile}"
 
@@ -323,7 +336,8 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if [ -z "${id}" ] ; then
-        id=$( siteRegistrarInfo.sh -i registrarUserName )
+        # id=$( siteRegistrarInfo.sh -i registrarUserName )
+        id="bystar"
     fi
     local siteGitServerInfoBaseDir=$( bisosSiteGitServer.sh -i gitServerInfoBaseDir )
 

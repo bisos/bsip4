@@ -109,6 +109,7 @@ _CommentEnd_
 typeset -t bpoId=""
 typeset -t privA=""
 typeset -t registrar=""
+typeset -t platfSiteBootstrap=""
 typeset -t id=""
 typeset -t password=""
 typeset -t siteBxoId=""
@@ -198,9 +199,9 @@ _EOF_
 
     local siteBxoId=$( sysCharRealize.sh -i selectedSiteBxoId )
 
-    local registrar=$( vis_registrarHostName )
-    local id=$( vis_registrarUserName )
-    local password=$( vis_registrarUserPassword )        
+    local platfSiteBootstrap=$( platfSiteBootstrap-fps.cs  -i parGet nameOrIpAddr )
+    local id=$( platfSiteBootstrap-fps.cs  -i parGet acct )
+    local password=$( platfSiteBootstrap-fps.cs  -i parGet passwd )
 
     # local oneTargetName="192.168.0.52"
     local oneTargetName=${curTargetBox:-}
@@ -232,7 +233,7 @@ ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2_sitedDevContaine
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2_sitedContainer  # onManager  -- PRIMARY (New BOX)
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2_sitedContainer  # onManager  -- PRIMARY (New BOX)
  ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_siteSetup # onManager or below onTarget
-${G_myName} ${extraInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -p siteBxoId=${siteBxoId}" -i bisosBasePlatform_siteSetup # onTarget
+${G_myName} ${extraInfo} -p platfSiteBootstrap="${platfSiteBootstrap}" -p id="${id}" -p password="${password}"  -i bisosBasePlatform_siteSetup # onTarget
 $( examplesSeperatorSection "L2:: BISOS Development Preps -- bisosBasePlatform Actions" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_devContainer # onManager+onTarget UsedBy: l2_sitedDevContainer
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i usgConvey_bisosDeveloper # onManager+onTarget UsedBy: l2_sitedDevContainer
@@ -276,7 +277,7 @@ ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l5_materializedCo
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l5_materializedDevContainer  # on Manager  -- PRIMARY (Existing BOX)
 $( examplesSeperatorChapter "VIRTUALIZATION :: sysCharGuestMaterialize.sh Use of sysChaBoxrDeploy.sh" )
 $( examplesSeperatorSection "Used in Vagrantfile --- Phase 2.1, 2.2, 2.3" )
-${G_myName} ${extraInfo} -p registrar="192.168.0.257" -p id="bystar" -p password="somePasswd" -p siteBxoId="pms_someSite" -i bisosBasePlatform_siteSetup
+${G_myName} ${extraInfo} -p platfSiteBootstrap="192.168.0.257" -p id="${id}" -p password="${password}"  -i bisosBasePlatform_siteSetup # onTarget
 ${G_myName} ${extraInfo} -p bisosDevBxoId=piu_mbBisosDev -i usgConvey_bisosDeveloper
 ${G_myName} ${extraInfo} -p bxoId="pmp_VAG-deb11_" -i siteBasePlatform_sysBxoActivate
 ${G_myName} ${extraInfo} -p bxoId="pmp_VAG-deb11_" -p cfpVmNameQualifier=\"12\" -i conveyInfoStore
@@ -448,17 +449,14 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     function onManagerRun {
-        if [ -z "${registrar}" ] ; then
-            registrar=$( vis_registrarHostName )
+        if [ -z "${platfSiteBootstrap}" ] ; then
+            platfSiteBootstrap=$( platfSiteBootstrap-fps.cs  -i parGet nameOrIpAddr )
         fi
         if [ -z "${id}" ] ; then
-            id=$( vis_registrarUserName )
+            id=$( platfSiteBootstrap-fps.cs  -i parGet acct )
         fi
         if [ -z "${password}" ] ; then  
-            password=$( vis_registrarUserPassword )
-        fi
-        if [ -z "${siteBxoId}" ] ; then 
-            siteBxoId=$( sysCharRealize.sh -i selectedSiteBxoId )
+            password=$( platfSiteBootstrap-fps.cs  -i parGet passwd )
         fi
     }
 
@@ -467,6 +465,68 @@ _EOF_
         # NOTYET, perhaps this should be done even sooner
         lpDo bisosCurrentsManage.sh ${G_commandPrefs} -i currentsFileCreate
         
+        # lpDo bisosSiteSetup.sh ${G_commandPrefs} \
+        #      -p bpoId="${siteBxoId}" \
+        #      -i activate_siteBxoPlusAndSelect
+
+        #  activate_siteBxoPlusAndSelect is now done in fullUpdate
+        lpDo bisosSiteSetup.sh ${G_commandPrefs} \
+            -p platfSiteBootstrap="${platfSiteBootstrap}" -p id="${id}" -p password="${password}" \
+            -i fullUpdate
+    }
+
+    if [ "${targetName}" != "onTargetRun" ] && [ ! -z "${targetName}" ] ; then
+        lpDo onManagerRun
+    fi
+
+    EH_assert [ ! -z "${platfSiteBootstrap}" ]
+    EH_assert [ ! -z "${id}" ]
+    EH_assert [ ! -z "${password}" ]
+
+    G_paramCmndOption="-p platfSiteBootstrap=${platfSiteBootstrap} -p id=${id} -p password=${password}"
+    
+####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" :cmndOption t
+    if [ "${targetName}" == "onTargetRun" ] ; then
+        lpDo onTargetRun
+    elif [ -z "${targetName}" ] ; then
+        lpDo onTargetRun
+    else
+        local commandName=${FUNCNAME##vis_}             
+        lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
+             $(which ${G_myName}) ${G_commandPrefs} \
+             -p targetName=onTargetRun ${G_paramCmndOption} -i ${commandName}
+    fi
+####+END:
+}
+
+function vis_bisosBasePlatform_siteSetupDIRTY {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Preps the site (configs for gitlab server, etc) and activates the siteBxo.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    function onManagerRun {
+        if [ -z "${registrar}" ] ; then
+            registrar=$( vis_registrarHostName )
+        fi
+        if [ -z "${id}" ] ; then
+            id=$( vis_registrarUserName )
+        fi
+        if [ -z "${password}" ] ; then
+            password=$( vis_registrarUserPassword )
+        fi
+        if [ -z "${siteBxoId}" ] ; then
+            siteBxoId=$( sysCharRealize.sh -i selectedSiteBxoId )
+        fi
+    }
+
+    function onTargetRun {
+
+        # NOTYET, perhaps this should be done even sooner
+        lpDo bisosCurrentsManage.sh ${G_commandPrefs} -i currentsFileCreate
+
         # lpDo bisosSiteSetup.sh ${G_commandPrefs} \
         #      -p bpoId="${siteBxoId}" \
         #      -i activate_siteBxoPlusAndSelect
@@ -490,20 +550,21 @@ _EOF_
     EH_assert [ ! -z "${siteBxoId}" ]
 
     G_paramCmndOption="-p registrar=${registrar} -p id=${id} -p password=${password} -p siteBxoId=${siteBxoId}"
-    
+
 ####+BEGIN: bx:bsip:bash/onTargetRun :sshAcct "bystar" :managerOrTarget "both" :cmndOption t
     if [ "${targetName}" == "onTargetRun" ] ; then
         lpDo onTargetRun
     elif [ -z "${targetName}" ] ; then
         lpDo onTargetRun
     else
-        local commandName=${FUNCNAME##vis_}             
+        local commandName=${FUNCNAME##vis_}
         lpDo sshpass -p intra ${sshCmnd} bystar@"${targetName}" \
              $(which ${G_myName}) ${G_commandPrefs} \
              -p targetName=onTargetRun ${G_paramCmndOption} -i ${commandName}
     fi
 ####+END:
 }
+
 
 
 function vis_l2Plus_devContainer {

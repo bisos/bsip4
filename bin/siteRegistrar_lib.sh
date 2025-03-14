@@ -1,5 +1,10 @@
 #!/bin/bash
 
+#
+# This is now (2025-03-13) OBSOLETE -- SHOULD BE DELETED After removal of all references
+#
+
+
 ####+BEGIN: bx:bsip:bash/libLoadOnce :libName "auto"
 if [ -z "${bxeProvision_lib:-}" ] ; then
     bxoLib="LOADED" ; TM_trace 7 "bxeProvision_lib :: Loading Library -- /bisos/bsip/bin/bxeProvision_lib.sh"
@@ -17,35 +22,35 @@ _CommentBegin_
 _CommentEnd_
 
 
-function vis_registrarHostName {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
+# function vis_registrarHostName {
+#     G_funcEntry
+#     function describeF {  G_funcEntryShow; cat  << _EOF_
+# _EOF_
+#     }
+#     EH_assert [[ $# -eq 0 ]]
 
-    echo "192.168.0.90"
-}
+#     echo "192.168.0.90"
+# }
 
-function vis_registrarUserName {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
+# function vis_registrarUserName {
+#     G_funcEntry
+#     function describeF {  G_funcEntryShow; cat  << _EOF_
+# _EOF_
+#     }
+#     EH_assert [[ $# -eq 0 ]]
 
-    echo "bystar"
-}
+#     echo "bystar"
+# }
 
-function vis_registrarUserPassword {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
+# function vis_registrarUserPassword {
+#     G_funcEntry
+#     function describeF {  G_funcEntryShow; cat  << _EOF_
+# _EOF_
+#     }
+#     EH_assert [[ $# -eq 0 ]]
 
-    echo "intra"
-}
+#     echo "intra"
+# }
 
 
 
