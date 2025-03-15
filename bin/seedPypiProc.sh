@@ -998,7 +998,13 @@ _EOF_
 
     lpDo vis_fullPrepBuildUpload
 
+    # --- vis_pkgReInstall BEGIN  ## NOTYET, should converge
+    lpDo /bisos/venv/py3/dev-bisos3/bin/pip uninstall -y --no-cache-dir "${pypiPkgName}"
+
     opDo vis_fullPrepBuild forLocal  # recreates the dist with installed version
+
+    lpDo vis_pkgInstall edit /bisos/venv/py3/dev-bisos3
+    # --- vis_pkgReInstall END   ## NOTYET, should converge
 
     lpDo /bisos/venv/py3/bisos3/bin/pip install --no-cache-dir --upgrade "${pypiPkgName}"
 

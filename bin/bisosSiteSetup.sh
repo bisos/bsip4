@@ -215,8 +215,9 @@ _EOF_
 
     lpDo /bisos/var/sites/selected/sys/bin/siteBisosDefaults.sh ${extraInfo} -i initialize
 
-    # NOTYET, Shortcut 2025-03-13
-    bpoId=pis_superSiteNeda
+    local primarySite=$( platfSitesActivate-fps.cs  -i parGet primary )
+
+    bpoId=${primarySite}
 
     lpDo vis_activate_siteBxoPlusAndSelect
 
