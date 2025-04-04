@@ -286,9 +286,9 @@ _EOF_
 
     local ipAddrOfBpoVm=$(vis_ipAddrOfBpoVm)
 
-    lpDo roInv-facter.cs --svcName="svcFacter" --perfName="${ipAddrOfBpoVm}" --rosmu="roInv-facter.cs" --perfIpAddr="${ipAddrOfBpoVm}"  -i inv_sapCreate
+    lpDo facter-roInv.cs --svcName="svcFacter" --perfName="${ipAddrOfBpoVm}" --rosmu="facter-roInv.cs" --perfIpAddr="${ipAddrOfBpoVm}"  -i inv_sapCreate
 
-    lpDo roInv-facter.cs --perfName="${ipAddrOfBpoVm}"  -i factName networking
+    lpDo facter-roInv.cs --perfName="${ipAddrOfBpoVm}"  -i factName networking
 }
 
 
