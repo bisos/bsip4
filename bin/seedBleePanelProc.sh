@@ -104,6 +104,7 @@ ${G_myName} ${extraInfo} -i renew       # dblockUpdates fullUsagePanel-en.org ft
 ${G_myName} ${extraInfo} -i dblockBlankPanels   # dblockBlank fullUsagePanel-en.org
 ${G_myName} ${extraInfo} -i clean
 ${G_myName} ${extraInfo} -i bleeFilterCommonActions
+${G_myName} ${extraInfo} -i realmsPanelUpdate LinkHere
 _EOF_
 
   vis_ftoProcExamples  
@@ -328,6 +329,33 @@ _EOF_
 
     lpReturn
 }
+
+
+function vis_realmsPanelUpdate {
+    local realm="UNKNOWN-REALM"
+    local realmInsertFile="realmInsert.org"
+    local here=$(pwd)
+
+    if [[ "${here}" != *"/realmPanels/"* ]]; then
+        echo "Not in realmPanels -- creation skipped."
+        lpReturn
+    fi
+    if [[ "${here}" == *"/site/realmPanels/"* ]]; then
+        realm="*SITE*"
+    elif [[ "${here}" == *"/platform/realmPanels/"* ]]; then
+        realm="*PLATFORM*"
+    else
+        :
+    fi
+
+    cat << _EOF_ > ${realmInsertFile}
+*   [[file:${here}/fullUsagePanel-en.org][Go To ${realm} Realm Extensions Panel]]
+_EOF_
+    lpDo ls -l ${realmInsertFile}
+    lpDo cat ${realmInsertFile}
+    return
+}
+
 
 
 
