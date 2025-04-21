@@ -139,7 +139,8 @@ ${G_myName}  -i xforwardingEnabled
 ${G_myName} -i fullVerify
 ${G_myName} -i fullUpdate
 --- VERIFY ---
-${G_myName} -p localUser=${oneLocalUser} -i sshUserVerify
+${G_myName} -p localUser=${oneLocalUser} -i sshUserVerify           # Verify file perms and ownership
+${G_myName} -v -n showRun -i sshKeyRemoteVerify bystar localhost     # ssh into user@dest
 --- SERVER OPERATION --- 
 ${G_myName} -i start
 ${G_myName} -i stop
@@ -425,10 +426,10 @@ function vis_authorizedKeysUpdate {
       return 1
     fi
 
-    #print -- cat ${opAcct_homeDir}/.ssh/id_dsa.pub | ssh ${remoteUser}@${remoteHost} 'mkdir -p .ssh; umask 077; cat - >> .ssh/authorized_keys2'
+    #print -- cat ${opAcct_homeDir}/.ssh/id_dsa.pub | ssh ${remoteUser}@${remoteHost} 'mkdir -p .ssh; umask 077; cat - >> .ssh/authorized_keys'
 
-    opDo eval "cat ${opAcct_homeDir}/.ssh/id_dsa.pub | ssh ${remoteUser}@${remoteHost} 'mkdir -p .ssh; umask 077; cat - >> .ssh/authorized_keys2; chmod 644 .ssh/authorized_keys2'"
-    opDo eval "cat ${opAcct_homeDir}/.ssh/id_rsa.pub | ssh ${remoteUser}@${remoteHost} 'mkdir -p .ssh; umask 077; cat - >> .ssh/authorized_keys2; chmod 644 .ssh/authorized_keys2'"    
+    opDo eval "cat ${opAcct_homeDir}/.ssh/id_dsa.pub | ssh ${remoteUser}@${remoteHost} 'mkdir -p .ssh; umask 077; cat - >> .ssh/authorized_keys; chmod 644 .ssh/authorized_keys'"
+    opDo eval "cat ${opAcct_homeDir}/.ssh/id_rsa.pub | ssh ${remoteUser}@${remoteHost} 'mkdir -p .ssh; umask 077; cat - >> .ssh/authorized_keys; chmod 644 .ssh/authorized_keys'"
   fi
 }
 
@@ -475,10 +476,10 @@ function vis_logNameIsInAuthKeysFile {
   opAcctInfoGet osmt
   currentUser=${opRunAcctName}
 
-  userIsInAuthKeys=`cat ${opAcct_homeDir}/.ssh/authorized_keys2 | egrep "${currentUser}@"` ; retVal=$?
+  userIsInAuthKeys=`cat ${opAcct_homeDir}/.ssh/authorized_keys | egrep "${currentUser}@"` ; retVal=$?
   
   if [ ${retVal} != 0 ] ; then
-    EH_problem "You have permission problem to check for ${opAcct_homeDir}/.ssh/authorized_keys2"
+    EH_problem "You have permission problem to check for ${opAcct_homeDir}/.ssh/authorized_keys"
     exit 3
   else
     if [ "${userIsInAuthKeys}X" != "X" ] ; then
@@ -546,6 +547,29 @@ function vis_showLog {
 
 }
 
+function vis_sshKeyRemoteVerify {
+    G_funcEntry
+    function describeF { G_funcEntryShow; cat << _EOF_
+** $1=user $2=host
+   Verifies key-based auth by attempting key-based SSH connection.
+_EOF_
+    }
+
+    EH_assert [[ $# -eq 2 ]]
+    local user="$1"
+    local host="$2"
+
+    lpDo eval ssh -o BatchMode=yes -o ConnectTimeout=3 "${user}@${host}" "echo SSH Key Verified" 2\>/dev/null
+    if [[ $? -eq 0 ]]; then
+        ANT_raw "Remote SSH Key Authentication: SUCCESS for ${user}@${host}"
+        return 0
+    else
+        EH_problem "Remote SSH Key Authentication: FAILED for ${user}@${host}"
+        return 1
+    fi
+}
+
+
 function vis_knownHostsAddSystem {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -576,25 +600,147 @@ _EOF_
     lpReturn
 }
 
+function vis_sshdConfigEnforce {
+    G_funcEntry
+    function describeF { G_funcEntryShow; cat << _EOF_
+** $1=Directive $2=ExpectedValue
+   Verifies (or enforces) that /etc/ssh/sshd_config contains the proper value.
+_EOF_
+    }
 
+    EH_assert [[ $# -eq 2 ]]
+
+    local directive="$1"
+    local expected="$2"
+    local actual
+
+    actual=$(grep -i "^\s*${directive}\s" /etc/ssh/sshd_config | awk '{print $2}' | tail -n1)
+
+    if [[ "$actual" == "$expected" ]]; then
+        ANT_raw "Directive Match -- ${directive} ${actual}"
+        return 0
+    else
+        EH_problem "Directive Mismatch -- ${directive} is ${actual:-<unset>} (expected: ${expected})"
+        return 1
+    fi
+}
+
+
+function vis_pathOwnerVerify {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** $1=filePath $2=expectedOwner
+   Verifies that the file or directory at \$1 is owned by \$2.
+_EOF_
+    }
+    EH_assert [[ $# -eq 2 ]]
+
+    local filePath="$1"
+    local expectedOwner="$2"
+    local actualOwner
+
+    actualOwner=$(stat -c "%U" "$filePath" 2>/dev/null)
+
+    if [[ "$actualOwner" == "$expectedOwner" ]]; then
+        # ANT_raw "Ownership Match  -- ${filePath} owned by ${actualOwner}"
+        return 0
+    else
+        EH_problem "Bad Owner -- ${filePath} is owned by ${actualOwner}, expected ${expectedOwner}"
+        return 1
+    fi
+}
+
+
+function vis_pathPermsVerify {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** $1=filePath $2=filePermissions (in octal), if $2 matches the actual permissions return 0
+_EOF_
+    }
+    EH_assert [[ $# -eq 2 ]]
+
+    local filePath="$1"
+    local expectedPerm="$2"
+    local retVal=0
+
+    # Get actual file permissions in octal
+    local actualPerm
+    actualPerm=$(stat -c "%a" "$filePath" 2>/dev/null)
+
+    # Compare and return accordingly
+    if [[ "${actualPerm}" == "${expectedPerm}" ]]; then
+        ANT_raw "As Expected  -- ${filePath} = ${actualPerm}"
+        retVal=0
+    else
+        EH_problem "Bad Permissions -- ${filePath} = ${actualPerm}"
+        retVal=1
+    fi
+
+    if [[ -d "${filePath}" ]] ; then
+      lpDo ls -ld ${filePath}
+    else
+      lpDo ls -l ${filePath}
+    fi
+
+    lpReturn ${retVal}
+}
 
 function vis_sshUserVerify {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Verify all relevant files for proper ssh functioning
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+    local localHome=$(eval echo ~${localUser})
 
-  if [[ "${opRunOsType}_" == "Linux_" ]] ; then
+    lpDo vis_pathPermsVerify ${localHome} "2755"
+    lpDo vis_pathOwnerVerify ${localHome} "${localUser}"
+
+    lpDo vis_pathPermsVerify ${localHome}/.ssh "2700"
+    lpDo vis_pathOwnerVerify ${localHome}/.ssh  "${localUser}"
+
+    lpDo vis_pathPermsVerify ${localHome}/.ssh/id_rsa "600"
+    lpDo vis_pathOwnerVerify ${localHome}/.ssh/id_rsa  "${localUser}"
+
+    lpDo vis_pathPermsVerify ${localHome}/.ssh/known_hosts "600"
+    lpDo vis_pathOwnerVerify ${localHome}/.ssh/known_hosts  "${localUser}"
+
+    lpDo vis_pathPermsVerify ${localHome}/.ssh/config "600"
+    lpDo vis_pathOwnerVerify ${localHome}/.ssh/config  "${localUser}"
+
+    lpDo vis_pathPermsVerify ${localHome}/.ssh/authorized_keys "644"
+    lpDo vis_pathOwnerVerify ${localHome}/.ssh/authorized_keys  "${localUser}"
+
+    lpDo vis_sshdConfigEnforce "PubkeyAuthentication" "yes"
+
+}
+
+
+function vis_sshUserVerifyOLD {
+  local user=""
+  local group=""
+  local other=""
+  local localHome=$(eval echo ~${localUser})
+  declare -a this
+
+
+  if [[ "${opRunOsType}" == "Linux" ]] ; then
     cmd="getfacl --absolute-names --omit-header ~${localUser}/.ssh"
   else
     cmd="getfacl ~${localUser}/.ssh | egrep -v "^\#" | cut -d \# -f1"
   fi
 
   integer i=0
-  eval ${cmd} | 
+  # eval ${cmd} |
+
   while read line ; do
     this[i]=$line
     i=i+1
-  done
+  done <<< $(eval ${cmd})
 
   for x in ${this[@]} ; do
-    if [[ "${x%%:*}_" == "user_" ]] ; then
+    if [[ "${x%%:*}" == "user" ]] ; then
       user=${x##*:}
     elif [[ "${x%%:*}_" == "group_" ]] ; then
       group=${x##*:}
@@ -603,16 +749,21 @@ function vis_sshUserVerify {
     fi
   done
 
-  if [ "${user}_" == "rwx_" -a "${group}_" == "---_" -a "${other}_" == "---_" ] ; then
-    print "~${localUser}/.ssh -- correct permission"
-    ls -ld ~${localUser}/.ssh
-    #NOTYET
-    print "permission for ~${localUser}/.ssh/authorized_keys2 has to be 644"
-    print "permission for ~${localUser} has to be 755"
+  if [ "${user}" == "rwx" -a "${group}" == "---" -a "${other}" == "---" ] ; then
+    print "As Expected -- ~${localUser}/.ssh -- correct permission"
+    lpDo ls -ld ${localHome}/.ssh
+    #
+
+    lpDo vis_pathPermsVerify ${localHome}/.ssh/id_rsa "600"
+
+    lpDo vis_pathPermsVerify ${localHome}/.ssh/authorized_keys "644"
+
+    lpDo vis_pathPermsVerify ${localHome} "2755"
+
     return 0
   else
-    EH_problem "~${localUser}/.ssh -- incorrect permission"
-    ls -ld ~${localUser}/.ssh
+    EH_problem "${localHome}/.ssh -- user=${user} group=${group} other=${other} --  incorrect permission"
+    ls -ld ${localHome}/.ssh
     return 1
   fi
   

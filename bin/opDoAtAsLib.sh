@@ -147,10 +147,10 @@ function logNameIsInOSMTAuthKeysFile {
   opAcctInfoGet osmt
   currentUser=${opRunAcctName}
 
-  userIsInAuthKeys=`cat ${opAcct_homeDir}/.ssh/authorized_keys2 | egrep "${currentUser}@"` ; retVal=$?
+  userIsInAuthKeys=`cat ${opAcct_homeDir}/.ssh/authorized_keys | egrep "${currentUser}@"` ; retVal=$?
   
   if [ ${retVal} != 0 ] ; then
-    EH_problem "You have permission problem to check for ${opAcct_homeDir}/.ssh/authorized_keys2"
+    EH_problem "You have permission problem to check for ${opAcct_homeDir}/.ssh/authorized_keys"
     exit 3
   else
     if [ "${userIsInAuthKeys}X" != "X" ] ; then
