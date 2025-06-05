@@ -97,7 +97,7 @@ ${G_myName} ${extraInfo} -i regReqInfoBasePath_obtain
 _EOF_
 }
 
-
+cur_bpoId_parent=${cur_bpoId_parent:-UNSET}
 
 function vis_examplesBxRealIndiv {
     bxeParamsMini="-p privacy=\"priv\" -p kind=\"real\" -p type=\"individual\" -p firstName=\"first\" -p lastName=\"last\" "

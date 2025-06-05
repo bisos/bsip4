@@ -3452,7 +3452,8 @@ _EOF_
 
     local thisEmacsClient=$( vis_thisEmacsClient )
 
-    lpDo ${thisEmacsClient} -e  "(b:mtdt:derive/fromFilesAndSelect  \"${mailingFileNames}\")"
+    # OBSOLETED lpDo ${thisEmacsClient} -e  "(b:mtdt:derive/fromFilesAndSelect  \"${mailingFileNames}\")"
+    lpDo ${thisEmacsClient} -e  "(b:mtdt:mailings|selectWithFile  \"${mailingFileNames}\")"
 }
 
 

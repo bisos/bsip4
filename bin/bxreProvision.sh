@@ -72,6 +72,9 @@ _CommentEnd_
 . ${opBinBase}/lpParams.libSh
 . ${opBinBase}/lpReRunAs.libSh
 
+. ${opBinBase}/unisosAccounts_lib.sh
+. ${opBinBase}/bisosAccounts_lib.sh
+
 . ${opBinBase}/bystarHook.libSh
 
 . ${opBinBase}/bxeHookRun_lib.sh
