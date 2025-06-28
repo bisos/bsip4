@@ -1242,6 +1242,7 @@ $( examplesSeperatorChapter "PyPi AuxNode ftpWalks" )
 ftoProc.sh -v -n showRun -i treeRecurse runFunc pypiProc.sh -i distClean
 ftoProc.sh -v -n showRun -i ftoWalkRunCmnd pypiProc.sh -i distClean
 ftoProc.sh -v -n showRun -i ftoWalkRunCmnd pypiProc.sh -v -n showRun -i pkgReInstall edit /bisos/venv/py3/dev-bisos3
+ftoProc.sh -v -n showRun -i ftoWalkRunCmnd pypiProc.sh -v -n showRun -p repo=main -i fullPrepBuildUploadRePrep
 ftoProc.sh -v -n showRun -i ftoWalkRunCmnd pypiProc.sh -v -n showRun -i devBinSymlinks
 ftoProc.sh -v -n showRun -i ftoWalkRunCmnd csPlayer.sh -i clean ftoProc.sh pypiProc.sh
 ftoProc.sh -v -n showRun -i ftoWalkRunCmnd csPlayer.sh -i pkgedPrep ftoProc.sh pypiProc.sh

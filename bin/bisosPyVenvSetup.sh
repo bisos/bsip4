@@ -268,6 +268,8 @@ _EOF_
             lpDo mv "${baseDir}" "${baseDir}.$(DATE_nowTag)"
         fi
 
+        lpDo sudo apt-get install python3-virtualenv
+
         lpDo  virtualenv --python=${pythonVersion} "${baseDir}"
 
         lpDo ${baseDir}/bin/python -m pip install --upgrade pip

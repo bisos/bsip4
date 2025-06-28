@@ -116,6 +116,7 @@ ${G_myName} ${extraInfo} -i bvdbb_deb10_desktopBuild
 ${G_myName} ${extraInfo} -i bvdbb_deb11_serverBuild
 ${G_myName} ${extraInfo} -i bvdbb_deb11_desktopBuild
 ${G_myName} ${extraInfo} -i bvdbb_deb12_desktopBuild
+${G_myName} ${extraInfo} -i bvdbb_deb13_desktopBuild
 ${G_myName} ${extraInfo} -i bvdbb_ub2004_serverBuild
 ${G_myName} ${extraInfo} -i bvdbb_ub2004_desktopBuild
 $( examplesSeperatorChapter "BISOS Vagrant Base Boxes" )
@@ -393,6 +394,30 @@ _EOF_
 
     lpReturn
 }
+
+
+
+function vis_bvdbb_deb13_desktopBuild {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local bisosPackerBoxesPath=$( vis_bisos_packerBoxesBasePath )
+
+    # installs needed plugins
+    inBaseDirDo ${bisosPackerBoxesPath}/debian/desktop packer init debian-13.trixie-amd64.pkr.hcl
+
+    # /bxo/r3/iso/aip_vagrantBaseBoxes/vagrants/packerBaseBoxes/debian/desktop/debian-12.4.0-amd64.pkr.hcl
+    # /bisos/admin/vagrants/packerBaseBoxes/debian/desktop/debian-13.trixie-amd64.pkr.hcl
+    inBaseDirDo ${bisosPackerBoxesPath}/debian/desktop packer  build -var "headless=true" debian-13.trixie-amd64.pkr.hcl
+
+    lpDo vagrant box add $(vis_bisosVarVagrantBuilds)/debian-13.trixie-desktop.libvirt.box --name "bxDistro/debian-23.trixie/desktop"
+
+    lpReturn
+}
+
 
 function vis_bvdbb_deb11_desktopBuild {
     G_funcEntry
