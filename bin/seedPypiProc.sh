@@ -887,7 +887,10 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    if [ -f ../README.org ] ; then
+    if [ -f ../README-PyPi.org ] ; then
+        lpDo vis_readmeToDescriptionOrg ../README-PyPi.org ./_description.org
+        lpDo pandoc --from=org -s -t rst --toc ./_description.org -o ./README.rst
+    elif [ -f ../README.org ] ; then
         lpDo vis_readmeToDescriptionOrg ../README.org ./_description.org
         lpDo pandoc --from=org -s -t rst --toc ./_description.org -o ./README.rst
     else

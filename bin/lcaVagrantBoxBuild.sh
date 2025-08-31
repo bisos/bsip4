@@ -121,6 +121,10 @@ ${G_myName} ${extraInfo} -i bvdbb_ub2004_serverBuild
 ${G_myName} ${extraInfo} -i bvdbb_ub2004_desktopBuild
 $( examplesSeperatorChapter "BISOS Vagrant Base Boxes" )
 ${G_myName} ${extraInfo} -i bisos_fullUpdate
+$( examplesSeperatorChapter "For Path of Vagrant Base Box, build, clean" )
+${G_myName} ${extraInfo} -i forPath_analyze /bisos/git/bxRepos/bxObjects/bro_vagrantDebianBaseBoxes/qemu/debian/13/trixie/amd64/netinst/us.pkr.hcl
+${G_myName} ${extraInfo} -i forPath_build /bisos/git/bxRepos/bxObjects/bro_vagrantDebianBaseBoxes/qemu/debian/13/trixie/amd64/netinst/us.pkr.hcl
+${G_myName} ${extraInfo} -i forPath_clean /bisos/git/bxRepos/bxObjects/bro_vagrantDebianBaseBoxes/qemu/debian/13/trixie/amd64/netinst/us.pkr.hcl
 $( examplesSeperatorSection "Debian and Ubuntu BISOS Container Vagrant  Base Boxes" )
 ${G_myName} ${extraInfo} -i bisos_boxesPrep
 ${G_myName} ${extraInfo} -i bisos_deb10_build
@@ -537,6 +541,90 @@ _EOF_
     inBaseDirDo ${bisosPackerBoxesPath}/ubuntu/bxcntnr packer build -only qemu -var "headless=true" ubuntu-20.04-amd64.json
 
     lpDo vagrant box add $(vis_bisosVarVagrantBuilds)/ubuntu-20.04-bxcntnr.libvirt.box --name "bisos/ubuntu-20.04/bxcntnr"
+
+    lpReturn
+}
+
+function vis_forPath_analyze {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local filePath=$1
+
+    if [ !  -f "${filePath}" ] ; then
+        EH_problem "Missing ${filePath}"
+        lpReturn 101
+    fi
+
+    # NOTYET, the file and its path will be analyzed.
+    # The following information is hardcoded for debian 13.
+
+    vagPar_creator="bx"
+    vagPar_provider="libvirt"
+    vagPar_distro="debian"
+    vagPar_distroRel="13"
+    vagPar_distroVersion="13.trixie"
+    vagPar_cpuArch="amd64"
+    vagPar_boxScope="netinst"
+    vagPar_locale="us"
+
+    lpReturn
+}
+
+
+function vis_forPath_build {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local filePath=$1
+
+    if ! vis_forPath_analyze "${filePath}" ; then
+        EH_problem "Failed:: vis_forPath_analyze ${filePath}"
+        lpReturn 101
+    fi
+
+    local dirBase=$(dirname "${filePath}")
+    local fileName=$(basename "${filePath}")
+
+    local boxFileName=${vagPar_distro}-${vagPar_distroRel}-${vagPar_cpuArch}-${vagPar_provider}.box
+
+    lpDo rm -f "${dirBase}/${boxFileName}"
+
+    inBaseDirDo ${dirBase} env \
+        CHECKPOINT_DISABLE=1 \
+	    PACKER_LOG=1 \
+	    PACKER_LOG_PATH="${boxFileName}.init.log" \
+        packer init ${vagPar_locale}.pkr.hcl
+
+    inBaseDirDo ${dirBase} env \
+        PACKER_KEY_INTERVAL=10ms \
+	    CHECKPOINT_DISABLE=1 \
+	    PACKER_LOG=1 \
+	    PACKER_LOG_PATH=$boxFileName.log \
+	    PKR_VAR_version=vagPar_distroRel \
+	    PKR_VAR_vagrant_box=$boxFileName \
+		packer build -only=qemu.debian-amd64 -on-error=abort -timestamp-ui ${vagPar_locale}.pkr.hcl
+
+    inBaseDirDo ${dirBase} env \
+        PACKER_KEY_INTERVAL=10ms \
+	    CHECKPOINT_DISABLE=1 \
+	    PACKER_LOG=1 \
+	    PACKER_LOG_PATH=$boxFileName.log \
+	    PKR_VAR_version=vagPar_distroRel \
+	    PKR_VAR_vagrant_box=$boxFileName \
+		packer build -only=qemu.debian-amd64 -on-error=abort -timestamp-ui ${vagPar_locale}.pkr.hcl
+
+   local boxName=${vagPar_creator}/${vagPar_distro}-${vagPar_distroVersion}-${vagPar_cpuArch}/${vagPar_boxScope}/${vagPar_locale}
+
+   lpDo vagrant box add ${dirBase}/${boxFileName}  --name "${boxName}" --provider ${vagPar_provider}
+
+   lpDo vagrant box list
 
     lpReturn
 }
