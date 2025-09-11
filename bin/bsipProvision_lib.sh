@@ -320,6 +320,23 @@ _EOF_
     lpReturn
 }
 
+function vis_runningInDocker {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    if [ -f /.dockerenv ]; then
+      echo "Running inside a Docker container."
+      return 0
+    else
+      echo "Not running inside a Docker container."
+      return 1
+    fi
+}
+
+
 function vis_provisionGnomeDesktop {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -330,6 +347,10 @@ _EOF_
     local bisosBinBase="$( bisosBinBaseGet )"
 
     lpDo id
+
+    if vis_runningInDocker ; then
+        return
+    fi
 
     lpDo sudo  mkdir -p /usr/local/share/applications
     lpDo ${bisosBinBase}/blee-xdg.sh -h -v -n showRun -f -i xdgBleeSysAppUpdate
