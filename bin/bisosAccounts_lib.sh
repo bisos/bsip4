@@ -270,8 +270,9 @@ _EOF_
        else
            EH_problem "${acctName} account is misconfigured"
            ANT_raw "For acctName=${acctName} Attempting Re-Configurations"
-           lpDo groupmod -g ${acctGid} ${acctName}
+           lpDo sudo usermod -G ${acctGid} --append ${acctName}
            lpDo id
+           lpDo sudo -u ${acctName} id
            # lpReturn 101
        fi
    else
@@ -293,7 +294,6 @@ _EOF_
 
    lpDo vis_usgAcctPasswdSet "${acctName}"
 
-   lpDo id
 }
 
 function vis_usgAcctPasswdSet { vis_bisosAcctPasswdSet $@; }
