@@ -269,7 +269,8 @@ _EOF_
            ANT_raw "${acctName} exists and is properly configured. It will be used"
        else
            EH_problem "${acctName} account is misconfigured"
-           lpReturn 101
+           ANT_raw "For acctName=${acctName} Attempting Re-Configurations"
+           # lpReturn 101
        fi
    else
        opDo vis_usgAcctAdd ${acctName}
