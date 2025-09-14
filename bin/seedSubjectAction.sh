@@ -12,6 +12,9 @@ set -o pipefail   # return is that of rightmost
 #IFS=$'\n\t'      #
 
 # set-u fix
+
+umask 0002
+
 G_myName=""
 FUNCNAME=""
 
