@@ -1286,7 +1286,7 @@ _EOF_
 
     lpDo pypiPkgInfoExtract
 
-    lpDo  pyPkgTools.cs  -i pypiLatestVersionPlus ${pypiPkgName} ${increment}
+    lpDo pyPkgTools.cs -i pypiLatestVersionPlus ${pypiPkgName} ${increment}
 }
 
 function vis_pypiVerLatest {
