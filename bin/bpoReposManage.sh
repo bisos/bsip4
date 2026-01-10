@@ -119,8 +119,8 @@ function vis_examples {
     
     #local privacy="priv"
     local priv="priv"    
-    #local oneBxoId="prs_bisos"
-    local oneBxoId=${currentBxoId}    
+    local oneBxoId="prs_bisos"
+    # local oneBxoId=${currentBxoId}
     #oneBxoId="as-test1_5"    
     oneBxoHome=$( FN_absolutePathGet ~${oneBxoId} )    
 
@@ -141,6 +141,10 @@ $( examplesSeperatorChapter "BxO Path Based Actvities" )
 ${G_myName} ${extraInfo} -i bpoIdObtainForPath . 
 ${G_myName} ${extraInfo} -i repoCreateAndPushBasedOnPath .
 ${G_myName} ${extraInfo} -i repoDeleteBasedOnPath .  # use -f to also remove dir
+echo "${oneBxoId}" | ${G_myName} -i bpoReposNotCloned
+bpoAcctManage.sh -i bpoIdsList | ${G_myName} -i bpoReposNotCloned
+echo "${oneBxoId}" | ${G_myName} -i bpoBasedirsNotRepos
+bpoAcctManage.sh -i bpoIdsList | ${G_myName} -i bpoBasedirsNotRepos
 $( examplesSeperatorChapter "BxO Pull Git Repos" )
 echo $(pwd) | bx-gitRepos -i gitRemPull
 ${G_myName} -i basedOnPath_reposPathList . | bx-gitRepos -i gitRemPull

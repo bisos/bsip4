@@ -119,9 +119,15 @@ ${G_myName} ${extraInfo} -p ssid=lws-1000111 -p passwd=lePassword -p ApNu=1 -i w
 ${G_myName} ${extraInfo} -p ssid=lws-1000111 -p passwd=lePassword -p channelNu=155 -i wifiApFullUpdate
 ${G_myName} ${extraInfo} -p ssid=lws-1000111 -p passwd=lePassword -p ApNu=1 -i wifiApBridgeCreate
 ${G_myName} ${extraInfo} -i wifiApAndBridgeStatus
-s$( examplesSeperatorChapter "br-hotspot-wifi -- Wifi Connection Configuration" )
-${G_myName} ${extraInfo} -i assertUsbWifiDevice
-${G_myName} ${extraInfo} -i wifiDeviceName
+$( examplesSeperatorChapter "Wifi Antena/Device Hardware" )
+echo Hardware:  [Device] Alfa Networks AWUS036ACH AWUS036ACM -- [Chipset] 88XXau (rtl8812au)
+lsusb | grep -i 802.11   # USB Antena is plugged in?
+${G_myName} ${extraInfo} -i assertUsbWifiDevice  # lsusb | grep -i 802.11
+sudo dmesg | grep -i wifi   # Should show rtlwifi, if blank - install driver
+echo https://github.com/aircrack-ng/rtl8812au  # For driver installation
+dkms status | grep -i 88..au   # Has the Kernel module been installed?
+${G_myName} ${extraInfo} -i wifiDeviceName # nmcli device | grep ^wlx
+$( examplesSeperatorChapter "br-hotspot-wifi -- Wifi Connection Configuration" )
 ${G_myName} ${extraInfo} -i getChannelNumber 1
 ${G_myName} ${extraInfo} -i wifiApStandAlone_down
 ${G_myName} ${extraInfo} -p ssid=lws-1000111 -p passwd=lePassword -p channelNu=36 -i wifiApStandAlone
@@ -134,9 +140,27 @@ nmcli connection show br-hotspot-wired
 $( examplesSeperatorChapter "br-hotspot-bridge br-hotspot-dev -- Bridge Configuration Configuration" )
 nmcli connection show br-hotspot-bridge
 nmcli device show br-hotspot-dev
-$( examplesSeperatorChapter "Individual Function Examples" )
-${G_myName} ${extraInfo} -i wifiApConsDel
-$( examplesSeperatorChapter "Network Manage Interfaces -- Monitoring and Diagnostics" )
+$( examplesSeperatorChapter "Cleanup -- Delete All Connections and Devices" )
+${G_myName} ${extraInfo} -i wifiApConnectionsDelete
+$( examplesSeperatorChapter "Diagnostics" )
+$( echo ------- Hardware USB -------- )
+echo Hardware:  [Device] Alfa Networks AWUS036ACH AWUS036ACM -- [Chipset] 88XXau (rtl8812au)
+echo Debian 12 and 13 Kernel has Driver Obsoletes -- https://github.com/lwfinger/rtw88 -- Obsoletes https://github.com/aircrack-ng/rtl8812au
+lsusb -t -v # Lists the driver as mt76x2u on Deb 12 -- MediaTek Inc. MT7612U
+lsusb | grep -i 802.11   # USB Antena is plugged in?
+${G_myName} ${extraInfo} -i assertUsbWifiDevice  # lsusb | grep -i 802.11
+sudo dmesg | grep -i wifi   # Should show rtlwifi, if blank - install driver
+$( echo ------- Hardware PCI -------- )
+lspci -nnk | grep -iA 3 net
+lspci | grep -i wireless
+lspci -k
+sudo lshw -C network
+$( echo ------- Kernel -------- )
+dkms status  # Needed for Deb 11 Has the Kernel module been installed?
+lsmod | grep -i mt76x2u  # Deb 12+ In kernel Module
+sudo dmesg | grep -i mt76x2u
+journalctl -k -b -1  | grep -i mt76x2u # Previous boot
+$( echo ------- Network Manager -------- )
 sudo ls -ldt /etc/NetworkManager/system-connections/*
 nmcli     # Used in this script
 nmtui     # Terminal interface -- curses based
@@ -144,14 +168,18 @@ nm-connection-editor    # GUI GTK Based
 gnome-nettool    # GTK Based, limited
 systemctl status NetworkManager
 journalctl -xe | grep -i network
-$( examplesSeperatorChapter "Diagnostics" )
-netstat -rn         # Routes
+journalctl -xe NM_CONNECTION=ea5738b6-97ba-4d67-b4d9-aa6657d517c0 + NM_DEVICE=wlx00c0cab3f740
 nmcli device        # List Devices
 nmcli connection    # List Bridge Names
 nmcli device wifi   # SSIDs, Chans, Bars,
 nmcli device show virbr1
 nmcli connection show virbr1
 echo Connections/Devices:: br-hotspot-bridge, br-hotspot-dev, br-hotspot-wired, br-hotspot-wifi
+$( echo ------- Routing -------- )
+cat /proc/sys/net/ipv4/ip_forward
+netstat -rn         # Routes
+sudo iptables -L
+ip link
 _EOF_
 }
 
@@ -291,7 +319,8 @@ function vis_wifiApStandAlone_down {
 _EOF_
                       }
     EH_assert [[ $# -eq 0 ]]
-    lpDo eval sudo nmcli connection delete br0-wifi
+    lpDo sudo nmcli connection down br-hotspot-wifi
+    lpDo sudo nmcli connection delete br-hotspot-wifi
 }
 
 function vis_wifiApStandAlone_up {
@@ -300,9 +329,21 @@ function vis_wifiApStandAlone_up {
 _EOF_
                       }
     EH_assert [[ $# -eq 0 ]]
+    EH_assert [[ ! -z "${ssid}" ]]
+
+    local wifiDeviceName=$(vis_wifiDeviceName)
+    if [ -z "${wifiDeviceName}" ]; then
+        EH_problem "Missing Wifi Device Name"
+        return 1
+    fi
+
     lpDo vis_wifiApStandAlone_down
+
+    # Create the connection Here
+    lpDo sudo nmcli connection add con-name br-hotspot-wifi ifname ${wifiDeviceName} type wifi autoconnect no ssid "${ssid}"
+
     lpDo vis_wifiApStandAlone
-    lpDo  sudo nmcli connection up br0-wifi
+    lpDo  sudo nmcli connection up br-hotspot-wifi
 }
 
 
@@ -326,20 +367,13 @@ _EOF_
         channelNu=$(vis_getChannelNumber ${ApNu})
     fi
 
-
-
-    # Add br0-wifi as slave to WifiBridge0
-    # lpDo sudo nmcli connection add con-name br0-wifi ifname ${wifiDeviceName} type wifi slave-type bridge master WifiBridge0 connection.autoconnect yes wifi.ssid "${ssid}"
-    # lpDo sudo nmcli connection add con-name wap010   ifname wlx00c0cab3f740   type wifi autoconnect no ssid lws-1000010
-    lpDo sudo nmcli connection add con-name br-hotspot-wifi ifname ${wifiDeviceName} type wifi autoconnect no ssid "${ssid}"
-
+    # NOTYET, assumes br-hotspot-wifi exists -- Should assert that
 
     # Configure WiFi as standalone Access Point (not bridged at kernel level)
-    # lpDo sudo nmcli connection add con-name br0-wifi ifname ${wifiDeviceName} type wifi ipv4.method manual ipv4.addresses "192.168.0.2/24" ipv6.method disabled wifi.ssid "${ssid}"
+    #lpDo sudo nmcli connection add con-name br-hotspot-wifi ifname ${wifiDeviceName} type wifi autoconnect no ssid "${ssid}"
 
-    # Configure WiFi security and AP mode
     # lpDo sudo nmcli connection modify br0-wifi 802-11-wireless.mode ap 802-11-wireless.band a
-    lpDo sudo nmcli connection modify br-hotspot-wifi 802-11-wireless.mode ap 802-11-wireless.band bg ipv4.method shared
+    lpDo sudo nmcli connection modify br-hotspot-wifi 802-11-wireless.mode ap 802-11-wireless.band bg
 
     # lpDo sudo nmcli connection modify br0-wifi wifi.channel ${channelNu}
 
@@ -387,42 +421,26 @@ _EOF_
     # Delete previous configurations
     lpDo vis_wifiApConnectionsDelete
 
-
-    # Create bridge using ip commands
-    # lpDo sudo ip link add name br0 type bridge
-    # lpDo sudo ip link set br0 up
-
-    # Add wired interface to bridge (WiFi adapter may not support bridge enslaving)
-    # lpDo sudo ip link set ${wiredIf} master br0
-
     # Create Bridge -- connection=br-hotspot-bridge  device=br-hotspot-device  stp=no(no spanning tree)
-    lpDo sudo nmcli connection add con-name br-hotspot-bridge ifname br-hotspot-device type bridge ipv4.method auto ipv6.method disabled connection.autoconnect yes stp no
+    lpDo sudo nmcli connection add con-name br-hotspot-bridge ifname br-hotspot-dev type bridge ipv4.method auto ipv6.method disabled connection.autoconnect yes stp no
 
     # Add br-hotspot-wired connection as slave to br-hotspot-bridge (master) on wired interface
     lpDo sudo nmcli connection add con-name br-hotspot-wired  ifname ${wiredIf} type bridge-slave master br-hotspot-bridge connection.autoconnect yes
 
-
-    lpDo sudo nmcli connection add con-name br-hotspot-wifi ifname ${wifiDeviceName} type wifi slave-type bridge master WifiBridge0 connection.autoconnect yes
+    lpDo sudo nmcli connection add con-name br-hotspot-wifi ifname ${wifiDeviceName} type wifi slave-type bridge master br-hotspot-bridge connection.autoconnect yes wifi.ssid "${ssid}"
 
     # Configure WiFi and bring up connections
     lpDo vis_wifiApStandAlone
 
-
-
-   # Configure wired interface with NetworkManager
-   lpDo sudo nmcli connection add con-name br0-wired ifname ${wiredIf} type ethernet ipv4.method manual ipv4.addresses "192.168.0.1/24" ipv6.method disabled master br0 slave-type bridge
-
-
     # Bring up the wired connection to the bridge
-    lpDo sudo nmcli connection up br0-wired
+    lpDo sudo nmcli connection up br-hotspot-wired
 
     # Bring up WiFi AP
-    lpDo sudo nmcli connection up br0-wifi
+    lpDo sudo nmcli connection up br-hotspot-wifi
 
-    # Configure bridge IP
-    lpDo sudo ip addr add 192.168.0.1/24 dev br0 2>/dev/null || true
+    lpDo sudo nmcli connection up br-hotspot-bridge
 
-   lpReturn
+    lpReturn
 }
 
 function vis_wifiApAndBridgeStatus {

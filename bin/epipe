@@ -1,0 +1,58 @@
+#!/bin/sh
+
+
+# Taken from https://github.com/dajva/epipe.git
+# TODOs:
+# -v is not necessary can be done with tee and with pee
+
+EPIPE_EMACS=${EPIPE_EMACS:-emacs}
+show="NO"
+buffer_name=""
+interval=1
+
+usage() {
+    self=$(basename $0)
+    echo "$self redirects stdin to an emacs buffer"
+    echo -e "Example: 'echo \"foo\" | epipe'"
+    echo
+    echo -e "\t-e CMD\t Use emacs CMD (default is EPIPE_EMACS=${EPIPE_EMACS})."
+    echo -e "\t-b NAME\t Piped-to buffer should have NAME."
+    echo -e "\t-I INT\t Use INT as revert interval."
+    echo -e "\t-v\t Verbose mode also prints output to stdout."
+    echo -e "\t-h\t Shows this message."
+}
+
+while [ $# -gt 0 ]
+do
+    case $1 in
+        -v) show="YES"; shift;;
+        -e) shift; EPIPE_EMACS=$1; shift;;
+        -b) shift; buffer_name=$1; shift;;
+        -I) shift; interval=$1; shift;;
+        -h) usage; exit 0; shift;;
+        *) echo "Unknown option: '$1'"; usage; exit 1;;
+    esac
+done
+
+tmpfile=$(mktemp --tmpdir=/tmp epipe.XXXXXX)
+elisp="
+(let ((find-file-hook
+       '((lambda ()
+           (turn-on-auto-revert-tail-mode)
+           (setq auto-revert-interval ${interval})
+           (auto-revert-set-timer)
+           (goto-char (point-max))
+           (cd \"$(pwd)\")
+           (unless (string-empty-p \"$buffer_name\")
+             (rename-buffer \"$buffer_name\"))))))
+  (find-file \"$tmpfile\"))"
+${EPIPE_EMACS} --eval "$elisp" > /dev/null &
+
+if [ "$show" = "NO" ]
+then
+    cat > $tmpfile
+else
+    tee $tmpfile
+fi
+
+

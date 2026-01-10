@@ -449,6 +449,164 @@ _EOF_
 }
 
 
+function vis_bpoReposNotCloned {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+
+    local inputsList="$@"
+    local thisFunc=${G_thisFunc}
+
+    function processEach {
+        EH_assert [[ $# -eq 1 ]]
+        local bpoId=$1
+        if ! vis_userAcctExists ${bpoId} ; then
+            EH_problem "${bpoId} Account Does Not Exist -- ${thisFunc} Processing Skipped"
+            lpReturn 101
+        fi
+        local bpoHome=$( FN_absolutePathGet ~${bpoId} )
+        local reposList=$( bxoGitlab.py -v 30 --bpoId="${bpoId}" -i reposList )
+
+        if [ "${G_verbose}_" == "verbose_" ] ; then
+            ANT_raw "Listing Path Of Repos Of bpoId=${bpoId}"
+        fi
+        local basedirsList=$(inBaseDirDo ${bpoHome} ls)
+        local bpoMatch="TRUE"
+        local repoMisMatch="TRUE"
+        for each in ${reposList} ; do
+            repoMisMatch="TRUE"
+            for other in ${basedirsList} ; do
+                if [ "${each}" == "${other}" ] ; then
+                    repoMisMatch="FALSE"
+                    break
+                fi
+            done
+            if [ "${repoMisMatch}" == "TRUE" ] ; then
+                echo REPO Has Not Been Cloned: ${bpoHome}/${each}
+                bpoMatch="FALSE"
+            fi
+        done
+        if [ "${bpoMatch}" == "TRUE" ] ; then
+            echo Consistent REPOS and BASEDIRS: ${bpoHome}
+        fi
+
+        return
+
+        for each in ${basedirsList} ; do
+            echo BASEDIR: ${bpoHome}/${each}
+        done
+
+        for each in ${reposList} ; do
+            echo REPO:  ${bpoHome}/${each}
+        done
+    }
+
+####+BEGIN: bx:bsip:bash/processArgsAndStdin :noParams t
+     function processArgsAndStdin {
+        local effectiveArgs=( "$@" )
+        local stdinArgs=()
+        local each
+        if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
+            readarray stdinArgs < /dev/stdin
+            effectiveArgs=( "$@" "${stdinArgs[@]}" )
+        fi
+        if [ ${#effectiveArgs[@]} -eq 0 ] ; then
+            ANT_raw "No Args And Stdin Is Empty"
+            lpReturn
+        fi
+        for each in "${effectiveArgs[@]}"; do
+            lpDo processEach "${each%$'\n'}"
+        done
+    }
+    lpDo processArgsAndStdin "$@"
+####+END:
+
+    lpReturn
+}
+
+
+
+
+
+function vis_bpoBasedirsNotRepos {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+
+    local inputsList="$@"
+    local thisFunc=${G_thisFunc}
+
+    function processEach {
+        EH_assert [[ $# -eq 1 ]]
+        local bpoId=$1
+        if ! vis_userAcctExists ${bpoId} ; then
+            EH_problem "${bpoId} Account Does Not Exist -- ${thisFunc} Processing Skipped"
+            lpReturn 101
+        fi
+        local bpoHome=$( FN_absolutePathGet ~${bpoId} )
+        local reposList=$( bxoGitlab.py -v 30 --bpoId="${bpoId}" -i reposList )
+
+        if [ "${G_verbose}_" == "verbose_" ] ; then
+            ANT_raw "Listing Path Of Repos Of bpoId=${bpoId}"
+        fi
+        local basedirsList=$(inBaseDirDo ${bpoHome} ls)
+        local bpoMatch="TRUE"
+        local repoMisMatch="TRUE"
+        for each in ${basedirsList} ; do
+            repoMisMatch="TRUE"
+            for other in ${reposList} ; do
+                if [ "${each}" == "${other}" ] ; then
+                    repoMisMatch="FALSE"
+                    break
+                fi
+            done
+            if [ "${repoMisMatch}" == "TRUE" ] ; then
+                echo NOT A REPO: ${bpoHome}/${each}
+                bpoMatch="FALSE"
+            fi
+        done
+        if [ "${bpoMatch}" == "TRUE" ] ; then
+            echo Consistent REPOS and BASEDIRS: ${bpoHome}
+        fi
+
+        return
+
+        for each in ${basedirsList} ; do
+            echo BASEDIR: ${bpoHome}/${each}
+        done
+
+        for each in ${reposList} ; do
+            echo REPO:  ${bpoHome}/${each}
+        done
+    }
+
+####+BEGIN: bx:bsip:bash/processArgsAndStdin :noParams t
+     function processArgsAndStdin {
+        local effectiveArgs=( "$@" )
+        local stdinArgs=()
+        local each
+        if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
+            readarray stdinArgs < /dev/stdin
+            effectiveArgs=( "$@" "${stdinArgs[@]}" )
+        fi
+        if [ ${#effectiveArgs[@]} -eq 0 ] ; then
+            ANT_raw "No Args And Stdin Is Empty"
+            lpReturn
+        fi
+        for each in "${effectiveArgs[@]}"; do
+            lpDo processEach "${each%$'\n'}"
+        done
+    }
+    lpDo processArgsAndStdin "$@"
+####+END:
+
+    lpReturn
+}
+
+
+
 function vis_bxoReposPathList {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
