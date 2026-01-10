@@ -556,6 +556,10 @@ _EOF_
         local repoMisMatch="TRUE"
         for each in ${basedirsList} ; do
             repoMisMatch="TRUE"
+            if [ -L "${bpoHome}/${each}"  ] ; then
+                echo NOT A REPO: A SymLink -- Skipped: ${bpoHome}/${each}
+                break
+            fi
             for other in ${reposList} ; do
                 if [ "${each}" == "${other}" ] ; then
                     repoMisMatch="FALSE"
@@ -572,14 +576,6 @@ _EOF_
         fi
 
         return
-
-        for each in ${basedirsList} ; do
-            echo BASEDIR: ${bpoHome}/${each}
-        done
-
-        for each in ${reposList} ; do
-            echo REPO:  ${bpoHome}/${each}
-        done
     }
 
 ####+BEGIN: bx:bsip:bash/processArgsAndStdin :noParams t
