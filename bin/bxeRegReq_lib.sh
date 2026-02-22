@@ -97,7 +97,15 @@ ${G_myName} ${extraInfo} -i regReqInfoBasePath_obtain
 _EOF_
 }
 
+local passwdParent
+
 cur_bpoId_parent=${cur_bpoId_parent:-UNSET}
+if [ "${cur_bpoId_parent}" == "UNSET" ] ; then
+    passwdParent=$( grep ^pri_ /etc/passwd | head -1  | cut -d ':' -f 1 )
+    if [ ! -z "${passwdParent}" ] ; then
+        cur_bpoId_parent=${passwdParent}
+    fi
+fi
 
 function vis_examplesBxRealIndiv {
     bxeParamsMini="-p privacy=\"priv\" -p kind=\"real\" -p type=\"individual\" -p firstName=\"first\" -p lastName=\"last\" "
