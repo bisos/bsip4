@@ -122,11 +122,12 @@ ${G_myName} ${extraInfo} -i venvPy3Dev_lspBisosSymLinks
 $( examplesSeperatorChapter "Py3 Tmp Manage Environment" )
 ${G_myName} ${extraInfo} -i virtenvsPrep py3/tmp  # Create Virtual Environment
 ${G_myName} ${extraInfo} -f -i virtenvsPrep py3/tmp # force mode
-$( examplesSeperatorChapter "Direct Examples" )
-${pdb_venv_py3Bisos3}/bin/pip list --outdated --format=freeze
-${pdb_venv_py3Bisos3}/bin/pip list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 ${pdb_venv_py3Bisos3}/bin/pip install --upgrade
-pip2 list --outdated --format=freeze 
-pip list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
+$( examplesSeperatorChapter "Direct Examples -- Interim Activities" )
+${pdb_venv_py3Bisos3}/bin/pip list --outdated   #  --format=freeze has been obsoleted
+${pdb_venv_py3Bisos3}/bin/pip list --outdated | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 ${pdb_venv_py3Bisos3}/bin/pip install --upgrade
+${pdb_venv_py3Bisos3}/bin/pip list --outdated | grep -v '^\-e' | egrep '^bisos.' | cut -d = -f 1 | xargs -n1 ${pdb_venv_py3Bisos3}/bin/pip install --upgrade
+pip list --outdated | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
+/bisos/venv/py3/bisos3/bin/pip  list | egrep '^bisos.' | cut -d ' ' -f 1 | xargs /bisos/venv/py3/bisos3/bin/pip  install --upgrade
 _EOF_
 }
 
