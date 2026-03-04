@@ -86,7 +86,7 @@ _EOF_
 # ./bxo_lib.sh
 . ${opBinBase}/bpo_lib.sh
 
-. ${opBinBase}/bisosCurrents_lib.sh
+# . ${opBinBase}/bisosCurrents_lib.sh
 
 # PRE parameters
 typeset -t acctTypePrefix=""
@@ -94,7 +94,7 @@ typeset -t bystarUid=""
 
 function G_postParamHook {
     bystarUidHome=$( FN_absolutePathGet ~${bystarUid} )
-    lpCurrentsGet
+    # lpCurrentsGet
     lpReturn 0
 }
 
@@ -113,7 +113,7 @@ function vis_examples {
   typeset runInfo="-p ri=any:mailFolders"
   typeset runInfo=""
 
-  typeset oneMailDirBase=$( FN_absolutePathGet ~sa-20000 )/${bystarAcctMailDirBase}
+  # typeset oneMailDirBase=$( FN_absolutePathGet ~sa-20000 )/${bystarAcctMailDirBase}
 
   typeset oneSubjectFolder=INBOX.job
   typeset oneDestSpamFolder=INBOX.spam.detected.often
@@ -124,6 +124,7 @@ function vis_examples {
 EXAMPLES:
 ----
 ${G_myName} ${extraInfo} ${runInfo} -i openUrlNewTabOne http://www.byname.com
+${G_myName} ${extraInfo} ${runInfo} -i openUrlNewTabOne https://www.google.com
 ${G_myName} ${extraInfo} ${runInfo} -i openUrlThisTab http://www.neda.com
 lpEach.sh -i prepend "http://" www.neda.com www.byname.com | ${G_myName} ${extraInfo} ${runInfo} -i openUrlNewTab
 _EOF_
@@ -131,12 +132,27 @@ _EOF_
 
 
 noArgsHook() {
-  vis_examples
+  vis_noArgs $@
+  #vis_examples
 }
 
 noSubjectHook() {
   return 0
 }
+
+####+BEGINNOT: bx:dblock:lsip:bash:function :func "vis_noArgs" :type "nonidempotent"
+# {{{ vis_noArgs
+function vis_noArgs {
+    # TM_funcEntered
+    thisFuncName=$( thisFuncNameBashOrKsh "$0" "$FUNCNAME" )
+####+END:
+    EH_assert [[ $# -ge 0 ]]
+    function describeF {  cat  << _EOF_
+_EOF_
+    }
+    vis_openUrlNewTab $@
+}
+
 
 
 ####+BEGIN: bx:dblock:lsip:bash:function :func "vis_openUrlNewTabSleep" :type "nonidempotent"
@@ -216,7 +232,8 @@ _EOF_
     #opDo rm /acct/employee/lsipusr/.mozilla/firefox/2x91uh1p.default/.parentlock
     #opDoRet firefox --new-tab ${1}  &
 
-    opDoRet firefox-bx ${1}
+    # opDoRet firefox-bx ${1}
+    google-chrome "$@"
 
     lpReturn
 }

@@ -1,7 +1,1 @@
-#!/bin/bash
-
-#/opt/public/osmt/bin/firefox-bx "$@"
-#firefox "$@"
-#mozilla "$@"
-
-google-chrome "$@"
+bx-browse-url.sh
