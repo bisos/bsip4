@@ -97,7 +97,8 @@ ${G_myName} ${extraInfo} -i regReqInfoBasePath_obtain
 _EOF_
 }
 
-local passwdParent
+#local passwdParent
+passwdParent=""
 
 cur_bpoId_parent=${cur_bpoId_parent:-UNSET}
 if [ "${cur_bpoId_parent}" == "UNSET" ] ; then

@@ -97,6 +97,8 @@ typeset -t bxeDesc=""
 typeset -t bpoId=""
 # usg=""
 
+bpoHome=""
+
 function G_postParamHook {
     if [ ! -z  "${bpoId}" ] ; then  bpoIdPrepValidate; fi;
 

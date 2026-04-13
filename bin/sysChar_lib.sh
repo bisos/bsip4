@@ -546,6 +546,10 @@ _EOF_
    EH_assert vis_bxoAcctVerify "${bpoId}"
    bpoHome=$( FN_absolutePathGet ~${bpoId} )
   
+   if [[ "${bpoId}" =~ (VAG|VSG) ]]; then
+       return
+   fi
+
    local containerSteadyBase=${bpoHome}/siteContainersRepo/steady
 
    if [ ! -d "${containerSteadyBase}" ] ; then

@@ -550,7 +550,7 @@ _EOF_
    local containersBase="/bisos/admin/sysChar/generics/"
 
    #find ${containersBase} -type d -print | egrep '/Generic/.*[^/]$'
-   local genericBasesList=( $(find ${containersBase} -type d -print | egrep '/Generic/[a-z|0-9|_]*$') )
+   local genericBasesList=( $(find ${containersBase} -type d -print | egrep '/Generic/[a-z|0-9|_]*$' | sort) )
 
    for each in ${genericBasesList[@]} ;  do
        echo $each

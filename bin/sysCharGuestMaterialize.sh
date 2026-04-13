@@ -1144,6 +1144,19 @@ _EOF_
 _OUTER_EOF_
             ;;
 
+        "bx/debian-13.trixie-amd64/netinst/us")
+        cat  << _OUTER_EOF_
+      cat  << _EOF_
+######### PHASE 1: DEBIAN-13 BISOS Provisioning -- baseBox=${containerBaseBox}
+_EOF_
+
+        wget  https://raw.githubusercontent.com/bxGenesis/start/main/raw-bisos.sh
+        chmod 775 ./raw-bisos.sh
+        ./raw-bisos.sh -v -n showRun -i installUnsitedBisos
+_OUTER_EOF_
+            ;;
+
+
         "OLDbxDistro/debian-12.4.0/desktop")
         cat  << _OUTER_EOF_
       cat  << _EOF_
@@ -1205,7 +1218,10 @@ _EOF_
              echo "containerBaseBox=${containerBaseBox} -- Vagrant Skipped desktop addition."
 _OUTER_EOF_
             ;;
-        
+
+        "bx/debian-13.trixie-amd64/netinst/us")
+            doNothing
+            ;&   #fallthru
         "bento/debian-10.8"|"bento/debian-11.pre")
             doNothing
             ;&   #fallthru
