@@ -136,6 +136,7 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     local bisosBinBase="$( bisosBinBaseGet )"
+    local bleeBinBase="$( bleeBinBaseGet )"
 
     # had already been venvPy3_pipInstalls
     # lpDo ${bisosBinBase}/bisosPyVenvSetup.sh -h -v -n showRun -i venvPy3_pipInstalls
@@ -148,7 +149,7 @@ _EOF_
 
     lpDo vis_provisionBasicBlee
 
-    lpDo sudo -u bystar ${bisosBinBase}/blee -v -n showRun -p acctName=bystar -i provisionSetup
+    lpDo sudo -u bystar ${bleeBinBase}/blee -v -n showRun -p acctName=bystar -i provisionSetup
 
 
     lpDo echo "Stuff from bisosUpdateInterim.sh comes here."

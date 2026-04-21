@@ -7,6 +7,29 @@
 _CommentBegin_
 _CommentEnd_
 
+function bleeBinBaseGet {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local provisionersBinBase=""
+
+    if [ -z "${bxp_rootDir_bisos}" ] ; then
+        EH_problem "Blank bxp_rootDir_bisos"
+        lpReturn 101
+    elif [ -d "${bxp_rootDir_bisos}/blee/bin" ] ; then
+        provisionersBinBase="${bxp_rootDir_bisos}/blee/bin"
+    else
+        EH_problem "Missing ${bxp_rootDir_bisos}/blee/bin"
+        lpReturn 101
+    fi
+
+    echo ${provisionersBinBase}
+}
+
+
 function bisosBinBaseGet {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -197,7 +220,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    local bisosBinBase="$( bisosBinBaseGet )"
+    local bisosBinBase="$( bleeBinBaseGet )"
         
     # /bisos/core/bsip/bin/bleeBinsPrep.sh
     local bisosProg="${bisosBinBase}/bleeBinsPrep.sh"
@@ -345,6 +368,7 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     local bisosBinBase="$( bisosBinBaseGet )"
+    local bleeBinBase="$( bleeBinBaseGet )"
 
     lpDo id
 
@@ -353,7 +377,7 @@ _EOF_
     fi
 
     lpDo sudo  mkdir -p /usr/local/share/applications
-    lpDo ${bisosBinBase}/blee-xdg.sh -h -v -n showRun -f -i xdgBleeSysAppUpdate
+    lpDo ${bleeBinBase}/blee-xdg.sh -h -v -n showRun -f -i xdgBleeSysAppUpdate
 
     lpDo sudo -u bisos ${bisosBinBase}/gnomeExtensionsBinsPrep.sh -i fullUpdate
 
