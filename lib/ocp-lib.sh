@@ -48,7 +48,7 @@ opRunUserGet
 
 . ${opLibBase}/visLib.sh
 
-. ${opBinBase}/bleeLib.sh
+. ${bleeBinBase}/bleeLib.sh
 
 # if [ -z ${G_emacsServerPid} ] ; then
 #     export G_emacsServerPid=$(vis_emacsServerPidFromIcmLib)

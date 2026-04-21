@@ -87,7 +87,7 @@ _EOF_
 ###   #### 2023 Additions
 ###
 
-. ${opBinBase}/bleeLib.sh
+. ${bleeBinBase}/bleeLib.sh
 . ${lcntBinBase}/lcnLcntMailingLib.sh
 
 

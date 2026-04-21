@@ -26,6 +26,7 @@ opSiteControlBase=${opBase}/siteControl
 opSysConfigInputBase=${opBase}/sysConfigInput
 opPoliciesBase=${opBase}/policies
 
+bleeBinBase="/bisos/blee/bin"
 palsBinBase="/bisos/pals/bin"
 lcntBinBase="/bisos/core/lcnt/bin"
 mailBinBase="/bisos/asc/mail/bin"
