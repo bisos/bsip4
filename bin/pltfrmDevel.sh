@@ -156,6 +156,8 @@ sysCharBoxDeploy.sh -h -v -n showRun -p bisosDevBxoId=piu_mbBisosDev -i usgConve
 ${G_myName} ${extraInfo} -i bisosDevBxo_fullSetup  # PRIMARY -- activate bisosDevBxoId plus actuate it
 ${G_myName} ${extraInfo} -i bisosDevBxo_activate   # activate bisosDevBxoId
 ${G_myName} ${extraInfo} -i bisosDevBxo_actuate    # clone  auth based bxRepos with bisosDev credentials
+${G_myName} ${extraInfo} -i bisosDevBxo_actuate bpo   # clone  auth based bxRepos with bisosDev credentials
+${G_myName} ${extraInfo} -i bisosDevBxo_actuate bro   # clone  auth based bxRepos with bisosDev credentials
 $( examplesSeperatorChapter "Repeatable Actions And Updates" )
 bx-gitReposBases -v 20 --baseDir="/bisos/git/auth/bxRepos" --pbdName="bxReposRoot" --vcMode="auth" --gitLabel="mb1_github"  -i pbdUpdate all
 bisosPyVenvSetup.sh -h -v -n showRun -i pyVenv_DevSetup # Create Virtual Environment and dev pipInstalls
@@ -266,15 +268,36 @@ function vis_bisosDevBxo_actuate {
 ** actuate
 _EOF_
     }
-    EH_assert [[ $# -eq 0 ]]
 
-    bisosDevBxoHome=$( vis_usgBposUsageEnvs_bisosDev_bxoPath )
-    EH_assert [ ! -z "${bisosDevBxoHome}" ]
+    EH_assert [[ $# -lt 2 ]]
+
+    local bisosDevBxoHome=""
+
+    if [ $# -eq 0 ] ; then
+        bisosDevBxoHome=$( vis_usgBposUsageEnvs_bisosDev_bxoPath )
+        EH_assert [ ! -z "${bisosDevBxoHome}" ]
+
+    elif [ $# -eq 1 ] ; then
+        bxoType=$1
+        if [ "${bxoType}" == "bpo" ] ; then
+            bisosDevBxoHome=$( vis_usgBposUsageEnvs_bisosDev_bxoPath )
+            EH_assert [ ! -z "${bisosDevBxoHome}" ]
+        elif [ "${bxoType}" == "bro" ] ; then
+            bisosDevBxoHome="/bisos/git/bxRepos/bxObjects/bro_rawBisos/bro_mbBisosDev"
+            EH_assert [ ! -z "${bisosDevBxoHome}" ]
+        else
+            EH_oops ""
+            lpReturn
+        fi
+    else
+        EH_oops ""
+        lpReturn
+    fi
 
     # Install bisosDev dev crentials in ~/.ssh and
     # auth clone using bisosDev credentials
     # switch to auth based bxRepos 
-    lpDo ${bisosDevBxoHome}/sys/bin/bpoSysSetup.sh ${G_commandPrefs} \
+    lpDo echo ${bisosDevBxoHome}/sys/bin/bpoSysSetup.sh ${G_commandPrefs} \
          -i developerMode
 }
 
