@@ -116,7 +116,8 @@ $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Chapter Title" )
 $( examplesSeperatorSection "Section Title" )
 --- SERVER KEY MANIPULATORS ---
-${G_myName} -i serverKeyUpdate
+${G_myName} -i hereKeyUpdate  # Runs ssh-keygen in cur dir for ./id_rsa
+${G_myName} -i serverKeyUpdate  # Runs ssh-keygen for ${sshEtcDir}/ssh_host_rsa_key
 --- KNOWN HOSTS MANIPULATION ---
 ${G_myName} -p localUser=${oneLocalUser} -p remoteHost=${oneRemoteHost} -i hostIsInKnownHostsFile
 --- USER KEY MANIPULATORS ---
@@ -182,6 +183,17 @@ _EOF_
 function vis_serverKeyGeneration {
   vis_serverKeyUpdate "$@"
 }
+
+
+function vis_hereKeyUpdate {
+
+  echo "Key generation may take a while..."
+  echo "If during dsa key generation the system seem to stall,"
+  echo "do not panick.  Try to type anything and enter.  Do that several times."
+  echo "Something to do with the random number pool entropy."
+  opDoComplain ssh-keygen -t rsa -f ./id_rsa -N ""
+}
+
 
 function vis_serverKeyUpdate {
   G_abortIfNotRunningAsRoot
