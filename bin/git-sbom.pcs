@@ -1,0 +1,147 @@
+#!/usr/bin/env python
+
+""" #+begin_org
+* Panel::  [[file:/bisos/panels/bisos-apps/NameOfThePanelComeHere/_nodeBase_/fullUsagePanel-en.org]]
+* Overview and Relevant Pointers
+#+end_org """
+
+from bisos import b
+# from bisos.b import cmndsSeed
+from bisos.b import cs
+from bisos.b import b_io
+
+# import collections
+import typing
+
+from bisos.sbom import pkgsSeed  # pkgsSeed.plantWithWhich("seedSbom.cs")
+ap = pkgsSeed.aptPkg
+
+
+def ghAptSource():
+    outcome =  b.subProc.WOpW(invedBy=None, log=1).bash(
+        f"""
+(type -p wget >/dev/null || (sudo apt update && sudo apt-get install wget -y)) \
+	&& sudo mkdir -p -m 755 /etc/apt/keyrings \
+	&& wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
+	&& sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
+	&& echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+	&& sudo apt update \
+	&& sudo apt install gh -y
+""")
+
+
+def gcmDebAptSource():
+    outcome =  b.subProc.WOpW(invedBy=None, log=1).bash(
+        f"""
+GCM_VERSION=2.7.3
+GCM_DEB=gcm-linux-x64-${{GCM_VERSION}}.deb
+wget -q https://github.com/git-ecosystem/git-credential-manager/releases/download/v${{GCM_VERSION}}/${{GCM_DEB}} \
+    && sudo dpkg -i ${{GCM_DEB}} \
+    && sudo apt-get install -f -y \
+    && git-credential-manager configure \
+    && git config --global credential.credentialStore gpg
+""")
+
+
+aptPkgsList = [
+    ap("wget"),    # Required to download the GCM .deb release artifact.
+    ap("git-credential-manager", func=gcmDebAptSource),
+    ap("gh", func=ghAptSource),   # Github API Cli -- taken from https://github.com/cli/cli/blob/trunk/docs/install_linux.md
+]
+
+
+pkgsSeed.setup(
+    aptPkgsList=aptPkgsList,
+)
+
+
+####+BEGIN: b:py3:cs:cmnd/classHead :cmndName "readme" :extent "verify" :comment "Describe" :parsMand "" :parsOpt "" :argsMin 0 :argsMax 0 :pyInv ""
+""" #+begin_org
+*  _[[elisp:(blee:menu-sel:outline:popupMenu)][±]]_ _[[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]]_ [[elisp:(outline-show-branches+toggle)][|=]] [[elisp:(bx:orgm:indirectBufOther)][|>]] *[[elisp:(blee:ppmm:org-mode-toggle)][|N]]*  CmndSvc-   [[elisp:(outline-show-subtree+toggle)][||]] <<readme>>  *Describe*  =verify= ro=cli   [[elisp:(org-cycle)][| ]]
+#+end_org """
+class readme(cs.Cmnd):
+    cmndParamsMandatory = [ ]
+    cmndParamsOptional = [ ]
+    cmndArgsLen = {'Min': 0, 'Max': 0,}
+
+    @cs.track(fnLoc=True, fnEntry=True, fnExit=True)
+    def cmnd(self,
+             rtInv: cs.RtInvoker,
+             cmndOutcome: b.op.Outcome,
+    ) -> b.op.Outcome:
+        """Describe"""
+        failed = b_io.eh.badOutcome
+        callParamsDict = {}
+        if self.invocationValidate(rtInv, cmndOutcome, callParamsDict, None).isProblematic():
+            return failed(cmndOutcome)
+####+END:
+        descriptionStr = """\
+* Scope: git, Git Credential Manager (GCM), and related git tooling (gh CLI, gitlab APIs).
+
+* Layering and order:
+  1) Run gpg-sbom first:
+       gpg-sbom.pcs -i sbom_fullUpdate
+  2) Complete GPG/pass key-store init (see gpg-sbom readme/examples).
+  3) Then run git-sbom:
+       git-sbom.pcs -i sbom_fullUpdate
+
+* What this layer does:
+  - Installs GCM from a pinned Linux .deb release (v2.7.3).
+  - Configures GCM as git credential helper.
+  - Sets credential.credentialStore to gpg so credentials are stored through
+    the gpg/pass BackStore prepared by gpg-sbom.
+
+* By design, gpg package dependencies are NOT installed here.
+  - gpg-related packages and key setup belong to gpg-sbom.pcs.
+  - This keeps git and gpg concerns split into two explicit layers.\
+"""
+        print(descriptionStr)
+
+        return cmndOutcome.set(
+            opError=b.op.OpError.Success,
+            opResults=None,
+        )
+
+def examples_csu() -> b.op.Outcome:
+    """Common Usage Examples for this Command-Service Unit"""
+
+    cmnd = cs.examples.cmndEnter
+    literal = cs.examples.execInsert
+
+    cmndOutcome = b.op.Outcome()
+
+    cs.examples.menuChapter('*Git Command Examples*')
+    if not (resStr := b.subProc.Op(outcome=cmndOutcome, log=0).bash(
+       f"""which git""").stdout):  return(b_io.eh.badOutcome(cmndOutcome))
+
+    literal(f"which git # {resStr.strip()}")
+    literal("git --version")
+    literal("git --no-pager help")
+
+    cmnd('readme', comment=" # An overview short description")
+
+    cs.examples.menuChapter('*Layering Prerequisite*')
+    literal("gpg-sbom.pcs -i sbom_fullUpdate")
+    literal("gpg-sbom.pcs -i readme")
+
+    cs.examples.menuChapter('*Git Global Config -- Identity*')
+    literal('git config --global user.name "Your Name"')
+    literal('git config --global user.email "you@example.com"')
+
+    cs.examples.menuChapter('*Magit-Safe Credential Helper Setup*')
+    literal("git config --global --unset-all credential.helper")
+    literal("git config --global credential.helper manager-core")
+    literal("git config --global core.pager cat")
+    literal("git config --global core.editor emacs")
+    literal("git config --local credential.helper '<vscode-helper>'  # optional: repo-local only, never global")
+    literal("git --no-pager config --show-origin --get-all credential.helper")
+
+    cs.examples.menuChapter('*Git Global Config -- Verify*')
+    literal("git --no-pager config --global --list")
+    literal("git --no-pager config --show-origin --get-all credential.helper")
+    literal("git credential-manager --version")
+    literal("git config --global credential.credentialStore   # should print: gpg")
+    literal("cat ~/.gitconfig  # should show Git configuration")
+
+    cs.examples.menuChapter('*End-Of  Git Command Examples*')
+    return cmndOutcome

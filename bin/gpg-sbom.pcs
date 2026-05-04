@@ -1,0 +1,174 @@
+#!/usr/bin/env python
+
+""" #+begin_org
+* Panel::  [[file:/bisos/panels/bisos-apps/NameOfThePanelComeHere/_nodeBase_/fullUsagePanel-en.org]]
+* Overview and Relevant Pointers
+#+end_org """
+
+from bisos import b
+# from bisos.b import cmndsSeed
+from bisos.b import cs
+from bisos.b import b_io
+
+# import collections
+import typing
+
+from bisos.sbom import pkgsSeed  # pkgsSeed.plantWithWhich("seedSbom.cs")
+ap = pkgsSeed.aptPkg
+
+
+def initGpgStore():
+    """Initialize GPG store and pass BackStore idempotently."""
+    outcome = b.subProc.WOpW(invedBy=None, log=1).bash(
+        f"""
+# Idempotency check: if ~/.password-store/.gpg-id exists, we're already initialized.
+if [ -f ~/.password-store/.gpg-id ]; then
+    echo "GPG store already initialized at ~/.password-store/.gpg-id"
+    cat ~/.password-store/.gpg-id
+    exit 0
+fi
+
+# Prepare GPG environment
+export GPG_TTY=$(tty)
+mkdir -p ~/.gnupg && chmod 700 ~/.gnupg
+
+# Configure pinentry
+grep -q '^pinentry-program ' ~/.gnupg/gpg-agent.conf 2>/dev/null || echo 'pinentry-program /usr/bin/pinentry-curses' >> ~/.gnupg/gpg-agent.conf
+
+# Restart gpg-agent
+gpgconf --kill gpg-agent
+gpgconf --launch gpg-agent
+gpg-connect-agent updatestartuptty /bye
+
+# Get name and email from git config
+GIT_NAME=$(git config --global user.name || echo "User")
+GIT_EMAIL=$(git config --global user.email || echo "user@example.com")
+
+# Generate GPG key non-interactively
+gpg --batch --generate-key --pinentry-mode loopback << 'GPG_EOF'
+%no-protection
+Key-Type: RSA
+Key-Length: 4096
+Name-Real: ${{GIT_NAME}}
+Name-Email: ${{GIT_EMAIL}}
+Expire-Date: 0
+%commit
+GPG_EOF
+
+# Extract the fingerprint of the newly generated key
+GPG_FINGERPRINT=$(gpg --list-secret-keys --keyid-format LONG --with-colons | grep fpr | head -1 | cut -d: -f10)
+
+if [ -z "$GPG_FINGERPRINT" ]; then
+    echo "ERROR: Failed to extract GPG fingerprint"
+    exit 1
+fi
+
+# Initialize pass with the fingerprint
+pass init "${{GPG_FINGERPRINT}}"
+
+echo "GPG store initialized with fingerprint: ${{GPG_FINGERPRINT}}"
+cat ~/.password-store/.gpg-id
+""")
+
+
+aptPkgsList = [
+    ap("gnupg"),                          # Core GPG tooling: key generation, keyring, encryption/decryption.
+    ap("pass"),                           # Password-store backend used by GCM's gpg credential store.
+    ap("pinentry-curses"),                # Primary TTY/headless passphrase prompt for terminal sessions.
+    ap("pinentry-tty"),                   # Minimal terminal fallback pinentry implementation.
+    ap("gpg-store-init", func=initGpgStore),  # Idempotent GPG/pass BackStore initialization.
+]
+
+pkgsSeed.setup(
+    aptPkgsList=aptPkgsList,
+)
+
+
+####+BEGIN: b:py3:cs:cmnd/classHead :cmndName "readme" :extent "verify" :comment "Describe" :parsMand "" :parsOpt "" :argsMin 0 :argsMax 0 :pyInv ""
+""" #+begin_org
+*  _[[elisp:(blee:menu-sel:outline:popupMenu)][±]]_ _[[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]]_ [[elisp:(outline-show-branches+toggle)][|=]] [[elisp:(bx:orgm:indirectBufOther)][|>]] *[[elisp:(blee:ppmm:org-mode-toggle)][|N]]*  CmndSvc-   [[elisp:(outline-show-subtree+toggle)][||]] <<readme>>  *Describe*  =verify= ro=cli   [[elisp:(org-cycle)][| ]]
+#+end_org """
+class readme(cs.Cmnd):
+    cmndParamsMandatory = [ ]
+    cmndParamsOptional = [ ]
+    cmndArgsLen = {'Min': 0, 'Max': 0,}
+
+    @cs.track(fnLoc=True, fnEntry=True, fnExit=True)
+    def cmnd(self,
+             rtInv: cs.RtInvoker,
+             cmndOutcome: b.op.Outcome,
+    ) -> b.op.Outcome:
+        """Describe"""
+        failed = b_io.eh.badOutcome
+        callParamsDict = {}
+        if self.invocationValidate(rtInv, cmndOutcome, callParamsDict, None).isProblematic():
+            return failed(cmndOutcome)
+####+END:
+        descriptionStr = """\
+* Scope: GnuPG + pass BackStore prerequisites for Git Credential Manager.
+
+* Layering and order:
+  1) Run this layer first:
+       gpg-sbom.pcs -i sbom_fullUpdate
+  2) Do one-time key/store init as target user:
+       gpg --full-generate-key
+       gpg --list-secret-keys --keyid-format LONG
+       pass init <gpg-id>
+  3) Then run git layer:
+       git-sbom.pcs -i sbom_fullUpdate
+
+* How this layer fits:
+  - Provides gnupg, pass, and pinentry programs.
+  - Prepares the encrypted BackStore used later by git-sbom/GCM.
+  - Has no dependency on git package setup.
+
+* Pinentry guidance:
+  - This layer uses Debian-safe pinentry packages: pinentry-curses and pinentry-tty.
+  - Emacs/Magit users should use loopback fallback when terminal pinentry conflicts.
+  - For terminal/headless sessions, pinentry-curses is preferred.\
+"""
+        print(descriptionStr)
+
+        return cmndOutcome.set(
+            opError=b.op.OpError.Success,
+            opResults=None,
+        )
+
+def examples_csu() -> b.op.Outcome:
+    """Common Usage Examples for this Command-Service Unit"""
+
+    cmnd = cs.examples.cmndEnter
+    literal = cs.examples.execInsert
+
+    cmndOutcome = b.op.Outcome()
+
+    cs.examples.menuChapter('*GPG Command Examples*')
+    if not (resStr := b.subProc.Op(outcome=cmndOutcome, log=0).bash(
+       f"""which gpg""").stdout):  return(b_io.eh.badOutcome(cmndOutcome))
+
+    literal(f"which gpg # {resStr.strip()}")
+    literal("gpg --version")
+
+    cmnd('readme', comment=" # An overview short description")
+
+    cs.examples.menuChapter('*GPG Agent Prep (Emacs-Safe)*')
+    literal("export GPG_TTY=$(tty)")
+    literal("mkdir -p ~/.gnupg && chmod 700 ~/.gnupg")
+    literal("grep -q '^pinentry-program ' ~/.gnupg/gpg-agent.conf 2>/dev/null || echo 'pinentry-program /usr/bin/pinentry-curses' >> ~/.gnupg/gpg-agent.conf")
+    literal("gpgconf --kill gpg-agent")
+    literal("gpgconf --launch gpg-agent")
+    literal("gpg-connect-agent updatestartuptty /bye")
+
+    cs.examples.menuChapter('*BackStore Initialization*')
+    literal("gpg --full-generate-key   # preferred when pinentry-curses can prompt")
+    literal("gpg --pinentry-mode loopback --full-generate-key   # fallback for Emacs or prompt-conflict sessions")
+    literal("gpg --list-secret-keys --keyid-format LONG")
+    literal("pass init <gpg-id>")
+    literal("cat ~/.password-store/.gpg-id")    
+
+    cs.examples.menuChapter('*Hand-Off To Git Layer*')
+    literal("git-sbom.pcs -i sbom_fullUpdate")
+    literal("git-sbom.pcs -i readme")
+
+    cs.examples.menuChapter('*End-Of  GPG Command Examples*')
+    return cmndOutcome

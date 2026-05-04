@@ -111,8 +111,9 @@ function G_postParamHook {
         bpoIdPrepValidate
         bpoHome=$( FN_absolutePathGet ~${bpoId} )
     fi
-    
-    bisosCurrentsGet
+
+    # NOTYET, Temporarily Disabled
+    # bisosCurrentsGet
 }
 
 
@@ -144,38 +145,12 @@ $( examplesSeperatorTopLabel "${G_myName}" )
 bisosCurrentsManage.sh
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId "${oneBxoId}"
 bisosCurrentsManage.sh  ${extraInfo} -i setParam currentBxoId pmp_VAG-deb11_
-$( examplesSeperatorChapter "Identify or Locate bisosDevBxo" )
-usgBpos.sh
-usgBpos.sh -i usgBposUsageEnvs_bisosDevBxoId_read
 $( examplesSeperatorChapter "Specialized Actions" )
 ${G_myName} ${extraInfo} -i fullUpdate
 ${G_myName} ${extraInfo} -i vagrantBaseBoxesBuild
 ${G_myName} ${extraInfo} -i siteContainersAssignGenerics
-$( examplesSeperatorChapter "Developer Git Credentials Activate" )
-sysCharBoxDeploy.sh -h -v -n showRun -p bisosDevBxoId=piu_mbBisosDev -i usgConvey_bisosDeveloper
-${G_myName} ${extraInfo} -i bisosDevBxo_fullSetup  # PRIMARY -- activate bisosDevBxoId plus actuate it
-${G_myName} ${extraInfo} -i bisosDevBxo_activate   # activate bisosDevBxoId
-${G_myName} ${extraInfo} -i bisosDevBxo_actuate    # clone  auth based bxRepos with bisosDev credentials
-${G_myName} ${extraInfo} -i bisosDevBxo_actuate bpo   # clone  auth based bxRepos with bisosDev credentials
-${G_myName} ${extraInfo} -i bisosDevBxo_actuate bro   # clone  auth based bxRepos with bisosDev credentials
-$( examplesSeperatorChapter "Repeatable Actions And Updates" )
-bx-gitReposBases -v 20 --baseDir="/bisos/git/auth/bxRepos" --pbdName="bxReposRoot" --vcMode="auth" --gitLabel="mb1_github"  -i pbdUpdate all
-bisosPyVenvSetup.sh -h -v -n showRun -i pyVenv_DevSetup # Create Virtual Environment and dev pipInstalls
-$( examplesSeperatorChapter "Temporary Work Around" )
-bpoActivate.sh -h -v -n showRun -p privacy="priv" -p bpoId="piu_mbFullUsage" -i bpoActivate
-usgBpos.sh -h -v -n showRun -i usgBpos_usageEnvs_fullUse_update piu_mbFullUsage # Main Entry -- Sets
-$( examplesSeperatorChapter "Developer Git Credentials Deactivate" )
-${G_myName} ${extraInfo} -i bisosDevBxo_delete
-$( examplesSeperatorChapter "Mode Selection" )
-sysCharBoxDeploy.sh -p bpoId="sysChar" -i conveyInfoShow
-${G_myName} ${extraInfo} -p bpoId="sysChar" -i sysCharConveyInfoWrite securityMode developer
-${G_myName} ${extraInfo} -p bpoId="sysChar" -i sysCharConveyInfoWrite securityMode stable
-${G_myName} ${extraInfo} -i securityMode developer
-${G_myName} ${extraInfo} -i securityMode stable
-${G_myName} ${extraInfo} -i securityMode sealed
 _EOF_
 }
-
 
 function vis_fullUpdate {
     G_funcEntry
@@ -217,120 +192,6 @@ _EOF_
     
     lpReturn
 }       
-
-function vis_bisosDevBxo_fullSetup {    
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** Activate the bisosDev usage env bpo. authClone using credentials of bisosDev.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    lpDo vis_bisosDevBxo_activate
-
-    lpDo vis_bisosDevBxo_actuate
-
-
-    lpDo bisosPyVenvSetup.sh -h -v -n showRun -i pyVenv_DevSetup
-
-    lpDo bisosSiteSetup.sh  ${G_commandPrefs} \
-        -p registrar=192.168.0.90 -i siteRegistrarSelect
-
-}
-
-function vis_bisosDevBxo_activate {    
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** Activate the bisosDev usage env bpo. authClone using credentials of bisosDev.
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    local bisosDevBxoId=$( vis_usgBposUsageEnvs_bisosDevBxoId_read )
-    EH_assert [ ! -z "${bisosDevBxoId}" ]
-
-    # Activate bisosDev usage env bpo
-    lpDo bpoManage.sh ${G_commandPrefs} \
-         -p privacy=priv -p bpoId=${bisosDevBxoId} \
-         -i fullConstruct
-
-    local bisosDevBxoHome=$( FN_absolutePathGet ~${bisosDevBxoId} )
-    
-    # record the activated bpo as bisosDev
-    lpDo usgBpos.sh ${G_commandPrefs} \
-         -i usgBposUsageEnvs_bisosDev_update ${bisosDevBxoHome}
-}
-
-
-function vis_bisosDevBxo_actuate {    
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-** actuate
-_EOF_
-    }
-
-    EH_assert [[ $# -lt 2 ]]
-
-    local bisosDevBxoHome=""
-
-    if [ $# -eq 0 ] ; then
-        bisosDevBxoHome=$( vis_usgBposUsageEnvs_bisosDev_bxoPath )
-        EH_assert [ ! -z "${bisosDevBxoHome}" ]
-
-    elif [ $# -eq 1 ] ; then
-        bxoType=$1
-        if [ "${bxoType}" == "bpo" ] ; then
-            bisosDevBxoHome=$( vis_usgBposUsageEnvs_bisosDev_bxoPath )
-            EH_assert [ ! -z "${bisosDevBxoHome}" ]
-        elif [ "${bxoType}" == "bro" ] ; then
-            bisosDevBxoHome="/bisos/git/bxRepos/bxObjects/bro_rawBisos/bro_mbBisosDev"
-            EH_assert [ ! -z "${bisosDevBxoHome}" ]
-        else
-            EH_oops ""
-            lpReturn
-        fi
-    else
-        EH_oops ""
-        lpReturn
-    fi
-
-    # Install bisosDev dev crentials in ~/.ssh and
-    # auth clone using bisosDev credentials
-    # switch to auth based bxRepos 
-    lpDo echo ${bisosDevBxoHome}/sys/bin/bpoSysSetup.sh ${G_commandPrefs} \
-         -i developerMode
-}
-
-
-function vis_securityMode {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 1 ]]
-
-    local secMode="$1"
-
-    case ${secMode} in
-        developer)
-            lpDo bisosBaseDirs.sh ${G_commandPrefs} -i bxReposAuthSet
-            lpDo vis_sysCharConveyInfoWrite securityMode developer
-            ;;
-        stable)
-            lpDo bisosBaseDirs.sh ${G_commandPrefs} -i bxReposAnonSet
-            lpDo vis_sysCharConveyInfoWrite securityMode stable    
-            ;;
-        sealed)
-            EH_problem "NOTYET"
-            ;;
-        *)
-            EH_problem "Bad Usage -- ${secMode}"
-            ;;
-    esac
-        
-    lpReturn
-}
-
 
 
 _CommentBegin_
