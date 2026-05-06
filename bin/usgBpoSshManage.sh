@@ -287,16 +287,22 @@ function vis_usgCustomFullUpdate {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
-    EH_assert [[ $# -eq 3 ]]
+    EH_assert [[ $# -ge 3 ]]
+    EH_assert [[ $# -lt 5 ]]
     EH_assert [ ! -z "${usg}" ]
 
     local sshGitLabel="$1"
     local sshKeysBase="$2"
     local gitServer="$3"
+    local gitAccess="ssh"
+
+    if [ $# -ge 4 ] ; then
+        gitAccess="$4"
+    fi
 
     opDo vis_usgAcctCustomCredentialsUpdate ${sshGitLabel} ${sshKeysBase}
 
-    opDo vis_customConfigSegUpdate ${sshGitLabel} ${gitServer}
+    opDo vis_customConfigSegUpdate ${sshGitLabel} ${gitServer} ${gitAccess}
     
     opDo vis_configFileUpdate
 
@@ -353,7 +359,7 @@ _EOF_
 
 
 
-function vis_usgSshConfigSegBasePrep%% {
+function vis_usgSshConfigSegBasePrep_Obsoleted {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -705,7 +711,6 @@ _EOF_
 }
 
 
-
 _CommentBegin_
 *      ======[[elisp:(org-cycle)][Fold]]====== Custom Config File Generate/Update
 _CommentEnd_
@@ -714,22 +719,46 @@ _CommentEnd_
 function vis_customConfigSegStdout {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+Emit an SSH config segment for a custom Git host using key ~/.ssh/<gitLabel>_rsa.
 _EOF_
     }
-    EH_assert [[ $# -eq 2 ]]
+    EH_assert [[ $# -ge 2 ]]
+    EH_assert [[ $# -lt 4 ]]
 
     local customGitLabel="$1"
     local customGitServerName="$2"
+    local customGitAccess="ssh"
 
-    cat  << _EOF_
+    if [ $# -ge 3 ] ; then
+        customGitAccess="$3"
+    fi
+
+    if [ "${customGitAccess}" == "ssh" ] ; then
+        cat  << _EOF_
 # at $( DATE_nowTag ) by $(id -u -n) on $(hostname)
-# customGitLabel=${customGitLabel}  customGitServerName=${customGitServerName}
+# customGitLabel=${customGitLabel}  customGitServerName=${customGitServerName} customGitAccess=${customGitAccess}
 Host ${customGitLabel}
         Hostname ${customGitServerName}
         User git
         IdentityFile ~/.ssh/${customGitLabel}_rsa
 _EOF_
 
+    elif [ "${customGitAccess}" == "sshOverHttps" ] ; then
+        cat  << _EOF_
+# at $( DATE_nowTag ) by $(id -u -n) on $(hostname)
+# customGitLabel=${customGitLabel}  customGitServerName=${customGitServerName} customGitAccess=${customGitAccess}
+Host ${customGitLabel}
+        Hostname ${customGitServerName}
+        Port 443
+        User git
+        IdentityFile ~/.ssh/${customGitLabel}_rsa
+_EOF_
+
+    else
+        EH_problem "Unknown git access type ${customGitAccess}."
+        lpReturn 1
+    fi
+    
     lpReturn
 }
 
@@ -753,14 +782,20 @@ function vis_customConfigSegUpdate {
 * TODO Revisit this as it conflicts with same name in usgBpoSshCustomManage.sh
 _EOF_
     }
-    EH_assert [[ $# -eq 2 ]]
+    EH_assert [[ $# -ge 2 ]]
+    EH_assert [[ $# -lt 4 ]]
 
     local customGitLabel="$1"
     local customGitServerName="$2"
+    local customGitAccess="ssh"
+
+    if [ $# -ge 3 ] ; then
+        customGitAccess="$3"
+    fi
 
     local outFileName="$( vis_customConfigSegFileName ${customGitLabel} ${customGitServerName} )"
 
-    lpDo eval vis_customConfigSegStdout ${customGitLabel} ${customGitServerName} \>  "${outFileName}"
+    lpDo eval vis_customConfigSegStdout ${customGitLabel} ${customGitServerName} ${customGitAccess} \>  "${outFileName}"
 
     lpReturn
 }

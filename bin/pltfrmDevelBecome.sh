@@ -196,7 +196,10 @@ _EOF_
         if [ "${bxoType}" == "bpo" ] ; then
             doNothing
         elif [ "${bxoType}" == "bro" ] ; then
-            doNothing
+            # All of this should go under a develBecome separate repo.
+            lpDo git config --global includeIf.gitdir:/bisos/.path ~/.gitconfig-bisos
+            lpDo git config --file ~/.gitconfig-bisos user.name "Mohsen Banan"
+            lpDo git config --file ~/.gitconfig-bisos user.email "form@mohsen.1.banan.byname.net"
         else
             EH_oops ""
             lpReturn

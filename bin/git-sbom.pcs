@@ -76,22 +76,22 @@ class readme(cs.Cmnd):
             return failed(cmndOutcome)
 ####+END:
         descriptionStr = """\
-* Scope: git, Git Credential Manager (GCM), and related git tooling (gh CLI, gitlab APIs).
+** Scope: git, Git Credential Manager (GCM), and related git tooling (gh CLI, gitlab APIs).
 
-* Layering and order:
+** Layering and order:
   1) Run gpg-sbom first:
        gpg-sbom.pcs -i sbom_fullUpdate
   2) Complete GPG/pass key-store init (see gpg-sbom readme/examples).
   3) Then run git-sbom:
        git-sbom.pcs -i sbom_fullUpdate
 
-* What this layer does:
+** What this layer does:
   - Installs GCM from a pinned Linux .deb release (v2.7.3).
   - Configures GCM as git credential helper.
   - Sets credential.credentialStore to gpg so credentials are stored through
     the gpg/pass BackStore prepared by gpg-sbom.
 
-* By design, gpg package dependencies are NOT installed here.
+** By design, gpg package dependencies are NOT installed here.
   - gpg-related packages and key setup belong to gpg-sbom.pcs.
   - This keeps git and gpg concerns split into two explicit layers.\
 """

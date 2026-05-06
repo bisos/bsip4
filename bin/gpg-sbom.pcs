@@ -105,9 +105,9 @@ class readme(cs.Cmnd):
             return failed(cmndOutcome)
 ####+END:
         descriptionStr = """\
-* Scope: GnuPG + pass BackStore prerequisites for Git Credential Manager.
+** Scope: GnuPG + pass BackStore prerequisites for Git Credential Manager.
 
-* Layering and order:
+** Layering and order:
   1) Run this layer first:
        gpg-sbom.pcs -i sbom_fullUpdate
   2) Do one-time key/store init as target user:
@@ -117,12 +117,12 @@ class readme(cs.Cmnd):
   3) Then run git layer:
        git-sbom.pcs -i sbom_fullUpdate
 
-* How this layer fits:
+** How this layer fits:
   - Provides gnupg, pass, and pinentry programs.
   - Prepares the encrypted BackStore used later by git-sbom/GCM.
   - Has no dependency on git package setup.
 
-* Pinentry guidance:
+** Pinentry guidance:
   - This layer uses Debian-safe pinentry packages: pinentry-curses and pinentry-tty.
   - Emacs/Magit users should use loopback fallback when terminal pinentry conflicts.
   - For terminal/headless sessions, pinentry-curses is preferred.\
