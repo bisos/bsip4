@@ -31,7 +31,7 @@ sudo chmod 755 /usr/bin/systemctl
 sudo mv /usr/bin/journalctl /usr/bin/journalctl.dist
 sudo cp  /bisos/git/anon/ext/misc/docker-systemctl-replacement/files/docker/journalctl3.py /usr/bin/journalctl
 sudo chmod 755 /usr/bin/journalctl
-mkdir -p /run/systemd/system
+sudo mkdir -p /run/systemd/system
 """)
 
 

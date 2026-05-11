@@ -25,13 +25,13 @@ __author__="
 
 ####+BEGIN: bx:bsip:bash:seed-spec :types "seedActions.bash"
 SEED="
-*  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] | 
+*  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedActions.bash]] |
 "
 FILE="
-*  /This File/ :: /bisos/bsip/bin/sysCharGuestPreps.sh 
+*  /This File/ :: /bisos/core/bsip/bin/pltfrmDevelBecome.sh
 "
 if [ "${loadFiles}" == "" ] ; then
-    /bisos/core/bsip/bin/seedActions.bash -l $0 "$@" 
+    /bisos/core/bsip/bin/seedActions.bash -l $0 "$@"
     exit $?
 fi
 ####+END:
