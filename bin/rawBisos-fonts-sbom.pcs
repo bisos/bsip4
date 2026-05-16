@@ -43,8 +43,8 @@ aptPkgsList = [
     ap("xfonts-intl-arabic"),
     ap("xfonts-intl-european"),
     ap("xfonts-intl-phonetic"),
-    ap("msttcorefonts"),
-    ap("ttf-freefarsi"),
+    # ap("msttcorefonts"),  # OBSOLETED, no longer available as of deb12
+    # ap("ttf-freefarsi"),  # OBSOLETED, no longer available as of deb12
     ap("persianFontPkgs", func=persianFontPkgs),
     ap("fontXbZarInstall", func=fontXbZarInstall),
 ]
