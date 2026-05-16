@@ -77,6 +77,7 @@ class readme(cs.Cmnd):
 ####+END:
         descriptionStr = """\
 ** Scope: Font pkgs transitioned from buePersian.sh in 2026
+        NOTYET: Absorb: curl -L https://fontlibrary.org/assets/downloads/xb-zar/xb-zar.zip -o xbzar.zip
 """
         print(descriptionStr)
 
