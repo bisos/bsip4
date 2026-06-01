@@ -1,0 +1,197 @@
+#!/usr/bin/env python
+
+""" #+begin_org
+* Panel::  [[file:/bisos/panels/bisos-apps/NameOfThePanelComeHere/_nodeBase_/fullUsagePanel-en.org]]
+* Overview and Relevant Pointers
+#+end_org """
+
+from bisos import b
+# from bisos.b import cmndsSeed
+from bisos.b import cs
+from bisos.b import b_io
+
+# import collections
+import typing
+
+from bisos.sbom import pkgsSeed  # pkgsSeed.plantWithWhich("seedSbom.cs")
+ap = pkgsSeed.aptPkg
+
+
+def claudeCodeAptSource():
+    """Set up the official Anthropic apt repository and install claude-code on Debian/Ubuntu.
+    GPG key fingerprint: 31DD DE24 DDFA B679 F42D 7BD2 BAA9 29FF 1A7E CACE
+    Source: https://code.claude.com/docs/en/setup#install-with-linux-package-managers
+    """
+    outcome = b.subProc.WOpW(invedBy=None, log=1).bash(
+        f"""
+sudo install -d -m 0755 /etc/apt/keyrings \
+    && sudo curl -fsSL https://downloads.claude.ai/keys/claude-code.asc \
+         -o /etc/apt/keyrings/claude-code.asc \
+    && echo "deb [signed-by=/etc/apt/keyrings/claude-code.asc] https://downloads.claude.ai/claude-code/apt/stable stable main" \
+         | sudo tee /etc/apt/sources.list.d/claude-code.list \
+    && sudo apt update \
+    && sudo apt install -y claude-code
+""")
+
+def claudeDesktop():
+    """Set up the official Anthropic apt repository and install claude-code on Debian/Ubuntu.
+    GPG key fingerprint: 31DD DE24 DDFA B679 F42D 7BD2 BAA9 29FF 1A7E CACE
+    Source: https://code.claude.com/docs/en/setup#install-with-linux-package-managers
+    """
+    outcome = b.subProc.WOpW(invedBy=None, log=1).bash(
+        """
+install_claude_desktop() {
+      # Installs the community-built Claude Desktop on Debian/Ubuntu via APT.
+      # Unofficial: repackages Anthropic's app (https://github.com/aaddrick/claude-desktop-debian).
+      set -euo pipefail
+
+      local repo_url="https://pkg.claude-desktop-debian.dev"
+      local keyring="/usr/share/keyrings/claude-desktop.gpg"
+      local list_file="/etc/apt/sources.list.d/claude-desktop.list"
+
+      # Pick the right privilege escalation (none needed if already root).
+      local SUDO=""
+      if [[ $EUID -ne 0 ]]; then
+          command -v sudo >/dev/null 2>&1 || { echo "Error: need root or sudo." >&2; return 1; }
+          SUDO="sudo"
+      fi
+      command -v apt-get >/dev/null 2>&1 || { echo "Error: apt not found — Debian/Ubuntu only." >&2; return 1; }
+      command -v curl    >/dev/null 2>&1 || { echo "Error: curl is required." >&2; return 1; }
+      command -v gpg     >/dev/null 2>&1 || { echo "Error: gpg is required (apt install gnupg)." >&2; return 1; }
+
+      # The repo only publishes amd64 and arm64.
+      local arch; arch="$(dpkg --print-architecture)"
+      case "$arch" in
+          amd64|arm64) ;;
+          *) echo "Error: unsupported architecture '$arch' (need amd64 or arm64)." >&2; return 1 ;;
+      esac
+
+      echo "==> Adding GPG signing key..."
+      curl -fsSL "$repo_url/KEY.gpg" | $SUDO gpg --batch --yes --dearmor -o "$keyring"
+
+      echo "==> Adding APT repository..."
+      echo "deb [signed-by=$keyring arch=amd64,arm64] $repo_url stable main" \
+          | $SUDO tee "$list_file" >/dev/null
+
+      echo "==> Updating package lists and installing claude-desktop..."
+      $SUDO apt-get update
+      $SUDO apt-get install -y claude-desktop
+
+      echo "==> Done. Claude Desktop installed (updates via normal 'apt upgrade')."
+  }
+install_claude_desktop
+""")
+
+
+aptPkgsList = [
+    ap("curl"),            # Required to download the apt signing key
+    ap("claude-code", func=claudeCodeAptSource),   # Claude Code CLI -- via official Anthropic apt repo
+    ap("claudeDesktop", func=claudeDesktop),   #
+]
+
+
+pkgsSeed.setup(
+    aptPkgsList=aptPkgsList,
+)
+
+
+####+BEGIN: b:py3:cs:cmnd/classHead :cmndName "readme" :extent "verify" :comment "Describe" :parsMand "" :parsOpt "" :argsMin 0 :argsMax 0 :pyInv ""
+""" #+begin_org
+*  _[[elisp:(blee:menu-sel:outline:popupMenu)][±]]_ _[[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]]_ [[elisp:(outline-show-branches+toggle)][|=]] [[elisp:(bx:orgm:indirectBufOther)][|>]] *[[elisp:(blee:ppmm:org-mode-toggle)][|N]]*  CmndSvc-   [[elisp:(outline-show-subtree+toggle)][||]] <<readme>>  *Describe*  =verify= ro=cli   [[elisp:(org-cycle)][| ]]
+#+end_org """
+class readme(cs.Cmnd):
+    cmndParamsMandatory = [ ]
+    cmndParamsOptional = [ ]
+    cmndArgsLen = {'Min': 0, 'Max': 0,}
+
+    @cs.track(fnLoc=True, fnEntry=True, fnExit=True)
+    def cmnd(self,
+             rtInv: cs.RtInvoker,
+             cmndOutcome: b.op.Outcome,
+    ) -> b.op.Outcome:
+        """Describe"""
+        failed = b_io.eh.badOutcome
+        callParamsDict = {}
+        if self.invocationValidate(rtInv, cmndOutcome, callParamsDict, None).isProblematic():
+            return failed(cmndOutcome)
+####+END:
+        descriptionStr = """\
+** Scope: Anthropic Claude Code CLI for Debian 12 (amd64).
+
+** Component installed:
+
+  1) Claude Code CLI  (claude-code -- official Anthropic apt repository)
+       - A terminal-based AI coding assistant powered by Claude.
+       - Installed via the official Anthropic signed apt repository:
+           https://downloads.claude.ai/claude-code/apt/stable
+       - GPG key fingerprint: 31DD DE24 DDFA B679 F42D 7BD2 BAA9 29FF 1A7E CACE
+       - Invoked as: claude
+
+** NOTE: Claude Desktop is NOT available for Linux (macOS and Windows only).
+
+** Installation:
+       ai-claude-sbom.pcs -i sbom_fullUpdate
+
+** Update:
+       sudo apt update && sudo apt upgrade claude-code
+
+** Authentication (first run):
+       claude   # follow browser prompts
+       claude auth login\
+"""
+        print(descriptionStr)
+
+        return cmndOutcome.set(
+            opError=b.op.OpError.Success,
+            opResults=None,
+        )
+
+def examples_csu() -> b.op.Outcome:
+    """Common Usage Examples for this Command-Service Unit"""
+
+    cmnd = cs.examples.cmndEnter
+    literal = cs.examples.execInsert
+
+    cmndOutcome = b.op.Outcome()
+
+    cs.examples.menuChapter('*Claude CLI (claude-code) Examples*')
+    if not (resStr := b.subProc.Op(outcome=cmndOutcome, log=0).bash(
+       f"""which claude""").stdout):  
+        # b_io.eh.badOutcome(cmndOutcome)
+        pass
+
+    literal(f"which claude # {resStr.strip()}")
+    literal("claude --version")
+    literal("claude --help")
+
+    cmnd('readme', comment=" # An overview short description")
+
+    cs.examples.menuChapter('*Install / Update*')
+    literal("ai-claude-sbom.pcs -i sbom_fullUpdate")
+    literal("sudo apt update && sudo apt upgrade claude-code  # manual update via apt")
+
+    cs.examples.menuChapter('*Claude Code CLI -- Authentication*')
+    literal("claude auth login")
+    literal("claude auth status")
+
+    cs.examples.menuChapter('*Claude Code CLI -- Basic Usage*')
+    literal("claude")
+    literal('claude "Explain this codebase"')
+    literal("claude --print 'What does this function do?'")
+    literal("claude doctor  # check installation and config health")
+
+    cs.examples.menuChapter('*Verify Installation*')
+    literal("dpkg -l | grep claude-code")
+    literal("claude --version")
+    literal("which claude")
+
+    cs.examples.menuChapter('*APT Repository Info*')
+    literal("cat /etc/apt/sources.list.d/claude-code.list")
+    literal("gpg --show-keys /etc/apt/keyrings/claude-code.asc  # fingerprint: 31DD DE24 DDFA B679 F42D 7BD2 BAA9 29FF 1A7E CACE")
+
+    cs.examples.menuChapter('*Uninstall*')
+    literal("sudo apt remove claude-code")
+    literal("sudo rm /etc/apt/sources.list.d/claude-code.list /etc/apt/keyrings/claude-code.asc")
+
+    cs.examples.menuChapter('*End-Of  Claude AI Command Examples*')
+    return cmndOutcome
