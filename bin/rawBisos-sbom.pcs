@@ -17,6 +17,7 @@ ap = pkgsSeed.aptPkg
 
 aptPkgsList = [
     ap("whois"),  #
+    ap("htop"),  #
 ]
 
 pkgsSeed.setup(
