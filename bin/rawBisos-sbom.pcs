@@ -16,6 +16,7 @@ from bisos.sbom import pkgsSeed  # pkgsSeed.plantWithWhich("seedSbom.cs")
 ap = pkgsSeed.aptPkg
 
 aptPkgsList = [
+    ap("bc"),  #
     ap("whois"),  #
     ap("htop"),  #
 ]
