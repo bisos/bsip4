@@ -106,7 +106,8 @@ ${G_myName} ${extraInfo} -i virtenvsPrep py3/adopted  # Create Virtual Environme
 ${G_myName} ${extraInfo} -f -i virtenvsPrep py3/adopted # force mode
 ${G_myName} ${extraInfo} -i venvPy3Adopted_pipInstalls # editable installed with ftoWalkThrough
 $( examplesSeperatorChapter "Py3 Dev Manage Environment" )
-${G_myName} ${extraInfo} -i pyVenv_DevSetup # Create Virtual Environment and dev pipInstalls
+${G_myName} ${extraInfo} -i pyVenv_DevSetup
+ # Create Virtual Environment and dev pipInstalls
 ${G_myName} ${extraInfo} -i virtenvsPrep py3/dev  # Create Virtual Environment
 ${G_myName} ${extraInfo} -f -i virtenvsPrep py3/dev # force mode
 ${G_myName} ${extraInfo} -i venvPy3Dev_pipInstalls # editable installed with ftoWalkThrough
