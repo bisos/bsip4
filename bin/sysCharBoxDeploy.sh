@@ -199,7 +199,8 @@ _EOF_
 
     local siteBxoId=$( sysCharRealize.sh -i selectedSiteBxoId )
 
-    local platfSiteBootstrap=$( platfSiteBootstrap-fps.cs  -i parGet nameOrIpAddr )
+    # local platfSiteBootstrap=$( platfSiteBootstrap-fps.cs  -i parGet nameOrIpAddr )
+    local platfSiteBootstrap=$( platfSiteBootstrap-fps.cs  -i parGet nameOrIpAddrForBox )
     local id=$( platfSiteBootstrap-fps.cs  -i parGet acct )
     local password=$( platfSiteBootstrap-fps.cs  -i parGet passwd )
 
@@ -231,14 +232,13 @@ bleeVisit /bisos/panels/development/bisos-dev/howToBecomeDeveloper/fullUsagePane
 $( examplesSeperatorChapter "LAYER-2:: Sited-Container -- UnsitedBisos to SitedContainer" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2_sitedDevContainer  # onManager  -- PRIMARY (New BOX)
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2_sitedContainer  # onManager  -- PRIMARY (New BOX)
-${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2_sitedContainer  # onManager  -- PRIMARY (New BOX)
- ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_siteSetup # onManager or below onTarget
+${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_siteSetup # onManager or below onTarget
 ${G_myName} ${extraInfo} -p platfSiteBootstrap="${platfSiteBootstrap}" -p id="${id}" -p password="${password}"  -i bisosBasePlatform_siteSetup # onTarget
 $( examplesSeperatorSection "L2:: BISOS Development Preps -- bisosBasePlatform Actions" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l2Plus_devContainer # onManager+onTarget UsedBy: l2_sitedDevContainer
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i usgConvey_bisosDeveloper # onManager+onTarget UsedBy: l2_sitedDevContainer
 ${G_myName} ${extraInfo} -p bisosDevBxoId=prompt -i usgConvey_bisosDeveloper # onTarget UsedBy: l2_sitedDevContainer
-cntnrDevel.sh -h -v -n showRun -i bisosDevBxo_fullSetup  # activate bisosDevBxoId and Materialize it
+pltfrmDevelBecome.sh -h -v -n showRun -i bisosDevBxo_fullSetup  # activate bisosDevBxoId and Materialize it
 $( examplesSeperatorChapter "Layer-1 + Layer 2:: Combined" )
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l2_sitedDevContainer # OnManager
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i l1l2_sitedContainer  # OnManager
@@ -450,7 +450,7 @@ _EOF_
 
     function onManagerRun {
         if [ -z "${platfSiteBootstrap}" ] ; then
-            platfSiteBootstrap=$( platfSiteBootstrap-fps.cs  -i parGet nameOrIpAddr )
+            platfSiteBootstrap=$( platfSiteBootstrap-fps.cs  -i parGet nameOrIpAddrForBox )
         fi
         if [ -z "${id}" ] ; then
             id=$( platfSiteBootstrap-fps.cs  -i parGet acct )
@@ -581,7 +581,7 @@ _EOF_
 
     function onTargetRun {
 
-        lpDo cntnrDevel.sh ${G_commandPrefs} \
+        lpDo pltfrmDevelBecome.sh ${G_commandPrefs} \
              -i bisosDevBxo_fullSetup
     }
 
@@ -1578,7 +1578,7 @@ $( examplesSeperatorChapter "LAYER-2:: Sited-Container (Registrar Not Here, in b
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_fullUpdate # onManager
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i bisosBasePlatform_siteSetup # onManager or below onTarget
 ${G_myName} ${extraInfo} -p registrar="${registrar}" -p id="${id}" -p password="${password}" -p siteBxoId=${siteBxoId}" -i bisosBasePlatform_siteSetup # onTarget
-cntnrDevel.sh -h -v -n showRun -i bisosDevBxo_fullSetup  # activate bisosDevBxoId and actuate it
+pltfrmDevelBecome.sh -h -v -n showRun -i bisosDevBxo_fullSetup  # activate bisosDevBxoId and actuate it
 ${G_myName} ${extraInfo} -p targetName="${oneTargetName}" -i  sitedDevelContainer  # PRIMARY
 $( examplesSeperatorChapter "LAYER-3:: Chared-Container -- (Realize or Activate) SysChar Setup (with sysCharBpo) -- siteBasePlatform Actions" )
 $( examplesSeperatorSection "L3:: siteBasePlatform New Box Assign -- On Manager Or On Target Box" )
