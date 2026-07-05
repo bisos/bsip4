@@ -252,10 +252,10 @@ _EOF_
 
     if [ "${bxoType}" == "bpo" ] ; then
         local bisosDevBxoId=$( vis_usgBposUsageEnvs_bisosDevBxoId_read )
-        EH_assert [ ! -z "${bisosDevBxoId}" ]
+        EH_assert [[ ! -z "${bisosDevBxoId}" ]]
 
         bisosDevBxoHome=$( vis_usgBposUsageEnvs_bisosDev_bxoPath )
-        EH_assert [ ! -z "${bisosDevBxoHome}" ]
+        EH_assert [[ ! -z "${bisosDevBxoHome}" ]]
 
         # Activate bisosDev usage env bpo
         lpDo bpoManage.sh ${G_commandPrefs} \
