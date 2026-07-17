@@ -1,0 +1,99 @@
+#+title: Work Plan
+#+DATE: <2026-06-10 Wed 13:54>
+#+AUTHOR: Mohsen BANAN
+#+OPTIONS: toc:4
+#+TAGS: me ai aiAndMe
+
+# Provenance (installed once by startAiActivity.cs --- not regenerated):
+#   Date:      2026-07-17T14:07:48-07:00
+#   User:      bystar
+#   Templates: /bisos/apps/defaults/ai-templates
+#   Command:   /bisos/venv/py3/devbin/startAiActivity.cs -i initiateSub --activity=custom --noLink=AI-Activity.org
+
+####+BEGIN: b:ai:file/particulars
+* AI Working Context
+  Working Directory: /bisos/git/auth/bxRepos/bisos/bsip4/bin
+  File: /bisos/git/auth/bxRepos/bisos/bsip4/bin/AI-WorkPlan.org
+  Companion Docs: AI-Activity.org, AI-DevStatus.org
+###+END:
+
+This Work Plan file drives the AI collaborative development.
+Interactions are broken down into "Stages". Each Stage has a set
+of TODOs that I work with Claude to accomplish.
+
+Note to a fresh Claude: read this file together with AI-WORKFLOW.org,
+AI-Activity.org and AI-DevStatus.org to orient yourself. The =<<Context Confirmation>>=
+TODO below is the standard first step, or use =/bx-confirm0= as the automated equivalent.
+TODOs tagged =:ai:= are assigned to Claude. After completing a TODO, summarize results
+under =----- AI Results: ------= and mark it DONE.
+
+* Stage 1: Confirm AI's Understanding of This Repo's Context
+
+Goal: Confirm AI's understanding of the context and capture that in [[Context Confirmation]] TODO.
+
+
+* Stage 1 TODOs
+** +
+** DONE [#A] <<Context Confirmation>> for AI (typically triggered by /bx-confirm0) :ai:
+SCHEDULED: <2026-06-09 Tue>
+Based on the series of files starting from CLAUDE.md in this repo,
+describe succinctly what you have understood.
+Enumerate explicitly which files you have imported and which you have considered.
+----- AI Results: ------
+
+*** Files imported (in order)
+
+Local subproject overlay (this directory --- all regular files, none symlinked):
+1. ./CLAUDE.md --- regular file (393 B); slim overlay, imports only the local trio below.
+2. ./AI-Activity.org --- regular file; =custom= activity, NOT symlinked (installed with =--noLink=AI-Activity.org=).
+3. ./AI-DevStatus.org --- regular file; sparse template.
+4. ./AI-WorkPlan.org --- regular file; sparse template.
+
+Inherited invariants via Claude Code walk-up (from parent repo /bisos/git/auth/bxRepos/bisos/bsip4/):
+5. ../CLAUDE.md --- regular file (parent repo root).
+6. ../AI-WORKFLOW.org --- symlink -> /bisos/apps/defaults/ai-templates/mother/AI-WORKFLOW.org.
+7. ../.claude/ --- directory (inherited settings/commands/skills).
+
+Note: no local AI-WORKFLOW.org here --- that invariant is deliberately inherited
+from the parent, which is the expected =initiateSub= behavior.
+This directory (/bisos/core/bsip/bin) resolves to /bisos/git/auth/bxRepos/bisos/bsip4/bin.
+
+*** Summary of understanding
+
+This is a subproject overlay under the =bsip4= repo, installed via
+=startAiActivity.cs -i initiateSub --activity=custom= on 2026-07-17, sitting at
+/bisos/git/auth/bxRepos/bisos/bsip4/bin (reached via the /bisos/core/bsip/bin path).
+Being a slim overlay, its CLAUDE.md imports only the three local AI-*.org files and
+inherits the invariant AI-WORKFLOW.org and .claude/ from the parent repo via walk-up.
+The activity is =custom= --- the escape hatch for conventions not covered by standard
+activities --- and AI-Activity.org declares the sole focus of this directory:
+=sbom.pcs= creation and maintenance. Both AI-DevStatus.org and AI-WorkPlan.org are
+still at their sparse initial templates, so no substantive work has been recorded ---
+this Context Confirmation is the first completed TODO.
+** -
+
+* Stage 2: Create ./ai-tools-sbom.pcs (similar to ./ai-claude-sbom.pcs)
+
+Goal: Create ./ai-tools-sbom.pcs staring with markitdown
+
+
+* Stage 2 TODOs
+** +
+** TODO [#A] Install <<markitdown>> through ./ai-tools-sbom.pcs :ai:
+SCHEDULED: <2026-06-09 Tue>
+Are you familiar with MS's markitdown? Is this clear enough for you to write the -sbom.pcs?
+Describe the process of creating -sbom.pcs as you have gathered?
+Should that process become a skill and go in _skill s of sbom+cap?
+----- AI Results: ------
+** TODO [#A] Other than markitdown What other tools are <<good candidates>> for inclusion in  ./ai-tools-sbom.pcs :ai:
+SCHEDULED: <2026-06-09 Tue>
+If any, enumerate and educate me
+----- AI Results: ------
+
+** -
+
+
+# Local Variables:
+# eval: (setq-local toc-org-max-depth 4)
+# eval: (setq-local org-log-done 'time)
+# End:
