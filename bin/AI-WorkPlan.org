@@ -79,16 +79,105 @@ Goal: Create ./ai-tools-sbom.pcs staring with markitdown
 
 * Stage 2 TODOs
 ** +
-** TODO [#A] Install <<markitdown>> through ./ai-tools-sbom.pcs :ai:
+** DONE [#A] Install <<markitdown>> through ./ai-tools-sbom.pcs :ai:
 SCHEDULED: <2026-06-09 Tue>
+CLOSED: [2026-07-17 Thu]
 Are you familiar with MS's markitdown? Is this clear enough for you to write the -sbom.pcs?
 Describe the process of creating -sbom.pcs as you have gathered?
 Should that process become a skill and go in _skill s of sbom+cap?
 ----- AI Results: ------
-** TODO [#A] Other than markitdown What other tools are <<good candidates>> for inclusion in  ./ai-tools-sbom.pcs :ai:
+
+*** markitdown
+
+Yes, familiar. markitdown (microsoft/markitdown) is a Python library and CLI tool that
+converts PDF, Word, Excel, PowerPoint, HTML, images, audio, ZIP archives, etc. to Markdown.
+Installed via pip (not pipx) into =/bisos/venv/py3/asc= so it is both importable as a
+library (=from markitdown import MarkItDown=) and available as a CLI command.
+
+*** pkgsSeed pattern for pip installs
+
+=pkgsSeed= has =pipPkg= (=pp=) as a first-class peer to =aptPkg= (=ap=). No custom function
+is needed for a plain pip install. The clean pattern:
+
+#+begin_src python
+pp = pkgsSeed.pipPkg
+pkgsSeed.pkgsSeedInfo.virtenv = "/bisos/venv/py3/asc"
+
+pipPkgsList = [
+    pp("markitdown"),
+]
+pkgsSeed.setup(pipPkgsList=pipPkgsList)
+#+end_src
+
+The =func== pattern is only for cases requiring custom shell logic (e.g. adding a new apt
+source). For ordinary pip installs, =pp()= is sufficient.
+
+*** Created
+
+=/bisos/git/auth/bxRepos/bisos/bsip4/bin/ai-tools-sbom.pcs=
+
+*** Should this become a skill?
+
+Yes -- the pkgsSeed API and the apt-vs-pip-vs-custom-source decision tree should be
+captured in =.claude/skills/sbom-pcs.md=. Deferred to a future TODO.
+** DONE [#A] Other than markitdown What other tools are <<good candidates>> for inclusion in  ./ai-tools-sbom.pcs :ai:
 SCHEDULED: <2026-06-09 Tue>
+CLOSED: [2026-07-17 Thu]
 If any, enumerate and educate me
 ----- AI Results: ------
+
+*** Tools added to ai-tools-sbom.pcs
+
+Two additional tools were added alongside markitdown:
+
+  1) crawl4ai
+       - LLM-focused web crawler; renders JavaScript via Playwright, outputs clean Markdown.
+       - Complements markitdown: markitdown handles local files, crawl4ai handles live URLs.
+       - Requires playwright -- handled via =sbom("/bisos/core/lcnt/bin/playwright-sbom.pcs")=
+         as a prerequisite sbom demand.
+
+  2) docling  (IBM Research)
+       - Stronger than markitdown for complex PDFs: multi-column layouts, tables, figures.
+       - Outputs structured Markdown or JSON; integrates with LangChain/LlamaIndex.
+       - Heavier footprint (PyTorch-based OCR models on first use).
+
+*** Tools considered and rejected
+
+  - litellm: multi-provider LLM routing proxy -- not relevant in a Claude-centric BISOS context.
+
+*** Side effect: playwright-sbom.pcs updated
+
+Added =pkgsSeed.pkgsSeedInfo.virtenv = "/bisos/venv/py3/asc"= to
+=/bisos/core/lcnt/bin/playwright-sbom.pcs= so playwright installs into the same venv
+as crawl4ai. (Note: verify this does not conflict with lcnt's original use of playwright.)
+** DONE [#A] Write a <<skill for sbom>>  Creation and Maintenance :ai:
+SCHEDULED: <2026-07-17 Fri>
+CLOSED: [2026-07-17 Thu]
+Consider every thing that is in /bisos/apps/defaults/ai-templates/sbom+cap/AI-Activity.org -- Create the _skill right there for use by bisos.startAiActivity. Consider existing skills and their inclusion machinary.
+----- AI Results: ------
+
+*** Skill created
+
+=/bisos/apps/defaults/ai-templates/sbom+cap/_skills/sbom-authoring/SKILL.md=
+
+Covers:
+- Full file structure template (shebang, imports, pkg lists, pkgsSeed.setup)
+- Decision tree: ap / pp / pipx / func= / sbom() — when to use each
+- virtenv setting and the cross-sbom venv consistency rule
+- The func= pattern for apt custom sources and post-install steps
+- sbom() dependency declaration with absolute paths
+- readme class authoring (body only after ####+END:)
+- examples_csu() pattern
+- Running the sbom (sbom_fullUpdate, readme, examples)
+
+*** Inclusion machinery
+
+- Skill lives at: =<templatesBase>/sbom+cap/_skills/pkgsSeed-authoring/SKILL.md=
+- At =initiate= time, =startAiActivity.cs= creates =.claude/skills -> <templatesBase>/<activity>/_skills/= as a single directory-level symlink.
+- =initiateSub= repos inherit =.claude/skills/= via Claude Code CLAUDE.md walk-up from the initiated ancestor.
+- The symlink was manually created for this repo (already initiated before the skill existed):
+  =.claude/skills -> /bisos/apps/defaults/ai-templates/sbom+cap/_skills/=
+- New projects initiated against =sbom+cap= will get the symlink automatically.
 
 ** -
 
