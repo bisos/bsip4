@@ -5,15 +5,16 @@
 #+TAGS: me ai aiAndMe
 
 # Provenance (installed once by startAiActivity.cs --- not regenerated):
-#   Date:      2026-07-17T14:07:48-07:00
+#   Date:      2026-07-18T18:43:38-07:00
 #   User:      bystar
 #   Templates: /bisos/apps/defaults/ai-templates
-#   Command:   /bisos/venv/py3/devbin/startAiActivity.cs -i initiateSub --activity=custom --noLink=AI-Activity.org
+#   Command:   /bisos/venv/py3/devbin/startAiActivity.cs -i initiateSub --activity=sbom+cap
 
 ####+BEGIN: b:ai:file/particulars
 * AI Working Context
   Working Directory: /bisos/git/auth/bxRepos/bisos/bsip4/bin
   File: /bisos/git/auth/bxRepos/bisos/bsip4/bin/AI-WorkPlan.org
+  Activity: sbom+cap
   Companion Docs: AI-Activity.org, AI-DevStatus.org
 ###+END:
 

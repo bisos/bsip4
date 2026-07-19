@@ -1,1 +1,1 @@
-/bisos/apps/defaults/ai-templates/sbom+cap/AI-Activity.org
+/bisos/apps/defaults/ai-templates/aiActivity/AI-Activity.org
