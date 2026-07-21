@@ -19,6 +19,7 @@ aptPkgsList = [
     ap("bc"),  #
     ap("whois"),  #
     ap("htop"),  #
+    ap("iputils-ping"),  #
 ]
 
 pkgsSeed.setup(
