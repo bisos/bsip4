@@ -101,6 +101,15 @@ function vis_examples {
     #local relPy3Bisos3="/bystar/dist/venv/py2-bisos-3"
     local relPy3Bisos3="/bisos/venv/py3/bisos3"
 
+    if [ -z  "${VIRTUAL_ENV:-}" ] ; then
+        projectInstallLine=""
+    else
+        # New line at the end is by design.
+        projectInstallLine="${G_myName} ${extraInfo} -i pkgReInstall edit ${VIRTUAL_ENV}   # PRIMARY, Project -- unInstall+fullPrepBuild forLocal+Install
+"
+    fi
+
+
     typeset visLibExamples=`visLibExamplesOutput ${G_myName} ${extraInfo}`
  cat  << _EOF_
 EXAMPLES:
@@ -137,14 +146,15 @@ ${G_myName} ${extraInfo} -p repo=test -i fullPrepBuildUpload
 $( examplesSeperatorChapter "Installation" )
 ${G_myName} ${extraInfo} -i pkgInstall local ${relPy3Bisos3}   # pip install  ${pipPkgFile}
 ${G_myName} ${extraInfo} -i pkgInstall edit ${devPy3Bisos3}  # pip install --editable $(pwd)
-/bisos/venv/py3/bisos3/bin/pip install --no-cache-dir --upgrade ${pypiPkgName} # pip install from PYPI 
+/bisos/venv/py3/bisos3/bin/pip install --no-cache-dir --upgrade ${pypiPkgName} # pip install from PYPI
 pip install --no-cache-dir --editable ${pypiPkgName}  # --use-pep517
 $( examplesSeperatorChapter "Un-Installation and Re-Installation" )
 ${G_myName} ${extraInfo} -i pkgUnInstall ${relPy3Bisos3}
 ${G_myName} ${extraInfo} -i pkgUnInstall ${devPy3Bisos3}
 ${G_myName} ${extraInfo} -i pkgReInstall local ${relPy3Bisos3}
 ${G_myName} ${extraInfo} -i pkgReInstall edit ${devPy3Bisos3}   # PRIMARY, unInstall+fullPrepBuild forLocal+Install
-${G_myName} ${extraInfo} -i devBinSymLinks
+${projectInstallLine}${G_myName} ${extraInfo} -i devBinSymLinks
+pip uninstall -y ${pypiPkgName}
 $( examplesSeperatorChapter "Cleaning" )
 ${G_myName} ${extraInfo} -i distClean
 $( examplesSeperatorChapter "Pkg Versions at PyPi" )
@@ -685,12 +695,12 @@ _EOF_
     local installType="$1"
     local venvBase="$2"
 
-
-    local venvBase="$1"
-
     opDo pypiPkgInfoExtract
 
+    print "AAA- ${venvBase}"
     local activeFile=$(withVenvBaseGetActiveFile ${venvBase})
+
+    print "BBB- ${activeFile}"
 
     if [ ! -z ${activeFile} ] ; then
         opDo sourceVenvActiveFile ${activeFile}

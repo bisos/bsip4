@@ -173,7 +173,7 @@ Covers:
 
 *** Inclusion machinery
 
-- Skill lives at: =<templatesBase>/sbom+cap/_skills/pkgsSeed-authoring/SKILL.md=
+- Skill lives at: =<templatesBase>/sbom+cap/_skills/sbom-authoring/SKILL.md=
 - At =initiate= time, =startAiActivity.cs= creates =.claude/skills -> <templatesBase>/<activity>/_skills/= as a single directory-level symlink.
 - =initiateSub= repos inherit =.claude/skills/= via Claude Code CLAUDE.md walk-up from the initiated ancestor.
 - The symlink was manually created for this repo (already initiated before the skill existed):

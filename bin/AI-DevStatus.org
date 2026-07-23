@@ -26,19 +26,56 @@ Note to a fresh Claude: this file is intentionally sparse at project start.
 Fill in the sections below when asked to update, following the structure provided.
 
 * Current State
-  [To be filled in by Claude after first substantive interaction]
+
+  All Stage 2 TODOs are DONE. The subproject's primary deliverable,
+  =ai-tools-sbom.pcs=, has been created and is functional. A reusable
+  =sbom-authoring= skill has been written and wired into the templates.
+  No open TODOs remain in the WorkPlan for this subproject.
 
 * Architecture
-  [Key components, file structure, entry points]
+
+  This subproject (=/bisos/git/auth/bxRepos/bisos/bsip4/bin=, reached via
+  =/bisos/core/bsip/bin=) is a =initiateSub= overlay under the =bsip4= repo.
+  It inherits =AI-WORKFLOW.org= and =.claude/= (including skills) from the
+  parent repo via Claude Code walk-up. Activity: =sbom+cap=.
+
+  Key files created/modified in this session:
+
+  - =./ai-tools-sbom.pcs= --- new; installs AI document ingestion tools via pip
+    into =/bisos/venv/py3/asc=. Demands =/bisos/core/lcnt/bin/playwright-sbom.pcs=
+    as a prerequisite sbom.
+  - =/bisos/core/lcnt/bin/playwright-sbom.pcs= --- modified; added
+    =pkgsSeed.pkgsSeedInfo.virtenv = "/bisos/venv/py3/asc"= for venv consistency.
+  - =/bisos/apps/defaults/ai-templates/sbom+cap/_skills/sbom-authoring/SKILL.md=
+    --- new; reusable skill for authoring =-sbom.pcs= files.
+  - =/bisos/git/auth/bxRepos/bisos/bsip4/.claude/skills= --- new symlink pointing
+    at =/bisos/apps/defaults/ai-templates/sbom+cap/_skills/=.
 
 * What Works
-  [Verified functionality]
+
+  - =ai-tools-sbom.pcs= structure is correct per pkgsSeed conventions:
+    uses =pp()= directly (no spurious =func==), sets =virtenv=, declares =sbomsList=.
+  - Skill =sbom-authoring= is live and accessible to Claude via the =.claude/skills=
+    symlink at the parent repo level.
 
 * What Is Untested
-  [Known gaps]
+
+  - =ai-tools-sbom.pcs -i sbom_fullUpdate= has not been run; markitdown, crawl4ai,
+    and docling have not actually been installed into =/bisos/venv/py3/asc= yet.
+  - The playwright venv change (=/bisos/core/lcnt/bin/playwright-sbom.pcs=) may
+    conflict with lcnt's original use of playwright in the default venv — needs
+    verification before running lcnt's playwright-dependent code.
 
 * Key Design Decisions
-  [Non-obvious choices and their rationale]
+
+  - *pip not pipx for AI tools*: markitdown, crawl4ai, docling installed via =pp()=
+    into =/bisos/venv/py3/asc= so they are importable as Python libraries, not just
+    CLI commands. pipx would isolate them into their own venvs.
+  - *sbom dependency for playwright*: crawl4ai's playwright requirement is handled
+    via =sbom("/bisos/core/lcnt/bin/playwright-sbom.pcs")= rather than duplicating
+    the playwright install — the canonical sbom-demands-sbom pattern.
+  - *Skill named =sbom-authoring= not =pkgsSeed-authoring=*: names the activity
+    (authoring an sbom) rather than the implementation detail (pkgsSeed API).
 
 # Local Variables:
 # eval: (setq-local toc-org-max-depth 4)
