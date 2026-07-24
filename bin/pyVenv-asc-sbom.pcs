@@ -28,7 +28,7 @@ def venvBuild():
         sudo mkdir -p {baseVenvPath} \
     &&  sudo chown $(id -un):$(id -gn) {baseVenvPath} \
     &&  python3 -m venv {baseVenvPath} \
-    &&  {baseVenvPath}/bin/python3 -m pip install --upgrade pip setuptools wheel
+    &&  {baseVenvPath}/bin/python3 -m pip install --upgrade pip setuptools wheel build
 """)
 
 
