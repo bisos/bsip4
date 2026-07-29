@@ -129,6 +129,7 @@ ${G_myName} -p localUser=${oneLocalUser} -p sshDir=credentials/ssh -i userKeyUpd
 ${G_myName} ${extraInfo} -p localUser=${oneLocalUser} -f -i userKeyUpdate
 --- PUBLIC KEY EXPORT MANIPULATORS ---
 ${G_myName} ${extraInfo} -p localUser=${oneLocalUser} -p remoteUser=${oneRemoteUser} -p remoteHost=${oneRemoteHost}  -i authorizedKeysUpdate
+${G_myName} ${extraInfo} -p localUser=${oneLocalUser} -p remoteUser=${oneRemoteUser} -p remoteHost=${oneRemoteHost}  -i sshCopyIdUpdate
 --- AUTHORZED KEYS MANIPULATORS ---
 ${G_myName} -p localUser=${oneLocalUser} -p remoteUser=${oneRemoteUser} -p remoteHost=${oneRemoteHost}  -i logNameIsInAuthKeysFile
 ${G_myName} -i knownHostsAddSystem bystar 192.168.0.2        
@@ -433,6 +434,8 @@ function vis_authorizedKeysUpdate {
   else
     opDoRet opAcctInfoGet ${localUser} || return $?
 
+    # Check for id_ed25519.pub as well
+
     if [ ! -f ${opAcct_homeDir}/.ssh/id_dsa.pub ]  ; then
       EH_problem "${opAcct_homeDir}/.ssh/id_dsa.pub not found"
       return 1
@@ -446,7 +449,34 @@ function vis_authorizedKeysUpdate {
 }
 
 
-# NOTYET, 
+function vis_sshCopyIdUpdate {
+  if [ "${remoteHost}_" == "_" ] ; then
+    EH_problem "remoteHost must be specified"
+    return 1
+  fi
+
+  if [ "${localUser}_" == "_" ] ; then
+    localUser=${opRunAcctName}
+  fi
+
+  if [ "${remoteUser}_" == "_" ] ; then
+    remoteUser=${localUser}
+  fi
+
+  ANT_raw "About to sshCopyIdUpdate for localUser=${localUser}"
+  pauseForVerification
+
+  opDoRet opAcctInfoGet ${localUser} || return $?
+
+  for pubKey in id_ed25519.pub id_rsa.pub id_dsa.pub ; do
+    if [ -f ${opAcct_homeDir}/.ssh/${pubKey} ] ; then
+      opDo ssh-copy-id -i ${opAcct_homeDir}/.ssh/${pubKey} ${remoteUser}@${remoteHost}
+    fi
+  done
+}
+
+
+# NOTYET,
 # currentUser should become -p localUser
 # destHost shouldBecome RemoteHost
 function vis_hostIsInKnownHostsFile {

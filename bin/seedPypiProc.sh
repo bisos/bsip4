@@ -697,10 +697,7 @@ _EOF_
 
     opDo pypiPkgInfoExtract
 
-    print "AAA- ${venvBase}"
     local activeFile=$(withVenvBaseGetActiveFile ${venvBase})
-
-    print "BBB- ${activeFile}"
 
     if [ ! -z ${activeFile} ] ; then
         opDo sourceVenvActiveFile ${activeFile}
