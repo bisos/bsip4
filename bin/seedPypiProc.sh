@@ -184,6 +184,7 @@ pipx runpip ${pypiPkgName} show ${pypiPkgName}
 $( examplesSeperatorChapter "Development Examples" )
 ${G_myName} ${extraInfo} -i devExamples
 ${G_myName} ${extraInfo} -i readmeToDescriptionOrg ../README.org ./_description.org
+${G_myName} ${extraInfo} -i genPipreqs                           # Regenerate ./requirements.txt from ./tmo and ./bin (incl .cs/.pcs/.mcs)
 _EOF_
 
 }
@@ -1513,6 +1514,102 @@ _EOF_
     lpDo rm ${tmpFile}
 }
 
+
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || IIF       ::  vis_genPipreqs    [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+
+function vis_genPipreqs {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+Regenerate ./requirements.txt from imports found in the package source
+tree and ./bin. Wraps pipreqs.
+
+pipreqs only scans *.py files, so non-.py Python executables in ./bin
+(*.cs, *.pcs, *.mcs) are made visible to pipreqs via temporary *.py
+symlinks under a scratch scan directory. The scan directory (and its
+symlinks) is cleaned up after pipreqs completes.
+
+Assumes pipreqs is available on PATH (e.g. via 'pipx install pipreqs').
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo pypiPkgInfoExtract
+
+    if ! command -v pipreqs > /dev/null 2>&1 ; then
+        EH_problem "pipreqs not found on PATH; install with: pipx install pipreqs"
+        lpReturn 1
+    fi
+
+    local scanDir=$(mktemp -d --tmpdir genPipreqs.XXXX)
+    if [ -z "${scanDir}" ] || [ ! -d "${scanDir}" ] ; then
+        EH_problem "Failed to create scan directory"
+        lpReturn 1
+    fi
+    trap "rm -rf '${scanDir}'" RETURN
+
+    local pkgSrcTree="./${pypiPkgNamespace}/${pypiPkgModule}"
+    if [ -d "${pkgSrcTree}" ] ; then
+        lpDo ln -s "$(FN_absolutePathGet "${pkgSrcTree}")" "${scanDir}/pkgSrc"
+    else
+        EH_problem "Missing package source tree: ${pkgSrcTree}"
+        lpReturn 1
+    fi
+
+    # For ./bin/ --- symlink each Python-source file with a .py extension so
+    # pipreqs will scan it. Recognized Python source extensions: .py, .cs,
+    # .pcs, .mcs.
+    if [ -d "./bin" ] ; then
+        mkdir -p "${scanDir}/bin"
+        local eachFile=""
+        for eachFile in ./bin/* ; do
+            [[ -d "${eachFile}" ]] && continue
+            local base=$(basename "${eachFile}")
+            case "${base}" in
+                *.py|*.cs|*.pcs|*.mcs)
+                    # Strip the current extension and give it a .py suffix so
+                    # pipreqs will read it.
+                    local stem="${base%.*}"
+                    lpDo ln -s "$(FN_absolutePathGet "${eachFile}")" "${scanDir}/bin/${stem}.py"
+                    ;;
+                *)
+                    :
+                    ;;
+            esac
+        done
+    fi
+
+    lpDo pipreqs --force --mode no-pin --savepath ./requirements.txt "${scanDir}"
+
+    # Augment: pipreqs sees "from bisos.X import ..." and "import bisos.X"
+    # and records only the top-level "bisos" (the namespace-declaring
+    # PyPI package). But each bisos.X is a separately-published PyPI
+    # package (bisos.b, bisos.common, bisos.pycs, ...) that also needs
+    # to be in requirements.txt. Detect the actual bisos.X (two-level)
+    # imports in the scan area and append them. The bare "bisos" line
+    # from pipreqs is preserved --- it's the real namespace package.
+
+    local bisosSubmods=$(
+        find "${scanDir}" -type l -name '*.py' -exec cat {} \; 2>/dev/null | \
+            egrep '^[[:space:]]*(from|import)[[:space:]]+bisos\.' | \
+            sed -E 's/^[[:space:]]*(from|import)[[:space:]]+(bisos\.[a-zA-Z_][a-zA-Z0-9_]*).*/\2/' | \
+            sort -u
+    )
+
+    if [ -n "${bisosSubmods}" ] ; then
+        for submod in ${bisosSubmods} ; do
+            echo "${submod}" >> ./requirements.txt
+        done
+        # Deduplicate and stable-sort the file in place.
+        lpDo sort -u -o ./requirements.txt ./requirements.txt
+        ANT_raw "Augmented ./requirements.txt with bisos.* submodule packages: ${bisosSubmods}"
+    fi
+
+    ANT_raw "Generated ./requirements.txt --- review; tmo.* names may need manual PyPI mapping."
+
+    lpReturn
+}
 
 
 ####+BEGIN: bx:dblock:bash:end-of-file :type "basic"
