@@ -123,8 +123,12 @@ _CommentBegin_
 _CommentEnd_
 
 vis_repositoryAdd () {
-    opDo eval "wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -"
-    opDo sudo add-apt-repository "deb http://dl.google.com/linux/chrome/deb/ stable main"
+    # apt-key and add-apt-repository are deprecated/removed (Debian trixie).
+    # Use the keyrings + signed-by mechanism instead.
+    opDo sudo install -d -m 0755 /etc/apt/keyrings
+    opDo eval "wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo gpg --dearmor -o /etc/apt/keyrings/google-chrome.gpg"
+    opDo sudo chmod go+r /etc/apt/keyrings/google-chrome.gpg
+    opDo eval "echo 'deb [arch=amd64 signed-by=/etc/apt/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list > /dev/null"
     opDo sudo apt-get update
 }
 

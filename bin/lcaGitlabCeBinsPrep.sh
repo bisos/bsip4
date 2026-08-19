@@ -260,8 +260,11 @@ vis_repositoryAdd () {
 
     gpg_key_url="https://packages.gitlab.com/gitlab/gitlab-ce/gpgkey"
     apt_config_url="https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/config_file.list?os=${os}&dist=${dist}&source=script"
-    
+
     apt_source_path="/etc/apt/sources.list.d/gitlab_gitlab-ce.list"
+    # apt-key is deprecated/removed (Debian trixie); the packagecloud
+    # config_file.list references this keyring via signed-by=.
+    apt_keyring_path="/usr/share/keyrings/gitlab_gitlab-ce-archive-keyring.gpg"
 
     echo -n "Installing $apt_source_path..."
 
@@ -310,8 +313,9 @@ vis_repositoryAdd () {
     fi
 
     echo -n "Importing packagecloud gpg key... "
-    # import the gpg key
-    curl -L "${gpg_key_url}" 2> /dev/null | apt-key add - &>/dev/null
+    # import the gpg key into a keyring referenced by signed-by= in the repo list
+    curl -L "${gpg_key_url}" 2> /dev/null | gpg --dearmor | sudo tee "${apt_keyring_path}" &>/dev/null
+    sudo chmod go+r "${apt_keyring_path}"
     echo "done."
 
     echo -n "Running apt-get update... "
