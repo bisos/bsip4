@@ -136,8 +136,12 @@ _CommentBegin_
 _CommentEnd_
 
 vis_repositoryAdd () {
-    opDo eval "curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -"
-    opDo sudo apt-add-repository -y "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+    # apt-key and apt-add-repository are deprecated/removed (Debian trixie).
+    # Use the keyrings + signed-by mechanism instead.
+    opDo sudo install -d -m 0755 /etc/apt/keyrings
+    opDo eval "curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/hashicorp.gpg"
+    opDo sudo chmod go+r /etc/apt/keyrings/hashicorp.gpg
+    opDo eval "echo \"deb [arch=amd64 signed-by=/etc/apt/keyrings/hashicorp.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main\" | sudo tee /etc/apt/sources.list.d/hashicorp.list > /dev/null"
     opDo sudo apt-get update
 }
 

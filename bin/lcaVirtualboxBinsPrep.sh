@@ -113,20 +113,16 @@ _CommentEnd_
 
 vis_repositoryAdd () {
     #
-    # You can add the new repository one of two ways.
-    # 1) With add-apt-repository, something like:
-    #     opDo sudo add-apt-repository "deb http://dl.google.com/linux/chrome/deb/ stable main"
-    # 2) By writing in the /etc/apt/sources.list.d/ directly, something like:
-    #    echo 'deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian  focal contrib' | sudo tee /etc/apt/sources.list.d/virtualbox.list
+    # apt-key and add-apt-repository are deprecated/removed (Debian trixie).
+    # Use the keyrings + signed-by mechanism instead:
+    # 1) Write the repo into /etc/apt/sources.list.d/ with a signed-by= pointer.
+    # 2) Create trust by dearmoring the signing key into /etc/apt/keyrings/.
     #
-    # Next you need to create trust with apt-key add, something like,
-    # lpDo eval "wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -"
-    #
-    
-    echo 'deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian  focal contrib' | sudo tee /etc/apt/sources.list.d/virtualbox.list
-    lpDo eval "wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo apt-key add -"
-    lpDo eval "wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -"
-    
+    opDo sudo install -d -m 0755 /etc/apt/keyrings
+    lpDo eval "wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo gpg --dearmor -o /etc/apt/keyrings/oracle-virtualbox-2016.gpg"
+    opDo sudo chmod go+r /etc/apt/keyrings/oracle-virtualbox-2016.gpg
+    opDo eval "echo 'deb [arch=amd64 signed-by=/etc/apt/keyrings/oracle-virtualbox-2016.gpg] https://download.virtualbox.org/virtualbox/debian focal contrib' | sudo tee /etc/apt/sources.list.d/virtualbox.list > /dev/null"
+
     sudo apt-get update
 }
 

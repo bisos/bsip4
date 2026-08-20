@@ -73,6 +73,8 @@ def examples_csu() -> b.op.Outcome:
     literal("sudo apt update")
     literal("sudo apt install torbrowser-launcher")
     literal("torbrowser-launcher")
+    literal("cd ~/.local/share/torbrowser/tbb/x86_64/tor-browser/Browser && ./start-tor-browser --detach")
+
 
     cmnd('readme', comment=" # An overview short description")
 
