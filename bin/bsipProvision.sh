@@ -146,13 +146,19 @@ _EOF_
     lpDo ${bisosBinBase}/lcaPythonCommonBinsPrep.sh -v -n showRun -i fullUpdate
 
     lpDo bisosCurrentsManage.sh -i setParam cur_bpoId_parent pis_defaultSite
+'
+    lpDo rawBisos-sbom.pcs -i sbom_fullUpdate
 
+    lpDo rawBisos-sbom.pcs -i sbom_fullUpdate
+    lpDo lcaChromeBinsPrep.sh -v -n showRun -i fullUpdate
+'
     lpDo vis_provisionBasicBlee
 
     lpDo sudo -u bystar ${bleeBinBase}/blee -v -n showRun -p acctName=bystar -i provisionSetup
 
-
     lpDo echo "Stuff from bisosUpdateInterim.sh comes here."
+
+    lpDo echo "Initiation of cbm (Capability Bundels Materialization) happens here"
 }
 
 
