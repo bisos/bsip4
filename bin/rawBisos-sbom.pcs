@@ -24,8 +24,10 @@ pkgsSeed.pkgsSeedInfo.virtenv = "/bisos/venv/py3/asc"
 # ]
 
 pipPkgsList = [
-    pp("bisos.dnsCap"),
+    pp("bisos.pipreqsPlus"),
+    pp("bisos.fileObj"),
     pp("bisos.pyDblock"),
+    pp("bisos.dnsCap"),
     pp("bisos.webCap"),
 ]
 

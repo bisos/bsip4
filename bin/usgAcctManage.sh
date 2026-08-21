@@ -202,8 +202,15 @@ _EOF_
     lpDo sudo -u ${usgAcctName} cp ${profileDefaultFile} ${usgAcctHome}/_profile
     lpDo sudo -u ${usgAcctName} cp ${bashrcDefaultFile} ${usgAcctHome}/_bashrc
 
+    if [ -f "${usgAcctHome}/.profile" ] && [ ! -L "${usgAcctHome}/.profile" ] ; then
+        lpDo mv "${usgAcctHome}/.profile" "${usgAcctHome}/.profile.orig"
+    fi
     lpDo sudo -u ${usgAcctName} ln -s ${usgAcctHome}/_profile ${usgAcctHome}/.profile
-    lpDo sudo -u ${usgAcctName} ln -s ${usgAcctHome}/_bashrc ${usgAcctHome}/.bashrc            
+
+    if [ -f "${usgAcctHome}/.bashrc" ] && [ ! -L "${usgAcctHome}/.bashrc" ] ; then
+        lpDo mv "${usgAcctHome}/.bashrc" "${usgAcctHome}/.bashrc.orig"
+    fi
+    lpDo sudo -u ${usgAcctName} ln -s ${usgAcctHome}/_bashrc ${usgAcctHome}/.bashrc
 
     lpReturn
 }
