@@ -152,6 +152,7 @@ lsipAdoptedFamilyGenerationArchList=( \
     "lsipAdopted_DEBIAN_7" \
     "lsipAdopted_DEBIAN_11" \
     "lsipAdopted_DEBIAN_12" \
+    "lsipAdopted_DEBIAN_13" \
     "lsipAdopted_UBUNTU_FIESTY" \
     "lsipAdopted_UBUNTU_GUTSY" \
     "lsipAdopted_UBUNTU_HARDY" \
@@ -220,6 +221,14 @@ lsipAdopted_DEBIAN_12 () {
    adoptedDistFamily="debian"
    adoptedDistGeneration="12"  # bookworm
    adoptedDistRev="12.0"
+   adoptedDistArchs=( "i386"  "sparc" )
+   adoptedDistNextGen=""
+}
+
+lsipAdopted_DEBIAN_13 () {
+   adoptedDistFamily="debian"
+   adoptedDistGeneration="13"  # trixie
+   adoptedDistRev="13.0"
    adoptedDistArchs=( "i386"  "sparc" )
    adoptedDistNextGen=""
 }
