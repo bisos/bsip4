@@ -147,7 +147,7 @@ _EOF_
 
     lpDo bisosCurrentsManage.sh -i setParam cur_bpoId_parent pis_defaultSite
 
-    lpDo rawBisos-sbom.pcs -i sbom_fullUpdate
+    lpDo sudo -u bisos rawBisos-sbom.pcs -i sbom_fullUpdate
 
     lpDo lcaChromeBinsPrep.sh -v -n showRun -i fullUpdate
 
