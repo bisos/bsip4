@@ -147,7 +147,7 @@ _EOF_
 
     lpDo bisosCurrentsManage.sh -i setParam cur_bpoId_parent pis_defaultSite
 
-    lpDo sudo -u bisos rawBisos-sbom.pcs -i sbom_fullUpdate
+    lpDo sudo -u bisos env PATH=$PATH:/bisos/venv/py3/bisos3/bin ${bisosBinBase}/rawBisos-sbom.pcs -i sbom_fullUpdate
 
     lpDo lcaChromeBinsPrep.sh -v -n showRun -i fullUpdate
 
