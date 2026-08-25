@@ -1,0 +1,103 @@
+#!/usr/bin/env python
+
+""" #+begin_org
+* Panel::  [[file:/bisos/panels/bisos-apps/NameOfThePanelComeHere/_nodeBase_/fullUsagePanel-en.org]]
+* Overview and Relevant Pointers
+#+end_org """
+
+from bisos import b
+# from bisos.b import cmndsSeed
+from bisos.b import cs
+from bisos.b import b_io
+
+# import collections
+import typing
+
+from bisos.sbom import pkgsSeed  # pkgsSeed.plantWithWhich("seedSbom.cs")
+ap = pkgsSeed.aptPkg
+
+
+aptPkgsList = [
+    ap("nodejs"),   # Node.js runtime -- Debian 12 bookworm/main (v18 LTS)
+    ap("npm"),      # npm package manager -- depends on nodejs; listed explicitly for clarity
+]
+
+pkgsSeed.setup(
+    aptPkgsList=aptPkgsList,
+)
+
+
+####+BEGIN: b:py3:cs:cmnd/classHead :cmndName "readme" :extent "verify" :comment "Describe" :parsMand "" :parsOpt "" :argsMin 0 :argsMax 0 :pyInv ""
+""" #+begin_org
+*  _[[elisp:(blee:menu-sel:outline:popupMenu)][±]]_ _[[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]]_ [[elisp:(outline-show-branches+toggle)][|=]] [[elisp:(bx:orgm:indirectBufOther)][|>]] *[[elisp:(blee:ppmm:org-mode-toggle)][|N]]*  CmndSvc-   [[elisp:(outline-show-subtree+toggle)][||]] <<readme>>  *Describe*  =verify= ro=cli   [[elisp:(org-cycle)][| ]]
+#+end_org """
+class readme(cs.Cmnd):
+    cmndParamsMandatory = [ ]
+    cmndParamsOptional = [ ]
+    cmndArgsLen = {'Min': 0, 'Max': 0,}
+
+    @cs.track(fnLoc=True, fnEntry=True, fnExit=True)
+    def cmnd(self,
+             rtInv: cs.RtInvoker,
+             cmndOutcome: b.op.Outcome,
+    ) -> b.op.Outcome:
+        """Describe"""
+        failed = b_io.eh.badOutcome
+        callParamsDict = {}
+        if self.invocationValidate(rtInv, cmndOutcome, callParamsDict, None).isProblematic():
+            return failed(cmndOutcome)
+####+END:
+        descriptionStr = """** Scope: Node.js and npm via apt for Debian 12 (bookworm/main).
+
+** What this installs:
+
+  nodejs  -- Node.js 18 LTS runtime, from Debian 12 bookworm/main.
+  npm     -- npm package manager (depends on nodejs; installed together).
+
+** Notes:
+  - No custom apt source is required; both packages are in Debian 12 main.
+  - Debian 12 ships Node.js 18 LTS. For newer Node versions (20, 22 LTS),
+    use nvm-sbom.pcs instead, which installs nvm and lets you manage
+    multiple Node versions per-user.
+  - npm installed here is system-wide (via apt). For per-user npm globals
+    prefer nvm-managed npm to avoid sudo for global installs.
+
+** Relationship to nvm-sbom.pcs:
+  This sbom provides a system-wide Node.js/npm baseline.
+  nvm-sbom.pcs provides per-user version switching on top of (or instead of) this.
+"""
+        print(descriptionStr)
+
+        return cmndOutcome.set(
+            opError=b.op.OpError.Success,
+            opResults=None,
+        )
+
+def examples_csu() -> b.op.Outcome:
+    """Common Usage Examples for this Command-Service Unit"""
+
+    cmnd = cs.examples.cmndEnter
+    literal = cs.examples.execInsert
+
+    cmndOutcome = b.op.Outcome()
+
+    cs.examples.menuChapter('*npm/nodejs Install*')
+    literal("npm-sbom.pcs -i sbom_fullUpdate")
+
+    cmnd('readme', comment=" # An overview short description")
+
+    cs.examples.menuChapter('*Verify*')
+    literal("node --version")
+    literal("npm --version")
+    literal("which node")
+    literal("which npm")
+    literal("dpkg -l nodejs npm")
+
+    cs.examples.menuChapter('*Basic npm usage*')
+    literal("npm install <package>           # install locally into node_modules/")
+    literal("sudo npm install -g <package>   # install globally (system npm)")
+    literal("npm list -g --depth=0           # list global packages")
+    literal("npm update                      # update local packages")
+
+    cs.examples.menuChapter('*End-Of  npm Examples*')
+    return cmndOutcome
