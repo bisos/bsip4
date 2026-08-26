@@ -116,6 +116,7 @@ def examples_csu() -> b.op.Outcome:
     literal("nvm ls-remote            # list all available versions")
 
     cs.examples.menuChapter('*Verify*')
+    literal('command -v nvm  # nvm is a bash command -- which -a nvm will fail')
     literal("nvm --version")
     literal("node --version")
     literal("npm --version")
