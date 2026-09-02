@@ -17,7 +17,6 @@ ap = pkgsSeed.aptPkg
 pp = pkgsSeed.pipPkg
 # sbom = pkgsSeed.sbomSpec
 
-pkgsSeed.pkgsSeedInfo.virtenv = "/bisos/venv/py3/asc"
 
 # sbomsList = [
 #     sbom("/bisos/core/lcnt/bin/playwright-sbom.pcs"),  # required by crawl4ai for JS rendering
@@ -29,6 +28,7 @@ pipPkgsList = [
     pp("bisos.pyDblock"),
     pp("bisos.dnsCap"),
     pp("bisos.webCap"),
+    pp("bisos.airflow"),
 ]
 
 aptPkgsList = [

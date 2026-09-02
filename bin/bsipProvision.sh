@@ -141,11 +141,16 @@ _EOF_
     # had already been venvPy3_pipInstalls
     # lpDo ${bisosBinBase}/bisosPyVenvSetup.sh -h -v -n showRun -i venvPy3_pipInstalls
 
+    lpDo ${bisosBinBase}/bisosCurrentsManage.sh -v -n showRun -i currentsFileCreate
+
     lpDo ${bisosBinBase}/lcaJsBinsPrep.sh -v -n showRun -i fullUpdate
 
     lpDo ${bisosBinBase}/lcaPythonCommonBinsPrep.sh -v -n showRun -i fullUpdate
 
     lpDo bisosCurrentsManage.sh -i setParam cur_bpoId_parent pis_defaultSite
+
+    lpDo sudo -u bisos env PATH=$PATH:/bisos/venv/py3/bisos3/bin ${bisosBinBase}/platformBasesUpdate.cs --bpoId="/bisos/git/bxRepos/bxObjects/bro_rawBisos/bro_rawBisosPlatform"  -i platformBase update
+    lpDo sudo -u bisos env PATH=$PATH:/bisos/venv/py3/bisos3/bin ${bisosBinBase}/platformBasesUpdate.cs --bpoId="/bisos/git/bxRepos/bxObjects/bro_rawBisos/bro_rawBisosSite"  -i siteBase update
 
     lpDo sudo -u bisos env PATH=$PATH:/bisos/venv/py3/bisos3/bin ${bisosBinBase}/rawBisos-sbom.pcs -i sbom_fullUpdate
 
