@@ -147,10 +147,10 @@ _EOF_
 
     lpDo ${bisosBinBase}/lcaPythonCommonBinsPrep.sh -v -n showRun -i fullUpdate
 
-    lpDo bisosCurrentsManage.sh -i setParam cur_bpoId_parent pis_defaultSite
+    lpDo sudo -u bisos ${bisosBinBase}/bisosCurrentsManage.sh -i setParam cur_bpoId_parent pis_defaultSite
 
-    lpDo sudo -u bisos env PATH=$PATH:/bisos/venv/py3/bisos3/bin ${bisosBinBase}/platformBasesUpdate.cs --bpoId="/bisos/git/bxRepos/bxObjects/bro_rawBisos/bro_rawBisosPlatform"  -i platformBase update
-    lpDo sudo -u bisos env PATH=$PATH:/bisos/venv/py3/bisos3/bin ${bisosBinBase}/platformBasesUpdate.cs --bpoId="/bisos/git/bxRepos/bxObjects/bro_rawBisos/bro_rawBisosSite"  -i siteBase update
+    lpDo sudo -u bisos env PATH=$PATH:/bisos/venv/py3/bisos3/bin platformBasesUpdate.cs --bpoId="/bisos/git/bxRepos/bxObjects/bro_rawBisos/bro_rawBisosPlatform"  -i platformBase update
+    lpDo sudo -u bisos env PATH=$PATH:/bisos/venv/py3/bisos3/bin platformBasesUpdate.cs --bpoId="/bisos/git/bxRepos/bxObjects/bro_rawBisos/bro_rawBisosSite"  -i siteBase update
 
     lpDo sudo -u bisos env PATH=$PATH:/bisos/venv/py3/bisos3/bin ${bisosBinBase}/rawBisos-sbom.pcs -i sbom_fullUpdate
 
