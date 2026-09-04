@@ -152,6 +152,7 @@ _EOF_
     lpDo sudo -u bisos env PATH=$PATH:/bisos/venv/py3/bisos3/bin platformBasesUpdate.cs --bpoId="/bisos/git/bxRepos/bxObjects/bro_rawBisos/bro_rawBisosPlatform"  -i platformBase update
     lpDo sudo -u bisos env PATH=$PATH:/bisos/venv/py3/bisos3/bin sitesManage.cs -i siteBase --bpoId="/bisos/git/bxRepos/bxObjects/bro_rawBisos/bro_rawBisosSite"  update
 
+    lpDo sudo -u bisos env PATH=$PATH:/bisos/venv/py3/bisos3/bin ${bisosBinBase}/pyVenv-asc-sbom.pcs -i sbom_fullUpdate
     lpDo sudo -u bisos env PATH=$PATH:/bisos/venv/py3/bisos3/bin ${bisosBinBase}/rawBisos-sbom.pcs -i sbom_fullUpdate
 
     lpDo lcaChromeBinsPrep.sh -v -n showRun -i fullUpdate
