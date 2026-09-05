@@ -155,6 +155,9 @@ _EOF_
     lpDo sudo -u bisos env PATH=$PATH:/bisos/venv/py3/bisos3/bin ${bisosBinBase}/pyVenv-asc-sbom.pcs -i sbom_fullUpdate
     lpDo sudo -u bisos env PATH=$PATH:/bisos/venv/py3/bisos3/bin ${bisosBinBase}/rawBisos-sbom.pcs -i sbom_fullUpdate
 
+    # This needs to happen here, because future uses of npm by CBMs requires a fresh source of .bashrc
+    lpDo env PATH=$PATH:/bisos/venv/py3/bisos3/bin ${bisosBinBase}/nvm-sbom.pcs -i sbom_fullUpdate
+
     lpDo lcaChromeBinsPrep.sh -v -n showRun -i fullUpdate
 
     lpDo vis_provisionBasicBlee
