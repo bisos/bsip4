@@ -102,10 +102,11 @@ function opBasePathSet {
   export PATH="${PATH}:/bisos/venv/py3/devbin"
   export PATH="${PATH}:/bisos/venv/py3/dev-bisos3/bin"
   export PATH="${PATH}:/bisos/venv/py3/bisos3/bin"
-  export PATH="${PATH}:/bisos/venv/py3/adopted/bin"
+  export PATH="${PATH}:/bisos/venv/py3/adopted/bin"  # NOTYET, redundant with /bisos/venv/py3/asc/bin ?
   export PATH="${PATH}:${opBase}/bin:${opBase}/lib:${opBase}/usrEnv"
   export PATH="${PATH}:/bisos/core/dev/bin"
   export PATH="${PATH}:/bisos/blee/bin"
+  export PATH="${PATH}:/bisos/venv/py3/asc/bin"
   export PATH="${PATH}:/bisos/asc/bin"
   export PATH="${PATH}:/bisos/asc/dns/bin"
   export PATH="${PATH}:/bisos/asc/bedrock/bin"  

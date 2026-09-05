@@ -22,17 +22,41 @@ def nvmInstall():
     Source: https://github.com/nvm-sh/nvm
     NB: runs as the invoking user (not root) -- nvm lives in ~/.nvm.
     The install script appends activation lines to ~/.bashrc automatically.
+    Idempotent: does nothing if ~/.nvm/nvm.sh already exists.
     """
     outcome = b.subProc.WOpW(invedBy=None, log=1).bash(
         """
+NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+    echo "nvm already installed at $NVM_DIR -- skipping install."
+    exit 0
+fi
 NVM_VERSION="v0.40.3"
 curl -fsSL "https://raw.githubusercontent.com/nvm-sh/nvm/${NVM_VERSION}/install.sh" | bash
 """)
 
 
+def nvmInstall_lts():
+    """Run nvm install lts.
+    Idempotent: skips the install if an LTS Node.js version is already installed.
+    """
+    outcome = b.subProc.WOpW(invedBy=None, log=1).bash(
+        """
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+if nvm ls --no-colors lts/* 2>/dev/null | grep -q 'v[0-9]'; then
+    echo "An LTS Node.js version is already installed -- skipping install."
+    nvm ls --no-colors lts/*
+    exit 0
+fi
+nvm install --lts
+""")
+
+
 aptPkgsList = [
     ap("curl"),                        # Required by the nvm install script
-    ap("nvm", func=nvmInstall),        # nvm -- Node Version Manager, installed per-user into ~/.nvm
+    ap("nvmInstall", func=nvmInstall),        # nvm -- Node Version Manager, installed per-user into ~/.nvm
+    ap("nvmInstallLts", func=nvmInstall_lts),        # nvm -- Node Version Manager, installed per-user into ~/.nvm
 ]
 
 pkgsSeed.setup(
