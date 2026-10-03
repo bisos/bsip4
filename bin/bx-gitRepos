@@ -1188,13 +1188,21 @@ _EOF_
             if [ ! -f .gitignore ] ; then
                 lpDo cp /bisos/apps/defaults/begin/templates/moded/git/gitignore/emacs+py+tex .gitignore
             else
-                echo "${here}/.gitignore in place -- updating skipped"
+                if [ "${G_forceMode}" == "force" ] ; then
+                    lpDo cp /bisos/apps/defaults/begin/templates/moded/git/gitignore/emacs+py+tex .gitignore
+                else
+                    ANT_raw "${here}/.gitignore in place -- forceMode not specified -- updating skipped"
+                fi  
             fi
 
             if [ ! -f .gitattributes ] ; then
                 lpDo cp /bisos/apps/defaults/begin/templates/moded/git/gitattributes/py .gitattributes
             else
-                echo "${here}/.gitattributes in place -- updating skipped"
+                if [ "${G_forceMode}" == "force" ] ; then
+                    lpDo cp /bisos/apps/defaults/begin/templates/moded/git/gitattributes/py .gitattributes                    
+                else
+                    ANT_raw "${here}/.gitattributes in place -- forceMode not specified -- updating skipped"
+                fi  
             fi
         # fi
 
@@ -1297,6 +1305,76 @@ _EOF_
     
     lpReturn
 }       
+
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || IIF       ::  vis_baseDiffDotIgnore  [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+
+function vis_baseDiffDotIgnore {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+If there are any args, process those.
+If there are no args, process stdin.
+_EOF_
+                       }
+
+    function hereDo {
+        EH_assert [[ $# -eq 0 ]]
+        local here=$(pwd)
+
+        if [ ! -f .gitignore ] ; then
+            ANT_raw "Missing ${here}/.gitignore"
+        elif cmp /bisos/apps/defaults/begin/templates/moded/git/gitignore/emacs+py+tex ${here}/.gitignore ; then
+            ANT_raw "Verified ${here}/.gitignore"
+        else
+            ANT_raw "Exists ${here}/.gitignore -- But different:"
+            lpDo diff /bisos/apps/defaults/begin/templates/moded/git/gitignore/emacs+py+tex ${here}/.gitignore
+        fi
+
+        if [ ! -f .gitattributes ] ; then
+            ANT_raw "Missing ${here}/.gitattributes"
+        else
+            ANT_raw "Verified ${here}/.gitattributes"
+        fi
+        
+    }
+
+    function processEach {
+        EH_assert [[ $# -eq 1 ]]
+        local thisOne="$1"
+
+        # lpDo cp /bisos/apps/defaults/begin/templates/moded/git/gitignore/emacs+py+tex .gitignore
+
+        # lpDo cp /bisos/apps/defaults/begin/templates/moded/git/gitattributes/py .gitattributes    
+
+        inBaseDirDo \
+            ${thisOne} \
+            hereDo
+    }
+
+####+BEGIN: bx:bsip:bash/processArgsAndStdin :noParams t
+     function processArgsAndStdin {
+        local effectiveArgs=( "$@" )
+        local stdinArgs
+        local each
+        if [ ! -t 0 ]; then # FD 0 is not opened on a terminal, there is a pipe
+            readarray stdinArgs < /dev/stdin
+            effectiveArgs=( "$@" "${stdinArgs[@]}" )
+        fi
+        if [ ${#effectiveArgs[@]} -eq 0 ] ; then
+            ANT_raw "No Args And Stdin Is Empty"
+            lpReturn
+        fi
+        for each in "${effectiveArgs[@]}"; do
+            lpDo processEach "${each%$'\n'}"
+        done
+    }
+    lpDo processArgsAndStdin "$@"
+####+END:
+    
+    lpReturn
+}       
+
 
 
 

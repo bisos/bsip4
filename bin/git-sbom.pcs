@@ -47,6 +47,7 @@ aptPkgsList = [
     ap("wget"),    # Required to download the GCM .deb release artifact.
     ap("git-credential-manager", func=gcmDebAptSource),
     ap("gh", func=ghAptSource),   # Github API Cli -- taken from https://github.com/cli/cli/blob/trunk/docs/install_linux.md
+    ap("gitleaks")
 ]
 
 
@@ -143,5 +144,8 @@ def examples_csu() -> b.op.Outcome:
     literal("git config --global credential.credentialStore   # should print: gpg")
     literal("cat ~/.gitconfig  # should show Git configuration")
 
+    cs.examples.menuChapter('*gitleaks*')
+    literal("gitleaks detect --source . --redact --no-banner -v") 
+    
     cs.examples.menuChapter('*End-Of  Git Command Examples*')
     return cmndOutcome

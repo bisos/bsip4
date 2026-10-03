@@ -30,7 +30,22 @@ Fill in the sections below when asked to update, following the structure provide
   All Stage 2 TODOs are DONE. The subproject's primary deliverable,
   =ai-tools-sbom.pcs=, has been created and is functional. A reusable
   =sbom-authoring= skill has been written and wired into the templates.
-  No open TODOs remain in the WorkPlan for this subproject.
+
+  *Stage 3 (added 2026-10-03) is open*: a switchable VNC authentication (no password / password)
+  for the BISOS-Platform desktop, for the container model and for systemd instances on VMs. It is
+  planned, with all the facts, decisions and a test plan, in =AI-WorkPlan.org= Stage 3 (TODOs
+  3.1--3.6); *nothing was changed on any host or image*. Highlights: the units
+  (=vncserver.service=, =novnc.service=) are baked into the =bro_dockerfiles= images, not installed
+  by =vncServer-sbom.pcs= (which only installs =tigervnc-standalone-server=); the live units were
+  identical to the image copies; =SecurityTypes= cannot be changed on a running server (restart needed);
+  Debian's TigerVNC has a native =~/.config/tigervnc/config.pl= =$SecurityTypes= setting and a
+  =tigervncserver@:1.service= template unit (recommended over a custom environment file, untested).
+  The testing is for a VM that creates repeatable privileged containers.
+
+  *Version control*: =bsip4/= is its own git repo (=/bisos/git/auth/bxRepos/bisos/bsip4=, branch
+  =master=), nested inside the =bisos= repo, where it shows as untracked. The edits of 2026-10-03 to
+  =AI-WorkPlan.org= and this file are *uncommitted* in the =bsip4= repo. (An earlier note here that
+  =bsip4/= was untracked was wrong: it came from running =git ls-files= in the outer repo.)
 
 * Architecture
 

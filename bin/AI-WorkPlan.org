@@ -183,6 +183,167 @@ Covers:
 ** -
 
 
+* Stage 3: Switchable VNC Authentication --- Container Model and systemd Instances
+
+Goal: Let the VNC server of a BISOS-Platform with a desktop switch conveniently between *no
+password* and *password*. Mohsen works in a trusted environment where no password is acceptable,
+but wants to flip it at will. To be built and tested on a VM that can create repeatable privileged
+containers; *nothing here has been changed on the live container*. Origin: a question about
+=-SecurityTypes None= on the container VNC server, 2026-10-03.
+
+** Facts (read-only, 2026-10-03, container =54e5ee2090ef=, Debian 13 trixie, TigerVNC 1.15.0+dfsg-2.1~deb13u1)
+
+ - *Process tree*: =/usr/bin/perl /usr/bin/vncserver :1 -localhost no -geometry 1920x1080 -depth 16
+   -SecurityTypes None --I-KNOW-THIS-IS-INSECURE= (pid 166, parent 1) runs =Xtigervnc :1
+   -localhost=0 -rfbport 5901 -SecurityTypes None -auth /home/bystar/.Xauthority= as =bystar=.
+ - *Listening*: =0.0.0.0:5901= (VNC), =0.0.0.0:6901= (websockify, noVNC web client), =0.0.0.0:80=
+   (something else). No VNC authentication anywhere; the noVNC client inherits the VNC server's mode.
+ - *Units* (root-owned, =/etc/systemd/system/=): =vncserver.service= (=Type=forking=, =User=bystar=,
+   =ExecStartPre= removes =/tmp/.X11-unix/X1= and =/tmp/.X1-lock=, =ExecStop=vncserver -kill :1=,
+   =Restart=on-failure=) and =novnc.service= (=websockify --web=/usr/share/novnc 6901
+   localhost:5901=, =Requires=vncserver.service=). =novnc.service= needs no change.
+ - *Source of the units*: they are not from an sbom. They are baked into the Docker image:
+   =bro_dockerfiles/debian/13/privileged/vnc/xfce/bisos_deb13-sysd/dockerConf/= =COPY='d to
+   =/etc/systemd/system/= by the Dockerfile. The live units are byte-identical to those (diffed).
+   The four =vncserver.service= copies (Debian 12 and 13, =privileged= and =rootless-sysd=) are
+   identical to one another. The =confined/vnc= directories show no unit =COPY=.
+ - *No password file* exists (=~/.vnc/passwd=, =~/.config/tigervnc/passwd=). =vncpasswd= is not
+   installed: it is in =tigervnc-tools= (apt candidate present, not installed).
+ - *No hot switch*: =DISPLAY=:1 vncconfig -set SecurityTypes=None= (the current value) fails with
+   "Setting param SecurityTypes=None failed". Changing the mode needs a server restart, which ends
+   the X session: every GUI app on =:1= closes (Chrome, DBeaver, ...).
+ - *Installed*: =tigervnc-common= and =tigervnc-standalone-server=. =/usr/bin/websockify= and
+   =/usr/share/novnc= belong to *no dpkg package* and =pip= has no =websockify=: their source is
+   unknown (the image build?). =/etc/tigervnc/vncserver.users= holds =:1=bystar=.
+ - *The sbom*: =vncServer-sbom.pcs= (=/bisos/core/bsip/bin/=, in the =bisos= repo =bsip4/bin=)
+   installs only =tigervnc-standalone-server=. Siblings: =vncViewer-sbom.pcs=, =vscode-sbom.pcs=, ...
+ - *Debian's own mechanism* (tigervnc.conf(5x), =vncserver-config-defaults=): the server reads
+   =/etc/tigervnc/vncserver-config-defaults=, then =$HOME/.config/tigervnc/config.pl=, then command-line
+   options, then =/etc/tigervnc/vncserver-config-mandatory= (which beats everything). =$SecurityTypes=
+   (default =VncAuth=; =None= means no user authentication) and =$localhost= are settings there; the
+   password file is =$vncPasswdFile= (default =$vncUserDir/passwd=). Debian also ships the template
+   unit =/usr/lib/systemd/system/tigervncserver@.service= (=ExecStart=/usr/libexec/tigervncsession-start
+   %i=), started as =systemctl enable|start tigervncserver@:<display>.service=, using
+   =vncserver.users= to map a display to a user. *=~/.config/tigervnc/= already exists on this
+   container* (it holds the server log and =xstartup=).
+
+** Decisions Taken
+
+ - The mode is *None or Password*, switched by a command, with a server restart. (Mohsen, 2026-10-03.)
+ - =vncServer-sbom.pcs= gets the *packages* (=tigervnc-tools= for =vncpasswd=). It does not carry
+   units or commands: an sbom installs packages.
+ - Nothing is changed on the live container. Testing is on a VM that can create repeatable privileged
+   containers.
+
+** Two ways to hold the mode
+
+ - *A. A variable the unit expands* (the first proposal): =/etc/default/vncserver= with
+   =VNC_SECURITY_OPTIONS=...=, =EnvironmentFile=-/etc/default/vncserver= and =$VNC_SECURITY_OPTIONS= in
+   =ExecStart=. Works with the existing custom units. The mode lives in an extra, non-standard file.
+ - *B. Debian's own config* (found later; *recommended*): remove =-SecurityTypes None
+   --I-KNOW-THIS-IS-INSECURE= from the units' =ExecStart= (command-line options override the config
+   files, so leaving it would defeat the switch) and put =$SecurityTypes = "None";= or
+   =$SecurityTypes = "VncAuth";= in =$HOME/.config/tigervnc/config.pl=. The switch flips that one line
+   and restarts the service. No custom variable; the config file and password file are where the
+   package expects them. *Unverified*: that the wrapper accepts =None= from =config.pl= without the
+   =--I-KNOW-THIS-IS-INSECURE= flag (it was not in the tigervncserver man page I grepped) --- test.
+
+** Container model (bro_dockerfiles) --- changes
+
+Directories (each has =dockerConf/vncserver.service= and a Dockerfile =COPY= of it):
+=debian/13/privileged/vnc/xfce/bisos_deb13-sysd= (Dockerfile line 35),
+=debian/13/rootless-sysd/vnc/xfce/bisos_deb13-rootless-sysd= (49),
+=debian/12/privileged/vnc/xfce/bisos_deb12-sysd= (36),
+=debian/12/rootless-sysd/vnc/xfce/bisos_deb12-rootless-sysd= (49).
+
+For B: in each =vncserver.service=, replace the last =ExecStart= line =-SecurityTypes None
+--I-KNOW-THIS-IS-INSECURE= by nothing (keep =:1 -localhost no -geometry 1920x1080 -depth 16=, or move
+them to =config.pl= as =$localhost="no"=), and ship the default =config.pl= with =$SecurityTypes = "None";=
+for =bystar= (to preserve today's behaviour) --- via a =COPY= into =/home/bystar/.config/tigervnc/config.pl=
+with =bystar= ownership, or =vncserver-config-defaults=. *Check that the home directory is not shadowed by
+a volume.* For A: =EnvironmentFile=-/etc/default/vncserver= plus =$VNC_SECURITY_OPTIONS=, a new
+=dockerConf/vncserver.default= and =COPY dockerConf/vncserver.default /etc/default/vncserver=.
+With the leading =-= on =EnvironmentFile=, a missing file leaves the variable empty and TigerVNC falls
+back to =VncAuth=: it fails closed (no password file means a loud start failure, never an open server).
+=novnc.service= is unchanged.
+
+** systemd instances (VMs and hosts, no Docker)
+
+ - Preferred: Debian's template unit. Add the display=user mapping to =/etc/tigervnc/vncserver.users=
+   (=:1=<user>=), put =$SecurityTypes= (and =$localhost=) in that user's =config.pl=, then
+   =systemctl enable --now tigervncserver@:1.service=. The switch edits =config.pl= and restarts
+   =tigervncserver@:1.service=. Run =vncpasswd= (from =tigervnc-tools=) as the desktop user before the
+   first Password mode.
+ - Alternative: the custom =vncserver.service= of the images, with the unit change above.
+ - BISOS idiom: a =vncserver-sysd.pcs= (=bisos.debian= =systemd_seedInfo=) in a capability bundle, as
+   for airflow's units; the config file and mapping written by an sbom pseudo-package. *Not decided*:
+   which package or bundle owns it (there is no bisos-pip package for VNC).
+ - noVNC: =novnc.service= (or its equivalent) proxies to the VNC port, so it needs no change.
+   Its package source is unknown (see the facts) and must be recorded in an sbom.
+
+** The switch command (spec, not written)
+
+=vncAuth none|password|status=. =status= reads the mode, no restart. A change rewrites the one mode
+line, asks for confirmation that the restart *closes the desktop session and every GUI app*
+(=--yes= skips it), then restarts the VNC service. It refuses =password= when no password file
+exists and tells the user to run =vncpasswd= themself: the command never handles the password.
+Optional third mode: *none but localhost-only* (reachable through an SSH tunnel), for the day the
+container is exposed more widely. Home of the command: *undecided* (a small CS beside the sboms in
+=bsip4/bin=, or a package).
+
+** Open decisions
+
+ - A or B (recommended B). - Home of the command, and of the unit/config for VMs.
+ - Password file path (=~/.config/tigervnc/passwd= is the package default; =~/.vnc/passwd= is the older
+   location). - Whether the four images are changed, or only the live container for testing.
+ - Whether =tigervnc-tools= in =vncServer-sbom.pcs= is acceptable on every host that runs it.
+ - Where =websockify= and =/usr/share/novnc= come from.
+
+* Stage 3 TODOs
+** +
+** TODO [#A] <<3.1>> Choose how the mode is held (A: variable, B: Debian =config.pl=) :aiAndMe:
+SCHEDULED: <2026-10-03 Sat>
+Test B first on the VM: does =vncserver= honour =$SecurityTypes= from =config.pl= with the command-line
+=-SecurityTypes= removed, and is =--I-KNOW-THIS-IS-INSECURE= still needed for =None=?
+----- AI Results: ------
+
+** TODO [#B] <<3.2>> Add =tigervnc-tools= to =vncServer-sbom.pcs= :ai:
+SCHEDULED: <2026-10-03 Sat>
+It provides =vncpasswd=. Check where =novnc= and =websockify= are installed from and record them in an sbom.
+----- AI Results: ------
+
+** TODO [#B] <<3.3>> Container model: change the four =bro_dockerfiles= images :aiAndMe:
+SCHEDULED: <2026-10-03 Sat>
+:PROPERTIES:
+:REPO: /bisos/git/bxRepos/bxObjects/bro_dockerfiles
+:END:
+Per "Container model --- changes" above. Build and test on the VM that creates repeatable privileged
+containers; verify both modes, the noVNC path, and that a rebuild keeps the chosen default.
+----- AI Results: ------
+
+** TODO [#B] <<3.4>> systemd instance model for VMs (=tigervncserver@:1= plus =config.pl=) :aiAndMe:
+SCHEDULED: <2026-10-03 Sat>
+Per "systemd instances" above. Decide the owner (a =vncserver-sysd.pcs= in a bundle, or a plain sbom
+step) and test on a VM.
+----- AI Results: ------
+
+** TODO [#B] <<3.5>> Write the switch command =vncAuth= :aiAndMe:
+SCHEDULED: <2026-10-03 Sat>
+Per the spec above. Decide its home first.
+----- AI Results: ------
+
+** TODO [#C] <<3.6>> Test plan on the VM :aiAndMe:
+SCHEDULED: <2026-10-03 Sat>
+ 1. Both modes, in a fresh container and on a systemd VM: connect with a VNC client and with noVNC.
+ 2. =password= with no password file refuses; with one, the client is asked for it.
+ 3. Switching closes the session; a rebuild or reboot keeps the last chosen mode.
+ 4. =-localhost no= still binds =0.0.0.0:5901= in both modes.
+ 5. Failing closed: remove the config and see that the server does not come up open.
+----- AI Results: ------
+
+** -
+
+
 # Local Variables:
 # eval: (setq-local toc-org-max-depth 4)
 # eval: (setq-local org-log-done 'time)
