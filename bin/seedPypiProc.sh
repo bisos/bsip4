@@ -1556,6 +1556,18 @@ _EOF_
         --binDir="./bin" \
         --outFile="./requirements.txt"
 
+    # The package's own ./bin scripts (its planted .spcs, its .cs) import the
+    # package itself, so pipreqs lists it --- and setup.py's requires dblock
+    # (:requirements "requirements.txt") would make the package require itself.
+    # Drop that line. Package names compare case-insensitively with . _ - alike.
+    if [ -f ./requirements.txt ] && [ -n "${pypiPkgName}" ] ; then
+        local selfRe
+        selfRe=$(echo "${pypiPkgName}" | sed -e 's/[._-]/[._-]/g')
+        grep -v -i -E "^${selfRe}([=<>!~ ;[]|$)" ./requirements.txt > ./requirements.txt.noSelf || true
+        mv ./requirements.txt.noSelf ./requirements.txt
+        ANT_raw "Dropped ${pypiPkgName} (the package itself) from ./requirements.txt"
+    fi
+
     lpReturn
 }
 

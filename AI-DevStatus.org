@@ -107,6 +107,15 @@ pattern already used in the newer =*-sbom.pcs= files (=git-sbom.pcs=,
   historical notes only (in =lcaVirtualboxBinsPrep.sh= and
   =lcaGitlabCeBinsPrep.sh=); no active usages remain.
 
+* Maintenance: =genPipreqs= No Longer Lists the Package Itself (2026-10-26)
+
+=bin/seedPypiProc.sh=, =vis_genPipreqs=: after =pipreqs-plus.cs= writes =./requirements.txt=, the
+line naming the package itself (=${pypiPkgName}=, case-insensitive, =.= =_= =-= alike) is dropped.
+Its own =./bin= scripts import the package, so pipreqs listed it, and =setup.py='s requires dblock
+(=:requirements "requirements.txt"=) would then make the package require itself. Found while doing
+=bisos.dockerProc='s =requirements.txt=; skill =bisos-pip-setup-py= ("How requires is filled")
+documents the flow. Check with the next =genPipreqs= run (not re-run here after the edit).
+
 # Local Variables:
 # eval: (setq-local toc-org-max-depth 4)
 # End:
