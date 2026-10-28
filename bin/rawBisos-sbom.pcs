@@ -36,6 +36,8 @@ aptPkgsList = [
     ap("whois"),  #
     ap("htop"),  #
     ap("iputils-ping"),  #
+    ap("xclip"),  # X clipboard from the shell: claudeSessions.cs -i prompt into a running session
+    ap("xdotool"),  # X key presses: claudeSessions.cs -i prompt pastes (Ctrl+V) into that session
 ]
 
 pkgsSeed.setup(

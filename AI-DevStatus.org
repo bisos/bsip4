@@ -116,6 +116,14 @@ Its own =./bin= scripts import the package, so pipreqs listed it, and =setup.py=
 =bisos.dockerProc='s =requirements.txt=; skill =bisos-pip-setup-py= ("How requires is filled")
 documents the flow. Check with the next =genPipreqs= run (not re-run here after the edit).
 
+* VS Code and Claude: =vscode-sbom.pcs=, =rawBisos-sbom.pcs= (2026-10-27/28)
+
+Recorded in =bisos-pip/aiActivity='s =AI-WorkPlan.org=, Stage 20 (TODOs 20.1, 20.2, 20.3.2), not
+here. =vscode-sbom.pcs=: local VS Code extensions (=extsReport=, =extsInstallPinned=,
+=extsInstallLatest=; pinned list =vscodeExtensionsList=) and a readme on local vs remote VS Code and
+the shared =~/.claude= credentials. =rawBisos-sbom.pcs=: =xclip= and =xdotool=, used by
+=claudeSessions.cs -i prompt=.
+
 # Local Variables:
 # eval: (setq-local toc-org-max-depth 4)
 # End:
