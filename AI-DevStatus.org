@@ -124,6 +124,10 @@ here. =vscode-sbom.pcs=: local VS Code extensions (=extsReport=, =extsInstallPin
 the shared =~/.claude= credentials. =rawBisos-sbom.pcs=: =xclip= and =xdotool=, used by
 =claudeSessions.cs -i prompt=.
 
+*Moved, 2026-10-31*: =vscode-sbom.pcs= is no longer here: it is in =bisos.vscodeClaude=
+(=/bisos/git/bxRepos/bisos-pip/vscodeClaude/py3/bin/=, its AI-WorkPlan 2.1), installed on PATH with that
+package. =rawBisos-sbom.pcs= stays here.
+
 # Local Variables:
 # eval: (setq-local toc-org-max-depth 4)
 # End:

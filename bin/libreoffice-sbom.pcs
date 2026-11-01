@@ -16,8 +16,18 @@ import typing
 from bisos.sbom import pkgsSeed  # pkgsSeed.plantWithWhich("seedSbom.cs")
 ap = pkgsSeed.aptPkg
 
+# libreoffice-gtk3 is only the GTK interface (it pulls in core and common, no application): each
+# application is its own package. Without libreoffice-draw, "libreoffice --draw" fails with
+# "fopen .../program/pagein-draw: No such file or directory" (2026-10-31).
 aptPkgsList = [
     ap("libreoffice-gtk3"),
+    ap("libreoffice-draw"),
+    ap("libreoffice-writer"),
+    ap("libreoffice-calc"),
+    ap("libreoffice-impress"),
+    ap("libreoffice-math"),
+    ap("libreoffice-base"),
+    ap("libreoffice-java-common"),  # javaldx: without it, "failed to launch javaldx" at each start
     ap("libxinerama1"),
     ap("libgl1"),
 ]
@@ -48,6 +58,8 @@ class readme(cs.Cmnd):
 ####+END:
         descriptionStr = """\
 ** Scope: In Blee libreoffice (openoffice) is mostly used for draw.
+** Installs every application (draw, writer, calc, impress, math, base) and the Java bridge:
+   libreoffice-gtk3 alone is only the interface, with no application.
 """
         print(descriptionStr)
 
@@ -75,6 +87,7 @@ def examples_csu() -> b.op.Outcome:
 
     cs.examples.menuChapter('*LIBREOFFICE*')
     literal("libreoffice")
+    literal("libreoffice --draw  # e.g. the figures under images/LibreOffice/")
 
     cs.examples.menuChapter('*End-Of  LIBREOFFICE Command Examples*')
     return cmndOutcome
