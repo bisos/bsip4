@@ -32,6 +32,7 @@ pipPkgsList = [
     pp("bisos.aiActivity"),    # aiActivity.cs: the AI-Activity engine (bxGenesis/start WorkPlan 2.1)
     pp("bisos.dockerProc"),
     pp("bisos.gitist"),
+    pp("bisos.vscodeClaude"),  # vscode.cs, vscodeClaude.cs: the Python under Blee's vscode-claude
 ]
 
 aptPkgsList = [

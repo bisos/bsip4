@@ -131,7 +131,8 @@ package. =rawBisos-sbom.pcs= stays here.
 * The raw-bisos chain: new pip packages and repos (2026-11-02)
 
 Recorded in bxGenesis/start's AI-WorkPlan.org, 2.1 and 2.2 (the bisos-genesis activity):
-- =bin/rawBisos-sbom.pcs=: =pp()= for bisos.aiActivity, bisos.dockerProc, bisos.gitist.
+- =bin/rawBisos-sbom.pcs=: =pp()= for bisos.aiActivity, bisos.dockerProc, bisos.gitist, and (once
+  on PyPI) bisos.vscodeClaude.
 - =bin/bxRepos-gitist.pcs= (new): the repos missing from bisos.common's registry, as data, a
   bisos.gitist plant; anon or auth as its caller says, else as the =/bisos/git/bxRepos= symlink says.
 - =bin/bisosBaseDirs.sh= =bxGitReposBasesReClone= runs it after the =bxReposRoot= pbd (with vcMode,
