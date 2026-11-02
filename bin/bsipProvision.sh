@@ -154,6 +154,8 @@ _EOF_
 
     lpDo sudo -u bisos env PATH=$PATH:/bisos/venv/py3/bisos3/bin ${bisosBinBase}/pyVenv-asc-sbom.pcs -i sbom_fullUpdate
     lpDo sudo -u bisos env PATH=$PATH:/bisos/venv/py3/bisos3/bin ${bisosBinBase}/rawBisos-sbom.pcs -i sbom_fullUpdate
+    # The repos listed as data in bxRepos-gitist.pcs; bisos.gitist came with rawBisos-sbom.pcs (bxGenesis/start WorkPlan 2.2)
+    lpDo sudo -u bisos env PATH=$PATH:/bisos/venv/py3/bisos3/bin ${bisosBinBase}/bxRepos-gitist.pcs -i csCmndEval all
 
     # This needs to happen here, because future uses of npm by CBMs requires a fresh source of .bashrc
     lpDo env PATH=$PATH:/bisos/venv/py3/bisos3/bin ${bisosBinBase}/nvm-sbom.pcs -i sbom_fullUpdate

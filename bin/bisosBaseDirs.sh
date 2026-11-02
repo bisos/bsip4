@@ -313,6 +313,10 @@ _EOF_
         
     lpDo bx-gitReposBases -v 20 --baseDir="${baseDir}/bxRepos" --pbdName="bxReposRoot" --vcMode=${vcMode} --gitLabel="${gitLabel}" -i pbdUpdate all
 
+    # The repos listed as data in bxRepos-gitist.pcs (bxGenesis/start AI-WorkPlan 2.2)
+    lpDo env vcMode="${vcMode}" bxReposBaseDir="${baseDir}/bxRepos" gitLabel="${gitLabel}" \
+         "${G_myFullName%/*}/bxRepos-gitist.pcs" -i csCmndEval all
+
     if [ -d "${baseDir}/ext" ] ; then
         lpDo mv "${baseDir}/ext" "${baseDir}/ext.${thisDateTag}"
     fi

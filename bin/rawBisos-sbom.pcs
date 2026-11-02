@@ -29,6 +29,9 @@ pipPkgsList = [
     pp("bisos.dnsCap"),
     pp("bisos.webCap"),
     pp("bisos.airflow"),
+    pp("bisos.aiActivity"),    # aiActivity.cs: the AI-Activity engine (bxGenesis/start WorkPlan 2.1)
+    pp("bisos.dockerProc"),
+    pp("bisos.gitist"),
 ]
 
 aptPkgsList = [

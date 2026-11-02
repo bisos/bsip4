@@ -128,6 +128,16 @@ the shared =~/.claude= credentials. =rawBisos-sbom.pcs=: =xclip= and =xdotool=, 
 (=/bisos/git/bxRepos/bisos-pip/vscodeClaude/py3/bin/=, its AI-WorkPlan 2.1), installed on PATH with that
 package. =rawBisos-sbom.pcs= stays here.
 
+* The raw-bisos chain: new pip packages and repos (2026-11-02)
+
+Recorded in bxGenesis/start's AI-WorkPlan.org, 2.1 and 2.2 (the bisos-genesis activity):
+- =bin/rawBisos-sbom.pcs=: =pp()= for bisos.aiActivity, bisos.dockerProc, bisos.gitist.
+- =bin/bxRepos-gitist.pcs= (new): the repos missing from bisos.common's registry, as data, a
+  bisos.gitist plant; anon or auth as its caller says, else as the =/bisos/git/bxRepos= symlink says.
+- =bin/bisosBaseDirs.sh= =bxGitReposBasesReClone= runs it after the =bxReposRoot= pbd (with vcMode,
+  bxReposBaseDir, gitLabel); =bin/bsipProvision.sh= =sysBaseGeneralAugment= runs it after
+  =rawBisos-sbom.pcs=. Not yet run by the chain: the VM rebuild.
+
 # Local Variables:
 # eval: (setq-local toc-org-max-depth 4)
 # End:

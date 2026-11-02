@@ -1,0 +1,101 @@
+#!/bin/env python
+
+""" #+begin_org
+* ~[Summary]~ :: The bxRepos that bisos.common's registry does not clone, as a planted gitist list.
+* Overview and Relevant Pointers
+A first, minimal step of bxGenesis/start AI-WorkPlan 2.2 (Modernization of raw-bisos with gitist):
+the repos found missing from bisos/common baseDirBxRepos.py (WorkPlan 2.1) are listed here, as data,
+instead of being added to that Python registry. A new repo is a line here and a push of bisos/bsip4,
+not a release of bisos.common. The full registry moves here later, in stages.
+
+Runs in stage 3 of the bootstrap model, from /bisos/core/bsip/bin, on the bisos3 venv (bisos.gitist
+installed there; bisos.gitist 0.13 imports python-gitlab without declaring it).
+
+bisosBaseDirs.sh's bxGitReposBasesReClone runs it after the bxReposRoot pbd, passing vcMode,
+bxReposBaseDir and gitLabel in the environment. Run alone, the mode and the destination follow the
+symlink /bisos/git/bxRepos, as bisosBaseDirs.sh's bxReposAnonSet / bxReposAuthSet set it:
+- to /bisos/git/anon/bxRepos: anonymous, over https, into /bisos/git/anon/bxRepos/<org>/<repo>;
+- to /bisos/git/auth/bxRepos: authenticated, over ssh as git@<gitLabel>:<org>/<repo>, into
+  /bisos/git/auth/bxRepos/<org>/<repo>. gitLabel is the ssh Host alias, as in bisosBaseDirs.sh:
+  "github.com" unless the environment gives gitLabel (e.g. gitLabel=mb1_github).
+An existing clone is skipped.
+  bxRepos-gitist.pcs                                  # this menu
+  bxRepos-gitist.pcs -i csCmndEval all                # clone every listed repo
+  gitLabel=mb1_github bxRepos-gitist.pcs -i csCmndEval all
+#+end_org """
+
+from bisos.b import cs
+import collections
+import os
+
+from bisos.csSeed import seedsLib
+
+from bisos.gitist import gitist_seed #  noqa: F401  # type: ignore[unused-import] _atExit_
+
+from bisos.gitist import gitist_seedInfo
+cntrlInfo = gitist_seedInfo.cmndsControlInfo
+cntrlInfo.brand = gitist_seedInfo.GitProviderBrand.Github
+cntrlInfo.serverConfigPath = "~/credentials/githubHosts.cfg"    # absent: public github.com, anonymous
+cntrlInfo.serverConfigTag = "default"
+
+# Anon or auth, and where: as bisosBaseDirs.sh's bxGitReposBasesReClone passes them in the
+# environment (vcMode, bxReposBaseDir, gitLabel); run alone, as the bxRepos symlink says
+# (bisosBaseDirs.sh -i bxReposAnonSet / bxReposAuthSet).
+destBaseDir = os.environ.get("bxReposBaseDir") or os.path.realpath("/bisos/git/bxRepos")
+vcMode = os.environ.get("vcMode") or ("auth" if destBaseDir == "/bisos/git/auth/bxRepos" else "anon")
+if vcMode == "auth":
+    cntrlInfo.gitAccessType = gitist_seedInfo.GitAccessType.Auth
+    cntrlInfo.gitAuthAccessMethod = gitist_seedInfo.GitAuthAccessMethod.Ssh
+    cntrlInfo.gitAccessAcct = os.environ.get("gitLabel") or "github.com"   # as bisosBaseDirs.sh
+else:
+    cntrlInfo.gitAccessType = gitist_seedInfo.GitAccessType.Anon
+
+from bisos.csSeed import csCmndsList_seedInfo
+csCmnd = csCmndsList_seedInfo.csCmnd
+
+# GitHub <org>/<repo>, cloned to <destBaseDir>/<org>/<repo>. Found missing from bisos.common's
+# registry on 2026-11-02 (bxGenesis/start AI-WorkPlan 2.1).
+reposList = [
+    "bisos-pip/devpi",
+    "bisos-pip/geneweb",
+    "bisos-pip/gitist",
+    "bisos-pip/gitlab",
+    "bisos-pip/grafana",
+    "bisos-pip/kafka",
+    "bisos-pip/postgres",
+    "bisos-pip/prometheus",
+    "bisos-pip/pypiserver",
+    "bisos-pip/vscodeClaude",
+    "bisos-web/astro-starter-bystar",
+    "blee-binders/evolution",
+    "bxObjects/aiActivityTemplates",
+    "bxObjects/aiTemplates-DE",
+    "bxObjects/aiTemplates-workFlow",
+    "cliGui/csLib",
+    "cliGui/csPlayer-arena",
+    "cliGui/webCliGui",
+    "mb-ephemera/pub-shuttle",
+    # bx-blee/vscode-claude: in bisos.common's registry instead (local dir blee/, not bx-blee/)
+]
+
+csCmndsList = [
+    csCmnd("gitist_clone",
+           pars=collections.OrderedDict([("destBaseDir", destBaseDir)]),
+           args=repo, doContinue=True)
+    for repo in reposList
+]
+
+csCmndsList_seedInfo.setup(
+    csCmndsList=csCmndsList,
+)
+
+
+def examples_pcs() -> None:
+    od = collections.OrderedDict
+    cmnd = cs.examples.cmndEnter
+
+    csName = seedsLib.seededCsxuInfo.seedOfThisPlant
+
+    cs.examples.menuChapter(f'*bxRepos beyond bisos.common: clone one, into {destBaseDir}*')
+    for repo in reposList[:3]:
+        cmnd('gitist_clone', csName=csName, pars=od([('destBaseDir', destBaseDir)]), args=repo)
