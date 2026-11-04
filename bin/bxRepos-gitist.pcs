@@ -56,16 +56,16 @@ csCmnd = csCmndsList_seedInfo.csCmnd
 # GitHub <org>/<repo>, cloned to <destBaseDir>/<org>/<repo>. Found missing from bisos.common's
 # registry on 2026-11-02 (bxGenesis/start AI-WorkPlan 2.1).
 reposList = [
-    "bisos-pip/devpi",
-    "bisos-pip/geneweb",
-    "bisos-pip/gitist",
-    "bisos-pip/gitlab",
-    "bisos-pip/grafana",
-    "bisos-pip/kafka",
-    "bisos-pip/postgres",
-    "bisos-pip/prometheus",
+    "bisos-pip/devpi",                       # done
+    "bisos-pip/geneweb",                     # done
+    "bisos-pip/gitist",                      # done
+    "bisos-pip/gitlab",                      # done
+    "bisos-pip/grafana",                     # done
+    "bisos-pip/kafka",                       # done
+    "bisos-pip/postgres",                    # done
+    "bisos-pip/prometheus",                  # done
     "bisos-pip/pypiserver",
-    "bisos-pip/vscodeClaude",
+    "bisos-pip/vscodeClaude",                # done
     "bisos-web/astro-starter-bystar",
     "blee-binders/evolution",
     "bxObjects/aiActivityTemplates",

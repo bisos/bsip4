@@ -33,6 +33,14 @@ pipPkgsList = [
     pp("bisos.dockerProc"),
     pp("bisos.gitist"),
     pp("bisos.vscodeClaude"),  # vscode.cs, vscodeClaude.cs: the Python under Blee's vscode-claude
+    pp("bisos-pip/devpi"),
+    pp("bisos-pip/geneweb"),
+    pp("bisos-pip/gitlab"),
+    pp("bisos-pip/grafana"),
+    pp("bisos-pip/kafka"),
+    pp("bisos-pip/postgres"),
+    pp("bisos-pip/prometheus"),
+    pp("bisos-pip/pypiserver"),
 ]
 
 aptPkgsList = [
