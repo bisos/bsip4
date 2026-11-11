@@ -173,8 +173,11 @@ function vis_fontXbZarInstall {
     #opDo wget -O XBZar.zip 'http://irmug.org/dl/index.php?name=Downloads&req=getit&lid=30'
     #opDo wget -O XBZar.zip 'http://wiki.irmug.com/index.php/X_Series_2#Download_fonts'
 
-    opDo wget -O XBZar.zip http://www.bybinary.org/republish/debian/squeeze/all/XBZar.zip
+    # opDo wget -O XBZar.zip http://www.bybinary.org/republish/debian/squeeze/all/XBZar.zip
 
+    # opDo wget -O XBZar.zip "https://github.com/rePublication/fonts/blob/main/XBZar.zip?raw=true"
+    opDo wget -O XBZar.zip https://raw.githubusercontent.com/rePublication/fonts/main/XBZar.zip
+    
     opDo ls -lt
 
     opDo sudo unzip XBZar.zip -d /usr/share/fonts/truetype/ttf-persian-fonts
