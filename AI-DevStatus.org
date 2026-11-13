@@ -139,6 +139,15 @@ Recorded in bxGenesis/start's AI-WorkPlan.org, 2.1 and 2.2 (the bisos-genesis ac
   bxReposBaseDir, gitLabel); =bin/bsipProvision.sh= =sysBaseGeneralAugment= runs it after
   =rawBisos-sbom.pcs=. Not yet run by the chain: the VM rebuild.
 
+* =nvm-sbom.pcs=: nvm where install.sh puts it (2026-11-13; uncommitted)
+
+Recorded in bisos-pip/capability's AI-WorkPlan.org 4.3 (pointer, not a copy). With =XDG_CONFIG_HOME=
+set, nvm's install.sh installs into =$XDG_CONFIG_HOME/nvm=; =bin/nvm-sbom.pcs= assumed =~/.nvm=, so
+=nvmInstall_lts= never found =nvm.sh= and no Node was installed, silently. Now both functions share
+=nvmDirPrelude= (=NVM_DIR=, else =$XDG_CONFIG_HOME/nvm=, else =~/.nvm=); =nvmInstall_lts= fails (exit 1)
+without =nvm.sh=, installs the LTS, sets =nvm alias default lts/*= and prints the node in use. Tested on
+a container: Node v26.13.1 installed and made default; a re-run changes nothing.
+
 # Local Variables:
 # eval: (setq-local toc-org-max-depth 4)
 # End:

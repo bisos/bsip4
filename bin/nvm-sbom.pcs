@@ -17,16 +17,24 @@ from bisos.sbom import pkgsSeed  # pkgsSeed.plantWithWhich("seedSbom.cs")
 ap = pkgsSeed.aptPkg
 
 
+# Where nvm's install.sh puts nvm: NVM_DIR, else $XDG_CONFIG_HOME/nvm, else ~/.nvm.
+# Both functions start with it, so they agree with install.sh and with each other.
+nvmDirPrelude = """
+if [ -z "${NVM_DIR}" ]; then
+    if [ -n "${XDG_CONFIG_HOME}" ]; then NVM_DIR="${XDG_CONFIG_HOME}/nvm"; else NVM_DIR="${HOME}/.nvm"; fi
+fi
+export NVM_DIR
+"""
+
+
 def nvmInstall():
     """Install nvm (Node Version Manager) for the current user via the official install script.
     Source: https://github.com/nvm-sh/nvm
-    NB: runs as the invoking user (not root) -- nvm lives in ~/.nvm.
+    NB: runs as the invoking user (not root) -- nvm lives in $NVM_DIR (see nvmDirPrelude).
     The install script appends activation lines to ~/.bashrc automatically.
-    Idempotent: does nothing if ~/.nvm/nvm.sh already exists.
+    Idempotent: does nothing if $NVM_DIR/nvm.sh already exists.
     """
-    outcome = b.subProc.WOpW(invedBy=None, log=1).bash(
-        """
-NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+    outcome = b.subProc.WOpW(invedBy=None, log=1).bash(nvmDirPrelude + """
 if [ -s "$NVM_DIR/nvm.sh" ]; then
     echo "nvm already installed at $NVM_DIR -- skipping install."
     exit 0
@@ -37,26 +45,31 @@ curl -fsSL "https://raw.githubusercontent.com/nvm-sh/nvm/${NVM_VERSION}/install.
 
 
 def nvmInstall_lts():
-    """Run nvm install lts.
+    """Install the current LTS Node.js with nvm and make it nvm's default.
     Idempotent: skips the install if an LTS Node.js version is already installed.
+    Fails loudly (exit 1) when nvm.sh is missing or the install fails.
     """
-    outcome = b.subProc.WOpW(invedBy=None, log=1).bash(
-        """
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-if nvm ls --no-colors lts/* 2>/dev/null | grep -q 'v[0-9]'; then
-    echo "An LTS Node.js version is already installed -- skipping install."
-    nvm ls --no-colors lts/*
-    exit 0
+    outcome = b.subProc.WOpW(invedBy=None, log=1).bash(nvmDirPrelude + """
+if [ ! -s "$NVM_DIR/nvm.sh" ]; then
+    echo "ERROR: no nvm.sh at $NVM_DIR -- nvmInstall did not run or failed." >&2
+    exit 1
 fi
-nvm install --lts
+. "$NVM_DIR/nvm.sh"
+if nvm ls --no-colors 'lts/*' 2>/dev/null | grep -q 'v[0-9]'; then
+    echo "An LTS Node.js version is already installed -- skipping install."
+else
+    nvm install --lts || exit 1
+fi
+nvm alias default 'lts/*'
+nvm use default >/dev/null
+echo "node: $(command -v node) $(node --version)"
 """)
 
 
 aptPkgsList = [
     ap("curl"),                        # Required by the nvm install script
-    ap("nvmInstall", func=nvmInstall),        # nvm -- Node Version Manager, installed per-user into ~/.nvm
-    ap("nvmInstallLts", func=nvmInstall_lts),        # nvm -- Node Version Manager, installed per-user into ~/.nvm
+    ap("nvmInstall", func=nvmInstall),        # nvm -- Node Version Manager, installed per-user into $NVM_DIR
+    ap("nvmInstallLts", func=nvmInstall_lts),        # LTS Node.js via nvm, made nvm's default
 ]
 
 pkgsSeed.setup(
@@ -84,22 +97,24 @@ class readme(cs.Cmnd):
         if self.invocationValidate(rtInv, cmndOutcome, callParamsDict, None).isProblematic():
             return failed(cmndOutcome)
 ####+END:
-        descriptionStr = """** Scope: nvm (Node Version Manager) for Debian 12.
+        descriptionStr = """** Scope: nvm (Node Version Manager) and the current LTS Node.js, per user.
 
 ** What this installs:
 
   nvm (https://github.com/nvm-sh/nvm) -- the standard per-user Node.js
-  version manager. Installed via the official install script into ~/.nvm.
+  version manager, via the official install script, into $NVM_DIR:
+  NVM_DIR if set, else $XDG_CONFIG_HOME/nvm, else ~/.nvm (install.sh's own rule).
+  Then the current LTS Node.js, made nvm's default (nvm alias default lts/*).
 
 ** Important: nvm is per-user, NOT system-wide.
   Run this sbom as the target user (not root).
   The install script adds activation lines to ~/.bashrc automatically.
+  Non-interactive shells (sboms, builds) must load nvm.sh themselves.
   To activate nvm in the current shell without restarting:
-      export NVM_DIR="$HOME/.nvm"
+      export NVM_DIR="${XDG_CONFIG_HOME}/nvm"   # or ~/.nvm without XDG_CONFIG_HOME
       [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
-** After installing nvm, install a Node.js version:
-      nvm install --lts        # latest LTS (recommended)
+** Other Node.js versions:
       nvm install 22           # specific major version
       nvm use --lts            # activate LTS in current shell
       nvm alias default lts/*  # set default for new shells
@@ -128,7 +143,7 @@ def examples_csu() -> b.op.Outcome:
     cmnd('readme', comment=" # An overview short description")
 
     cs.examples.menuChapter('*Activate nvm in current shell*')
-    literal('export NVM_DIR="$HOME/.nvm"')
+    literal('export NVM_DIR="${NVM_DIR:-${XDG_CONFIG_HOME:-$HOME/.config}/nvm}"  # ~/.nvm without XDG_CONFIG_HOME')
     literal('[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"')
 
     cs.examples.menuChapter('*Install and select Node.js versions*')
