@@ -44,7 +44,9 @@ wget -q https://github.com/git-ecosystem/git-credential-manager/releases/downloa
 
 
 aptPkgsList = [
-    ap("wget"),    # Required to download the GCM .deb release artifact.
+    ap("wget"),                   # Required to download the GCM .deb release artifact.
+    ap("git"),
+    ap("git-lfs"),                # Needed by some repos
     ap("git-credential-manager", func=gcmDebAptSource),
     ap("gh", func=ghAptSource),   # Github API Cli -- taken from https://github.com/cli/cli/blob/trunk/docs/install_linux.md
     ap("gitleaks")
