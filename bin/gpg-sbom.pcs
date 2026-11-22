@@ -114,12 +114,13 @@ class readme(cs.Cmnd):
        gpg --full-generate-key
        gpg --list-secret-keys --keyid-format LONG
        pass init <gpg-id>
-  3) Then run git layer:
-       git-sbom.pcs -i sbom_fullUpdate
+  3) Then run the git credentials layer (bisos.gitist):
+       gitCreds-sbom.pcs -i sbom_fullUpdate
+     (git, git-lfs, gitleaks are git-sbom.pcs, also bisos.gitist; the provisioner runs it.)
 
 ** How this layer fits:
   - Provides gnupg, pass, and pinentry programs.
-  - Prepares the encrypted BackStore used later by git-sbom/GCM.
+  - Prepares the encrypted BackStore used later by gitCreds-sbom/GCM.
   - Has no dependency on git package setup.
 
 ** Pinentry guidance:
@@ -166,9 +167,9 @@ def examples_csu() -> b.op.Outcome:
     literal("pass init <gpg-id>")
     literal("cat ~/.password-store/.gpg-id")    
 
-    cs.examples.menuChapter('*Hand-Off To Git Layer*')
-    literal("git-sbom.pcs -i sbom_fullUpdate")
-    literal("git-sbom.pcs -i readme")
+    cs.examples.menuChapter('*Hand-Off To Git Credentials Layer (bisos.gitist)*')
+    literal("gitCreds-sbom.pcs -i sbom_fullUpdate")
+    literal("gitCreds-sbom.pcs -i readme")
 
     cs.examples.menuChapter('*End-Of  GPG Command Examples*')
     return cmndOutcome

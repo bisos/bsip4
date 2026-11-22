@@ -154,6 +154,13 @@ _EOF_
 
     lpDo sudo -u bisos env PATH=$PATH:/bisos/venv/py3/bisos3/bin ${bisosBinBase}/pyVenv-asc-sbom.pcs -i sbom_fullUpdate
     lpDo sudo -u bisos env PATH=$PATH:/bisos/venv/py3/bisos3/bin ${bisosBinBase}/rawBisos-sbom.pcs -i sbom_fullUpdate
+    # git, git-lfs, gitleaks before any clone; git-sbom.pcs ships with bisos.gitist (from rawBisos-sbom.pcs).
+    # Guarded until a bisos.gitist release that carries it is on PyPI. Credentials (gitCreds-sbom.pcs) stay manual.
+    if [ -x /bisos/venv/py3/bisos3/bin/git-sbom.pcs ] ; then
+        lpDo sudo -u bisos env PATH=$PATH:/bisos/venv/py3/bisos3/bin /bisos/venv/py3/bisos3/bin/git-sbom.pcs -i sbom_fullUpdate
+    else
+        ANT_raw "git-sbom.pcs missing (bisos.gitist predates it) -- git-lfs not installed"
+    fi
     # The repos listed as data in bxRepos-gitist.pcs; bisos.gitist came with rawBisos-sbom.pcs (bxGenesis/start WorkPlan 2.2)
     lpDo sudo -u bisos env PATH=$PATH:/bisos/venv/py3/bisos3/bin ${bisosBinBase}/bxRepos-gitist.pcs -i csCmndEval all
 
