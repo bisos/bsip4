@@ -138,6 +138,10 @@ Recorded in bxGenesis/start's AI-WorkPlan.org, 2.1 and 2.2 (the bisos-genesis ac
 - =bin/bisosBaseDirs.sh= =bxGitReposBasesReClone= runs it after the =bxReposRoot= pbd (with vcMode,
   bxReposBaseDir, gitLabel); =bin/bsipProvision.sh= =sysBaseGeneralAugment= runs it after
   =rawBisos-sbom.pcs=. Not yet run by the chain: the VM rebuild.
+- 2026-11-22 (uncommitted), bxGenesis/base AI-WorkPlan Stage 2 (the gitGroup layout of new installs):
+  =bxRepos-gitist.pcs= also clones =mb-ephemera/base= and =rePublication/base=;
+  =bin/bxGenesis_gitGroup.spcs= links the bxGenesis gitGroup's plant (=bxGenesis/base/py3/bin/=), beside
+  the bisos-pip and blee ones.
 
 * =nvm-sbom.pcs=: nvm where install.sh puts it (2026-11-13; uncommitted)
 

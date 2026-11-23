@@ -74,8 +74,10 @@ reposList = [
     "cliGui/csLib",
     "cliGui/csPlayer-arena",
     "cliGui/webCliGui",
+    "mb-ephemera/base",                      # gitGroup base (bxGenesis/base WorkPlan 2.2)
     "mb-ephemera/pub-shuttle",
     "bxlcnt/bro_lcntBases-rawBisos",
+    "rePublication/base",                    # gitGroup base (bxGenesis/base WorkPlan 2.2)
     "rePublication/fonts",
     # bx-blee/vscode-claude: in bisos.common's registry instead (local dir blee/, not bx-blee/)
 ]
