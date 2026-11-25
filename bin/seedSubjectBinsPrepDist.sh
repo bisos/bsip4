@@ -198,7 +198,7 @@ _EOF_
 
     local extraInfo="${G_verboseCmndOption} ${G_runModeCmndOption}"
 
-    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn 1; fi;
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
     typeset allOrderedSubjects=$( vis_orderedList )
 
     opDo sudo ${G_myFullName} ${extraInfo} ${allOrderedSubjects} -a fullUpdate

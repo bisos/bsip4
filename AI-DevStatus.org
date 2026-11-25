@@ -143,6 +143,17 @@ Recorded in bxGenesis/start's AI-WorkPlan.org, 2.1 and 2.2 (the bisos-genesis ac
   =bin/bxGenesis_gitGroup.spcs= links the bxGenesis gitGroup's plant (=bxGenesis/base/py3/bin/=), beside
   the bisos-pip and blee ones.
 
+* The 261124-1 VM run: two fixes (2026-11-25; uncommitted)
+
+Recorded in bxGenesis/base's AI-WorkPlan.org (pointers, not copies):
+- 3.2.3 (the user): =bin/rawBisos-sbom.pcs= named the CBM packages =pp("bisos-pip/<x>")= (=Invalid
+  requirement=, the sbom failed); now =pp("bisos.<x>")=, all 8 on PyPI.
+- 3.2.4: =bin/seedSubjectBinsPrepDist.sh= =vis_fullUpdate=, run as a user, re-runs itself as root and
+  then returned 1 whatever that run did (a false "FAILED" for every binsPrep =fullUpdate=, e.g.
+  lcntCore's LaTeX); now =lpReturn ${globalReRunRetVal}=, as =seedAdminDaemonSysV.sh= does. The same
+  =lpReturn 1= is left in =bisosCurrentsManage.sh=, =seedFgcSwSvc.sh=, =bystarHereAcct.libSh=,
+  =seedAdminDaemonSvc.sh=. Untested.
+
 * =nvm-sbom.pcs=: nvm where install.sh puts it (2026-11-13; uncommitted)
 
 Recorded in bisos-pip/capability's AI-WorkPlan.org 4.3 (pointer, not a copy). With =XDG_CONFIG_HOME=
