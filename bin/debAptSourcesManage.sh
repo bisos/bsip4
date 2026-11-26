@@ -87,7 +87,7 @@ function vis_examples {
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
-$( examplesSeperatorChapter "Manage deb-src lines of sources.list" )
+$( examplesSeperatorChapter "Manage deb-src: sources.list, .list and deb822 .sources" )
 ${G_myName} ${extraInfo} -i verifyDebSrc
 ${G_myName} ${extraInfo} -i enableDebSrc
 ${G_myName} ${extraInfo} -i disableDebSrc
@@ -106,22 +106,35 @@ _CommentEnd_
 function vis_verifyDebSrc {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+Returns 0 when a deb-src source is configured: a deb-src line in sources.list or a
+sources.list.d/*.list, or Types with deb-src in a deb822 sources.list.d/*.sources (Debian 13).
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    local aptSourcesFile="/etc/apt/sources.list"
-    local retVal=0
+    local aptDir="/etc/apt"
+    local retVal=1
+    local each
 
-    opDo eval "egrep '^deb-src ' ${aptSourcesFile}"
-    retVal=$?
+    for each in ${aptDir}/sources.list ${aptDir}/sources.list.d/*.list ; do
+        if [ -f "${each}" ] && egrep -q '^deb-src ' "${each}" ; then
+            ANT_raw "deb-src lines detected in ${each}"
+            retVal=0
+        fi
+    done
+    for each in ${aptDir}/sources.list.d/*.sources ; do
+        if [ -f "${each}" ] && egrep -q '^Types:.*\bdeb-src\b' "${each}" ; then
+            ANT_raw "deb-src Types detected in ${each}"
+            retVal=0
+        fi
+    done
 
     if [ ${retVal} == 0 ]  ; then
-        ANT_raw "deb-src lines detected in ${aptSourcesFile} -- returning ${retVal}"
+        ANT_raw "deb-src is configured -- returning ${retVal}"
     else
-        ANT_raw "deb-src lines are missing in ${aptSourcesFile} -- returning ${retVal}"
+        ANT_raw "deb-src is missing in ${aptDir}/sources.list{,.d/} -- returning ${retVal}"
     fi
-    
+
     lpReturn ${retVal}
 }
 
@@ -136,19 +149,39 @@ _EOF_
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
     
     local aptSourcesFile="/etc/apt/sources.list"
+    local deb822File="/etc/apt/sources.list.d/debian.sources"
 
-    opDo FN_fileSafeCopy ${aptSourcesFile} ${aptSourcesFile}.${dateTag}    
+    if [ -f ${aptSourcesFile} ] && grep -qi ubuntu.com ${aptSourcesFile} ; then
+        opDo FN_fileSafeCopy ${aptSourcesFile} ${aptSourcesFile}.${dateTag}
 
-    egrep '^deb ' ${aptSourcesFile}  | egrep 'restricted|universe' | grep -i ubuntu.com | grep -v backports  |
-        while read thisLine ; do
-            echo Running: $( echo add-apt-repository --enable-source \'${thisLine}\' )
-            eval          $( echo add-apt-repository --enable-source \'${thisLine}\' )
-        done
+        egrep '^deb ' ${aptSourcesFile}  | egrep 'restricted|universe' | grep -i ubuntu.com | grep -v backports  |
+            while read thisLine ; do
+                echo Running: $( echo add-apt-repository --enable-source \'${thisLine}\' )
+                eval          $( echo add-apt-repository --enable-source \'${thisLine}\' )
+            done
+    else
+        # Debian, as raw-bisos.sh's aptSourcesDebSrcEnable (bxGenesis/start) does at install time.
+        # Only the Debian archive: a third-party repository may publish no sources.
+        if [ -f ${deb822File} ] ; then
+            opDo FN_fileSafeCopy ${deb822File} ${deb822File}.${dateTag}
+            opDo sed -i 's/^Types:[[:space:]]*deb[[:space:]]*$/Types: deb deb-src/' ${deb822File}
+            opDo grep '^Types:' ${deb822File}
+        fi
+        if [ -f ${aptSourcesFile} ] ; then
+            local twinsAwk='/^deb-src /{have[$0]=1} {print} /^deb / && /[./]debian\.org\// && !/cdrom:/ {n++; want[n]="deb-src " substr($0,5)} END{for(i=1;i<=n;i++) if(!(want[i] in have)) print want[i]}'
+            awk "${twinsAwk}" ${aptSourcesFile} > /tmp/sources.list.debSrc.$$
+            if ! cmp -s /tmp/sources.list.debSrc.$$ ${aptSourcesFile} ; then
+                opDo FN_fileSafeCopy ${aptSourcesFile} ${aptSourcesFile}.${dateTag}
+                opDo cp /tmp/sources.list.debSrc.$$ ${aptSourcesFile}
+            fi
+            rm -f /tmp/sources.list.debSrc.$$
+        fi
+    fi
 
     opDo apt-get update
 
-    opDo ls -l ${aptSourcesFile}
-    
+    vis_verifyDebSrc
+
     lpReturn
 }
 

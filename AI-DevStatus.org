@@ -154,6 +154,13 @@ Recorded in bxGenesis/base's AI-WorkPlan.org (pointers, not copies):
   =lpReturn 1= is left in =bisosCurrentsManage.sh=, =seedFgcSwSvc.sh=, =bystarHereAcct.libSh=,
   =seedAdminDaemonSvc.sh=. Untested.
 
+* =debAptSourcesManage.sh= reads deb822 sources (2026-11-25)
+
+bxGenesis/base AI-WorkPlan.org 3.2.8 (pointer): =verifyDebSrc= also reads =sources.list.d/*.list= and
+the deb822 =*.sources= (Debian 13 has no =sources.list=); =enableDebSrc= keeps its Ubuntu path and
+otherwise sets =Types: deb deb-src= / adds =deb-src= twins for the Debian archive only, as
+bxGenesis/start's =raw-bisos.sh= now does at install time. =enableDebSrc= on Debian untested.
+
 * =nvm-sbom.pcs=: nvm where install.sh puts it (2026-11-13; uncommitted)
 
 Recorded in bisos-pip/capability's AI-WorkPlan.org 4.3 (pointer, not a copy). With =XDG_CONFIG_HOME=
