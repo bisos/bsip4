@@ -343,7 +343,7 @@ _EOF_
     local debVer=$(lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" lsb_release -a | grep Release | cut -d : -f 2)
     debVer=$(echo ${debVer})  # get rid of spaces
 
-    if [ "${debVer}" == "12" ] ; then
+    if [ "${debVer}" == "12" ] || [ "${debVer}" == "13" ] ; then
 
         lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
             sudo apt-get install -y pipx
@@ -383,7 +383,7 @@ _EOF_
     local debVer=$(lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" lsb_release -a | grep Release | cut -d : -f 2)
     debVer=$(echo ${debVer})  # get rid of spaces
 
-    if [ "${debVer}" == "12" ] ; then
+    if [ "${debVer}" == "12" ] || [ "${debVer}" == "13" ] ; then
         lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
             \$HOME/.local/bin/provisionBisos.sh -h -v -n showRun -i deBisosIfy
     elif [ "${debVer}" == "11" ] ; then
