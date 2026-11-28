@@ -165,7 +165,8 @@ _EOF_
     lpDo sudo -u bisos env PATH=$PATH:/bisos/venv/py3/bisos3/bin ${bisosBinBase}/bxRepos-gitist.pcs -i csCmndEval all
 
     # This needs to happen here, because future uses of npm by CBMs requires a fresh source of .bashrc
-    lpDo env PATH=$PATH:/bisos/venv/py3/bisos3/bin ${bisosBinBase}/nvm-sbom.pcs -i sbom_fullUpdate
+    # As bystar, who runs the CBMs: nvm goes to the invoker's ~/.nvm, and on a box the invoker is the install account.
+    lpDo sudo -u bystar -H env -C ~bystar PATH=$PATH:/bisos/venv/py3/bisos3/bin ${bisosBinBase}/nvm-sbom.pcs -i sbom_fullUpdate
 
     lpDo lcaChromeBinsPrep.sh -v -n showRun -i fullUpdate
 
