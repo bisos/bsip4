@@ -1138,7 +1138,7 @@ _OUTER_EOF_
 ######### PHASE 1: DEBIAN-12 BISOS Provisioning -- baseBox=${containerBaseBox}
 _EOF_
 
-        wget  https://raw.githubusercontent.com/bxGenesis/start/main/raw-bisos.sh
+        wget -O raw-bisos.sh https://raw.githubusercontent.com/bxGenesis/start/main/raw-bisos.sh
         chmod 775 ./raw-bisos.sh
         ./raw-bisos.sh -v -n showRun -i installUnsitedBisos
 _OUTER_EOF_
@@ -1150,7 +1150,7 @@ _OUTER_EOF_
 ######### PHASE 1: DEBIAN-13 BISOS Provisioning -- baseBox=${containerBaseBox}
 _EOF_
 
-        wget  https://raw.githubusercontent.com/bxGenesis/start/main/raw-bisos.sh
+        wget -O raw-bisos.sh https://raw.githubusercontent.com/bxGenesis/start/main/raw-bisos.sh
         chmod 775 ./raw-bisos.sh
         ./raw-bisos.sh -v -n showRun -i installUnsitedBisos
 _OUTER_EOF_

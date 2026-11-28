@@ -216,7 +216,7 @@ _EOF_
     local passwdParam=""
 
     lpDo sshpass -p ${debInstAcctPasswd} ${sshCmnd} ${debInstAcct}@"${targetName}" \
-        wget  https://raw.githubusercontent.com/bxGenesis/start/main/raw-bisos.sh
+        wget -O raw-bisos.sh https://raw.githubusercontent.com/bxGenesis/start/main/raw-bisos.sh
 
     lpDo sshpass -p ${debInstAcctPasswd} ${sshCmnd} ${debInstAcct}@"${targetName}" \
         chmod 775 ./raw-bisos.sh
@@ -261,13 +261,13 @@ _EOF_
     EH_assert [ ! -z "${targetName}" ]
     
     # redirection of stderr gets rid of the Password: prompt, which can throw emacs off
-    local intraLine=$( sshpass -p intra ${sshCmnd} intra@"${targetName}" "echo intra | su - root -c 'egrep ^intra /etc/sudoers'" 2> /dev/null )
+    local intraLine=$( sshpass -p ${debInstAcctPasswd} ${sshCmnd} ${debInstAcct}@"${targetName}" "echo ${debInstRootPasswd} | su - root -c 'egrep ^${debInstAcct} /etc/sudoers'" 2> /dev/null )
 
     if [ -z "${intraLine}" ] ; then
-        lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-             "echo intra | su - root -c 'echo intra ALL=\(ALL\) NOPASSWD: ALL >> /etc/sudoers'"
+        lpDo sshpass -p ${debInstAcctPasswd} ${sshCmnd} ${debInstAcct}@"${targetName}" \
+             "echo ${debInstRootPasswd} | su - root -c 'echo ${debInstAcct} ALL=\(ALL\) NOPASSWD: ALL >> /etc/sudoers'"
     else
-        ANT_raw "intra is already in /etc/sudoers -- skipped"
+        ANT_raw "${debInstAcct} is already in /etc/sudoers -- skipped"
     fi
 }
 
@@ -284,23 +284,23 @@ _EOF_
 
     EH_assert [ ! -z "${targetName}" ]
 
-    local lsOrig=$( sshpass -p intra ${sshCmnd} intra@"${targetName}" sudo ls /etc/apt/sources.list.orig 2> /dev/null )
+    local lsOrig=$( sshpass -p ${debInstAcctPasswd} ${sshCmnd} ${debInstAcct}@"${targetName}" sudo ls /etc/apt/sources.list.orig 2> /dev/null )
 
     if [ -z "${lsOrig}" ] ; then
-        lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+        lpDo sshpass -p ${debInstAcctPasswd} ${sshCmnd} ${debInstAcct}@"${targetName}" \
              sudo cp -p /etc/apt/sources.list /etc/apt/sources.list.orig
     else
         ANT_raw "/etc/apt/sources.list.orig exists -- copying skipped"
     fi
 
     # In "''" "" is consumed by lpDo
-    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+    lpDo sshpass -p ${debInstAcctPasswd} ${sshCmnd} ${debInstAcct}@"${targetName}" \
          grep -v "'^deb cdrom:'" /etc/apt/sources.list \> /tmp/sources.list
 
-    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+    lpDo sshpass -p ${debInstAcctPasswd} ${sshCmnd} ${debInstAcct}@"${targetName}" \
          sudo mv /tmp/sources.list /etc/apt/sources.list
 
-    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+    lpDo sshpass -p ${debInstAcctPasswd} ${sshCmnd} ${debInstAcct}@"${targetName}" \
          sudo apt-get update
 }
 
@@ -315,7 +315,7 @@ _EOF_
     
     EH_assert [ ! -z "${targetName}" ]
 
-    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+    lpDo sshpass -p ${debInstAcctPasswd} ${sshCmnd} ${debInstAcct}@"${targetName}" \
          sudo ls -l /bisos/core/bsip
 
 }
@@ -333,36 +333,36 @@ _EOF_
     
     EH_assert [ ! -z "${targetName}" ]
 
-    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+    lpDo sshpass -p ${debInstAcctPasswd} ${sshCmnd} ${debInstAcct}@"${targetName}" \
          sudo apt-get update
 
-    #lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+    #lpDo sshpass -p ${debInstAcctPasswd} ${sshCmnd} ${debInstAcct}@"${targetName}" \
     #    sudo apt-get -y upgrade
 
 
-    local debVer=$(lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" lsb_release -a | grep Release | cut -d : -f 2)
+    local debVer=$(lpDo sshpass -p ${debInstAcctPasswd} ${sshCmnd} ${debInstAcct}@"${targetName}" lsb_release -a | grep Release | cut -d : -f 2)
     debVer=$(echo ${debVer})  # get rid of spaces
 
     if [ "${debVer}" == "12" ] || [ "${debVer}" == "13" ] ; then
 
-        lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+        lpDo sshpass -p ${debInstAcctPasswd} ${sshCmnd} ${debInstAcct}@"${targetName}" \
             sudo apt-get install -y pipx
 
-        lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+        lpDo sshpass -p ${debInstAcctPasswd} ${sshCmnd} ${debInstAcct}@"${targetName}" \
             pipx install bisos.provision
 
-        lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+        lpDo sshpass -p ${debInstAcctPasswd} ${sshCmnd} ${debInstAcct}@"${targetName}" \
            \$HOME/.local/bin/provisionBisos.sh -h -v -n showRun -i sysBasePlatform
 
     elif [ "${debVer}" == "11" ] ; then
 
-        lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+        lpDo sshpass -p ${debInstAcctPasswd} ${sshCmnd} ${debInstAcct}@"${targetName}" \
             sudo apt-get install -y python3-pip
 
-        lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+        lpDo sshpass -p ${debInstAcctPasswd} ${sshCmnd} ${debInstAcct}@"${targetName}" \
             sudo pip3 install --upgrade bisos.provision
 
-        lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+        lpDo sshpass -p ${debInstAcctPasswd} ${sshCmnd} ${debInstAcct}@"${targetName}" \
             /usr/local/bin/provisionBisos.sh ${G_commandPrefs} -i sysBasePlatform
 
    else
@@ -380,14 +380,14 @@ _EOF_
 
     EH_assert [ ! -z "${targetName}" ]
 
-    local debVer=$(lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" lsb_release -a | grep Release | cut -d : -f 2)
+    local debVer=$(lpDo sshpass -p ${debInstAcctPasswd} ${sshCmnd} ${debInstAcct}@"${targetName}" lsb_release -a | grep Release | cut -d : -f 2)
     debVer=$(echo ${debVer})  # get rid of spaces
 
     if [ "${debVer}" == "12" ] || [ "${debVer}" == "13" ] ; then
-        lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+        lpDo sshpass -p ${debInstAcctPasswd} ${sshCmnd} ${debInstAcct}@"${targetName}" \
             \$HOME/.local/bin/provisionBisos.sh -h -v -n showRun -i deBisosIfy
     elif [ "${debVer}" == "11" ] ; then
-        lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+        lpDo sshpass -p ${debInstAcctPasswd} ${sshCmnd} ${debInstAcct}@"${targetName}" \
             /usr/local/bin/provisionBisos.sh -h -v -n showRun -i deBisosIfy
    else
       EH_problem "Unsuported debVer=${debVer}"
@@ -404,14 +404,14 @@ _EOF_
 
     EH_assert [ ! -z "${targetName}" ]
 
-    local debVer=$(lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" lsb_release -a | grep Release | cut -d : -f 2)
+    local debVer=$(lpDo sshpass -p ${debInstAcctPasswd} ${sshCmnd} ${debInstAcct}@"${targetName}" lsb_release -a | grep Release | cut -d : -f 2)
     debVer=$(echo ${debVer})  # get rid of spaces
 
-    if [ "${debVer}" == "12" ] ; then
-        lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+    if [ "${debVer}" == "12" ] || [ "${debVer}" == "13" ] ; then
+        lpDo sshpass -p ${debInstAcctPasswd} ${sshCmnd} ${debInstAcct}@"${targetName}" \
             \$HOME/.local/bin/provisionBisos.sh -h -v -n showRun -i reInstall  sysBasePlatform
     elif [ "${debVer}" == "11" ] ; then
-        lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
+        lpDo sshpass -p ${debInstAcctPasswd} ${sshCmnd} ${debInstAcct}@"${targetName}" \
             /usr/local/bin/provisionBisos.sh -h -v -n showRun -i reInstall  sysBasePlatform
     else
       EH_problem "Unsuported debVer=${debVer}"
@@ -428,8 +428,8 @@ _EOF_
 
     EH_assert [ ! -z "${targetName}" ]
 
-    lpDo sshpass -p intra ${sshCmnd} intra@"${targetName}" \
-        "echo intra | su - root -c 'dmidecode -s system-uuid'"
+    lpDo sshpass -p ${debInstAcctPasswd} ${sshCmnd} ${debInstAcct}@"${targetName}" \
+        "echo ${debInstRootPasswd} | su - root -c 'dmidecode -s system-uuid'"
 }
 
 ####### TO BE SORTED OUT #######

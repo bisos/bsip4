@@ -481,7 +481,7 @@ vis_pipxInstalls () {
     #lpDo sudo -u bisos id
     local each
     for each in ${itemPipxOrderedList[@]} ; do
-        lpDo sudo -u bisos env PIPX_HOME=/bisos/pipx PIPX_BIN_DIR=/bisos/pipx/bin /bisos/venv/py3/bisos3/bin/pipx install "${each}"
+        lpDo sudo -u bisos env -C /bisos PIPX_HOME=/bisos/pipx PIPX_BIN_DIR=/bisos/pipx/bin /bisos/venv/py3/bisos3/bin/pipx install "${each}"
     done
 }
 
